@@ -7,25 +7,16 @@ from sqlalchemy.orm import relationship
 
 from core import Base
 
+class User(Base):
 
-class SubjectType(enum.Enum):
-    CANDIDATE = "Кандидат"
-    EMPLOYEE = "Сотрудник"
-    PERSONNEL = "Личный состав"
-    STAFF = "Штат"
-
-
-class HrDocumentTemplate(Base):
-
-    __tablename__ = "hr_document_templates"
+    __tablename__ = "users"
 
     id = Column(UUID(as_uuid=True), primary_key=True,
                 nullable=False, default=uuid.uuid4)
-    name = Column(String(255))
-    path = Column(String(255))
-    subject_type = Column(Enum(SubjectType))
-    properties = Column(JSON(none_as_null=True))
-    document = relationship("HrDocument")
+    email = Column(String(150), nullable=True, unique=True)
+    password = Column(String(255), nullable=False)
+    first_name = Column(String(150), nullable=True)
+    last_name = Column(String(150), nullable=True)
 
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))

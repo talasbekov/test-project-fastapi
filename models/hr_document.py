@@ -27,3 +27,8 @@ class HrDocument(Base):
     status = Column(Enum(HrDocumentStatus))
     properties = Column(JSON(none_as_null=True))
     document_type = relationship("HrDocumentTemplate", cascade="all,delete")
+
+    created_at = Column(TIMESTAMP(timezone=True),
+                        nullable=False, server_default=text("now()"))
+    updated_at = Column(TIMESTAMP(timezone=True),
+                        nullable=False, server_default=text("now()"))
