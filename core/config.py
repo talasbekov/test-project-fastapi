@@ -6,7 +6,6 @@ class Settings(BaseSettings):
     DESCRIPTION: str
     VERSION: str
     API_V1_PREFIX: str
-    HOST: str
 
     DATABASE_PORT: int
     POSTGRES_PASSWORD: str

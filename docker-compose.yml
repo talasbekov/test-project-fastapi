@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+
+  postgres:
+    platform: linux/amd64
+    image: postgres:15.1-alpine
+    container_name: postgres
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./.data:/var/lib/postgresql/data
+    networks:
+      - backend
+  
+  sgo-erp:
+    platform: linux/amd64
+    command: bash -c "alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8000"
+    build: .
+    container_name: sgo-erp
+    restart: always
+    ports:
+        - "8000:8000"
+    volumes:
+      - .:/app
+    networks:
+        - backend
+    depends_on:
+        - postgres
+
+networks:
+    backend:
+        driver: bridge
