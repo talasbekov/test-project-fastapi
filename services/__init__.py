@@ -5,3 +5,6 @@ from .hr_document import hr_document_service
 # Keep in mind that I have hr_document_service in this file
 # So I need to make sure that it will initialize before initializing my file
 from .hr_document_template import hr_document_template_service
+from .user_stat import user_stat_service
+from .position import position_service
+from .permission import permission_service
