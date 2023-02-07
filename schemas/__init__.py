@@ -6,3 +6,4 @@ from .hr_document_step import HrDocumentStepCreate, HrDocumentStepUpdate, HrDocu
 from .role import RoleCreate, RoleUpdate, RoleRead
 from .auth import LoginForm, RegistrationForm
 from .rank import RankCreate
+from .badge import BadgeCreate

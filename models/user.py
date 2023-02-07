@@ -31,3 +31,9 @@ class User(Base):
         UUID(as_uuid=True), ForeignKey("ranks.id"), nullable=True)
     
     group = relationship("Group", cascade="all, delete")
+    badges = relationship(
+        "Badge",
+        secondary=users_badges,
+        back_populates='users',
+        cascade="all,delete"
+    )
