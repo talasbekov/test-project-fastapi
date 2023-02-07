@@ -10,7 +10,7 @@ from core import Base
 class GroupName(enum.Enum):
     DEPARTMENT = "Департамент"
     MANAGEMENT = "Управление"
-    DIVISION = "Отдел"
+    TEAM = "Отдел"
 
 class Group(Base):
     
