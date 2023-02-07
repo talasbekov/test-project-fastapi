@@ -1,5 +1,4 @@
 import uuid
-import enum
 
 from sqlalchemy import TIMESTAMP, Column, String, text, ForeignKey, Enum
 from sqlalchemy.dialects.postgresql import UUID, ARRAY, JSON
@@ -7,6 +6,7 @@ from sqlalchemy.orm import relationship
 
 from core import Base
 from .association import users_badges
+
 
 class User(Base):
 
@@ -30,7 +30,7 @@ class User(Base):
                         nullable=False, server_default=text("now()"))
     rank_id = Column(
         UUID(as_uuid=True), ForeignKey("ranks.id"), nullable=True)
-    
+
     group = relationship("Group", cascade="all, delete")
     badges = relationship(
         "Badge",
@@ -38,3 +38,4 @@ class User(Base):
         back_populates='users',
         cascade="all,delete"
     )
+    birthday = Column(String, nullable=True)

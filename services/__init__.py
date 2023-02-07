@@ -9,3 +9,7 @@ from .group import group_service
 from .hr_document_info import hr_document_info_service
 from .hr_document_step import hr_document_step_service
 from .role import role_service
+from .user_stat import user_stat_service
+from .position import position_service
+from .permission import permission_service
+from .user import user_service

@@ -1,7 +1,30 @@
-import uuid
-
 from pydantic import BaseModel
-from typing import List, Dict, Any
 
-class UserBase():
+
+class UserBase(BaseModel):
+    email: str
+    password: str
+    first_name: str
+    last_name: str
+    middle_name: str
+    group_id: str
+    call_sign: str
+    id_number: str
+    phone_number: str
+    address: str
+    birthday: str
+
+
+class UserCreate(UserBase):
     pass
+
+
+class UserUpdate(UserBase):
+    pass
+
+
+class UserRead(UserBase):
+    id: str
+
+    class Config:
+        orm_mode = True

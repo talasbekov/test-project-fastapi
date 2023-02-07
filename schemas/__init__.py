@@ -7,3 +7,7 @@ from .role import RoleCreate, RoleUpdate, RoleRead
 from .auth import LoginForm, RegistrationForm
 from .rank import RankCreate
 from .badge import BadgeCreate
+from .user_stat import UserStatCreate, UserStatUpdate, UserStatRead
+from .position import PositionCreate, PositionUpdate, PositionRead
+from .permission import PermissionCreate, PermissionUpdate, PermissionRead
+from .user import UserCreate, UserUpdate, UserRead
