@@ -2,6 +2,7 @@ import uuid
 
 from sqlalchemy import Column, text, String, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 
 from core import Base
 
@@ -13,3 +14,4 @@ class Position(Base):
     name = Column(String, nullable=True)
     max_rank_id = Column(UUID(as_uuid=True), ForeignKey("ranks.id"), nullable=True, default=uuid.uuid4)
     description = Column(text, nullable=True)
+    permission = relationship("Permission", secondary="position_permission_table", black_populates="positions")
