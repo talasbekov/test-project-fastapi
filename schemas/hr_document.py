@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime
 
 from pydantic import BaseModel
 from typing import List, Dict
@@ -10,6 +11,7 @@ from .hr_document_template import HrDocumentTemplateRead
 class HrDocumentBase(BaseModel):
     document_type_id: str
     status: HrDocumentStatus
+    due_date: datetime
     properties: dict
 
 
@@ -22,7 +24,7 @@ class HrDocumentUpdate(HrDocumentBase):
 
 
 class HrDocumentRead(HrDocumentBase):
-    id: uuid.UUID
+    id: str
     document_type: HrDocumentTemplateRead
 
     class Config:

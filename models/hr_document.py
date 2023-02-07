@@ -25,6 +25,7 @@ class HrDocument(Base):
     document_type_id = Column(
         UUID(as_uuid=True), ForeignKey("hr_document_templates.id"), nullable=True)
     status = Column(Enum(HrDocumentStatus))
+    due_date = Column(TIMESTAMP(timezone=True), nullable=False)
     properties = Column(JSON(none_as_null=True))
     document_type = relationship("HrDocumentTemplate", cascade="all,delete")
 

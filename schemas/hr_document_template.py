@@ -22,7 +22,7 @@ class HrDocumentTemplateUpdate(HrDocumentTemplateBase):
 
 
 class HrDocumentTemplateRead(HrDocumentTemplateBase):
-    id: uuid.UUID
+    id: str
 
     class Config:
         orm_mode = True

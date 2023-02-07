@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, status
 from fastapi_jwt_auth import AuthJWT
 from fastapi.security import HTTPBearer
@@ -7,10 +9,10 @@ from core import get_db
 from schemas import HrDocumentCreate, HrDocumentUpdate, HrDocumentRead
 from services import hr_document_service
 
-router = APIRouter(prefix="/hr-documents", tags=["HrDocuments"])
+router = APIRouter(prefix="/hr-documents", tags=["HrDocuments"], dependencies=[Depends(HTTPBearer())])
 
 
-@router.get("", response_model=HrDocumentRead, dependencies=[Depends(HTTPBearer())])
+@router.get("", response_model=List[HrDocumentRead])
 async def get_all(*,
     # This is essential for every api we will be writing
     # This will start our Transaction and will guide us around all service methods
@@ -26,7 +28,7 @@ async def get_all(*,
     return hr_document_service.get_multi(db, skip, limit)
 
 
-@router.post("", status_code=status.HTTP_201_CREATED, response_model=HrDocumentRead, dependencies=[Depends(HTTPBearer())])
+@router.post("", status_code=status.HTTP_201_CREATED, response_model=HrDocumentRead)
 async def create(*,
     db: Session = Depends(get_db),
     body: HrDocumentCreate,
@@ -35,7 +37,7 @@ async def create(*,
     Authorize.jwt_required()
     return hr_document_service.create(db, body)
 
-@router.put("/{id}/", response_model=HrDocumentRead, dependencies=[Depends(HTTPBearer())])
+@router.put("/{id}/", response_model=HrDocumentRead)
 async def update(*,
     db: Session = Depends(get_db),
     id: str,
@@ -48,7 +50,7 @@ async def update(*,
         db_obj=hr_document_service.get_by_id(db, id),
         obj_in=body)
 
-@router.delete("/{id}/", status_code=status.HTTP_202_ACCEPTED, response_model=HrDocumentRead, dependencies=[Depends(HTTPBearer())])
+@router.delete("/{id}/", status_code=status.HTTP_202_ACCEPTED)
 async def delete(*,
     db: Session = Depends(get_db),
     id: str,

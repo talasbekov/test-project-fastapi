@@ -177,3 +177,6 @@ $RECYCLE.BIN/
 # Custom files
 test.py
 .data
+
+#Intellij IDEA
+.idea
