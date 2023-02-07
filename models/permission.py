@@ -14,4 +14,4 @@ class Permission(Base):
                 nullable=True, default=uuid.uuid4)
     name = Column(String(150), nullable=True)
     position = relationship("Position", secondary="position_permission_table",
-                            black_populates="permissions")
+                            back_populates="permissions")
