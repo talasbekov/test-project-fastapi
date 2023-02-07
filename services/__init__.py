@@ -8,3 +8,4 @@ from .hr_document_template import hr_document_template_service
 from .user_stat import user_stat_service
 from .position import position_service
 from .permission import permission_service
+from .user import user_service

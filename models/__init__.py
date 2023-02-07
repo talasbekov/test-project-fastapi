@@ -8,4 +8,3 @@ from .user import User
 from .user_stat import UserStat
 from .position import Position
 from .permission import Permission
-from .association import PositionPermission

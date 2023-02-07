@@ -7,8 +7,8 @@ from sqlalchemy.orm import relationship
 
 from core import Base
 
-class User(Base):
 
+class User(Base):
     __tablename__ = "users"
 
     id = Column(UUID(as_uuid=True), primary_key=True,
@@ -27,5 +27,6 @@ class User(Base):
                         nullable=False, server_default=text("now()"))
     updated_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))
-    
+
     group = relationship("Group", cascade="all, delete")
+    birthday = Column(String, nullable=True)

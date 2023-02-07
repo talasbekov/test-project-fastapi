@@ -6,10 +6,6 @@ from sqlalchemy import Table, Column, ForeignKey
 from core import Base
 
 
-class PositionPermission(Base):
-    pass
-
-
 position_permission_table = Table(
     "position_permission_table",
     Base.metadata,
