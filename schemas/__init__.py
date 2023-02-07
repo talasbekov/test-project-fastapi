@@ -5,3 +5,4 @@ from .hr_document_info import HrDocumentInfoCreate, HrDocumentInfoUpdate, HrDocu
 from .hr_document_step import HrDocumentStepCreate, HrDocumentStepUpdate, HrDocumentStepRead
 from .role import RoleCreate, RoleUpdate, RoleRead
 from .auth import LoginForm, RegistrationForm
+from .rank import RankCreate
