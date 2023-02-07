@@ -27,5 +27,13 @@ class User(Base):
                         nullable=False, server_default=text("now()"))
     updated_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))
+    rank_id = Column(
+        UUID(as_uuid=True), ForeignKey("ranks.id"), nullable=True)
     
     group = relationship("Group", cascade="all, delete")
+    badges = relationship(
+        "Badge",
+        secondary=users_badges,
+        back_populates='users',
+        cascade="all,delete"
+    )
