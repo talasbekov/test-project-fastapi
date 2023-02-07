@@ -23,4 +23,3 @@ class Badge(Base):
         back_populates='badges',
         cascade="all,delete"
     )
-

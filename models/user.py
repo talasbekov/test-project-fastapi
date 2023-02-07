@@ -6,6 +6,7 @@ from sqlalchemy.dialects.postgresql import UUID, ARRAY, JSON
 from sqlalchemy.orm import relationship
 
 from core import Base
+from .association import users_badges
 
 class User(Base):
 
