@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, status
 from fastapi_jwt_auth import AuthJWT
 from fastapi.security import HTTPBearer
@@ -10,7 +12,7 @@ from services import user_stat_service
 router = APIRouter(prefix="/user-stats", tags=["UserStats"])
 
 
-@router.get("", response_model=UserStatRead, dependencies=[Depends(HTTPBearer())])
+@router.get("", response_model=List[UserStatRead], dependencies=[Depends(HTTPBearer())])
 async def get_all(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),

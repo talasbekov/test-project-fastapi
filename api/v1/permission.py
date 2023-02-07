@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, status
 from fastapi_jwt_auth import AuthJWT
 from fastapi.security import HTTPBearer
@@ -10,14 +12,13 @@ from services import permission_service
 router = APIRouter(prefix="/permissions", tags=["Permissions"])
 
 
-@router.get("", response_model=PermissionRead, dependencies=[Depends(HTTPBearer())])
+@router.get("", response_model=List[PermissionRead], dependencies=[Depends(HTTPBearer())])
 async def get_all(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
     skip: int = 0,
     limit: int = 10
 ):
-    # This will secure our api
     Authorize.jwt_required()
     return permission_service.get_multi(db, skip, limit)
 
