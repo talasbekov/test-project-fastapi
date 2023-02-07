@@ -19,4 +19,4 @@ class HrDocumentStepUpdate(HrDocumentStepBase):
 
 
 class HrDocumentStepRead(HrDocumentStepBase):
-    id: str
+    id: uuid.UUID

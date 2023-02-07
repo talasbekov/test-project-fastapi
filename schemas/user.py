@@ -1,3 +1,6 @@
+import uuid
+from typing import Optional
+
 from pydantic import BaseModel
 
 
@@ -7,7 +10,7 @@ class UserBase(BaseModel):
     first_name: str
     last_name: str
     middle_name: str
-    group_id: str
+    group_id: Optional[str]
     call_sign: str
     id_number: str
     phone_number: str
@@ -24,7 +27,7 @@ class UserUpdate(UserBase):
 
 
 class UserRead(UserBase):
-    id: str
+    id: uuid.UUID
 
     class Config:
         orm_mode = True

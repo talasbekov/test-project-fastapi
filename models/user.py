@@ -28,14 +28,19 @@ class User(Base):
                         nullable=False, server_default=text("now()"))
     updated_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))
+    position_id = Column(UUID(as_uuid=True), ForeignKey("positions.id"), nullable=True)
+    actual_position_id = Column(UUID(as_uuid=True), ForeignKey("positions.id"), nullable=True)
     rank_id = Column(
         UUID(as_uuid=True), ForeignKey("ranks.id"), nullable=True)
 
-    group = relationship("Group", cascade="all, delete")
+    birthday = Column(String, nullable=True)
+    
+    group = relationship("Group", cascade="all,delete")
     badges = relationship(
         "Badge",
         secondary=users_badges,
         back_populates='users',
         cascade="all,delete"
     )
-    birthday = Column(String, nullable=True)
+    position = relationship("Position", cascade="all,delete", foreign_keys=position_id)
+    actual_position = relationship("Position", cascade="all,delete", foreign_keys=actual_position_id)

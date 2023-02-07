@@ -17,5 +17,5 @@ class GroupUpdate(GroupBase):
 
 
 class GroupRead(GroupBase):
-    id: str
+    id: uuid.UUID
     children: Any

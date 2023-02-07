@@ -13,3 +13,4 @@ from .user_stat import user_stat_service
 from .position import position_service
 from .permission import permission_service
 from .user import user_service
+from .auth import auth_service

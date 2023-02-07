@@ -19,4 +19,4 @@ class HrDocumentInfoUpdate(HrDocumentInfoBase):
 
 
 class HrDocumentInfoRead(HrDocumentInfoBase):
-    id: str
+    id: uuid.UUID

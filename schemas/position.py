@@ -18,7 +18,7 @@ class PositionUpdate(PositionBase):
 
 
 class PositionRead(PositionBase):
-    id: str
+    id: uuid.UUID
 
     class Config:
         orm_mode = True

@@ -18,7 +18,7 @@ class PermissionUpdate(PermissionBase):
 
 
 class PermissionRead(PermissionBase):
-    id: str
+    id: uuid.UUID
 
     class Config:
         orm_mode = True

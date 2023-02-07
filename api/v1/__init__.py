@@ -12,6 +12,7 @@ from .user_stat import router as user_stat_router
 from .position import router as position_router
 from .permission import router as permission_router
 from .user import router as user_router
+from .auth import router as auth_router
 
 router = APIRouter(prefix="/v1")
 
@@ -25,3 +26,4 @@ router.include_router(user_stat_router)
 router.include_router(position_router)
 router.include_router(permission_router)
 router.include_router(user_router)
+router.include_router(auth_router)

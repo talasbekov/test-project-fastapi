@@ -24,7 +24,7 @@ class HrDocumentUpdate(HrDocumentBase):
 
 
 class HrDocumentRead(HrDocumentBase):
-    id: str
+    id: uuid.UUID
     document_type: HrDocumentTemplateRead
 
     class Config:

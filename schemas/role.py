@@ -1,3 +1,4 @@
+import uuid
 from pydantic import BaseModel
 
 
@@ -14,4 +15,4 @@ class RoleUpdate(RoleBase):
 
 
 class RoleRead(RoleBase):
-    id: str
+    id: uuid.UUID

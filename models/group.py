@@ -20,4 +20,4 @@ class Group(Base):
                 nullable=False, default=uuid.uuid4)
     parent_group_id = Column(UUID(as_uuid=True), ForeignKey("groups.id"), nullable=True)
     name = Column(String(255))
-    children = relationship("Group", backref=backref('children', remote_side=[id]))
+    children = relationship("Group")

@@ -16,5 +16,5 @@ class Position(Base):
     max_rank_id = Column(UUID(as_uuid=True), ForeignKey("ranks.id"),
                          nullable=True, default=uuid.uuid4)
     description = Column(TEXT, nullable=True)
-    permission = relationship("Permission", secondary="position_permission_table",
+    permissions = relationship("Permission", secondary="position_permission_table",
                               back_populates="positions")

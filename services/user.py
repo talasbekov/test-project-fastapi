@@ -12,6 +12,9 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         user = super().get(db, id)
         if user is None:
             raise NotFoundException(detail="Statistics of user is not found!")
-
+        
+    def get_by_email(self, db: Session, email: str):
+        user = db.query(User).filter(User.email == email).first()
+        return user
 
 user_service = UserService(User)

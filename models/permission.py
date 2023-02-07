@@ -13,5 +13,5 @@ class Permission(Base):
     id = Column(UUID(as_uuid=True), primary_key=True,
                 nullable=True, default=uuid.uuid4)
     name = Column(String(150), nullable=True)
-    position = relationship("Position", secondary="position_permission_table",
+    positions = relationship("Position", secondary="position_permission_table",
                             back_populates="permissions")
