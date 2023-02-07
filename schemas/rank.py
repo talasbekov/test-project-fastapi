@@ -12,7 +12,7 @@ class RankCreate(RankBase):
 
 
 class Rank(RankBase):
-    id: uuid.UUID
+    id: str
 
     class Config:
         orm_mode = True

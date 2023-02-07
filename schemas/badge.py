@@ -12,7 +12,7 @@ class BadgeCreate(BadgeBase):
 
 
 class Badge(BadgeBase):
-    id: uuid.UUID
+    id: str
 
     class Config:
         orm_mode = True
