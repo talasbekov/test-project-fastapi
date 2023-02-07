@@ -22,7 +22,7 @@ class UserStatUpdate(UserStatBase):
 
 
 class UserStatRead(UserStatBase):
-    id: uuid.UUID
+    id: str
 
     class Config:
         orm_mode = True

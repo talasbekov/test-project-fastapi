@@ -10,8 +10,11 @@ from core import Base
 class Position(Base):
     __tablename__ = "positions"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, nullable=True, default=uuid.uuid4)
+    id = Column(UUID(as_uuid=True), primary_key=True,
+                nullable=True, default=uuid.uuid4)
     name = Column(String, nullable=True)
-    max_rank_id = Column(UUID(as_uuid=True), ForeignKey("ranks.id"), nullable=True, default=uuid.uuid4)
+    max_rank_id = Column(UUID(as_uuid=True), ForeignKey("ranks.id"),
+                         nullable=True, default=uuid.uuid4)
     description = Column(text, nullable=True)
-    permission = relationship("Permission", secondary="position_permission_table", black_populates="positions")
+    permission = relationship("Permission", secondary="position_permission_table",
+                              black_populates="positions")

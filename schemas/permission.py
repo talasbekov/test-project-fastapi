@@ -2,6 +2,8 @@ import uuid
 
 from pydantic import BaseModel
 
+from schemas import PositionRead
+
 
 class PermissionBase(BaseModel):
     name: str
@@ -16,7 +18,7 @@ class PermissionUpdate(PermissionBase):
 
 
 class PermissionRead(PermissionBase):
-    id: uuid.UUID
+    id: str
 
     class Config:
         orm_mode = True

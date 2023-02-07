@@ -2,7 +2,6 @@ from __future__ import annotations
 from typing import List
 
 from sqlalchemy import Table, Column, ForeignKey
-from sqlalchemy.orm import Mapped, relationship
 
 from core import Base
 
