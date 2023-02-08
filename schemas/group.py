@@ -19,3 +19,6 @@ class GroupUpdate(GroupBase):
 class GroupRead(GroupBase):
     id: uuid.UUID
     children: Any
+
+    class Config:
+        orm_mode = True

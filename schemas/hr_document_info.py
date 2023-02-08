@@ -20,3 +20,6 @@ class HrDocumentInfoUpdate(HrDocumentInfoBase):
 
 class HrDocumentInfoRead(HrDocumentInfoBase):
     id: uuid.UUID
+
+    class Config:
+        orm_mode = True

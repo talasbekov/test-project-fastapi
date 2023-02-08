@@ -20,3 +20,6 @@ class HrDocumentStepUpdate(HrDocumentStepBase):
 
 class HrDocumentStepRead(HrDocumentStepBase):
     id: uuid.UUID
+
+    class Config:
+        orm_mode = True

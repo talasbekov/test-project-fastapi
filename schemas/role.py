@@ -16,3 +16,6 @@ class RoleUpdate(RoleBase):
 
 class RoleRead(RoleBase):
     id: uuid.UUID
+
+    class Config:
+        orm_mode = True
