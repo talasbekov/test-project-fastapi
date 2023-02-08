@@ -1,3 +1,8 @@
+# Admin user to Log in:
+
+`"email":` `"admin@mail.com",`
+`"password":` `"123456"`
+
 # Generate migrations
 
 ## To generate alembic migration you should use inside docker container
