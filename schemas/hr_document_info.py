@@ -9,6 +9,7 @@ class HrDocumentInfoBase(BaseModel):
     signed_by: str
     comment: str
     is_signed: bool
+    hr_document_id: str
 
 
 class HrDocumentInfoCreate(HrDocumentInfoBase):

@@ -18,6 +18,8 @@ class HrDocumentInfo(Base):
     signed_by = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
     comment = Column(TEXT())
     is_signed = Column(Boolean())
-
+    hr_document_id = Column(UUID(as_uuid=True), ForeignKey("hr_documents.id"), nullable=False)
+    
     signee = relationship("User", cascade="all, delete")
     hr_document_step = relationship("HrDocumentStep", cascade="all,delete")
+    hr_document = relationship("HrDocument", cascade="all,delete")
