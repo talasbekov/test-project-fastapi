@@ -9,7 +9,7 @@ from core import get_db
 from schemas import PermissionCreate, PermissionUpdate, PermissionRead
 from services import permission_service
 
-router = APIRouter(prefix="/permissions", tags=["Permissions"])
+router = APIRouter(prefix="/permissions", tags=["Permissions"], dependencies=[Depends(HTTPBearer())])
 
 
 @router.get("", response_model=List[PermissionRead], dependencies=[Depends(HTTPBearer())])

@@ -9,7 +9,7 @@ from core import get_db
 from schemas import UserStatCreate, UserStatUpdate, UserStatRead
 from services import user_stat_service
 
-router = APIRouter(prefix="/user-stats", tags=["UserStats"])
+router = APIRouter(prefix="/user-stats", tags=["UserStats"], dependencies=[Depends(HTTPBearer())])
 
 
 @router.get("", response_model=List[UserStatRead], dependencies=[Depends(HTTPBearer())])

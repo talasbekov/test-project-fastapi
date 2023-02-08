@@ -11,3 +11,4 @@ from .user_stat import UserStat
 from .position import Position
 from .permission import Permission
 from .event import Event
+from .equipment import Equipment

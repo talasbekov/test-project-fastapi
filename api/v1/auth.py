@@ -35,7 +35,7 @@ def refresh_token(Authorize: AuthJWT = Depends(), db: Session = Depends(get_db))
                                 detail='Could not refresh access token')
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            etail='The user belonging to this token no logger exist')
+                            detail='The user belonging to this token no logger exist')
 
     current_user_id=Authorize.get_jwt_subject()
     user_claims = {

@@ -9,7 +9,7 @@ from core import get_db
 from schemas import PositionCreate, PositionUpdate, PositionRead
 from services import position_service
 
-router = APIRouter(prefix="/positions", tags=["Positions"])
+router = APIRouter(prefix="/positions", tags=["Positions"], dependencies=[Depends(HTTPBearer())])
 
 
 @router.get("", response_model=List[PositionRead], dependencies=[Depends(HTTPBearer())])

@@ -17,4 +17,5 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         user = db.query(User).filter(User.email == email).first()
         return user
 
+
 user_service = UserService(User)

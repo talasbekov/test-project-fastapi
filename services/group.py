@@ -17,4 +17,5 @@ class GroupService(ServiceBase[Group, GroupCreate, GroupUpdate]):
             raise NotFoundException(f"Group with id: {id} is not found!")
         return group
 
+
 group_service = GroupService(Group)
