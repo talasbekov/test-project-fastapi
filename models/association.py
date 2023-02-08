@@ -16,3 +16,10 @@ users_badges = Table(
     Column("user_id", ForeignKey("users.id")),
     Column("badge_id", ForeignKey("badges.id"))
 )
+
+hr_documents_users = Table(
+    "document_users",
+    Base.metadata,
+    Column("document_id", ForeignKey("hr_documents.id")),
+    Column("subject_id", ForeignKey("users.id"))
+)

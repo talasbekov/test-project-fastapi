@@ -10,3 +10,4 @@ from .badge import Badge
 from .user_stat import UserStat
 from .position import Position
 from .permission import Permission
+from .event import Event

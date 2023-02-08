@@ -6,6 +6,7 @@ from sqlalchemy.dialects.postgresql import UUID, ARRAY, JSON
 from sqlalchemy.orm import relationship
 
 from core import Base
+from .association import hr_documents_users
 
 
 class HrDocumentStatus(enum.Enum):
@@ -28,6 +29,12 @@ class HrDocument(Base):
     due_date = Column(TIMESTAMP(timezone=True), nullable=False)
     properties = Column(JSON(none_as_null=True))
     document_type = relationship("HrDocumentTemplate", cascade="all,delete")
+    user = relationship(
+        "User",
+        secondary=hr_documents_users,
+        back_populates="hr_documents",
+        cascade="all,delete"
+    )
 
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))
