@@ -23,3 +23,10 @@ hr_document_equipment = Table(
     Column("document_id", ForeignKey("hr_documents.id")),
     Column("subject_id", ForeignKey("equipments.id")),
 )
+
+hr_documents_users = Table(
+    "document_users",
+    Base.metadata,
+    Column("document_id", ForeignKey("hr_documents.id")),
+    Column("subject_id", ForeignKey("users.id"))
+)

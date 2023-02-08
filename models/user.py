@@ -5,7 +5,7 @@ from sqlalchemy.dialects.postgresql import UUID, ARRAY, JSON
 from sqlalchemy.orm import relationship
 
 from core import Base
-from .association import users_badges
+from .association import users_badges, hr_documents_users
 
 
 class User(Base):
@@ -44,3 +44,10 @@ class User(Base):
     )
     position = relationship("Position", cascade="all,delete", foreign_keys=position_id)
     actual_position = relationship("Position", cascade="all,delete", foreign_keys=actual_position_id)
+
+    hr_documents = relationship(
+        "HrDocument",
+        secondary=hr_documents_users,
+        back_populates="user",
+        cascade="all,delete"
+    )

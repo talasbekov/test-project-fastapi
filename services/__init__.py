@@ -14,4 +14,5 @@ from .position import position_service
 from .permission import permission_service
 from .user import user_service
 from .auth import auth_service
+from .event import event_service
 from .equipment import equipment_service

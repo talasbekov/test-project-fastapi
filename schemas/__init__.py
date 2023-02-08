@@ -12,3 +12,4 @@ from .position import PositionCreate, PositionUpdate, PositionRead
 from .permission import PermissionCreate, PermissionUpdate, PermissionRead
 from .user import UserCreate, UserUpdate, UserRead
 from .equipment import EquipmentCreate, EquipmentUpdate, EquipmentRead
+from .event import EventCreate, EventUpdate, EventRead
