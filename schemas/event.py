@@ -6,7 +6,7 @@ from typing import List, Dict, Any
 
 
 class EventBase(BaseModel):
-    user_id: str
+    user_id: uuid.UUID
     name: str
     date_since: datetime
     date_to: datetime

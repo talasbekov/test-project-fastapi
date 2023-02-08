@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 
 class UserStatBase(BaseModel):
-    user_id: str
+    user_id: uuid.UUID
     physical_training: int
     fire_training: int
     attendance: int

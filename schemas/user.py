@@ -1,18 +1,17 @@
 import uuid
+
 from typing import Optional
-
-from pydantic import BaseModel
-
+from pydantic import BaseModel, EmailStr
 from schemas import BadgeRead, GroupRead, PositionRead, RankRead
 
 
 class UserBase(BaseModel):
-    email: str
+    email: EmailStr
     password: str
     first_name: str
     last_name: str
     middle_name: Optional[str]
-    group_id: Optional[str]
+    group_id: Optional[uuid.UUID]
     call_sign: str
     id_number: str
     phone_number: Optional[str]

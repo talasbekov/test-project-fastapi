@@ -5,9 +5,9 @@ from typing import List, Dict, Any
 
 
 class HrDocumentStepBase(BaseModel):
-    hr_document_template_id: str
-    position_id: str
-    role_id: str
+    hr_document_template_id: uuid.UUID
+    position_id: uuid.UUID
+    role_id: uuid.UUID
 
 
 class HrDocumentStepCreate(HrDocumentStepBase):

@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 class PositionBase(BaseModel):
     name: str
-    max_rank_id: str
+    max_rank_id: uuid.UUID
     description: str
 
 

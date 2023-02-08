@@ -9,7 +9,7 @@ from .hr_document_template import HrDocumentTemplateRead
 
 
 class HrDocumentBase(BaseModel):
-    document_type_id: str
+    document_type_id: uuid.UUID
     status: HrDocumentStatus
     due_date: datetime
     properties: dict

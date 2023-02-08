@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from typing import List, Dict, Any
 
 class GroupBase(BaseModel):
-    parent_group_id: str
+    parent_group_id: uuid.UUID
     name: str
 
 
