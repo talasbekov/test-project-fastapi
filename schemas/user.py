@@ -11,7 +11,7 @@ class UserBase(BaseModel):
     first_name: str
     last_name: str
     middle_name: Optional[str]
-    group_id: Optional[uuid.UUID]
+    group_id: uuid.UUID
     call_sign: str
     id_number: str
     phone_number: Optional[str]
