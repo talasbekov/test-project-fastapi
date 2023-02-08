@@ -13,3 +13,13 @@ class BadgeService(ServiceBase):
         if badge is None:
             raise NotFoundException(detail=f"Badge with id: {id} is not found!")
         return badge
+    
+    def add_badge(self, db: Session, body: BadgeCreate):
+        badge = Badge(
+            name= body.name,
+            url= body.url
+        )
+        db.add(badge)
+        db.commit()
+        db.refresh(badge)
+        return badge

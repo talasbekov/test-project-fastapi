@@ -1,7 +1,7 @@
 import uuid
 
-from sqlalchemy import Column, TEXT, String, ForeignKey
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, TEXT, String, ForeignKey, text
+from sqlalchemy.dialects.postgresql import UUID, TIMESTAMP
 from sqlalchemy.orm import relationship
 
 from core import Base
@@ -18,3 +18,7 @@ class Position(Base):
     description = Column(TEXT, nullable=True)
     permissions = relationship("Permission", secondary="position_permission",
                                back_populates="positions")
+    created_at = Column(TIMESTAMP(timezone=True),
+                        nullable=False, server_default=text("now()"))
+    updated_at = Column(TIMESTAMP(timezone=True),
+                        nullable=False, server_default=text("now()"))

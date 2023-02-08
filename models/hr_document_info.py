@@ -23,3 +23,7 @@ class HrDocumentInfo(Base):
     signee = relationship("User", cascade="all, delete")
     hr_document_step = relationship("HrDocumentStep", cascade="all,delete")
     hr_document = relationship("HrDocument", cascade="all,delete")
+    created_at = Column(TIMESTAMP(timezone=True),
+                        nullable=False, server_default=text("now()"))
+    updated_at = Column(TIMESTAMP(timezone=True),
+                        nullable=False, server_default=text("now()"))
