@@ -34,8 +34,9 @@ class User(Base):
         UUID(as_uuid=True), ForeignKey("ranks.id"), nullable=True)
 
     birthday = Column(String, nullable=True)
-    
-    group = relationship("Group", cascade="all,delete")
+
+    rank = relationship("Rank", cascade="all,delete")
+    group = relationship("Group", cascade="all,delete", back_populates="users")
     badges = relationship(
         "Badge",
         secondary=users_badges,

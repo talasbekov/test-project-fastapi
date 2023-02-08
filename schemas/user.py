@@ -3,19 +3,21 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from schemas import BadgeRead, GroupRead, PositionRead, RankRead
+
 
 class UserBase(BaseModel):
     email: str
     password: str
     first_name: str
     last_name: str
-    middle_name: str
+    middle_name: Optional[str]
     group_id: Optional[str]
     call_sign: str
     id_number: str
-    phone_number: str
-    address: str
-    birthday: str
+    phone_number: Optional[str]
+    address: Optional[str]
+    birthday: Optional[str]
 
 
 class UserCreate(UserBase):
@@ -28,6 +30,11 @@ class UserUpdate(UserBase):
 
 class UserRead(UserBase):
     id: uuid.UUID
+    badges: BadgeRead
+    position: PositionRead
+    actual_position: PositionRead
+    group: GroupRead
+    rank: RankRead
 
     class Config:
         orm_mode = True

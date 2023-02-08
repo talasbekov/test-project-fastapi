@@ -5,13 +5,18 @@ from pydantic import BaseModel
 
 class BadgeBase(BaseModel):
     name: str
-
-
-class BadgeCreate(BadgeBase):
     url: str
 
 
-class Badge(BadgeBase):
+class BadgeCreate(BadgeBase):
+    pass
+
+
+class BadgeUpdate(BadgeBase):
+    pass
+
+
+class BadgeRead(BadgeBase):
     id: uuid.UUID
 
     class Config:

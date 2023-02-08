@@ -5,13 +5,18 @@ from pydantic import BaseModel
 
 class RankBase(BaseModel):
     name: str
-
-
-class RankCreate(RankBase):
     url: str
 
 
-class Rank(RankBase):
+class RankCreate(RankBase):
+    pass
+
+
+class RankUpdate(RankBase):
+    pass
+
+
+class RankRead(RankBase):
     id: uuid.UUID
 
     class Config:

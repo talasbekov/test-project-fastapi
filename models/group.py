@@ -21,3 +21,4 @@ class Group(Base):
     parent_group_id = Column(UUID(as_uuid=True), ForeignKey("groups.id"), nullable=True)
     name = Column(String(255))
     children = relationship("Group")
+    users = relationship("User", back_populates="group", cascade ="all,delete")
