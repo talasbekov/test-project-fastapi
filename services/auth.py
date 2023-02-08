@@ -11,12 +11,9 @@ from core import configs
 
 from schemas import LoginForm, RegistrationForm, UserCreate
 
-
-
 from services import user_service
 from exceptions import NotFoundException, BadRequestException
 from utils import verify_password, hash_password, is_valid_phone_number
-
 
 
 class AuthService():

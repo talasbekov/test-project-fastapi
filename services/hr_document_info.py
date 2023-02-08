@@ -17,4 +17,5 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
             raise NotFoundException(detail=f"Document Info with id: {id} is not found!")
         return hr_document_info
 
+
 hr_document_info_service = HrDocumentInfoService(HrDocumentInfo)

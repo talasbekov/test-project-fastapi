@@ -28,6 +28,8 @@ class HrDocument(Base):
     due_date = Column(TIMESTAMP(timezone=True), nullable=False)
     properties = Column(JSON(none_as_null=True))
     document_type = relationship("HrDocumentTemplate", cascade="all,delete")
+    equipments = relationship("HrDocument", secondary="hr_document_equipment",
+                              back_populates="equipments")
 
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))

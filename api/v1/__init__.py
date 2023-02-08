@@ -1,7 +1,5 @@
 from fastapi import APIRouter
 
-from core import configs
-
 from .hr_document import router as hr_document_router
 from .role import router as role_router
 from .group import router as group_router
@@ -13,6 +11,7 @@ from .position import router as position_router
 from .permission import router as permission_router
 from .user import router as user_router
 from .auth import router as auth_router
+from .equipment import router as equipment_router
 
 router = APIRouter(prefix="/v1")
 
@@ -27,3 +26,4 @@ router.include_router(position_router)
 router.include_router(permission_router)
 router.include_router(user_router)
 router.include_router(auth_router)
+router.include_router(equipment_router)
