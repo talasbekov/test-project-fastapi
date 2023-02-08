@@ -1,10 +1,10 @@
 import uuid
 
 from pydantic import BaseModel
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 
 class GroupBase(BaseModel):
-    parent_group_id: uuid.UUID
+    parent_group_id: Optional[uuid.UUID]
     name: str
 
 
