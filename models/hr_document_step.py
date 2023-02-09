@@ -16,7 +16,9 @@ class HrDocumentStep(Base):
     hr_document_template_id = Column(UUID(as_uuid=True), ForeignKey("hr_document_templates.id"), nullable=False)
     position_id = Column(UUID(as_uuid=True), nullable=False)
     role_id = Column(UUID(as_uuid=True), ForeignKey("roles.id"), nullable=False)
+    previous_step_id = Column(UUID(as_uuid=True), ForeignKey("hr_document_steps.id"))
 
+    previous_step = relationship("HrDocumentStep")
     role = relationship("Role", cascade="all,delete")
     hr_document_type = relationship("HrDocumentTemplate", cascade="all,delete")
     created_at = Column(TIMESTAMP(timezone=True),

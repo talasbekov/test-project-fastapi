@@ -23,7 +23,7 @@ async def get_all(*,
     return equipment_service.get_multi(db, skip, limit)
 
 
-@router.post("", status_code=status.HTTP_201_CREATED, response_model=List[EquipmentRead],
+@router.post("", status_code=status.HTTP_201_CREATED, response_model=EquipmentRead,
              dependencies=[Depends(HTTPBearer())])
 async def create(*,
     db: Session = Depends(get_db),
@@ -34,7 +34,7 @@ async def create(*,
     return equipment_service.create(db, body)
 
 
-@router.put("/{id}/", response_model=List[EquipmentRead], dependencies=[Depends(HTTPBearer())])
+@router.put("/{id}/", response_model=EquipmentRead, dependencies=[Depends(HTTPBearer())])
 async def update(*,
     db: Session = Depends(get_db),
     id: str,
@@ -48,7 +48,7 @@ async def update(*,
         obj_in=body)
 
 
-@router.delete("/{id}/", status_code=status.HTTP_202_ACCEPTED, response_model=List[EquipmentRead],
+@router.delete("/{id}/", status_code=status.HTTP_202_ACCEPTED,
                dependencies=[Depends(HTTPBearer())])
 async def delete(*,
     db: Session = Depends(get_db),

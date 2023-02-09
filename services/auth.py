@@ -27,7 +27,7 @@ class AuthService():
             raise BadRequestException(detail='Incorrect email or password')
         
         user_claims = {
-            "role": user.position
+            "role": user.position.name
         }
         access_token = Authorize.create_access_token(
             subject=str(user.id), user_claims=user_claims, expires_time=timedelta(minutes=configs.ACCESS_TOKEN_EXPIRES_IN)

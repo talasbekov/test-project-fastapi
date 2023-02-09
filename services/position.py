@@ -14,4 +14,5 @@ class PositionService(ServiceBase[Position, PositionCreate, PositionUpdate]):
             raise NotFoundException(detail="Position is not found!")
 
 
+
 position_service = PositionService(Position)

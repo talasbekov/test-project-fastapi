@@ -6,13 +6,14 @@ from fastapi.security import HTTPBearer
 from sqlalchemy.orm import Session
 
 from core import get_db
+from models import  User
 from schemas import UserCreate, UserUpdate, UserRead
 from services import user_service
 
 router = APIRouter(prefix="/users", tags=["Users"], dependencies=[Depends(HTTPBearer())])
 
 
-@router.get("", response_model=List[UserRead], dependencies=[Depends(HTTPBearer())])
+@router.get("", dependencies=[Depends(HTTPBearer())])
 async def get_all(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
@@ -20,10 +21,10 @@ async def get_all(*,
     limit: int = 10
 ):
     Authorize.jwt_required()
-    return user_service.get_multi(db, skip, limit)
+    return UserRead(**dict(user_service.get_multi(db, skip, limit)))
 
 
-@router.post("", status_code=status.HTTP_201_CREATED, response_model=List[UserRead],
+@router.post("", status_code=status.HTTP_201_CREATED, response_model=UserRead,
              dependencies=[Depends(HTTPBearer())])
 async def create(*,
     db: Session = Depends(get_db),
@@ -34,7 +35,7 @@ async def create(*,
     return user_service.create(db, body)
 
 
-@router.put("/{id}/", response_model=List[UserRead], dependencies=[Depends(HTTPBearer())])
+@router.put("/{id}/", response_model=UserRead, dependencies=[Depends(HTTPBearer())])
 async def update(*,
     db: Session = Depends(get_db),
     id: str,
@@ -48,7 +49,7 @@ async def update(*,
         obj_in=body)
 
 
-@router.delete("/{id}/", status_code=status.HTTP_202_ACCEPTED, response_model=List[UserRead],
+@router.delete("/{id}/", status_code=status.HTTP_202_ACCEPTED,
                dependencies=[Depends(HTTPBearer())])
 async def delete(*,
     db: Session = Depends(get_db),

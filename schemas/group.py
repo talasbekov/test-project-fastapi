@@ -1,7 +1,8 @@
 import uuid
 
 from pydantic import BaseModel
-from typing import List, Dict, Any, Optional
+from typing import Any, Optional, Union
+
 
 
 class GroupBase(BaseModel):

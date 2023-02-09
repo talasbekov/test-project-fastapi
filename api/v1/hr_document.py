@@ -12,32 +12,29 @@ from services import hr_document_service
 router = APIRouter(prefix="/hr-documents", tags=["HrDocuments"], dependencies=[Depends(HTTPBearer())])
 
 
-@router.get("", response_model=List[HrDocumentRead])
+@router.get("")
 async def get_all(*,
-    # This is essential for every api we will be writing
-    # This will start our Transaction and will guide us around all service methods
     db: Session = Depends(get_db),
-    # This block will determine whether or not should this api be secured
-    # To fully secure this api you should invoke method jwt_required()
     Authorize: AuthJWT = Depends(),
     skip: int = 0,
     limit: int = 10
 ):
-    # This will secure our api
     Authorize.jwt_required()
-    return hr_document_service.get_multi(db, skip, limit)
+    user_id = Authorize.get_jwt_subject()
+    return hr_document_service.get_not_signed_documents(db, user_id, skip, limit)
 
 
-@router.post("", status_code=status.HTTP_201_CREATED, response_model=HrDocumentRead)
-async def create(*,
+@router.post("", status_code=status.HTTP_201_CREATED)
+async def initialize(*,
     db: Session = Depends(get_db),
     body: HrDocumentCreate,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
-    return hr_document_service.create(db, body)
+    user_id = Authorize.get_jwt_subject()
+    return hr_document_service.initialize(db, body, user_id)
 
-@router.put("/{id}/", response_model=HrDocumentRead)
+@router.put("/{id}/")
 async def update(*,
     db: Session = Depends(get_db),
     id: str,
@@ -58,3 +55,15 @@ async def delete(*,
 ):
     Authorize.jwt_required()
     hr_document_service.remove(db, id)
+
+
+@router.post("/{id}/", status_code=status.HTTP_200_OK)
+async def sign(*,
+    db: Session = Depends(get_db),
+    id: str,
+    comment: str,
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
+    hr_document_service.sign(db, id, comment, user_id)
