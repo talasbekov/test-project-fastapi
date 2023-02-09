@@ -8,11 +8,11 @@ from sqlalchemy.orm import relationship
 from core import Base
 
 
-class SubjectType(enum.Enum):
-    CANDIDATE = "Кандидат"
-    EMPLOYEE = "Сотрудник"
-    PERSONNEL = "Личный состав"
-    STAFF = "Штат"
+class SubjectType(enum.IntEnum):
+    CANDIDATE = 1
+    EMPLOYEE = 2
+    PERSONNEL = 3
+    STAFF = 4
 
 
 class HrDocumentTemplate(Base):

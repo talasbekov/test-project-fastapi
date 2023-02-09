@@ -7,10 +7,12 @@ from sqlalchemy.orm import relationship, backref
 
 from core import Base
 
+
 class GroupName(enum.Enum):
-    DEPARTMENT = "Департамент"
-    MANAGEMENT = "Управление"
-    TEAM = "Отдел"
+    DEPARTMENT = 1
+    MANAGEMENT = 2
+    TEAM = 3
+
 
 class Group(Base):
     
@@ -22,7 +24,7 @@ class Group(Base):
     name = Column(String(255))
     desciption = Column(TEXT)
     children = relationship("Group")
-    users = relationship("User", back_populates="group", cascade ="all,delete")
+    users = relationship("User", back_populates="group", cascade="all,delete")
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))
     updated_at = Column(TIMESTAMP(timezone=True),

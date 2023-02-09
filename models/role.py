@@ -1,19 +1,18 @@
 import uuid
 import enum
 
-from sqlalchemy import TIMESTAMP, Column, String, text, ForeignKey, Enum, Boolean
-from sqlalchemy.dialects.postgresql import UUID, ARRAY, JSON, TEXT
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy import TIMESTAMP, Column, String
+from sqlalchemy.dialects.postgresql import UUID
 
 from core import Base
 
 
 class RoleName(enum.Enum):
-    AGREER = "Согласующий"
-    EXPERT = "Эксперт"
-    APPROVER = "Утверждающий"
-    NOTIFIER = "Уведомляемый"
-    INITIATOR = "Инициатор"
+    AGREER = 1
+    EXPERT = 2
+    APPROVER = 3
+    NOTIFIER = 4
+    INITIATOR = 5
 
 
 class Role(Base):

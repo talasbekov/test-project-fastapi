@@ -16,7 +16,7 @@ class Event(Base):
                 nullable=False, default=uuid.uuid4)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     name = Column(String(255))
-    desciption = Column(TEXT())
+    description = Column(TEXT())
     date_since = Column(TIMESTAMP(timezone=True))
     date_to = Column(TIMESTAMP(timezone=True))
     created_at = Column(TIMESTAMP(timezone=True),

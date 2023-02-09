@@ -1,20 +1,20 @@
 import uuid
 import enum
 
-from sqlalchemy import TIMESTAMP, Column, String, text, ForeignKey, Enum
-from sqlalchemy.dialects.postgresql import UUID, ARRAY, JSON
+from sqlalchemy import TIMESTAMP, Column, text, ForeignKey, Enum
+from sqlalchemy.dialects.postgresql import UUID, JSON
 from sqlalchemy.orm import relationship
 
 from core import Base
 from .association import hr_documents_users
 
 
-class HrDocumentStatus(enum.Enum):
-    INITIALIZED = "Инициализирован"
-    IN_PROGRESS = "В прогрессе"
-    COMPLETED = "Подписан"
-    CANCELED = "Отменен"
-    ON_REVISION = "На доработке"
+class HrDocumentStatus(enum.IntEnum):
+    INITIALIZED = 1
+    IN_PROGRESS = 2
+    COMPLETED = 3
+    CANCELED = 4
+    ON_REVISION = 5
 
 
 class HrDocument(Base):

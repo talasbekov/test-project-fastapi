@@ -2,8 +2,6 @@ import uuid
 
 from pydantic import BaseModel
 
-from schemas import PositionRead
-
 
 class PermissionBase(BaseModel):
     name: str
