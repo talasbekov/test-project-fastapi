@@ -23,12 +23,12 @@ class HrDocument(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True,
                 nullable=False, default=uuid.uuid4)
-    document_type_id = Column(
+    hr_document_template_id = Column(
         UUID(as_uuid=True), ForeignKey("hr_document_templates.id"), nullable=True)
     status = Column(Enum(HrDocumentStatus))
     due_date = Column(TIMESTAMP(timezone=True), nullable=False)
     properties = Column(JSON(none_as_null=True))
-    document_type = relationship("HrDocumentTemplate", cascade="all,delete")
+    document_template = relationship("HrDocumentTemplate", cascade="all,delete")
     equipments = relationship("HrDocument", secondary="hr_document_equipment",
                               back_populates="equipments")
     user = relationship(
