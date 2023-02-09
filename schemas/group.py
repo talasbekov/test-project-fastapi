@@ -4,9 +4,11 @@ from pydantic import BaseModel
 from typing import Any, Optional, Union
 
 
+
 class GroupBase(BaseModel):
-    parent_group_id: Union[uuid.UUID, None]
-    name: str
+    parent_group_id: Optional[uuid.UUID]
+    name: Optional[str]
+    description: Optional[str]
 
 
 class GroupCreate(GroupBase):
