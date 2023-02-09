@@ -5,7 +5,6 @@ from pydantic import BaseModel
 
 class RankBase(BaseModel):
     name: str
-    url: str
 
 
 class RankCreate(RankBase):
