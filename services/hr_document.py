@@ -7,9 +7,9 @@ from fastapi.logger import logger as log
 
 from .base import ServiceBase
 
-from models import HrDocument, HrDocumentStatus
+from models import HrDocument, HrDocumentStatus, User
 from schemas import HrDocumentCreate, HrDocumentUpdate, HrDocumentInfoCreate
-from exceptions import NotFoundException
+from exceptions import NotFoundException, ForbiddenException
 
 from services import hr_document_template_service, hr_document_info_service, hr_document_step_service, user_service
 
@@ -21,12 +21,18 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             raise NotFoundException(detail="Document is not found!")
         return document
         
-    def initialize(self, db: Session, body: HrDocumentCreate, user_id: str):
+    def initialize(self, db: Session, body: HrDocumentCreate, user_id: str, role: str):
+
+        user: User = user_service.get_by_id(user_id)
 
         template = hr_document_template_service.get_by_id(db, body.hr_document_template_id)
         document = super().create(db, body)
 
         step = hr_document_step_service.get_initial_step_for_template(db, template.id)
+
+        if role != step.position.name:
+            raise ForbiddenException(detail=f'Вы не можете инициализировать этот документ!')
+        
         next_step = hr_document_step_service.get_next_step_from_id(db, step.id)
 
         if next_step is None:

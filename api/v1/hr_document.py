@@ -32,7 +32,8 @@ async def initialize(*,
 ):
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
-    return hr_document_service.initialize(db, body, user_id)
+    role = Authorize.get_raw_jwt()['role']
+    return hr_document_service.initialize(db, body, user_id, role)
 
 @router.put("/{id}/")
 async def update(*,

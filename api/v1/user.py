@@ -21,7 +21,7 @@ async def get_all(*,
     limit: int = 10
 ):
     Authorize.jwt_required()
-    return UserRead(**dict(user_service.get_multi(db, skip, limit)))
+    return user_service.get_multi(db, skip, limit)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,

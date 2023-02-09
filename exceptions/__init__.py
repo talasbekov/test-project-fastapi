@@ -1,2 +1,2 @@
 from .base import SgoErpException
-from .client import NotFoundException, BadRequestException
+from .client import NotFoundException, BadRequestException, ForbiddenException

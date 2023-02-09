@@ -9,7 +9,7 @@ from exceptions import NotFoundException
 
 class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
-    def get_by_id(self, db: Session, id: str):
+    def get_by_id(self, db: Session, id: str) -> User:
 
         user = super().get(db, id)
         if user is None:
