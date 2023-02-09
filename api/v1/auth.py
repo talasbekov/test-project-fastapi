@@ -37,7 +37,7 @@ def refresh_token(Authorize: AuthJWT = Depends(), db: Session = Depends(get_db))
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail='The user belonging to this token no logger exist')
 
-    current_user_id=Authorize.get_jwt_subject()
+    current_user_id = Authorize.get_jwt_subject()
     user_claims = {
         "role": user.role.name
     }

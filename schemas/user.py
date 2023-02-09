@@ -10,8 +10,9 @@ class UserBase(BaseModel):
     password: str
     first_name: str
     last_name: str
-    middle_name: Optional[str]
+    father_name: Optional[str]
     group_id: uuid.UUID
+    position_id: uuid.UUID
     call_sign: str
     id_number: str
     phone_number: Optional[str]

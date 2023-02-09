@@ -12,7 +12,7 @@ from services import rank_service
 router = APIRouter(prefix="/ranks", tags=["Ranks"], dependencies=[Depends(HTTPBearer())])
 
 
-@router.get("", response_model=List[RankRead])
+@router.get("")
 async def get_all(*,
     db: Session = Depends(get_db),
     skip: int = 0,

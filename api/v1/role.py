@@ -12,7 +12,7 @@ from services import role_service
 router = APIRouter(prefix="/roles", tags=["Roles"], dependencies=[Depends(HTTPBearer())])
 
 
-@router.get("", response_model=List[RoleRead])
+@router.get("")
 async def get_all(*,
     db: Session = Depends(get_db),
     skip: int = 0,
@@ -23,7 +23,7 @@ async def get_all(*,
     return role_service.get_multi(db, skip, limit)
 
 
-@router.post("", status_code=status.HTTP_201_CREATED, response_model=RoleRead)
+@router.post("", status_code=status.HTTP_201_CREATED)
 async def create(*,
     db: Session = Depends(get_db),
     body: RoleCreate,
@@ -33,7 +33,7 @@ async def create(*,
     return role_service.create(db, body)
 
 
-@router.get("/{id}/", response_model=RoleRead)
+@router.get("/{id}/")
 async def get_by_id(*,
     db: Session = Depends(get_db),
     id: str,
@@ -43,7 +43,7 @@ async def get_by_id(*,
     return role_service.get_by_id(db, id)
 
 
-@router.put("/{id}/", response_model=RoleRead)
+@router.put("/{id}/")
 async def update(*,
     db: Session = Depends(get_db),
     id: str,

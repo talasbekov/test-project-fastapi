@@ -19,4 +19,5 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
             raise NotFoundException(detail=f'HrDocumentTemplate with id: {id} is not found!')
         return hr_document_template
 
+
 hr_document_template_service = HrDocumentTemplateService(HrDocumentTemplate)

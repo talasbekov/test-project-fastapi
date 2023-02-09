@@ -12,7 +12,7 @@ from services import position_service
 router = APIRouter(prefix="/positions", tags=["Positions"], dependencies=[Depends(HTTPBearer())])
 
 
-@router.get("", response_model=List[PositionRead], dependencies=[Depends(HTTPBearer())])
+@router.get("", dependencies=[Depends(HTTPBearer())])
 async def get_all(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
@@ -23,7 +23,7 @@ async def get_all(*,
     return position_service.get_multi(db, skip, limit)
 
 
-@router.post("", status_code=status.HTTP_201_CREATED, response_model=PositionRead,
+@router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())])
 async def create(*,
     db: Session = Depends(get_db),
@@ -34,7 +34,7 @@ async def create(*,
     return position_service.create(db, body)
 
 
-@router.put("/{id}/", response_model=PositionRead, dependencies=[Depends(HTTPBearer())])
+@router.put("/{id}/", dependencies=[Depends(HTTPBearer())])
 async def update(*,
     db: Session = Depends(get_db),
     id: str,
