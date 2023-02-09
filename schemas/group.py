@@ -3,9 +3,11 @@ import uuid
 from pydantic import BaseModel
 from typing import List, Dict, Any, Optional
 
+
 class GroupBase(BaseModel):
     parent_group_id: Optional[uuid.UUID]
-    name: str
+    name: Optional[str]
+    description: Optional[str]
 
 
 class GroupCreate(GroupBase):
