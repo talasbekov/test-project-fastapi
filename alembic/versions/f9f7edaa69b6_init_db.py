@@ -36,7 +36,7 @@ def upgrade() -> None:
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('parent_group_id', sa.UUID(), nullable=True),
     sa.Column('name', sa.String(length=255), nullable=True),
-    sa.Column('desciption', sa.TEXT(), nullable=True),
+    sa.Column('description', sa.TEXT(), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['parent_group_id'], ['groups.id'], ),
