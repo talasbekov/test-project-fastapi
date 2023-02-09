@@ -2,7 +2,7 @@ import uuid
 import enum
 
 from sqlalchemy import TIMESTAMP, Column, String, text, ForeignKey, Enum
-from sqlalchemy.dialects.postgresql import UUID, ARRAY, JSON
+from sqlalchemy.dialects.postgresql import UUID, ARRAY, JSON, TEXT
 from sqlalchemy.orm import relationship, backref
 
 from core import Base
@@ -20,5 +20,10 @@ class Group(Base):
                 nullable=False, default=uuid.uuid4)
     parent_group_id = Column(UUID(as_uuid=True), ForeignKey("groups.id"), nullable=True)
     name = Column(String(255))
+    desciption = Column(TEXT)
     children = relationship("Group")
     users = relationship("User", back_populates="group", cascade ="all,delete")
+    created_at = Column(TIMESTAMP(timezone=True),
+                        nullable=False, server_default=text("now()"))
+    updated_at = Column(TIMESTAMP(timezone=True),
+                        nullable=False, server_default=text("now()"))

@@ -19,3 +19,7 @@ class Event(Base):
     desciption = Column(TEXT())
     date_since = Column(TIMESTAMP(timezone=True))
     date_to = Column(TIMESTAMP(timezone=True))
+    created_at = Column(TIMESTAMP(timezone=True),
+                        nullable=False, server_default=text("now()"))
+    updated_at = Column(TIMESTAMP(timezone=True),
+                        nullable=False, server_default=text("now()"))

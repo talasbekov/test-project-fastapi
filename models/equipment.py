@@ -1,8 +1,8 @@
 import uuid
 
-from sqlalchemy import Column, BigInteger, String
+from sqlalchemy import Column, BigInteger, String, text
 from sqlalchemy.orm import relationship
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import UUID, TIMESTAMP
 
 from core import Base
 
@@ -17,3 +17,7 @@ class Equipment(Base):
     quantity = Column(BigInteger, nullable=True)
     hr_documents = relationship("Equipment", secondary="hr_document_equipment",
                                 back_populates="hr_documents")
+    created_at = Column(TIMESTAMP(timezone=True),
+                        nullable=False, server_default=text("now()"))
+    updated_at = Column(TIMESTAMP(timezone=True),
+                        nullable=False, server_default=text("now()"))
