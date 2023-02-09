@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from .base import ServiceBase
 
 from models import User
-from schemas import UserCreate, UserUpdate
+from schemas import UserCreate, UserUpdate, UserRead, GroupUpdate
 from exceptions import NotFoundException
 
 

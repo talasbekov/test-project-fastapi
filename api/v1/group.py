@@ -6,7 +6,7 @@ from fastapi.security import HTTPBearer
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import GroupCreate, GroupUpdate, GroupRead
+from schemas import GroupCreate, GroupUpdate, GroupRead, UserRead
 from services import group_service
 
 router = APIRouter(prefix="/groups", tags=["Groups"], dependencies=[Depends(HTTPBearer())])
@@ -20,7 +20,7 @@ async def get_all(*,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
-    return group_service.get_multi(db, skip, limit)
+    return group_service.get_departments(db, skip, limit)
 
 
 @router.post("", response_model=GroupRead)
@@ -52,6 +52,17 @@ async def update(*,
 ):
     Authorize.jwt_required()
     return group_service.update(db, db_obj=group_service.get_by_id(db, id), obj_in=body)
+
+
+@router.patch("/{id}/", response_model=GroupRead)
+async def update_parent(*,
+     db: Session = Depends(get_db),
+     id: str,
+     body: GroupUpdate,
+     Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    return group_service.change_parent_group(db, id, body)
 
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT)
