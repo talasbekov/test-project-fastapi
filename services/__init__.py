@@ -17,3 +17,4 @@ from .auth import auth_service
 from .event import event_service
 from .equipment import equipment_service
 from .badge import badge_service
+from .rank import rank_service
