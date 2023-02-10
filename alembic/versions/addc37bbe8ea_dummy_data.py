@@ -66,12 +66,9 @@ def upgrade() -> None:
         }]
     )
 
-
-
     group1_id = get_uuid()
     group2_id = get_uuid()
     group3_id = get_uuid()
-
 
     op.bulk_insert(
         Base.metadata.tables['groups'],
@@ -276,9 +273,9 @@ def upgrade() -> None:
     )
 
 
-
 def get_uuid():
     return str(uuid.uuid4())
+
 
 def create_user(id, name, surname, email, group_id, call_sign, number,  position_id):
     return {
@@ -295,7 +292,6 @@ def create_user(id, name, surname, email, group_id, call_sign, number,  position
         'phone_number': '+77771234789',
         'address': 'Mangilik Yel, 1'
     }
-
 
 
 def downgrade() -> None:
