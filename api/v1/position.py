@@ -1,3 +1,4 @@
+import uuid
 from typing import List
 
 from fastapi import APIRouter, Depends, status
@@ -37,7 +38,7 @@ async def create(*,
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())])
 async def update(*,
     db: Session = Depends(get_db),
-    id: str,
+    id: uuid.UUID,
     body: PositionUpdate,
     Authorize: AuthJWT = Depends()
 ):
@@ -52,7 +53,7 @@ async def update(*,
                dependencies=[Depends(HTTPBearer())])
 async def delete(*,
     db: Session = Depends(get_db),
-    id: str,
+    id: uuid.UUID,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()

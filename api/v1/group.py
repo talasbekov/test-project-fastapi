@@ -1,3 +1,4 @@
+import uuid
 from typing import List
 
 from fastapi import APIRouter, Depends, status
@@ -36,7 +37,7 @@ async def create(*,
 @router.get("/{id}/", response_model=GroupRead)
 async def get_by_id(*,
     db: Session = Depends(get_db),
-    id: str,
+    id: uuid.UUID,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
@@ -46,7 +47,7 @@ async def get_by_id(*,
 @router.put("/{id}/", response_model=GroupRead)
 async def update(*,
     db: Session = Depends(get_db),
-    id: str,
+    id: uuid.UUID,
     body: GroupUpdate,
     Authorize: AuthJWT = Depends()
 ):
@@ -57,7 +58,7 @@ async def update(*,
 @router.patch("/{id}/", response_model=GroupRead)
 async def update_parent(*,
      db: Session = Depends(get_db),
-     id: str,
+     id: uuid.UUID,
      body: GroupUpdate,
      Authorize: AuthJWT = Depends()
 ):
@@ -68,7 +69,7 @@ async def update_parent(*,
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT)
 async def delete(*,
     db: Session = Depends(get_db),
-    id: str,
+    id: uuid.UUID,
     Authrorize: AuthJWT = Depends()
 ):
     Authrorize.jwt_required()

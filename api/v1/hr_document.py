@@ -1,3 +1,4 @@
+import uuid
 from typing import List
 
 from fastapi import APIRouter, Depends, status
@@ -38,7 +39,7 @@ async def initialize(*,
 @router.put("/{id}/")
 async def update(*,
     db: Session = Depends(get_db),
-    id: str,
+    id: uuid.UUID,
     body: HrDocumentUpdate,
     Authorize: AuthJWT = Depends()
 ):
@@ -51,7 +52,7 @@ async def update(*,
 @router.delete("/{id}/", status_code=status.HTTP_202_ACCEPTED)
 async def delete(*,
     db: Session = Depends(get_db),
-    id: str,
+    id: uuid.UUID,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
@@ -61,7 +62,7 @@ async def delete(*,
 @router.post("/{id}/", status_code=status.HTTP_200_OK)
 async def sign(*,
     db: Session = Depends(get_db),
-    id: str,
+    id: uuid.UUID,
     comment: str,
     Authorize: AuthJWT = Depends()
 ):
@@ -72,7 +73,7 @@ async def sign(*,
 @router.get('/generate/{id}/', status_code=status.HTTP_200_OK)
 async def generate(*,
     db: Session = Depends(get_db),
-    id: str,
+    id: uuid.UUID,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()

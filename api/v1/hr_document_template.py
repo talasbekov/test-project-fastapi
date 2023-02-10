@@ -1,3 +1,4 @@
+import uuid
 from typing import List
 
 from fastapi import APIRouter, Depends, status
@@ -36,7 +37,7 @@ async def create(*,
 @router.put("/{id}/", response_model=HrDocumentTemplateRead)
 async def update(*,
     db: Session = Depends(get_db),
-    id: str,
+    id: uuid.UUID,
     body: HrDocumentTemplateUpdate,
     Authorize: AuthJWT = Depends()
 ):
@@ -50,7 +51,7 @@ async def update(*,
 @router.delete("/{id}/", status_code=status.HTTP_202_ACCEPTED)
 async def delete(*,
     db: Session = Depends(get_db),
-    id: str,
+    id: uuid.UUID,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
