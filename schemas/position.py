@@ -1,12 +1,13 @@
 import uuid
 
+from typing import Optional
 from pydantic import BaseModel
 
 
 class PositionBase(BaseModel):
     name: str
     max_rank_id: uuid.UUID
-    description: str
+    description: Optional[str]
 
 
 class PositionCreate(PositionBase):

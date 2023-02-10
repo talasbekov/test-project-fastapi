@@ -1,6 +1,6 @@
 import uuid
 
-from typing import Optional
+from typing import Optional, List
 from pydantic import BaseModel, EmailStr
 from schemas import BadgeRead, GroupRead, PositionRead, RankRead
 
@@ -30,7 +30,7 @@ class UserUpdate(UserBase):
 
 class UserRead(UserBase):
     id: uuid.UUID
-    badges: BadgeRead
+    badges: List[BadgeRead]
     position: PositionRead
     actual_position: PositionRead
     group: GroupRead

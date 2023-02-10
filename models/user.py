@@ -1,8 +1,9 @@
 import uuid
+from typing import Any
 
 from sqlalchemy import TIMESTAMP, Column, String, text, ForeignKey, Enum
 from sqlalchemy.dialects.postgresql import UUID, ARRAY, JSON
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Mapped
 
 from core import Base
 from .association import users_badges, hr_documents_users

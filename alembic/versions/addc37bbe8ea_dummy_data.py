@@ -15,7 +15,7 @@ from core import configs, Base
 
 # revision identifiers, used by Alembic.
 revision = 'addc37bbe8ea'
-down_revision = '512b89e2ce36'
+down_revision = 'c31e385c9ab7'
 branch_labels = None
 depends_on = None
 
@@ -109,6 +109,8 @@ def upgrade() -> None:
                 group3_id, 
                 "Альфа 1", 
                 '1', 
+                position1_id,
+                rank1_id,
                 position1_id),
             create_user(
                 user2_id,
@@ -118,6 +120,8 @@ def upgrade() -> None:
                 group3_id, 
                 "Альфа 2", 
                 '2',
+                position1_id,
+                rank1_id,
                 position1_id),
             create_user(
                 user3_id,
@@ -127,6 +131,8 @@ def upgrade() -> None:
                 group3_id, 
                 "Альфа 3", 
                 '3', 
+                position1_id,
+                rank1_id,
                 position1_id),
             create_user(
                 user4_id,
@@ -136,6 +142,8 @@ def upgrade() -> None:
                 group3_id, 
                 "Альфа 4", 
                 '4', 
+                position2_id,
+                rank2_id,
                 position2_id),
             create_user(
                 user5_id,
@@ -145,6 +153,8 @@ def upgrade() -> None:
                 group2_id, 
                 "Альфа 5", 
                 '5', 
+                position1_id,
+                rank1_id,
                 position1_id),
             create_user(
                 user6_id,
@@ -154,6 +164,8 @@ def upgrade() -> None:
                 group2_id, 
                 "Альфа 6", 
                 '6', 
+                position3_id,
+                rank2_id,
                 position3_id),
             create_user(
                 user7_id,
@@ -163,6 +175,8 @@ def upgrade() -> None:
                 group2_id, 
                 "Альфа 7", 
                 '7', 
+                position1_id,
+                rank1_id,
                 position1_id),
             create_user(
                 user8_id,
@@ -172,6 +186,8 @@ def upgrade() -> None:
                 group3_id, 
                 "Альфа 8", 
                 '8', 
+                position1_id,
+                rank1_id,
                 position1_id),
             create_user(
                 user9_id,
@@ -181,6 +197,8 @@ def upgrade() -> None:
                 group3_id, 
                 "Альфа 9", 
                 '9', 
+                position1_id,
+                rank1_id,
                 position1_id),
             create_user(
                 user10_id,
@@ -190,6 +208,19 @@ def upgrade() -> None:
                 group3_id, 
                 "Альфа 10", 
                 '10', 
+                position4_id,
+                rank3_id,
+                position4_id),
+            create_user(
+                str(uuid.uuid4()),
+                "Admin",
+                "Adminov",
+                'admin@mail.com',
+                group3_id,
+                'admin',
+                '123456789',
+                position4_id,
+                rank3_id,
                 position4_id)
         ]
     )
@@ -277,7 +308,7 @@ def get_uuid():
     return str(uuid.uuid4())
 
 
-def create_user(id, name, surname, email, group_id, call_sign, number,  position_id):
+def create_user(id, name, surname, email, group_id, call_sign, number,  position_id, rank_id, actual_position_id):
     return {
         'id': id,
         'email': email,
@@ -290,7 +321,9 @@ def create_user(id, name, surname, email, group_id, call_sign, number,  position
         'call_sign': call_sign,
         'id_number': number,
         'phone_number': '+77771234789',
-        'address': 'Mangilik Yel, 1'
+        'address': 'Mangilik Yel, 1',
+        'rank_id': rank_id,
+        'actual_position_id': actual_position_id
     }
 
 
