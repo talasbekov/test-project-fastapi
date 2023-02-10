@@ -5,6 +5,7 @@ from fastapi.responses import RedirectResponse, JSONResponse
 from fastapi.logger import logger
 from fastapi_jwt_auth import AuthJWT
 from fastapi_jwt_auth.exceptions import AuthJWTException
+from pydantic import ValidationError
 
 from api import router
 from core import configs
@@ -33,6 +34,14 @@ async def add_process_time_header(request: Request, call_next):
     process_time = time.time() - start_time
     response.headers["X-Process-Time"] = str(process_time)
     return response
+
+
+@app.exception_handler(ValidationError)
+def validation_error_handler(request: Request, exc: ValidationError):
+    return JSONResponse(
+        status_code=400,
+        content={'detail': exc.json()}
+    )
 
 
 @app.exception_handler(AuthJWTException)
