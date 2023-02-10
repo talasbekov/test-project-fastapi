@@ -59,3 +59,14 @@ async def delete(*,
 ):
     Authorize.jwt_required()
     user_service.remove(db, id)
+
+
+@router.patch("/{id}/group")
+async def update_user_group(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    group_id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    return user_service.update_user_group(db, id, group_id)
