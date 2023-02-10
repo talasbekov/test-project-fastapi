@@ -24,7 +24,7 @@ class GroupRead(GroupBase):
     parent_group_id: Optional[uuid.UUID]
     name: Optional[str]
     description: Optional[str]
-    children: Any
+    children: List['GroupRead']
 
     class Config:
         orm_mode = True
