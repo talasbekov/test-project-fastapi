@@ -31,7 +31,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         user: User = user_service.get_by_id(db, user_id)
 
         template = hr_document_template_service.get_by_id(db, body.hr_document_template_id)
-        document = super().create(db, body)
+        document: HrDocument = super().create(db, body)
 
         step = hr_document_step_service.get_initial_step_for_template(db, template.id)
 
@@ -46,7 +46,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         hr_document_info_service.create_info_for_step(db, document.id, step.id, user.id)
         hr_document_info_service.create_next_info_for_step(db, document.id, next_step.id)
 
-        return document
+        return dict(document)
     
     def get_not_signed_documents(self, db: Session, user_id: str, skip: int, limit: int):
 
