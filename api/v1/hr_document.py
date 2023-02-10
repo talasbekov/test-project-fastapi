@@ -68,3 +68,12 @@ async def sign(*,
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
     hr_document_service.sign(db, id, comment, user_id)
+
+@router.get('/generate/{id}/', status_code=status.HTTP_200_OK)
+async def generate(*,
+    db: Session = Depends(get_db),
+    id: str,
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    return hr_document_service.generate(db, id)
