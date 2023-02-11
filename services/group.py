@@ -33,15 +33,16 @@ class GroupService(ServiceBase[Group, GroupCreate, GroupUpdate]):
     def change_parent_group(self,
             db: Session,
             id: str,
-            body: GroupUpdate
+            new_parent_group_id: str
     ) -> GroupRead:
         group = super().get(db, id)
         if group is None:
             raise NotFoundException(f"Group with id: {id} is not found!")
 
-        if body.parent_group_id == None:
-            raise BadRequestException("Parent group id should be no empty")
-        group.parent_group_id = body.parent_group_id
+        parent_group = super().get(db, new_parent_group_id)
+        if parent_group is None:
+            raise BadRequestException(f"Parent group with id: {new_parent_group_id} is not found!")
+        group.parent_group_id = new_parent_group_id
         db.add(group)
         db.commit()
         db.refresh(group)

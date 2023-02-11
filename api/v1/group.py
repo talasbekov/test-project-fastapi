@@ -59,11 +59,11 @@ async def update(*,
 async def update_parent(*,
      db: Session = Depends(get_db),
      id: uuid.UUID,
-     body: GroupUpdate,
+     new_parent_group_id: uuid.UUID,
      Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
-    return group_service.change_parent_group(db, id, body)
+    return group_service.change_parent_group(db, id, new_parent_group_id)
 
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT)
