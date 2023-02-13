@@ -25,18 +25,58 @@ def upgrade() -> None:
     rank1_id = get_uuid()
     rank2_id = get_uuid()
     rank3_id = get_uuid()
+    rank4_id = get_uuid()
+    rank5_id = get_uuid()
+    rank6_id = get_uuid()
+    rank7_id = get_uuid()
+    rank8_id = get_uuid()
+    rank9_id = get_uuid()
+    rank10_id = get_uuid()
+    rank11_id = get_uuid()
+    rank12_id = get_uuid()
+    rank13_id = get_uuid()
     
     op.bulk_insert(
         Base.metadata.tables['ranks'],
         [{
             'id': rank1_id,
-            'name': 'Майор'
+            'name': 'рядовой'
         }, {
             'id': rank2_id,
-            'name': 'Подполковник'
+            'name': 'младший сержант'
         }, {
             'id': rank3_id,
-            'name': 'Полковник'
+            'name': 'сержант'
+        }, {
+            'id': rank4_id,
+            'name': 'старший сержант'
+        }, {
+            'id': rank5_id,
+            'name': 'лейтенант'
+        }, {
+            'id': rank6_id,
+            'name': 'старший лейтенант'
+        }, {
+            'id': rank7_id,
+            'name': 'капитан'
+        }, {
+            'id': rank8_id,
+            'name': 'майор'
+        }, {
+            'id': rank9_id,
+            'name': 'подполковник'
+        }, {
+            'id': rank10_id,
+            'name': 'полковник'
+        }, {
+            'id': rank11_id,
+            'name': 'Генерал-майор'
+        }, {
+            'id': rank12_id,
+            'name': 'Генерал-лейтенант'
+        }, {
+            'id': rank13_id,
+            'name': 'Генерал-полковник'
         }]
     )
 
@@ -44,31 +84,98 @@ def upgrade() -> None:
     position2_id = get_uuid()
     position3_id = get_uuid()
     position4_id = get_uuid()
+    position5_id = get_uuid()
+    position6_id = get_uuid()
+    position7_id = get_uuid()
+    position8_id = get_uuid()
+    position9_id = get_uuid()
+    position10_id = get_uuid()
+    position11_id = get_uuid()
+    position12_id = get_uuid()
+    position13_id = get_uuid()
+    position14_id = get_uuid()
+    position15_id = get_uuid()
+    position16_id = get_uuid()
+    position17_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['positions'],
         [{
             'id': position1_id,
-            'name': 'Солдат',
+            'name': 'Военно-служащий срочной службы',
             'max_rank_id': rank1_id
         },{
             'id': position2_id,
-            'name': 'Начальник Отдела',
-            'max_rank_id': rank1_id
-        }, {
-            'id': position3_id,
-            'name': 'Начальник Управления',
+            'name': 'Сотрудник охраны 3-категории',
             'max_rank_id': rank2_id
         }, {
-            'id': position4_id,
-            'name': 'Начальник Департамента',
+            'id': position3_id,
+            'name': 'Сотрудник охраны 2-категории',
             'max_rank_id': rank3_id
+        }, {
+            'id': position4_id,
+            'name': 'Сотрудник охраны 1-категории',
+            'max_rank_id': rank4_id
+        }, {
+            'id': position5_id,
+            'name': 'Офицер охраны',
+            'max_rank_id': rank7_id
+        }, {
+            'id': position6_id,
+            'name': 'Старший офицер охраны',
+            'max_rank_id': rank8_id
+        }, {
+            'id': position7_id,
+            'name': 'Старший офицер',
+            'max_rank_id': rank8_id
+        }, {
+            'id': position8_id,
+            'name': 'Инспектор',
+            'max_rank_id': rank9_id
+        }, {
+            'id': position9_id,
+            'name': 'Старший инспектор',
+            'max_rank_id': rank9_id
+        }, {
+            'id': position10_id,
+            'name': 'Начальник отдела',
+            'max_rank_id': rank9_id
+        }, {
+            'id': position11_id,
+            'name': 'Заместитель начальника управление - Начальник отдела',
+            'max_rank_id': rank9_id
+        }, {
+            'id': position12_id,
+            'name': 'Главный инспектор',
+            'max_rank_id': rank10_id
+        }, {
+            'id': position13_id,
+            'name': 'Начальник управления',
+            'max_rank_id': rank10_id
+        }, {
+            'id': position14_id,
+            'name': 'Заместитель начальника департамента',
+            'max_rank_id': rank10_id
+        }, {
+            'id': position15_id,
+            'name': 'Начальник департамента',
+            'max_rank_id': rank10_id
+        }, {
+            'id': position16_id,
+            'name': 'Заместитель начальника Службы',
+            'max_rank_id': rank12_id
+        }, {
+            'id': position17_id,
+            'name': 'Начальник Службы',
+            'max_rank_id': rank13_id
         }]
     )
 
     group1_id = get_uuid()
     group2_id = get_uuid()
     group3_id = get_uuid()
+    group4_id = get_uuid()
+    group5_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['groups'],
@@ -81,9 +188,17 @@ def upgrade() -> None:
             'id': group2_id,
             'name': "Управление 1"
         }, {
-            'parent_group_id': group2_id,
+            'parent_group_id': group1_id,
             'id': group3_id,
-            'name': "Группа 1"
+            'name': "Управление 2"
+        }, {
+            'parent_group_id': group1_id,
+            'id': group4_id,
+            'name': "Управление 3"
+        }, {
+            'parent_group_id': group1_id,
+            'id': group5_id,
+            'name': "Управление 4"
         }]
     )
 
