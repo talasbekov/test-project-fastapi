@@ -24,13 +24,15 @@ from services import (
     position_service,
     rank_service,
     group_service,
+    badge_service
 )
 
 options = {
     'position': position_service.get_by_id,
     'actual_position': position_service.get_by_id,
     'group': group_service.get_by_id,
-    'rank': rank_service.get_by_id
+    'rank': rank_service.get_by_id,
+    'badges': badge_service.get_by_id
 }
 
 class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpdate]):
@@ -137,12 +139,14 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         attr = getattr(user, key)
 
         if isinstance(attr, Base):
-            res = None
-            
+            res = options[key](db, value)
+            log.info(res)
             setattr(user, key, res)
 
         elif isinstance(attr, list):
-            pass
+            res = options[key](db, value)
+            attr.append(res)
+            setattr(user, key, attr)
 
         else:
             setattr(user, key, value)
