@@ -13,6 +13,7 @@ class HrDocumentBase(BaseModel):
     status: HrDocumentStatus
     due_date: datetime
     properties: dict
+    details: dict
 
 
 class HrDocumentCreate(HrDocumentBase):

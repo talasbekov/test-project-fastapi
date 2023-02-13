@@ -11,6 +11,7 @@ class HrDocumentTemplateBase(BaseModel):
     path: str
     subject_type: SubjectType
     properties: dict
+    details: dict
 
 
 class HrDocumentTemplateCreate(HrDocumentTemplateBase):
