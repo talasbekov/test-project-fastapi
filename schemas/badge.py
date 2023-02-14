@@ -1,6 +1,7 @@
 import uuid
 
 from pydantic import BaseModel
+from typing import Optional
 
 
 class BadgeBase(BaseModel):
@@ -17,7 +18,9 @@ class BadgeUpdate(BadgeBase):
 
 
 class BadgeRead(BadgeBase):
-    id: uuid.UUID
+    id: Optional[uuid.UUID]
+    name: Optional[str]
+    url: Optional[str]
 
     class Config:
         orm_mode = True
