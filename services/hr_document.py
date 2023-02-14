@@ -115,13 +115,13 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         template.render(document.properties)
         template.render(context)
 
-        # with tempfile.NamedTemporaryFile(delete=False) as file_path:
+        with tempfile.NamedTemporaryFile(delete=False) as file_path:
 
-        file_path = document_template.path
-        file_name = file_path
-        template.save(file_name)
+            file_path = document_template.path
+            file_name = file_path
+            template.save(file_name)
 
-        return FileResponse(
+            return FileResponse(
                 path=file_name,
                 media_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                 filename=document_template.name + '.docx'
