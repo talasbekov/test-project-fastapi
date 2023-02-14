@@ -63,7 +63,7 @@ async def update(*,
         obj_in=body)
 
 
-@router.delete("/{id}/", status_code=status.HTTP_202_ACCEPTED,
+@router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
                response_model=RankRead)
 async def delete(*,
@@ -72,4 +72,4 @@ async def delete(*,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
-    rank_service.remove(db, id)
+    return rank_service.remove(db, id)

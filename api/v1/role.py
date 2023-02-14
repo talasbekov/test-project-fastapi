@@ -60,7 +60,7 @@ async def update(*,
     return role_service.update(db, db_obj=role_service.get_by_id(db, id), obj_in=body)
 
 
-@router.delete("/{id}/", status_code=status.HTTP_202_ACCEPTED,
+@router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
                response_model=RoleRead)
 async def delete(*,
@@ -69,4 +69,4 @@ async def delete(*,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
-    role_service.remove(db, id)
+    return role_service.remove(db, id)

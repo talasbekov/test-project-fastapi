@@ -73,7 +73,7 @@ async def update_parent(*,
     return group_service.change_parent_group(db, id, new_parent_group_id)
 
 
-@router.delete("/{id}/", status_code=status.HTTP_202_ACCEPTED,
+@router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
                response_model=GroupRead)
 async def delete(*,
@@ -82,4 +82,4 @@ async def delete(*,
     Authrorize: AuthJWT = Depends()
 ):
     Authrorize.jwt_required()
-    group_service.remove(db, id)
+    return group_service.remove(db, id)

@@ -52,7 +52,7 @@ async def update(*,
         obj_in=body)
 
 
-@router.delete("/{id}/", status_code=status.HTTP_202_ACCEPTED,
+@router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
                response_model=HrDocumentInfoRead)
 async def delete(*,
@@ -61,4 +61,4 @@ async def delete(*,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
-    hr_document_info_service.remove(db, id)
+    return hr_document_info_service.remove(db, id)
