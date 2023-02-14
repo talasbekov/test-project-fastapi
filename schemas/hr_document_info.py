@@ -21,7 +21,10 @@ class HrDocumentInfoUpdate(HrDocumentInfoBase):
 
 
 class HrDocumentInfoRead(HrDocumentInfoBase):
-    id: uuid.UUID
+    id: Optional[uuid.UUID]
+    hr_document_step_id: Optional[uuid.UUID]
+    comment: Optional[str]
+    hr_document_id: Optional[uuid.UUID]
 
     class Config:
         orm_mode = True

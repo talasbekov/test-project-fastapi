@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 
 from pydantic import BaseModel
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 
 
 class EventBase(BaseModel):
@@ -21,7 +21,11 @@ class EventUpdate(EventBase):
 
 
 class EventRead(EventBase):
-    id: uuid.UUID
+    id: Optional[uuid.UUID]
+    user_id: Optional[uuid.UUID]
+    name: Optional[str]
+    date_since: Optional[datetime]
+    date_to: Optional[datetime]
 
     class Config:
         orm_mode = True

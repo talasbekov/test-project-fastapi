@@ -1,6 +1,7 @@
 import uuid
 
 from pydantic import BaseModel
+from typing import Optional
 
 
 class UserStatBase(BaseModel):
@@ -22,7 +23,14 @@ class UserStatUpdate(UserStatBase):
 
 
 class UserStatRead(UserStatBase):
-    id: uuid.UUID
+    id: Optional[uuid.UUID]
+    user_id: Optional[uuid.UUID]
+    physical_training: Optional[int]
+    fire_training: Optional[int]
+    attendance: Optional[int]
+    activity: Optional[int]
+    opinion_of_colleagues: Optional[int]
+    opinion_of_management: Optional[int]
 
     class Config:
         orm_mode = True
