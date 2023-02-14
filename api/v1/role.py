@@ -13,7 +13,8 @@ from services import role_service
 router = APIRouter(prefix="/roles", tags=["Roles"], dependencies=[Depends(HTTPBearer())])
 
 
-@router.get("")
+@router.get("", dependencies=[Depends(HTTPBearer())],
+            response_model=List[RoleRead])
 async def get_all(*,
     db: Session = Depends(get_db),
     skip: int = 0,
@@ -24,7 +25,9 @@ async def get_all(*,
     return role_service.get_multi(db, skip, limit)
 
 
-@router.post("", status_code=status.HTTP_201_CREATED)
+@router.post("", status_code=status.HTTP_201_CREATED,
+             dependencies=[Depends(HTTPBearer())],
+             response_model=RoleRead)
 async def create(*,
     db: Session = Depends(get_db),
     body: RoleCreate,
@@ -34,7 +37,8 @@ async def create(*,
     return role_service.create(db, body)
 
 
-@router.get("/{id}/")
+@router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=RoleRead)
 async def get_by_id(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
@@ -44,7 +48,8 @@ async def get_by_id(*,
     return role_service.get_by_id(db, id)
 
 
-@router.put("/{id}/")
+@router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=RoleRead)
 async def update(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
@@ -55,7 +60,9 @@ async def update(*,
     return role_service.update(db, db_obj=role_service.get_by_id(id), obj_in=body)
 
 
-@router.delete("/{id}/",status_code=status.HTTP_202_ACCEPTED)
+@router.delete("/{id}/", status_code=status.HTTP_202_ACCEPTED,
+               dependencies=[Depends(HTTPBearer())],
+               response_model=RoleRead)
 async def delete(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,

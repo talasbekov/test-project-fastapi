@@ -13,7 +13,8 @@ from services import position_service
 router = APIRouter(prefix="/positions", tags=["Positions"], dependencies=[Depends(HTTPBearer())])
 
 
-@router.get("", dependencies=[Depends(HTTPBearer())])
+@router.get("", dependencies=[Depends(HTTPBearer())],
+            response_model=List[PositionRead])
 async def get_all(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
@@ -25,7 +26,8 @@ async def get_all(*,
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
-             dependencies=[Depends(HTTPBearer())])
+             dependencies=[Depends(HTTPBearer())],
+             response_model=PositionRead)
 async def create(*,
     db: Session = Depends(get_db),
     body: PositionCreate,
@@ -35,7 +37,8 @@ async def create(*,
     return position_service.create(db, body)
 
 
-@router.put("/{id}/", dependencies=[Depends(HTTPBearer())])
+@router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=PositionRead)
 async def update(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
@@ -50,7 +53,8 @@ async def update(*,
 
 
 @router.delete("/{id}/", status_code=status.HTTP_202_ACCEPTED,
-               dependencies=[Depends(HTTPBearer())])
+               dependencies=[Depends(HTTPBearer())],
+               response_model=PositionRead)
 async def delete(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,

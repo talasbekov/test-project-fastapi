@@ -24,8 +24,9 @@ async def get_all(*,
     return user_stat_service.get_multi(db, skip, limit)
 
 
-@router.post("", status_code=status.HTTP_201_CREATED, response_model=UserStatRead,
-             dependencies=[Depends(HTTPBearer())])
+@router.post("", status_code=status.HTTP_201_CREATED,
+             dependencies=[Depends(HTTPBearer())],
+             response_model=UserStatRead)
 async def create(*,
     db: Session = Depends(get_db),
     body: UserStatCreate,
@@ -35,7 +36,8 @@ async def create(*,
     return user_stat_service.create(db, body)
 
 
-@router.put("/{id}/", response_model=UserStatRead, dependencies=[Depends(HTTPBearer())])
+@router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=UserStatRead)
 async def update(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
@@ -50,7 +52,8 @@ async def update(*,
 
 
 @router.delete("/{id}/", status_code=status.HTTP_202_ACCEPTED,
-               dependencies=[Depends(HTTPBearer())])
+               dependencies=[Depends(HTTPBearer())],
+               response_model=UserStatRead)
 async def delete(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,

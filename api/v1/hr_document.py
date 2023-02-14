@@ -13,7 +13,8 @@ from services import hr_document_service
 router = APIRouter(prefix="/hr-documents", tags=["HrDocuments"], dependencies=[Depends(HTTPBearer())])
 
 
-@router.get("")
+@router.get("", dependencies=[Depends(HTTPBearer())],
+            response_model=List[HrDocumentRead])
 async def get_all(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
@@ -25,7 +26,8 @@ async def get_all(*,
     return hr_document_service.get_not_signed_documents(db, user_id, skip, limit)
 
 
-@router.post("", status_code=status.HTTP_201_CREATED)
+@router.post("", status_code=status.HTTP_201_CREATED,
+             dependencies=[Depends(HTTPBearer())])
 async def initialize(*,
     db: Session = Depends(get_db),
     body: HrDocumentCreate,
@@ -36,7 +38,8 @@ async def initialize(*,
     role = Authorize.get_raw_jwt()['role']
     return hr_document_service.initialize(db, body, user_id, role)
 
-@router.put("/{id}/")
+@router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=HrDocumentRead)
 async def update(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
@@ -49,7 +52,9 @@ async def update(*,
         db_obj=hr_document_service.get_by_id(db, id),
         obj_in=body)
 
-@router.delete("/{id}/", status_code=status.HTTP_202_ACCEPTED)
+@router.delete("/{id}/", status_code=status.HTTP_202_ACCEPTED,
+               dependencies=[Depends(HTTPBearer())],
+               response_model=HrDocumentRead)
 async def delete(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
@@ -59,7 +64,9 @@ async def delete(*,
     hr_document_service.remove(db, id)
 
 
-@router.post("/{id}/", status_code=status.HTTP_200_OK)
+@router.post("/{id}/", status_code=status.HTTP_200_OK,
+             dependencies=[Depends(HTTPBearer())],
+             response_model=HrDocumentRead)
 async def sign(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
@@ -71,7 +78,8 @@ async def sign(*,
     hr_document_service.sign(db, id, comment, user_id)
 
 
-@router.get('/generate/{id}/', status_code=status.HTTP_200_OK)
+@router.get('/generate/{id}/', status_code=status.HTTP_200_OK,
+            dependencies=[Depends(HTTPBearer())])
 async def generate(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,

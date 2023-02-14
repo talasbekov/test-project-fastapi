@@ -13,7 +13,8 @@ from services import group_service
 router = APIRouter(prefix="/groups", tags=["Groups"], dependencies=[Depends(HTTPBearer())])
 
 
-@router.get("", response_model=List[GroupRead])
+@router.get("", dependencies=[Depends(HTTPBearer())],
+            response_model=List[GroupRead])
 async def get_all(*,
     db: Session = Depends(get_db),
     skip: int = 0,
@@ -24,7 +25,9 @@ async def get_all(*,
     return group_service.get_departments(db, skip, limit)
 
 
-@router.post("", response_model=GroupRead)
+@router.post("", status_code=status.HTTP_201_CREATED,
+             dependencies=[Depends(HTTPBearer())],
+             response_model=GroupRead)
 async def create(*,
     db: Session = Depends(get_db),
     body: GroupCreate,
@@ -34,7 +37,8 @@ async def create(*,
     return group_service.create(db, body)
 
 
-@router.get("/{id}/", response_model=GroupRead)
+@router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=GroupRead)
 async def get_by_id(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
@@ -44,7 +48,8 @@ async def get_by_id(*,
     return group_service.get_by_id(db, id)
 
 
-@router.put("/{id}/", response_model=GroupRead)
+@router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=GroupRead)
 async def update(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
@@ -55,7 +60,9 @@ async def update(*,
     return group_service.update(db, db_obj=group_service.get_by_id(db, id), obj_in=body)
 
 
-@router.patch("/{id}/", response_model=GroupRead)
+@router.patch("/{id}/", status_code=status.HTTP_202_ACCEPTED,
+              dependencies=[Depends(HTTPBearer())],
+              response_model=GroupRead)
 async def update_parent(*,
      db: Session = Depends(get_db),
      id: uuid.UUID,
@@ -66,7 +73,9 @@ async def update_parent(*,
     return group_service.change_parent_group(db, id, new_parent_group_id)
 
 
-@router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{id}/", status_code=status.HTTP_202_ACCEPTED,
+               dependencies=[Depends(HTTPBearer())],
+               response_model=GroupRead)
 async def delete(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
