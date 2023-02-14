@@ -1,6 +1,7 @@
 import time
 
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse, JSONResponse
 from fastapi.logger import logger
 from fastapi_jwt_auth import AuthJWT
@@ -16,6 +17,14 @@ app = FastAPI(
     description=configs.DESCRIPTION,
     version=configs.VERSION,
     openapi_url=f"{configs.API_V1_PREFIX}/openapi.json"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.include_router(router)
