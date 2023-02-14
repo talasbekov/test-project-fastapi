@@ -8,7 +8,6 @@ from schemas import BadgeRead, GroupRead, PositionRead, RankRead
 
 class UserBase(BaseModel):
     email: EmailStr
-    password: str
     first_name: str
     last_name: str
     father_name: Optional[str]
