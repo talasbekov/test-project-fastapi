@@ -20,11 +20,11 @@ class GroupUpdate(GroupBase):
 
 
 class GroupRead(GroupBase):
-    id: uuid.UUID
+    id: Optional[uuid.UUID]
     parent_group_id: Optional[uuid.UUID]
     name: Optional[str]
     description: Optional[str]
-    children: List['GroupRead']
+    children: Optional[List['GroupRead']]
 
     class Config:
         orm_mode = True

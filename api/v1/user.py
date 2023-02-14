@@ -75,7 +75,8 @@ async def update_user_group(*,
     return user_service.update_user_group(db, id, group_id)
 
 
-@router.get('/{id}/', response_model=UserRead)
+@router.get('/{id}/', dependencies=[Depends(HTTPBearer())],
+            response_model=UserRead)
 async def get_by_id(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
@@ -85,7 +86,7 @@ async def get_by_id(*,
     return user_service.get_by_id(db, id)
 
 
-@router.get('/fields')
+@router.get('/fields', dependencies=[Depends(HTTPBearer())],)
 async def get_fields(*,
     Authorize: AuthJWT = Depends()
 ):

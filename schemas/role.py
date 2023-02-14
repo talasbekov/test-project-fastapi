@@ -1,6 +1,7 @@
 import uuid
 
 from pydantic import BaseModel
+from typing import Optional
 
 
 class RoleBase(BaseModel):
@@ -16,7 +17,8 @@ class RoleUpdate(RoleBase):
 
 
 class RoleRead(RoleBase):
-    id: uuid.UUID
+    id: Optional[uuid.UUID]
+    name: Optional[str]
 
     class Config:
         orm_mode = True
