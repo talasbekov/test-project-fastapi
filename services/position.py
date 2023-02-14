@@ -12,6 +12,8 @@ class PositionService(ServiceBase[Position, PositionCreate, PositionUpdate]):
         position = super().get(db, id)
         if position is None:
             raise NotFoundException(detail="Position is not found!")
+        
+        return position
 
 
 

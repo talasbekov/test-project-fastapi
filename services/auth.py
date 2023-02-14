@@ -11,7 +11,7 @@ from core import configs
 
 from schemas import LoginForm, RegistrationForm, UserCreate
 
-from services import user_service, group_service
+from services import user_service, group_service, position_service
 from exceptions import BadRequestException
 from utils import verify_password, hash_password, is_valid_phone_number
 
@@ -41,6 +41,7 @@ class AuthService():
     def register(self, form: RegistrationForm, db: Session):
         user_obj = user_service.get_by_email(db, EmailStr(form.email).lower())
         group_obj = group_service.get_by_id(db, form.group_id)
+        position_obj = position_service.get_by_id(db, form.position_id)
         
         if user_obj:
             raise HTTPException(status_code=400, detail="User with this email already exists!")
@@ -55,7 +56,8 @@ class AuthService():
             last_name=form.last_name,
             phone_number=form.phone_number,
             password=hash_password(form.password),
-            middle_name=form.middle_name,
+            father_name=form.father_name,
+            position_id=position_obj.id,
             group_id=group_obj.id,
             call_sign=form.call_sign,
             id_number=form.id_number,

@@ -1,4 +1,5 @@
 import uuid
+import datetime
 
 from typing import Optional, List
 from pydantic import BaseModel, EmailStr
@@ -17,7 +18,7 @@ class UserBase(BaseModel):
     id_number: str
     phone_number: Optional[str]
     address: Optional[str]
-    birthday: Optional[str]
+    birthday: Optional[datetime.date]
 
 
 class UserCreate(UserBase):
@@ -30,11 +31,11 @@ class UserUpdate(UserBase):
 
 class UserRead(UserBase):
     id: uuid.UUID
-    badges: List[BadgeRead]
-    position: PositionRead
-    actual_position: PositionRead
-    group: GroupRead
-    rank: RankRead
+    badges: Optional[List[BadgeRead]]
+    position: Optional[PositionRead]
+    actual_position:Optional[PositionRead]
+    group: Optional[GroupRead]
+    rank: Optional[RankRead]
 
     class Config:
         orm_mode = True

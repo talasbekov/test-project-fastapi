@@ -1,7 +1,7 @@
 import uuid
 from typing import Any
 
-from sqlalchemy import TIMESTAMP, Column, String, text, ForeignKey, Enum
+from sqlalchemy import TIMESTAMP, Column, String, text, ForeignKey, Date
 from sqlalchemy.dialects.postgresql import UUID, ARRAY, JSON
 from sqlalchemy.orm import relationship, Mapped
 
@@ -34,7 +34,7 @@ class User(Base):
     rank_id = Column(
         UUID(as_uuid=True), ForeignKey("ranks.id"), nullable=True)
 
-    birthday = Column(String, nullable=True)
+    birthday = Column(Date, nullable=True)
 
     rank = relationship("Rank", cascade="all,delete")
     group = relationship("Group", cascade="all,delete", back_populates="users")

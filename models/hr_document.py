@@ -31,7 +31,7 @@ class HrDocument(Base):
     details = Column(JSON(none_as_null=True))
 
     document_template = relationship("HrDocumentTemplate", back_populates="document", cascade="all,delete")
-    equipments = relationship("HrDocument", secondary=hr_document_equipments,
+    equipments = relationship("HrDocument", secondary="hr_document_equipments",
                               back_populates="equipments")
     user = relationship(
         "User",
