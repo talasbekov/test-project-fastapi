@@ -53,12 +53,11 @@ async def update(*,
 
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
-               dependencies=[Depends(HTTPBearer())],
-               response_model=EquipmentRead)
+               dependencies=[Depends(HTTPBearer())])
 async def delete(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
-    return equipment_service.remove(db, id)
+    equipment_service.remove(db, id)

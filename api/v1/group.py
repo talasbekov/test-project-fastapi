@@ -74,12 +74,11 @@ async def update_parent(*,
 
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
-               dependencies=[Depends(HTTPBearer())],
-               response_model=GroupRead)
+               dependencies=[Depends(HTTPBearer())])
 async def delete(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
     Authrorize: AuthJWT = Depends()
 ):
     Authrorize.jwt_required()
-    return group_service.remove(db, id)
+    group_service.remove(db, id)
