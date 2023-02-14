@@ -37,7 +37,6 @@ class UserRead(UserBase):
     group: Optional[GroupRead]
     rank: Optional[RankRead]
     email: Optional[EmailStr]
-    password: Optional[str]
     first_name: Optional[str]
     last_name: Optional[str]
     group_id: Optional[uuid.UUID]
