@@ -39,18 +39,6 @@ async def update(*,
         obj_in=body)
 
 
-@router.delete("/{id}/", status_code=status.HTTP_202_ACCEPTED,
-               dependencies=[Depends(HTTPBearer())],
-               response_model=UserRead)
-async def delete(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
-    Authorize.jwt_required()
-    user_service.remove(db, id)
-
-
 @router.patch("/{id}/group", status_code=status.HTTP_202_ACCEPTED,
               dependencies=[Depends(HTTPBearer())],
               response_model=UserRead)
