@@ -1,3 +1,5 @@
+import types
+
 from sqlalchemy.orm import Session
 
 from .base import ServiceBase
@@ -5,6 +7,8 @@ from .base import ServiceBase
 from models import User, Group
 from schemas import UserCreate, UserUpdate, UserRead, GroupUpdate
 from exceptions import NotFoundException
+
+CALLABLES = types.FunctionType, types.MethodType
 
 
 class UserService(ServiceBase[User, UserCreate, UserUpdate]):
@@ -39,6 +43,11 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         db.commit()
         db.refresh(user)
         return user
+    
+    def get_fields(self):
+        fields = [key for key, value in User.__dict__.items() if (not 'id' in key and not isinstance(value, CALLABLES) and not key.startswith('_'))]
+        return fields
+
 
 
 user_service = UserService(User)

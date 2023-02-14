@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String, Integer
 from sqlalchemy.dialects.postgresql import UUID
 from core import Base
 
@@ -12,3 +12,4 @@ class Rank(Base):
     id = Column(UUID(as_uuid=True), primary_key=True,
                 nullable=False, default=uuid.uuid4)
     name = Column(String, nullable=False)
+    order = Column(Integer, nullable=True)

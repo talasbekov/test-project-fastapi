@@ -17,15 +17,15 @@ users_badges = Table(
     Column("badge_id", ForeignKey("badges.id"))
 )
 
-hr_document_equipment = Table(
-    "hr_document_equipment",
+hr_document_equipments = Table(
+    "hr_document_equipments",
     Base.metadata,
     Column("document_id", ForeignKey("hr_documents.id")),
     Column("subject_id", ForeignKey("equipments.id")),
 )
 
 hr_documents_users = Table(
-    "document_users",
+    "hr_document_users",
     Base.metadata,
     Column("document_id", ForeignKey("hr_documents.id")),
     Column("subject_id", ForeignKey("users.id"))

@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 
 from pydantic import BaseModel
-from typing import List, Dict
+from typing import List, Dict, Union
 
 from models import HrDocumentStatus
 from .hr_document_template import HrDocumentTemplateRead
@@ -12,7 +12,8 @@ class HrDocumentBase(BaseModel):
     hr_document_template_id: uuid.UUID
     status: HrDocumentStatus
     due_date: datetime
-    properties: dict
+    properties: Union[dict, None]
+    details: Union[dict, None]
 
 
 class HrDocumentCreate(HrDocumentBase):

@@ -11,12 +11,29 @@ from docxtpl import DocxTemplate
 
 from .base import ServiceBase
 
+from core import Base
 from models import HrDocument, HrDocumentStatus, User
 from schemas import HrDocumentCreate, HrDocumentUpdate, HrDocumentInfoCreate
 from exceptions import NotFoundException, ForbiddenException
 
-from services import hr_document_template_service, hr_document_info_service, hr_document_step_service, user_service
+from services import (
+    hr_document_template_service,
+    hr_document_info_service,
+    hr_document_step_service,
+    user_service,
+    position_service,
+    rank_service,
+    group_service,
+    badge_service
+)
 
+options = {
+    'position': position_service.get_by_id,
+    'actual_position': position_service.get_by_id,
+    'group': group_service.get_by_id,
+    'rank': rank_service.get_by_id,
+    'badges': badge_service.get_by_id
+}
 
 class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpdate]):
 
@@ -66,7 +83,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         next_step = hr_document_step_service.get_next_step_from_id(db, info.hr_document_step_id)
         
         if next_step is None:
-            return self._finish_document(db, document)        
+            return self._finish_document(db, document, document.user)
 
         hr_document_info_service.create_next_info_for_step(db, document.id, next_step.id)
         document.status = HrDocumentStatus.IN_PROGRESS
@@ -99,15 +116,45 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 filename=document_template.name + '.docx'
             )
 
-    def _finish_document(self, db: Session, document: HrDocument):
+    def _finish_document(self, db: Session, document: HrDocument, user: User):
 
         document.status = HrDocumentStatus.COMPLETED
+
+        fields = user_service.get_fields()
+
+        keys = list(document.details)
+
+        for key in keys:
+            if key in fields:
+                self._set_attr(db, user, key, keys[key])
 
         db.add(document)
         db.commit()
         db.refresh(document)
 
         return document
+    
+    def _set_attr(self,db: Session, user: User, key: str, value):
+
+        attr = getattr(user, key)
+
+        if isinstance(attr, Base):
+            res = options[key](db, value)
+            log.info(res)
+            setattr(user, key, res)
+
+        elif isinstance(attr, list):
+            res = options[key](db, value)
+            attr.append(res)
+            setattr(user, key, attr)
+
+        else:
+            setattr(user, key, value)
+
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+        return user
 
 
 hr_document_service = HrDocumentService(HrDocument)

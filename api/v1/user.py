@@ -14,8 +14,7 @@ from services import user_service
 router = APIRouter(prefix="/users", tags=["Users"], dependencies=[Depends(HTTPBearer())])
 
 
-@router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[UserRead])
+@router.get("", dependencies=[Depends(HTTPBearer())], response_model=List[UserRead])
 async def get_all(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
@@ -27,8 +26,7 @@ async def get_all(*,
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
-             dependencies=[Depends(HTTPBearer())],
-             response_model=UserRead)
+             dependencies=[Depends(HTTPBearer())], response_model=UserRead)
 async def create(*,
     db: Session = Depends(get_db),
     body: UserCreate,
@@ -38,8 +36,7 @@ async def create(*,
     return user_service.create(db, body)
 
 
-@router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=UserRead)
+@router.put("/{id}/", dependencies=[Depends(HTTPBearer())], response_model=UserRead)
 async def update(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
@@ -76,3 +73,21 @@ async def update_user_group(*,
 ):
     Authorize.jwt_required()
     return user_service.update_user_group(db, id, group_id)
+
+
+@router.get('/{id}/', response_model=UserRead)
+async def get_by_id(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    return user_service.get_by_id(db, id)
+
+
+@router.get('/fields')
+async def get_fields(*,
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    return user_service.get_fields()
