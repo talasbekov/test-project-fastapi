@@ -39,7 +39,7 @@ def refresh_token(Authorize: AuthJWT = Depends(), db: Session = Depends(get_db))
 
     current_user_id = Authorize.get_jwt_subject()
     user_claims = {
-        "role": user.role.name
+        "role": user.position.name
     }
     access_token=Authorize.create_access_token(subject=current_user_id, user_claims=user_claims, expires_time=timedelta(minutes=configs.ACCESS_TOKEN_EXPIRES_IN))
     refresh_token = Authorize.create_refresh_token(subject=current_user_id, user_claims=user_claims, expires_time=timedelta(minutes=configs.REFRESH_TOKEN_EXPIRES_IN))
