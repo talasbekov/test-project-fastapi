@@ -5,6 +5,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID, TIMESTAMP
 
 from core import Base
+from .association import hr_document_equipments
 
 
 class Equipment(Base):
@@ -15,7 +16,7 @@ class Equipment(Base):
                 nullable=False, default=uuid.uuid4)
     name = Column(String(150), nullable=True)
     quantity = Column(BigInteger, nullable=True)
-    hr_documents = relationship("Equipment", secondary="hr_document_equipment",
+    hr_documents = relationship("Equipment", secondary=hr_document_equipments,
                                 back_populates="hr_documents")
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))

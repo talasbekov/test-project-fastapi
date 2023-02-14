@@ -17,7 +17,7 @@ users_badges = Table(
     Column("badge_id", ForeignKey("badges.id"))
 )
 
-hr_document_equipment = Table(
+hr_document_equipments = Table(
     "hr_document_equipments",
     Base.metadata,
     Column("document_id", ForeignKey("hr_documents.id")),

@@ -6,7 +6,7 @@ from sqlalchemy.dialects.postgresql import UUID, JSON
 from sqlalchemy.orm import relationship
 
 from core import Base
-from .association import hr_documents_users
+from .association import hr_documents_users, hr_document_equipments
 
 
 class HrDocumentStatus(enum.IntEnum):
@@ -31,7 +31,7 @@ class HrDocument(Base):
     details = Column(JSON(none_as_null=True))
 
     document_template = relationship("HrDocumentTemplate", back_populates="document", cascade="all,delete")
-    equipments = relationship("HrDocument", secondary="hr_document_equipment",
+    equipments = relationship("HrDocument", secondary=hr_document_equipments,
                               back_populates="equipments")
     user = relationship(
         "User",
