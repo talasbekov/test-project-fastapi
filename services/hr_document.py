@@ -63,7 +63,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         hr_document_info_service.create_info_for_step(db, document.id, step.id, user.id)
         hr_document_info_service.create_next_info_for_step(db, document.id, next_step.id)
 
-        return dict(document)
+        return document
     
     def get_not_signed_documents(self, db: Session, user_id: str, skip: int, limit: int):
 
@@ -99,18 +99,29 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         document = self.get_by_id(db, id)
         document_template = hr_document_template_service.get_by_id(db, document.hr_document_template_id)
 
-        if os.path.exists(document_template.path):
-            raise NotFoundException(detail=f'Template file is not found! Check if this is correct: {document_template.path}')
+        # if os.path.exists(document_template.path):
+        #     raise NotFoundException(detail=f'Template file is not found! Check if this is correct: {document_template.path}')
         
         template = DocxTemplate(document_template.path)
+
+        print(os.stat(document_template.path))
+        print(os.path.exists(document_template.path))
+
+        context = {
+            'document_id': document.id,
+            'document_template_id': document.hr_document_template_id,
+        }
+
         template.render(document.properties)
+        template.render(context)
 
-        with tempfile.NamedTemporaryFile(delete=False) as file_path:
+        # with tempfile.NamedTemporaryFile(delete=False) as file_path:
 
-            file_name = file_path + ".docx"
-            template.save(file_name)
+        file_path = document_template.path
+        file_name = file_path
+        template.save(file_name)
 
-            return FileResponse(
+        return FileResponse(
                 path=file_name,
                 media_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                 filename=document_template.name + '.docx'
