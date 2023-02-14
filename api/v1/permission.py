@@ -13,7 +13,8 @@ from services import permission_service
 router = APIRouter(prefix="/permissions", tags=["Permissions"], dependencies=[Depends(HTTPBearer())])
 
 
-@router.get("", response_model=List[PermissionRead], dependencies=[Depends(HTTPBearer())])
+@router.get("", dependencies=[Depends(HTTPBearer())],
+            response_model=List[PermissionRead])
 async def get_all(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
@@ -24,8 +25,9 @@ async def get_all(*,
     return permission_service.get_multi(db, skip, limit)
 
 
-@router.post("", status_code=status.HTTP_201_CREATED, response_model=PermissionRead,
-             dependencies=[Depends(HTTPBearer())])
+@router.post("", status_code=status.HTTP_201_CREATED,
+             dependencies=[Depends(HTTPBearer())],
+             response_model=PermissionRead)
 async def create(*,
     db: Session = Depends(get_db),
     body: PermissionCreate,
@@ -35,7 +37,8 @@ async def create(*,
     return permission_service.create(db, body)
 
 
-@router.put("/{id}/", response_model=PermissionRead, dependencies=[Depends(HTTPBearer())])
+@router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=PermissionRead)
 async def update(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
@@ -50,7 +53,8 @@ async def update(*,
 
 
 @router.delete("/{id}/", status_code=status.HTTP_202_ACCEPTED,
-               dependencies=[Depends(HTTPBearer())])
+               dependencies=[Depends(HTTPBearer())],
+               response_model=PermissionRead)
 async def delete(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,

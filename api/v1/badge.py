@@ -13,7 +13,8 @@ from services import badge_service
 router = APIRouter(prefix="/badges", tags=["Badges"], dependencies=[Depends(HTTPBearer())])
 
 
-@router.get("", response_model=List[BadgeRead])
+@router.get("", dependencies=[Depends(HTTPBearer())],
+            response_model=List[BadgeRead])
 async def get_all(*,
     db: Session = Depends(get_db),
     skip: int = 0,
@@ -24,7 +25,9 @@ async def get_all(*,
     return badge_service.get_multi(db, skip, limit)
 
 
-@router.post("", status_code=status.HTTP_201_CREATED, response_model=BadgeRead)
+@router.post("", status_code=status.HTTP_201_CREATED,
+             dependencies=[Depends(HTTPBearer())],
+             response_model=BadgeRead)
 async def create(*,
     db: Session = Depends(get_db),
     body: BadgeCreate,
@@ -34,7 +37,8 @@ async def create(*,
     return badge_service.create(db, body)
 
 
-@router.get("/{id}/", response_model=BadgeRead)
+@router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=BadgeRead)
 async def get_by_id(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
@@ -44,7 +48,8 @@ async def get_by_id(*,
     return badge_service.get_by_id(db, id)
 
 
-@router.put("/{id}/", response_model=BadgeRead)
+@router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=BadgeRead)
 async def update(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
@@ -58,7 +63,9 @@ async def update(*,
         obj_in=body)
 
 
-@router.delete("/{id}/",status_code=status.HTTP_202_ACCEPTED)
+@router.delete("/{id}/",status_code=status.HTTP_202_ACCEPTED,
+               dependencies=[Depends(HTTPBearer())],
+               response_model=BadgeRead)
 async def delete(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,

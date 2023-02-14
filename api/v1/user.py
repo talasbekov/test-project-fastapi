@@ -14,7 +14,8 @@ from services import user_service
 router = APIRouter(prefix="/users", tags=["Users"], dependencies=[Depends(HTTPBearer())])
 
 
-@router.get("", dependencies=[Depends(HTTPBearer())], response_model=List[UserRead])
+@router.get("", dependencies=[Depends(HTTPBearer())],
+            response_model=List[UserRead])
 async def get_all(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
@@ -26,7 +27,8 @@ async def get_all(*,
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
-             dependencies=[Depends(HTTPBearer())], response_model=UserRead)
+             dependencies=[Depends(HTTPBearer())],
+             response_model=UserRead)
 async def create(*,
     db: Session = Depends(get_db),
     body: UserCreate,
@@ -36,7 +38,8 @@ async def create(*,
     return user_service.create(db, body)
 
 
-@router.put("/{id}/", dependencies=[Depends(HTTPBearer())], response_model=UserRead)
+@router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=UserRead)
 async def update(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
@@ -51,7 +54,8 @@ async def update(*,
 
 
 @router.delete("/{id}/", status_code=status.HTTP_202_ACCEPTED,
-               dependencies=[Depends(HTTPBearer())], response_model=UserRead)
+               dependencies=[Depends(HTTPBearer())],
+               response_model=UserRead)
 async def delete(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
@@ -61,7 +65,9 @@ async def delete(*,
     user_service.remove(db, id)
 
 
-@router.patch("/{id}/group")
+@router.patch("/{id}/group", status_code=status.HTTP_202_ACCEPTED,
+              dependencies=[Depends(HTTPBearer())],
+              response_model=UserRead)
 async def update_user_group(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
