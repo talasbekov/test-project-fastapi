@@ -6,28 +6,28 @@ from sqlalchemy.orm import Session
 from fastapi_jwt_auth import AuthJWT
 
 from schemas import LoginForm, RegistrationForm, UserRead
-from core import get_db, configs
+from core import get_db, configs, transactional
 from services import auth_service, user_service
 from exceptions import SgoErpException
 
 router = APIRouter(prefix="/auth", tags=["Authorization"])
-
 
 @router.post("/login")
 async def login(form: LoginForm, db: Session = Depends(get_db), Authorize: AuthJWT = Depends()):
     return auth_service.login(form, db, Authorize)
 
 
-@router.post("/register", response_model=UserRead)
+@router.post("/register")
+@transactional
 async def register(form: RegistrationForm, db: Session = Depends(get_db)):
-    try:
-        created_user = auth_service.register(form, db)
-        db.commit()
-        return created_user
-    except HTTPException as e:
-        db.rollback()
-        raise e
-
+    # try:
+    #     created_user = auth_service.register(form, db)
+    #     db.commit()
+    #     return created_user
+    # except HTTPException as e:
+    #     db.rollback()
+    #     raise e
+    return auth_service.register(form, db)
 
 @router.get('/refresh', dependencies=[Depends(HTTPBearer())])
 def refresh_token(Authorize: AuthJWT = Depends(), db: Session = Depends(get_db)):

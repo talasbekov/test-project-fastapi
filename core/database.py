@@ -1,3 +1,6 @@
+from functools import wraps
+
+from fastapi import HTTPException
 from sqlalchemy import *
 from sqlalchemy.engine import create_engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -20,3 +23,23 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+def transactional(func):
+    @wraps(func)
+    async def wrapper(*args, **kwargs):
+        session = next(get_db())
+        try:
+            kwargs["db"] = session
+            res = await func(*args, **kwargs)
+            print(res)
+            session.commit()
+            return res
+        except Exception as e:
+            session.rollback()
+            if isinstance(e, HTTPException):
+                raise e
+            else:
+                raise HTTPException(status_code=400, detail=str(e))
+
+    return wrapper
