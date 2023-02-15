@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from core import get_db
 from schemas import PositionCreate, PositionUpdate, PositionRead
-from services import position_service
+from services import position_service, rank_service
 
 router = APIRouter(prefix="/positions", tags=["Positions"], dependencies=[Depends(HTTPBearer())])
 
@@ -46,6 +46,7 @@ async def update(*,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
+    rank_service.get_by_id(db, body.max_rank_id)
     return position_service.update(
         db=db,
         db_obj=position_service.get_by_id(db, id),
