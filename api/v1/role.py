@@ -57,12 +57,11 @@ async def update(*,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
-    return role_service.update(db, db_obj=role_service.get_by_id(id), obj_in=body)
+    return role_service.update(db, db_obj=role_service.get_by_id(db, id), obj_in=body)
 
 
-@router.delete("/{id}/", status_code=status.HTTP_202_ACCEPTED,
-               dependencies=[Depends(HTTPBearer())],
-               response_model=RoleRead)
+@router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
+               dependencies=[Depends(HTTPBearer())])
 async def delete(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,

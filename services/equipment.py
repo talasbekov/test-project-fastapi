@@ -12,6 +12,7 @@ class EquipmentService(ServiceBase[Equipment, EquipmentCreate, EquipmentUpdate])
         equipment = super().get(db, id)
         if equipment is None:
             raise NotFoundException(detail="Equipment is not found!")
+        return equipment
 
 
 equipment_service = EquipmentService(Equipment)

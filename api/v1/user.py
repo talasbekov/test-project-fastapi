@@ -25,17 +25,6 @@ async def get_all(*,
     return user_service.get_multi(db, skip, limit)
 
 
-@router.post("", status_code=status.HTTP_201_CREATED,
-             dependencies=[Depends(HTTPBearer())], response_model=UserRead)
-async def create(*,
-    db: Session = Depends(get_db),
-    body: UserCreate,
-    Authorize: AuthJWT = Depends()
-):
-    Authorize.jwt_required()
-    return user_service.create(db, body)
-
-
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())], response_model=UserRead)
 async def update(*,
     db: Session = Depends(get_db),
@@ -48,18 +37,6 @@ async def update(*,
         db=db,
         db_obj=user_service.get_by_id(db, id),
         obj_in=body)
-
-
-@router.delete("/{id}/", status_code=status.HTTP_202_ACCEPTED,
-               dependencies=[Depends(HTTPBearer())],
-               response_model=UserRead)
-async def delete(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
-    Authorize.jwt_required()
-    user_service.remove(db, id)
 
 
 @router.patch("/{id}/group", status_code=status.HTTP_202_ACCEPTED,

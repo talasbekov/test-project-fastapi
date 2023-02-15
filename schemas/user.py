@@ -8,7 +8,6 @@ from schemas import BadgeRead, GroupRead, PositionRead, RankRead
 
 class UserBase(BaseModel):
     email: EmailStr
-    password: str
     first_name: str
     last_name: str
     father_name: Optional[str]
@@ -37,7 +36,6 @@ class UserRead(UserBase):
     group: Optional[GroupRead]
     rank: Optional[RankRead]
     email: Optional[EmailStr]
-    password: Optional[str]
     first_name: Optional[str]
     last_name: Optional[str]
     group_id: Optional[uuid.UUID]

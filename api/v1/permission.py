@@ -52,9 +52,8 @@ async def update(*,
         obj_in=body)
 
 
-@router.delete("/{id}/", status_code=status.HTTP_202_ACCEPTED,
-               dependencies=[Depends(HTTPBearer())],
-               response_model=PermissionRead)
+@router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
+               dependencies=[Depends(HTTPBearer())])
 async def delete(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
