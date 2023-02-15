@@ -1,3 +1,4 @@
+import json
 from functools import wraps
 
 from fastapi import HTTPException
@@ -26,13 +27,13 @@ def get_db():
 
 
 def transactional(func):
+
     @wraps(func)
     async def wrapper(*args, **kwargs):
         session = next(get_db())
         try:
             kwargs["db"] = session
             res = await func(*args, **kwargs)
-            print(res)
             session.commit()
             return res
         except Exception as e:
