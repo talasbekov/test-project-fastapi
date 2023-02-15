@@ -25,7 +25,6 @@ class HrDocumentTemplate(Base):
     path = Column(String(255))
     subject_type = Column(Enum(SubjectType))
     properties = Column(JSON(none_as_null=True))
-    details = Column(JSON(none_as_null=True))
 
     document = relationship("HrDocument", back_populates="document_template")
 

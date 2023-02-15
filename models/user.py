@@ -33,6 +33,8 @@ class User(Base):
     actual_position_id = Column(UUID(as_uuid=True), ForeignKey("positions.id"), nullable=True)
     rank_id = Column(
         UUID(as_uuid=True), ForeignKey("ranks.id"), nullable=True)
+    
+    status = Column(String(255), nullable=True)
 
     birthday = Column(Date, nullable=True)
 

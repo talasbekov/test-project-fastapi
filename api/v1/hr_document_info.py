@@ -62,3 +62,13 @@ async def delete(*,
 ):
     Authorize.jwt_required()
     hr_document_info_service.remove(db, id)
+
+
+@router.get("/{id}/", status_code=status.HTTP_200_OK)
+async def get_by_document_id(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    return hr_document_info_service.get_by_document_id(db, id)

@@ -7,14 +7,13 @@ from fastapi.security import HTTPBearer
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import HrDocumentCreate, HrDocumentUpdate, HrDocumentRead
+from schemas import HrDocumentCreate, HrDocumentUpdate, HrDocumentRead, HrDocumentInit, HrDocumentSign
 from services import hr_document_service
 
 router = APIRouter(prefix="/hr-documents", tags=["HrDocuments"], dependencies=[Depends(HTTPBearer())])
 
 
-@router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[HrDocumentRead])
+@router.get("", response_model=List[HrDocumentRead])
 async def get_all(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
@@ -26,11 +25,10 @@ async def get_all(*,
     return hr_document_service.get_not_signed_documents(db, user_id, skip, limit)
 
 
-@router.post("", status_code=status.HTTP_201_CREATED,
-             dependencies=[Depends(HTTPBearer())])
+@router.post("", status_code=status.HTTP_201_CREATED, response_model=HrDocumentRead)
 async def initialize(*,
     db: Session = Depends(get_db),
-    body: HrDocumentCreate,
+    body: HrDocumentInit,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
@@ -38,7 +36,7 @@ async def initialize(*,
     role = Authorize.get_raw_jwt()['role']
     return hr_document_service.initialize(db, body, user_id, role)
 
-@router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
+@router.put("/{id}/",
             response_model=HrDocumentRead)
 async def update(*,
     db: Session = Depends(get_db),
@@ -53,7 +51,6 @@ async def update(*,
         obj_in=body)
 
 @router.delete("/{id}/", status_code=status.HTTP_202_ACCEPTED,
-               dependencies=[Depends(HTTPBearer())],
                response_model=HrDocumentRead)
 async def delete(*,
     db: Session = Depends(get_db),
@@ -64,22 +61,20 @@ async def delete(*,
     hr_document_service.remove(db, id)
 
 
-@router.post("/{id}/", status_code=status.HTTP_200_OK,
-             dependencies=[Depends(HTTPBearer())],
-             response_model=HrDocumentRead)
+@router.post("/{id}/", status_code=status.HTTP_200_OK)
 async def sign(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
-    comment: str,
+    body: HrDocumentSign,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
-    hr_document_service.sign(db, id, comment, user_id)
+    role = Authorize.get_raw_jwt()['role']
+    hr_document_service.sign(db, id, body, user_id, role)
 
 
-@router.get('/generate/{id}/', status_code=status.HTTP_200_OK,
-            dependencies=[Depends(HTTPBearer())])
+@router.get('/generate/{id}/', status_code=status.HTTP_200_OK)
 async def generate(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
@@ -87,3 +82,12 @@ async def generate(*,
 ):
     Authorize.jwt_required()
     return hr_document_service.generate(db, id)
+
+@router.get("/check")
+async def check(*,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    hr_document_service.get_multi(db)[0].properties
+    return 

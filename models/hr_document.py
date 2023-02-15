@@ -28,7 +28,6 @@ class HrDocument(Base):
     status = Column(Enum(HrDocumentStatus))
     due_date = Column(TIMESTAMP(timezone=True), nullable=False)
     properties = Column(JSON(none_as_null=True))
-    details = Column(JSON(none_as_null=True))
 
     document_template = relationship("HrDocumentTemplate", back_populates="document", cascade="all,delete")
     equipments = relationship("HrDocument", secondary="hr_document_equipments",

@@ -1,20 +1,27 @@
 import uuid
 from datetime import datetime
 
-from pydantic import BaseModel
-from typing import List, Dict, Union
+from pydantic import BaseModel, validator, ValidationError
+from typing import Any, Dict, List, Optional
 
 from models import HrDocumentStatus
 from .hr_document_template import HrDocumentTemplateRead
+from .validator import validate_property
 
 
 class HrDocumentBase(BaseModel):
     hr_document_template_id: uuid.UUID
     status: HrDocumentStatus
     due_date: datetime
-    properties: Union[dict, None]
-    details: Union[dict, None]
+    properties: Dict[str, Any]
 
+
+class HrDocumentInit(HrDocumentBase):
+    user_ids: List[uuid.UUID]
+
+class HrDocumentSign(BaseModel):
+    comment: Optional[str]
+    is_signed: bool
 
 class HrDocumentCreate(HrDocumentBase):
     pass
@@ -26,7 +33,8 @@ class HrDocumentUpdate(HrDocumentBase):
 
 class HrDocumentRead(HrDocumentBase):
     id: uuid.UUID
-    document_type: HrDocumentTemplateRead
+    properties: Optional[dict]
+    document_template: Optional[HrDocumentTemplateRead]
 
     class Config:
         orm_mode = True

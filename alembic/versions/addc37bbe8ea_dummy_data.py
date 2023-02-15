@@ -15,7 +15,7 @@ from core import configs, Base
 
 # revision identifiers, used by Alembic.
 revision = 'addc37bbe8ea'
-down_revision = 'c31e385c9ab7'
+down_revision = '996bad760644'
 branch_labels = None
 depends_on = None
 
@@ -35,39 +35,39 @@ def upgrade() -> None:
     rank11_id = get_uuid()
     rank12_id = get_uuid()
     rank13_id = get_uuid()
-    
+
     op.bulk_insert(
         Base.metadata.tables['ranks'],
         [{
             'id': rank1_id,
-            'name': 'рядовой'
+            'name': 'Рядовой'
         }, {
             'id': rank2_id,
-            'name': 'младший сержант'
+            'name': 'Младший сержант'
         }, {
             'id': rank3_id,
-            'name': 'сержант'
+            'name': 'Сержант'
         }, {
             'id': rank4_id,
-            'name': 'старший сержант'
+            'name': 'Старший сержант'
         }, {
             'id': rank5_id,
-            'name': 'лейтенант'
+            'name': 'Лейтенант'
         }, {
             'id': rank6_id,
-            'name': 'старший лейтенант'
+            'name': 'Старший лейтенант'
         }, {
             'id': rank7_id,
-            'name': 'капитан'
+            'name': 'Капитан'
         }, {
             'id': rank8_id,
-            'name': 'майор'
+            'name': 'Майор'
         }, {
             'id': rank9_id,
-            'name': 'подполковник'
+            'name': 'Подполковник'
         }, {
             'id': rank10_id,
-            'name': 'полковник'
+            'name': 'Полковник'
         }, {
             'id': rank11_id,
             'name': 'Генерал-майор'
@@ -104,7 +104,7 @@ def upgrade() -> None:
             'id': position1_id,
             'name': 'Военно-служащий срочной службы',
             'max_rank_id': rank1_id
-        },{
+        }, {
             'id': position2_id,
             'name': 'Сотрудник охраны 3-категории',
             'max_rank_id': rank2_id
@@ -218,22 +218,22 @@ def upgrade() -> None:
         [
             create_user(
                 user1_id,
-                "Адлет",
-                "Наурыбаев", 
-                'adilet@mail.ru', 
-                group3_id, 
-                "Альфа 1", 
-                '1', 
+                "Адилет",
+                "Наурыбаев",
+                'adilet@mail.ru',
+                group2_id,
+                "Альфа 1",
+                '1',
                 position1_id,
                 rank1_id,
                 position1_id),
             create_user(
                 user2_id,
                 "Ахат",
-                "Наурыбаев", 
-                'ahat@mail.ru', 
-                group3_id, 
-                "Альфа 2", 
+                "Наурыбаев",
+                'ahat@mail.ru',
+                group3_id,
+                "Альфа 2",
                 '2',
                 position1_id,
                 rank1_id,
@@ -241,88 +241,88 @@ def upgrade() -> None:
             create_user(
                 user3_id,
                 "Асет",
-                "Наурыбаев", 
-                'aset@mail.ru', 
-                group3_id, 
-                "Альфа 3", 
-                '3', 
+                "Наурыбаев",
+                'aset@mail.ru',
+                group3_id,
+                "Альфа 3",
+                '3',
                 position1_id,
                 rank1_id,
                 position1_id),
             create_user(
                 user4_id,
                 "Жасулан",
-                "Наурыбеков", 
-                'zhasulan@mail.ru', 
-                group3_id, 
-                "Альфа 4", 
-                '4', 
+                "Наурыбеков",
+                'zhasulan@mail.ru',
+                group3_id,
+                "Альфа 4",
+                '4',
                 position2_id,
                 rank2_id,
                 position2_id),
             create_user(
                 user5_id,
                 "Ануар",
-                "Наурыбеков", 
-                'anuar@mail.ru', 
-                group2_id, 
-                "Альфа 5", 
-                '5', 
+                "Наурыбеков",
+                'anuar@mail.ru',
+                group2_id,
+                "Альфа 5",
+                '5',
                 position1_id,
                 rank1_id,
                 position1_id),
             create_user(
                 user6_id,
                 "Бексундет",
-                "Наурыбеков", 
-                'beksundet@mail.ru', 
-                group2_id, 
-                "Альфа 6", 
-                '6', 
+                "Наурыбеков",
+                'beksundet@mail.ru',
+                group2_id,
+                "Альфа 6",
+                '6',
                 position3_id,
                 rank2_id,
                 position3_id),
             create_user(
                 user7_id,
                 "Ерден",
-                "Наурыбеков", 
-                'erden@mail.ru', 
-                group2_id, 
-                "Альфа 7", 
-                '7', 
+                "Наурыбеков",
+                'erden@mail.ru',
+                group2_id,
+                "Альфа 7",
+                '7',
                 position1_id,
                 rank1_id,
                 position1_id),
             create_user(
                 user8_id,
                 "Еркин",
-                "Наурыбеков", 
-                'erkin@mail.ru', 
-                group3_id, 
-                "Альфа 8", 
-                '8', 
+                "Наурыбеков",
+                'erkin@mail.ru',
+                group3_id,
+                "Альфа 8",
+                '8',
                 position1_id,
                 rank1_id,
                 position1_id),
             create_user(
                 user9_id,
                 "Арман",
-                "Наурыбеков", 
-                'arman@mail.ru', 
-                group3_id, 
-                "Альфа 9", 
-                '9', 
+                "Наурыбеков",
+                'arman@mail.ru',
+                group3_id,
+                "Альфа 9",
+                '9',
                 position1_id,
                 rank1_id,
                 position1_id),
             create_user(
                 user10_id,
                 "Бауыржан",
-                "Наурыбеков", 
-                'bauyrzhan@mail.ru', 
-                group3_id, 
-                "Альфа 10", 
-                '10', 
+                "Наурыбеков",
+                'bauyrzhan@mail.ru',
+                group3_id,
+                "Альфа 10",
+                '10',
                 position4_id,
                 rank3_id,
                 position4_id),
@@ -347,13 +347,13 @@ def upgrade() -> None:
         Base.metadata.tables['hr_document_templates'],
         [{
             'name': 'Приказ о назначении на должность',
-            'path': '../static/templates/приказ_о_назначении на должность.docx',
+            'path': 'static/templates/приказ_о_назначении на должность.docx',
             'subject_type': 1,
             'properties': {},
             'id': template1_id
-        },{
+        }, {
             'name': 'Приказ на отпуск',
-            'path': '../static/templates/приказ_на_отпуск.docx',
+            'path': 'static/templates/приказ_на_отпуск.docx',
             'subject_type': 1,
             'properties': {},
             'id': template2_id
@@ -376,7 +376,7 @@ def upgrade() -> None:
     step2_1 = get_uuid()
     step2_2 = get_uuid()
     step2_3 = get_uuid()
-    
+
     op.bulk_insert(
         Base.metadata.tables['hr_document_steps'],
         [{
@@ -438,7 +438,8 @@ def create_user(id, name, surname, email, group_id, call_sign, number,  position
         'phone_number': '+77771234789',
         'address': 'Mangilik Yel, 1',
         'rank_id': rank_id,
-        'actual_position_id': actual_position_id
+        'actual_position_id': actual_position_id,
+        'status': "На работе"
     }
 
 

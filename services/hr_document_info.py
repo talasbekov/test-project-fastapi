@@ -23,14 +23,14 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
         
         return hr_document_info
     
-    def create_info_for_step(self, db: Session, document_id: str, step_id: str, user_id: str):
+    def create_info_for_step(self, db: Session, document_id: str, step_id: str, user_id: str, is_signed: bool):
 
         document_info = HrDocumentInfoCreate(
             hr_document_id=document_id,
             hr_document_step_id=step_id,
             signed_by=user_id,
             comment="",
-            is_signed=True
+            is_signed=is_signed
         )
 
         return super().create(db, document_info)
@@ -65,7 +65,19 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
         ).first()
 
         if info is None:
-            raise NotFoundException(detail=f'HrDocumentInfo with id: {id} is not found!')
+            raise NotFoundException(detail=f'Нет истории подписания!')
+
+        return info
+    
+    def get_last_unsigned_step_info(self, db: Session, id: str):
+
+        info = db.query(HrDocumentInfo).filter(
+            HrDocumentInfo.hr_document_id == id,
+            HrDocumentInfo.is_signed == None
+        ).first()
+
+        if info is None:
+            raise NotFoundException(detail=f'Все подписано!')
 
         return info
 
@@ -81,6 +93,16 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
         db.refresh(info)
 
         return info
+    
+    def get_by_document_id(self, db: Session, id: str):
+
+        infos = db.query(HrDocumentInfo).filter(
+            HrDocumentInfo.hr_document_id == id
+        ).order_by(
+            HrDocumentInfo.created_at.desc()
+        ).all()
+
+        return infos
 
 
 hr_document_info_service = HrDocumentInfoService(HrDocumentInfo)

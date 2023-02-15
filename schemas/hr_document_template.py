@@ -1,17 +1,19 @@
 import uuid
 
-from pydantic import BaseModel
-from typing import List, Dict, Union
+from pydantic import BaseModel, ValidationError, validator
+from typing import List, Dict, Union, Optional
 
 from models import SubjectType
+from .validator import validate_property
 
 
 class HrDocumentTemplateBase(BaseModel):
     name: str
     path: str
     subject_type: SubjectType
-    properties: Union[dict, None]
-    details: Union[dict, None]
+    properties: Dict[str, dict]
+
+    _check_properties = validator('properties', allow_reuse=True)(validate_property)
 
 
 class HrDocumentTemplateCreate(HrDocumentTemplateBase):
@@ -24,6 +26,7 @@ class HrDocumentTemplateUpdate(HrDocumentTemplateBase):
 
 class HrDocumentTemplateRead(HrDocumentTemplateBase):
     id: uuid.UUID
+    properties: Optional[dict]
 
     class Config:
         orm_mode = True
