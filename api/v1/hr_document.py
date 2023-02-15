@@ -38,6 +38,7 @@ async def initialize(*,
     role = Authorize.get_raw_jwt()['role']
     return hr_document_service.initialize(db, body, user_id, role)
 
+
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=HrDocumentRead)
 async def update(*,
@@ -51,6 +52,7 @@ async def update(*,
         db=db,
         db_obj=hr_document_service.get_by_id(db, id),
         obj_in=body)
+
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())])
