@@ -25,7 +25,7 @@ class GroupService(ServiceBase[Group, GroupCreate, GroupUpdate]):
             skip: int = 0,
             limit: int = 100
     ) -> List[Group]:
-        return db.query(Group).filter(
+        return db.query(self.model).filter(
             Group.parent_group_id == None
         ).offset(skip).limit(limit).all()
 
@@ -44,8 +44,7 @@ class GroupService(ServiceBase[Group, GroupCreate, GroupUpdate]):
             raise BadRequestException(f"Parent group with id: {new_parent_group_id} is not found!")
         group.parent_group_id = new_parent_group_id
         db.add(group)
-        db.commit()
-        db.refresh(group)
+        db.flush()
         return group
 
 

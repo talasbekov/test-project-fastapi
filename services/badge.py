@@ -21,8 +21,7 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
             url= body.url
         )
         db.add(badge)
-        db.commit()
-        db.refresh(badge)
+        db.flush()
         return badge
 
 

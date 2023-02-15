@@ -88,8 +88,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         hr_document_info_service.create_next_info_for_step(db, document.id, next_step.id)
  
         db.add(document)
-        db.commit()
-        db.refresh(document)
+        db.flush()
+
         return document
     
     def get_not_signed_documents(self, db: Session, user_id: str, skip: int, limit: int):
@@ -132,8 +132,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             document.status = HrDocumentStatus.ON_REVISION
 
         db.add(document)
-        db.commit()
-        db.refresh(document)
+        db.flush()
 
         return document
 
@@ -169,6 +168,12 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             media_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document',
             filename=document_template.name + '.docx'
             )
+
+    def get_all_by_option(self, db: Session, option: str):
+        service = options.get(option)
+        if service is None:
+            raise InvalidOperationException(f'Работа с {option} еще не поддерживается! Обратитесь к администратору для получения информации!')
+        return service.get_multi(db)
 
     def _finish_document(self, db: Session, document: HrDocument, users: List[User]):
 
@@ -206,8 +211,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                             self._set_attr(db, user, value['field_name'], val['value'])
 
         db.add(document)
-        db.commit()
-        db.refresh(document)
+        db.flush()
 
         return document
 
@@ -228,8 +232,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             setattr(user, key, value)
 
         db.add(user)
-        db.commit()
-        db.refresh(user)
+        db.flush()
+
         return user
     
     def _get_service(self, key):

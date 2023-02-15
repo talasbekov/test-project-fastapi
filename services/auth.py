@@ -9,6 +9,7 @@ from fastapi_jwt_auth import AuthJWT
 
 from core import configs
 
+from models import User
 from schemas import LoginForm, RegistrationForm, UserCreate
 
 from services import user_service, group_service, position_service
@@ -26,33 +27,24 @@ class AuthService():
         if not verify_password(form.password, user.password):
             raise BadRequestException(detail='Incorrect email or password')
         
-        user_claims = {
-            "role": user.position.name
-        }
-        access_token = Authorize.create_access_token(
-            subject=str(user.id), user_claims=user_claims, expires_time=timedelta(minutes=configs.ACCESS_TOKEN_EXPIRES_IN)
-        )
-        refresh_token = Authorize.create_refresh_token(
-            subject=str(user.id), user_claims=user_claims, expires_time=timedelta(minutes=configs.REFRESH_TOKEN_EXPIRES_IN)
-        )
+        access_token, refresh_token = self._generate_tokens(Authorize, user)
 
         return {"access_token": access_token, "refresh_token": refresh_token}
     
     def register(self, form: RegistrationForm, db: Session):
         group_obj = group_service.get_by_id(db, form.group_id)
         position_obj = position_service.get_by_id(db, form.position_id)
-        
+
         if user_service.get_by_email(db, EmailStr(form.email).lower()):
-            raise HTTPException(status_code=400, detail="User with this email already exists!")
+            raise BadRequestException(detail="User with this email already exists!")
         if user_service.get_by_call_sign(db, form.call_sign):
-            raise HTTPException(status_code=400, detail="User with this call_sign already exists!")
+            raise BadRequestException(detail="User with this call_sign already exists!")
         if user_service.get_by_id_number(db, form.id_number):
-            raise HTTPException(status_code=400, detail="User with this id_number already exists!")
+            raise BadRequestException(detail="User with this id_number already exists!")
         if not is_valid_phone_number(form.phone_number):
-            raise HTTPException(status_code=400, detail="Invalid phone number!")
+            raise BadRequestException(detail="Invalid phone number!")
         if form.password != form.re_password:
-            raise HTTPException(status_code=400, detail="Password mismatch!")
-        
+            raise BadRequestException(detail="Password mismatch!")
 
         user_obj_in = UserCreate(
             email=EmailStr(form.email).lower(),
@@ -70,6 +62,38 @@ class AuthService():
         )
 
         return user_service.create(db, user_obj_in)
+    
+    def refresh_token(self, db: Session, Authorize: AuthJWT):
+        if not Authorize.get_jwt_subject():
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                                    detail='Could not refresh access token')
+        user = user_service.get(db, Authorize.get_jwt_subject())
+        if not user:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                                detail='The user belonging to this token no longer exist')
+        
+        access_token, refresh_token = self._generate_tokens(Authorize, user)
+
+        return {"access_token": access_token, "refresh_token": refresh_token}
+
+    
+    def _generate_tokens(self, Authorize: AuthJWT, user: User):
+
+        user_claims = {
+            "role": user.position.name
+        }
+        access_token = Authorize.create_access_token(
+            subject=str(user.id),
+            user_claims=user_claims,
+            expires_time=timedelta(minutes=configs.ACCESS_TOKEN_EXPIRES_IN)
+        )
+        refresh_token = Authorize.create_refresh_token(
+            subject=str(user.id),
+            user_claims=user_claims,
+            expires_time=timedelta(minutes=configs.REFRESH_TOKEN_EXPIRES_IN)
+        )
+
+        return access_token, refresh_token
 
 
 auth_service = AuthService()

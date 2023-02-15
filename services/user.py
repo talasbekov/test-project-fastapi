@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from .base import ServiceBase
 
 from models import User, Group
+from services import group_service
 from schemas import UserCreate, UserUpdate, UserRead, GroupUpdate
 from exceptions import NotFoundException
 
@@ -23,13 +24,13 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
     def get_by_email(self, db: Session, email: str):
 
-        user = db.query(User).filter(User.email == email).first()
+        user = db.query(self.model).filter(User.email == email).first()
 
         return user
     
     def get_by_call_sign(self, db: Session, call_sign: str):
         
-        user = db.query(User).filter(User.call_sign == call_sign).first()
+        user = db.query(self.model).filter(User.call_sign == call_sign).first()
         
         return user
     
@@ -46,14 +47,12 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
                           ) -> User:
         user = self.get_by_id(db, id)
 
-        group = db.query(Group).filter(Group.id == group_id).first()
-        if group is None:
-            raise NotFoundException(detail="Group is not found!")
+        group_service.get_by_id(db, group_id)
 
         user.group_id = group_id
         db.add(user)
-        db.commit()
-        db.refresh(user)
+        db.flush()
+
         return user
     
     def get_fields(self):

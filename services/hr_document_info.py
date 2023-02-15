@@ -89,8 +89,7 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
         info.updated_at = datetime.now()
 
         db.add(info)
-        db.commit()
-        db.refresh(info)
+        db.flush()
 
         return info
     
