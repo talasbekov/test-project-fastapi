@@ -8,6 +8,7 @@ from fastapi_jwt_auth import AuthJWT
 from schemas import LoginForm, RegistrationForm, UserRead
 from core import get_db, configs
 from services import auth_service, user_service
+from exceptions import SgoErpException
 
 router = APIRouter(prefix="/auth", tags=["Authorization"])
 
@@ -19,7 +20,13 @@ async def login(form: LoginForm, db: Session = Depends(get_db), Authorize: AuthJ
 
 @router.post("/register", response_model=UserRead)
 async def register(form: RegistrationForm, db: Session = Depends(get_db)):
-    return auth_service.register(form, db)
+    try:
+        created_user = auth_service.register(form, db)
+        db.commit()
+        return created_user
+    except HTTPException as e:
+        db.rollback()
+        raise e
 
 
 @router.get('/refresh', dependencies=[Depends(HTTPBearer())])

@@ -39,16 +39,20 @@ class AuthService():
         return {"access_token": access_token, "refresh_token": refresh_token}
     
     def register(self, form: RegistrationForm, db: Session):
-        user_obj = user_service.get_by_email(db, EmailStr(form.email).lower())
         group_obj = group_service.get_by_id(db, form.group_id)
         position_obj = position_service.get_by_id(db, form.position_id)
         
-        if user_obj:
+        if user_service.get_by_email(db, EmailStr(form.email).lower()):
             raise HTTPException(status_code=400, detail="User with this email already exists!")
+        if user_service.get_by_call_sign(db, form.call_sign):
+            raise HTTPException(status_code=400, detail="User with this call_sign already exists!")
+        if user_service.get_by_id_number(db, form.id_number):
+            raise HTTPException(status_code=400, detail="User with this id_number already exists!")
         if not is_valid_phone_number(form.phone_number):
             raise HTTPException(status_code=400, detail="Invalid phone number!")
         if form.password != form.re_password:
             raise HTTPException(status_code=400, detail="Password mismatch!")
+        
 
         user_obj_in = UserCreate(
             email=EmailStr(form.email).lower(),

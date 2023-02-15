@@ -26,6 +26,18 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         user = db.query(User).filter(User.email == email).first()
 
         return user
+    
+    def get_by_call_sign(self, db: Session, call_sign: str):
+        
+        user = db.query(User).filter(User.call_sign == call_sign).first()
+        
+        return user
+    
+    def get_by_id_number(self, db: Session, id_number: str):
+        
+        user = db.query(self.model).filter(self.model.id_number == id_number).first()
+        
+        return user
 
     def update_user_group(self,
                           db: Session,
