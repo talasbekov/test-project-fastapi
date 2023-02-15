@@ -18,3 +18,4 @@ from .equipment import equipment_service
 from .badge import badge_service
 from .rank import rank_service
 from .hr_document import hr_document_service
+from .base import ServiceBase

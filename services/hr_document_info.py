@@ -51,7 +51,7 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
 
         infos = db.query(HrDocumentInfo).filter(
             HrDocumentInfo.is_signed == None,
-            HrDocumentInfo.hr_document_step.has(position_id = position_id)
+            HrDocumentInfo.hr_document_step.has(position_id=position_id)
         ).all()
 
         return infos

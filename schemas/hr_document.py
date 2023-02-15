@@ -19,9 +19,11 @@ class HrDocumentBase(BaseModel):
 class HrDocumentInit(HrDocumentBase):
     user_ids: List[uuid.UUID]
 
+
 class HrDocumentSign(BaseModel):
     comment: Optional[str]
     is_signed: bool
+
 
 class HrDocumentCreate(HrDocumentBase):
     pass
