@@ -36,8 +36,7 @@ async def initialize(*,
     role = Authorize.get_raw_jwt()['role']
     return hr_document_service.initialize(db, body, user_id, role)
 
-@router.put("/{id}/",
-            response_model=HrDocumentRead)
+@router.put("/{id}/", response_model=HrDocumentRead)
 async def update(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
@@ -50,8 +49,8 @@ async def update(*,
         db_obj=hr_document_service.get_by_id(db, id),
         obj_in=body)
 
-@router.delete("/{id}/", status_code=status.HTTP_202_ACCEPTED,
-               response_model=HrDocumentRead)
+
+@router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT)
 async def delete(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,

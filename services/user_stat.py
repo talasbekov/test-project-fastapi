@@ -9,9 +9,10 @@ from exceptions import NotFoundException
 
 class UserStatService(ServiceBase[UserStat, UserStatCreate, UserStatUpdate]):
     def get_by_id(self, db: Session, id: str):
-        userstat = super().get(db, id)
-        if userstat is None:
+        user_stat = super().get(db, id)
+        if user_stat is None:
             raise NotFoundException(detail="Statistics of user is not found!")
+        return user_stat
 
 
 user_stat_service = UserStatService(UserStat)

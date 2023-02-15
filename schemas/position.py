@@ -19,8 +19,9 @@ class PositionUpdate(PositionBase):
 
 
 class PositionRead(PositionBase):
-    id: uuid.UUID
+    id: Optional[uuid.UUID]
     name: Optional[str]
+    max_rank_id: Optional[uuid.UUID]
 
     class Config:
         orm_mode = True

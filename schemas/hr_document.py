@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 
 from pydantic import BaseModel, validator, ValidationError
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from models import HrDocumentStatus
 from .hr_document_template import HrDocumentTemplateRead
@@ -32,9 +32,14 @@ class HrDocumentUpdate(HrDocumentBase):
 
 
 class HrDocumentRead(HrDocumentBase):
-    id: uuid.UUID
+    id: Optional[uuid.UUID]
     properties: Optional[dict]
     document_template: Optional[HrDocumentTemplateRead]
+    hr_document_template_id: Optional[uuid.UUID]
+    status: Optional[HrDocumentStatus]
+    due_date: Optional[datetime]
+    properties: Optional[Union[dict, None]]
+    details: Optional[Union[dict, None]]
 
     class Config:
         orm_mode = True

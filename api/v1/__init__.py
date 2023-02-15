@@ -17,6 +17,8 @@ from .rank import router as rank_router
 
 router = APIRouter(prefix="/v1")
 
+router.include_router(auth_router)
+router.include_router(user_router)
 router.include_router(hr_document_router)
 router.include_router(role_router)
 router.include_router(group_router)
@@ -26,8 +28,6 @@ router.include_router(hr_document_template_router)
 router.include_router(user_stat_router)
 router.include_router(position_router)
 router.include_router(permission_router)
-router.include_router(user_router)
-router.include_router(auth_router)
 router.include_router(equipment_router)
 router.include_router(badge_router)
 router.include_router(rank_router)

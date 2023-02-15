@@ -73,9 +73,8 @@ async def update_parent(*,
     return group_service.change_parent_group(db, id, new_parent_group_id)
 
 
-@router.delete("/{id}/", status_code=status.HTTP_202_ACCEPTED,
-               dependencies=[Depends(HTTPBearer())],
-               response_model=GroupRead)
+@router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
+               dependencies=[Depends(HTTPBearer())])
 async def delete(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,

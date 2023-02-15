@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from core import get_db
 from schemas import UserStatCreate, UserStatUpdate, UserStatRead
-from services import user_stat_service
+from services import user_stat_service, user_service
 
 router = APIRouter(prefix="/user-stats", tags=["UserStats"], dependencies=[Depends(HTTPBearer())])
 
@@ -45,15 +45,15 @@ async def update(*,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
+    user_service.get_by_id(db, body.user_id)
     return user_stat_service.update(
         db=db,
         db_obj=user_stat_service.get_by_id(db, id),
         obj_in=body)
 
 
-@router.delete("/{id}/", status_code=status.HTTP_202_ACCEPTED,
-               dependencies=[Depends(HTTPBearer())],
-               response_model=UserStatRead)
+@router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
+               dependencies=[Depends(HTTPBearer())])
 async def delete(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,

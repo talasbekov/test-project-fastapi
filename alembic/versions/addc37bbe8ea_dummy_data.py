@@ -347,13 +347,13 @@ def upgrade() -> None:
         Base.metadata.tables['hr_document_templates'],
         [{
             'name': 'Приказ о назначении на должность',
-            'path': 'static/templates/приказ_о_назначении на должность.docx',
+            'path': 'static/templates/приказ о назначении на должность.docx',
             'subject_type': 1,
             'properties': {},
             'id': template1_id
         }, {
             'name': 'Приказ на отпуск',
-            'path': 'static/templates/приказ_на_отпуск.docx',
+            'path': 'static/templates/приказ на отпуск.docx',
             'subject_type': 1,
             'properties': {},
             'id': template2_id

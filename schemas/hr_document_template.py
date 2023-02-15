@@ -25,8 +25,12 @@ class HrDocumentTemplateUpdate(HrDocumentTemplateBase):
 
 
 class HrDocumentTemplateRead(HrDocumentTemplateBase):
-    id: uuid.UUID
-    properties: Optional[dict]
+    id: Optional[uuid.UUID]
+    name: Optional[str]
+    path: Optional[str]
+    subject_type: Optional[SubjectType]
+    properties: Optional[Union[dict, None]]
+    details: Optional[Union[dict, None]]
 
     class Config:
         orm_mode = True
