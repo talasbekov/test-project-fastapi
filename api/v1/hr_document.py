@@ -72,6 +72,15 @@ async def sign(*,
     role = Authorize.get_raw_jwt()['role']
     hr_document_service.sign(db, id, body, user_id, role)
 
+@router.get("/{id}/", response_model=HrDocumentRead)
+async def get_by_id(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    return hr_document_service.get_by_id(db, id)
+ 
 
 @router.get('/generate/{id}/', status_code=status.HTTP_200_OK)
 async def generate(*,
@@ -82,11 +91,12 @@ async def generate(*,
     Authorize.jwt_required()
     return hr_document_service.generate(db, id)
 
-@router.get("/check")
-async def check(*,
+
+@router.get('/options', status_code=status.HTTP_200_OK)
+async def get_data_by_option(*,
     db: Session = Depends(get_db),
+    option: str,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
-    hr_document_service.get_multi(db)[0].properties
-    return 
+    return hr_document_service.get_all_by_option(db, option)

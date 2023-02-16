@@ -15,7 +15,7 @@ from core import configs, Base
 
 # revision identifiers, used by Alembic.
 revision = 'addc37bbe8ea'
-down_revision = '996bad760644'
+down_revision = '26095a1758e4'
 branch_labels = None
 depends_on = None
 
@@ -361,12 +361,33 @@ def upgrade() -> None:
     )
 
     role_id = get_uuid()
+    role2_id = get_uuid()
+    role3_id = get_uuid()
+    role4_id = get_uuid()
+    role5_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['roles'],
         [{
             'id': role_id,
-            'name': "Согласующий"
+            'name': "Согласующий",
+            'can_cancel': True
+        }, {
+            'id': role2_id,
+            'name': "Эксперт",
+            'can_cancel': False
+        }, {
+            'id': role3_id,
+            'name': "Утверждающий",
+            'can_cancel': True
+        }, {
+            'id': role4_id,
+            'name': "Уведомляемый",
+            'can_cancel': False
+        }, {
+            'id': role5_id,
+            'name': "Инициатор",
+            'can_cancel': True
         }]
     )
 
@@ -383,37 +404,37 @@ def upgrade() -> None:
             'hr_document_template_id': template1_id,
             'previous_step_id': None,
             'position_id': position2_id,
-            'role_id': role_id,
+            'role_id': role5_id,
             'id': step1_1
         }, {
             'hr_document_template_id': template1_id,
             'previous_step_id': step1_1,
             'position_id': position3_id,
-            'role_id': role_id,
+            'role_id': role2_id,
             'id': step1_2
         }, {
             'hr_document_template_id': template1_id,
             'previous_step_id': step1_2,
             'position_id': position4_id,
-            'role_id': role_id,
+            'role_id': role3_id,
             'id': step1_3
         }, {
             'hr_document_template_id': template2_id,
             'previous_step_id': None,
             'position_id': position2_id,
-            'role_id': role_id,
+            'role_id': role5_id,
             'id': step2_1
         }, {
             'hr_document_template_id': template2_id,
             'previous_step_id': step2_1,
             'position_id': position3_id,
-            'role_id': role_id,
+            'role_id': role2_id,
             'id': step2_2
         }, {
             'hr_document_template_id': template2_id,
             'previous_step_id': step2_2,
             'position_id': position4_id,
-            'role_id': role_id,
+            'role_id': role3_id,
             'id': step2_3
         }]
     )

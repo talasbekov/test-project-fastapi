@@ -15,6 +15,21 @@ class HrDocumentBase(BaseModel):
     due_date: datetime
     properties: Dict[str, Any]
 
+    @validator('properties')
+    def properties_validator(cls, v):
+        if v is None:
+            return v
+        if not isinstance(v, dict):
+            raise ValueError(f'properties should be dictionary')
+        keys = list(v)
+        for key in keys:
+            value = keys[key]
+            if type(value) == dict:
+                val_keys = list(value)
+                if 'name' not in val_keys or 'value' not in val_keys:
+                    raise ValueError(f'name or value should be in {key}!')
+        return v
+
 
 class HrDocumentInit(HrDocumentBase):
     user_ids: List[uuid.UUID]
@@ -41,7 +56,7 @@ class HrDocumentRead(HrDocumentBase):
     status: Optional[HrDocumentStatus]
     due_date: Optional[datetime]
     properties: Optional[Union[dict, None]]
-    details: Optional[Union[dict, None]]
+    can_cancel: Optional[bool]
 
     class Config:
         orm_mode = True

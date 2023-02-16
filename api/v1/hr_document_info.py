@@ -13,8 +13,7 @@ from services import hr_document_info_service
 router = APIRouter(prefix="/hr-documents-info", tags=["HrDocumentInfos"], dependencies=[Depends(HTTPBearer())])
 
 
-@router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[HrDocumentInfoRead])
+@router.get("", response_model=List[HrDocumentInfoRead])
 async def get_all(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
@@ -26,7 +25,6 @@ async def get_all(*,
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
-             dependencies=[Depends(HTTPBearer())],
              response_model=HrDocumentInfoRead)
 async def create(*,
     db: Session = Depends(get_db),
@@ -37,8 +35,7 @@ async def create(*,
     return hr_document_info_service.create(db, body)
 
 
-@router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=HrDocumentInfoRead)
+@router.put("/{id}/", response_model=HrDocumentInfoRead)
 async def update(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
@@ -52,8 +49,7 @@ async def update(*,
         obj_in=body)
 
 
-@router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
-               dependencies=[Depends(HTTPBearer())])
+@router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT)
 async def delete(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
@@ -70,4 +66,4 @@ async def get_by_document_id(*,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
-    return hr_document_info_service.get_by_document_id(db, id)
+    return hr_document_info_service.get_by_id(db, id)

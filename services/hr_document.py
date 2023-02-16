@@ -9,12 +9,13 @@ from docxtpl import DocxTemplate
 from .base import ServiceBase
 
 from core import Base
-from models import HrDocument, HrDocumentStatus, User
+from models import HrDocument, HrDocumentStatus, User, HrDocumentInfo
 from schemas import (
     HrDocumentCreate,
     HrDocumentUpdate,
     HrDocumentInit,
-    HrDocumentSign
+    HrDocumentSign,
+    HrDocumentRead
 )
 
 from exceptions import (
@@ -83,17 +84,25 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         hr_document_info_service.create_next_info_for_step(db, document.id, next_step.id)
 
         db.add(document)
-        db.commit()
-        db.refresh(document)
-        return document
+        db.flush()
 
+        return document
+    
+    def get_all(self, db: Session, user_id, skip: int, limit: int):
+
+        user = user_service.get_by_id(db, user_id)
+
+        infos = hr_document_info_service.get_all(db, user.position_id, skip, limit)
+
+        return [self._to_response(i) for i in infos]
+    
     def get_not_signed_documents(self, db: Session, user_id: str, skip: int, limit: int):
 
         user = user_service.get_by_id(db, user_id)
 
-        infos = hr_document_info_service.get_not_signed_by_position(db, user.position_id)
+        infos = hr_document_info_service.get_not_signed_by_position(db, user.position_id, skip, limit)
 
-        return [i.hr_document for i in infos]
+        return [self._to_response(i) for i in infos]
 
     def sign(self, db: Session, id: str, body: HrDocumentSign, user_id: str, role: str):
 
@@ -105,6 +114,9 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             raise ForbiddenException(detail=f'Вы не можете подписать этот документ!')
 
         user: User = user_service.get_by_id(db, user_id)
+
+        if not info.hr_document_step.role.can_cancel:
+            body.is_signed = True
 
         hr_document_info_service.sign(db, info, user_id, body.comment, body.is_signed)
 
@@ -127,8 +139,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             document.status = HrDocumentStatus.ON_REVISION
 
         db.add(document)
-        db.commit()
-        db.refresh(document)
+        db.flush()
 
         return document
 
@@ -160,6 +171,12 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             media_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document',
             filename=document_template.name + '.docx'
         )
+
+    def get_all_by_option(self, db: Session, option: str):
+        service = options.get(option)
+        if service is None:
+            raise InvalidOperationException(f'Работа с {option} еще не поддерживается! Обратитесь к администратору для получения информации!')
+        return service.get_multi(db)
 
     def _finish_document(self, db: Session, document: HrDocument, users: List[User]):
 
@@ -197,8 +214,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                             self._set_attr(db, user, value['field_name'], val['value'])
 
         db.add(document)
-        db.commit()
-        db.refresh(document)
+        db.flush()
 
         return document
 
@@ -219,8 +235,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             setattr(user, key, value)
 
         db.add(user)
-        db.commit()
-        db.refresh(user)
+        db.flush()
+
         return user
 
     def _get_service(self, key):
@@ -228,6 +244,13 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         if service is None:
             raise InvalidOperationException(f'New state is encountered! Cannot change {key}!')
         return service
+    
+    def _to_response(self, info: HrDocumentInfo) -> HrDocumentRead:
+
+        response = HrDocumentRead.from_orm(info.hr_document)
+        response.can_cancel = info.hr_document_step.role.can_cancel
+
+        return response
 
 
 hr_document_service = HrDocumentService(HrDocument)

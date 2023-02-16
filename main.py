@@ -30,7 +30,9 @@ app.add_middleware(
 )
 
 app.include_router(router)
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
 templates = Jinja2Templates(directory="templates")
 
 
@@ -41,7 +43,6 @@ def get_config():
 
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):
-    logger.info(request.url)
     start_time = time.time()
     response = await call_next(request)
     process_time = time.time() - start_time

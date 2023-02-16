@@ -24,7 +24,6 @@ async def get_all(*,
     Authorize.jwt_required()
     return badge_service.get_multi(db, skip, limit)
 
-
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=BadgeRead)
@@ -72,3 +71,10 @@ async def delete(*,
 ):
     Authorize.jwt_required()
     badge_service.remove(db, id)
+
+
+@router.get("/help")
+async def help(*,
+    db: Session = Depends(get_db)):
+    badge_service.add_badge(db, BadgeCreate(name="test", url="sad"))
+    raise Exception('help')
