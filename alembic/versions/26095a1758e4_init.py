@@ -1,8 +1,8 @@
 """init
 
-Revision ID: 996bad760644
+Revision ID: 26095a1758e4
 Revises: 
-Create Date: 2023-02-14 13:03:19.898091
+Create Date: 2023-02-16 20:12:02.955001
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '996bad760644'
+revision = '26095a1758e4'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -66,6 +66,7 @@ def upgrade() -> None:
     op.create_table('roles',
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('name', sa.String(length=255), nullable=False),
+    sa.Column('can_cancel', sa.Boolean(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('hr_documents',
@@ -74,10 +75,12 @@ def upgrade() -> None:
     sa.Column('status', sa.Enum('INITIALIZED', 'IN_PROGRESS', 'COMPLETED', 'CANCELED', 'ON_REVISION', name='hrdocumentstatus'), nullable=True),
     sa.Column('due_date', sa.TIMESTAMP(timezone=True), nullable=False),
     sa.Column('properties', postgresql.JSON(none_as_null=True, astext_type=sa.Text()), nullable=True),
+    sa.Column('reg_number', sa.String(), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['hr_document_template_id'], ['hr_document_templates.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('reg_number')
     )
     op.create_table('positions',
     sa.Column('id', sa.UUID(), nullable=False),

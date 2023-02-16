@@ -54,7 +54,7 @@ class HrDocumentRead(HrDocumentBase):
     status: Optional[HrDocumentStatus]
     due_date: Optional[datetime]
     properties: Optional[Union[dict, None]]
-    details: Optional[Union[dict, None]]
+    can_cancel: Optional[bool]
 
     class Config:
         orm_mode = True

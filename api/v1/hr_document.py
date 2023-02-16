@@ -80,9 +80,7 @@ async def get_by_id(*,
 ):
     Authorize.jwt_required()
     return hr_document_service.get_by_id(db, id)
-
-
-
+ 
 
 @router.get('/generate/{id}/', status_code=status.HTTP_200_OK)
 async def generate(*,

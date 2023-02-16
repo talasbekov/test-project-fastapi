@@ -19,6 +19,7 @@ class RankUpdate(RankBase):
 class RankRead(RankBase):
     id: Optional[uuid.UUID]
     name: Optional[str]
+    can_cancel: Optional[bool]
 
     class Config:
         orm_mode = True
