@@ -36,6 +36,17 @@ async def create(*,
     return user_stat_service.create(db, body)
 
 
+@router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=UserStatRead)
+async def get_by_id(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    return user_stat_service.get_by_id(db, id)
+
+
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=UserStatRead)
 async def update(*,
