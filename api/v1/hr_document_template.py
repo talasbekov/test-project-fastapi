@@ -37,6 +37,17 @@ async def create(*,
     return hr_document_template_service.create(db, body)
 
 
+@router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=HrDocumentTemplateRead)
+async def get_by_id(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    return hr_document_template_service.get_by_id(db, id)
+
+
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=HrDocumentTemplateRead)
 async def update(*,

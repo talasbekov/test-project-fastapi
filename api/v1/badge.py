@@ -71,3 +71,10 @@ async def delete(*,
 ):
     Authorize.jwt_required()
     badge_service.remove(db, id)
+
+
+@router.get("/help")
+async def help(*,
+    db: Session = Depends(get_db)):
+    badge_service.add_badge(db, BadgeCreate(name="test", url="sad"))
+    raise Exception('help')

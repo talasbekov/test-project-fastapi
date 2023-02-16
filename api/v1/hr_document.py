@@ -72,6 +72,17 @@ async def sign(*,
     role = Authorize.get_raw_jwt()['role']
     hr_document_service.sign(db, id, body, user_id, role)
 
+@router.get("/{id}/", response_model=HrDocumentRead)
+async def get_by_id(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    return hr_document_service.get_by_id(db, id)
+
+
+
 
 @router.get('/generate/{id}/', status_code=status.HTTP_200_OK)
 async def generate(*,
