@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import desc
+from sqlalchemy import desc, or_, and_
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 from fastapi.logger import logger as log
@@ -47,15 +47,31 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
 
         return super().create(db, document_info)
     
-    def get_not_signed_by_position(self, db: Session, position_id: str):
+    def get_not_signed_by_position(self, db: Session, position_id: str, skip: int, limit: int):
 
         infos = db.query(HrDocumentInfo).filter(
             HrDocumentInfo.is_signed == None,
             HrDocumentInfo.hr_document_step.has(position_id = position_id)
-        ).all()
+        ).offset(skip).limit(limit).all()
 
         return infos
     
+    def get_all(self, db: Session, position_id, skip: int, limit: int) -> list[HrDocumentInfo]:
+        
+        infos = db.query(HrDocumentInfo).filter(
+            or_(
+                and_(
+                    HrDocumentInfo.is_signed == None,
+                    HrDocumentInfo.hr_document_step.has(position_id = position_id)
+                ),
+                HrDocumentInfo.hr_document_step.has(previous_step_id = None)
+            )
+        ).order_by(
+            desc(HrDocumentInfo.created_at)
+        ).offset(skip).limit(limit).all()
+
+        return infos
+
     def get_last_signed_step_info(self, db: Session, id: str):
 
         info = db.query(HrDocumentInfo).filter(

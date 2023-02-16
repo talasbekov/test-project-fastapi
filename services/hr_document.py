@@ -92,11 +92,19 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         return document
     
+    def get_all(self, db: Session, user_id, skip: int, limit: int):
+
+        user = user_service.get_by_id(db, user_id)
+
+        infos = hr_document_info_service.get_all(db, user.position_id, skip, limit)
+
+        return [i.hr_document for i in infos]
+    
     def get_not_signed_documents(self, db: Session, user_id: str, skip: int, limit: int):
 
         user = user_service.get_by_id(db, user_id)
 
-        infos = hr_document_info_service.get_not_signed_by_position(db, user.position_id)
+        infos = hr_document_info_service.get_not_signed_by_position(db, user.position_id, skip, limit)
 
         return [i.hr_document for i in infos]
 
