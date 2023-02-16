@@ -73,12 +73,12 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         users = [user_service.get_by_id(db, i) for i in body.user_ids]
 
-        document.user = users
+        document.users = users
 
         next_step = hr_document_step_service.get_next_step_from_id(db, step.id)
 
         if next_step is None:
-            return self._finish_document(db, document, document.user)
+            return self._finish_document(db, document, document.users)
 
         hr_document_info_service.create_info_for_step(db, document.id, step.id, user.id, True)
         hr_document_info_service.create_next_info_for_step(db, document.id, next_step.id)
@@ -125,7 +125,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             next_step = hr_document_step_service.get_next_step_from_id(db, info.hr_document_step_id)
 
             if next_step is None:
-                return self._finish_document(db, document, document.user)
+                return self._finish_document(db, document, document.users)
 
             hr_document_info_service.create_next_info_for_step(db, document.id, next_step.id)
             document.status = HrDocumentStatus.IN_PROGRESS

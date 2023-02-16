@@ -346,16 +346,151 @@ def upgrade() -> None:
     op.bulk_insert(
         Base.metadata.tables['hr_document_templates'],
         [{
-            'name': 'Приказ о назначении на должность',
-            'path': 'static/templates/приказ о назначении на должность.docx',
+            'name': 'Приказ о зачислении на службу',
+            'path': 'static/templates/Приказ о зачислении на службу (1).docx',
             'subject_type': 1,
-            'properties': {},
+            'properties': {
+                "signed_at": {
+                    "alias_name": "Время Регистрации",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "reg_number": {
+                    "alias_name": "Регистрационный номер",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "rank": {
+                    "alias_name": "Звание",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "first_name": {
+                    "alias_name": "Имя",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "last_name": {
+                    "alias_name": "Фамилия",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "father_name": {
+                    "alias_name": "Имя",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "id_number": {
+                    "alias_name": "ID",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "period": {
+                    "alias_name": "Период",
+                    "type": "read", # пока нет логики на время
+                    "data_taken": "manual"
+                },
+                "new_rank": {
+                    "alias_name": "Новое звание",
+                    "type": "write",
+                    "field_name": "rank",
+                    "data_taken": "manual"
+                },
+                "department_name": {
+                    "alias_name": "Департамент",
+                    "type": "write",
+                    "field_name": "group",
+                    "data_taken": "dropdown"
+                },
+                "position": {
+                    "alias_name": "Позиция",
+                    "type": "write",
+                    "field_name": "position",
+                    "data_taken": "dropdown"
+                },
+                "position_id": {
+                    "alias_name": "ID позиции",
+                    "type": "read",
+                    "data_taken":"auto"
+                }
+            },
             'id': template1_id
         }, {
-            'name': 'Приказ на отпуск',
-            'path': 'static/templates/приказ на отпуск.docx',
+            'name': 'Приказ о выходе в отпуск (рук.состав)',
+            'path': 'static/templates/Приказ_о_выходе_в_отпуск_рук_состав.docx',
             'subject_type': 1,
-            'properties': {},
+            'properties': {
+                "signed_at": {
+                    "alias_name": "Время Регистрации",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "reg_number": {
+                    "alias_name": "Регистрационный номер",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "rank": {
+                    "alias_name": "Звание",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "first_name": {
+                    "alias_name": "Имя",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "last_name": {
+                    "alias_name": "Фамилия",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "father_name": {
+                    "alias_name": "Имя",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "id_number": {
+                    "alias_name": "ID",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "department_name": {
+                    "alias_name": "Департамент",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "start_date": {
+                    "alias_name": "Начало",
+                    "type": "write",
+                    "data_taken": "manual"
+                },
+                "end_date": {
+                    "alias_name": "Конец",
+                    "type": "write",
+                    "data_taken": "manual"
+                },
+                "responsible_subject_rank": {
+                    "alias_name": "Ранк заменяющего",
+                    "type": "write",
+                    "data_taken": "dropdown"
+                },
+                "responsible_subject_last_name": {
+                    "alias_name": "Фамилия заменяющего",
+                    "type": "write",
+                    "data_taken": "dropdown"
+                },
+                "responsible_subject_first_name": {
+                    "alias_name": "Имя заменяющего",
+                    "type": "write",
+                    "data_taken": "dropdown"
+                },
+                "responsible_subject_father_name":  {
+                    "alias_name": "Отчество заменяющего",
+                    "type": "write",
+                    "data_taken": "dropdown"
+                }
+            },
             'id': template2_id
         }]
     )
