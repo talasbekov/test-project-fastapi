@@ -66,4 +66,4 @@ async def get_by_document_id(*,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
-    return hr_document_info_service.get_by_document_id(db, id)
+    return hr_document_info_service.get_by_id(db, id)
