@@ -5,7 +5,6 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID, TIMESTAMP
 
 from core import Base
-from .association import hr_document_equipments
 
 
 class Equipment(Base):

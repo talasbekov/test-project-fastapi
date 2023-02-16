@@ -15,5 +15,4 @@ class PositionService(ServiceBase[Position, PositionCreate, PositionUpdate]):
         return position
 
 
-
 position_service = PositionService(Position)
