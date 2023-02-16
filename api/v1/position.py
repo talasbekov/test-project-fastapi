@@ -53,6 +53,17 @@ async def update(*,
         obj_in=body)
 
 
+@router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=PositionRead)
+async def get_by_id(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    return position_service.get_by_id(db, id)
+
+
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())])
 async def delete(*,

@@ -16,7 +16,10 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
 
     def get_by_id(self, db: Session, id: str):
 
-        hr_document_info = super().get(db, id)
+        hr_document_info = db.query(HrDocumentInfo).filter(
+            HrDocumentInfo.id == id
+        ).first()
+        print(hr_document_info)
         
         if hr_document_info is None:
             raise NotFoundException(detail=f"Document Info with id: {id} is not found!")

@@ -36,6 +36,16 @@ async def create(*,
     Authorize.jwt_required()
     return equipment_service.create(db, body)
 
+@router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=EquipmentRead)
+async def get_by_id(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    return equipment_service.get_by_id(db, id)
+    
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=EquipmentRead)
