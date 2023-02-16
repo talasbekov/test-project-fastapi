@@ -346,14 +346,14 @@ def upgrade() -> None:
     op.bulk_insert(
         Base.metadata.tables['hr_document_templates'],
         [{
-            'name': 'Приказ о назначении на должность',
-            'path': 'static/templates/приказ о назначении на должность.docx',
+            'name': 'Приказ о зачислении на службу',
+            'path': 'static/templates/Приказ о зачислении на службу.docx',
             'subject_type': 1,
             'properties': {},
             'id': template1_id
         }, {
-            'name': 'Приказ на отпуск',
-            'path': 'static/templates/приказ на отпуск.docx',
+            'name': 'Приказ о выходе в отпуск (рук.состав)',
+            'path': 'static/templates/Приказ о выходе в отпуск (рук.состав).docx',
             'subject_type': 1,
             'properties': {},
             'id': template2_id
