@@ -16,6 +16,7 @@ class UserBase(BaseModel):
     father_name: Optional[str]
     group_id: uuid.UUID
     position_id: uuid.UUID
+    icon: Optional[str]
     call_sign: str
     id_number: str
     phone_number: Optional[str]

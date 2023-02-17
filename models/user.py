@@ -2,7 +2,7 @@ import uuid
 from typing import Any
 
 from sqlalchemy import TIMESTAMP, Column, String, text, ForeignKey, Date
-from sqlalchemy.dialects.postgresql import UUID, ARRAY, JSON
+from sqlalchemy.dialects.postgresql import UUID, ARRAY, JSON, TEXT
 from sqlalchemy.orm import relationship, Mapped
 
 from core import Base
@@ -21,6 +21,7 @@ class User(Base):
     last_name = Column(String(150), nullable=True)
     father_name = Column(String(150), nullable=True)
     group_id = Column(UUID(as_uuid=True), ForeignKey("groups.id"), nullable=True)
+    icon = Column(TEXT(), nullable=True)
     call_sign = Column(String(255), unique=True)
     id_number = Column(String(255), unique=True)
     phone_number = Column(String(32))
@@ -52,6 +53,6 @@ class User(Base):
     hr_documents = relationship(
         "HrDocument",
         secondary=hr_documents_users,
-        back_populates="user",
+        back_populates="users",
         cascade="all,delete"
     )

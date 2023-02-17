@@ -14,20 +14,6 @@ from services import user_service
 router = APIRouter(prefix="/users", tags=["Users"], dependencies=[Depends(HTTPBearer())])
 
 
-@router.get("help")
-async def help(
-    db: Session = Depends(get_db),
-):
-    return user_service.create(db, UserCreate(email="user@example.com", password="password",
-                                              group_id=uuid.uuid4(),
-                                              position_id=uuid.uuid4(),
-                                              call_sign='calla1234',
-                                              id_number='142351521',
-                                              last_name='last',
-                                              first_name='first'))
-
-
-
 @router.get("", dependencies=[Depends(HTTPBearer())], response_model=List[UserRead])
 async def get_all(*,
     db: Session = Depends(get_db),

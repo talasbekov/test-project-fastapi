@@ -463,32 +463,38 @@ def upgrade() -> None:
                 "start_date": {
                     "alias_name": "Начало",
                     "type": "write",
-                    "data_taken": "manual"
+                    "data_taken": "manual",
+                    "field_name": "" # Нет логики на создание event-а
                 },
                 "end_date": {
                     "alias_name": "Конец",
                     "type": "write",
-                    "data_taken": "manual"
+                    "data_taken": "manual",
+                    "field_name": "" # Нет логики на создание event-а
                 },
                 "responsible_subject_rank": {
                     "alias_name": "Ранк заменяющего",
                     "type": "write",
-                    "data_taken": "dropdown"
+                    "data_taken": "dropdown",
+                    "field_name": "" # Нет логики на изменение другого пользователя
                 },
                 "responsible_subject_last_name": {
                     "alias_name": "Фамилия заменяющего",
                     "type": "write",
-                    "data_taken": "dropdown"
+                    "data_taken": "dropdown",
+                    "field_name": "" # Нет логики на изменение другого пользователя
                 },
                 "responsible_subject_first_name": {
                     "alias_name": "Имя заменяющего",
                     "type": "write",
-                    "data_taken": "dropdown"
+                    "data_taken": "dropdown",
+                    "field_name": "" # Нет логики на изменение другого пользователя
                 },
                 "responsible_subject_father_name":  {
                     "alias_name": "Отчество заменяющего",
                     "type": "write",
-                    "data_taken": "dropdown"
+                    "data_taken": "dropdown",
+                    "field_name": "" # Нет логики на изменение другого пользователя
                 }
             },
             'id': template2_id

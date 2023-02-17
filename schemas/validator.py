@@ -29,8 +29,8 @@ def validate_property(v: dict):
 
         if type == "write":
             field_name = value.get('field_name')
-            if field_name is None or not isinstance(field_name, str):
-                raise ValueError(prefix_msg + 'field_name should be string')
+            if field_name is None:
+                raise ValueError(prefix_msg + 'field_name should not be None')
             if data_taken == "auto":
                 val = value.get('value')
                 if val is None:
