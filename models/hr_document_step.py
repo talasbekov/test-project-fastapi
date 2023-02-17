@@ -7,6 +7,7 @@ from sqlalchemy.orm import relationship, backref
 
 from core import Base
 
+
 class HrDocumentStep(Base):
         
     __tablename__ = "hr_document_steps"

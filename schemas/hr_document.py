@@ -12,12 +12,12 @@ from .user import UserRead
 "detail": "Mapper 'Mapper[HrDocument(hr_documents)]' has no property 'user'.  If this property was indicated from other mappers or configure events, ensure registry.configure() has been called."
 """
 
+
 class HrDocumentBase(BaseModel):
     hr_document_template_id: uuid.UUID
     status: HrDocumentStatus
     due_date: datetime
     properties: Dict[str, Any]
-
 
     @validator('properties')
     def properties_validator(cls, v):
@@ -33,8 +33,6 @@ class HrDocumentBase(BaseModel):
                 if 'name' not in val_keys or 'value' not in val_keys:
                     raise ValueError(f'name or value should be in {key}!')
         return v
-    
-    
 
 
 class HrDocumentInit(HrDocumentBase):

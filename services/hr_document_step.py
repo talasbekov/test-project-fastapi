@@ -40,7 +40,6 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
         ).first()
         
         return step
-    
 
 
 hr_document_step_service = HrDocumentStepService(HrDocumentStep)

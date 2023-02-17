@@ -9,12 +9,12 @@ from core import Base
 from .association import hr_documents_users, hr_document_equipments
 
 
-class HrDocumentStatus(enum.IntEnum):
-    INITIALIZED = 1
-    IN_PROGRESS = 2
-    COMPLETED = 3
-    CANCELED = 4
-    ON_REVISION = 5
+class HrDocumentStatus(str, enum.Enum):
+    INITIALIZED = "Иницилизирован"
+    IN_PROGRESS = "В процессе"
+    COMPLETED = "Завершен"
+    CANCELED = "Отменен"
+    ON_REVISION = "На доработке"
 
 
 class HrDocument(Base):
