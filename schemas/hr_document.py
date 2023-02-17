@@ -7,7 +7,7 @@ from typing import Any, Dict, List, Optional, Union
 from models import HrDocumentStatus
 from .hr_document_template import HrDocumentTemplateRead
 from .user import UserRead
-from .validator import validate_property
+ 
 
 
 class HrDocumentBase(BaseModel):

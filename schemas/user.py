@@ -3,7 +3,10 @@ import datetime
 
 from typing import Optional, List
 from pydantic import BaseModel, EmailStr
-from schemas import BadgeRead, GroupRead, PositionRead, RankRead
+from .badge import BadgeRead
+from .group import GroupRead
+from .position import PositionRead
+from .rank import RankRead
 
 
 class UserBase(BaseModel):

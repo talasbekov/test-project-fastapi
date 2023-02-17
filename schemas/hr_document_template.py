@@ -1,7 +1,7 @@
 import uuid
 
-from pydantic import BaseModel, ValidationError, validator
-from typing import List, Dict, Union, Optional
+from pydantic import BaseModel, validator
+from typing import Dict, Union, Optional
 
 from models import SubjectType
 from .validator import validate_property

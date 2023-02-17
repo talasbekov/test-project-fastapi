@@ -1,7 +1,7 @@
 import uuid
 
 from pydantic import BaseModel
-from typing import List, Dict, Any, Optional
+from typing import Optional
 
 
 class HrDocumentInfoBase(BaseModel):
