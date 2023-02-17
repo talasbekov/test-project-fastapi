@@ -36,6 +36,7 @@ class User(Base):
         UUID(as_uuid=True), ForeignKey("ranks.id"), nullable=True)
     
     status = Column(String(255), nullable=True)
+    status_till = Column(TIMESTAMP(timezone=True), nullable=True)
 
     birthday = Column(Date, nullable=True)
 

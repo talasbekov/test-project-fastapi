@@ -212,7 +212,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                             if val['value'] == None:
                                 raise BadRequestException(f'Обьект {key} должен иметь value!')
                             self._set_attr(db, user, value['field_name'], val['value'])
-
+ 
         db.add(document)
         db.flush()
 

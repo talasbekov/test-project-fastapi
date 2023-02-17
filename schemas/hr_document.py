@@ -33,8 +33,6 @@ class HrDocumentBase(BaseModel):
                 if 'name' not in val_keys or 'value' not in val_keys:
                     raise ValueError(f'name or value should be in {key}!')
         return v
-    
-    
 
 
 class HrDocumentInit(HrDocumentBase):

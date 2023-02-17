@@ -1,8 +1,9 @@
-import uuid
 import datetime
+import uuid
+from typing import List, Optional
 
-from typing import Optional, List
 from pydantic import BaseModel, EmailStr
+
 from .badge import BadgeRead
 from .group import GroupRead
 from .position import PositionRead
@@ -46,6 +47,8 @@ class UserRead(UserBase):
     position_id: Optional[uuid.UUID]
     call_sign: Optional[str]
     id_number: Optional[str]
+    status: Optional[str]
+    status_till: Optional[datetime.datetime]
 
     class Config:
         orm_mode = True
