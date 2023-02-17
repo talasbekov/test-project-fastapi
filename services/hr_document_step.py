@@ -15,10 +15,8 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
     
     def get_by_id(self, db: Session, id: str):
         
-        hr_document_step = db.query(HrDocumentStep).filter(
-            HrDocumentStep.id == id
-        ).first()
-        
+        hr_document_step = super().get(db, id)
+
         if hr_document_step is None:
             raise NotFoundException(detail=f"Document Step with id: {id} is not found!")
 
