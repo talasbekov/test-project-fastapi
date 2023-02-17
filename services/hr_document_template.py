@@ -14,7 +14,7 @@ from exceptions import NotFoundException
 class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTemplateCreate, HrDocumentTemplateUpdate]):
 
     def get_by_id(self, db: Session, id: str):
-        hr_document_template = db.query(HrDocumentTemplate).filter(HrDocumentTemplate.id == id).first()
+        hr_document_template = super().get(db, id)
         if hr_document_template is None:
             raise NotFoundException(detail=f'HrDocumentTemplate with id: {id} is not found!')
         return hr_document_template
