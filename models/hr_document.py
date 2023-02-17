@@ -33,7 +33,7 @@ class HrDocument(Base):
     document_template = relationship("HrDocumentTemplate", back_populates="document", cascade="all,delete")
     equipments = relationship("HrDocument", secondary="hr_document_equipments",
                               back_populates="equipments")
-    users = relationship(
+    user = relationship(
         "User",
         secondary=hr_documents_users,
         back_populates="hr_documents",
