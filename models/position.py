@@ -6,7 +6,7 @@ from sqlalchemy.orm import relationship
 
 from core import Base
 
-from .association import position_groups
+from .association import position_permission
 
 
 class Position(Base):
@@ -18,11 +18,7 @@ class Position(Base):
     max_rank_id = Column(UUID(as_uuid=True), ForeignKey("ranks.id"),
                          nullable=True)
     description = Column(TEXT, nullable=True)
-    groups = relationship(
-        "Group",
-        secondary=position_groups,
-        back_populates="positions"
-    )
+    groups = relationship("PositionGroup", back_populates="position")
     permissions = relationship("Permission", secondary="position_permission",
                                back_populates="positions")
     created_at = Column(TIMESTAMP(timezone=True),

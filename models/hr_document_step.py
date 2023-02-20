@@ -10,7 +10,7 @@ from core import Base
 
 
 class HrDocumentStep(Base):
-        
+
     __tablename__ = "hr_document_steps"
 
     id = Column(UUID(as_uuid=True), primary_key=True,

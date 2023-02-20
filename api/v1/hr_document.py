@@ -2,12 +2,13 @@ import uuid
 from typing import List
 
 from fastapi import APIRouter, Depends, status
-from fastapi_jwt_auth import AuthJWT
 from fastapi.security import HTTPBearer
+from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import HrDocumentCreate, HrDocumentUpdate, HrDocumentRead, HrDocumentInit, HrDocumentSign
+from schemas import (HrDocumentCreate, HrDocumentInit, HrDocumentRead,
+                     HrDocumentSign, HrDocumentUpdate)
 from services import hr_document_service
 
 router = APIRouter(prefix="/hr-documents", tags=["HrDocuments"], dependencies=[Depends(HTTPBearer())])

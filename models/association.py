@@ -29,11 +29,3 @@ hr_documents_users = Table(
     Column("document_id", ForeignKey("hr_documents.id")),
     Column("subject_id", ForeignKey("users.id"))
 )
-
-position_groups = Table(
-    "position_groups",
-    Base.metadata,
-    Column("position_id", ForeignKey("positions.id")),
-    Column("group_id", ForeignKey("groups.id")),
-    Column("description", TEXT())
-)
