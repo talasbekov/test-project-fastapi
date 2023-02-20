@@ -1,7 +1,7 @@
 import uuid
 
 from pydantic import BaseModel
-from typing import Any, Optional
+from typing import Any, Optional, List
 
 
 class HrDocumentStepBase(BaseModel):
@@ -21,7 +21,7 @@ class HrDocumentStepUpdate(HrDocumentStepBase):
 
 class HrDocumentStepRead(HrDocumentStepBase):
     id: Optional[uuid.UUID]
-    previous_step: Optional[Any]
+    previous_step: Optional[List['HrDocumentStepRead']]
     hr_document_template_id: Optional[uuid.UUID]
     previous_step_id: Optional[uuid.UUID]
     position_id: Optional[uuid.UUID]

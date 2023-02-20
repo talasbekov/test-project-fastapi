@@ -22,7 +22,7 @@ async def get_all(*,
     limit: int = 10
 ):
     Authorize.jwt_required()
-    return hr_document_step_service.get_multi(db, skip, limit)
+    return hr_document_step_service.get_initial_steps(db, skip, limit)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
