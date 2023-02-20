@@ -5,9 +5,10 @@ Revises:
 Create Date: 2023-02-16 20:12:02.955001
 
 """
-from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
+
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = '26095a1758e4'
@@ -103,12 +104,12 @@ def upgrade() -> None:
     sa.Column('hr_document_template_id', sa.UUID(), nullable=False),
     sa.Column('position_id', sa.UUID(), nullable=False),
     sa.Column('role_id', sa.UUID(), nullable=False),
-    sa.Column('next_step_id', sa.UUID(), nullable=True),
+    sa.Column('previous_step_id', sa.UUID(), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['hr_document_template_id'], ['hr_document_templates.id'], ),
     sa.ForeignKeyConstraint(['position_id'], ['positions.id'], ),
-    sa.ForeignKeyConstraint(['next_step_id'], ['hr_document_steps.id'], ),
+    sa.ForeignKeyConstraint(['previous_step_id'], ['hr_document_steps.id'], ),
     sa.ForeignKeyConstraint(['role_id'], ['roles.id'], ),
     sa.PrimaryKeyConstraint('id')
     )

@@ -7,11 +7,10 @@ Create Date: 2023-02-09 14:03:10.828717
 """
 import uuid
 
-from alembic import op
 import sqlalchemy as sa
 
-from core import configs, Base
-
+from alembic import op
+from core import Base, configs
 
 # revision identifiers, used by Alembic.
 revision = 'addc37bbe8ea'
@@ -543,37 +542,37 @@ def upgrade() -> None:
         Base.metadata.tables['hr_document_steps'],
         [{
             'hr_document_template_id': template1_id,
-            'next_step_id': None,
+            'previous_step_id': None,
             'position_id': position2_id,
             'role_id': role5_id,
             'id': step1_1
         }, {
             'hr_document_template_id': template1_id,
-            'next_step_id': step1_1,
+            'previous_step_id': step1_1,
             'position_id': position3_id,
             'role_id': role2_id,
             'id': step1_2
         }, {
             'hr_document_template_id': template1_id,
-            'next_step_id': step1_2,
+            'previous_step_id': step1_2,
             'position_id': position4_id,
             'role_id': role3_id,
             'id': step1_3
         }, {
             'hr_document_template_id': template2_id,
-            'next_step_id': None,
+            'previous_step_id': None,
             'position_id': position2_id,
             'role_id': role5_id,
             'id': step2_1
         }, {
             'hr_document_template_id': template2_id,
-            'next_step_id': step2_1,
+            'previous_step_id': step2_1,
             'position_id': position3_id,
             'role_id': role2_id,
             'id': step2_2
         }, {
             'hr_document_template_id': template2_id,
-            'next_step_id': step2_2,
+            'previous_step_id': step2_2,
             'position_id': position4_id,
             'role_id': role3_id,
             'id': step2_3

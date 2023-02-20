@@ -1,14 +1,15 @@
 import uuid
 
-from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 from fastapi.logger import logger as log
-
-from .base import ServiceBase
-from models import HrDocumentStep
-from schemas import HrDocumentStepCreate, HrDocumentStepUpdate, HrDocumentStepRead
+from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
+from models import HrDocumentStep
+from schemas import (HrDocumentStepCreate, HrDocumentStepRead,
+                     HrDocumentStepUpdate)
+
+from .base import ServiceBase
 
 
 class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, HrDocumentStepUpdate]):
@@ -44,7 +45,7 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
     def get_initial_steps(self, db: Session, skip: int, limit: int):
 
         steps = db.query(self.model).filter(
-            self.model.next_step_id == None
+            self.model.previous_step_id == None
         ).offset(skip).limit(limit).all()
 
         return steps
