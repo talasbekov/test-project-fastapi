@@ -60,5 +60,4 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         return fields
 
 
-
 user_service = UserService(User)

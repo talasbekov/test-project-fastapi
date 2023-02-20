@@ -111,7 +111,7 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
         db.flush()
 
         return info
-    
+
     def get_by_document_id(self, db: Session, id: str):
 
         infos = db.query(HrDocumentInfo).filter(

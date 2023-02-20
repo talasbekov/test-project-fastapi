@@ -30,7 +30,6 @@ class HrDocumentTemplateRead(HrDocumentTemplateBase):
     path: Optional[str]
     subject_type: Optional[SubjectType]
     properties: Optional[Union[dict, None]]
-    details: Optional[Union[dict, None]]
 
     class Config:
         orm_mode = True

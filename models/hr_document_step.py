@@ -23,7 +23,7 @@ class HrDocumentStep(Base):
     next_step = relationship("HrDocumentStep", foreign_keys=previous_step_id)
     role = relationship("Role", cascade="all,delete")
     position = relationship("Position",  cascade="all,delete")
-    hr_document_type = relationship("HrDocumentTemplate", cascade="all,delete")
+    hr_document_template = relationship("HrDocumentTemplate", cascade="all,delete")
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))
     updated_at = Column(TIMESTAMP(timezone=True),
