@@ -22,9 +22,19 @@ async def get_all(*,
 ):
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
+    return hr_document_service.get_all(db, user_id, skip, limit)
+
+@router.get("/not-signed", response_model=List[HrDocumentRead])
+async def get_not_signed(*,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends(),
+    skip: int = 0,
+    limit: int = 10
+):
+    Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
     return hr_document_service.get_not_signed_documents(db, user_id, skip, limit)
-
-
+ 
 @router.post("", status_code=status.HTTP_201_CREATED, response_model=HrDocumentRead)
 async def initialize(*,
     db: Session = Depends(get_db),

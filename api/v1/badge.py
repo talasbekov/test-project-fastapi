@@ -2,12 +2,12 @@ import uuid
 from typing import List
 
 from fastapi import APIRouter, Depends, status
-from fastapi_jwt_auth import AuthJWT
 from fastapi.security import HTTPBearer
+from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import BadgeCreate, BadgeUpdate, BadgeRead
+from schemas import BadgeCreate, BadgeRead, BadgeUpdate
 from services import badge_service
 
 router = APIRouter(prefix="/badges", tags=["Badges"], dependencies=[Depends(HTTPBearer())])
@@ -34,7 +34,6 @@ async def create(*,
 ):
     Authorize.jwt_required()
     return badge_service.create(db, body)
-
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=BadgeRead)
