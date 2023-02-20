@@ -1,11 +1,13 @@
-import uuid
 import enum
+import uuid
 
-from sqlalchemy import TIMESTAMP, Column, String, text, ForeignKey, Enum
-from sqlalchemy.dialects.postgresql import UUID, ARRAY, JSON, TEXT
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy import TIMESTAMP, Column, Enum, ForeignKey, String, text
+from sqlalchemy.dialects.postgresql import ARRAY, JSON, TEXT, UUID
+from sqlalchemy.orm import backref, relationship
 
 from core import Base
+
+from .association import position_groups
 
 
 class GroupName(enum.Enum):
@@ -24,6 +26,10 @@ class Group(Base):
     name = Column(String(255))
     description = Column(TEXT)
     children = relationship("Group")
+    positions = relationship(
+        "Position",
+        secondary=position_groups,
+        back_populates="groups")
     users = relationship("User", back_populates="group", cascade="all,delete")
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))

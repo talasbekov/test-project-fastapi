@@ -1,13 +1,14 @@
 import uuid
 from datetime import datetime
-
-from pydantic import BaseModel, validator, ValidationError
 from typing import Any, Dict, List, Optional, Union
 
+from pydantic import BaseModel, ValidationError, validator
+
 from models import HrDocumentStatus
+
 from .hr_document_template import HrDocumentTemplateRead
 from .user import UserRead
- 
+
 """
 "detail": "Mapper 'Mapper[HrDocument(hr_documents)]' has no property 'user'.  If this property was indicated from other mappers or configure events, ensure registry.configure() has been called."
 """
@@ -61,7 +62,7 @@ class HrDocumentRead(HrDocumentBase):
     due_date: Optional[datetime]
     properties: Optional[Union[dict, None]]
     can_cancel: Optional[bool]
-    users: Optional[UserRead]
+    users: Optional[List[UserRead]]
 
 
     class Config:
