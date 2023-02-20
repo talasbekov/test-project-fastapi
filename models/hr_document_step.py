@@ -1,11 +1,13 @@
-import uuid
 import enum
+import uuid
 
-from sqlalchemy import TIMESTAMP, Column, String, text, ForeignKey, Enum, Boolean
-from sqlalchemy.dialects.postgresql import UUID, ARRAY, JSON, TEXT
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy import (TIMESTAMP, Boolean, Column, Enum, ForeignKey, String,
+                        text)
+from sqlalchemy.dialects.postgresql import ARRAY, JSON, TEXT, UUID
+from sqlalchemy.orm import backref, relationship
 
 from core import Base
+
 
 class HrDocumentStep(Base):
         
@@ -18,7 +20,7 @@ class HrDocumentStep(Base):
     role_id = Column(UUID(as_uuid=True), ForeignKey("roles.id"), nullable=False)
     previous_step_id = Column(UUID(as_uuid=True), ForeignKey("hr_document_steps.id"))
 
-    next_step = relationship("HrDocumentStep")
+    next_step = relationship("HrDocumentStep", foreign_keys=previous_step_id)
     role = relationship("Role", cascade="all,delete")
     position = relationship("Position",  cascade="all,delete")
     hr_document_type = relationship("HrDocumentTemplate", cascade="all,delete")

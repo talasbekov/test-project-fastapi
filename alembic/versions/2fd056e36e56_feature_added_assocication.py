@@ -5,9 +5,9 @@ Revises: 72477f414cb6
 Create Date: 2023-02-20 09:12:36.330342
 
 """
-from alembic import op
 import sqlalchemy as sa
 
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = '2fd056e36e56'
@@ -25,7 +25,7 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['group_id'], ['groups.id'], ),
     sa.ForeignKeyConstraint(['position_id'], ['positions.id'], )
     )
-    op.add_column('hr_documents', sa.Column('signed_at', sa.TIMESTAMP(timezone=True), nullable=False))
+    op.add_column('hr_documents', sa.Column('signed_at', sa.TIMESTAMP(timezone=True)))
     # ### end Alembic commands ###
 
 

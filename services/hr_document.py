@@ -1,40 +1,22 @@
 import os
 import tempfile
-
 from typing import List
-from sqlalchemy.orm import Session
-from fastapi.responses import FileResponse
-from docxtpl import DocxTemplate
 
-from .base import ServiceBase
+from docxtpl import DocxTemplate
+from fastapi.responses import FileResponse
+from sqlalchemy.orm import Session
 
 from core import Base
-from models import HrDocument, HrDocumentStatus, User, HrDocumentInfo
-from schemas import (
-    HrDocumentCreate,
-    HrDocumentUpdate,
-    HrDocumentInit,
-    HrDocumentSign,
-    HrDocumentRead
-)
+from exceptions import (BadRequestException, ForbiddenException,
+                        InvalidOperationException, NotFoundException)
+from models import HrDocument, HrDocumentInfo, HrDocumentStatus, User
+from schemas import (HrDocumentCreate, HrDocumentInit, HrDocumentRead,
+                     HrDocumentSign, HrDocumentUpdate)
+from services import (badge_service, group_service, hr_document_info_service,
+                      hr_document_step_service, hr_document_template_service,
+                      position_service, rank_service, user_service)
 
-from exceptions import (
-    NotFoundException,
-    ForbiddenException,
-    InvalidOperationException,
-    BadRequestException
-)
-
-from services import (
-    hr_document_template_service,
-    hr_document_info_service,
-    hr_document_step_service,
-    user_service,
-    position_service,
-    rank_service,
-    group_service,
-    badge_service
-)
+from .base import ServiceBase
 
 options = {
     'position': position_service,

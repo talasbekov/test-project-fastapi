@@ -30,7 +30,7 @@ class HrDocument(Base):
     due_date = Column(TIMESTAMP(timezone=True), nullable=False)
     properties = Column(JSON(none_as_null=True))
     reg_number = Column(String, unique=True)
-    signed_at = Column(TIMESTAMP(timezone=True), nullable=False)
+    signed_at = Column(TIMESTAMP(timezone=True), nullable=True)
 
     document_template = relationship("HrDocumentTemplate", back_populates="documents", cascade="all,delete")
     equipments = relationship("HrDocument", secondary="hr_document_equipments",
