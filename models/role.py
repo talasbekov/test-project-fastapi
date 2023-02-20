@@ -7,12 +7,12 @@ from sqlalchemy.dialects.postgresql import UUID
 from core import Base
 
 
-class RoleName(enum.Enum):
-    AGREER = 1
-    EXPERT = 2
-    APPROVER = 3
-    NOTIFIER = 4
-    INITIATOR = 5
+class RoleName(str, enum.Enum):
+    AGREER = "Утверждающий"
+    EXPERT = "Эксперт"
+    APPROVER = "Согласующий"
+    NOTIFIER = "Увемдомляемый"
+    INITIATOR = "Инициатор"
 
 
 class Role(Base):
