@@ -1,12 +1,13 @@
-import uuid
 import enum
+import uuid
 
-from sqlalchemy import TIMESTAMP, Column, text, ForeignKey, Enum, String
-from sqlalchemy.dialects.postgresql import UUID, JSON
+from sqlalchemy import TIMESTAMP, Column, Enum, ForeignKey, String, text
+from sqlalchemy.dialects.postgresql import JSON, UUID
 from sqlalchemy.orm import relationship
 
 from core import Base
-from .association import hr_documents_users, hr_document_equipments
+
+from .association import hr_document_equipments, hr_documents_users
 
 
 class HrDocumentStatus(enum.IntEnum):
@@ -29,8 +30,9 @@ class HrDocument(Base):
     due_date = Column(TIMESTAMP(timezone=True), nullable=False)
     properties = Column(JSON(none_as_null=True))
     reg_number = Column(String, unique=True)
+    signed_at = Column(TIMESTAMP(timezone=True), nullable=False)
 
-    document_template = relationship("HrDocumentTemplate", back_populates="document", cascade="all,delete")
+    document_template = relationship("HrDocumentTemplate", back_populates="documents", cascade="all,delete")
     equipments = relationship("HrDocument", secondary="hr_document_equipments",
                               back_populates="equipments")
     users = relationship(

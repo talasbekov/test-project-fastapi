@@ -1,8 +1,8 @@
-import uuid
 import enum
+import uuid
 
-from sqlalchemy import TIMESTAMP, Column, String, text, ForeignKey, Enum
-from sqlalchemy.dialects.postgresql import UUID, ARRAY, JSON
+from sqlalchemy import TIMESTAMP, Column, Enum, ForeignKey, String, text
+from sqlalchemy.dialects.postgresql import ARRAY, JSON, UUID
 from sqlalchemy.orm import relationship
 
 from core import Base
@@ -26,7 +26,7 @@ class HrDocumentTemplate(Base):
     subject_type = Column(Enum(SubjectType))
     properties = Column(JSON(none_as_null=True))
 
-    document = relationship("HrDocument", back_populates="document_template")
+    documents = relationship("HrDocument", back_populates="document_template")
 
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))

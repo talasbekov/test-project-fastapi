@@ -1,7 +1,6 @@
-from sqlalchemy import Table, Column, ForeignKey, String
+from sqlalchemy import TEXT, Column, ForeignKey, String, Table
 
 from core import Base
-
 
 position_permission = Table(
     "position_permission",
@@ -29,4 +28,12 @@ hr_documents_users = Table(
     Base.metadata,
     Column("document_id", ForeignKey("hr_documents.id")),
     Column("subject_id", ForeignKey("users.id"))
+)
+
+position_groups = Table(
+    "position_groups",
+    Base.metadata,
+    Column("position_id", ForeignKey("positions.id")),
+    Column("group_id", ForeignKey("groups.id")),
+    Column("description", TEXT())
 )

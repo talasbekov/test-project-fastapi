@@ -1,14 +1,14 @@
 from typing import List
 
-from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 from fastapi.logger import logger as log
+from sqlalchemy.orm import Session
+
+from exceptions import BadRequestException, NotFoundException
+from models import Group
+from schemas import GroupCreate, GroupRead, GroupUpdate
 
 from .base import ServiceBase
-from models import Group
-from schemas import GroupCreate, GroupUpdate, GroupRead
-
-from exceptions import NotFoundException, BadRequestException
 
 
 class GroupService(ServiceBase[Group, GroupCreate, GroupUpdate]):
