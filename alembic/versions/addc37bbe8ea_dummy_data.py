@@ -543,37 +543,37 @@ def upgrade() -> None:
         Base.metadata.tables['hr_document_steps'],
         [{
             'hr_document_template_id': template1_id,
-            'previous_step_id': None,
+            'next_step_id': None,
             'position_id': position2_id,
             'role_id': role5_id,
             'id': step1_1
         }, {
             'hr_document_template_id': template1_id,
-            'previous_step_id': step1_1,
+            'next_step_id': step1_1,
             'position_id': position3_id,
             'role_id': role2_id,
             'id': step1_2
         }, {
             'hr_document_template_id': template1_id,
-            'previous_step_id': step1_2,
+            'next_step_id': step1_2,
             'position_id': position4_id,
             'role_id': role3_id,
             'id': step1_3
         }, {
             'hr_document_template_id': template2_id,
-            'previous_step_id': None,
+            'next_step_id': None,
             'position_id': position2_id,
             'role_id': role5_id,
             'id': step2_1
         }, {
             'hr_document_template_id': template2_id,
-            'previous_step_id': step2_1,
+            'next_step_id': step2_1,
             'position_id': position3_id,
             'role_id': role2_id,
             'id': step2_2
         }, {
             'hr_document_template_id': template2_id,
-            'previous_step_id': step2_2,
+            'next_step_id': step2_2,
             'position_id': position4_id,
             'role_id': role3_id,
             'id': step2_3

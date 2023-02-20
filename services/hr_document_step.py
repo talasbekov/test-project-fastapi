@@ -41,5 +41,13 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
         
         return step
 
+    def get_initial_steps(self, db: Session, skip: int, limit: int):
+
+        steps = db.query(self.model).filter(
+            self.model.next_step_id == None
+        ).offset(skip).limit(limit).all()
+
+        return steps
+
 
 hr_document_step_service = HrDocumentStepService(HrDocumentStep)

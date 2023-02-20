@@ -103,12 +103,12 @@ def upgrade() -> None:
     sa.Column('hr_document_template_id', sa.UUID(), nullable=False),
     sa.Column('position_id', sa.UUID(), nullable=False),
     sa.Column('role_id', sa.UUID(), nullable=False),
-    sa.Column('previous_step_id', sa.UUID(), nullable=True),
+    sa.Column('next_step_id', sa.UUID(), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['hr_document_template_id'], ['hr_document_templates.id'], ),
     sa.ForeignKeyConstraint(['position_id'], ['positions.id'], ),
-    sa.ForeignKeyConstraint(['previous_step_id'], ['hr_document_steps.id'], ),
+    sa.ForeignKeyConstraint(['next_step_id'], ['hr_document_steps.id'], ),
     sa.ForeignKeyConstraint(['role_id'], ['roles.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
