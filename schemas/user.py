@@ -23,6 +23,8 @@ class UserBase(BaseModel):
     phone_number: Optional[str]
     address: Optional[str]
     birthday: Optional[datetime.date]
+    status: Optional[str]
+    status_till: Optional[datetime.date]
 
 
 class UserCreate(UserBase):
@@ -48,7 +50,7 @@ class UserRead(UserBase):
     call_sign: Optional[str]
     id_number: Optional[str]
     status: Optional[str]
-    status_till: Optional[datetime.datetime]
+    status_till: Optional[datetime.date]
 
     class Config:
         orm_mode = True
