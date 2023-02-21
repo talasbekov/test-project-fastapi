@@ -56,10 +56,7 @@ async def update(*,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
-    return hr_document_step_service.update(
-        db=db,
-        db_obj=hr_document_step_service.get_by_id(db, id),
-        obj_in=body)
+    return hr_document_step_service.update_step(db=db, step_id=id, obj_in=body)
 
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,

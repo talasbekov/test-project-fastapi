@@ -4,8 +4,8 @@ from fastapi import HTTPException, status
 from fastapi.logger import logger as log
 from sqlalchemy.orm import Session
 
-from exceptions import NotFoundException
-from models import HrDocumentStep
+from exceptions import NotFoundException, BadRequestException
+from models import HrDocumentStep, HrDocumentTemplate
 from schemas import (HrDocumentStepCreate, HrDocumentStepRead,
                      HrDocumentStepUpdate)
 
@@ -49,6 +49,35 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
         ).offset(skip).limit(limit).all()
 
         return steps
+
+    def update_step(self, db: Session, step_id: str, obj_in: HrDocumentStepUpdate):
+        step = self.get_by_id(db, step_id)
+
+        template = db.query(HrDocumentTemplate).filter(HrDocumentTemplate.id == obj_in.hr_document_template_id).first()
+        if template is None:
+            raise NotFoundException(f"HrDocumentTemplate with id: {obj_in.hr_document_template_id} is not found!")
+
+        # if user is trying to change hr_document_template_id
+        if step.hr_document_template_id != obj_in.hr_document_template_id:
+            print("if user is trying to change hr_document_template_id")
+            # if the step has no previous step, then change hr_document_template_id for every child steps is necessary
+            if step.previous_step_id is None:
+                print("step.previous_step_id is None")
+                steps = db.query(self.model).filter(
+                    self.model.hr_document_template_id == template.id
+                ).all()
+
+                for i in steps:
+                    i.hr_document_template_id = template.id
+                    db.add(i)
+            # Change hr_document_template_id to child step is impossible
+            else:
+                raise BadRequestException(f"Child steps can not change template type")
+
+            db.flush()
+            return step
+        else:
+            return super().update(db=db, db_obj=step, obj_in=obj_in)
 
 
 hr_document_step_service = HrDocumentStepService(HrDocumentStep)
