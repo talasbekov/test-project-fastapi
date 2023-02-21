@@ -12,4 +12,3 @@ from .position import Position
 from .permission import Permission
 from .event import Event
 from .equipment import Equipment
-from .position_group import PositionGroup

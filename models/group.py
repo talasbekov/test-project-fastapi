@@ -24,8 +24,8 @@ class Group(Base):
     name = Column(String(255))
     description = Column(TEXT)
     children = relationship("Group")
-    positions = relationship("PositionGroup", back_populates="group")
     users = relationship("User", back_populates="group", cascade="all,delete")
+
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))
     updated_at = Column(TIMESTAMP(timezone=True),

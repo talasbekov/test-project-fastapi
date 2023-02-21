@@ -2,12 +2,13 @@ import types
 
 from sqlalchemy.orm import Session
 
-from .base import ServiceBase
-
-from models import User, Group
-from services import group_service
-from schemas import UserCreate, UserUpdate, UserRead, GroupUpdate
 from exceptions import NotFoundException
+from models import Group, User
+from schemas import (GroupUpdate, UserCreate, UserPermission, UserRead,
+                     UserUpdate)
+from services import group_service, permission_service
+
+from .base import ServiceBase
 
 CALLABLES = types.FunctionType, types.MethodType
 
@@ -58,6 +59,32 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
     def get_fields(self):
         fields = [key for key, value in User.__dict__.items() if (not 'id' in key and not isinstance(value, CALLABLES) and not key.startswith('_'))]
         return fields
+
+    def add_permission(self, db: Session, body: UserPermission):
+        user = self.get_by_id(db, body.user_id)
+ 
+        for id in body.permission_ids:
+            permission = permission_service.get_by_id(db, id)
+            if permission not in user.permissions:
+                user.permissions.append(permission)
+
+        db.add(user)
+        db.flush()
+
+    def remove_permission(self, db: Session, body: UserPermission):
+        user = self.get_by_id(db, body.user_id)
+        
+        for id in body.permission_ids:
+            permission = permission_service.get(db, id)
+            if permission is None:
+                continue
+            try:
+                user.permissions.remove(permission)
+            except ValueError as e:
+                continue
+
+        db.add(user)
+        db.flush()
 
 
 user_service = UserService(User)

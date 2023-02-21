@@ -1,17 +1,24 @@
 import uuid
 
 from sqlalchemy import Column, String
-from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 
 from core import Base
 
+from .association import user_permissions
+
 
 class Permission(Base):
+
     __tablename__ = "permissions"
 
     id = Column(UUID(as_uuid=True), primary_key=True,
                 nullable=False, default=uuid.uuid4)
     name = Column(String(150), nullable=True)
-    positions = relationship("Position", secondary="position_permission",
-                             back_populates="permissions")
+    users = relationship(
+        "User",
+        secondary=user_permissions,
+        back_populates="permissions",
+        cascade="all,delete"
+    )

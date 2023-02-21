@@ -1,8 +1,8 @@
-"""dummy data
+"""feature: add migration
 
-Revision ID: addc37bbe8ea
-Revises: 512b89e2ce36
-Create Date: 2023-02-09 14:03:10.828717
+Revision ID: 1caf71b7357b
+Revises: c4981d09fb44
+Create Date: 2023-02-21 09:03:24.156951
 
 """
 import uuid
@@ -10,11 +10,11 @@ import uuid
 import sqlalchemy as sa
 
 from alembic import op
-from core import Base, configs
+from core import Base
 
 # revision identifiers, used by Alembic.
-revision = 'addc37bbe8ea'
-down_revision = '26095a1758e4'
+revision = '1caf71b7357b'
+down_revision = 'c4981d09fb44'
 branch_labels = None
 depends_on = None
 
