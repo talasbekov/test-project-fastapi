@@ -27,7 +27,7 @@ class HrDocumentBase(BaseModel):
             raise ValueError(f'properties should be dictionary')
         keys = list(v)
         for key in keys:
-            value = keys[key]
+            value = v[key]
             if type(value) == dict:
                 val_keys = list(value)
                 if 'name' not in val_keys or 'value' not in val_keys:
@@ -62,7 +62,6 @@ class HrDocumentRead(HrDocumentBase):
     properties: Optional[Union[dict, None]]
     can_cancel: Optional[bool]
     users: Optional[List[UserRead]]
-
 
     class Config:
         orm_mode = True

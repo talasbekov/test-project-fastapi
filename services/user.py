@@ -1,3 +1,4 @@
+import datetime
 import types
 
 from sqlalchemy.orm import Session
@@ -55,7 +56,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         db.flush()
 
         return user
-    
+
     def get_fields(self):
         fields = [key for key, value in User.__dict__.items() if (not 'id' in key and not isinstance(value, CALLABLES) and not key.startswith('_'))]
         return fields

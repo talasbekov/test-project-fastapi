@@ -1,3 +1,4 @@
+import datetime
 import os
 import tempfile
 from typing import List
@@ -69,7 +70,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         db.flush()
 
         return document
-    
+
     def get_all(self, db: Session, user_id, skip: int, limit: int):
 
         user = user_service.get_by_id(db, user_id)
@@ -77,7 +78,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         infos = hr_document_info_service.get_all(db, user.position_id, skip, limit)
 
         return [self._to_response(i) for i in infos]
-    
+
     def get_not_signed_documents(self, db: Session, user_id: str, skip: int, limit: int):
 
         user = user_service.get_by_id(db, user_id)
@@ -92,8 +93,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         info = hr_document_info_service.get_last_unsigned_step_info(db, id)
 
-        # if role != info.hr_document_step.position.name:
-        #     raise ForbiddenException(detail=f'Вы не можете подписать этот документ!')
+        if role != info.hr_document_step.position.name:
+            raise ForbiddenException(detail=f'Вы не можете подписать этот документ!')
 
         user: User = user_service.get_by_id(db, user_id)
 
@@ -103,7 +104,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         hr_document_info_service.sign(db, info, user_id, body.comment, body.is_signed)
 
         if body.is_signed:
-
             next_step = hr_document_step_service.get_next_step_from_id(db, info.hr_document_step_id)
 
             if next_step is None:
@@ -157,7 +157,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
     def get_all_by_option(self, db: Session, option: str):
         service = options.get(option)
         if service is None:
-            raise InvalidOperationException(f'Работа с {option} еще не поддерживается! Обратитесь к администратору для получения информации!')
+            raise InvalidOperationException(
+                f'Работа с {option} еще не поддерживается! Обратитесь к администратору для получения информации!')
         return service.get_multi(db)
 
     def _finish_document(self, db: Session, document: HrDocument, users: List[User]):
@@ -165,36 +166,43 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         document.status = HrDocumentStatus.COMPLETED
 
         fields = user_service.get_fields()
+        print("fields:  ", fields)
 
         props = document.document_template.properties
+        print("properties:  ", props)
 
         for key in list(props):
 
             value = props[key]
+            print("value:  ", value)
 
             if value['type'] == 'read':
                 continue
 
-            if key not in fields:
+            if value['field_name'] not in fields:
                 raise InvalidOperationException(f'Operation on {key} is not supported yet!')
 
             for user in users:
-
                 if value['data_taken'] == "auto":
                     self._set_attr(db, user, value['field_name'], value['value'])
 
                 else:
                     if key in document.properties:
                         val = document.properties.get(key)
+                        print("val:  ", val)
                         if val is None:
                             raise BadRequestException(f'Нет ключа {val} в document.properties')
                         if not type(val) == dict:
-                            self._set_attr(db, user, value['field_name'], val)
+                            if value["data_taken"] == "datetime":  # change me
+                                date_time = datetime.datetime.strptime(val['value'], "%Y-%m-%d")
+                                self._set_attr(db, user, value['field_name'], date_time)
+                            else:
+                                self._set_attr(db, user, value['field_name'], val)
                         else:
                             if val['value'] == None:
                                 raise BadRequestException(f'Обьект {key} должен иметь value!')
                             self._set_attr(db, user, value['field_name'], val['value'])
- 
+
         db.add(document)
         db.flush()
 
@@ -213,6 +221,11 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             attr.append(res)
             setattr(user, key, attr)
 
+        elif isinstance(value, str) and datetime.date.strftime("%Y-%m-%d"):
+            res = self._get_service(key).get_by_id(db, value)
+            setattr(user, key, res)
+            print("res:  ", res)
+
         else:
             setattr(user, key, value)
 
@@ -226,7 +239,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         if service is None:
             raise InvalidOperationException(f'New state is encountered! Cannot change {key}!')
         return service
-    
+
     def _to_response(self, info: HrDocumentInfo) -> HrDocumentRead:
 
         response = HrDocumentRead.from_orm(info.hr_document)

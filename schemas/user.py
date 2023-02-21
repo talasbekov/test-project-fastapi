@@ -25,7 +25,7 @@ class UserBase(BaseModel):
     address: Optional[str]
     birthday: Optional[datetime.date]
     status: Optional[str]
-    status_till: Optional[datetime.date]
+    status_till: Optional[datetime.datetime]
 
 
 class UserCreate(UserBase):
@@ -51,7 +51,7 @@ class UserRead(UserBase):
     call_sign: Optional[str]
     id_number: Optional[str]
     status: Optional[str]
-    status_till: Optional[datetime.date]
+    status_till: Optional[datetime.datetime]
     permissions: Optional[List[PermissionRead]]
 
     class Config:
