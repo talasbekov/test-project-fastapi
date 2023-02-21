@@ -1,4 +1,4 @@
-def validate_property(v: dict):
+def hr_document_templates_properties_validator(v: dict):
 
     if v is None:
         return v
@@ -36,3 +36,17 @@ def validate_property(v: dict):
                 if val is None:
                     raise ValueError(prefix_msg + "value should be present")
     return v
+
+def hr_document_properties_validator(v: dict):
+        if v is None:
+            return v
+        if not isinstance(v, dict):
+            raise ValueError(f'properties should be dictionary')
+        keys = list(v)
+        for key in keys:
+            value = v[key]
+            if type(value) == dict:
+                val_keys = list(value)
+                if 'name' not in val_keys or 'value' not in val_keys:
+                    raise ValueError(f'name or value should be in {key}!')
+        return v

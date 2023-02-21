@@ -1,10 +1,11 @@
 import uuid
+from typing import Dict, Optional, Union
 
 from pydantic import BaseModel, validator
-from typing import Dict, Union, Optional
 
 from models import SubjectType
-from .validator import validate_property
+
+from .validator import hr_document_templates_properties_validator
 
 
 class HrDocumentTemplateBase(BaseModel):
@@ -13,7 +14,7 @@ class HrDocumentTemplateBase(BaseModel):
     subject_type: SubjectType
     properties: Dict[str, dict]
 
-    _check_properties = validator('properties', allow_reuse=True)(validate_property)
+    _check_properties = validator('properties', allow_reuse=True)(hr_document_templates_properties_validator)
 
 
 class HrDocumentTemplateCreate(HrDocumentTemplateBase):
