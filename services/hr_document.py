@@ -194,7 +194,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                             raise BadRequestException(f'Нет ключа {val} в document.properties')
                         if not type(val) == dict:
                             if value["data_taken"] == "datetime":  # change me
-                                date_time = datetime.datetime.strptime(val['value'], "%Y-%m-%d")
+                                date_time = datetime.datetime.strptime(val, "%Y-%m-%d")
                                 self._set_attr(db, user, value['field_name'], date_time)
                             else:
                                 self._set_attr(db, user, value['field_name'], val)
