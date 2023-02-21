@@ -71,12 +71,13 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
                     i.hr_document_template_id = template.id
                     db.add(i)
             # Change hr_document_template_id to child step is impossible
-            else:
+            if step.previous_step_id is not None:
                 raise BadRequestException(f"Child steps can not change template type")
 
             db.flush()
             return step
-        else:
+
+        if step.hr_document_template_id == obj_in.hr_document_template_id:
             return super().update(db=db, db_obj=step, obj_in=obj_in)
 
 
