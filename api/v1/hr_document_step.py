@@ -67,4 +67,4 @@ async def delete(*,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
-    hr_document_step_service.remove(db, id)
+    hr_document_step_service.delete_step(db, id)
