@@ -12,7 +12,6 @@ import sqlalchemy as sa
 from alembic import op
 from core import Base
 
-
 # revision identifiers, used by Alembic.
 revision = 'b0b48417ce8a'
 down_revision = '62eeaf02ec6a'
@@ -463,13 +462,13 @@ def upgrade() -> None:
                 "start_date": {
                     "alias_name": "Начало",
                     "type": "read",
-                    "data_taken": "manual",
+                    "data_taken": "date_picker",
                 },
                 "end_date": {
                     "alias_name": "Конец",
                     "type": "write",
-                    "data_taken": "manual",
-                    "field_name": "status_till"  # Нет логики на создание event-а
+                    "data_taken": "date_picker",
+                    "field_name": "status_till"
                 },
                 "responsible_subject_rank": {
                     "alias_name": "Ранк заменяющего",
