@@ -1,24 +1,24 @@
 import uuid
-
 from typing import Optional
+
 from pydantic import BaseModel
 
 
-class PositionBase(BaseModel):
+class StaffUnitBase(BaseModel):
     name: str
     max_rank_id: uuid.UUID
     description: Optional[str]
 
 
-class PositionCreate(PositionBase):
+class StaffUnitCreate(StaffUnitBase):
     pass
 
 
-class PositionUpdate(PositionBase):
+class StaffUnitUpdate(StaffUnitBase):
     pass
 
 
-class PositionRead(PositionBase):
+class StaffUnitRead(StaffUnitBase):
     id: Optional[uuid.UUID]
     name: Optional[str]
     max_rank_id: Optional[uuid.UUID]

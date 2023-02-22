@@ -1,7 +1,7 @@
-import uuid
 import enum
+import uuid
 
-from sqlalchemy import TIMESTAMP, Column, String, Boolean
+from sqlalchemy import TIMESTAMP, Boolean, Column, String
 from sqlalchemy.dialects.postgresql import UUID
 
 from core import Base
@@ -15,9 +15,9 @@ class RoleName(str, enum.Enum):
     INITIATOR = "Инициатор"
 
 
-class Role(Base):
+class StaffFunction(Base):
 
-    __tablename__ = "roles"
+    __tablename__ = "staff_functions"
 
     id = Column(UUID(as_uuid=True), primary_key=True,
                 nullable=False, default=uuid.uuid4)

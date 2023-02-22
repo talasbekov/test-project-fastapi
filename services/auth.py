@@ -1,20 +1,17 @@
-from sqlalchemy.orm import Session
+from datetime import timedelta
+
 from fastapi import HTTPException, status
 from fastapi.logger import logger as log
-from fastapi import HTTPException, status
-from datetime import timedelta
+from fastapi_jwt_auth import AuthJWT
 from pydantic import EmailStr
 from sqlalchemy.orm import Session
-from fastapi_jwt_auth import AuthJWT
 
 from core import configs
-
+from exceptions import BadRequestException
 from models import User
 from schemas import LoginForm, RegistrationForm, UserCreate
-
-from services import user_service, group_service, position_service
-from exceptions import BadRequestException
-from utils import verify_password, hash_password, is_valid_phone_number
+from services import staff_division_service, staff_unit_service, user_service
+from utils import hash_password, is_valid_phone_number, verify_password
 
 
 class AuthService():
@@ -32,8 +29,8 @@ class AuthService():
         return {"access_token": access_token, "refresh_token": refresh_token}
     
     def register(self, form: RegistrationForm, db: Session):
-        group_obj = group_service.get_by_id(db, form.group_id)
-        position_obj = position_service.get_by_id(db, form.position_id)
+        group_obj = staff_division_service.get_by_id(db, form.group_id)
+        position_obj = staff_unit_service.get_by_id(db, form.position_id)
 
         if user_service.get_by_email(db, EmailStr(form.email).lower()):
             raise BadRequestException(detail="User with this email already exists!")

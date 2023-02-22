@@ -14,16 +14,16 @@ class GroupName(enum.Enum):
     TEAM = 3
 
 
-class Group(Base):
-    
-    __tablename__ = "groups"
+class StaffDivision(Base):
+
+    __tablename__ = "staff_divisions"
 
     id = Column(UUID(as_uuid=True), primary_key=True,
                 nullable=False, default=uuid.uuid4)
-    parent_group_id = Column(UUID(as_uuid=True), ForeignKey("groups.id"), nullable=True)
+    parent_group_id = Column(UUID(as_uuid=True), ForeignKey("staff_divisions.id"), nullable=True)
     name = Column(String(255))
     description = Column(TEXT)
-    children = relationship("Group")
+    children = relationship("StaffDivision")
     users = relationship("User", back_populates="group", cascade="all,delete")
 
     created_at = Column(TIMESTAMP(timezone=True),

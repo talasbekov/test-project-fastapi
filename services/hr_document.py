@@ -1,3 +1,4 @@
+import datetime
 import os
 import tempfile
 from typing import List
@@ -13,16 +14,17 @@ from exceptions import (BadRequestException, ForbiddenException,
 from models import HrDocument, HrDocumentInfo, HrDocumentStatus, User
 from schemas import (HrDocumentCreate, HrDocumentInit, HrDocumentRead,
                      HrDocumentSign, HrDocumentUpdate)
-from services import (badge_service, group_service, hr_document_info_service,
+from services import (badge_service, hr_document_info_service,
                       hr_document_step_service, hr_document_template_service,
-                      position_service, rank_service, user_service)
+                      rank_service, staff_division_service, staff_unit_service,
+                      user_service)
 
 from .base import ServiceBase
 
 options = {
-    'position': position_service,
-    'actual_position': position_service,
-    'group': group_service,
+    'position': staff_unit_service,
+    'actual_position': staff_unit_service,
+    'group': staff_division_service,
     'rank': rank_service,
     'badges': badge_service
 }
@@ -75,7 +77,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         user = user_service.get_by_id(db, user_id)
 
-        infos = hr_document_info_service.get_all(db, user.position_id, skip, limit)
+        infos = hr_document_info_service.get_all(db, user.staff_unit_id, skip, limit)
 
         s = set()
 
@@ -92,7 +94,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         user = user_service.get_by_id(db, user_id)
 
-        infos = hr_document_info_service.get_not_signed_by_position(db, user.position_id, skip, limit)
+        infos = hr_document_info_service.get_not_signed_by_position(db, user.staff_unit_id, skip, limit)
 
         s = set()
 
@@ -194,8 +196,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             if value['type'] == 'read':
                 continue
 
-            if key not in fields:
-                raise InvalidOperationException(f'Operation on {key} is not supported yet!')
+            if value['field_name'] not in fields:
+                raise InvalidOperationException(f'Operation on {value["field_name"]} is not supported yet!')
 
             for user in users:
 
@@ -213,7 +215,9 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                             if val['value'] == None:
                                 raise BadRequestException(f'Обьект {key} должен иметь value!')
                             self._set_attr(db, user, value['field_name'], val['value'])
- 
+
+        document.signed_at = datetime.datetime.now()
+
         db.add(document)
         db.flush()
 

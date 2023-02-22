@@ -15,7 +15,7 @@ class Equipment(Base):
                 nullable=False, default=uuid.uuid4)
     name = Column(String(150), nullable=True)
     quantity = Column(BigInteger, nullable=True)
-    hr_documents = relationship("Equipment", secondary="hr_document_equipments",
+    hr_documents = relationship("HrDocument", secondary="hr_document_equipments",
                                 back_populates="hr_documents")
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))
