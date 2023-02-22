@@ -111,8 +111,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         info = hr_document_info_service.get_last_unsigned_step_info(db, id)
 
-        # if role != info.hr_document_step.position.name:
-        #     raise ForbiddenException(detail=f'Вы не можете подписать этот документ!')
+        if role != info.hr_document_step.position.name:
+            raise ForbiddenException(detail=f'Вы не можете подписать этот документ!')
 
         user: User = user_service.get_by_id(db, user_id)
 
