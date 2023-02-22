@@ -5,10 +5,10 @@ from typing import List, Optional
 from pydantic import BaseModel, EmailStr
 
 from .badge import BadgeRead
-from .group import GroupRead
-from .position import PositionRead
-from .rank import RankRead
 from .permission import PermissionRead
+from .staff_unit import StaffUnitRead
+from .rank import RankRead
+from .staff_division import StaffDivisionRead
 
 
 class UserBase(BaseModel):
@@ -39,9 +39,9 @@ class UserUpdate(UserBase):
 class UserRead(UserBase):
     id: Optional[uuid.UUID]
     badges: Optional[List[BadgeRead]]
-    position: Optional[PositionRead]
-    actual_position:Optional[PositionRead]
-    group: Optional[GroupRead]
+    position: Optional[StaffUnitRead]
+    actual_position:Optional[StaffUnitRead]
+    group: Optional[StaffDivisionRead]
     rank: Optional[RankRead]
     email: Optional[EmailStr]
     first_name: Optional[str]

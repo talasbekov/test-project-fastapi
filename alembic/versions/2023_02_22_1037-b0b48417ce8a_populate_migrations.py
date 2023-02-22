@@ -1,8 +1,8 @@
-"""feature: add migration
+"""populate: migrations
 
-Revision ID: 1caf71b7357b
-Revises: c4981d09fb44
-Create Date: 2023-02-21 09:03:24.156951
+Revision ID: b0b48417ce8a
+Revises: 62eeaf02ec6a
+Create Date: 2023-02-22 10:37:24.355312
 
 """
 import uuid
@@ -12,9 +12,10 @@ import sqlalchemy as sa
 from alembic import op
 from core import Base
 
+
 # revision identifiers, used by Alembic.
-revision = '1caf71b7357b'
-down_revision = 'c4981d09fb44'
+revision = 'b0b48417ce8a'
+down_revision = '62eeaf02ec6a'
 branch_labels = None
 depends_on = None
 
@@ -98,7 +99,7 @@ def upgrade() -> None:
     position17_id = get_uuid()
 
     op.bulk_insert(
-        Base.metadata.tables['positions'],
+        Base.metadata.tables['staff_units'],
         [{
             'id': position1_id,
             'name': 'Военно-служащий срочной службы',
@@ -177,7 +178,7 @@ def upgrade() -> None:
     group5_id = get_uuid()
 
     op.bulk_insert(
-        Base.metadata.tables['groups'],
+        Base.metadata.tables['staff_divisions'],
         [{
             'parent_group_id': None,
             'id': group1_id,
@@ -502,7 +503,7 @@ def upgrade() -> None:
     role5_id = get_uuid()
 
     op.bulk_insert(
-        Base.metadata.tables['roles'],
+        Base.metadata.tables['staff_functions'],
         [{
             'id': role_id,
             'name': "Согласующий",

@@ -21,7 +21,7 @@ class User(Base):
     first_name = Column(String(150), nullable=True)
     last_name = Column(String(150), nullable=True)
     father_name = Column(String(150), nullable=True)
-    group_id = Column(UUID(as_uuid=True), ForeignKey("groups.id"), nullable=True)
+    staff_division_id = Column(UUID(as_uuid=True), ForeignKey("staff_divisions.id"), nullable=True)
     icon = Column(TEXT(), nullable=True)
     call_sign = Column(String(255), unique=True)
     id_number = Column(String(255), unique=True)
@@ -31,8 +31,8 @@ class User(Base):
                         nullable=False, server_default=text("now()"))
     updated_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))
-    position_id = Column(UUID(as_uuid=True), ForeignKey("positions.id"), nullable=True)
-    actual_position_id = Column(UUID(as_uuid=True), ForeignKey("positions.id"), nullable=True)
+    staff_unit_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"), nullable=True)
+    actual_staff_unit_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"), nullable=True)
     rank_id = Column(
         UUID(as_uuid=True), ForeignKey("ranks.id"), nullable=True)
     
@@ -43,7 +43,7 @@ class User(Base):
     description = Column(TEXT, nullable=True)
 
     rank = relationship("Rank", cascade="all,delete")
-    group = relationship("Group", cascade="all,delete", back_populates="users")
+    staff_division = relationship("StaffDivision", cascade="all,delete", back_populates="users")
     badges = relationship(
         "Badge",
         secondary=users_badges,
@@ -56,8 +56,8 @@ class User(Base):
         back_populates="users",
         cascade="all,delete"
     )
-    position = relationship("Position", cascade="all,delete", foreign_keys=position_id)
-    actual_position = relationship("Position", cascade="all,delete", foreign_keys=actual_position_id)
+    staff_unit = relationship("StaffUnit", cascade="all,delete", foreign_keys=staff_unit_id)
+    actual_staff_unit = relationship("StaffUnit", cascade="all,delete", foreign_keys=actual_staff_unit_id)
 
     hr_documents = relationship(
         "HrDocument",

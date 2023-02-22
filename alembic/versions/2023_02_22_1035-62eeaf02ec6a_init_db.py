@@ -1,8 +1,8 @@
-"""init: create schema
+"""init: db
 
-Revision ID: c4981d09fb44
+Revision ID: 62eeaf02ec6a
 Revises: 
-Create Date: 2023-02-21 09:01:39.282927
+Create Date: 2023-02-22 10:35:36.188704
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = 'c4981d09fb44'
+revision = '62eeaf02ec6a'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -30,16 +30,6 @@ def upgrade() -> None:
     sa.Column('quantity', sa.BigInteger(), nullable=True),
     sa.Column('created_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('groups',
-    sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('parent_group_id', sa.UUID(), nullable=True),
-    sa.Column('name', sa.String(length=255), nullable=True),
-    sa.Column('description', sa.TEXT(), nullable=True),
-    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.ForeignKeyConstraint(['parent_group_id'], ['groups.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('hr_document_templates',
@@ -63,7 +53,17 @@ def upgrade() -> None:
     sa.Column('order', sa.Integer(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('roles',
+    op.create_table('staff_divisions',
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('parent_group_id', sa.UUID(), nullable=True),
+    sa.Column('name', sa.String(length=255), nullable=True),
+    sa.Column('description', sa.TEXT(), nullable=True),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['parent_group_id'], ['staff_divisions.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('staff_functions',
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('name', sa.String(length=255), nullable=False),
     sa.Column('can_cancel', sa.Boolean(), nullable=False),
@@ -83,11 +83,10 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('reg_number')
     )
-    op.create_table('positions',
+    op.create_table('staff_units',
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('name', sa.String(), nullable=True),
     sa.Column('max_rank_id', sa.UUID(), nullable=True),
-    sa.Column('description', sa.TEXT(), nullable=True),
     sa.Column('created_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['max_rank_id'], ['ranks.id'], ),
@@ -107,10 +106,10 @@ def upgrade() -> None:
     sa.Column('previous_step_id', sa.UUID(), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.ForeignKeyConstraint(['hr_document_template_id'], ['hr_document_templates.id'], ),
-    sa.ForeignKeyConstraint(['position_id'], ['positions.id'], ),
+    sa.ForeignKeyConstraint(['hr_document_template_id'], ['hr_document_templates.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['position_id'], ['staff_units.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['previous_step_id'], ['hr_document_steps.id'], ),
-    sa.ForeignKeyConstraint(['role_id'], ['roles.id'], ),
+    sa.ForeignKeyConstraint(['role_id'], ['staff_functions.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('users',
@@ -120,7 +119,7 @@ def upgrade() -> None:
     sa.Column('first_name', sa.String(length=150), nullable=True),
     sa.Column('last_name', sa.String(length=150), nullable=True),
     sa.Column('father_name', sa.String(length=150), nullable=True),
-    sa.Column('group_id', sa.UUID(), nullable=True),
+    sa.Column('staff_division_id', sa.UUID(), nullable=True),
     sa.Column('icon', sa.TEXT(), nullable=True),
     sa.Column('call_sign', sa.String(length=255), nullable=True),
     sa.Column('id_number', sa.String(length=255), nullable=True),
@@ -128,17 +127,17 @@ def upgrade() -> None:
     sa.Column('address', sa.String(length=255), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('position_id', sa.UUID(), nullable=True),
-    sa.Column('actual_position_id', sa.UUID(), nullable=True),
+    sa.Column('staff_unit_id', sa.UUID(), nullable=True),
+    sa.Column('actual_staff_unit_id', sa.UUID(), nullable=True),
     sa.Column('rank_id', sa.UUID(), nullable=True),
     sa.Column('status', sa.String(length=255), nullable=True),
     sa.Column('status_till', sa.TIMESTAMP(timezone=True), nullable=True),
     sa.Column('birthday', sa.Date(), nullable=True),
     sa.Column('description', sa.TEXT(), nullable=True),
-    sa.ForeignKeyConstraint(['actual_position_id'], ['positions.id'], ),
-    sa.ForeignKeyConstraint(['group_id'], ['groups.id'], ),
-    sa.ForeignKeyConstraint(['position_id'], ['positions.id'], ),
+    sa.ForeignKeyConstraint(['actual_staff_unit_id'], ['staff_units.id'], ),
     sa.ForeignKeyConstraint(['rank_id'], ['ranks.id'], ),
+    sa.ForeignKeyConstraint(['staff_division_id'], ['staff_divisions.id'], ),
+    sa.ForeignKeyConstraint(['staff_unit_id'], ['staff_units.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('call_sign'),
     sa.UniqueConstraint('email'),
@@ -216,13 +215,13 @@ def downgrade() -> None:
     op.drop_table('users')
     op.drop_table('hr_document_steps')
     op.drop_table('hr_document_equipments')
-    op.drop_table('positions')
+    op.drop_table('staff_units')
     op.drop_table('hr_documents')
-    op.drop_table('roles')
+    op.drop_table('staff_functions')
+    op.drop_table('staff_divisions')
     op.drop_table('ranks')
     op.drop_table('permissions')
     op.drop_table('hr_document_templates')
-    op.drop_table('groups')
     op.drop_table('equipments')
     op.drop_table('badges')
     # ### end Alembic commands ###
