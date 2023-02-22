@@ -3,6 +3,7 @@ import tempfile
 from typing import List
 
 from docxtpl import DocxTemplate
+from fastapi.logger import logger as log
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
@@ -76,7 +77,16 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         infos = hr_document_info_service.get_all(db, user.position_id, skip, limit)
 
-        return [self._to_response(i) for i in infos]
+        s = set()
+
+        l = []
+
+        for i in infos:
+            if i.hr_document_id not in s:
+                s.add(i.hr_document_id)
+                l.append(self._to_response(i))
+
+        return l
     
     def get_not_signed_documents(self, db: Session, user_id: str, skip: int, limit: int):
 
@@ -84,7 +94,16 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         infos = hr_document_info_service.get_not_signed_by_position(db, user.position_id, skip, limit)
 
-        return [self._to_response(i) for i in infos]
+        s = set()
+
+        l = []
+
+        for i in infos:
+            if i.hr_document_id not in s:
+                s.add(i.hr_document_id)
+                l.append(self._to_response(i))
+
+        return l
 
     def sign(self, db: Session, id: str, body: HrDocumentSign, user_id: str, role: str):
 
