@@ -16,8 +16,8 @@ class HrDocumentStep(Base):
     id = Column(UUID(as_uuid=True), primary_key=True,
                 nullable=False, default=uuid.uuid4)
     hr_document_template_id = Column(UUID(as_uuid=True), ForeignKey("hr_document_templates.id", ondelete='CASCADE', onupdate='CASCADE'), nullable=False)
-    position_id = Column(UUID(as_uuid=True), ForeignKey('positions.id', ondelete='CASCADE', onupdate='CASCADE'), nullable=False)
-    role_id = Column(UUID(as_uuid=True), ForeignKey("roles.id", ondelete='CASCADE', onupdate='CASCADE'), nullable=False)
+    position_id = Column(UUID(as_uuid=True), ForeignKey('positions.id'), nullable=False)
+    role_id = Column(UUID(as_uuid=True), ForeignKey("roles.id"), nullable=False)
     previous_step_id = Column(UUID(as_uuid=True), ForeignKey("hr_document_steps.id"))
 
     next_step = relationship("HrDocumentStep", foreign_keys=previous_step_id)
