@@ -209,7 +209,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                         if val is None:
                             raise BadRequestException(f'Нет ключа {val} в document.properties')
                         if not type(val) == dict:
-                            if value["data_taken"] == "datetime":  # change me
+                            if value["data_taken"] == "date_picker":  # change me
                                 date_time = datetime.datetime.strptime(val, "%Y-%m-%d")
                                 self._set_attr(db, user, value['field_name'], date_time)
                             else:
