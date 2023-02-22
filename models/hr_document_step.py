@@ -17,11 +17,11 @@ class HrDocumentStep(Base):
                 nullable=False, default=uuid.uuid4)
     hr_document_template_id = Column(UUID(as_uuid=True), ForeignKey("hr_document_templates.id", ondelete='CASCADE', onupdate='CASCADE'), nullable=False)
     staff_unit_id = Column(UUID(as_uuid=True), ForeignKey('staff_units.id', ondelete='CASCADE', onupdate='CASCADE'), nullable=False)
-    role_id = Column(UUID(as_uuid=True), ForeignKey("staff_functions.id", ondelete='CASCADE', onupdate='CASCADE'), nullable=False)
+    staff_function_id = Column(UUID(as_uuid=True), ForeignKey("staff_functions.id", ondelete='CASCADE', onupdate='CASCADE'), nullable=False)
     previous_step_id = Column(UUID(as_uuid=True), ForeignKey("hr_document_steps.id"))
 
     next_step = relationship("HrDocumentStep", foreign_keys=previous_step_id)
-    role = relationship("StaffFunction")
+    staff_function = relationship("StaffFunction")
     staff_unit = relationship("StaffUnit")
     hr_document_template = relationship("HrDocumentTemplate")
     created_at = Column(TIMESTAMP(timezone=True),

@@ -37,41 +37,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         if document is None:
             raise NotFoundException(detail="Document is not found!")
         return document
-
-    def initialize(self, db: Session, body: HrDocumentInit, user_id: str, role: str):
-
-        template = hr_document_template_service.get_by_id(db, body.hr_document_template_id)
-
-        step = hr_document_step_service.get_initial_step_for_template(db, template.id)
-
-        if role != step.staff_unit.name:
-            raise ForbiddenException(detail=f'Вы не можете инициализировать этот документ!')
-
-        user: User = user_service.get_by_id(db, user_id)
-
-        document: HrDocument = super().create(db, HrDocumentCreate(
-            hr_document_template_id=body.hr_document_template_id,
-            status=HrDocumentStatus.INITIALIZED,
-            due_date=body.due_date,
-            properties=body.properties
-        ))
-
-        users = [user_service.get_by_id(db, i) for i in body.user_ids]
-
-        document.users = users
-
-        next_step = hr_document_step_service.get_next_step_from_id(db, step.id)
-
-        if next_step is None:
-            return self._finish_document(db, document, document.users)
-
-        hr_document_info_service.create_info_for_step(db, document.id, step.id, user.id, True)
-        hr_document_info_service.create_next_info_for_step(db, document.id, next_step.id)
-
-        db.add(document)
-        db.flush()
-
-        return document
     
     def get_all(self, db: Session, user_id, skip: int, limit: int):
 
@@ -107,18 +72,53 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         return l
 
+    def initialize(self, db: Session, body: HrDocumentInit, user_id: str, role: str):
+
+        template = hr_document_template_service.get_by_id(db, body.hr_document_template_id)
+
+        step = hr_document_step_service.get_initial_step_for_template(db, template.id)
+
+        if role != step.staff_unit.name:
+            raise ForbiddenException(detail=f'Вы не можете инициализировать этот документ!')
+
+        user: User = user_service.get_by_id(db, user_id)
+
+        document: HrDocument = super().create(db, HrDocumentCreate(
+            hr_document_template_id=body.hr_document_template_id,
+            status=HrDocumentStatus.INITIALIZED,
+            due_date=body.due_date,
+            properties=body.properties
+        ))
+
+        users = [user_service.get_by_id(db, i) for i in body.user_ids]
+
+        document.users = users
+
+        next_step = hr_document_step_service.get_next_step_from_id(db, step.id)
+
+        if next_step is None:
+            return self._finish_document(db, document, document.users)
+
+        hr_document_info_service.create_info_for_step(db, document.id, step.id, user.id, True)
+        hr_document_info_service.create_next_info_for_step(db, document.id, next_step.id)
+
+        db.add(document)
+        db.flush()
+
+        return document
+
     def sign(self, db: Session, id: str, body: HrDocumentSign, user_id: str, role: str):
 
         document = self.get_by_id(db, id)
 
         info = hr_document_info_service.get_last_unsigned_step_info(db, id)
 
-        if role != info.hr_document_step.position.name:
+        if role != info.hr_document_step.staff_unit.name:
             raise ForbiddenException(detail=f'Вы не можете подписать этот документ!')
 
         user: User = user_service.get_by_id(db, user_id)
 
-        if not info.hr_document_step.role.can_cancel:
+        if not info.hr_document_step.staff_function.can_cancel:
             body.is_signed = True
 
         hr_document_info_service.sign(db, info, user_id, body.comment, body.is_signed)
@@ -253,7 +253,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
     def _to_response(self, info: HrDocumentInfo) -> HrDocumentRead:
 
         response = HrDocumentRead.from_orm(info.hr_document)
-        response.can_cancel = info.hr_document_step.role.can_cancel
+        response.can_cancel = info.hr_document_step.staff_function.can_cancel
 
         return response
 

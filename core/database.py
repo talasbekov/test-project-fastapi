@@ -25,11 +25,11 @@ def get_db():
     try:
         yield db
         db.commit()
-    # except Exception as e:
-    #     db.rollback()
-    #     if isinstance(e, HTTPException):
-    #         raise e
-    #     else:
-    #         raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        db.rollback()
+        if isinstance(e, HTTPException):
+            raise e
+        else:
+            raise HTTPException(status_code=400, detail=str(e))
     finally:
         db.close()
