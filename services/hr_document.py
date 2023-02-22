@@ -186,15 +186,12 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         document.status = HrDocumentStatus.COMPLETED
 
         fields = user_service.get_fields()
-        print("fields:  ", fields)
 
         props = document.document_template.properties
-        print("properties:  ", props)
 
         for key in list(props):
 
             value = props[key]
-            print("value:  ", value)
 
             if value['type'] == 'read':
                 continue
@@ -209,7 +206,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 else:
                     if key in document.properties:
                         val = document.properties.get(key)
-                        print("val:  ", val)
                         if val is None:
                             raise BadRequestException(f'Нет ключа {val} в document.properties')
                         if not type(val) == dict:
