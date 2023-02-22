@@ -8,6 +8,7 @@ from .badge import BadgeRead
 from .group import GroupRead
 from .position import PositionRead
 from .rank import RankRead
+from .permission import PermissionRead
 
 
 class UserBase(BaseModel):
@@ -51,6 +52,7 @@ class UserRead(UserBase):
     id_number: Optional[str]
     status: Optional[str]
     status_till: Optional[datetime.date]
+    permissions: Optional[List[PermissionRead]]
 
     class Config:
         orm_mode = True

@@ -1,7 +1,7 @@
 import uuid
+from typing import List, Optional
 
 from pydantic import BaseModel
-from typing import Optional
 
 
 class PermissionBase(BaseModel):
@@ -14,6 +14,11 @@ class PermissionCreate(PermissionBase):
 
 class PermissionUpdate(PermissionBase):
     pass
+
+
+class UserPermission(BaseModel):
+    user_id: uuid.UUID
+    permission_ids: List[uuid.UUID]
 
 
 class PermissionRead(PermissionBase):

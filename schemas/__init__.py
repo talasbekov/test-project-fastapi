@@ -9,7 +9,7 @@ from .hr_document_step import HrDocumentStepCreate, HrDocumentStepUpdate, HrDocu
 from .role import RoleCreate, RoleUpdate, RoleRead
 from .auth import LoginForm, RegistrationForm
 from .user_stat import UserStatCreate, UserStatUpdate, UserStatRead
-from .permission import PermissionCreate, PermissionUpdate, PermissionRead
+from .permission import PermissionCreate, PermissionUpdate, PermissionRead, UserPermission
 from .equipment import EquipmentCreate, EquipmentUpdate, EquipmentRead
 from .event import EventCreate, EventUpdate, EventRead
 from .user import UserCreate, UserUpdate, UserRead

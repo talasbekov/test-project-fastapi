@@ -1,12 +1,13 @@
 import uuid
 from typing import Any
 
-from sqlalchemy import TIMESTAMP, Column, String, text, ForeignKey, Date
-from sqlalchemy.dialects.postgresql import UUID, ARRAY, JSON, TEXT
-from sqlalchemy.orm import relationship, Mapped
+from sqlalchemy import TIMESTAMP, Column, Date, ForeignKey, String, text
+from sqlalchemy.dialects.postgresql import ARRAY, JSON, TEXT, UUID
+from sqlalchemy.orm import Mapped, relationship
 
 from core import Base
-from .association import users_badges, hr_documents_users
+
+from .association import hr_documents_users, user_permissions, users_badges
 
 
 class User(Base):
@@ -39,6 +40,7 @@ class User(Base):
     status_till = Column(TIMESTAMP(timezone=True), nullable=True)
 
     birthday = Column(Date, nullable=True)
+    description = Column(TEXT, nullable=True)
 
     rank = relationship("Rank", cascade="all,delete")
     group = relationship("Group", cascade="all,delete", back_populates="users")
@@ -46,6 +48,12 @@ class User(Base):
         "Badge",
         secondary=users_badges,
         back_populates='users',
+        cascade="all,delete"
+    )
+    permissions = relationship(
+        "Permission",
+        secondary=user_permissions,
+        back_populates="users",
         cascade="all,delete"
     )
     position = relationship("Position", cascade="all,delete", foreign_keys=position_id)

@@ -16,7 +16,6 @@ from .user import UserRead
 
 class HrDocumentBase(BaseModel):
     hr_document_template_id: uuid.UUID
-    status: HrDocumentStatus
     due_date: datetime
     properties: Dict[str, Any]
 
@@ -46,11 +45,11 @@ class HrDocumentSign(BaseModel):
 
 
 class HrDocumentCreate(HrDocumentBase):
-    pass
+    status: HrDocumentStatus
 
 
 class HrDocumentUpdate(HrDocumentBase):
-    pass
+    status: HrDocumentStatus
 
 
 class HrDocumentRead(HrDocumentBase):
