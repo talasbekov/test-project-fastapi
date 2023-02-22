@@ -8,8 +8,6 @@ from exceptions import BadRequestException, NotFoundException
 from models import HrDocumentStep, HrDocumentTemplate
 from schemas import (HrDocumentStepCreate, HrDocumentStepRead,
                      HrDocumentStepUpdate)
-from services import hr_document_template_service
-
 from .base import ServiceBase
 
 
@@ -58,7 +56,9 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
         # if user is trying to change hr_document_template_id
         if step.hr_document_template_id != obj_in.hr_document_template_id:
 
-            template = hr_document_template_service.get_by_id(db, obj_in.hr_document_template_id)
+            template = db.query(HrDocumentTemplate).filter(HrDocumentTemplate.id == obj_in.hr_document_template_id)
+            if template is None:
+                raise NotFoundException(detail=f"Document Template with id: {id} is not found!")
 
             # Change hr_document_template_id to child step is impossible
             if step.previous_step_id is not None:
