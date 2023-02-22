@@ -6,8 +6,6 @@ from .hr_document import (HrDocumentCreate, HrDocumentInit, HrDocumentRead,
                           HrDocumentSign, HrDocumentUpdate)
 from .hr_document_info import (HrDocumentInfoCreate, HrDocumentInfoRead,
                                HrDocumentInfoUpdate)
-from .hr_document_step import (HrDocumentStepCreate, HrDocumentStepRead,
-                               HrDocumentStepUpdate)
 from .hr_document_template import (HrDocumentTemplateCreate,
                                    HrDocumentTemplateRead,
                                    HrDocumentTemplateUpdate)
@@ -18,5 +16,7 @@ from .staff_function import StaffFunctionCreate, StaffFunctionRead, StaffFunctio
 from .staff_division import (StaffDivisionCreate, StaffDivisionRead,
                              StaffDivisionUpdate)
 from .staff_unit import StaffUnitCreate, StaffUnitRead, StaffUnitUpdate
+from .hr_document_step import (HrDocumentStepCreate, HrDocumentStepRead,
+                               HrDocumentStepUpdate)
 from .user import UserCreate, UserRead, UserUpdate
 from .user_stat import UserStatCreate, UserStatRead, UserStatUpdate
