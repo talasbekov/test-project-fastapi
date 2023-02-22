@@ -24,7 +24,7 @@ class StaffDivision(Base):
     name = Column(String(255))
     description = Column(TEXT)
     children = relationship("StaffDivision")
-    users = relationship("User", back_populates="group", cascade="all,delete")
+    users = relationship("User", back_populates="staff_division", cascade="all,delete")
 
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))

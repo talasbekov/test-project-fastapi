@@ -1,10 +1,12 @@
 import uuid
 
-from sqlalchemy import Column, BigInteger, String, text
+from sqlalchemy import BigInteger, Column, String, text
+from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID
 from sqlalchemy.orm import relationship
-from sqlalchemy.dialects.postgresql import UUID, TIMESTAMP
 
 from core import Base
+
+from .association import hr_document_equipments
 
 
 class Equipment(Base):
@@ -15,8 +17,8 @@ class Equipment(Base):
                 nullable=False, default=uuid.uuid4)
     name = Column(String(150), nullable=True)
     quantity = Column(BigInteger, nullable=True)
-    hr_documents = relationship("HrDocument", secondary="hr_document_equipments",
-                                back_populates="hr_documents")
+    hr_documents = relationship("HrDocument", secondary=hr_document_equipments,
+                                back_populates="equipments")
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))
     updated_at = Column(TIMESTAMP(timezone=True),

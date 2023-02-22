@@ -44,7 +44,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         step = hr_document_step_service.get_initial_step_for_template(db, template.id)
 
-        if role != step.position.name:
+        if role != step.staff_unit.name:
             raise ForbiddenException(detail=f'Вы не можете инициализировать этот документ!')
 
         user: User = user_service.get_by_id(db, user_id)

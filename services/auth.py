@@ -77,7 +77,7 @@ class AuthService():
     def _generate_tokens(self, Authorize: AuthJWT, user: User):
 
         user_claims = {
-            "role": user.position.name
+            "role": user.actual_staff_unit.name
         }
         access_token = Authorize.create_access_token(
             subject=str(user.id),
