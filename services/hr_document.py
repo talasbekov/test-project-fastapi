@@ -54,7 +54,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 l.append(self._to_response(i))
 
         return l
-    
+
     def get_not_signed_documents(self, db: Session, user_id: str, skip: int, limit: int):
 
         user = user_service.get_by_id(db, user_id)

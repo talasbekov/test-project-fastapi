@@ -1,8 +1,8 @@
-"""populate: migrations
+"""migration: added data
 
-Revision ID: b0b48417ce8a
-Revises: 62eeaf02ec6a
-Create Date: 2023-02-22 10:37:24.355312
+Revision ID: aff15fa0fe16
+Revises: f58b3d8b6a62
+Create Date: 2023-02-22 11:59:27.005940
 
 """
 import uuid
@@ -12,10 +12,9 @@ import sqlalchemy as sa
 from alembic import op
 from core import Base
 
-
 # revision identifiers, used by Alembic.
-revision = 'b0b48417ce8a'
-down_revision = '62eeaf02ec6a'
+revision = 'aff15fa0fe16'
+down_revision = 'f58b3d8b6a62'
 branch_labels = None
 depends_on = None
 
@@ -463,12 +462,12 @@ def upgrade() -> None:
                 "start_date": {
                     "alias_name": "Начало",
                     "type": "read",
-                    "data_taken": "manual",
+                    "data_taken": "date_picker",
                 },
                 "end_date": {
                     "alias_name": "Конец",
                     "type": "write",
-                    "data_taken": "manual",
+                    "data_taken": "date_picker",
                     "field_name": "status_till"  # Нет логики на создание event-а
                 },
                 "responsible_subject_rank": {
@@ -539,38 +538,38 @@ def upgrade() -> None:
         [{
             'hr_document_template_id': template1_id,
             'previous_step_id': None,
-            'position_id': position2_id,
-            'role_id': role5_id,
+            'staff_unit_id': position2_id,
+            'staff_function_id': role5_id,
             'id': step1_1
         }, {
             'hr_document_template_id': template1_id,
             'previous_step_id': step1_1,
-            'position_id': position3_id,
-            'role_id': role2_id,
+            'staff_unit_id': position3_id,
+            'staff_function_id': role2_id,
             'id': step1_2
         }, {
             'hr_document_template_id': template1_id,
             'previous_step_id': step1_2,
-            'position_id': position4_id,
-            'role_id': role3_id,
+            'staff_unit_id': position4_id,
+            'staff_function_id': role3_id,
             'id': step1_3
         }, {
             'hr_document_template_id': template2_id,
             'previous_step_id': None,
-            'position_id': position2_id,
-            'role_id': role5_id,
+            'staff_unit_id': position2_id,
+            'staff_function_id': role5_id,
             'id': step2_1
         }, {
             'hr_document_template_id': template2_id,
             'previous_step_id': step2_1,
-            'position_id': position3_id,
-            'role_id': role2_id,
+            'staff_unit_id': position3_id,
+            'staff_function_id': role2_id,
             'id': step2_2
         }, {
             'hr_document_template_id': template2_id,
             'previous_step_id': step2_2,
-            'position_id': position4_id,
-            'role_id': role3_id,
+            'staff_unit_id': position4_id,
+            'staff_function_id': role3_id,
             'id': step2_3
         }]
     )
@@ -588,14 +587,14 @@ def create_user(id, name, surname, email, group_id, call_sign, number,  position
         'first_name': name,
         'last_name': surname,
         'father_name': 'Отчество',
-        'group_id': group_id,
-        'position_id': position_id,
+        'staff_division_id': group_id,
+        'staff_unit_id': position_id,
         'call_sign': call_sign,
         'id_number': number,
         'phone_number': '+77771234789',
         'address': 'Mangilik Yel, 1',
         'rank_id': rank_id,
-        'actual_position_id': actual_position_id,
+        'actual_staff_unit_id': actual_position_id,
         'status': "На работе"
     }
 

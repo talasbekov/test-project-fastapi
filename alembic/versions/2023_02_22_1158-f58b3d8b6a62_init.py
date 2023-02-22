@@ -1,8 +1,8 @@
-"""init: db
+"""init
 
-Revision ID: 62eeaf02ec6a
+Revision ID: f58b3d8b6a62
 Revises: 
-Create Date: 2023-02-22 10:35:36.188704
+Create Date: 2023-02-22 11:58:43.488337
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '62eeaf02ec6a'
+revision = 'f58b3d8b6a62'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -101,15 +101,15 @@ def upgrade() -> None:
     op.create_table('hr_document_steps',
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('hr_document_template_id', sa.UUID(), nullable=False),
-    sa.Column('position_id', sa.UUID(), nullable=False),
-    sa.Column('role_id', sa.UUID(), nullable=False),
+    sa.Column('staff_unit_id', sa.UUID(), nullable=False),
+    sa.Column('staff_function_id', sa.UUID(), nullable=False),
     sa.Column('previous_step_id', sa.UUID(), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['hr_document_template_id'], ['hr_document_templates.id'], onupdate='CASCADE', ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['position_id'], ['staff_units.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['previous_step_id'], ['hr_document_steps.id'], ),
-    sa.ForeignKeyConstraint(['role_id'], ['staff_functions.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['staff_function_id'], ['staff_functions.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['staff_unit_id'], ['staff_units.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('users',
