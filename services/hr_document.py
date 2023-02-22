@@ -1,5 +1,6 @@
 import datetime
 import os
+import random
 import tempfile
 from typing import List
 
@@ -161,6 +162,9 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             else:
                 context[i] = document.properties[i]
 
+        context["reg_number"] = document.reg_number
+        context["signed_at"] = document.signed_at
+
         template.render(context)
 
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
@@ -217,6 +221,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                             self._set_attr(db, user, value['field_name'], val['value'])
 
         document.signed_at = datetime.datetime.now()
+        document.reg_number = str(random.randint(1, 10000)) + "-" + str(random.randint(1, 10000)) + "қбп/жқ"
 
         db.add(document)
         db.flush()
