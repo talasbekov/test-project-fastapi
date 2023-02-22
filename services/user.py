@@ -3,10 +3,10 @@ import types
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
-from models import Group, User
-from schemas import (GroupUpdate, UserCreate, UserPermission, UserRead,
+from models import StaffDivision, User
+from schemas import (StaffDivisionUpdate, UserCreate, UserPermission, UserRead,
                      UserUpdate)
-from services import group_service, permission_service
+from services import permission_service, staff_division_service
 
 from .base import ServiceBase
 
@@ -48,9 +48,9 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
                           ) -> User:
         user = self.get_by_id(db, id)
 
-        group_service.get_by_id(db, group_id)
+        staff_division_service.get_by_id(db, group_id)
 
-        user.group_id = group_id
+        user.staff_division_id = group_id
         db.add(user)
         db.flush()
 

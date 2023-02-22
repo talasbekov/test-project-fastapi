@@ -7,15 +7,15 @@ from sqlalchemy.orm import relationship
 from core import Base
 
 
-class Position(Base):
-    __tablename__ = "positions"
+class StaffUnit(Base):
+
+    __tablename__ = "staff_units"
 
     id = Column(UUID(as_uuid=True), primary_key=True,
                 nullable=False, default=uuid.uuid4)
     name = Column(String, nullable=True)
     max_rank_id = Column(UUID(as_uuid=True), ForeignKey("ranks.id"),
                          nullable=True)
-    description = Column(TEXT, nullable=True)
 
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))

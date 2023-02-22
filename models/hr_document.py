@@ -33,8 +33,8 @@ class HrDocument(Base):
     signed_at = Column(TIMESTAMP(timezone=True), nullable=True)
 
     document_template = relationship("HrDocumentTemplate", back_populates="documents", cascade="all,delete")
-    equipments = relationship("HrDocument", secondary="hr_document_equipments",
-                              back_populates="equipments")
+    equipments = relationship("Equipment", secondary=hr_document_equipments,
+                              back_populates="hr_documents")
     users = relationship(
         "User",
         secondary=hr_documents_users,
