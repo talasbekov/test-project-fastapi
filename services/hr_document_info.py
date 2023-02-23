@@ -146,6 +146,7 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
                 {
                     "id": None,
                     "hr_document_step_id": step.id,
+                    "hr_document_step": step,
                     "signed_by": None,
                     "comment": None,
                     "is_signed": None,
