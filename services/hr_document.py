@@ -1,4 +1,3 @@
-import datetime
 import os
 import tempfile
 from typing import List
@@ -13,16 +12,17 @@ from exceptions import (BadRequestException, ForbiddenException,
 from models import HrDocument, HrDocumentInfo, HrDocumentStatus, User
 from schemas import (HrDocumentCreate, HrDocumentInit, HrDocumentRead,
                      HrDocumentSign, HrDocumentUpdate)
-from services import (badge_service, group_service, hr_document_info_service,
+from services import (badge_service, hr_document_info_service,
                       hr_document_step_service, hr_document_template_service,
-                      position_service, rank_service, user_service)
+                      rank_service, staff_division_service, staff_unit_service,
+                      user_service)
 
 from .base import ServiceBase
 
 options = {
-    'position': position_service,
-    'actual_position': position_service,
-    'group': group_service,
+    'staff_unit': staff_unit_service,
+    'actual_staff_unit': staff_unit_service,
+    'staff_division': staff_division_service,
     'rank': rank_service,
     'badges': badge_service
 }
@@ -35,6 +35,40 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         if document is None:
             raise NotFoundException(detail="Document is not found!")
         return document
+
+    def get_all(self, db: Session, user_id, skip: int, limit: int):
+
+        user = user_service.get_by_id(db, user_id)
+
+        infos = hr_document_info_service.get_all(db, user.staff_unit_id, skip, limit)
+
+        s = set()
+
+        l = []
+
+        for i in infos:
+            if i.hr_document_id not in s:
+                s.add(i.hr_document_id)
+                l.append(self._to_response(i))
+
+        return l
+
+    def get_not_signed_documents(self, db: Session, user_id: str, skip: int, limit: int):
+
+        user = user_service.get_by_id(db, user_id)
+
+        infos = hr_document_info_service.get_not_signed_by_position(db, user.staff_unit_id, skip, limit)
+
+        s = set()
+
+        l = []
+
+        for i in infos:
+            if i.hr_document_id not in s:
+                s.add(i.hr_document_id)
+                l.append(self._to_response(i))
+
+        return l
 
     def initialize(self, db: Session, body: HrDocumentInit, user_id: str, role: str):
 
@@ -71,39 +105,24 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         return document
 
-    def get_all(self, db: Session, user_id, skip: int, limit: int):
-
-        user = user_service.get_by_id(db, user_id)
-
-        infos = hr_document_info_service.get_all(db, user.position_id, skip, limit)
-
-        return [self._to_response(i) for i in infos]
-
-    def get_not_signed_documents(self, db: Session, user_id: str, skip: int, limit: int):
-
-        user = user_service.get_by_id(db, user_id)
-
-        infos = hr_document_info_service.get_not_signed_by_position(db, user.position_id, skip, limit)
-
-        return [self._to_response(i) for i in infos]
-
     def sign(self, db: Session, id: str, body: HrDocumentSign, user_id: str, role: str):
 
         document = self.get_by_id(db, id)
 
         info = hr_document_info_service.get_last_unsigned_step_info(db, id)
 
-        if role != info.hr_document_step.position.name:
+        if role != info.hr_document_step.staff_unit.name:
             raise ForbiddenException(detail=f'Вы не можете подписать этот документ!')
 
         user: User = user_service.get_by_id(db, user_id)
 
-        if not info.hr_document_step.role.can_cancel:
+        if not info.hr_document_step.staff_function.can_cancel:
             body.is_signed = True
 
         hr_document_info_service.sign(db, info, user_id, body.comment, body.is_signed)
 
         if body.is_signed:
+
             next_step = hr_document_step_service.get_next_step_from_id(db, info.hr_document_step_id)
 
             if next_step is None:
@@ -140,6 +159,9 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             else:
                 context[i] = document.properties[i]
 
+        context["reg_number"] = document.reg_number
+        context["signed_at"] = document.signed_at.strftime("%Y-%m-%d")
+
         template.render(context)
 
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
@@ -157,8 +179,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
     def get_all_by_option(self, db: Session, option: str):
         service = options.get(option)
         if service is None:
-            raise InvalidOperationException(
-                f'Работа с {option} еще не поддерживается! Обратитесь к администратору для получения информации!')
+            raise InvalidOperationException(f'Работа с {option} еще не поддерживается! Обратитесь к администратору для получения информации!')
         return service.get_multi(db)
 
     def _finish_document(self, db: Session, document: HrDocument, users: List[User]):
@@ -166,42 +187,38 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         document.status = HrDocumentStatus.COMPLETED
 
         fields = user_service.get_fields()
-        print("fields:  ", fields)
 
         props = document.document_template.properties
-        print("properties:  ", props)
 
         for key in list(props):
 
             value = props[key]
-            print("value:  ", value)
 
             if value['type'] == 'read':
                 continue
 
             if value['field_name'] not in fields:
-                raise InvalidOperationException(f'Operation on {key} is not supported yet!')
+                raise InvalidOperationException(f'Operation on {value["field_name"]} is not supported yet!')
 
             for user in users:
+
                 if value['data_taken'] == "auto":
                     self._set_attr(db, user, value['field_name'], value['value'])
 
                 else:
                     if key in document.properties:
                         val = document.properties.get(key)
-                        print("val:  ", val)
                         if val is None:
                             raise BadRequestException(f'Нет ключа {val} в document.properties')
                         if not type(val) == dict:
-                            if value["data_taken"] == "datetime":  # change me
-                                date_time = datetime.datetime.strptime(val['value'], "%Y-%m-%d")
-                                self._set_attr(db, user, value['field_name'], date_time)
-                            else:
-                                self._set_attr(db, user, value['field_name'], val)
+                            self._set_attr(db, user, value['field_name'], val)
                         else:
                             if val['value'] == None:
                                 raise BadRequestException(f'Обьект {key} должен иметь value!')
                             self._set_attr(db, user, value['field_name'], val['value'])
+
+        document.signed_at = datetime.datetime.now()
+        document.reg_number = str(random.randint(1, 10000)) + "-" + str(random.randint(1, 10000)) + "қбп/жқ"
 
         db.add(document)
         db.flush()
@@ -221,11 +238,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             attr.append(res)
             setattr(user, key, attr)
 
-        elif isinstance(value, str) and datetime.date.strftime("%Y-%m-%d"):
-            res = self._get_service(key).get_by_id(db, value)
-            setattr(user, key, res)
-            print("res:  ", res)
-
         else:
             setattr(user, key, value)
 
@@ -239,11 +251,11 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         if service is None:
             raise InvalidOperationException(f'New state is encountered! Cannot change {key}!')
         return service
-
+    
     def _to_response(self, info: HrDocumentInfo) -> HrDocumentRead:
 
         response = HrDocumentRead.from_orm(info.hr_document)
-        response.can_cancel = info.hr_document_step.role.can_cancel
+        response.can_cancel = info.hr_document_step.staff_function.can_cancel
 
         return response
 

@@ -1,7 +1,11 @@
 import uuid
+from typing import Optional
 
 from pydantic import BaseModel
-from typing import Optional
+
+from .hr_document import HrDocumentRead
+from .hr_document_step import HrDocumentStepRead
+from .user import UserRead
 
 
 class HrDocumentInfoBase(BaseModel):
@@ -23,8 +27,11 @@ class HrDocumentInfoUpdate(HrDocumentInfoBase):
 class HrDocumentInfoRead(HrDocumentInfoBase):
     id: Optional[uuid.UUID]
     hr_document_step_id: Optional[uuid.UUID]
+    hr_document_step: Optional[HrDocumentStepRead]
     comment: Optional[str]
     hr_document_id: Optional[uuid.UUID]
+    hr_document: Optional[HrDocumentRead]
+    signee: Optional[UserRead]
 
     class Config:
         orm_mode = True

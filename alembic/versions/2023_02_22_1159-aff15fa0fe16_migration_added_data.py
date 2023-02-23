@@ -1,8 +1,8 @@
-"""feature: add migration
+"""migration: added data
 
-Revision ID: 1caf71b7357b
-Revises: c4981d09fb44
-Create Date: 2023-02-21 09:03:24.156951
+Revision ID: aff15fa0fe16
+Revises: f58b3d8b6a62
+Create Date: 2023-02-22 11:59:27.005940
 
 """
 import uuid
@@ -13,8 +13,8 @@ from alembic import op
 from core import Base
 
 # revision identifiers, used by Alembic.
-revision = '1caf71b7357b'
-down_revision = 'c4981d09fb44'
+revision = 'aff15fa0fe16'
+down_revision = 'f58b3d8b6a62'
 branch_labels = None
 depends_on = None
 
@@ -98,7 +98,7 @@ def upgrade() -> None:
     position17_id = get_uuid()
 
     op.bulk_insert(
-        Base.metadata.tables['positions'],
+        Base.metadata.tables['staff_units'],
         [{
             'id': position1_id,
             'name': 'Военно-служащий срочной службы',
@@ -177,7 +177,7 @@ def upgrade() -> None:
     group5_id = get_uuid()
 
     op.bulk_insert(
-        Base.metadata.tables['groups'],
+        Base.metadata.tables['staff_divisions'],
         [{
             'parent_group_id': None,
             'id': group1_id,
@@ -398,13 +398,13 @@ def upgrade() -> None:
                 "department_name": {
                     "alias_name": "Департамент",
                     "type": "write",
-                    "field_name": "group",
+                    "field_name": "staff_division",
                     "data_taken": "dropdown"
                 },
                 "position": {
                     "alias_name": "Позиция",
                     "type": "write",
-                    "field_name": "position",
+                    "field_name": "staff_unit",
                     "data_taken": "dropdown"
                 },
                 "position_id": {
@@ -462,12 +462,12 @@ def upgrade() -> None:
                 "start_date": {
                     "alias_name": "Начало",
                     "type": "read",
-                    "data_taken": "manual",
+                    "data_taken": "date_picker",
                 },
                 "end_date": {
                     "alias_name": "Конец",
                     "type": "write",
-                    "data_taken": "manual",
+                    "data_taken": "date_picker",
                     "field_name": "status_till"  # Нет логики на создание event-а
                 },
                 "responsible_subject_rank": {
@@ -489,6 +489,13 @@ def upgrade() -> None:
                     "alias_name": "Отчество заменяющего",
                     "type": "read",
                     "data_taken": "dropdown",
+                },
+                "status": {
+                    "alias_name": "Статус",
+                    "type": "write",
+                    "data_taken": "auto",
+                    "field_name": "status",
+                    "value": "В отпуске"
                 }
             },
             'id': template2_id
@@ -502,7 +509,7 @@ def upgrade() -> None:
     role5_id = get_uuid()
 
     op.bulk_insert(
-        Base.metadata.tables['roles'],
+        Base.metadata.tables['staff_functions'],
         [{
             'id': role_id,
             'name': "Согласующий",
@@ -538,38 +545,38 @@ def upgrade() -> None:
         [{
             'hr_document_template_id': template1_id,
             'previous_step_id': None,
-            'position_id': position2_id,
-            'role_id': role5_id,
+            'staff_unit_id': position2_id,
+            'staff_function_id': role5_id,
             'id': step1_1
         }, {
             'hr_document_template_id': template1_id,
             'previous_step_id': step1_1,
-            'position_id': position3_id,
-            'role_id': role2_id,
+            'staff_unit_id': position3_id,
+            'staff_function_id': role2_id,
             'id': step1_2
         }, {
             'hr_document_template_id': template1_id,
             'previous_step_id': step1_2,
-            'position_id': position4_id,
-            'role_id': role3_id,
+            'staff_unit_id': position4_id,
+            'staff_function_id': role3_id,
             'id': step1_3
         }, {
             'hr_document_template_id': template2_id,
             'previous_step_id': None,
-            'position_id': position2_id,
-            'role_id': role5_id,
+            'staff_unit_id': position2_id,
+            'staff_function_id': role5_id,
             'id': step2_1
         }, {
             'hr_document_template_id': template2_id,
             'previous_step_id': step2_1,
-            'position_id': position3_id,
-            'role_id': role2_id,
+            'staff_unit_id': position3_id,
+            'staff_function_id': role2_id,
             'id': step2_2
         }, {
             'hr_document_template_id': template2_id,
             'previous_step_id': step2_2,
-            'position_id': position4_id,
-            'role_id': role3_id,
+            'staff_unit_id': position4_id,
+            'staff_function_id': role3_id,
             'id': step2_3
         }]
     )
@@ -587,14 +594,14 @@ def create_user(id, name, surname, email, group_id, call_sign, number,  position
         'first_name': name,
         'last_name': surname,
         'father_name': 'Отчество',
-        'group_id': group_id,
-        'position_id': position_id,
+        'staff_division_id': group_id,
+        'staff_unit_id': position_id,
         'call_sign': call_sign,
         'id_number': number,
         'phone_number': '+77771234789',
         'address': 'Mangilik Yel, 1',
         'rank_id': rank_id,
-        'actual_position_id': actual_position_id,
+        'actual_staff_unit_id': actual_position_id,
         'status': "На работе"
     }
 

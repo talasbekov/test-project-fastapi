@@ -4,19 +4,19 @@ from typing import Optional
 from pydantic import BaseModel
 
 
-class RankBase(BaseModel):
+class StaffFunctionBase(BaseModel):
     name: str
 
 
-class RankCreate(RankBase):
+class StaffFunctionCreate(StaffFunctionBase):
     pass
 
 
-class RankUpdate(RankBase):
+class StaffFunctionUpdate(StaffFunctionBase):
     pass
 
 
-class RankRead(RankBase):
+class StaffFunctionRead(StaffFunctionBase):
     id: Optional[uuid.UUID]
     name: Optional[str]
 

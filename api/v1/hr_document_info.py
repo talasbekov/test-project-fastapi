@@ -2,12 +2,13 @@ import uuid
 from typing import List
 
 from fastapi import APIRouter, Depends, status
-from fastapi_jwt_auth import AuthJWT
 from fastapi.security import HTTPBearer
+from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import HrDocumentInfoCreate, HrDocumentInfoUpdate, HrDocumentInfoRead
+from schemas import (HrDocumentInfoCreate, HrDocumentInfoRead,
+                     HrDocumentInfoUpdate)
 from services import hr_document_info_service
 
 router = APIRouter(prefix="/hr-documents-info", tags=["HrDocumentInfos"], dependencies=[Depends(HTTPBearer())])
@@ -60,10 +61,20 @@ async def delete(*,
 
 
 @router.get("/{id}/", status_code=status.HTTP_200_OK)
-async def get_by_document_id(*,
+async def get_by_id(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
     return hr_document_info_service.get_by_id(db, id)
+
+
+@router.get('/history/{id}/')
+async def get_history_by_document_id(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    return hr_document_info_service.get_by_document_id(db, id)
