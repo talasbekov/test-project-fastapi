@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from core import get_db
 from schemas import (HrDocumentInfoCreate, HrDocumentInfoRead,
-                     HrDocumentInfoUpdate)
+                     HrDocumentInfoUpdate, HrDocumentHistoryRead)
 from services import hr_document_info_service
 
 router = APIRouter(prefix="/hr-documents-info", tags=["HrDocumentInfos"], dependencies=[Depends(HTTPBearer())])
@@ -70,7 +70,7 @@ async def get_by_id(*,
     return hr_document_info_service.get_by_id(db, id)
 
 
-@router.get('/history/{id}/', response_model= List[HrDocumentInfoRead])
+@router.get('/history/{id}/', response_model= List[HrDocumentHistoryRead])
 async def get_history_by_document_id(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,

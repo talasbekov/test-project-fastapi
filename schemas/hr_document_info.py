@@ -1,3 +1,4 @@
+import datetime
 import uuid
 from typing import Optional
 
@@ -14,6 +15,7 @@ class HrDocumentInfoBase(BaseModel):
     comment: str
     is_signed: Optional[bool]
     hr_document_id: uuid.UUID
+    signed_at: Optional[datetime.datetime]
 
 
 class HrDocumentInfoCreate(HrDocumentInfoBase):
@@ -32,6 +34,15 @@ class HrDocumentInfoRead(HrDocumentInfoBase):
     hr_document_id: Optional[uuid.UUID]
     hr_document: Optional[HrDocumentRead]
     signee: Optional[UserRead]
+    
+
+    class Config:
+        orm_mode = True
+
+
+class HrDocumentHistoryRead(HrDocumentInfoRead):
+
+    will_sign: Optional[UserRead]
 
     class Config:
         orm_mode = True

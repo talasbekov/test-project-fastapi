@@ -112,5 +112,13 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
         db.delete(step)
         db.flush()
 
+    def get_all_by_document_template_id(self, db: Session, template_id: uuid.UUID):
+
+        steps = db.query(self.model).filter(
+            self.model.hr_document_template_id == template_id
+        ).all()
+
+        return steps
+
 
 hr_document_step_service = HrDocumentStepService(HrDocumentStep)
