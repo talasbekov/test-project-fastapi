@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from exceptions import NotFoundException
 from models import StaffDivision, User
 from schemas import (StaffDivisionUpdate, UserCreate, UserPermission, UserRead,
-                     UserUpdate)
+                     UserUpdate, UserGroupUpdate)
 from services import permission_service, staff_division_service
 
 from .base import ServiceBase
@@ -43,14 +43,13 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
     def update_user_group(self,
                           db: Session,
-                          id: str,
-                          group_id: str,
+                          body: UserGroupUpdate
                           ) -> User:
-        user = self.get_by_id(db, id)
+        user = self.get_by_id(db, body.user_id)
 
-        staff_division_service.get_by_id(db, group_id)
+        staff_division_service.get_by_id(db, body.group_id)
 
-        user.staff_division_id = group_id
+        user.staff_division_id = body.group_id
         db.add(user)
         db.flush()
 

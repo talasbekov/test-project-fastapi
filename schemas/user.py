@@ -37,6 +37,11 @@ class UserUpdate(UserBase):
     pass
 
 
+class UserGroupUpdate(BaseModel):
+    user_id: uuid.UUID
+    group_id: uuid.UUID
+
+
 class UserRead(UserBase):
     id: Optional[uuid.UUID]
     badges: Optional[List[BadgeRead]]

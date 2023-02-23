@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from core import get_db
 from models import User
-from schemas import UserCreate, UserPermission, UserRead, UserUpdate
+from schemas import UserCreate, UserPermission, UserRead, UserUpdate, UserGroupUpdate
 from services import user_service
 
 router = APIRouter(prefix="/users", tags=["Users"], dependencies=[Depends(HTTPBearer())])
@@ -39,17 +39,16 @@ async def update(*,
         obj_in=body)
 
 
-@router.patch("/{id}/group", status_code=status.HTTP_202_ACCEPTED,
+@router.post("/group", status_code=status.HTTP_202_ACCEPTED,
               dependencies=[Depends(HTTPBearer())],
               response_model=UserRead)
 async def update_user_group(*,
     db: Session = Depends(get_db),
-    id: uuid.UUID,
-    group_id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
+    Authorize: AuthJWT = Depends(),
+    body: UserGroupUpdate
 ):
     Authorize.jwt_required()
-    return user_service.update_user_group(db, id, group_id)
+    return user_service.update_user_group(db, body)
 
 
 @router.get('/{id}/', dependencies=[Depends(HTTPBearer())],

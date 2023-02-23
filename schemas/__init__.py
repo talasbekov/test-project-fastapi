@@ -16,7 +16,7 @@ from .staff_division import (StaffDivisionCreate, StaffDivisionRead,
 from .staff_unit import StaffUnitCreate, StaffUnitRead, StaffUnitUpdate
 from .hr_document_step import (HrDocumentStepCreate, HrDocumentStepRead,
                                HrDocumentStepUpdate)
-from .user import UserCreate, UserRead, UserUpdate
+from .user import UserCreate, UserRead, UserUpdate, UserGroupUpdate
 from .hr_document_info import (HrDocumentInfoCreate, HrDocumentInfoRead,
                                HrDocumentInfoUpdate)
 from .user_stat import UserStatCreate, UserStatRead, UserStatUpdate
