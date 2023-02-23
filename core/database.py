@@ -3,7 +3,7 @@ import traceback
 from functools import wraps
 
 from fastapi import HTTPException
-from jwt.exceptions import ExpiredSignatureError
+from jwt.exceptions import PyJWTError
 from pydantic import BaseModel
 from sqlalchemy import *
 from sqlalchemy.engine import create_engine
@@ -32,8 +32,8 @@ def get_db():
         traceback.print_exc()
         if isinstance(e, HTTPException):
             raise e
-        elif isinstance(e, ExpiredSignatureError):
-            raise HTTPException(status_code=400, detail=e.args)
+        elif isinstance(e, PyJWTError):
+            raise HTTPException(status_code=400, detail=str(e))
         else:
             raise HTTPException(status_code=400, detail=str(e))
     finally:
