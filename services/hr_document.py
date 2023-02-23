@@ -121,7 +121,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         if role != info.hr_document_step.staff_unit.name:
             raise ForbiddenException(detail=f'Вы не можете подписать этот документ из-за роли!')
 
-        if self._check_for_department(db, user_service.get_by_id(db, user_id), document.users[0]):
+        if not self._check_for_department(db, user_service.get_by_id(db, user_id), document.users[0]):
             raise ForbiddenException(detail=f'Вы не можете подписать документ относящийся не к вашему департаменту!')
 
         user: User = user_service.get_by_id(db, user_id)
