@@ -6,9 +6,11 @@ from sqlalchemy import and_, asc, desc, or_
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
-from models import HrDocumentInfo
+from models import HrDocumentInfo, HrDocumentStep
 from schemas import (HrDocumentInfoCreate, HrDocumentInfoRead,
                      HrDocumentInfoUpdate)
+from services import (hr_document_step_service, staff_division_service,
+                      user_service)
 
 from .base import ServiceBase
 
@@ -107,6 +109,7 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
         info.comment = comment
         info.is_signed = is_signed
         info.updated_at = datetime.now()
+        info.signed_at = datetime.now()
 
         db.add(info)
         db.flush()
@@ -120,6 +123,49 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
         ).order_by(
             HrDocumentInfo.created_at.desc()
         ).all()
+
+        last_info = infos[len(infos)-1]
+
+        user = last_info.hr_document.users[0]
+
+        step: HrDocumentStep = last_info.hr_document_step
+
+        print
+
+        while step is not None:
+            
+            users = user_service.get_by_staff_unit(db, step.staff_unit_id)
+
+            res = None
+
+            for i in users:
+                if staff_division_service.get_department_id_from_staff_division_id(db, user.staff_division_id) == staff_division_service.get_department_id_from_staff_division_id(db, i.staff_division_id):
+                    res = i
+                    break
+            
+            infos.append(
+                {
+                    "id": None,
+                    "hr_document_step_id": step.id,
+                    "signed_by": None,
+                    "comment": None,
+                    "is_signed": None,
+                    "signed_at": None,
+                    "hr_document_id":  last_info.hr_document_id,
+                    "will_sign": i
+                }
+            )
+
+            if len(step.next_step) == 0:
+                break
+
+            print(step.next_step[0].id)
+
+            tmp = hr_document_step_service.get_by_id(db, step.next_step[0].id)
+
+            step = tmp
+
+        infos.remove(last_info)
 
         return infos
 

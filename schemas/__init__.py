@@ -18,5 +18,5 @@ from .hr_document_step import (HrDocumentStepCreate, HrDocumentStepRead,
                                HrDocumentStepUpdate)
 from .user import UserCreate, UserRead, UserUpdate
 from .hr_document_info import (HrDocumentInfoCreate, HrDocumentInfoRead,
-                               HrDocumentInfoUpdate)
+                               HrDocumentInfoUpdate, HrDocumentHistoryRead)
 from .user_stat import UserStatCreate, UserStatRead, UserStatUpdate
