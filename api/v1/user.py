@@ -39,17 +39,17 @@ async def update(*,
         obj_in=body)
 
 
-@router.patch("/{id}/group", status_code=status.HTTP_202_ACCEPTED,
+@router.patch("/{id}/userPatch", status_code=status.HTTP_202_ACCEPTED,
               dependencies=[Depends(HTTPBearer())],
               response_model=UserRead)
-async def update_user_group(*,
+async def update_user_patch(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
-    group_id: uuid.UUID,
+    body: UserUpdate,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
-    return user_service.update_user_group(db, id, group_id)
+    return user_service.update_user_patch(db, id, body)
 
 
 @router.get('/{id}/', dependencies=[Depends(HTTPBearer())],
