@@ -36,7 +36,8 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
             hr_document_step_id=step_id,
             signed_by=user_id,
             comment="",
-            is_signed=is_signed
+            is_signed=is_signed,
+            signed_at=datetime.now()
         )
 
         return super().create(db, document_info)
