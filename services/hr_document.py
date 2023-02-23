@@ -1,7 +1,7 @@
 import datetime
-import os
 import random
 import tempfile
+import uuid
 from typing import List
 
 from docxtpl import DocxTemplate
@@ -43,7 +43,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         user = user_service.get_by_id(db, user_id)
 
-        infos = hr_document_info_service.get_all(db, user.staff_unit_id, skip, limit)
+        infos = hr_document_info_service.get_all(db, user.actual_staff_unit_id, skip, limit)
 
         s = set()
 
@@ -51,16 +51,17 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         for i in infos:
             if i.hr_document_id not in s:
-                s.add(i.hr_document_id)
-                l.append(self._to_response(i))
-
+                subject = i.hr_document.users[0]
+                if self._check_for_department(db, user, subject):
+                    s.add(i.hr_document_id)
+                    l.append(self._to_response(i))
         return l
 
     def get_not_signed_documents(self, db: Session, user_id: str, skip: int, limit: int):
 
         user = user_service.get_by_id(db, user_id)
 
-        infos = hr_document_info_service.get_not_signed_by_position(db, user.staff_unit_id, skip, limit)
+        infos = hr_document_info_service.get_not_signed_by_position(db, user.actual_staff_unit_id, skip, limit)
 
         s = set()
 
@@ -68,8 +69,11 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         for i in infos:
             if i.hr_document_id not in s:
-                s.add(i.hr_document_id)
-                l.append(self._to_response(i))
+                subject = i.hr_document.users[0]
+                print(subject.id)
+                if self._check_for_department(db, user, subject):
+                    s.add(i.hr_document_id)
+                    l.append(self._to_response(i))
 
         return l
 
@@ -115,7 +119,10 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         info = hr_document_info_service.get_last_unsigned_step_info(db, id)
 
         if role != info.hr_document_step.staff_unit.name:
-            raise ForbiddenException(detail=f'Вы не можете подписать этот документ!')
+            raise ForbiddenException(detail=f'Вы не можете подписать этот документ из-за роли!')
+
+        if self._check_for_department(db, user_service.get_by_id(db, user_id), document.users[0]):
+            raise ForbiddenException(detail=f'Вы не можете подписать документ относящийся не к вашему департаменту!')
 
         user: User = user_service.get_by_id(db, user_id)
 
@@ -261,6 +268,18 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         response.can_cancel = info.hr_document_step.staff_function.can_cancel
 
         return response
+    
+    def _check_for_department(self, db: Session, user: User, subject: User) -> bool:
+
+        department_id = staff_division_service.get_department_id_from_staff_division_id(db, user.staff_division_id)
+        
+        subject_department_id = staff_division_service.get_department_id_from_staff_division_id(db, subject.staff_division_id)
+
+        print(department_id, subject_department_id)
+
+        if department_id == subject_department_id:
+            return True
+        return False
 
 
 hr_document_service = HrDocumentService(HrDocument)

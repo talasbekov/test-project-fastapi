@@ -1,3 +1,4 @@
+import uuid
 from typing import List
 
 from fastapi import HTTPException, status
@@ -46,6 +47,22 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
         db.add(group)
         db.flush()
         return group
+    
+    def get_department_id_from_staff_division_id(self, db: Session, staff_division_id: uuid.UUID):
+
+        staff_division = self.get_by_id(db, staff_division_id)
+
+        parent_id = staff_division.parent_group_id
+
+        res_id = staff_division.id
+
+        while parent_id != None:
+            res_id = parent_id
+            tmp = self.get_by_id(db, parent_id)
+            parent_id = tmp.parent_group_id
+        
+        return res_id
+
 
 
 staff_division_service = StaffDivisionService(StaffDivision)
