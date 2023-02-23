@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from core import get_db
 from schemas import (StaffDivisionCreate, StaffDivisionRead,
-                     StaffDivisionUpdate, UserRead)
+                     StaffDivisionUpdate, UserRead, StaffDivisionUpdateParentGroup)
 from services import staff_division_service
 
 router = APIRouter(prefix="/staff_division", tags=["StaffDivision"], dependencies=[Depends(HTTPBearer())])
@@ -61,17 +61,17 @@ async def update(*,
     return staff_division_service.update(db, db_obj=staff_division_service.get_by_id(db, id), obj_in=body)
 
 
-@router.patch("/{id}/", status_code=status.HTTP_202_ACCEPTED,
+@router.post("/{id}/", status_code=status.HTTP_202_ACCEPTED,
               dependencies=[Depends(HTTPBearer())],
               response_model=StaffDivisionRead)
 async def update_parent(*,
      db: Session = Depends(get_db),
      id: uuid.UUID,
-     new_parent_group_id: uuid.UUID,
+     body: StaffDivisionUpdateParentGroup,
      Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
-    return staff_division_service.change_parent_group(db, id, new_parent_group_id)
+    return staff_division_service.change_parent_group(db, id, body)
 
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
