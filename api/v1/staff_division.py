@@ -11,7 +11,7 @@ from schemas import (StaffDivisionCreate, StaffDivisionRead,
                      StaffDivisionUpdate, UserRead)
 from services import staff_division_service
 
-router = APIRouter(prefix="/groups", tags=["StaffDivision"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(prefix="/staff_division", tags=["StaffDivision"], dependencies=[Depends(HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],

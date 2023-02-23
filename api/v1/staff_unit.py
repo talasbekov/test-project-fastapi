@@ -10,7 +10,7 @@ from core import get_db
 from schemas import StaffUnitCreate, StaffUnitRead, StaffUnitUpdate
 from services import rank_service, staff_unit_service
 
-router = APIRouter(prefix="/positions", tags=["StaffUnit"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(prefix="/staff_unit", tags=["StaffUnit"], dependencies=[Depends(HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],

@@ -70,7 +70,7 @@ async def get_by_id(*,
     return hr_document_info_service.get_by_id(db, id)
 
 
-@router.get('/history/{id}/')
+@router.get('/history/{id}/', response_model= List[HrDocumentInfoRead])
 async def get_history_by_document_id(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
