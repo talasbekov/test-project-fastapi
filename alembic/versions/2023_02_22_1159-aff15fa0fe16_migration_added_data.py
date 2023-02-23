@@ -398,13 +398,13 @@ def upgrade() -> None:
                 "department_name": {
                     "alias_name": "Департамент",
                     "type": "write",
-                    "field_name": "group",
+                    "field_name": "staff_division",
                     "data_taken": "dropdown"
                 },
                 "position": {
                     "alias_name": "Позиция",
                     "type": "write",
-                    "field_name": "position",
+                    "field_name": "staff_unit",
                     "data_taken": "dropdown"
                 },
                 "position_id": {
@@ -489,6 +489,13 @@ def upgrade() -> None:
                     "alias_name": "Отчество заменяющего",
                     "type": "read",
                     "data_taken": "dropdown",
+                },
+                "status": {
+                    "alias_name": "Статус",
+                    "type": "write",
+                    "data_taken": "auto",
+                    "field_name": "status",
+                    "value": "В отпуске"
                 }
             },
             'id': template2_id

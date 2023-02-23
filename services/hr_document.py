@@ -23,9 +23,9 @@ from services import (badge_service, hr_document_info_service,
 from .base import ServiceBase
 
 options = {
-    'position': staff_unit_service,
-    'actual_position': staff_unit_service,
-    'group': staff_division_service,
+    'staff_unit': staff_unit_service,
+    'actual_staff_unit': staff_unit_service,
+    'staff_division': staff_division_service,
     'rank': rank_service,
     'badges': badge_service
 }
@@ -163,7 +163,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 context[i] = document.properties[i]
 
         context["reg_number"] = document.reg_number
-        context["signed_at"] = document.signed_at
+        context["signed_at"] = document.signed_at.strftime("%Y-%m-%d")
 
         template.render(context)
 
