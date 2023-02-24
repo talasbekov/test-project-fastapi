@@ -62,6 +62,8 @@ class HrDocumentRead(HrDocumentBase):
     properties: Optional[Union[dict, None]]
     can_cancel: Optional[bool]
     users: Optional[List[UserRead]]
+    created_at: Optional[datetime]
+    updated_at: Optional[datetime]
 
 
     class Config:

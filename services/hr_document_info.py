@@ -36,7 +36,8 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
             hr_document_step_id=step_id,
             signed_by=user_id,
             comment="",
-            is_signed=is_signed
+            is_signed=is_signed,
+            signed_at=datetime.now()
         )
 
         return super().create(db, document_info)
@@ -121,7 +122,7 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
         infos = db.query(HrDocumentInfo).filter(
             HrDocumentInfo.hr_document_id == id
         ).order_by(
-            HrDocumentInfo.created_at.desc()
+            HrDocumentInfo.created_at.asc()
         ).all()
 
         last_info = infos[len(infos)-1]
@@ -129,8 +130,6 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
         user = last_info.hr_document.users[0]
 
         step: HrDocumentStep = last_info.hr_document_step
-
-        print
 
         while step is not None:
             
@@ -147,6 +146,7 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
                 {
                     "id": None,
                     "hr_document_step_id": step.id,
+                    "hr_document_step": step,
                     "signed_by": None,
                     "comment": None,
                     "is_signed": None,
@@ -166,6 +166,8 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
             step = tmp
 
         infos.remove(last_info)
+
+        infos.reverse()
 
         return infos
 
