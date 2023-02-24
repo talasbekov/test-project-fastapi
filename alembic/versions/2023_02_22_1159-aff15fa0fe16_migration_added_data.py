@@ -393,7 +393,7 @@ def upgrade() -> None:
                     "alias_name": "Новое звание",
                     "type": "write",
                     "field_name": "rank",
-                    "data_taken": "manual"
+                    "data_taken": "dropdown",
                 },
                 "department_name": {
                     "alias_name": "Департамент",
