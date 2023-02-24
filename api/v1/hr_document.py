@@ -14,46 +14,87 @@ from services import hr_document_service
 router = APIRouter(prefix="/hr-documents", tags=["HrDocuments"], dependencies=[Depends(HTTPBearer())])
 
 
-@router.get("", response_model=List[HrDocumentRead])
+@router.get("", response_model=List[HrDocumentRead],
+            summary="Get all HrDocuments")
 async def get_all(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
     skip: int = 0,
     limit: int = 10
 ):
+    """
+        Get all HrDocuments
+
+        - **skip**: int - The number of HrDocuments to skip before returning the results. This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of HrDocuments to return in the response. This parameter is optional and defaults to 10.
+    """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
     return hr_document_service.get_all(db, user_id, skip, limit)
 
-@router.get("/not-signed", response_model=List[HrDocumentRead])
+@router.get("/not-signed", response_model=List[HrDocumentRead],
+            summary="Get all not signed HrDocuments")
 async def get_not_signed(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
     skip: int = 0,
     limit: int = 10
 ):
+    """
+        Get all not signed HrDocuments
+
+        - **skip**: int - The number of HrDocuments to skip before returning the results. This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of HrDocuments to return in the response. This parameter is optional and defaults to 10.
+    """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
     return hr_document_service.get_not_signed_documents(db, user_id, skip, limit)
  
-@router.post("", status_code=status.HTTP_201_CREATED, response_model=HrDocumentRead)
+@router.post("", status_code=status.HTTP_201_CREATED, response_model=HrDocumentRead,
+             summary="Initialize HrDocument")
 async def initialize(*,
     db: Session = Depends(get_db),
     body: HrDocumentInit,
     Authorize: AuthJWT = Depends()
 ):
+    """
+        Initialize HrDocument
+
+        The user must have a role that allows them to create HR documents.
+
+        - **hr_document_template_id**: UUID - required. HrDocument will be initialized based on HrDocumentTemplate.
+        - **due_date**: the end date of this document - format (YYYY-MM-DD). This parameter is required.
+        - **properties**: A dictionary containing properties for the HrDocument.
+        - **user_ids**: UUID - required and should exist in database. A list of user IDs to be assigned to the HrDocument.
+    """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
     role = Authorize.get_raw_jwt()['role']
     return hr_document_service.initialize(db, body, user_id, role)
 
-@router.put("/{id}/", response_model=HrDocumentRead)
+@router.put("/{id}/", response_model=HrDocumentRead,
+            summary="Update HrDocument")
 async def update(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
     body: HrDocumentUpdate,
     Authorize: AuthJWT = Depends()
 ):
+    """
+        Update HrDocument
+
+        - **id**: UUID - the id of HrDocument. This is required.
+        - **hr_document_template_id**: UUID - required. HrDocument will be initialized based on HrDocumentTemplate.
+        - **due_date**: the end date of this document - format (YYYY-MM-DD). This parameter is required.
+        - **properties**: A dictionary containing properties for the HrDocument.
+        - **status**: the status of the HrDocument. This field should accept one of the following statuses:
+
+        * Иницилизирован
+        * В процессе
+        * Завершен
+        * Отменен
+        * На доработке
+    """
     Authorize.jwt_required()
     return hr_document_service.update(
         db=db,
@@ -61,53 +102,95 @@ async def update(*,
         obj_in=body)
 
 
-@router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
+               summary="Delete HrDocument")
 async def delete(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
     Authorize: AuthJWT = Depends()
 ):
+    """
+        Delete HrDocument
+
+        - **id**: UUID - required.
+    """
     Authorize.jwt_required()
     hr_document_service.remove(db, id)
 
 
-@router.post("/{id}/", status_code=status.HTTP_200_OK)
+@router.post("/{id}/", status_code=status.HTTP_200_OK,
+             summary="Sign HrDocument")
 async def sign(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
     body: HrDocumentSign,
     Authorize: AuthJWT = Depends()
 ):
+    """
+        Sign HrDocument
+
+        The user must have a role that allows them to sign this HR document.
+
+        - **id**: UUID - the ID of HrDocument. This is required.
+        - **comment**: A comment on the signed document.
+        - **is_signed**: bool - indicating whether the document is signed.
+    """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
     role = Authorize.get_raw_jwt()['role']
     hr_document_service.sign(db, id, body, user_id, role)
 
-@router.get("/{id}/", response_model=HrDocumentRead)
+@router.get("/{id}/", response_model=HrDocumentRead,
+            summary="Get HrDocument by id")
 async def get_by_id(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
     Authorize: AuthJWT = Depends()
 ):
+    """
+        Get HrDocument by id
+
+        - **id**: UUID - required
+    """
     Authorize.jwt_required()
     return hr_document_service.get_by_id(db, id)
  
 
-@router.get('/generate/{id}/', status_code=status.HTTP_200_OK)
+@router.get('/generate/{id}/', status_code=status.HTTP_200_OK,
+            summary="Generate HrDocument")
 async def generate(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
     Authorize: AuthJWT = Depends()
 ):
+    """
+        This endpoint generates a HR document based on the given document ID.
+
+        It takes a document ID as input, retrieves the corresponding HR document from the database, retrieves the HR document template associated with the document, renders the template with the document's properties, and saves the resulting Word document to a temporary file. It then returns a FileResponse containing the generated document as an attachment that can be downloaded by the user.
+
+        - **id**: UUID - required.
+    """
     Authorize.jwt_required()
     return hr_document_service.generate(db, id)
 
 
-@router.get('/options', status_code=status.HTTP_200_OK)
+@router.get('/options', status_code=status.HTTP_200_OK,
+            summary="Get data by option")
 async def get_data_by_option(*,
     db: Session = Depends(get_db),
     option: str,
     Authorize: AuthJWT = Depends()
 ):
+    """
+        Get data by option
+
+        - **option**: required. This field should accept one of the following options:
+
+        * staff_unit
+        * actual_staff_unit
+        * staff_division
+        * rank
+        * badges
+    """
     Authorize.jwt_required()
     return hr_document_service.get_all_by_option(db, option)
