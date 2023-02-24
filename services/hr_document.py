@@ -45,17 +45,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         infos = hr_document_info_service.get_all(db, user.actual_staff_unit_id, skip, limit)
 
-        s = set()
-
-        l = []
-
-        for i in infos:
-            if i.hr_document_id not in s:
-                subject = i.hr_document.users[0]
-                if self._check_for_department(db, user, subject):
-                    s.add(i.hr_document_id)
-                    l.append(self._to_response(i))
-        return l
+        return self._return_correctly(db, infos, user)
 
     def get_not_signed_documents(self, db: Session, user_id: str, skip: int, limit: int):
 
@@ -63,19 +53,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         infos = hr_document_info_service.get_not_signed_by_position(db, user.actual_staff_unit_id, skip, limit)
 
-        s = set()
-
-        l = []
-
-        for i in infos:
-            if i.hr_document_id not in s:
-                subject = i.hr_document.users[0]
-                print(subject.id)
-                if self._check_for_department(db, user, subject):
-                    s.add(i.hr_document_id)
-                    l.append(self._to_response(i))
-
-        return l
+        return self._return_correctly(db, infos, user)
 
     def initialize(self, db: Session, body: HrDocumentInit, user_id: str, role: str):
 
@@ -196,6 +174,14 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             else:
                 return service.get_by_id(db, id).children
         return service.get_multi(db)
+    
+    def get_signed_documents(self, db: Session, user_id: uuid.UUID, skip: int, limit: int):
+
+        user = user_service.get_by_id(db, user_id)
+
+        infos = hr_document_info_service.get_signed_by_user_id(db, user_id, skip, limit)
+
+        return self._return_correctly(db, infos, user)
 
     def _finish_document(self, db: Session, document: HrDocument, users: List[User]):
 
@@ -320,6 +306,21 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         if department_id == subject_department_id:
             return True
         return False
+    
+    def _return_correctly(self,db: Session, infos: List[HrDocumentInfo], user: User) -> List[HrDocumentRead]:
 
+        s = set()
+
+        l = []
+
+        for i in infos:
+            if i.hr_document_id not in s:
+                subject = i.hr_document.users[0]
+                print(subject.id)
+                if self._check_for_department(db, user, subject):
+                    s.add(i.hr_document_id)
+                    l.append(self._to_response(i))
+
+        return l
 
 hr_document_service = HrDocumentService(HrDocument)

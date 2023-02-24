@@ -113,3 +113,15 @@ async def get_data_by_option(*,
 ):
     Authorize.jwt_required()
     return hr_document_service.get_all_by_option(db, option, data_taken, id)
+
+
+@router.get('/signed-history', status_code=status.HTTP_200_OK)
+async def get_signed_history(*,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends(),
+    skip: int = 0,
+    limit: int = 10
+):
+    Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
+    return hr_document_service.get_signed_documents(db, user_id, skip, limit)
