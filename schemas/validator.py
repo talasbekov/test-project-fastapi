@@ -18,7 +18,7 @@ def validate_property(v: dict):
         if type is None or not isinstance(type, str) or type.lower() not in types:
             raise ValueError(prefix_msg + 'type should be either "read/write"')
 
-        data_takens = ["auto", "manual", "dropdown", "date_picker"]
+        data_takens = ["auto", "manual", "dropdown", "date_picker", "matreshka"]
         data_taken = value.get('data_taken')
         if data_taken is None or not isinstance(data_taken, str) or data_taken not in data_takens:
             raise ValueError(prefix_msg + 'data_taken should be either "auto/manual/dropdown/date_picker"')

@@ -399,7 +399,7 @@ def upgrade() -> None:
                     "alias_name": "Департамент",
                     "type": "write",
                     "field_name": "staff_division",
-                    "data_taken": "dropdown"
+                    "data_taken": "matreshka"
                 },
                 "position": {
                     "alias_name": "Позиция",
@@ -417,7 +417,7 @@ def upgrade() -> None:
         }, {
             'name': 'Приказ о выходе в отпуск (рук.состав)',
             'path': 'static/templates/Приказ_о_выходе_в_отпуск_рук_состав.docx',
-            'subject_type': 1,
+            'subject_type': 1,  
             'properties': {
                 "signed_at": {
                     "alias_name": "Время Регистрации",

@@ -1,5 +1,5 @@
 import uuid
-from typing import List
+from typing import List, Union
 
 from fastapi import APIRouter, Depends, status
 from fastapi.security import HTTPBearer
@@ -107,7 +107,9 @@ async def generate(*,
 async def get_data_by_option(*,
     db: Session = Depends(get_db),
     option: str,
+    data_taken: Union[str, None],
+    id: Union[uuid.UUID, None],
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
-    return hr_document_service.get_all_by_option(db, option)
+    return hr_document_service.get_all_by_option(db, option, data_taken, id)

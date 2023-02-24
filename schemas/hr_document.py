@@ -65,6 +65,8 @@ class HrDocumentRead(HrDocumentBase):
     created_at: Optional[datetime]
     updated_at: Optional[datetime]
 
+    new_value: Optional[dict]
+
 
     class Config:
         orm_mode = True

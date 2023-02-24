@@ -186,10 +186,15 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             filename=document_template.name + '.docx'
         )
 
-    def get_all_by_option(self, db: Session, option: str):
+    def get_all_by_option(self, db: Session, option: str, data_taken: str, id: uuid.UUID):
         service = options.get(option)
         if service is None:
             raise InvalidOperationException(f'Работа с {option} еще не поддерживается! Обратитесь к администратору для получения информации!')
+        if data_taken is not None and data_taken == "matreshka":
+            if id is None:
+                return service.get_parents(db)
+            else:
+                return service.get_by_id(db, id).children
         return service.get_multi(db)
 
     def _finish_document(self, db: Session, document: HrDocument, users: List[User]):
@@ -262,10 +267,45 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             raise InvalidOperationException(f'New state is encountered! Cannot change {key}!')
         return service
     
-    def _to_response(self, info: HrDocumentInfo) -> HrDocumentRead:
+    def _to_response(self, db: Session, info: HrDocumentInfo) -> HrDocumentRead:
 
         response = HrDocumentRead.from_orm(info.hr_document)
         response.can_cancel = info.hr_document_step.staff_function.can_cancel
+
+        fields = user_service.get_fields()
+
+        props = info.hr_document.document_template.properties
+
+        new_val = {}
+
+        for key in list(props):
+            
+            value = props[key]
+
+            if value['type'] == 'read':
+                continue
+
+            if value['field_name'] not in fields:
+                raise InvalidOperationException(f'Operation on {value["field_name"]} is not supported yet!')
+            
+            if value['data_taken'] == "auto":
+                self._get_service(value['field_name']).get_by_id(db, value['value'])
+            
+            else:
+
+                val = info.hr_document.properties[key]
+                
+                if val is None:
+                    raise BadRequestException(f'Нет ключа {val} в document.properties')
+                
+                if not type(val) == dict:
+                    new_val[value['field_name']] = self._get_service(value['field_name']).get_by_id(db, val)
+                else:
+                    if val['value'] == None:
+                        raise BadRequestException(f'Обьект {key} должен иметь value!')
+                    new_val[value['field_name']] = self._get_service(value['field_name']).get_by_id(db, val['value'])
+
+        response.new_value = new_val
 
         return response
     
