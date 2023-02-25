@@ -15,7 +15,8 @@ from .config import configs
 SQLALCHEMY_DATABASE_URL = f"postgresql://{configs.POSTGRES_USER}:{configs.POSTGRES_PASSWORD}@{configs.POSTGRES_HOSTNAME}:{configs.DATABASE_PORT}/{configs.POSTGRES_DB}"
 
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URL
+    SQLALCHEMY_DATABASE_URL,
+    pool_size=20
 )
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
@@ -27,14 +28,14 @@ def get_db():
     try:
         yield db
         db.commit()
-    # except Exception as e:
-    #     db.rollback()
-    #     traceback.print_exc()
-    #     if isinstance(e, HTTPException):
-    #         raise e
-    #     elif isinstance(e, ExpiredSignatureError):
-    #         raise HTTPException(status_code=400, detail=e.args)
-    #     else:
-    #         raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        db.rollback()
+        traceback.print_exc()
+        if isinstance(e, HTTPException):
+            raise e
+        elif isinstance(e, ExpiredSignatureError):
+            raise HTTPException(status_code=400, detail=e.args)
+        else:
+            raise HTTPException(status_code=400, detail=str(e))
     finally:
         db.close()
