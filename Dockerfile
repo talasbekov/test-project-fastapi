@@ -7,6 +7,9 @@ RUN pip install pipenv
 # Set working directory
 WORKDIR /app
 
+# Install wget
+RUN apt-get update && apt-get install -y wget
+
 # Copy Pipfile and Pipfile.lock
 COPY requirements.txt .
 

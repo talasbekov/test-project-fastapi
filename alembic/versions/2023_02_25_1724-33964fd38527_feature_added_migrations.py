@@ -356,7 +356,8 @@ def upgrade() -> None:
                 '123456789',
                 position4_id,
                 rank3_id,
-                position4_id)
+                position4_id,
+                "http://192.168.0.199:8083/static/Erdaulet.png")
         ]
     )
 
