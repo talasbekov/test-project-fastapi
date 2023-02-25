@@ -1,4 +1,5 @@
 import json
+import logging
 import traceback
 from functools import wraps
 
@@ -28,14 +29,16 @@ def get_db():
     try:
         yield db
         db.commit()
-    except Exception as e:
-        db.rollback()
-        traceback.print_exc()
-        if isinstance(e, HTTPException):
-            raise e
-        elif isinstance(e, ExpiredSignatureError):
-            raise HTTPException(status_code=400, detail=e.args)
-        else:
-            raise HTTPException(status_code=400, detail=str(e))
+    # except Exception as e:
+    #     db.rollback()
+        # if isinstance(e, HTTPException):
+        #     raise e
+        # elif isinstance(e, ExpiredSignatureError):
+        #     raise HTTPException(status_code=400, detail=e.args)
+        # else:
+        #     logging.error("%s", e, exc_info=True)
+        #     raise HTTPException(status_code=400, detail=str(e))
     finally:
-        db.close()
+        if db:
+            db.close()
+            logging.debug("Database connection closed.")

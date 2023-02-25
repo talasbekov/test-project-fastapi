@@ -1,6 +1,8 @@
 import datetime
 import random
 import tempfile
+import urllib.parse
+import urllib.request
 import uuid
 from typing import List
 
@@ -137,7 +139,15 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         document = self.get_by_id(db, id)
         document_template = hr_document_template_service.get_by_id(db, document.hr_document_template_id)
 
-        template = DocxTemplate(document_template.path)
+        with tempfile.NamedTemporaryFile(delete=False) as temp:
+            
+            arr = document_template.path.rsplit('.')
+            extension = arr[len(arr)-1]
+            temp_file_path = temp.name + '.' + extension
+
+            urllib.request.urlretrieve(document_template.path, temp_file_path)
+
+        template = DocxTemplate(temp_file_path)
 
         context = {}
 
@@ -146,22 +156,23 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 context[i] = document.properties[i]['name']
             else:
                 context[i] = document.properties[i]
-
-        context["reg_number"] = document.reg_number
-        context["signed_at"] = document.signed_at.strftime("%Y-%m-%d")
+        if document.reg_number is not None:
+            context["reg_number"] = document.reg_number
+        if document.signed_at is not None:
+            context["signed_at"] = document.signed_at.strftime("%Y-%m-%d")
 
         template.render(context)
 
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
 
-            file_name = temp_file.name + ".docx"
+            file_name = temp_file.name + extension
 
             template.save(file_name)
 
         return FileResponse(
             path=file_name,
             media_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-            filename=document_template.name + '.docx'
+            filename=document_template.name + extension
         )
 
     def get_all_by_option(self, db: Session, option: str, data_taken: str, id: uuid.UUID):
