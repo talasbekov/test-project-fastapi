@@ -21,6 +21,18 @@ depends_on = None
 
 def upgrade() -> None:
 
+    badge1_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['badges'],
+        [{
+            "id": badge1_id,
+            "name": "Черный Берет",
+            "url": "http://192.168.0.199:8083/static/black_beret.jpg"
+        }]
+    )
+
+
     rank1_id = get_uuid()
     rank2_id = get_uuid()
     rank3_id = get_uuid()
@@ -507,7 +519,7 @@ def upgrade() -> None:
                     "type": "write",
                     "data_taken": "auto",
                     "field_name": "badges",
-                    "value": "uuid"
+                    "value": badge1_id
                 }
             },
             'id': template3_id
