@@ -341,16 +341,17 @@ def upgrade() -> None:
 
     template1_id = get_uuid()
     template2_id = get_uuid()
+    template3_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['hr_document_templates'],
         [{
-            'name': 'Приказ о зачислении на службу',
-            'path': 'static/templates/Приказ о зачислении на службу (1).docx',
+            'name': 'Приказ о назначении',
+            'path': 'http://192.168.0.199:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7%20%D0%BE%20%D0%BD%D0%B0%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%B8%D0%B8.docx',
             'subject_type': 1,
             'properties': {
                 "signed_at": {
-                    "alias_name": "Время Регистрации",
+                    "alias_name": "Дата подписания",
                     "type": "read",
                     "data_taken": "auto"
                 },
@@ -360,67 +361,66 @@ def upgrade() -> None:
                     "data_taken": "auto"
                 },
                 "rank": {
-                    "alias_name": "Звание",
-                    "type": "read",
-                    "data_taken": "auto"
-                },
-                "first_name": {
-                    "alias_name": "Имя",
+                    "alias_name": "Звание субъекта",
                     "type": "read",
                     "data_taken": "auto"
                 },
                 "last_name": {
-                    "alias_name": "Фамилия",
+                    "alias_name": "Фамилия субъекта",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "first_name": {
+                    "alias_name": "Имя субъекта",
                     "type": "read",
                     "data_taken": "auto"
                 },
                 "father_name": {
-                    "alias_name": "Имя",
+                    "alias_name": "Отчество субъекта",
                     "type": "read",
                     "data_taken": "auto"
-                },
+                }, 
                 "id_number": {
-                    "alias_name": "ID",
+                    "alias_name": "Идентификационный номер субъекта",
                     "type": "read",
                     "data_taken": "auto"
                 },
-                "period": {
-                    "alias_name": "Период",
-                    "type": "read", # пока нет логики на время
-                    "data_taken": "manual"
-                },
-                "new_rank": {
-                    "alias_name": "Новое звание",
+                "new_department_name": {
+                    "alias_name": "Департамент субъекта",
                     "type": "write",
-                    "field_name": "rank",
+                    "data_taken": "matreshka",
+                    "field_name":"staff_division"
+                },
+                "new_position": {
+                    "alias_name": "Новая позиция субъекта",
+                    "type": "write",
                     "data_taken": "dropdown",
+                    "field_name": "staff_unit"
                 },
                 "department_name": {
-                    "alias_name": "Департамент",
-                    "type": "write",
-                    "field_name": "staff_division",
-                    "data_taken": "matreshka"
-                },
-                "position": {
-                    "alias_name": "Позиция",
-                    "type": "write",
-                    "field_name": "staff_unit",
-                    "data_taken": "dropdown"
-                },
-                "position_id": {
-                    "alias_name": "ID позиции",
+                    "alias_name": "Департамент субъекта",
                     "type": "read",
-                    "data_taken":"auto"
+                    "data_taken": "auto"
+                },
+                "reason": {
+                    "alias_name": "Причина",
+                    "type": "read",
+                    "data_taken": "manual"
+                },
+                "number": {
+                    "alias_name": "Процент",
+                    "type": "read",
+                    "data_taken": "manual"
                 }
             },
             'id': template1_id
         }, {
-            'name': 'Приказ о выходе в отпуск (рук.состав)',
-            'path': 'static/templates/Приказ_о_выходе_в_отпуск_рук_состав.docx',
-            'subject_type': 1,  
+            'name': 'Приказ о присвоения звания',
+            'path': 'http://192.168.0.199:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7_%D0%BE_%D0%BF%D1%80%D0%B8%D1%81%D0%B2%D0%BE%D0%B5%D0%BD%D0%B8%D0%B8_%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F_%D0%BF%D0%BE%D0%B2%D1%8B%D1%88%D0%B5%D0%BD%D0%B8%D0%B5.docx',
+            'subject_type': 1,
             'properties': {
                 "signed_at": {
-                    "alias_name": "Время Регистрации",
+                    "alias_name": "Дата подписания",
                     "type": "read",
                     "data_taken": "auto"
                 },
@@ -429,76 +429,88 @@ def upgrade() -> None:
                     "type": "read",
                     "data_taken": "auto"
                 },
-                "rank": {
-                    "alias_name": "Звание",
+                "last_name": {
+                    "alias_name": "Фамилия субъекта",
                     "type": "read",
                     "data_taken": "auto"
                 },
                 "first_name": {
-                    "alias_name": "Имя",
-                    "type": "read",
-                    "data_taken": "auto"
-                },
-                "last_name": {
-                    "alias_name": "Фамилия",
+                    "alias_name": "Имя субъекта",
                     "type": "read",
                     "data_taken": "auto"
                 },
                 "father_name": {
-                    "alias_name": "Имя",
+                    "alias_name": "Отчество субъекта",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
+                "id_number": {
+                    "alias_name": "Идентификационный номер субъекта",
                     "type": "read",
                     "data_taken": "auto"
                 },
+                "new_position": {
+                    "alias_name": "Новая позиция субъекта",
+                    "type": "write",
+                    "data_taken": "dropdown",
+                    "field_name": "staff_unit"
+                }
+            },
+            'id': template2_id
+        }, {
+            'name': 'Приказ о присвоения черного берета',
+            'path': 'http://192.168.0.199:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7_%D0%BE_%D0%BF%D1%80%D0%B8%D1%81%D0%B2%D0%BE%D0%B5%D0%BD%D0%B8%D0%B8_%D0%A7%D0%B5%D1%80%D0%BD%D0%BE%D0%B3%D0%BE_%D0%B1%D0%B5%D1%80%D0%B5%D1%82%D0%B0.docx',
+            'subject_type': 1,  
+            'properties': {
+                "signed_at": {
+                    "alias_name": "Дата подписания",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "reg_number": {
+                    "alias_name": "Регистрационный номер",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "last_name": {
+                    "alias_name": "Фамилия субъекта",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "first_name": {
+                    "alias_name": "Имя субъекта",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "father_name": {
+                    "alias_name": "Отчество субъекта",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
                 "id_number": {
-                    "alias_name": "ID",
+                    "alias_name": "Идентификационный номер субъекта",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "position": {
+                    "alias_name": "Позиция субъекта",
                     "type": "read",
                     "data_taken": "auto"
                 },
                 "department_name": {
-                    "alias_name": "Департамент",
+                    "alias_name": "Департамент субъекта",
                     "type": "read",
                     "data_taken": "auto"
                 },
-                "start_date": {
-                    "alias_name": "Начало",
-                    "type": "read",
-                    "data_taken": "date_picker",
-                },
-                "end_date": {
-                    "alias_name": "Конец",
-                    "type": "write",
-                    "data_taken": "date_picker",
-                    "field_name": "status_till"  # Нет логики на создание event-а
-                },
-                "responsible_subject_rank": {
-                    "alias_name": "Ранк заменяющего",
-                    "type": "read",
-                    "data_taken": "dropdown",
-                },
-                "responsible_subject_last_name": {
-                    "alias_name": "Фамилия заменяющего",
-                    "type": "read",
-                    "data_taken": "dropdown",
-                },
-                "responsible_subject_first_name": {
-                    "alias_name": "Имя заменяющего",
-                    "type": "read",
-                    "data_taken": "dropdown",
-                },
-                "responsible_subject_father_name":  {
-                    "alias_name": "Отчество заменяющего",
-                    "type": "read",
-                    "data_taken": "dropdown",
-                },
-                "status": {
-                    "alias_name": "Статус",
+                "badge": {
+                    "alias_name": "Черный берет",
                     "type": "write",
                     "data_taken": "auto",
-                    "field_name": "status",
-                    "value": "В отпуске"
+                    "field_name": "badges",
+                    "value": "uuid"
                 }
             },
-            'id': template2_id
+            'id': template3_id
         }]
     )
 
@@ -539,6 +551,9 @@ def upgrade() -> None:
     step2_1 = get_uuid()
     step2_2 = get_uuid()
     step2_3 = get_uuid()
+    step3_1 = get_uuid()
+    step3_2 = get_uuid()
+    step3_3 = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['hr_document_steps'],
@@ -578,6 +593,24 @@ def upgrade() -> None:
             'staff_unit_id': position4_id,
             'staff_function_id': role3_id,
             'id': step2_3
+        }, {
+            'hr_document_template_id': template3_id,
+            'previous_step_id': None,
+            'staff_unit_id': position2_id,
+            'staff_function_id': role5_id,
+            'id': step3_1
+        }, {
+            'hr_document_template_id': template3_id,
+            'previous_step_id': step3_1,
+            'staff_unit_id': position3_id,
+            'staff_function_id': role2_id,
+            'id': step3_2
+        }, {
+            'hr_document_template_id': template3_id,
+            'previous_step_id': step3_2,
+            'staff_unit_id': position4_id,
+            'staff_function_id': role3_id,
+            'id': step3_3
         }]
     )
 
