@@ -319,7 +319,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 print(subject.id)
                 if self._check_for_department(db, user, subject):
                     s.add(i.hr_document_id)
-                    l.append(self._to_response(i))
+                    l.append(self._to_response(db, i))
 
         return l
 
