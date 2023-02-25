@@ -258,6 +258,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         response = HrDocumentRead.from_orm(info.hr_document)
         response.can_cancel = info.hr_document_step.staff_function.can_cancel
 
+        user = response.users[0]
+
         fields = user_service.get_fields()
 
         props = info.hr_document.document_template.properties
@@ -275,14 +277,19 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 raise InvalidOperationException(f'Operation on {value["field_name"]} is not supported yet!')
             
             if value['data_taken'] == "auto":
-                self._get_service(value['field_name']).get_by_id(db, value['value'])
+                attr = getattr(user, value['field_name'])
+                if isinstance(attr, Base or isinstance(attr, list)):
+                    new_val[value['field_name']] = self._get_service(value['field_name']).get_by_id(db, value['value'])
+                else:
+                    new_val[value['field_name']] = value['value']
             
             else:
 
-                val = info.hr_document.properties[key]
+                val = info.hr_document.properties.get(key)
                 
                 if val is None:
-                    raise BadRequestException(f'Нет ключа {val} в document.properties')
+                    continue
+                    # raise BadRequestException(f'Нет ключа {val} в document.properties')
                 
                 if not type(val) == dict:
                     new_val[value['field_name']] = self._get_service(value['field_name']).get_by_id(db, val)
@@ -315,10 +322,11 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         for i in infos:
             if i.hr_document_id not in s:
+                print(i.hr_document_id)
+                s.add(i.hr_document_id)
                 subject = i.hr_document.users[0]
-                print(subject.id)
+                # print(subject.id)
                 if self._check_for_department(db, user, subject):
-                    s.add(i.hr_document_id)
                     l.append(self._to_response(db, i))
 
         return l
