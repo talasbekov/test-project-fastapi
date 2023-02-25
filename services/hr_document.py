@@ -279,7 +279,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             if value['data_taken'] == "auto":
                 attr = getattr(user, value['field_name'])
                 if isinstance(attr, Base or isinstance(attr, list)):
-                    new_val[value['field_name']] = self._get_service(value['field_name']).get_by_id(db, value['value'])
+                    new_val[value['field_name']] = self._get_service(value['field_name']).get(db, value['value'])
                 else:
                     new_val[value['field_name']] = value['value']
             
@@ -294,13 +294,13 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 if not type(val) == dict:
                     attr = getattr(user, value['field_name'])
                     if isinstance(attr, Base or isinstance(attr, list)):
-                        new_val[value['field_name']] = self._get_service(value['field_name']).get_by_id(db, val)
+                        new_val[value['field_name']] = self._get_service(value['field_name']).get(db, val)
                     else:
                         new_val[value['field_name']] = val
                 else:
                     if val['value'] == None:
                         raise BadRequestException(f'Обьект {key} должен иметь value!')
-                    new_val[value['field_name']] = self._get_service(value['field_name']).get_by_id(db, val['value'])
+                    new_val[value['field_name']] = self._get_service(value['field_name']).get(db, val['value'])
 
         response.new_value = new_val
 
