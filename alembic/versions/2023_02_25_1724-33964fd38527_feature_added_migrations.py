@@ -1,8 +1,8 @@
-"""migration: added data
+"""feature: added migrations
 
-Revision ID: aff15fa0fe16
-Revises: f58b3d8b6a62
-Create Date: 2023-02-22 11:59:27.005940
+Revision ID: 33964fd38527
+Revises: f2bfe17f02b7
+Create Date: 2023-02-25 17:24:21.028216
 
 """
 import uuid
@@ -13,8 +13,8 @@ from alembic import op
 from core import Base
 
 # revision identifiers, used by Alembic.
-revision = 'aff15fa0fe16'
-down_revision = 'f58b3d8b6a62'
+revision = '33964fd38527'
+down_revision = 'f2bfe17f02b7'
 branch_labels = None
 depends_on = None
 
@@ -31,7 +31,6 @@ def upgrade() -> None:
             "url": "http://192.168.0.199:8083/static/black_beret.jpg"
         }]
     )
-
 
     rank1_id = get_uuid()
     rank2_id = get_uuid()
@@ -237,7 +236,8 @@ def upgrade() -> None:
                 '1',
                 position1_id,
                 rank1_id,
-                position1_id),
+                position1_id,
+                "http://192.168.0.199:8083/static/Samal.png"),
             create_user(
                 user2_id,
                 "Ахат",
@@ -248,7 +248,8 @@ def upgrade() -> None:
                 '2',
                 position1_id,
                 rank1_id,
-                position1_id),
+                position1_id,
+                "http://192.168.0.199:8083/static/Erzhan.png"),
             create_user(
                 user3_id,
                 "Асет",
@@ -259,7 +260,8 @@ def upgrade() -> None:
                 '3',
                 position1_id,
                 rank1_id,
-                position1_id),
+                position1_id,
+                "http://192.168.0.199:8083/static/Almaz.png"),
             create_user(
                 user4_id,
                 "Жасулан",
@@ -270,7 +272,8 @@ def upgrade() -> None:
                 '4',
                 position2_id,
                 rank2_id,
-                position2_id),
+                position2_id,
+                "http://192.168.0.199:8083/static/Adil.png"),
             create_user(
                 user5_id,
                 "Ануар",
@@ -281,7 +284,8 @@ def upgrade() -> None:
                 '5',
                 position1_id,
                 rank1_id,
-                position1_id),
+                position1_id,
+                "http://192.168.0.199:8083/static/Aislu.png"),
             create_user(
                 user6_id,
                 "Бексундет",
@@ -292,7 +296,8 @@ def upgrade() -> None:
                 '6',
                 position3_id,
                 rank2_id,
-                position3_id),
+                position3_id,
+                "http://192.168.0.199:8083/static/Ernazar.png"),
             create_user(
                 user7_id,
                 "Ерден",
@@ -303,7 +308,8 @@ def upgrade() -> None:
                 '7',
                 position1_id,
                 rank1_id,
-                position1_id),
+                position1_id,
+                "http://192.168.0.199:8083/static/Nurlan.png"),
             create_user(
                 user8_id,
                 "Еркин",
@@ -314,7 +320,8 @@ def upgrade() -> None:
                 '8',
                 position1_id,
                 rank1_id,
-                position1_id),
+                position1_id,
+                "http://192.168.0.199:8083/static/Erdaulet.png"),
             create_user(
                 user9_id,
                 "Арман",
@@ -325,7 +332,8 @@ def upgrade() -> None:
                 '9',
                 position1_id,
                 rank1_id,
-                position1_id),
+                position1_id,
+                "http://192.168.0.199:8083/static/Erdaulet.png"),
             create_user(
                 user10_id,
                 "Бауыржан",
@@ -336,7 +344,8 @@ def upgrade() -> None:
                 '10',
                 position4_id,
                 rank3_id,
-                position4_id),
+                position4_id,
+                "http://192.168.0.199:8083/static/Dima.png"),
             create_user(
                 str(uuid.uuid4()),
                 "Admin",
@@ -398,7 +407,7 @@ def upgrade() -> None:
                     "data_taken": "auto"
                 },
                 "new_department_name": {
-                    "alias_name": "Департамент субъекта",
+                    "alias_name": "Новый департамент субъекта",
                     "type": "write",
                     "data_taken": "matreshka",
                     "field_name":"staff_division"
@@ -631,7 +640,7 @@ def get_uuid():
     return str(uuid.uuid4())
 
 
-def create_user(id, name, surname, email, group_id, call_sign, number,  position_id, rank_id, actual_position_id):
+def create_user(id, name, surname, email, group_id, call_sign, number,  position_id, rank_id, actual_position_id, icon):
     return {
         'id': id,
         'email': email,
@@ -647,7 +656,8 @@ def create_user(id, name, surname, email, group_id, call_sign, number,  position
         'address': 'Mangilik Yel, 1',
         'rank_id': rank_id,
         'actual_staff_unit_id': actual_position_id,
-        'status': "На работе"
+        'status': "На работе",
+        'icon': icon
     }
 
 

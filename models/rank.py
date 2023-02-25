@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import TEXT, Column, Integer, String
 from sqlalchemy.dialects.postgresql import UUID
 
 from core import Base
@@ -14,3 +14,4 @@ class Rank(Base):
                 nullable=False, default=uuid.uuid4)
     name = Column(String, nullable=False)
     order = Column(Integer, nullable=True)
+    url = Column(TEXT, nullable=True)
