@@ -292,7 +292,11 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                     # raise BadRequestException(f'Нет ключа {val} в document.properties')
                 
                 if not type(val) == dict:
-                    new_val[value['field_name']] = self._get_service(value['field_name']).get_by_id(db, val)
+                    attr = getattr(user, value['field_name'])
+                    if isinstance(attr, Base or isinstance(attr, list)):
+                        new_val[value['field_name']] = self._get_service(value['field_name']).get_by_id(db, val)
+                    else:
+                        new_val[value['field_name']] = val
                 else:
                     if val['value'] == None:
                         raise BadRequestException(f'Обьект {key} должен иметь value!')
