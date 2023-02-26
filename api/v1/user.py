@@ -98,3 +98,4 @@ async def get_profile(*,
     Authorize.jwt_required()
     id = Authorize.get_jwt_subject()
     return user_service.get_by_id(db, id)
+ 

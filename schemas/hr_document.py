@@ -28,7 +28,7 @@ class HrDocumentBase(BaseModel):
         keys = list(v)
         for key in keys:
             value = v[key]
-            if type(value) == dict:
+            if isinstance(value, dict):
                 val_keys = list(value)
                 if 'name' not in val_keys or 'value' not in val_keys:
                     raise ValueError(f'name or value should be in {key}!')
