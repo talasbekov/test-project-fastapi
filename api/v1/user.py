@@ -72,7 +72,7 @@ async def get_fields(*,
 
 
 @router.post("/add-permission")
-def add_permission(*,
+async def add_permission(*,
     db: Session = Depends(get_db),
     body: UserPermission,
     Authorize: AuthJWT = Depends()
@@ -82,10 +82,19 @@ def add_permission(*,
 
 
 @router.post("/remove-permission")
-def remove_permission(*,
+async def remove_permission(*,
     db: Session = Depends(get_db),
     body: UserPermission,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
     user_service.remove_permission(db, body)
+
+@router.get("/profile")
+async def get_profile(*,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    id = Authorize.get_jwt_subject()
+    return user_service.get_by_id(db, id)
