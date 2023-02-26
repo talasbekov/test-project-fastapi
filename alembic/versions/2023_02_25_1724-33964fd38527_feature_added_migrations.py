@@ -237,7 +237,7 @@ def upgrade() -> None:
                 position1_id,
                 rank1_id,
                 position1_id,
-                "http://192.168.0.199:8083/static/Samal.png"),
+                "http://192.168.0.199:8083/static/Erzhan.png"),
             create_user(
                 user2_id,
                 "Ахат",
@@ -285,7 +285,7 @@ def upgrade() -> None:
                 position1_id,
                 rank1_id,
                 position1_id,
-                "http://192.168.0.199:8083/static/Aislu.png"),
+                "http://192.168.0.199:8083/static/Almaz.png"),
             create_user(
                 user6_id,
                 "Бексундет",
