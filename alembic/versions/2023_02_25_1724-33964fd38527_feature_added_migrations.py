@@ -229,7 +229,8 @@ def upgrade() -> None:
             create_user(
                 user1_id,
                 "Адилет",
-                "Наурыбаев",
+                "Наурызбаев",
+                'Саматович'
                 'adilet@mail.ru',
                 group2_id,
                 "Альфа 1",
@@ -241,7 +242,8 @@ def upgrade() -> None:
             create_user(
                 user2_id,
                 "Ахат",
-                "Наурыбаев",
+                "Наурызбаев",
+                'Саматович',
                 'ahat@mail.ru',
                 group3_id,
                 "Альфа 2",
@@ -253,7 +255,8 @@ def upgrade() -> None:
             create_user(
                 user3_id,
                 "Асет",
-                "Наурыбаев",
+                "Наурызбаев",
+                'Асланович',
                 'aset@mail.ru',
                 group3_id,
                 "Альфа 3",
@@ -265,7 +268,8 @@ def upgrade() -> None:
             create_user(
                 user4_id,
                 "Жасулан",
-                "Наурыбеков",
+                "Наурызбеков",
+                'Дидарович',
                 'zhasulan@mail.ru',
                 group3_id,
                 "Альфа 4",
@@ -277,7 +281,8 @@ def upgrade() -> None:
             create_user(
                 user5_id,
                 "Ануар",
-                "Наурыбеков",
+                "Наурызбеков",
+                'Дидарович',
                 'anuar@mail.ru',
                 group2_id,
                 "Альфа 5",
@@ -289,7 +294,8 @@ def upgrade() -> None:
             create_user(
                 user6_id,
                 "Бексундет",
-                "Наурыбеков",
+                "Наурызбеков",
+                'Дидарович',
                 'beksundet@mail.ru',
                 group2_id,
                 "Альфа 6",
@@ -301,7 +307,8 @@ def upgrade() -> None:
             create_user(
                 user7_id,
                 "Ерден",
-                "Наурыбеков",
+                "Наурызбеков",
+                'Алматович',
                 'erden@mail.ru',
                 group2_id,
                 "Альфа 7",
@@ -313,7 +320,8 @@ def upgrade() -> None:
             create_user(
                 user8_id,
                 "Еркин",
-                "Наурыбеков",
+                "Наурызбеков",
+                'Дидарович',
                 'erkin@mail.ru',
                 group3_id,
                 "Альфа 8",
@@ -325,7 +333,8 @@ def upgrade() -> None:
             create_user(
                 user9_id,
                 "Арман",
-                "Наурыбеков",
+                "Наурызбеков",
+                'Алматович',
                 'arman@mail.ru',
                 group3_id,
                 "Альфа 9",
@@ -337,7 +346,8 @@ def upgrade() -> None:
             create_user(
                 user10_id,
                 "Бауыржан",
-                "Наурыбеков",
+                "Наурызбеков",
+                'Алматович',
                 'bauyrzhan@mail.ru',
                 group3_id,
                 "Альфа 10",
@@ -348,8 +358,9 @@ def upgrade() -> None:
                 "http://192.168.0.199:8083/static/Dima.png"),
             create_user(
                 str(uuid.uuid4()),
-                "Admin",
-                "Adminov",
+                "Админ",
+                "Админов",
+                "Админович",
                 'admin@mail.com',
                 group3_id,
                 'admin',
@@ -641,20 +652,20 @@ def get_uuid():
     return str(uuid.uuid4())
 
 
-def create_user(id, name, surname, email, group_id, call_sign, number,  position_id, rank_id, actual_position_id, icon):
+def create_user(id, name, surname, father_name, email, group_id, call_sign, number,  position_id, rank_id, actual_position_id, icon):
     return {
         'id': id,
         'email': email,
         'password': '$2b$12$vhg69KJxWiGgetoLxGRvie3VxElPt45i4ELJiE/V2qOj30X3c3.7m',
         'first_name': name,
         'last_name': surname,
-        'father_name': 'Отчество',
+        'father_name': father_name,
         'staff_division_id': group_id,
         'staff_unit_id': position_id,
         'call_sign': call_sign,
         'id_number': number,
         'phone_number': '+77771234789',
-        'address': 'Mangilik Yel, 1',
+        'address': 'Мангилик Ел, 1',
         'rank_id': rank_id,
         'actual_staff_unit_id': actual_position_id,
         'status': "На работе",
