@@ -116,9 +116,9 @@ async def get_fields(*,
     return user_service.get_fields()
 
 
-@router.post("/add-permission", dependencies=[Depends(HTTPBearer())],
+@router.post("/add-permission", dependencies=[Depends(HTTPBearer())]
              summary="Add Permission")
-def add_permission(*,
+async def add_permission(*,
     db: Session = Depends(get_db),
     body: UserPermission,
     Authorize: AuthJWT = Depends()
@@ -135,7 +135,7 @@ def add_permission(*,
 
 @router.post("/remove-permission", dependencies=[Depends(HTTPBearer())],
              summary="Remove Permission")
-def remove_permission(*,
+async def remove_permission(*,
     db: Session = Depends(get_db),
     body: UserPermission,
     Authorize: AuthJWT = Depends()
@@ -148,3 +148,12 @@ def remove_permission(*,
     """
     Authorize.jwt_required()
     user_service.remove_permission(db, body)
+
+@router.get("/profile")
+async def get_profile(*,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    id = Authorize.get_jwt_subject()
+    return user_service.get_by_id(db, id)

@@ -1,8 +1,8 @@
 """init
 
-Revision ID: f58b3d8b6a62
+Revision ID: f2bfe17f02b7
 Revises: 
-Create Date: 2023-02-22 11:58:43.488337
+Create Date: 2023-02-25 17:23:10.604513
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = 'f58b3d8b6a62'
+revision = 'f2bfe17f02b7'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -51,6 +51,7 @@ def upgrade() -> None:
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('order', sa.Integer(), nullable=True),
+    sa.Column('url', sa.TEXT(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('staff_divisions',
@@ -161,6 +162,7 @@ def upgrade() -> None:
     sa.Column('signed_by', sa.UUID(), nullable=True),
     sa.Column('comment', sa.TEXT(), nullable=True),
     sa.Column('is_signed', sa.Boolean(), nullable=True),
+    sa.Column('signed_at', sa.TIMESTAMP(timezone=True), nullable=True),
     sa.Column('hr_document_id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),

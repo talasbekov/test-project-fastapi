@@ -1,8 +1,8 @@
-"""migration: added data
+"""feature: added migrations
 
-Revision ID: aff15fa0fe16
-Revises: f58b3d8b6a62
-Create Date: 2023-02-22 11:59:27.005940
+Revision ID: 33964fd38527
+Revises: f2bfe17f02b7
+Create Date: 2023-02-25 17:24:21.028216
 
 """
 import uuid
@@ -13,13 +13,24 @@ from alembic import op
 from core import Base
 
 # revision identifiers, used by Alembic.
-revision = 'aff15fa0fe16'
-down_revision = 'f58b3d8b6a62'
+revision = '33964fd38527'
+down_revision = 'f2bfe17f02b7'
 branch_labels = None
 depends_on = None
 
 
 def upgrade() -> None:
+
+    badge1_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['badges'],
+        [{
+            "id": badge1_id,
+            "name": "Черный Берет",
+            "url": "http://192.168.0.199:8083/static/black_beret.jpg"
+        }]
+    )
 
     rank1_id = get_uuid()
     rank2_id = get_uuid()
@@ -218,139 +229,162 @@ def upgrade() -> None:
             create_user(
                 user1_id,
                 "Адилет",
-                "Наурыбаев",
+                "Наурызбаев",
+                'Саматович',
                 'adilet@mail.ru',
                 group2_id,
                 "Альфа 1",
                 '1',
                 position1_id,
                 rank1_id,
-                position1_id),
+                position1_id,
+                "http://192.168.0.199:8083/static/Erzhan.png"),
             create_user(
                 user2_id,
                 "Ахат",
-                "Наурыбаев",
+                "Наурызбаев",
+                'Саматович',
                 'ahat@mail.ru',
                 group3_id,
                 "Альфа 2",
                 '2',
                 position1_id,
                 rank1_id,
-                position1_id),
+                position1_id,
+                "http://192.168.0.199:8083/static/Erzhan.png"),
             create_user(
                 user3_id,
                 "Асет",
-                "Наурыбаев",
+                "Наурызбаев",
+                'Асланович',
                 'aset@mail.ru',
                 group3_id,
                 "Альфа 3",
                 '3',
                 position1_id,
                 rank1_id,
-                position1_id),
+                position1_id,
+                "http://192.168.0.199:8083/static/Almaz.png"),
             create_user(
                 user4_id,
                 "Жасулан",
-                "Наурыбеков",
+                "Наурызбеков",
+                'Дидарович',
                 'zhasulan@mail.ru',
                 group3_id,
                 "Альфа 4",
                 '4',
                 position2_id,
                 rank2_id,
-                position2_id),
+                position2_id,
+                "http://192.168.0.199:8083/static/Adil.png"),
             create_user(
                 user5_id,
                 "Ануар",
-                "Наурыбеков",
+                "Наурызбеков",
+                'Дидарович',
                 'anuar@mail.ru',
                 group2_id,
                 "Альфа 5",
                 '5',
                 position1_id,
                 rank1_id,
-                position1_id),
+                position1_id,
+                "http://192.168.0.199:8083/static/Almaz.png"),
             create_user(
                 user6_id,
                 "Бексундет",
-                "Наурыбеков",
+                "Наурызбеков",
+                'Дидарович',
                 'beksundet@mail.ru',
                 group2_id,
                 "Альфа 6",
                 '6',
                 position3_id,
                 rank2_id,
-                position3_id),
+                position3_id,
+                "http://192.168.0.199:8083/static/Ernazar.png"),
             create_user(
                 user7_id,
                 "Ерден",
-                "Наурыбеков",
+                "Наурызбеков",
+                'Алматович',
                 'erden@mail.ru',
                 group2_id,
                 "Альфа 7",
                 '7',
                 position1_id,
                 rank1_id,
-                position1_id),
+                position1_id,
+                "http://192.168.0.199:8083/static/Nurlan.png"),
             create_user(
                 user8_id,
                 "Еркин",
-                "Наурыбеков",
+                "Наурызбеков",
+                'Дидарович',
                 'erkin@mail.ru',
                 group3_id,
                 "Альфа 8",
                 '8',
                 position1_id,
                 rank1_id,
-                position1_id),
+                position1_id,
+                "http://192.168.0.199:8083/static/Erdaulet.png"),
             create_user(
                 user9_id,
                 "Арман",
-                "Наурыбеков",
+                "Наурызбеков",
+                'Алматович',
                 'arman@mail.ru',
                 group3_id,
                 "Альфа 9",
                 '9',
                 position1_id,
                 rank1_id,
-                position1_id),
+                position1_id,
+                "http://192.168.0.199:8083/static/Erdaulet.png"),
             create_user(
                 user10_id,
                 "Бауыржан",
-                "Наурыбеков",
+                "Наурызбеков",
+                'Алматович',
                 'bauyrzhan@mail.ru',
                 group3_id,
                 "Альфа 10",
                 '10',
                 position4_id,
                 rank3_id,
-                position4_id),
+                position4_id,
+                "http://192.168.0.199:8083/static/Dima.png"),
             create_user(
                 str(uuid.uuid4()),
-                "Admin",
-                "Adminov",
+                "Админ",
+                "Админов",
+                "Админович",
                 'admin@mail.com',
                 group3_id,
                 'admin',
                 '123456789',
                 position4_id,
                 rank3_id,
-                position4_id)
+                position4_id,
+                "http://192.168.0.199:8083/static/Erdaulet.png")
         ]
     )
 
     template1_id = get_uuid()
     template2_id = get_uuid()
+    template3_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['hr_document_templates'],
         [{
-            'name': 'Приказ о зачислении на службу',
-            'path': 'static/templates/Приказ о зачислении на службу (1).docx',
+            'name': 'Приказ о назначении',
+            'path': 'http://192.168.0.199:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7%20%D0%BE%20%D0%BD%D0%B0%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%B8%D0%B8.docx',
             'subject_type': 1,
             'properties': {
                 "signed_at": {
-                    "alias_name": "Время Регистрации",
+                    "alias_name": "Дата подписания",
                     "type": "read",
                     "data_taken": "auto"
                 },
@@ -360,67 +394,66 @@ def upgrade() -> None:
                     "data_taken": "auto"
                 },
                 "rank": {
-                    "alias_name": "Звание",
-                    "type": "read",
-                    "data_taken": "auto"
-                },
-                "first_name": {
-                    "alias_name": "Имя",
+                    "alias_name": "Звание субъекта",
                     "type": "read",
                     "data_taken": "auto"
                 },
                 "last_name": {
-                    "alias_name": "Фамилия",
+                    "alias_name": "Фамилия субъекта",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "first_name": {
+                    "alias_name": "Имя субъекта",
                     "type": "read",
                     "data_taken": "auto"
                 },
                 "father_name": {
-                    "alias_name": "Имя",
+                    "alias_name": "Отчество субъекта",
                     "type": "read",
                     "data_taken": "auto"
-                },
+                }, 
                 "id_number": {
-                    "alias_name": "ID",
+                    "alias_name": "Идентификационный номер субъекта",
                     "type": "read",
                     "data_taken": "auto"
                 },
-                "period": {
-                    "alias_name": "Период",
-                    "type": "read", # пока нет логики на время
-                    "data_taken": "manual"
-                },
-                "new_rank": {
-                    "alias_name": "Новое звание",
+                "new_department_name": {
+                    "alias_name": "Новый департамент субъекта",
                     "type": "write",
-                    "field_name": "rank",
+                    "data_taken": "matreshka",
+                    "field_name":"staff_division"
+                },
+                "new_position": {
+                    "alias_name": "Новая позиция субъекта",
+                    "type": "write",
                     "data_taken": "dropdown",
+                    "field_name": "staff_unit"
                 },
                 "department_name": {
-                    "alias_name": "Департамент",
-                    "type": "write",
-                    "field_name": "staff_division",
-                    "data_taken": "dropdown"
-                },
-                "position": {
-                    "alias_name": "Позиция",
-                    "type": "write",
-                    "field_name": "staff_unit",
-                    "data_taken": "dropdown"
-                },
-                "position_id": {
-                    "alias_name": "ID позиции",
+                    "alias_name": "Департамент субъекта",
                     "type": "read",
-                    "data_taken":"auto"
+                    "data_taken": "auto"
+                },
+                "reason": {
+                    "alias_name": "Причина",
+                    "type": "read",
+                    "data_taken": "manual"
+                },
+                "number": {
+                    "alias_name": "Процент",
+                    "type": "read",
+                    "data_taken": "manual"
                 }
             },
             'id': template1_id
         }, {
-            'name': 'Приказ о выходе в отпуск (рук.состав)',
-            'path': 'static/templates/Приказ_о_выходе_в_отпуск_рук_состав.docx',
+            'name': 'Приказ о присвоения звания',
+            'path': 'http://192.168.0.199:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7_%D0%BE_%D0%BF%D1%80%D0%B8%D1%81%D0%B2%D0%BE%D0%B5%D0%BD%D0%B8%D0%B8_%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F_%D0%BF%D0%BE%D0%B2%D1%8B%D1%88%D0%B5%D0%BD%D0%B8%D0%B5.docx',
             'subject_type': 1,
             'properties': {
                 "signed_at": {
-                    "alias_name": "Время Регистрации",
+                    "alias_name": "Дата подписания",
                     "type": "read",
                     "data_taken": "auto"
                 },
@@ -429,76 +462,88 @@ def upgrade() -> None:
                     "type": "read",
                     "data_taken": "auto"
                 },
-                "rank": {
-                    "alias_name": "Звание",
+                "last_name": {
+                    "alias_name": "Фамилия субъекта",
                     "type": "read",
                     "data_taken": "auto"
                 },
                 "first_name": {
-                    "alias_name": "Имя",
-                    "type": "read",
-                    "data_taken": "auto"
-                },
-                "last_name": {
-                    "alias_name": "Фамилия",
+                    "alias_name": "Имя субъекта",
                     "type": "read",
                     "data_taken": "auto"
                 },
                 "father_name": {
-                    "alias_name": "Имя",
+                    "alias_name": "Отчество субъекта",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
+                "id_number": {
+                    "alias_name": "Идентификационный номер субъекта",
                     "type": "read",
                     "data_taken": "auto"
                 },
+                "new_position": {
+                    "alias_name": "Новая позиция субъекта",
+                    "type": "write",
+                    "data_taken": "dropdown",
+                    "field_name": "staff_unit"
+                }
+            },
+            'id': template2_id
+        }, {
+            'name': 'Приказ о присвоения черного берета',
+            'path': 'http://192.168.0.199:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7_%D0%BE_%D0%BF%D1%80%D0%B8%D1%81%D0%B2%D0%BE%D0%B5%D0%BD%D0%B8%D0%B8_%D0%A7%D0%B5%D1%80%D0%BD%D0%BE%D0%B3%D0%BE_%D0%B1%D0%B5%D1%80%D0%B5%D1%82%D0%B0.docx',
+            'subject_type': 1,  
+            'properties': {
+                "signed_at": {
+                    "alias_name": "Дата подписания",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "reg_number": {
+                    "alias_name": "Регистрационный номер",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "last_name": {
+                    "alias_name": "Фамилия субъекта",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "first_name": {
+                    "alias_name": "Имя субъекта",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "father_name": {
+                    "alias_name": "Отчество субъекта",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
                 "id_number": {
-                    "alias_name": "ID",
+                    "alias_name": "Идентификационный номер субъекта",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "position": {
+                    "alias_name": "Позиция субъекта",
                     "type": "read",
                     "data_taken": "auto"
                 },
                 "department_name": {
-                    "alias_name": "Департамент",
+                    "alias_name": "Департамент субъекта",
                     "type": "read",
                     "data_taken": "auto"
                 },
-                "start_date": {
-                    "alias_name": "Начало",
-                    "type": "read",
-                    "data_taken": "date_picker",
-                },
-                "end_date": {
-                    "alias_name": "Конец",
-                    "type": "write",
-                    "data_taken": "date_picker",
-                    "field_name": "status_till"  # Нет логики на создание event-а
-                },
-                "responsible_subject_rank": {
-                    "alias_name": "Ранк заменяющего",
-                    "type": "read",
-                    "data_taken": "dropdown",
-                },
-                "responsible_subject_last_name": {
-                    "alias_name": "Фамилия заменяющего",
-                    "type": "read",
-                    "data_taken": "dropdown",
-                },
-                "responsible_subject_first_name": {
-                    "alias_name": "Имя заменяющего",
-                    "type": "read",
-                    "data_taken": "dropdown",
-                },
-                "responsible_subject_father_name":  {
-                    "alias_name": "Отчество заменяющего",
-                    "type": "read",
-                    "data_taken": "dropdown",
-                },
-                "status": {
-                    "alias_name": "Статус",
+                "badge": {
+                    "alias_name": "Черный берет",
                     "type": "write",
                     "data_taken": "auto",
-                    "field_name": "status",
-                    "value": "В отпуске"
+                    "field_name": "badges",
+                    "value": badge1_id
                 }
             },
-            'id': template2_id
+            'id': template3_id
         }]
     )
 
@@ -539,6 +584,9 @@ def upgrade() -> None:
     step2_1 = get_uuid()
     step2_2 = get_uuid()
     step2_3 = get_uuid()
+    step3_1 = get_uuid()
+    step3_2 = get_uuid()
+    step3_3 = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['hr_document_steps'],
@@ -578,6 +626,24 @@ def upgrade() -> None:
             'staff_unit_id': position4_id,
             'staff_function_id': role3_id,
             'id': step2_3
+        }, {
+            'hr_document_template_id': template3_id,
+            'previous_step_id': None,
+            'staff_unit_id': position2_id,
+            'staff_function_id': role5_id,
+            'id': step3_1
+        }, {
+            'hr_document_template_id': template3_id,
+            'previous_step_id': step3_1,
+            'staff_unit_id': position3_id,
+            'staff_function_id': role2_id,
+            'id': step3_2
+        }, {
+            'hr_document_template_id': template3_id,
+            'previous_step_id': step3_2,
+            'staff_unit_id': position4_id,
+            'staff_function_id': role3_id,
+            'id': step3_3
         }]
     )
 
@@ -586,23 +652,24 @@ def get_uuid():
     return str(uuid.uuid4())
 
 
-def create_user(id, name, surname, email, group_id, call_sign, number,  position_id, rank_id, actual_position_id):
+def create_user(id, name, surname, father_name, email, group_id, call_sign, number,  position_id, rank_id, actual_position_id, icon):
     return {
         'id': id,
         'email': email,
         'password': '$2b$12$vhg69KJxWiGgetoLxGRvie3VxElPt45i4ELJiE/V2qOj30X3c3.7m',
         'first_name': name,
         'last_name': surname,
-        'father_name': 'Отчество',
+        'father_name': father_name,
         'staff_division_id': group_id,
         'staff_unit_id': position_id,
         'call_sign': call_sign,
         'id_number': number,
         'phone_number': '+77771234789',
-        'address': 'Mangilik Yel, 1',
+        'address': 'Мангилик Ел, 1',
         'rank_id': rank_id,
         'actual_staff_unit_id': actual_position_id,
-        'status': "На работе"
+        'status': "На работе",
+        'icon': icon
     }
 
 

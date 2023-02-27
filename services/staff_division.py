@@ -29,7 +29,11 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
         return db.query(self.model).filter(
             StaffDivision.parent_group_id == None
         ).offset(skip).limit(limit).all()
-
+    
+    def get_parents(self, db: Session) -> List[StaffDivision]:
+        return db.query(self.model).filter(
+            StaffDivision.parent_group_id == None
+        ).all()
 
     def change_parent_group(self,
             db: Session,

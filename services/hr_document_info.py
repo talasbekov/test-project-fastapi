@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime
 
 from fastapi import HTTPException, status
@@ -116,6 +117,14 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
         db.flush()
 
         return info
+    
+    def get_signed_by_user_id(self, db: Session, user_id: uuid.UUID, skip: int, limit: int):
+
+        infos = db.query(self.model).filter(
+            self.model.signed_by == user_id
+        ).offset(skip).limit(limit).all()
+
+        return infos
 
     def get_by_document_id(self, db: Session, id: str):
 
