@@ -116,7 +116,7 @@ async def get_fields(*,
     return user_service.get_fields()
 
 
-@router.post("/add-permission", dependencies=[Depends(HTTPBearer())]
+@router.post("/add-permission", dependencies=[Depends(HTTPBearer())],
              summary="Add Permission")
 async def add_permission(*,
     db: Session = Depends(get_db),
