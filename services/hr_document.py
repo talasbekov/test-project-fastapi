@@ -140,7 +140,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         document_template = hr_document_template_service.get_by_id(db, document.hr_document_template_id)
 
         with tempfile.NamedTemporaryFile(delete=False) as temp:
-            
+
             arr = document_template.path.rsplit('.')
             extension = arr[len(arr)-1]
             temp_file_path = temp.name + '.' + extension
