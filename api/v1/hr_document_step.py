@@ -50,7 +50,7 @@ async def create(*,
         - **staff_function_id**: UUID - the id of StaffFunction. This is required.
     """
     Authorize.jwt_required()
-    return hr_document_step_service.create(db, body)
+    return hr_document_step_service.create_step(db, body)
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=HrDocumentStepRead,
