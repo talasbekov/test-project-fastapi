@@ -230,7 +230,7 @@ def upgrade() -> None:
                 user1_id,
                 "Адилет",
                 "Наурызбаев",
-                'Саматович'
+                'Саматович',
                 'adilet@mail.ru',
                 group2_id,
                 "Альфа 1",
