@@ -37,7 +37,7 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
 
         return step
 
-    def get_next_step_from_id(self, db: Session, step_id: str):
+    def get_next_step_from_id(self, db: Session, step_id: str) -> HrDocumentStep:
         step = db.query(HrDocumentStep).filter(
             HrDocumentStep.previous_step_id == step_id
         ).first()
@@ -80,12 +80,14 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
         previous_step = self.get_by_id(db, body.previous_step_id)
         staff_function = staff_function_service.get_by_id(db, body.staff_function_id)
 
-        # after step which contains staff_function with 'Утверждающий' name (3.1).
+        # parent step which contains staff_function with 'Утверждающий' name (3.1)
+        # It is not possible to create step after this parent step if staff function of new step is not "Уведомляемый".
         if previous_step.staff_function.name == "Утверждающий" and staff_function.name != "Уведомляемый":
             raise BadRequestException(
                 detail=f"It is not possible to create a HrDocumentStep for HrDocumentTemplate with: {body.hr_document_template_id} id. You can not create HrDocumentStep after HrDocumentStep which has StaffFunction with: 'Утверждающий' name")
 
-        # after step which contains staff_function with 'Уведомляемый' name (3.2).
+        # parent step which contains staff_function with 'Уведомляемый' name (3.2).
+        # It is not possible to create step after this parent step if staff function of new step is not "Уведомляемый"
         if previous_step.staff_function.name == "Уведомляемый" and staff_function.name != "Уведомляемый":
             raise BadRequestException(
                 detail=f'После HrDocumentStep с StaffFunction уведомляемого невозможно добавить HrDocumentStep: {staff_function.name}')
@@ -108,6 +110,20 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
         return new_step
 
     def update_step(self, db: Session, step_id: str, obj_in: HrDocumentStepUpdate):
+        """
+            This code updates an existing HrDocumentStep object in the database with new data provided in the obj_in parameter.
+            The method performs some logic to ensure that the updated HrDocumentStep object is valid according
+             to the application's business logic.
+
+            1. Checks selected step exists in database or not. (Selected step is object to update)
+            2. If the hr_document_template_id provided in obj_in is different from the current hr_document_template_id
+                of the HrDocumentStep object, the code performs some additional logic to update the hr_document_template_id
+                for all child steps of the selected step.
+                2.1. If the selected step is child step, it raises an error because child steps cannot change the template type.
+                2.2. If the selected step is parent step which previous_step_id is 'null' then you should change template type for all child steps.
+
+            Otherwise, this method call update method from super class.
+        """
 
         step = self.get_by_id(db, step_id)
 
@@ -143,6 +159,19 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
             return super().update(db=db, db_obj=step, obj_in=obj_in)
 
     def delete_step(self, db: Session, step_id: str):
+        """
+            This code deletes a 'HrDocumentStep' object in the database. The method performs a some logics to ensure
+            that the object deleted correctly.
+
+            Here are the steps that the code performs:
+
+            1. Checks selected step exists in database or not. (Selected step is object to delete)
+            2. If exists you should find child steps
+                2.1. If selected step does not have child steps, step deletes as usual
+                2.2 If selected step has child step, child step should update his previous_step_id.
+                2.3 If selected step has child step and selected step does not have a previous step,
+                 then child step should change previous step to 'null'
+        """
         step = self.get_by_id(db, step_id)
 
         # get child step
