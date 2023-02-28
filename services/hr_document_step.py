@@ -151,6 +151,15 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
 
             step.hr_document_template_id = obj_in.hr_document_template_id
 
+            obj_data = jsonable_encoder(self)
+            if isinstance(obj_in, dict):
+                update_data = obj_in
+            else:
+                update_data = obj_in.dict(exclude_unset=True)
+            for field in obj_data:
+                if field in update_data:
+                    setattr(self, field, update_data[field])
+
             db.add(step)
             db.flush()
             return self.get_by_id(db, step_id)
