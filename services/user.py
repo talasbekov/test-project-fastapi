@@ -86,7 +86,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         db.flush()
 
     def get_by_staff_unit(self, db: Session, staff_unit_id):
-        
+
         users = db.query(self.model).filter(
             self.model.actual_staff_unit_id == staff_unit_id
         ).all()

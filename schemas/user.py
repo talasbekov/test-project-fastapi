@@ -12,21 +12,21 @@ from .staff_unit import StaffUnitRead
 
 
 class UserBase(BaseModel):
-    email: EmailStr
-    first_name: str
-    last_name: str
+    email: Optional[EmailStr]
+    first_name: Optional[str]
+    last_name: Optional[str]
     father_name: Optional[str]
-    staff_division_id: uuid.UUID
-    staff_unit_id: uuid.UUID
-    actual_staff_unit_id: uuid.UUID
+    staff_division_id: Optional[uuid.UUID]
+    staff_unit_id: Optional[uuid.UUID]
+    actual_staff_unit_id: Optional[uuid.UUID]
     icon: Optional[str]
-    call_sign: str
-    id_number: str
+    call_sign: Optional[str]
+    id_number: Optional[str]
     phone_number: Optional[str]
     address: Optional[str]
     birthday: Optional[datetime.date]
     status: Optional[str]
-    status_till: Optional[datetime.date]
+    status_till: Optional[datetime.datetime]
 
 
 class UserCreate(UserBase):
@@ -57,7 +57,7 @@ class UserRead(UserBase):
     call_sign: Optional[str]
     id_number: Optional[str]
     status: Optional[str]
-    status_till: Optional[datetime.date]
+    status_till: Optional[datetime.datetime]
     permissions: Optional[List[PermissionRead]]
 
     class Config:

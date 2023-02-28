@@ -316,11 +316,11 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         response.new_value = new_val
 
         return response
-    
+
     def _check_for_department(self, db: Session, user: User, subject: User) -> bool:
 
         department_id = staff_division_service.get_department_id_from_staff_division_id(db, user.staff_division_id)
-        
+
         subject_department_id = staff_division_service.get_department_id_from_staff_division_id(db, subject.staff_division_id)
 
         print(department_id, subject_department_id)
