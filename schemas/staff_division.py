@@ -18,6 +18,10 @@ class StaffDivisionUpdate(StaffDivisionBase):
     pass
 
 
+class StaffDivisionUpdateParentGroup(BaseModel):
+    parent_group_id: uuid.UUID
+
+
 class StaffDivisionRead(StaffDivisionBase):
     id: Optional[uuid.UUID]
     name: Optional[str]

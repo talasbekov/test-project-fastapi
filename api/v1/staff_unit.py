@@ -14,37 +14,61 @@ router = APIRouter(prefix="/staff_unit", tags=["StaffUnit"], dependencies=[Depen
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[StaffUnitRead])
+            response_model=List[StaffUnitRead],
+            summary="Get all Staff Units")
 async def get_all(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
     skip: int = 0,
     limit: int = 10
 ):
+    """
+       Get all Staff Units
+
+       - **skip**: int - The number of staff units to skip before returning the results. This parameter is optional and defaults to 0.
+       - **limit**: int - The maximum number of staff units to return in the response. This parameter is optional and defaults to 10.
+   """
     Authorize.jwt_required()
     return staff_unit_service.get_multi(db, skip, limit)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
-             response_model=StaffUnitRead)
+             response_model=StaffUnitRead,
+             summary="Create Staff Unit")
 async def create(*,
     db: Session = Depends(get_db),
     body: StaffUnitCreate,
     Authorize: AuthJWT = Depends()
 ):
+    """
+        Create Staff Unit
+
+        - **name**: required
+        - **max_rank_id**: UUID - required and should exist in the database
+        - **description**: a long description. This parameter is optional.
+    """
     Authorize.jwt_required()
     return staff_unit_service.create(db, body)
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=StaffUnitRead)
+            response_model=StaffUnitRead,
+            summary="Update Staff Unit")
 async def update(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
     body: StaffUnitUpdate,
     Authorize: AuthJWT = Depends()
 ):
+    """
+        Update Staff Unit
+
+        - **id**: UUID - required
+        - **name**: required
+        - **max_rank_id**: UUID - required and should exist in the database
+        - **description**: a long description. This parameter is optional.
+    """
     Authorize.jwt_required()
     rank_service.get_by_id(db, body.max_rank_id)
     return staff_unit_service.update(
@@ -54,22 +78,34 @@ async def update(*,
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=StaffUnitRead)
+            response_model=StaffUnitRead,
+            summary="Get Staff Unit by id")
 async def get_by_id(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
     Authorize: AuthJWT = Depends()
 ):
+    """
+        Get Staff Unit by id
+
+        - **id** - UUID - required
+    """
     Authorize.jwt_required()
     return staff_unit_service.get_by_id(db, id)
 
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
-               dependencies=[Depends(HTTPBearer())])
+               dependencies=[Depends(HTTPBearer())],
+               summary="Delete Staff Unit")
 async def delete(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
     Authorize: AuthJWT = Depends()
 ):
+    """
+        Delete Staff Unit
+
+        - **id** - UUID - required
+    """
     Authorize.jwt_required()
     staff_unit_service.remove(db, id)

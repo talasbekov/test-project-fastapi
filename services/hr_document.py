@@ -1,6 +1,8 @@
 import datetime
 import random
 import tempfile
+import urllib.parse
+import urllib.request
 import uuid
 from typing import List
 
@@ -45,17 +47,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         infos = hr_document_info_service.get_all(db, user.actual_staff_unit_id, skip, limit)
 
-        s = set()
-
-        l = []
-
-        for i in infos:
-            if i.hr_document_id not in s:
-                subject = i.hr_document.users[0]
-                if self._check_for_department(db, user, subject):
-                    s.add(i.hr_document_id)
-                    l.append(self._to_response(i))
-        return l
+        return self._return_correctly(db, infos, user)
 
     def get_not_signed_documents(self, db: Session, user_id: str, skip: int, limit: int):
 
@@ -63,19 +55,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         infos = hr_document_info_service.get_not_signed_by_position(db, user.actual_staff_unit_id, skip, limit)
 
-        s = set()
-
-        l = []
-
-        for i in infos:
-            if i.hr_document_id not in s:
-                subject = i.hr_document.users[0]
-                print(subject.id)
-                if self._check_for_department(db, user, subject):
-                    s.add(i.hr_document_id)
-                    l.append(self._to_response(i))
-
-        return l
+        return self._return_correctly(db, infos, user)
 
     def initialize(self, db: Session, body: HrDocumentInit, user_id: str, role: str):
 
@@ -121,7 +101,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         if role != info.hr_document_step.staff_unit.name:
             raise ForbiddenException(detail=f'Вы не можете подписать этот документ из-за роли!')
 
-        if self._check_for_department(db, user_service.get_by_id(db, user_id), document.users[0]):
+        if not self._check_for_department(db, user_service.get_by_id(db, user_id), document.users[0]):
             raise ForbiddenException(detail=f'Вы не можете подписать документ относящийся не к вашему департаменту!')
 
         user: User = user_service.get_by_id(db, user_id)
@@ -159,7 +139,15 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         document = self.get_by_id(db, id)
         document_template = hr_document_template_service.get_by_id(db, document.hr_document_template_id)
 
-        template = DocxTemplate(document_template.path)
+        with tempfile.NamedTemporaryFile(delete=False) as temp:
+
+            arr = document_template.path.rsplit('.')
+            extension = arr[len(arr)-1]
+            temp_file_path = temp.name + '.' + extension
+
+            urllib.request.urlretrieve(document_template.path, temp_file_path)
+
+        template = DocxTemplate(temp_file_path)
 
         context = {}
 
@@ -168,29 +156,43 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 context[i] = document.properties[i]['name']
             else:
                 context[i] = document.properties[i]
-
-        context["reg_number"] = document.reg_number
-        context["signed_at"] = document.signed_at.strftime("%Y-%m-%d")
+        if document.reg_number is not None:
+            context["reg_number"] = document.reg_number
+        if document.signed_at is not None:
+            context["signed_at"] = document.signed_at.strftime("%Y-%m-%d")
 
         template.render(context)
 
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
 
-            file_name = temp_file.name + ".docx"
+            file_name = temp_file.name + extension
 
             template.save(file_name)
 
         return FileResponse(
             path=file_name,
             media_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-            filename=document_template.name + '.docx'
+            filename=document_template.name + extension
         )
 
-    def get_all_by_option(self, db: Session, option: str):
+    def get_all_by_option(self, db: Session, option: str, data_taken: str, id: uuid.UUID):
         service = options.get(option)
         if service is None:
             raise InvalidOperationException(f'Работа с {option} еще не поддерживается! Обратитесь к администратору для получения информации!')
+        if data_taken is not None and data_taken == "matreshka":
+            if id is None:
+                return service.get_parents(db)
+            else:
+                return service.get_by_id(db, id).children
         return service.get_multi(db)
+    
+    def get_signed_documents(self, db: Session, user_id: uuid.UUID, skip: int, limit: int):
+
+        user = user_service.get_by_id(db, user_id)
+
+        infos = hr_document_info_service.get_signed_by_user_id(db, user_id, skip, limit)
+
+        return self._return_correctly(db, infos, user)
 
     def _finish_document(self, db: Session, document: HrDocument, users: List[User]):
 
@@ -262,10 +264,56 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             raise InvalidOperationException(f'New state is encountered! Cannot change {key}!')
         return service
     
-    def _to_response(self, info: HrDocumentInfo) -> HrDocumentRead:
+    def _to_response(self, db: Session, info: HrDocumentInfo) -> HrDocumentRead:
 
         response = HrDocumentRead.from_orm(info.hr_document)
         response.can_cancel = info.hr_document_step.staff_function.can_cancel
+
+        user = response.users[0]
+
+        fields = user_service.get_fields()
+
+        props = info.hr_document.document_template.properties
+
+        new_val = {}
+
+        for key in list(props):
+            
+            value = props[key]
+
+            if value['type'] == 'read':
+                continue
+
+            if value['field_name'] not in fields:
+                raise InvalidOperationException(f'Operation on {value["field_name"]} is not supported yet!')
+            
+            if value['data_taken'] == "auto":
+                attr = getattr(user, value['field_name'])
+                if isinstance(attr, Base) or isinstance(attr, list):
+                    new_val[value['field_name']] = self._get_service(value['field_name']).get(db, value['value'])
+                else:
+                    new_val[value['field_name']] = value['value']
+            
+            else:
+
+                val = info.hr_document.properties.get(key)
+                
+                if val is None:
+                    continue
+                    # raise BadRequestException(f'Нет ключа {val} в document.properties')
+                
+                if not type(val) == dict:
+                    attr = getattr(user, value['field_name'])
+                    if isinstance(attr, Base or isinstance(attr, list)):
+                        new_val[value['field_name']] = self._get_service(value['field_name']).get(db, val)
+                    else:
+                        new_val[value['field_name']] = val
+                else:
+                    if val['value'] == None:
+                        raise BadRequestException(f'Обьект {key} должен иметь value!')
+                    new_val[value['field_name']] = self._get_service(value['field_name']).get(db, val['value'])
+
+        response.new_value = new_val
 
         return response
 
@@ -280,6 +328,22 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         if department_id == subject_department_id:
             return True
         return False
+    
+    def _return_correctly(self,db: Session, infos: List[HrDocumentInfo], user: User) -> List[HrDocumentRead]:
 
+        s = set()
+
+        l = []
+
+        for i in infos:
+            if i.hr_document_id not in s:
+                print(i.hr_document_id)
+                s.add(i.hr_document_id)
+                subject = i.hr_document.users[0]
+                # print(subject.id)
+                if self._check_for_department(db, user, subject):
+                    l.append(self._to_response(db, i))
+
+        return l
 
 hr_document_service = HrDocumentService(HrDocument)

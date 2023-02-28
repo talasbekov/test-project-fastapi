@@ -8,7 +8,10 @@ from models import HrDocumentStatus
 
 from .hr_document_template import HrDocumentTemplateRead
 from .user import UserRead
-from .validator import hr_document_properties_validator
+
+"""
+"detail": "Mapper 'Mapper[HrDocument(hr_documents)]' has no property 'user'.  If this property was indicated from other mappers or configure events, ensure registry.configure() has been called."
+"""
 
 
 class HrDocumentBase(BaseModel):
@@ -16,7 +19,20 @@ class HrDocumentBase(BaseModel):
     due_date: datetime
     properties: Dict[str, Any]
 
-    _check_properties = validator("properties", allow_reuse=True)(hr_document_properties_validator)
+    @validator('properties')
+    def properties_validator(cls, v):
+        if v is None:
+            return v
+        if not isinstance(v, dict):
+            raise ValueError(f'properties should be dictionary')
+        keys = list(v)
+        for key in keys:
+            value = v[key]
+            if isinstance(value, dict):
+                val_keys = list(value)
+                if 'name' not in val_keys or 'value' not in val_keys:
+                    raise ValueError(f'name or value should be in {key}!')
+        return v
 
 
 class HrDocumentInit(HrDocumentBase):
@@ -46,6 +62,10 @@ class HrDocumentRead(HrDocumentBase):
     properties: Optional[Union[dict, None]]
     can_cancel: Optional[bool]
     users: Optional[List[UserRead]]
+    created_at: Optional[datetime]
+    updated_at: Optional[datetime]
+
+    new_value: Optional[dict]
 
     class Config:
         orm_mode = True

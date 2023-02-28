@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from exceptions import BadRequestException, NotFoundException
 from models import StaffDivision
-from schemas import StaffDivisionCreate, StaffDivisionRead, StaffDivisionUpdate
+from schemas import StaffDivisionCreate, StaffDivisionRead, StaffDivisionUpdate, StaffDivisionUpdateParentGroup
 
 from .base import ServiceBase
 
@@ -29,21 +29,25 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
         return db.query(self.model).filter(
             StaffDivision.parent_group_id == None
         ).offset(skip).limit(limit).all()
-
+    
+    def get_parents(self, db: Session) -> List[StaffDivision]:
+        return db.query(self.model).filter(
+            StaffDivision.parent_group_id == None
+        ).all()
 
     def change_parent_group(self,
             db: Session,
             id: str,
-            new_parent_group_id: str
+            body: StaffDivisionUpdateParentGroup
     ) -> StaffDivisionRead:
         group = super().get(db, id)
         if group is None:
             raise NotFoundException(f"StaffDivision with id: {id} is not found!")
 
-        parent_group = super().get(db, new_parent_group_id)
+        parent_group = super().get(db, body.parent_group_id)
         if parent_group is None:
-            raise BadRequestException(f"Parent staffDivision with id: {new_parent_group_id} is not found!")
-        group.parent_group_id = new_parent_group_id
+            raise BadRequestException(f"Parent staffDivision with id: {body.parent_group_id} is not found!")
+        group.parent_group_id = body.parent_group_id
         db.add(group)
         db.flush()
         return group

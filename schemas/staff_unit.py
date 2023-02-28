@@ -7,7 +7,6 @@ from pydantic import BaseModel
 class StaffUnitBase(BaseModel):
     name: str
     max_rank_id: uuid.UUID
-    description: Optional[str]
 
 
 class StaffUnitCreate(StaffUnitBase):
