@@ -115,7 +115,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
             next_step = hr_document_step_service.get_next_step_from_id(db, info.hr_document_step_id)
 
-            if next_step is None:
+            if info.hr_document_step.staff_function.name == "Утверждающий": # Закончить на staff function Утверждающий
                 return self._finish_document(db, document, document.users)
 
             hr_document_info_service.create_next_info_for_step(db, document.id, next_step.id)
