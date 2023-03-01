@@ -2,12 +2,13 @@ import uuid
 from typing import List
 
 from fastapi import APIRouter, Depends, status
-from fastapi_jwt_auth import AuthJWT
 from fastapi.security import HTTPBearer
+from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import ServiceFunctionTypeCreate, ServiceFunctionTypeUpdate, ServiceFunctionTypeRead
+from schemas import (ServiceFunctionTypeCreate, ServiceFunctionTypeRead,
+                     ServiceFunctionTypeUpdate)
 from services import service_function_type_service
 
 router = APIRouter(prefix="/service_function_type", tags=["ServiceFunctionType"], dependencies=[Depends(HTTPBearer())])
