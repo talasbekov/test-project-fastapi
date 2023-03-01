@@ -1,8 +1,8 @@
 """init
 
-Revision ID: da827e427c1e
+Revision ID: 1d1c68f2a0c8
 Revises: 
-Create Date: 2023-03-01 20:42:49.653867
+Create Date: 2023-03-01 21:21:53.977641
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = 'da827e427c1e'
+revision = '1d1c68f2a0c8'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -86,7 +86,6 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('staff_units',
-    sa.Column('user_id', sa.UUID(), nullable=True),
     sa.Column('position_id', sa.UUID(), nullable=False),
     sa.Column('staff_division_id', sa.UUID(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
@@ -115,7 +114,6 @@ def upgrade() -> None:
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('priority', sa.Integer(), nullable=True),
     sa.Column('role_id', sa.UUID(), nullable=True),
     sa.Column('type_id', sa.UUID(), nullable=True),
     sa.ForeignKeyConstraint(['role_id'], ['document_function_types.id'], ),
@@ -134,6 +132,8 @@ def upgrade() -> None:
     sa.Column('phone_number', sa.String(length=32), nullable=True),
     sa.Column('address', sa.String(length=255), nullable=True),
     sa.Column('rank_id', sa.UUID(), nullable=True),
+    sa.Column('staff_unit_id', sa.UUID(), nullable=False),
+    sa.Column('actual_staff_unit_id', sa.UUID(), nullable=False),
     sa.Column('status', sa.String(length=255), nullable=True),
     sa.Column('status_till', sa.TIMESTAMP(timezone=True), nullable=True),
     sa.Column('birthday', sa.Date(), nullable=True),
@@ -141,7 +141,9 @@ def upgrade() -> None:
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['actual_staff_unit_id'], ['staff_units.id'], ),
     sa.ForeignKeyConstraint(['rank_id'], ['ranks.id'], ),
+    sa.ForeignKeyConstraint(['staff_unit_id'], ['staff_units.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('call_sign'),
     sa.UniqueConstraint('email'),
@@ -169,6 +171,7 @@ def upgrade() -> None:
     sa.Column('hr_document_template_id', sa.UUID(), nullable=False),
     sa.Column('staff_function_id', sa.UUID(), nullable=False),
     sa.Column('jurisdiction_id', sa.UUID(), nullable=True),
+    sa.Column('priority', sa.Integer(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
