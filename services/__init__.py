@@ -5,6 +5,8 @@ from .base import ServiceBase
 from .staff_division import staff_division_service
 from .staff_function import staff_function_service
 from .permission import permission_service
+from .service_function_type import service_function_type_service
+from .service_function import service_function_service
 from .user import user_service
 from .badge import badge_service
 from .equipment import equipment_service
@@ -17,5 +19,3 @@ from .staff_unit import staff_unit_service
 from .user_stat import user_stat_service
 from .auth import auth_service
 from .hr_document import hr_document_service
-from .service_function_type import service_function_type_service
-from .service_function import service_function_service

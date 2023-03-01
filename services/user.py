@@ -5,8 +5,8 @@ from sqlalchemy.orm import Session
 from exceptions import NotFoundException
 from models import StaffDivision, User
 from schemas import (StaffDivisionUpdate, UserCreate, UserPermission, UserRead,
-                     UserUpdate, UserGroupUpdate)
-from services import permission_service, staff_division_service
+                     UserUpdate, UserGroupUpdate, UserServiceFunction)
+from services import permission_service, staff_division_service, service_function_service
 
 from .base import ServiceBase
 
@@ -93,6 +93,31 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
         return users
 
+    def add_service_function(self, db: Session, body: UserServiceFunction):
+        user = self.get_by_id(db, body.user_id)
+
+        for id in body.service_function_ids:
+            service_function = service_function_service.get_by_id(db, id)
+            if service_function not in user.service_functions:
+                user.service_functions.append(service_function)
+
+        db.add(user)
+        db.flush()
+
+    def remove_service_function(self, db: Session, body: UserServiceFunction):
+        user = self.get_by_id(db, body.user_id)
+
+        for id in body.service_function_ids:
+            service_function = service_function_service.get(db, id)
+            if service_function is None:
+                continue
+            try:
+                user.service_functions.remove(service_function)
+            except ValueError as e:
+                continue
+
+        db.add(user)
+        db.flush()
 
 
 user_service = UserService(User)

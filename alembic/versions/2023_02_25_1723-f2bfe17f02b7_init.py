@@ -203,6 +203,27 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['badge_id'], ['badges.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], )
     )
+    op.create_table('service_function_types',
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('name', sa.String(length=255), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('service_functions',
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('name', sa.String(length=255), nullable=True),
+    sa.Column('service_function_type_id', sa.UUID(), nullable=True),
+    sa.Column('spend_hours_per_week', sa.Integer(), nullable=True),
+    sa.PrimaryKeyConstraint('id'),
+    sa.ForeignKeyConstraint(['service_function_type_id'], ['service_function_types.id'], )
+    )
+    op.create_table('user_service_functions',
+    sa.Column('user_id', sa.UUID(), nullable=False),
+    sa.Column('service_function_id', sa.UUID(), nullable=False),
+    sa.ForeignKeyConstraint(['service_function_id'], ['service_functions.id'], onupdate='CASCADE',
+                            ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('user_id', 'service_function_id')
+    )
     # ### end Alembic commands ###
 
 
@@ -226,4 +247,6 @@ def downgrade() -> None:
     op.drop_table('hr_document_templates')
     op.drop_table('equipments')
     op.drop_table('badges')
+    op.drop_table('service_functions')
+    op.drop_table('service_function_types')
     # ### end Alembic commands ###

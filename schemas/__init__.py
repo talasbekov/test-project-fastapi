@@ -21,4 +21,4 @@ from .hr_document_info import (HrDocumentInfoCreate, HrDocumentInfoRead,
                                HrDocumentInfoUpdate, HrDocumentHistoryRead)
 from .user_stat import UserStatCreate, UserStatRead, UserStatUpdate
 from .service_function_type import ServiceFunctionTypeCreate, ServiceFunctionTypeUpdate, ServiceFunctionTypeRead
-from .service_function import ServiceFunctionCreate, ServiceFunctionUpdate, ServiceFunctionRead
+from .service_function import ServiceFunctionCreate, ServiceFunctionUpdate, ServiceFunctionRead, UserServiceFunction

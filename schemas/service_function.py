@@ -1,5 +1,5 @@
 import uuid
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel
 
@@ -16,6 +16,11 @@ class ServiceFunctionCreate(ServiceFunctionBase):
 
 class ServiceFunctionUpdate(ServiceFunctionBase):
     pass
+
+
+class UserServiceFunction(BaseModel):
+    user_id: uuid.UUID
+    service_function_ids: List[uuid.UUID]
 
 
 class ServiceFunctionRead(ServiceFunctionBase):

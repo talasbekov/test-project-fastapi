@@ -9,6 +9,7 @@ from .permission import PermissionRead
 from .rank import RankRead
 from .staff_division import StaffDivisionRead
 from .staff_unit import StaffUnitRead
+from .service_function import ServiceFunctionRead
 
 
 class UserBase(BaseModel):
@@ -59,6 +60,7 @@ class UserRead(UserBase):
     status: Optional[str]
     status_till: Optional[datetime.datetime]
     permissions: Optional[List[PermissionRead]]
+    service_functions: Optional[List[ServiceFunctionRead]]
 
     class Config:
         orm_mode = True

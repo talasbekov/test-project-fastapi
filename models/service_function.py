@@ -6,6 +6,8 @@ from sqlalchemy.orm import relationship
 
 from core import Base
 
+from .association import user_service_functions
+
 
 class ServiceFunction(Base):
 
@@ -18,3 +20,9 @@ class ServiceFunction(Base):
     spend_hours_per_week = Column(Integer, nullable=True)
 
     service_function_type = relationship("ServiceFunctionType", cascade="all, delete")
+    users = relationship(
+        "User",
+        secondary=user_service_functions,
+        back_populates="service_functions",
+        cascade="all,delete"
+    )
