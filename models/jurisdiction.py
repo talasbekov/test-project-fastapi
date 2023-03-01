@@ -1,14 +1,12 @@
 import uuid
 
-from sqlalchemy import Column, String, text, TIMESTAMP
+from sqlalchemy import TIMESTAMP, Column, String, text
 from sqlalchemy.dialects.postgresql import UUID
 
 from core import Base
-from models import TimeBaseModel
+from models import NamedModel
 
 
-class Jurisdiction(TimeBaseModel, Base):
+class Jurisdiction(NamedModel, Base):
+
     __tablename__ = "jurisdictions"
-
-    id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
-    name = Column(String(150))

@@ -6,7 +6,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from core import Base
-from models import TimeBaseModel
+from models import Model, NamedModel
 
 from .association import user_functions
 
@@ -19,32 +19,22 @@ class RoleName(str, enum.Enum):
     INITIATOR = "Инициатор"
 
 
-class ServiceFunctionType(TimeBaseModel, Base):
+class ServiceFunctionType(NamedModel, Base):
 
     __tablename__ = "service_function_types"
 
-    id = Column(UUID(as_uuid=True), primary_key=True,
-                nullable=False, default=uuid.uuid4)
-    name = Column(String, nullable=False)
 
-
-class DocumentFunctionType(TimeBaseModel, Base):
+class DocumentFunctionType(NamedModel, Base):
 
     __tablename__ = "document_function_types"
 
-    id = Column(UUID(as_uuid=True), primary_key=True,
-                nullable=False, default=uuid.uuid4)
-    name = Column(String, nullable=False)
     can_cancel = Column(Boolean, nullable=False)
 
 
-class StaffFunction(TimeBaseModel, Base):
+class StaffFunction(NamedModel, Base):
 
     __tablename__ = "staff_functions"
 
-    id = Column(UUID(as_uuid=True), primary_key=True,
-                nullable=False, default=uuid.uuid4)
-    name = Column(String(255), nullable=False)
     hours_per_week = Column(Integer())
     discriminator = Column(String(255))
 

@@ -6,7 +6,7 @@ from sqlalchemy.dialects.postgresql import JSON, UUID
 from sqlalchemy.orm import relationship
 
 from core import Base
-from models import TimeBaseModel
+from models import Model
 
 from .association import hr_document_equipments, hr_documents_users
 
@@ -19,12 +19,10 @@ class HrDocumentStatus(str, enum.Enum):
     ON_REVISION = "На доработке"
 
 
-class HrDocument(TimeBaseModel, Base):
+class HrDocument(Model, Base):
 
     __tablename__ = "hr_documents"
 
-    id = Column(UUID(as_uuid=True), primary_key=True,
-                nullable=False, default=uuid.uuid4)
     hr_document_template_id = Column(
         UUID(as_uuid=True), ForeignKey("hr_document_templates.id"), nullable=True)
     status = Column(Enum(HrDocumentStatus))

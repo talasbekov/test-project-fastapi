@@ -1,17 +1,16 @@
 import uuid
 
-from sqlalchemy import Column, Integer, TIMESTAMP, ForeignKey, text
+from sqlalchemy import TIMESTAMP, Column, ForeignKey, Integer, text
 from sqlalchemy.dialects.postgresql import UUID
 
 from core import Base
-from models import TimeBaseModel
+from models import Model
 
 
-class UserStat(TimeBaseModel, Base):
+class UserStat(Model, Base):
+
     __tablename__ = "user_stats"
 
-    id = Column(UUID(as_uuid=True), primary_key=True,
-                nullable=False, default=uuid.uuid4)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
     physical_training = Column(Integer)
     fire_training = Column(Integer)

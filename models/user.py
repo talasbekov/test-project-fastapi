@@ -6,18 +6,16 @@ from sqlalchemy.dialects.postgresql import ARRAY, JSON, TEXT, UUID
 from sqlalchemy.orm import Mapped, relationship
 
 from core import Base
-from models import TimeBaseModel
+from models import Model
 
 from .association import (hr_documents_users, user_functions, user_permissions,
                           users_badges)
 
 
-class User(TimeBaseModel, Base):
+class User(Model, Base):
 
     __tablename__ = "users"
 
-    id = Column(UUID(as_uuid=True), primary_key=True,
-                nullable=False, default=uuid.uuid4)
     email = Column(String(150), nullable=True, unique=True)
     password = Column(String(255), nullable=False)
     first_name = Column(String(150), nullable=True)

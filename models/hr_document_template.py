@@ -6,7 +6,7 @@ from sqlalchemy.dialects.postgresql import ARRAY, JSON, UUID
 from sqlalchemy.orm import relationship
 
 from core import Base
-from models import TimeBaseModel
+from models import NamedModel
 
 
 class SubjectType(enum.IntEnum):
@@ -16,13 +16,10 @@ class SubjectType(enum.IntEnum):
     STAFF = 4
 
 
-class HrDocumentTemplate(TimeBaseModel, Base):
+class HrDocumentTemplate(NamedModel, Base):
 
     __tablename__ = "hr_document_templates"
 
-    id = Column(UUID(as_uuid=True), primary_key=True,
-                nullable=False, default=uuid.uuid4)
-    name = Column(String(255))
     path = Column(String(255))
     subject_type = Column(Enum(SubjectType))
     properties = Column(JSON(none_as_null=True))

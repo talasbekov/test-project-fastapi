@@ -7,15 +7,13 @@ from sqlalchemy.dialects.postgresql import ARRAY, JSON, TEXT, UUID
 from sqlalchemy.orm import backref, relationship
 
 from core import Base
-from models import TimeBaseModel
+from models import Model
 
 
-class HrDocumentInfo(TimeBaseModel, Base):
+class HrDocumentInfo(Model, Base):
     
     __tablename__ = "hr_document_infos"
 
-    id = Column(UUID(as_uuid=True), primary_key=True,
-                nullable=False, default=uuid.uuid4)
     hr_document_step_id = Column(UUID(as_uuid=True), ForeignKey("hr_document_steps.id"), nullable=False)
     signed_by = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
     comment = Column(TEXT())
