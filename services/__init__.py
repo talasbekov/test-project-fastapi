@@ -20,3 +20,4 @@ from .staff_unit import staff_unit_service
 from .user_stat import user_stat_service
 from .auth import auth_service
 from .hr_document import hr_document_service
+from .jurisdiction import jurisdiction_service

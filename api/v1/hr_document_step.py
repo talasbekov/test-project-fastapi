@@ -52,6 +52,7 @@ async def create(*,
     Authorize.jwt_required()
     return hr_document_step_service.create_step(db, body)
 
+
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=HrDocumentStepRead,
             summary="Get HrDocumentStep by id")

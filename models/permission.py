@@ -5,17 +5,15 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from core import Base
+from models import NamedModel
 
 from .association import user_permissions
 
 
-class Permission(Base):
+class Permission(NamedModel, Base):
 
     __tablename__ = "permissions"
 
-    id = Column(UUID(as_uuid=True), primary_key=True,
-                nullable=False, default=uuid.uuid4)
-    name = Column(String(150), nullable=True)
     users = relationship(
         "User",
         secondary=user_permissions,
