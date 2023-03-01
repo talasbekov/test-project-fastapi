@@ -1,12 +1,11 @@
 import enum
-import uuid
 
-from sqlalchemy import TIMESTAMP, Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from core import Base
-from models import Model, NamedModel
+from models import NamedModel
 
 from .association import staff_unit_function
 
@@ -48,7 +47,6 @@ class StaffFunction(NamedModel, Base):
 
 class DocumentStaffFunction(StaffFunction):
 
-    priority = Column(Integer())
     role_id = Column(UUID(as_uuid=True), ForeignKey("document_function_types.id"))
 
     role = relationship("DocumentFunctionType")
