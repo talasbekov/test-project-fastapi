@@ -4,9 +4,10 @@ from sqlalchemy import TEXT, Column, Integer, String
 from sqlalchemy.dialects.postgresql import UUID
 
 from core import Base
+from models import TimeBaseModel
 
 
-class Rank(Base):
+class Rank(TimeBaseModel, Base):
 
     __tablename__ = "ranks"
 

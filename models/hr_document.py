@@ -6,6 +6,7 @@ from sqlalchemy.dialects.postgresql import JSON, UUID
 from sqlalchemy.orm import relationship
 
 from core import Base
+from models import TimeBaseModel
 
 from .association import hr_document_equipments, hr_documents_users
 
@@ -18,7 +19,7 @@ class HrDocumentStatus(str, enum.Enum):
     ON_REVISION = "На доработке"
 
 
-class HrDocument(Base):
+class HrDocument(TimeBaseModel, Base):
 
     __tablename__ = "hr_documents"
 
@@ -41,8 +42,3 @@ class HrDocument(Base):
         back_populates="hr_documents",
         cascade="all,delete"
     )
-
-    created_at = Column(TIMESTAMP(timezone=True),
-                        nullable=False, server_default=text("now()"))
-    updated_at = Column(TIMESTAMP(timezone=True),
-                        nullable=False, server_default=text("now()"))

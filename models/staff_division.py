@@ -6,6 +6,7 @@ from sqlalchemy.dialects.postgresql import ARRAY, JSON, TEXT, UUID
 from sqlalchemy.orm import backref, relationship
 
 from core import Base
+from models import TimeBaseModel
 
 
 class GroupName(enum.Enum):
@@ -14,7 +15,7 @@ class GroupName(enum.Enum):
     TEAM = 3
 
 
-class StaffDivision(Base):
+class StaffDivision(TimeBaseModel, Base):
 
     __tablename__ = "staff_divisions"
 
@@ -25,8 +26,3 @@ class StaffDivision(Base):
     description = Column(TEXT)
     children = relationship("StaffDivision")
     users = relationship("User", back_populates="staff_division", cascade="all,delete")
-
-    created_at = Column(TIMESTAMP(timezone=True),
-                        nullable=False, server_default=text("now()"))
-    updated_at = Column(TIMESTAMP(timezone=True),
-                        nullable=False, server_default=text("now()"))

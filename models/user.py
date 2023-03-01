@@ -6,12 +6,13 @@ from sqlalchemy.dialects.postgresql import ARRAY, JSON, TEXT, UUID
 from sqlalchemy.orm import Mapped, relationship
 
 from core import Base
+from models import TimeBaseModel
 
 from .association import (hr_documents_users, user_functions, user_permissions,
                           users_badges)
 
 
-class User(Base):
+class User(TimeBaseModel, Base):
 
     __tablename__ = "users"
 
@@ -28,10 +29,6 @@ class User(Base):
     id_number = Column(String(255), unique=True)
     phone_number = Column(String(32))
     address = Column(String(255))
-    created_at = Column(TIMESTAMP(timezone=True),
-                        nullable=False, server_default=text("now()"))
-    updated_at = Column(TIMESTAMP(timezone=True),
-                        nullable=False, server_default=text("now()"))
     staff_unit_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"), nullable=True)
     actual_staff_unit_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"), nullable=True)
     rank_id = Column(

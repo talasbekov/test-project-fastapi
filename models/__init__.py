@@ -1,3 +1,4 @@
+from .base import TimeBaseModel
 from .badge import Badge
 from .equipment import Equipment
 from .event import Event
@@ -14,3 +15,4 @@ from .staff_function import (DocumentStaffFunction, RoleName,
 from .staff_unit import StaffUnit
 from .user import User
 from .user_stat import UserStat
+from .jurisdiction import Jurisdiction

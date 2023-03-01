@@ -5,11 +5,12 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from core import Base
+from models import TimeBaseModel
 
 from .association import user_permissions
 
 
-class Permission(Base):
+class Permission(TimeBaseModel, Base):
 
     __tablename__ = "permissions"
 

@@ -6,9 +6,10 @@ from sqlalchemy.dialects.postgresql import UUID, ARRAY, JSON, TEXT
 from sqlalchemy.orm import relationship, backref
 
 from core import Base
+from models import TimeBaseModel
 
 
-class Event(Base):
+class Event(TimeBaseModel, Base):
 
     __tablename__ = "events"
 
@@ -19,7 +20,3 @@ class Event(Base):
     description = Column(TEXT())
     date_since = Column(TIMESTAMP(timezone=True))
     date_to = Column(TIMESTAMP(timezone=True))
-    created_at = Column(TIMESTAMP(timezone=True),
-                        nullable=False, server_default=text("now()"))
-    updated_at = Column(TIMESTAMP(timezone=True),
-                        nullable=False, server_default=text("now()"))

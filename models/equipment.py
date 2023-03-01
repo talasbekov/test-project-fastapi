@@ -5,11 +5,12 @@ from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID
 from sqlalchemy.orm import relationship
 
 from core import Base
+from models import TimeBaseModel
 
 from .association import hr_document_equipments
 
 
-class Equipment(Base):
+class Equipment(TimeBaseModel, Base):
 
     __tablename__ = "equipments"
 
@@ -19,7 +20,3 @@ class Equipment(Base):
     quantity = Column(BigInteger, nullable=True)
     hr_documents = relationship("HrDocument", secondary=hr_document_equipments,
                                 back_populates="equipments")
-    created_at = Column(TIMESTAMP(timezone=True),
-                        nullable=False, server_default=text("now()"))
-    updated_at = Column(TIMESTAMP(timezone=True),
-                        nullable=False, server_default=text("now()"))

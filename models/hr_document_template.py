@@ -6,6 +6,7 @@ from sqlalchemy.dialects.postgresql import ARRAY, JSON, UUID
 from sqlalchemy.orm import relationship
 
 from core import Base
+from models import TimeBaseModel
 
 
 class SubjectType(enum.IntEnum):
@@ -15,7 +16,7 @@ class SubjectType(enum.IntEnum):
     STAFF = 4
 
 
-class HrDocumentTemplate(Base):
+class HrDocumentTemplate(TimeBaseModel, Base):
 
     __tablename__ = "hr_document_templates"
 
@@ -27,8 +28,3 @@ class HrDocumentTemplate(Base):
     properties = Column(JSON(none_as_null=True))
 
     documents = relationship("HrDocument", back_populates="document_template")
-
-    created_at = Column(TIMESTAMP(timezone=True),
-                        nullable=False, server_default=text("now()"))
-    updated_at = Column(TIMESTAMP(timezone=True),
-                        nullable=False, server_default=text("now()"))

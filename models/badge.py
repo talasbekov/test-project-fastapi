@@ -5,10 +5,11 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from core import Base
+from models import TimeBaseModel
 from .association import users_badges
 
 
-class Badge(Base):
+class Badge(TimeBaseModel, Base):
 
     __tablename__ = "badges"
 

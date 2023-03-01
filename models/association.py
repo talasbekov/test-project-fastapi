@@ -33,6 +33,6 @@ user_permissions = Table(
 user_functions = Table(
     "user_functions",
     Base.metadata,
-    Column("user_id", ForeignKey("users.id", ondelete="CASCADE", onupdate="CASCADE")),
-    Column("function_id", ForeignKey("staff_functions.id", ondelete="CASCADE", onupdate="CASCADE"))
+    Column("user_id", ForeignKey("users.id", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True),
+    Column("function_id", ForeignKey("staff_functions.id", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)
 )

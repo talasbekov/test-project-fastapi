@@ -5,9 +5,10 @@ from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID
 from sqlalchemy.orm import relationship
 
 from core import Base
+from models import TimeBaseModel
 
 
-class StaffUnit(Base):
+class StaffUnit(TimeBaseModel, Base):
 
     __tablename__ = "staff_units"
 
@@ -16,8 +17,3 @@ class StaffUnit(Base):
     name = Column(String, nullable=True)
     max_rank_id = Column(UUID(as_uuid=True), ForeignKey("ranks.id"),
                          nullable=True)
-
-    created_at = Column(TIMESTAMP(timezone=True),
-                        nullable=False, server_default=text("now()"))
-    updated_at = Column(TIMESTAMP(timezone=True),
-                        nullable=False, server_default=text("now()"))
