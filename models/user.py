@@ -28,6 +28,9 @@ class User(Model, Base):
     rank_id = Column(
         UUID(as_uuid=True), ForeignKey("ranks.id"), nullable=True)
     
+    staff_unit_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"), nullable=False)
+    actual_staff_unit_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"), nullable=False)
+    
     status = Column(String(255), nullable=True)
     status_till = Column(TIMESTAMP(timezone=True), nullable=True)
 
@@ -41,6 +44,9 @@ class User(Model, Base):
         back_populates='users',
         cascade="all,delete"
     )
+
+    staff_unit = relationship("StaffUnit", foreign_keys=staff_unit_id)
+    actual_staff_unit = relationship("StaffUnit", foreign_keys=actual_staff_unit_id)
 
     hr_documents = relationship(
         "HrDocument",

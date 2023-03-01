@@ -14,7 +14,6 @@ class StaffUnit(Model, Base):
 
     __tablename__ = "staff_units"
 
-    user_id = Column(UUID(as_uuid=True), nullable=True)
     position_id = Column(UUID(as_uuid=True), nullable=False)
     staff_division_id = Column(UUID(as_uuid=True), nullable=False)
 
