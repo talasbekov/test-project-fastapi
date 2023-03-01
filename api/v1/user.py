@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from core import get_db
 from models import User
-from schemas import UserCreate, UserPermission, UserRead, UserUpdate, UserGroupUpdate
+from schemas import UserCreate, UserPermission, UserServiceFunction, UserRead, UserUpdate, UserGroupUpdate
 from services import user_service
 
 router = APIRouter(prefix="/users", tags=["Users"], dependencies=[Depends(HTTPBearer())])
@@ -137,3 +137,37 @@ async def get_profile(*,
     Authorize.jwt_required()
     id = Authorize.get_jwt_subject()
     return user_service.get_by_id(db, id)
+
+
+@router.post("/add-service-function", dependencies=[Depends(HTTPBearer())],
+             summary="Add ServiceFunction")
+async def add_service_function(*,
+    db: Session = Depends(get_db),
+    body: UserServiceFunction,
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Add ServiceFunction to user
+
+        - **user_id**: UUID - the ID of the user to add the permission. It is required and should exist in database.
+        - **service_function_ids**: UUID - A list of IDs of the permissions to add. This parameter is required and should exist in database.
+    """
+    Authorize.jwt_required()
+    user_service.add_service_function(db, body)
+
+
+@router.post("/remove-service-function", dependencies=[Depends(HTTPBearer())],
+             summary="Remove ServiceFunction")
+async def remove_service_function(*,
+    db: Session = Depends(get_db),
+    body: UserServiceFunction,
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Remove ServiceFunction from user
+
+        - **user_id**: UUID - the ID of the user to remove the permission. It is required and should exist in database.
+        - **service_function_ids**: UUID - A list of IDs of the permissions to remove. This parameter is required and should exist in database.
+    """
+    Authorize.jwt_required()
+    user_service.remove_service_function(db, body)

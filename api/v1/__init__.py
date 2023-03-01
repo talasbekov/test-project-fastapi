@@ -14,6 +14,8 @@ from .auth import router as auth_router
 from .equipment import router as equipment_router
 from .badge import router as badge_router
 from .rank import router as rank_router
+from .service_function_type import router as service_function_type_router
+from .service_function import router as service_function_router
 
 router = APIRouter(prefix="/v1")
 
@@ -31,3 +33,5 @@ router.include_router(permission_router)
 router.include_router(equipment_router)
 router.include_router(badge_router)
 router.include_router(rank_router)
+router.include_router(service_function_type_router)
+router.include_router(service_function_router)
