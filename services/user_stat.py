@@ -1,10 +1,10 @@
 from sqlalchemy.orm import Session
 
-from .base import ServiceBase
-
+from exceptions import NotFoundException
 from models import UserStat
 from schemas import UserStatCreate, UserStatUpdate
-from exceptions import NotFoundException
+
+from .base import ServiceBase
 
 
 class UserStatService(ServiceBase[UserStat, UserStatCreate, UserStatUpdate]):

@@ -4,11 +4,12 @@ from typing import Optional
 
 from sqlalchemy.orm import Session
 
-from exceptions import NotFoundException, InvalidOperationException
+from exceptions import InvalidOperationException, NotFoundException
 from models import StaffDivision, User
-from schemas import (StaffDivisionUpdate, UserCreate, UserPermission, UserRead,
-                     UserUpdate, UserGroupUpdate, UserServiceFunction)
-from services import permission_service, staff_division_service, service_function_service, staff_unit_service
+from schemas import (StaffDivisionUpdate, UserCreate, UserGroupUpdate,
+                     UserPermission, UserRead, UserServiceFunction, UserUpdate)
+from services import (service_function_service, staff_division_service,
+                      staff_unit_service)
 
 from .base import ServiceBase
 

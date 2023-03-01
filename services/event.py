@@ -1,12 +1,12 @@
-from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 from fastapi.logger import logger as log
-
-from .base import ServiceBase
-from models import Event
-from schemas import EventRead, EventCreate, EventUpdate
+from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
+from models import Event
+from schemas import EventCreate, EventRead, EventUpdate
+
+from .base import ServiceBase
 
 
 class EventService(ServiceBase[Event, EventCreate, EventUpdate]):

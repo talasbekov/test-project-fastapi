@@ -1,8 +1,8 @@
 import uuid
 
 from fastapi import HTTPException, status
-from fastapi.logger import logger as log
 from fastapi.encoders import jsonable_encoder
+from fastapi.logger import logger as log
 from sqlalchemy.orm import Session
 
 from exceptions import BadRequestException, NotFoundException

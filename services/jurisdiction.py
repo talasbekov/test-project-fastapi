@@ -1,10 +1,10 @@
 from sqlalchemy.orm import Session
 
-from .base import ServiceBase
-
+from exceptions.client import NotFoundException
 from models import Jurisdiction
 from schemas import JurisdictionCreate, JurisdictionUpdate
-from exceptions.client import NotFoundException
+
+from .base import ServiceBase
 
 
 class JurisdictionService(ServiceBase[Jurisdiction, JurisdictionCreate, JurisdictionUpdate]):

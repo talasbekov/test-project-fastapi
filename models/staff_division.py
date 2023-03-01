@@ -6,7 +6,7 @@ from sqlalchemy.dialects.postgresql import ARRAY, JSON, TEXT, UUID
 from sqlalchemy.orm import backref, relationship
 
 from core import Base
-from models import NamedModel
+from models import NamedNestedModel
 
 
 class GroupName(enum.Enum):
@@ -15,11 +15,11 @@ class GroupName(enum.Enum):
     TEAM = 3
 
 
-class StaffDivision(NamedModel, Base):
+class StaffDivision(NamedNestedModel, Base):
 
     __tablename__ = "staff_divisions"
 
     parent_group_id = Column(UUID(as_uuid=True), ForeignKey("staff_divisions.id"), nullable=True)
     description = Column(TEXT)
     children = relationship("StaffDivision")
-    users = relationship("User", back_populates="staff_division", cascade="all,delete")
+    staff_units = relationship("StaffUnit")

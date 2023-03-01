@@ -8,7 +8,7 @@ from sqlalchemy.orm import relationship
 from core import Base
 from models import Model, NamedModel
 
-from .association import user_functions
+from .association import staff_unit_function
 
 
 class RoleName(str, enum.Enum):
@@ -38,7 +38,7 @@ class StaffFunction(NamedModel, Base):
     hours_per_week = Column(Integer())
     discriminator = Column(String(255))
 
-    users = relationship("User", secondary=user_functions)
+    staff_units = relationship("StaffUnit", secondary=staff_unit_function)
 
     __mapper_args__ = {
         "polymorphic_on": discriminator,

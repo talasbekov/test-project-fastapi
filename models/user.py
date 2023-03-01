@@ -8,8 +8,7 @@ from sqlalchemy.orm import Mapped, relationship
 from core import Base
 from models import Model
 
-from .association import (hr_documents_users, user_functions, user_permissions,
-                          users_badges)
+from .association import hr_documents_users, users_badges
 
 
 class User(Model, Base):
@@ -21,14 +20,11 @@ class User(Model, Base):
     first_name = Column(String(150), nullable=True)
     last_name = Column(String(150), nullable=True)
     father_name = Column(String(150), nullable=True)
-    staff_division_id = Column(UUID(as_uuid=True), ForeignKey("staff_divisions.id"), nullable=True)
     icon = Column(TEXT(), nullable=True)
     call_sign = Column(String(255), unique=True)
     id_number = Column(String(255), unique=True)
     phone_number = Column(String(32))
     address = Column(String(255))
-    staff_unit_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"), nullable=True)
-    actual_staff_unit_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"), nullable=True)
     rank_id = Column(
         UUID(as_uuid=True), ForeignKey("ranks.id"), nullable=True)
     
@@ -39,26 +35,12 @@ class User(Model, Base):
     description = Column(TEXT, nullable=True)
 
     rank = relationship("Rank", cascade="all,delete")
-    staff_division = relationship("StaffDivision", cascade="all,delete", back_populates="users")
     badges = relationship(
         "Badge",
         secondary=users_badges,
         back_populates='users',
         cascade="all,delete"
     )
-    permissions = relationship(
-        "Permission",
-        secondary=user_permissions,
-        back_populates="users",
-        cascade="all,delete"
-    )
-    functions = relationship(
-        "StaffFunction",
-        secondary=user_functions,
-        back_populates="users"
-    )
-    staff_unit = relationship("StaffUnit", cascade="all,delete", foreign_keys=staff_unit_id)
-    actual_staff_unit = relationship("StaffUnit", cascade="all,delete", foreign_keys=actual_staff_unit_id)
 
     hr_documents = relationship(
         "HrDocument",
@@ -66,4 +48,3 @@ class User(Model, Base):
         back_populates="users",
         cascade="all,delete"
     )
- 

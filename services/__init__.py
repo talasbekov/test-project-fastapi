@@ -4,7 +4,6 @@
 from .base import ServiceBase
 from .staff_division import staff_division_service
 from .staff_function import staff_function_service
-from .permission import permission_service
 from .staff_unit import staff_unit_service
 from .service_function_type import service_function_type_service
 from .service_function import service_function_service
