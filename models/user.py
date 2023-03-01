@@ -7,7 +7,8 @@ from sqlalchemy.orm import Mapped, relationship
 
 from core import Base
 
-from .association import hr_documents_users, user_permissions, users_badges, user_service_functions
+from .association import (hr_documents_users, user_functions, user_permissions,
+                          users_badges)
 
 
 class User(Base):
@@ -56,11 +57,10 @@ class User(Base):
         back_populates="users",
         cascade="all,delete"
     )
-    service_functions = relationship(
-        "ServiceFunction",
-        secondary=user_service_functions,
-        back_populates="users",
-        cascade="all,delete"
+    functions = relationship(
+        "StaffFunction",
+        secondary=user_functions,
+        back_populates="users"
     )
     staff_unit = relationship("StaffUnit", cascade="all,delete", foreign_keys=staff_unit_id)
     actual_staff_unit = relationship("StaffUnit", cascade="all,delete", foreign_keys=actual_staff_unit_id)
@@ -71,3 +71,4 @@ class User(Base):
         back_populates="users",
         cascade="all,delete"
     )
+ 

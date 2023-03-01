@@ -1,18 +1,20 @@
 import time
+import uuid
 
-from fastapi import FastAPI, Request
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import RedirectResponse, JSONResponse
+from fastapi import Depends, FastAPI, Request
 from fastapi.logger import logger
-from fastapi.templating import Jinja2Templates
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from fastapi_jwt_auth import AuthJWT
 from fastapi_jwt_auth.exceptions import AuthJWTException
 from pydantic import ValidationError
+from sqlalchemy.orm import Session
 
 from api import router
-from core import configs
-
+from core import configs, get_db
+from models import DocumentFunctionType, DocumentStaffFunction
 
 app = FastAPI(
     title=configs.PROJECT_NAME,
@@ -69,3 +71,26 @@ def authjwt_exception_handler(request: Request, exc: AuthJWTException):
 @app.get("/", include_in_schema=False)
 async def docs_redirect():
     return RedirectResponse(url="/docs")
+
+
+@app.get("/test")
+async def test(db: Session = Depends(get_db)):
+
+    role = DocumentFunctionType(
+       id = uuid.uuid4(),
+       name = "SERIK",
+       can_cancel = False
+    )
+
+    func = DocumentStaffFunction(
+        id = uuid.uuid4(),
+        name="NAME",
+        hours_per_week= 4,
+        priority = 3,
+        role_id = role.id
+    )
+    db.add(role)
+    db.add(func)
+    db.flush()
+
+    return func

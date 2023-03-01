@@ -30,9 +30,9 @@ user_permissions = Table(
     Column("permission_id", ForeignKey("permissions.id", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)
 )
 
-user_service_functions = Table(
-    "user_service_functions",
+user_functions = Table(
+    "user_functions",
     Base.metadata,
     Column("user_id", ForeignKey("users.id", ondelete="CASCADE", onupdate="CASCADE")),
-    Column("service_function_id", ForeignKey("service_functions.id", ondelete="CASCADE", onupdate="CASCADE"))
+    Column("function_id", ForeignKey("staff_functions.id", ondelete="CASCADE", onupdate="CASCADE"))
 )

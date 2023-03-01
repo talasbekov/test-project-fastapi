@@ -38,16 +38,12 @@ class StaffFunctionTypeRead(StaffFunctionTypeBase):
 
     class Config:
         orm_mode=True
+        arbitrary_types_allowed = True
 
 
 class DocumentStaffFunctionTypeRead(StaffFunctionTypeRead):
     can_cancel: Optional[bool]
 
-    class Config:
-        orm_mode=True
-
 
 class ServiceStaffFunctionTypeRead(StaffFunctionTypeRead):
-
-    class Config:
-        orm_mode=True
+    pass

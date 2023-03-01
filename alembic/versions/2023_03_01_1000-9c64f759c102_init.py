@@ -1,8 +1,8 @@
 """init
 
-Revision ID: f2bfe17f02b7
+Revision ID: 9c64f759c102
 Revises: 
-Create Date: 2023-02-25 17:23:10.604513
+Create Date: 2023-03-01 10:00:07.127920
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = 'f2bfe17f02b7'
+revision = '9c64f759c102'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -22,6 +22,12 @@ def upgrade() -> None:
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('url', sa.String(), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('document_function_types',
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('name', sa.String(), nullable=False),
+    sa.Column('can_cancel', sa.Boolean(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('equipments',
@@ -54,6 +60,11 @@ def upgrade() -> None:
     sa.Column('url', sa.TEXT(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('service_function_types',
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('name', sa.String(), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('staff_divisions',
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('parent_group_id', sa.UUID(), nullable=True),
@@ -62,12 +73,6 @@ def upgrade() -> None:
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['parent_group_id'], ['staff_divisions.id'], ),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('staff_functions',
-    sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('name', sa.String(length=255), nullable=False),
-    sa.Column('can_cancel', sa.Boolean(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('hr_documents',
@@ -83,6 +88,18 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['hr_document_template_id'], ['hr_document_templates.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('reg_number')
+    )
+    op.create_table('staff_functions',
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('name', sa.String(length=255), nullable=False),
+    sa.Column('hours_per_week', sa.Integer(), nullable=True),
+    sa.Column('discriminator', sa.String(length=255), nullable=True),
+    sa.Column('priority', sa.Integer(), nullable=True),
+    sa.Column('role_id', sa.UUID(), nullable=True),
+    sa.Column('type_id', sa.UUID(), nullable=True),
+    sa.ForeignKeyConstraint(['role_id'], ['document_function_types.id'], ),
+    sa.ForeignKeyConstraint(['type_id'], ['service_function_types.id'], ),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('staff_units',
     sa.Column('id', sa.UUID(), nullable=False),
@@ -177,6 +194,12 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['document_id'], ['hr_documents.id'], ),
     sa.ForeignKeyConstraint(['subject_id'], ['users.id'], )
     )
+    op.create_table('user_functions',
+    sa.Column('user_id', sa.UUID(), nullable=True),
+    sa.Column('function_id', sa.UUID(), nullable=True),
+    sa.ForeignKeyConstraint(['function_id'], ['staff_functions.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], onupdate='CASCADE', ondelete='CASCADE')
+    )
     op.create_table('user_permissions',
     sa.Column('user_id', sa.UUID(), nullable=False),
     sa.Column('permission_id', sa.UUID(), nullable=False),
@@ -203,27 +226,6 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['badge_id'], ['badges.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], )
     )
-    op.create_table('service_function_types',
-    sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('name', sa.String(length=255), nullable=True),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('service_functions',
-    sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('name', sa.String(length=255), nullable=True),
-    sa.Column('service_function_type_id', sa.UUID(), nullable=True),
-    sa.Column('spend_hours_per_week', sa.Integer(), nullable=True),
-    sa.PrimaryKeyConstraint('id'),
-    sa.ForeignKeyConstraint(['service_function_type_id'], ['service_function_types.id'], )
-    )
-    op.create_table('user_service_functions',
-    sa.Column('user_id', sa.UUID(), nullable=False),
-    sa.Column('service_function_id', sa.UUID(), nullable=False),
-    sa.ForeignKeyConstraint(['service_function_id'], ['service_functions.id'], onupdate='CASCADE',
-                            ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], onupdate='CASCADE', ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('user_id', 'service_function_id')
-    )
     # ### end Alembic commands ###
 
 
@@ -232,6 +234,7 @@ def downgrade() -> None:
     op.drop_table('users_badges')
     op.drop_table('user_stats')
     op.drop_table('user_permissions')
+    op.drop_table('user_functions')
     op.drop_table('hr_document_users')
     op.drop_table('hr_document_infos')
     op.drop_table('events')
@@ -239,14 +242,14 @@ def downgrade() -> None:
     op.drop_table('hr_document_steps')
     op.drop_table('hr_document_equipments')
     op.drop_table('staff_units')
-    op.drop_table('hr_documents')
     op.drop_table('staff_functions')
+    op.drop_table('hr_documents')
     op.drop_table('staff_divisions')
+    op.drop_table('service_function_types')
     op.drop_table('ranks')
     op.drop_table('permissions')
     op.drop_table('hr_document_templates')
     op.drop_table('equipments')
+    op.drop_table('document_function_types')
     op.drop_table('badges')
-    op.drop_table('service_functions')
-    op.drop_table('service_function_types')
     # ### end Alembic commands ###

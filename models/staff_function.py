@@ -7,6 +7,8 @@ from sqlalchemy.orm import relationship
 
 from core import Base
 
+from .association import user_functions
+
 
 class RoleName(str, enum.Enum):
     AGREER = "Утверждающий"
@@ -44,6 +46,8 @@ class StaffFunction(Base):
     hours_per_week = Column(Integer())
     discriminator = Column(String(255))
 
+    users = relationship("User", secondary=user_functions)
+
     __mapper_args__ = {
         "polymorphic_on": discriminator,
         "polymorphic_identity": "staff_function",
@@ -52,8 +56,8 @@ class StaffFunction(Base):
 
 class DocumentStaffFunction(StaffFunction):
 
-    priority = Column(Integer(), nullable=False)
-    role_id = Column(UUID(as_uuid=True), ForeignKey("document_function_types.id"), nullable=False)
+    priority = Column(Integer())
+    role_id = Column(UUID(as_uuid=True), ForeignKey("document_function_types.id"))
 
     role = relationship("DocumentFunctionType")
 
@@ -64,7 +68,7 @@ class DocumentStaffFunction(StaffFunction):
 
 class ServiceStaffFunction(StaffFunction):
 
-    type_id = Column(UUID(as_uuid=True), ForeignKey("service_function_types.id"), nullable=False)
+    type_id = Column(UUID(as_uuid=True), ForeignKey("service_function_types.id"))
 
     type = relationship("ServiceFunctionType")
 

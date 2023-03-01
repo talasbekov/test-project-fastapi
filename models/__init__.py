@@ -10,7 +10,7 @@ from .rank import Rank
 from .staff_division import GroupName, StaffDivision
 from .staff_function import (DocumentStaffFunction, RoleName,
                              ServiceFunctionType, ServiceStaffFunction,
-                             StaffFunction)
+                             StaffFunction, DocumentFunctionType)
 from .staff_unit import StaffUnit
 from .user import User
 from .user_stat import UserStat

@@ -1,8 +1,8 @@
-"""feature: added migrations
+"""migration
 
-Revision ID: 33964fd38527
-Revises: f2bfe17f02b7
-Create Date: 2023-02-25 17:24:21.028216
+Revision ID: 48a197e3f201
+Revises: 9c64f759c102
+Create Date: 2023-03-01 10:16:35.531636
 
 """
 import uuid
@@ -13,8 +13,8 @@ from alembic import op
 from core import Base
 
 # revision identifiers, used by Alembic.
-revision = '33964fd38527'
-down_revision = 'f2bfe17f02b7'
+revision = '48a197e3f201'
+down_revision = '9c64f759c102'
 branch_labels = None
 depends_on = None
 
@@ -544,106 +544,6 @@ def upgrade() -> None:
                 }
             },
             'id': template3_id
-        }]
-    )
-
-    role_id = get_uuid()
-    role2_id = get_uuid()
-    role3_id = get_uuid()
-    role4_id = get_uuid()
-    role5_id = get_uuid()
-
-    op.bulk_insert(
-        Base.metadata.tables['staff_functions'],
-        [{
-            'id': role_id,
-            'name': "Согласующий",
-            'can_cancel': True
-        }, {
-            'id': role2_id,
-            'name': "Эксперт",
-            'can_cancel': False
-        }, {
-            'id': role3_id,
-            'name': "Утверждающий",
-            'can_cancel': True
-        }, {
-            'id': role4_id,
-            'name': "Уведомляемый",
-            'can_cancel': False
-        }, {
-            'id': role5_id,
-            'name': "Инициатор",
-            'can_cancel': True
-        }]
-    )
-
-    step1_1 = get_uuid()
-    step1_2 = get_uuid()
-    step1_3 = get_uuid()
-    step2_1 = get_uuid()
-    step2_2 = get_uuid()
-    step2_3 = get_uuid()
-    step3_1 = get_uuid()
-    step3_2 = get_uuid()
-    step3_3 = get_uuid()
-
-    op.bulk_insert(
-        Base.metadata.tables['hr_document_steps'],
-        [{
-            'hr_document_template_id': template1_id,
-            'previous_step_id': None,
-            'staff_unit_id': position2_id,
-            'staff_function_id': role5_id,
-            'id': step1_1
-        }, {
-            'hr_document_template_id': template1_id,
-            'previous_step_id': step1_1,
-            'staff_unit_id': position3_id,
-            'staff_function_id': role2_id,
-            'id': step1_2
-        }, {
-            'hr_document_template_id': template1_id,
-            'previous_step_id': step1_2,
-            'staff_unit_id': position4_id,
-            'staff_function_id': role3_id,
-            'id': step1_3
-        }, {
-            'hr_document_template_id': template2_id,
-            'previous_step_id': None,
-            'staff_unit_id': position2_id,
-            'staff_function_id': role5_id,
-            'id': step2_1
-        }, {
-            'hr_document_template_id': template2_id,
-            'previous_step_id': step2_1,
-            'staff_unit_id': position3_id,
-            'staff_function_id': role2_id,
-            'id': step2_2
-        }, {
-            'hr_document_template_id': template2_id,
-            'previous_step_id': step2_2,
-            'staff_unit_id': position4_id,
-            'staff_function_id': role3_id,
-            'id': step2_3
-        }, {
-            'hr_document_template_id': template3_id,
-            'previous_step_id': None,
-            'staff_unit_id': position2_id,
-            'staff_function_id': role5_id,
-            'id': step3_1
-        }, {
-            'hr_document_template_id': template3_id,
-            'previous_step_id': step3_1,
-            'staff_unit_id': position3_id,
-            'staff_function_id': role2_id,
-            'id': step3_2
-        }, {
-            'hr_document_template_id': template3_id,
-            'previous_step_id': step3_2,
-            'staff_unit_id': position4_id,
-            'staff_function_id': role3_id,
-            'id': step3_3
         }]
     )
 

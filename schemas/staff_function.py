@@ -53,19 +53,16 @@ class StaffFunctionRead(StaffFunctionBase):
 
     class Config:
         orm_mode = True
+        arbitrary_types_allowed = True
+
 
 class DocumentStaffFunctionRead(StaffFunctionRead):
     priority: Optional[int]
     role_id: Optional[uuid.UUID]
     role: Optional[DocumentStaffFunctionTypeRead]
 
-    class Config:
-        orm_mode=True
 
 class ServiceStaffFunctionRead(StaffFunctionRead):
 
     type_id = Optional[uuid.UUID]
     type = Optional[ServiceStaffFunctionTypeRead]
-
-    class Config:
-        orm_mode=True
