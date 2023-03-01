@@ -47,7 +47,7 @@ class UserRead(UserBase):
     id: Optional[uuid.UUID]
     badges: Optional[List[BadgeRead]]
     staff_unit: Optional[StaffUnitRead]
-    actual_staff_unit:Optional[StaffUnitRead]
+    actual_staff_unit: Optional[StaffUnitRead]
     staff_division: Optional[StaffDivisionRead]
     rank: Optional[RankRead]
     email: Optional[EmailStr]

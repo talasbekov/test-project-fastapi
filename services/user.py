@@ -1,8 +1,10 @@
+import datetime
 import types
+from typing import Optional
 
 from sqlalchemy.orm import Session
 
-from exceptions import NotFoundException
+from exceptions import NotFoundException, InvalidOperationException
 from models import StaffDivision, User
 from schemas import (StaffDivisionUpdate, UserCreate, UserPermission, UserRead,
                      UserUpdate, UserGroupUpdate, UserServiceFunction)
@@ -28,40 +30,67 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         user = db.query(self.model).filter(User.email == email).first()
 
         return user
-    
+
     def get_by_call_sign(self, db: Session, call_sign: str):
-        
+
         user = db.query(self.model).filter(User.call_sign == call_sign).first()
-        
+
         return user
-    
+
     def get_by_id_number(self, db: Session, id_number: str):
-        
+
         user = db.query(self.model).filter(self.model.id_number == id_number).first()
-        
+
         return user
 
-    def update_user_group(self,
-                          db: Session,
-                          body: UserGroupUpdate
-                          ) -> User:
-        user = self.get_by_id(db, body.user_id)
+    def update_user_patch(self, db: Session, id: str, body: UserUpdate) -> User:
 
-        staff_division_service.get_by_id(db, body.group_id)
+        user = self.get_by_id(db, id)
 
-        user.staff_division_id = body.group_id
+        if body.email is not None:
+            user.email = body.email
+        if body.first_name is not None:
+            user.first_name = body.first_name
+        if body.last_name is not None:
+            user.last_name = body.last_name
+        if body.father_name is not None:
+            user.father_name = body.father_name
+        if body.staff_division_id is not None:
+            user.staff_division_id = staff_division_service.get_by_id(db, body.staff_division_id)
+        if body.staff_unit_id is not None:
+            user.staff_unit_id = staff_unit_service.get_by_id(db, body.staff_unit_id)
+        if body.staff_unit_id is not None:
+            user.staff_unit_id = staff_unit_service.get_by_id(db, body.staff_unit_id)
+        if body.icon is not None:
+            user.icon = body.icon
+        if body.call_sign is not None:
+            user.call_sign = body.call_sign
+        if body.id_number is not None:
+            user.id_number = body.id_number
+        if body.phone_number is not None:
+            user.phone_number = body.phone_number
+        if body.address is not None:
+            user.address = body.address
+        if body.birthday is not None:
+            user.birthday = body.birthday
+        if body.status is not None:
+            user.status = body.status
+        if body.status_till is not None:
+            user.status_till = body.status_till
+
         db.add(user)
         db.flush()
 
         return user
-    
+
     def get_fields(self):
-        fields = [key for key, value in User.__dict__.items() if (not 'id' in key and not isinstance(value, CALLABLES) and not key.startswith('_'))]
+        fields = [key for key, value in User.__dict__.items() if
+                  (not 'id' in key and not isinstance(value, CALLABLES) and not key.startswith('_'))]
         return fields
 
     def add_permission(self, db: Session, body: UserPermission):
         user = self.get_by_id(db, body.user_id)
- 
+
         for id in body.permission_ids:
             permission = permission_service.get_by_id(db, id)
             if permission not in user.permissions:
@@ -72,7 +101,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
     def remove_permission(self, db: Session, body: UserPermission):
         user = self.get_by_id(db, body.user_id)
-        
+
         for id in body.permission_ids:
             permission = permission_service.get(db, id)
             if permission is None:
