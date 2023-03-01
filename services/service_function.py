@@ -1,13 +1,14 @@
 from sqlalchemy.orm import Session
 
-from models import ServiceFunction
-from schemas import ServiceFunctionCreate, ServiceFunctionUpdate, ServiceFunctionTypeRead
 from exceptions.client import NotFoundException
+from models import ServiceStaffFunction
+from schemas import (ServiceFunctionCreate, ServiceFunctionTypeRead,
+                     ServiceFunctionUpdate)
 
 from .base import ServiceBase
 
 
-class ServiceFunctionService(ServiceBase[ServiceFunction, ServiceFunctionCreate, ServiceFunctionUpdate]):
+class ServiceFunctionService(ServiceBase[ServiceStaffFunction, ServiceFunctionCreate, ServiceFunctionUpdate]):
 
     def get_by_id(self, db: Session, id: str):
         service_function = super().get(db, id)
@@ -16,4 +17,4 @@ class ServiceFunctionService(ServiceBase[ServiceFunction, ServiceFunctionCreate,
         return service_function
 
 
-service_function_service = ServiceFunctionService(ServiceFunction)
+service_function_service = ServiceFunctionService(ServiceStaffFunction)
