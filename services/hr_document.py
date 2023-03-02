@@ -63,7 +63,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         step = hr_document_step_service.get_initial_step_for_template(db, template.id)
 
-        if role != step.staff_unit.name:
+        if role != step.staff_unit.id:
             raise ForbiddenException(detail=f'Вы не можете инициализировать этот документ!')
 
         user: User = user_service.get_by_id(db, user_id)
@@ -98,7 +98,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         info = hr_document_info_service.get_last_unsigned_step_info(db, id)
 
-        if role != info.hr_document_step.staff_unit.name:
+        if role != info.hr_document_step.staff_unit.id:
             raise ForbiddenException(detail=f'Вы не можете подписать этот документ из-за роли!')
 
         if not self._check_for_department(db, user_service.get_by_id(db, user_id), document.users[0]):

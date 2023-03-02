@@ -15,3 +15,4 @@ from .staff_function import (DocumentFunctionType, DocumentStaffFunction,
 from .staff_unit import StaffUnit
 from .user import User
 from .user_stat import UserStat
+from .position import Position

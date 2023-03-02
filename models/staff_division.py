@@ -22,4 +22,4 @@ class StaffDivision(NamedNestedModel, Base):
     parent_group_id = Column(UUID(as_uuid=True), ForeignKey("staff_divisions.id"), nullable=True)
     description = Column(TEXT)
     children = relationship("StaffDivision")
-    staff_units = relationship("StaffUnit")
+    staff_units = relationship("StaffUnit", back_populates="staff_division")
