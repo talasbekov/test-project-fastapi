@@ -84,7 +84,22 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         if next_step is None:
             return self._finish_document(db, document, document.users)
 
-        hr_document_info_service.create_info_for_step(db, document.id, step.id, user.id, True)
+        comm = ""
+
+        for key in list(template.properties):
+            value = template.properties[key]
+
+            if value['type'] != "read" and value['data_taken'] != "manual":
+                continue
+
+            if comm != "":
+                comm = ", " + comm + value['alias_name'] + ": " + document.properties[key]
+            else:
+                comm = comm + value['alias_name'] + ": " + document.properties[key] + ", "
+
+        print(comm)
+
+        hr_document_info_service.create_info_for_step(db, document.id, step.id, user.id, True, comm)
         hr_document_info_service.create_next_info_for_step(db, document.id, next_step.id)
 
         db.add(document)
@@ -125,7 +140,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
             step = hr_document_step_service.get_initial_step_for_template(db, document.document_template.id)
 
-            info = hr_document_info_service.create_info_for_step(db, document.id, step.id, None, None)
+            info = hr_document_info_service.create_info_for_step(db, document.id, step.id, None, None, "")
 
             document.status = HrDocumentStatus.ON_REVISION
 

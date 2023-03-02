@@ -30,13 +30,13 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
         
         return hr_document_info
     
-    def create_info_for_step(self, db: Session, document_id: str, step_id: str, user_id: str, is_signed: bool):
+    def create_info_for_step(self, db: Session, document_id: str, step_id: str, user_id: str, is_signed: bool, comment: str):
 
         document_info = HrDocumentInfoCreate(
             hr_document_id=document_id,
             hr_document_step_id=step_id,
             signed_by=user_id,
-            comment="",
+            comment=comment,
             is_signed=is_signed,
             signed_at=datetime.now()
         )
