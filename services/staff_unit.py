@@ -8,7 +8,7 @@ from .base import ServiceBase
 
 
 class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate]):
-    def get_by_id(self, db: Session, id: str):
+    def get_by_id(self, db: Session, id: str) -> StaffUnit:
         position = super().get(db, id)
         if position is None:
             raise NotFoundException(detail="StaffUnit is not found!")

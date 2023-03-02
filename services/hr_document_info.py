@@ -7,7 +7,7 @@ from sqlalchemy import and_, asc, desc, or_
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
-from models import HrDocumentInfo, HrDocumentStep
+from models import HrDocumentInfo, HrDocumentStep, HrDocument
 from schemas import (HrDocumentInfoCreate, HrDocumentInfoRead,
                      HrDocumentInfoUpdate)
 from services import (hr_document_step_service, staff_division_service,
@@ -64,15 +64,21 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
 
         return infos
     
-    def get_all(self, db: Session, staff_unit_id, skip: int, limit: int) -> list[HrDocumentInfo]:
-        
+    def get_all(self, db: Session, staff_unit_id, document_id: str, skip: int, limit: int) -> list[HrDocumentInfo]:
+
+        document = db.query(HrDocument).filter(HrDocument.id == document_id).first()
+        if document is None:
+            raise NotFoundException(f'HrDocument is not found!')
+
+        last_step_id = hr_document_step_service.get_by_id(db, document.last_step)
+
         infos = db.query(HrDocumentInfo).filter(
             or_(
                 and_(
                     HrDocumentInfo.is_signed == None,
-                    HrDocumentInfo.hr_document_step.has(staff_unit_id = staff_unit_id)
+                    HrDocumentInfo.hr_document_step.has(staff_unit_id=staff_unit_id)
                 ),
-                HrDocumentInfo.hr_document_step.has(previous_step_id = None)
+                HrDocumentInfo.document.has(last_step_id=None)
             )
         ).order_by(
             desc(HrDocumentInfo.created_at)
