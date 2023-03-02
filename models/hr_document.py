@@ -30,6 +30,7 @@ class HrDocument(Model, Base):
     properties = Column(JSON(none_as_null=True))
     reg_number = Column(String, unique=True)
     signed_at = Column(TIMESTAMP(timezone=True), nullable=True)
+    last_step_id = Column(UUID(as_uuid=True), ForeignKey("hr_document_steps.id"))
 
     document_template = relationship("HrDocumentTemplate", back_populates="documents", cascade="all,delete")
     equipments = relationship("Equipment", secondary=hr_document_equipments,
@@ -40,3 +41,4 @@ class HrDocument(Model, Base):
         back_populates="hr_documents",
         cascade="all,delete"
     )
+    last_step = relationship("HrDocumentStep")
