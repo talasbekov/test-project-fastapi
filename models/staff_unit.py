@@ -6,6 +6,8 @@ from sqlalchemy.orm import relationship
 
 from core import Base
 
+from .association import staff_unit_functions
+
 
 class StaffUnit(Base):
 
@@ -21,3 +23,17 @@ class StaffUnit(Base):
                         nullable=False, server_default=text("now()"))
     updated_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))
+
+    document_staff_functions = relationship(
+        "DocumentStaffFunction",
+        secondary=staff_unit_functions,
+        backref='staff_units',
+        cascade="all,delete"
+    )
+
+    service_staff_functions = relationship(
+        "ServiceStaffFunction",
+        secondary=staff_unit_functions,
+        backref="staff_units",
+        cascade="all,delete"
+    )

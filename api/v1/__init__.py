@@ -1,7 +1,10 @@
 from fastapi import APIRouter
 
 from .hr_document import router as hr_document_router
-from .staff_function import router as staff_function_router
+from .document_staff_function_type import router as document_staff_function_type_router
+from .document_staff_function import router as document_staff_function_router
+from .service_staff_function_type import router as service_staff_function_type_router
+from .service_staff_function import router as service_staff_function_router
 from .staff_division import router as staff_division_router
 from .hr_document_info import router as hr_document_info_router
 from .hr_document_step import router as hr_document_step_router
@@ -20,7 +23,10 @@ router = APIRouter(prefix="/v1")
 router.include_router(auth_router)
 router.include_router(user_router)
 router.include_router(hr_document_router)
-router.include_router(staff_function_router)
+router.include_router(service_staff_function_type_router)
+router.include_router(service_staff_function_router)
+router.include_router(document_staff_function_type_router)
+router.include_router(document_staff_function_router)
 router.include_router(staff_division_router)
 router.include_router(hr_document_info_router)
 router.include_router(hr_document_step_router)

@@ -9,6 +9,7 @@ from .hr_document_template import HrDocumentTemplate, SubjectType
 from .permission import Permission
 from .staff_unit import StaffUnit
 from .rank import Rank
-from .staff_function import RoleName, StaffFunction
+from .staff_function import (ServiceFunctionType, DocumentFunctionType,
+                             RoleName, StaffFunction, DocumentStaffFunction, ServiceStaffFunction)
 from .user import User
 from .user_stat import UserStat

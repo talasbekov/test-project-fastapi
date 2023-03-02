@@ -558,23 +558,28 @@ def upgrade() -> None:
         [{
             'id': role_id,
             'name': "Согласующий",
-            'can_cancel': True
+            'can_cancel': True,
+            'discriminator': "document_staff_function"
         }, {
             'id': role2_id,
             'name': "Эксперт",
-            'can_cancel': False
+            'can_cancel': False,
+            'discriminator': "document_staff_function"
         }, {
             'id': role3_id,
             'name': "Утверждающий",
-            'can_cancel': True
+            'can_cancel': True,
+            'discriminator': "document_staff_function"
         }, {
             'id': role4_id,
             'name': "Уведомляемый",
-            'can_cancel': False
+            'can_cancel': False,
+            'discriminator': "document_staff_function"
         }, {
             'id': role5_id,
             'name': "Инициатор",
-            'can_cancel': True
+            'can_cancel': True,
+            'discriminator': "document_staff_function"
         }]
     )
 

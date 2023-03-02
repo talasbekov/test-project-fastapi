@@ -64,11 +64,28 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['parent_group_id'], ['staff_divisions.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('service_function_types',
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('name', sa.String(), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('document_function_types',
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('name', sa.String(), nullable=False),
+    sa.Column('can_cancel', sa.Boolean(), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('staff_functions',
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('name', sa.String(length=255), nullable=False),
-    sa.Column('can_cancel', sa.Boolean(), nullable=False),
-    sa.PrimaryKeyConstraint('id')
+    sa.Column('hours_per_week', sa.Integer(), nullable=True),
+    sa.Column('discriminator', sa.String(length=255), nullable=True),
+    sa.Column('priority', sa.Integer(), nullable=True),
+    sa.Column('role_id', sa.UUID(), nullable=True),
+    sa.Column('type_id', sa.UUID(), nullable=True),
+    sa.PrimaryKeyConstraint('id'),
+    sa.ForeignKeyConstraint(['role_id'], ['document_function_types.id'], ),
+    sa.ForeignKeyConstraint(['type_id'], ['service_function_types.id'], )
     )
     op.create_table('hr_documents',
     sa.Column('id', sa.UUID(), nullable=False),
@@ -202,6 +219,12 @@ def upgrade() -> None:
     sa.Column('badge_id', sa.UUID(), nullable=True),
     sa.ForeignKeyConstraint(['badge_id'], ['badges.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], )
+    )
+    op.create_table('staff_unit_functions',
+    sa.Column('staff_unit_id', sa.UUID(), nullable=False),
+    sa.Column('staff_function_id', sa.UUID(), nullable=False),
+    sa.ForeignKeyConstraint(['staff_unit_id'], ['staff_units.id'], ),
+    sa.ForeignKeyConstraint(['staff_function_id'], ['staff_functions.id'], )
     )
     # ### end Alembic commands ###
 

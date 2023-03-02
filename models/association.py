@@ -29,3 +29,10 @@ user_permissions = Table(
     Column("user_id", ForeignKey("users.id", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True),
     Column("permission_id", ForeignKey("permissions.id", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)
 )
+
+staff_unit_functions = Table(
+    "staff_unit_functions",
+    Base.metadata,
+    Column("staff_unit_id", ForeignKey("staff_units.id")),
+    Column("staff_function_id", ForeignKey("staff_functions.id"))
+)
