@@ -1,9 +1,9 @@
-from typing import Type, TypeVar, Optional, List, Any, Union, Dict, Generic
+from typing import Any, Dict, Generic, List, Optional, Type, TypeVar, Union
 
-from pydantic import BaseModel
-from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 from fastapi.encoders import jsonable_encoder
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
 
 from core import Base
 

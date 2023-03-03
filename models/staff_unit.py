@@ -5,28 +5,27 @@ from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID
 from sqlalchemy.orm import relationship
 
 from core import Base
+from models import Model
 
-from .association import staff_unit_functions
+from .association import staff_unit_function
 
 
-class StaffUnit(Base):
+class StaffUnit(Model, Base):
 
     __tablename__ = "staff_units"
 
-    id = Column(UUID(as_uuid=True), primary_key=True,
-                nullable=False, default=uuid.uuid4)
-    name = Column(String, nullable=True)
-    max_rank_id = Column(UUID(as_uuid=True), ForeignKey("ranks.id"),
-                         nullable=True)
+    position_id = Column(UUID(as_uuid=True), ForeignKey("positions.id"), nullable=False)
+    staff_division_id = Column(UUID(as_uuid=True), ForeignKey("staff_divisions.id"), nullable=False)
 
-    created_at = Column(TIMESTAMP(timezone=True),
-                        nullable=False, server_default=text("now()"))
-    updated_at = Column(TIMESTAMP(timezone=True),
-                        nullable=False, server_default=text("now()"))
+    position = relationship("Position", cascade="all,delete")
+    staff_division = relationship("StaffDivision", back_populates="staff_units", cascade="all,delete")
+
+    users = relationship("User", back_populates="staff_unit", foreign_keys='User.staff_unit_id')
+    actual_users = relationship("User", back_populates="actual_staff_unit", foreign_keys='User.actual_staff_unit_id')
 
     staff_functions = relationship(
         "StaffFunction",
-        secondary=staff_unit_functions,
+        secondary=staff_unit_function,
         back_populates='staff_units',
         cascade="all,delete"
     )

@@ -1,10 +1,10 @@
 from sqlalchemy.orm import Session
 
-from .base import ServiceBase
-
-from models import Rank
-from schemas import RankCreate, RankUpdate, RankRead
 from exceptions.client import NotFoundException
+from models import Rank
+from schemas import RankCreate, RankRead, RankUpdate
+
+from .base import ServiceBase
 
 
 class RankService(ServiceBase[Rank, RankCreate, RankUpdate]):

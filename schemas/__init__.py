@@ -18,6 +18,8 @@ from .staff_division import (StaffDivisionCreate, StaffDivisionRead,
                              StaffDivisionUpdate, StaffDivisionUpdateParentGroup)
 from .hr_document_step import (HrDocumentStepCreate, HrDocumentStepRead,
                                HrDocumentStepUpdate)
+from .service_function_type import ServiceFunctionTypeCreate, ServiceFunctionTypeUpdate, ServiceFunctionTypeRead
+from .service_function import ServiceFunctionCreate, ServiceFunctionUpdate, ServiceFunctionRead, UserServiceFunction
 from .user import UserCreate, UserRead, UserUpdate, UserGroupUpdate
 from .hr_document import (HrDocumentCreate, HrDocumentInit, HrDocumentRead,
                           HrDocumentSign, HrDocumentUpdate)
@@ -25,4 +27,5 @@ from .hr_document import (HrDocumentCreate, HrDocumentInit, HrDocumentRead,
 from .hr_document_info import (HrDocumentInfoCreate, HrDocumentInfoRead,
                                HrDocumentInfoUpdate, HrDocumentHistoryRead)
 from .user_stat import UserStatCreate, UserStatRead, UserStatUpdate
+from .jurisdiction import JurisdictionRead, JurisdictionCreate, JurisdictionUpdate
 from .auth import LoginForm, RegistrationForm

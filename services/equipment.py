@@ -1,10 +1,10 @@
 from sqlalchemy.orm import Session
 
-from .base import ServiceBase
-
+from exceptions.client import NotFoundException
 from models import Equipment
 from schemas import EquipmentCreate, EquipmentUpdate
-from exceptions.client import NotFoundException
+
+from .base import ServiceBase
 
 
 class EquipmentService(ServiceBase[Equipment, EquipmentCreate, EquipmentUpdate]):

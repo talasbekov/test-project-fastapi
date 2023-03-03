@@ -11,6 +11,7 @@ class HrDocumentStepBase(BaseModel):
     previous_step_id: Optional[uuid.UUID]
     staff_unit_id: uuid.UUID
     staff_function_id: uuid.UUID
+    jurisdiction_is: uuid.UUID
 
 
 class HrDocumentStepCreate(HrDocumentStepBase):
@@ -30,6 +31,7 @@ class HrDocumentStepRead(HrDocumentStepBase):
     staff_function_id: Optional[uuid.UUID]
     staff_function: Optional[StaffFunctionRead]
     staff_unit: Optional[StaffUnitRead]
+    jurisdiction_id: Optional[uuid.UUID]
 
     class Config:
         orm_mode = True

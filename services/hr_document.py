@@ -63,7 +63,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         step = hr_document_step_service.get_initial_step_for_template(db, template.id)
 
-        if role != step.staff_unit.name:
+        if role != step.staff_unit.id:
             raise ForbiddenException(detail=f'Вы не можете инициализировать этот документ!')
 
         user: User = user_service.get_by_id(db, user_id)
@@ -113,7 +113,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         info = hr_document_info_service.get_last_unsigned_step_info(db, id)
 
-        if role != info.hr_document_step.staff_unit.name:
+        if role != info.hr_document_step.staff_unit.id:
             raise ForbiddenException(detail=f'Вы не можете подписать этот документ из-за роли!')
 
         if not self._check_for_department(db, user_service.get_by_id(db, user_id), document.users[0]):
@@ -136,7 +136,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
             next_step = hr_document_step_service.get_next_step_from_id(db, info.hr_document_step_id)
 
-            if next_step is None:
+            if info.hr_document_step.staff_function.name == "Утверждающий": # Закончить на staff function Утверждающий
                 return self._finish_document(db, document, document.users)
 
             hr_document_info_service.create_next_info_for_step(db, document.id, next_step.id)
@@ -344,11 +344,11 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         response.new_value = new_val
 
         return response
-    
+
     def _check_for_department(self, db: Session, user: User, subject: User) -> bool:
 
         department_id = staff_division_service.get_department_id_from_staff_division_id(db, user.staff_division_id)
-        
+
         subject_department_id = staff_division_service.get_department_id_from_staff_division_id(db, subject.staff_division_id)
 
         print(department_id, subject_department_id)

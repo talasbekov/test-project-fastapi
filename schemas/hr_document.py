@@ -66,7 +66,6 @@ class HrDocumentRead(HrDocumentBase):
 
     new_value: Optional[dict]
 
-
     class Config:
         orm_mode = True
     

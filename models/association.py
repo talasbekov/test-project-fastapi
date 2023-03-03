@@ -23,16 +23,9 @@ hr_documents_users = Table(
     Column("subject_id", ForeignKey("users.id"))
 )
 
-user_permissions = Table(
-    "user_permissions",
-    Base.metadata,
-    Column("user_id", ForeignKey("users.id", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True),
-    Column("permission_id", ForeignKey("permissions.id", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)
-)
-
-staff_unit_functions = Table(
+staff_unit_function = Table(
     "staff_unit_functions",
     Base.metadata,
-    Column("staff_unit_id", ForeignKey("staff_units.id")),
-    Column("staff_function_id", ForeignKey("staff_functions.id"))
+    Column("staff_unit_id", ForeignKey("staff_units.id", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True),
+    Column("staff_function_id", ForeignKey("staff_functions.id", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)
 )

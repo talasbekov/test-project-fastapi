@@ -1,8 +1,8 @@
-"""feature: added migrations
+"""migration
 
-Revision ID: 33964fd38527
-Revises: f2bfe17f02b7
-Create Date: 2023-02-25 17:24:21.028216
+Revision ID: 9fae9da641dd
+Revises: f04c5daf7685
+Create Date: 2023-03-02 11:47:59.787804
 
 """
 import uuid
@@ -13,8 +13,8 @@ from alembic import op
 from core import Base
 
 # revision identifiers, used by Alembic.
-revision = '33964fd38527'
-down_revision = 'f2bfe17f02b7'
+revision = '9fae9da641dd'
+down_revision = 'f04c5daf7685'
 branch_labels = None
 depends_on = None
 
@@ -109,7 +109,7 @@ def upgrade() -> None:
     position17_id = get_uuid()
 
     op.bulk_insert(
-        Base.metadata.tables['staff_units'],
+        Base.metadata.tables['positions'],
         [{
             'id': position1_id,
             'name': 'Военно-служащий срочной службы',
@@ -181,6 +181,125 @@ def upgrade() -> None:
         }]
     )
 
+
+    jurisdiction1_id = get_uuid()
+    jurisdiction2_id = get_uuid()
+    jurisdiction3_id = get_uuid()
+    jurisdiction4_id = get_uuid()
+    jurisdiction5_id = get_uuid()
+    jurisdiction6_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['jurisdictions'],
+        [{
+            'id': jurisdiction1_id,
+            'name': "Вся служба"
+        }, {
+            'id': jurisdiction2_id,
+            'name': "Личный Состав"
+        }, {
+            'id': jurisdiction3_id,
+            'name': "Боевое Подразделение"
+        }, {
+            'id': jurisdiction4_id,
+            'name': "Штабное Подразделение"
+        }, {
+            'id': jurisdiction5_id,
+            'name': "Кандидаты"
+        }, {
+            'id': jurisdiction6_id,
+            'name': "Курьируемые сотрудники"
+        }]
+    )
+
+
+    staff_function1_id = get_uuid()
+    staff_function2_id = get_uuid()
+    staff_function3_id = get_uuid()
+    staff_function4_id = get_uuid()
+    staff_function5_id = get_uuid()
+    staff_function6_id = get_uuid()
+    staff_function7_id = get_uuid()
+    staff_function8_id = get_uuid()
+    staff_function9_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['staff_functions'],
+        [{
+            'id': staff_function1_id,
+            'hours_per_week' : 3,
+            'discriminator': 'document_staff_function',
+            'name' : 'Инициатор приказа о назначении',
+            'jurisdiction_id': jurisdiction1_id,
+            'priority': 1
+        },
+        {
+            'id': staff_function2_id,
+            'hours_per_week' : 3,
+            'discriminator': 'document_staff_function',
+            'name' : 'Эксперт приказа о назначении',
+            'jurisdiction_id': jurisdiction1_id,
+            'priority': 2
+        },
+        {
+            'id': staff_function3_id,
+            'hours_per_week' : 3,
+            'discriminator': 'document_staff_function',
+            'name' : 'Утверждающий приказа о назначении',
+            'jurisdiction_id': jurisdiction1_id,
+            'priority': 100
+        },
+        {
+            'id': staff_function4_id,
+            'hours_per_week' : 3,
+            'discriminator': 'document_staff_function',
+            'name' : 'Инициатор приказа о присвоения звания',
+            'jurisdiction_id': jurisdiction1_id,
+            'priority': 1
+        },
+        {
+            'id': staff_function5_id,
+            'hours_per_week' : 3,
+            'discriminator': 'document_staff_function',
+            'name' : 'Эксперт приказа о присвоения звания',
+            'jurisdiction_id': jurisdiction1_id,
+            'priority': 2
+        },
+        {
+            'id': staff_function6_id,
+            'hours_per_week' : 3,
+            'discriminator': 'document_staff_function',
+            'name' : 'Утверждающий приказа о присвоения звания',
+            'jurisdiction_id': jurisdiction1_id,
+            'priority': 100
+        },
+        {
+            'id': staff_function7_id,
+            'hours_per_week' : 3,
+            'discriminator': 'document_staff_function',
+            'name' : 'Инициатор приказа о присвоения черного берета',
+            'jurisdiction_id': jurisdiction1_id,
+            'priority': 1
+        },
+        {
+            'id': staff_function8_id,
+            'hours_per_week' : 3,
+            'discriminator': 'document_staff_function',
+            'name' : 'Эксперт приказа о присвоения черного берета',
+            'jurisdiction_id': jurisdiction1_id,
+            'priority': 2
+        },
+        {
+            'id': staff_function9_id,
+            'hours_per_week' : 3,
+            'discriminator': 'document_staff_function',
+            'name' : 'Утверждающий приказа о присвоения черного берета',
+            'jurisdiction_id': jurisdiction1_id,
+            'priority': 100
+        }]
+    )
+
+
     group1_id = get_uuid()
     group2_id = get_uuid()
     group3_id = get_uuid()
@@ -212,6 +331,7 @@ def upgrade() -> None:
         }]
     )
 
+
     user1_id = get_uuid()
     user2_id = get_uuid()
     user3_id = get_uuid()
@@ -222,6 +342,19 @@ def upgrade() -> None:
     user8_id = get_uuid()
     user9_id = get_uuid()
     user10_id = get_uuid()
+
+    staff_unit1_id = get_uuid()
+    staff_unit2_id = get_uuid()
+    staff_unit3_id = get_uuid()
+    staff_unit4_id = get_uuid()
+    staff_unit5_id = get_uuid()
+    staff_unit6_id = get_uuid()
+    staff_unit7_id = get_uuid()
+    staff_unit8_id = get_uuid()
+    staff_unit9_id = get_uuid()
+    staff_unit10_id = get_uuid()
+    staff_unit11_id = get_uuid()
+    staff_unit12_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['users'],
@@ -235,10 +368,11 @@ def upgrade() -> None:
                 group2_id,
                 "Альфа 1",
                 '1',
-                position1_id,
+                staff_unit1_id,
                 rank1_id,
-                position1_id,
-                "http://192.168.0.199:8083/static/Erzhan.png"),
+                staff_unit1_id,
+                "http://192.168.0.199:8083/static/Erzhan.png",
+                position1_id),
             create_user(
                 user2_id,
                 "Ахат",
@@ -248,10 +382,11 @@ def upgrade() -> None:
                 group3_id,
                 "Альфа 2",
                 '2',
-                position1_id,
+                staff_unit2_id,
                 rank1_id,
-                position1_id,
-                "http://192.168.0.199:8083/static/Erzhan.png"),
+                staff_unit2_id,
+                "http://192.168.0.199:8083/static/Erzhan.png",
+                position1_id),
             create_user(
                 user3_id,
                 "Асет",
@@ -261,10 +396,11 @@ def upgrade() -> None:
                 group3_id,
                 "Альфа 3",
                 '3',
-                position1_id,
+                staff_unit3_id,
                 rank1_id,
-                position1_id,
-                "http://192.168.0.199:8083/static/Almaz.png"),
+                staff_unit3_id,
+                "http://192.168.0.199:8083/static/Almaz.png",
+                position1_id),
             create_user(
                 user4_id,
                 "Жасулан",
@@ -274,10 +410,11 @@ def upgrade() -> None:
                 group3_id,
                 "Альфа 4",
                 '4',
-                position2_id,
+                staff_unit4_id,
                 rank2_id,
-                position2_id,
-                "http://192.168.0.199:8083/static/Adil.png"),
+                staff_unit4_id,
+                "http://192.168.0.199:8083/static/Adil.png",
+                position2_id),
             create_user(
                 user5_id,
                 "Ануар",
@@ -287,10 +424,11 @@ def upgrade() -> None:
                 group2_id,
                 "Альфа 5",
                 '5',
-                position1_id,
+                staff_unit5_id,
                 rank1_id,
-                position1_id,
-                "http://192.168.0.199:8083/static/Almaz.png"),
+                staff_unit5_id,
+                "http://192.168.0.199:8083/static/Almaz.png",
+                position1_id),
             create_user(
                 user6_id,
                 "Бексундет",
@@ -300,10 +438,11 @@ def upgrade() -> None:
                 group2_id,
                 "Альфа 6",
                 '6',
-                position3_id,
-                rank2_id,
-                position3_id,
-                "http://192.168.0.199:8083/static/Ernazar.png"),
+                staff_unit6_id,
+                rank3_id,
+                staff_unit6_id,
+                "http://192.168.0.199:8083/static/Ernazar.png",
+                position2_id),
             create_user(
                 user7_id,
                 "Ерден",
@@ -313,10 +452,11 @@ def upgrade() -> None:
                 group2_id,
                 "Альфа 7",
                 '7',
-                position1_id,
+                staff_unit7_id,
                 rank1_id,
-                position1_id,
-                "http://192.168.0.199:8083/static/Nurlan.png"),
+                staff_unit7_id,
+                "http://192.168.0.199:8083/static/Nurlan.png",
+                position1_id),
             create_user(
                 user8_id,
                 "Еркин",
@@ -326,10 +466,11 @@ def upgrade() -> None:
                 group3_id,
                 "Альфа 8",
                 '8',
-                position1_id,
+                staff_unit8_id,
                 rank1_id,
-                position1_id,
-                "http://192.168.0.199:8083/static/Erdaulet.png"),
+                staff_unit8_id,
+                "http://192.168.0.199:8083/static/Erdaulet.png",
+                position1_id),
             create_user(
                 user9_id,
                 "Арман",
@@ -339,10 +480,11 @@ def upgrade() -> None:
                 group3_id,
                 "Альфа 9",
                 '9',
-                position1_id,
+                staff_unit9_id,
                 rank1_id,
-                position1_id,
-                "http://192.168.0.199:8083/static/Erdaulet.png"),
+                staff_unit9_id,
+                "http://192.168.0.199:8083/static/Erdaulet.png",
+                position3_id),
             create_user(
                 user10_id,
                 "Бауыржан",
@@ -352,10 +494,11 @@ def upgrade() -> None:
                 group3_id,
                 "Альфа 10",
                 '10',
-                position4_id,
+                staff_unit10_id,
                 rank3_id,
-                position4_id,
-                "http://192.168.0.199:8083/static/Dima.png"),
+                staff_unit10_id,
+                "http://192.168.0.199:8083/static/Dima.png",
+                position4_id),
             create_user(
                 str(uuid.uuid4()),
                 "Админ",
@@ -365,11 +508,44 @@ def upgrade() -> None:
                 group3_id,
                 'admin',
                 '123456789',
-                position4_id,
+                staff_unit11_id,
                 rank3_id,
-                position4_id,
-                "http://192.168.0.199:8083/static/Erdaulet.png")
+                staff_unit11_id,
+                "http://192.168.0.199:8083/static/Erdaulet.png",
+                position4_id)
         ]
+    )
+
+    op.bulk_insert(
+        Base.metadata.tables['staff_unit_functions'],
+        [{
+            'staff_unit_id': staff_unit10_id,
+            'staff_function_id': staff_function9_id
+        }, {
+            'staff_unit_id': staff_unit10_id,
+            'staff_function_id': staff_function6_id
+        }, {
+            'staff_unit_id': staff_unit10_id,
+            'staff_function_id': staff_function3_id
+        }, {
+            'staff_unit_id': staff_unit6_id,
+            'staff_function_id': staff_function8_id
+        }, {
+            'staff_unit_id': staff_unit6_id,
+            'staff_function_id': staff_function5_id
+        }, {
+            'staff_unit_id': staff_unit6_id,
+            'staff_function_id': staff_function2_id
+        }, {
+            'staff_unit_id': staff_unit4_id,
+            'staff_function_id': staff_function7_id
+        }, {
+            'staff_unit_id': staff_unit4_id,
+            'staff_function_id': staff_function4_id
+        }, {
+            'staff_unit_id': staff_unit4_id,
+            'staff_function_id': staff_function1_id
+        }]
     )
 
     template1_id = get_uuid()
@@ -639,56 +815,47 @@ def upgrade() -> None:
         [{
             'hr_document_template_id': template1_id,
             'previous_step_id': None,
-            'staff_unit_id': position2_id,
-            'staff_function_id': role5_id,
+            'staff_function_id': staff_function1_id,
             'id': step1_1
         }, {
             'hr_document_template_id': template1_id,
             'previous_step_id': step1_1,
-            'staff_unit_id': position3_id,
-            'staff_function_id': role2_id,
+            'staff_function_id': staff_function2_id,
             'id': step1_2
         }, {
             'hr_document_template_id': template1_id,
             'previous_step_id': step1_2,
-            'staff_unit_id': position4_id,
-            'staff_function_id': role3_id,
+            'staff_function_id': staff_function5_id,
             'id': step1_3
         }, {
             'hr_document_template_id': template2_id,
             'previous_step_id': None,
-            'staff_unit_id': position2_id,
-            'staff_function_id': role5_id,
+            'staff_function_id': staff_function6_id,
             'id': step2_1
         }, {
             'hr_document_template_id': template2_id,
             'previous_step_id': step2_1,
-            'staff_unit_id': position3_id,
-            'staff_function_id': role2_id,
+            'staff_function_id': staff_function5_id,
             'id': step2_2
         }, {
             'hr_document_template_id': template2_id,
             'previous_step_id': step2_2,
-            'staff_unit_id': position4_id,
-            'staff_function_id': role3_id,
+            'staff_function_id': staff_function6_id,
             'id': step2_3
         }, {
             'hr_document_template_id': template3_id,
             'previous_step_id': None,
-            'staff_unit_id': position2_id,
-            'staff_function_id': role5_id,
+            'staff_function_id': staff_function7_id,
             'id': step3_1
         }, {
             'hr_document_template_id': template3_id,
             'previous_step_id': step3_1,
-            'staff_unit_id': position3_id,
-            'staff_function_id': role2_id,
+            'staff_function_id': staff_function8_id,
             'id': step3_2
         }, {
             'hr_document_template_id': template3_id,
             'previous_step_id': step3_2,
-            'staff_unit_id': position4_id,
-            'staff_function_id': role3_id,
+            'staff_function_id': staff_function9_id,
             'id': step3_3
         }]
     )
@@ -698,7 +865,17 @@ def get_uuid():
     return str(uuid.uuid4())
 
 
-def create_user(id, name, surname, father_name, email, group_id, call_sign, number,  position_id, rank_id, actual_position_id, icon):
+def create_user(id, name, surname, father_name, email, group_id, call_sign, number,  staff_unit_id, rank_id, actual_staff_unit_id, icon, position_id):
+    op.bulk_insert(
+        Base.metadata.tables['staff_units'],
+        [{
+            'id': staff_unit_id,
+            'user_id': id,
+            'position_id': position_id,
+            'staff_division_id': group_id
+        }]
+    )
+
     return {
         'id': id,
         'email': email,
@@ -706,14 +883,13 @@ def create_user(id, name, surname, father_name, email, group_id, call_sign, numb
         'first_name': name,
         'last_name': surname,
         'father_name': father_name,
-        'staff_division_id': group_id,
-        'staff_unit_id': position_id,
+        'staff_unit_id': staff_unit_id,
         'call_sign': call_sign,
         'id_number': number,
         'phone_number': '+77771234789',
         'address': 'Мангилик Ел, 1',
         'rank_id': rank_id,
-        'actual_staff_unit_id': actual_position_id,
+        'actual_staff_unit_id': actual_staff_unit_id,
         'status': "На работе",
         'icon': icon
     }

@@ -1,10 +1,10 @@
 from sqlalchemy.orm import Session
 
-from .base import ServiceBase
-
-from models import Badge
-from schemas import BadgeCreate, BadgeUpdate, BadgeRead
 from exceptions.client import NotFoundException
+from models import Badge
+from schemas import BadgeCreate, BadgeRead, BadgeUpdate
+
+from .base import ServiceBase
 
 
 class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
