@@ -7,7 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import StaffUnitCreate, StaffUnitRead, StaffUnitUpdate
+from schemas import StaffUnitCreate, StaffUnitRead, StaffUnitUpdate, StaffUnitFunctions
 from services import rank_service, staff_unit_service
 
 router = APIRouter(prefix="/staff_unit", tags=["StaffUnit"], dependencies=[Depends(HTTPBearer())])
@@ -109,3 +109,63 @@ async def delete(*,
     """
     Authorize.jwt_required()
     staff_unit_service.remove(db, id)
+
+
+@router.post("/add-service-staff-function", dependencies=[Depends(HTTPBearer())],
+             summary="Add ServiceStaffFunction")
+async def add_service_staff_function(*,
+    db: Session = Depends(get_db),
+    body: StaffUnitFunctions,
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Add ServiceStaffFunction to StaffUnit
+
+    """
+    Authorize.jwt_required()
+    staff_unit_service.add_service_staff_function(db, body)
+
+
+@router.post("/remove-service-staff-function", dependencies=[Depends(HTTPBearer())],
+             summary="Remove ServiceStaffFunction")
+async def remove_service_staff_function(*,
+    db: Session = Depends(get_db),
+    body: StaffUnitFunctions,
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Remove ServiceStaffFunction from StaffUnit
+
+    """
+    Authorize.jwt_required()
+    staff_unit_service.remove_service_staff_function(db, body)
+
+
+@router.post("/add-document-staff-function", dependencies=[Depends(HTTPBearer())],
+             summary="Add DocumentStaffFunction")
+async def add_document_staff_function(*,
+     db: Session = Depends(get_db),
+     body: StaffUnitFunctions,
+     Authorize: AuthJWT = Depends()
+):
+    """
+        Add DocumentStaffFunction to StaffUnit
+
+    """
+    Authorize.jwt_required()
+    staff_unit_service.add_document_staff_function(db, body)
+
+
+@router.post("/remove-document-staff-function", dependencies=[Depends(HTTPBearer())],
+             summary="Remove DocumentStaffFunction")
+async def remove_document_staff_function(*,
+        db: Session = Depends(get_db),
+        body: StaffUnitFunctions,
+        Authorize: AuthJWT = Depends()
+):
+    """
+        Remove DocumentStaffFunction from StaffUnit
+
+    """
+    Authorize.jwt_required()
+    staff_unit_service.remove_document_staff_function(db, body)

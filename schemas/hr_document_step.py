@@ -3,8 +3,7 @@ from typing import Any, List, Optional
 
 from pydantic import BaseModel
 
-from .staff_function import StaffFunctionRead
-from .staff_unit import StaffUnitRead
+from schemas import StaffFunctionRead, StaffUnitRead
 
 
 class HrDocumentStepBase(BaseModel):

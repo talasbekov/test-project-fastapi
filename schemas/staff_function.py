@@ -1,10 +1,9 @@
 import uuid
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel
 
-from .staff_function_type import (DocumentStaffFunctionTypeRead,
-                                  ServiceStaffFunctionTypeRead)
+from schemas import DocumentStaffFunctionTypeRead, ServiceStaffFunctionTypeRead
 
 
 class StaffFunctionBase(BaseModel):
@@ -46,6 +45,11 @@ class DocumentStaffFunctionUpdate(DocumentStaffFunctionBase):
     pass
 
 
+class StaffUnitFunctions(BaseModel):
+    staff_unit_id: uuid.UUID
+    staff_function_ids: List[uuid.UUID]
+
+
 class StaffFunctionRead(StaffFunctionBase):
     id: Optional[uuid.UUID]
     name: Optional[str]
@@ -64,5 +68,5 @@ class DocumentStaffFunctionRead(StaffFunctionRead):
 
 class ServiceStaffFunctionRead(StaffFunctionRead):
 
-    type_id = Optional[uuid.UUID]
-    type = Optional[ServiceStaffFunctionTypeRead]
+    type_id: Optional[uuid.UUID]
+    type: Optional[ServiceStaffFunctionTypeRead]

@@ -4,9 +4,7 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from .hr_document import HrDocumentRead
-from .hr_document_step import HrDocumentStepRead
-from .user import UserRead
+from schemas import HrDocumentRead, HrDocumentStepRead, UserRead
 
 
 class HrDocumentInfoBase(BaseModel):
