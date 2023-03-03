@@ -10,7 +10,7 @@ from .hr_document import (HrDocumentCreate, HrDocumentInit, HrDocumentRead,
 from .permission import (PermissionCreate, PermissionRead, PermissionUpdate,
                          UserPermission)
 from .rank import RankCreate, RankRead, RankUpdate
-from .staff_function import StaffFunctionCreate, StaffFunctionRead, StaffFunctionUpdate
+from .staff_function import (StaffFunctionCreate, StaffFunctionRead, StaffFunctionUpdate)
 from .staff_division import (StaffDivisionCreate, StaffDivisionRead,
                              StaffDivisionUpdate, StaffDivisionUpdateParentGroup)
 from .staff_unit import StaffUnitCreate, StaffUnitRead, StaffUnitUpdate

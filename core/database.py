@@ -29,15 +29,15 @@ def get_db():
     try:
         yield db
         db.commit()
-    except Exception as e:
-        db.rollback()
-        if isinstance(e, HTTPException):
-            raise e
-        elif isinstance(e, ExpiredSignatureError):
-            raise HTTPException(status_code=400, detail=f"Signature is expired!")
-        else:
-            logging.error("%s", e, exc_info=True)
-            raise HTTPException(status_code=400, detail=str(e))
+    # except Exception as e:
+    #     db.rollback()
+    #     if isinstance(e, HTTPException):
+    #         raise e
+    #     elif isinstance(e, ExpiredSignatureError):
+    #         raise HTTPException(status_code=400, detail=f"Signature is expired!")
+    #     else:
+    #         logging.error("%s", e, exc_info=True)
+    #         raise HTTPException(status_code=400, detail=str(e))
     finally:
         if db:
             db.close()

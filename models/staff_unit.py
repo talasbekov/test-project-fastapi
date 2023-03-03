@@ -14,11 +14,13 @@ class StaffUnit(Model, Base):
 
     __tablename__ = "staff_units"
 
-    position_id = Column(UUID(as_uuid=True), nullable=False)
-    staff_division_id = Column(UUID(as_uuid=True), nullable=False)
+    position_id = Column(UUID(as_uuid=True), ForeignKey("positions.id"), nullable=False)
+    staff_division_id = Column(UUID(as_uuid=True), ForeignKey("staff_divisions.id"), nullable=False)
 
-    user = relationship("User")
     staff_functions = relationship("StaffFunction",
                                    secondary=staff_unit_function)
     position = relationship("Position", cascade="all,delete")
-    staff_division = relationship("StaffDivision", cascade="all,delete")
+    staff_division = relationship("StaffDivision", back_populates="staff_units", cascade="all,delete")
+
+    users = relationship("User", back_populates="staff_unit", foreign_keys='User.staff_unit_id')
+    actual_users = relationship("User", back_populates="actual_staff_unit", foreign_keys='User.actual_staff_unit_id')

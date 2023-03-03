@@ -1,9 +1,10 @@
-import datetime
+
 import random
 import tempfile
 import urllib.parse
 import urllib.request
 import uuid
+from datetime import datetime
 from typing import List
 
 from docxtpl import DocxTemplate
@@ -14,7 +15,8 @@ from sqlalchemy.orm import Session
 from core import Base
 from exceptions import (BadRequestException, ForbiddenException,
                         InvalidOperationException, NotFoundException)
-from models import HrDocument, HrDocumentInfo, HrDocumentStatus, User
+from models import (HrDocument, HrDocumentInfo, HrDocumentStatus, 
+                    User, HrDocumentStep, StaffUnit)
 from schemas import (HrDocumentCreate, HrDocumentInit, HrDocumentRead,
                      HrDocumentSign, HrDocumentUpdate)
 from services import (badge_service, hr_document_info_service,
@@ -61,73 +63,98 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         template = hr_document_template_service.get_by_id(db, body.hr_document_template_id)
 
-        step = hr_document_step_service.get_initial_step_for_template(db, template.id)
+        step: HrDocumentStep = hr_document_step_service.get_initial_step_for_template(db, template.id)
 
-        if role != step.staff_unit.name:
+        staff_unit: StaffUnit = staff_unit_service.get_by_id(db, role)
+        
+        if step.staff_function not in staff_unit.staff_functions:
             raise ForbiddenException(detail=f'Вы не можете инициализировать этот документ!')
 
-        user: User = user_service.get_by_id(db, user_id)
+        all_steps: list = hr_document_step_service.get_all_by_document_template_id(db, template.id)
+        all_steps.remove(step)
+        
 
+        if len(all_steps) < 2:
+            raise BadRequestException(detail='Документ должен иметь хотя бы 2 шага!')
+
+        print(body.document_step_users_ids)
+        users = [v for _, v in body.document_step_users_ids.items()]
+        
+        if len(users) != len(all_steps):
+            raise BadRequestException(detail='Количество пользователей не соответствует количеству шагов!')
+        current_user = user_service.get_by_id(db, user_id)
+        
         document: HrDocument = super().create(db, HrDocumentCreate(
             hr_document_template_id=body.hr_document_template_id,
             status=HrDocumentStatus.INITIALIZED,
             due_date=body.due_date,
             properties=body.properties
         ))
+        document_info_initiator = hr_document_info_service.create_info_for_step(db, document.id, step.id, user_id, True)
+        
+        hr_document_info_service.sign(db, document_info_initiator, current_user, None, True)
+         
+        for step, user_id in zip(all_steps, users):
+             
+            hr_document_info_service.create_info_for_step(db, document.id, step.id, user_id, None)
+              
+        users_document = [user_service.get_by_id(db, user_id) for user_id in body.user_ids]
 
-        users = [user_service.get_by_id(db, i) for i in body.user_ids]
+        document.last_step_id = all_steps[1].id
+        document.users = users_document
 
-        document.users = users
-
-        next_step = hr_document_step_service.get_next_step_from_id(db, step.id)
-
-        if next_step is None:
-            return self._finish_document(db, document, document.users)
-
-        hr_document_info_service.create_info_for_step(db, document.id, step.id, user.id, True)
-        hr_document_info_service.create_next_info_for_step(db, document.id, next_step.id)
-
+        
         db.add(document)
         db.flush()
 
         return document
 
-    def sign(self, db: Session, id: str, body: HrDocumentSign, user_id: str, role: str):
+    def sign(self, db: Session, document_id: str, body: HrDocumentSign, user_id: str, role: str):
 
-        document = self.get_by_id(db, id)
+        document = self.get_by_id(db, document_id)
 
-        info = hr_document_info_service.get_last_unsigned_step_info(db, id)
+        info = hr_document_info_service.get_by_document_id_and_step_id(db, document_id, document.last_step_id)
 
-        if role != info.hr_document_step.staff_unit.name:
+        staff_unit = staff_unit_service.get_by_id(db, role)
+
+        if info.hr_document_step.staff_function not in staff_unit.staff_functions:
             raise ForbiddenException(detail=f'Вы не можете подписать этот документ из-за роли!')
-
-        if not self._check_for_department(db, user_service.get_by_id(db, user_id), document.users[0]):
-            raise ForbiddenException(detail=f'Вы не можете подписать документ относящийся не к вашему департаменту!')
 
         user: User = user_service.get_by_id(db, user_id)
 
-        if not info.hr_document_step.staff_function.can_cancel:
-            body.is_signed = True
+        if not self._check_for_department(db, user, document.users[0]):
+            raise ForbiddenException(detail=f'Вы не можете подписать документ относящийся не к вашему департаменту!')
 
-        hr_document_info_service.sign(db, info, user_id, body.comment, body.is_signed)
+         
+
+        hr_document_info_service.sign(db, info, user, body.comment, body.is_signed)
 
         if body.is_signed:
+            
+            next_step = hr_document_step_service.get_next_step_from_priority(db, document.id, info.hr_document_step.staff_function.priority)
 
-            next_step = hr_document_step_service.get_next_step_from_id(db, info.hr_document_step_id)
-
-            if info.hr_document_step.staff_function.name == "Утверждающий": # Закончить на staff function Утверждающий
+            if next_step is None:
                 return self._finish_document(db, document, document.users)
 
-            hr_document_info_service.create_next_info_for_step(db, document.id, next_step.id)
+            document.last_step = next_step
+
             document.status = HrDocumentStatus.IN_PROGRESS
 
         else:
 
-            step = hr_document_step_service.get_initial_step_for_template(db, document.document_template.id)
+            steps = hr_document_step_service.get_all_by_document_template_id(db, document.hr_document_template_id)
 
-            info = hr_document_info_service.create_info_for_step(db, document.id, step.id, None, None)
+            for step in steps:
+
+                hr_document_info_service.create_info_for_step(db, document.id, step.id, user.id, None)
+
+                if step == info.hr_document_step:
+                    break
+
+            document.last_step = steps[0]
 
             document.status = HrDocumentStatus.ON_REVISION
+
 
         db.add(document)
         db.flush()
@@ -229,7 +256,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                                 raise BadRequestException(f'Обьект {key} должен иметь value!')
                             self._set_attr(db, user, value['field_name'], val['value'])
 
-        document.signed_at = datetime.datetime.now()
+        document.signed_at = datetime.now()
         document.reg_number = str(random.randint(1, 10000)) + "-" + str(random.randint(1, 10000)) + "қбп/жқ"
 
         db.add(document)
@@ -319,11 +346,9 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
     def _check_for_department(self, db: Session, user: User, subject: User) -> bool:
 
-        department_id = staff_division_service.get_department_id_from_staff_division_id(db, user.staff_division_id)
+        department_id = staff_division_service.get_department_id_from_staff_division_id(db, user.staff_unit.staff_division_id)
 
-        subject_department_id = staff_division_service.get_department_id_from_staff_division_id(db, subject.staff_division_id)
-
-        print(department_id, subject_department_id)
+        subject_department_id = staff_division_service.get_department_id_from_staff_division_id(db, subject.staff_unit.staff_division_id)
 
         if department_id == subject_department_id:
             return True

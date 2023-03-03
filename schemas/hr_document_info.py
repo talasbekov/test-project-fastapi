@@ -11,7 +11,8 @@ from .user import UserRead
 
 class HrDocumentInfoBase(BaseModel):
     hr_document_step_id: uuid.UUID
-    signed_by: Optional[uuid.UUID]
+    signed_by_id: Optional[uuid.UUID]
+    assigned_to_id: Optional[uuid.UUID]
     comment: str
     is_signed: Optional[bool]
     hr_document_id: uuid.UUID
@@ -33,7 +34,8 @@ class HrDocumentInfoRead(HrDocumentInfoBase):
     comment: Optional[str]
     hr_document_id: Optional[uuid.UUID]
     hr_document: Optional[HrDocumentRead]
-    signee: Optional[UserRead]
+    signed_by: Optional[UserRead]
+    assigned_to: Optional[UserRead]
     
 
     class Config:

@@ -122,7 +122,7 @@ async def delete(*,
              summary="Sign HrDocument")
 async def sign(*,
     db: Session = Depends(get_db),
-    id: uuid.UUID,
+    document_id: uuid.UUID,
     body: HrDocumentSign,
     Authorize: AuthJWT = Depends()
 ):
@@ -138,7 +138,7 @@ async def sign(*,
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
     role = Authorize.get_raw_jwt()['role']
-    hr_document_service.sign(db, id, body, user_id, role)
+    hr_document_service.sign(db, document_id, body, user_id, role)
 
 @router.get("/{id}/", response_model=HrDocumentRead,
             summary="Get HrDocument by id")
