@@ -14,7 +14,7 @@ from .base import ServiceBase
 
 class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, HrDocumentStepUpdate]):
 
-    def get_by_id(self, db: Session, id: str):
+    def get_by_id(self, db: Session, id: str) -> HrDocumentStep:
 
         hr_document_step = super().get(db, id)
 

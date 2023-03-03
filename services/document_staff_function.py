@@ -10,7 +10,7 @@ from .base import ServiceBase
 
 class DocumentStaffFunctionService(ServiceBase[DocumentStaffFunction, DocumentStaffFunctionCreate, DocumentStaffFunctionUpdate]):
 
-    def get_by_id(self, db: Session, id: str):
+    def get_by_id(self, db: Session, id: str) -> DocumentStaffFunction:
         service_staff_function = super().get(db, id)
         if service_staff_function is None:
             raise NotFoundException(detail=f"DocumentStaffFunction with id: {id} is not found!")

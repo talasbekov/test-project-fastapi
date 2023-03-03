@@ -14,7 +14,7 @@ from .base import ServiceBase
 
 class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, StaffDivisionUpdate]):
 
-    def get_by_id(self, db: Session, id: str):
+    def get_by_id(self, db: Session, id: str) -> StaffDivision:
         group = super().get(db, id)
         if group is None:
             raise NotFoundException(f"StaffDivision with id: {id} is not found!")

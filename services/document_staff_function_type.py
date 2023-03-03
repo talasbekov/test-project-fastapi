@@ -9,7 +9,7 @@ from exceptions.client import NotFoundException
 
 class DocumentStaffFunctionTypeService(ServiceBase[DocumentFunctionType, DocumentStaffFunctionTypeCreate, DocumentStaffFunctionTypeUpdate]):
 
-    def get_by_id(self, db: Session, id: str):
+    def get_by_id(self, db: Session, id: str) -> DocumentFunctionType:
         document_staff_function_type = super().get(db, id)
         if document_staff_function_type is None:
             raise NotFoundException(detail=f"DocumentFunctionType with id: {id} is not found!")

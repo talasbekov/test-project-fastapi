@@ -181,4 +181,12 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
         return infos
 
 
+    def get_history_by_document_id(self, db: Session, document_id: str):
+        infos = db.query(HrDocumentInfo).filter(
+            HrDocumentInfo.hr_document_id == id
+        ).order_by(
+            HrDocumentInfo.signed_at.asc()
+        ).all()
+
+
 hr_document_info_service = HrDocumentInfoService(HrDocumentInfo)

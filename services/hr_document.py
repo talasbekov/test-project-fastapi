@@ -20,7 +20,7 @@ from schemas import (HrDocumentCreate, HrDocumentInit, HrDocumentRead,
 from services import (badge_service, hr_document_info_service,
                       hr_document_step_service, hr_document_template_service,
                       rank_service, staff_division_service, staff_unit_service,
-                      user_service)
+                      user_service, document_staff_function_type_service, document_staff_function_service)
 
 from .base import ServiceBase
 
@@ -282,7 +282,14 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
     def _to_response(self, db: Session, info: HrDocumentInfo) -> HrDocumentRead:
 
         response = HrDocumentRead.from_orm(info.hr_document)
-        response.can_cancel = info.hr_document_step.staff_function.can_cancel
+
+        hr_document_step = hr_document_step_service.get_by_id(db, info.hr_document_step_id)
+
+        staff_function = document_staff_function_service.get_by_id(db, hr_document_step.staff_function_id)
+
+        document_type = document_staff_function_type_service.get_by_id(db, staff_function.role_id)
+
+        response.can_cancel = document_type.can_cancel
 
         user = response.users[0]
 
