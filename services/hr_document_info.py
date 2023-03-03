@@ -8,7 +8,7 @@ from sqlalchemy import and_, asc, desc, or_
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
-from models import HrDocumentInfo, HrDocumentStep, HrDocument
+from models import HrDocument, HrDocumentInfo, HrDocumentStep
 from schemas import (HrDocumentInfoCreate, HrDocumentInfoRead,
                      HrDocumentInfoUpdate)
 from services import (hr_document_step_service, staff_division_service,
@@ -32,7 +32,7 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
         return hr_document_info
 
     def create_info_for_step(self, db: Session, document_id: str, step_id: str, user_id: str, is_signed: bool,
-                             comment: str):
+                             comment: str, signed_at: datetime):
 
         document_info = HrDocumentInfoCreate(
             hr_document_id=document_id,
@@ -41,7 +41,7 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
             signed_by=None,
             comment="",
             is_signed=is_signed,
-            signed_at=datetime.now()
+            signed_at=signed_at
         )
 
         return super().create(db, document_info)

@@ -594,12 +594,6 @@ def upgrade() -> None:
                     "type": "read",
                     "data_taken": "auto"
                 },
-                "new_department_name": {
-                    "alias_name": "Новый департамент субъекта",
-                    "type": "write",
-                    "data_taken": "matreshka",
-                    "field_name":"staff_division"
-                },
                 "new_position": {
                     "alias_name": "Новая позиция субъекта",
                     "type": "write",
@@ -662,7 +656,7 @@ def upgrade() -> None:
                     "alias_name": "Новая позиция субъекта",
                     "type": "write",
                     "data_taken": "dropdown",
-                    "field_name": "staff_unit"
+                    "field_name": "rank"
                 }
             },
             'id': template2_id
@@ -825,12 +819,12 @@ def upgrade() -> None:
         }, {
             'hr_document_template_id': template1_id,
             'previous_step_id': step1_2,
-            'staff_function_id': staff_function5_id,
+            'staff_function_id': staff_function3_id,
             'id': step1_3
         }, {
             'hr_document_template_id': template2_id,
             'previous_step_id': None,
-            'staff_function_id': staff_function6_id,
+            'staff_function_id': staff_function4_id,
             'id': step2_1
         }, {
             'hr_document_template_id': template2_id,

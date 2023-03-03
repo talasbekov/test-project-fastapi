@@ -14,7 +14,7 @@ from sqlalchemy.orm import Session
 
 from api import router
 from core import configs, get_db
-from models import DocumentFunctionType, DocumentStaffFunction
+from models import DocumentFunctionType, DocumentStaffFunction, HrDocumentStep
 
 app = FastAPI(
     title=configs.PROJECT_NAME,
@@ -76,21 +76,9 @@ async def docs_redirect():
 @app.get("/test")
 async def test(db: Session = Depends(get_db)):
 
-    role = DocumentFunctionType(
-       id = uuid.uuid4(),
-       name = "SERIK",
-       can_cancel = False
-    )
+    steps = db.query(HrDocumentStep).join(DocumentStaffFunction).filter(
+        DocumentStaffFunction.priority > 3
+    ).all()
 
-    func = DocumentStaffFunction(
-        id = uuid.uuid4(),
-        name="NAME",
-        hours_per_week= 4,
-        priority = 3,
-        role_id = role.id
-    )
-    db.add(role)
-    db.add(func)
-    db.flush()
-
-    return func
+    for step in steps:
+        print(step.staff_function.name)
