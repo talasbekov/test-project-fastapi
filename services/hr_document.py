@@ -121,7 +121,13 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         user: User = user_service.get_by_id(db, user_id)
 
-        if not info.hr_document_step.staff_function.can_cancel:
+        hr_document_step = hr_document_step_service.get_by_id(db, info.hr_document_step_id)
+
+        staff_function = document_staff_function_service.get_by_id(db, hr_document_step.staff_function_id)
+
+        document_type = document_staff_function_type_service.get_by_id(db, staff_function.role_id)
+
+        if not document_type.can_cancel:
             body.is_signed = True
 
         hr_document_info_service.sign(db, info, user_id, body.comment, body.is_signed)

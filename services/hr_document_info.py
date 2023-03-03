@@ -1,5 +1,6 @@
 import uuid
 from datetime import datetime
+from typing import List
 
 from fastapi import HTTPException, status
 from fastapi.logger import logger as log
@@ -24,13 +25,14 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
             HrDocumentInfo.id == id
         ).first()
         print(hr_document_info)
-        
+
         if hr_document_info is None:
             raise NotFoundException(detail=f"Document Info with id: {id} is not found!")
-        
+
         return hr_document_info
-    
-    def create_info_for_step(self, db: Session, document_id: str, step_id: str, user_id: str, is_signed: bool, comment: str):
+
+    def create_info_for_step(self, db: Session, document_id: str, step_id: str, user_id: str, is_signed: bool,
+                             comment: str):
 
         document_info = HrDocumentInfoCreate(
             hr_document_id=document_id,
@@ -42,8 +44,8 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
         )
 
         return super().create(db, document_info)
-    
-    def create_next_info_for_step(self, db: Session,  document_id: str, step_id: str):
+
+    def create_next_info_for_step(self, db: Session, document_id: str, step_id: str):
 
         document_info = HrDocumentInfoCreate(
             hr_document_id=document_id,
@@ -54,25 +56,25 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
         )
 
         return super().create(db, document_info)
-    
+
     def get_not_signed_by_position(self, db: Session, staff_unit_id: str, skip: int, limit: int):
 
         infos = db.query(HrDocumentInfo).filter(
             HrDocumentInfo.is_signed == None,
-            HrDocumentInfo.hr_document_step.has(staff_unit_id = staff_unit_id)
+            HrDocumentInfo.hr_document_step.has(staff_unit_id=staff_unit_id)
         ).offset(skip).limit(limit).all()
 
         return infos
-    
+
     def get_all(self, db: Session, staff_unit_id, skip: int, limit: int) -> list[HrDocumentInfo]:
-        
+
         infos = db.query(HrDocumentInfo).filter(
             or_(
                 and_(
                     HrDocumentInfo.is_signed == None,
-                    HrDocumentInfo.hr_document_step.has(staff_unit_id = staff_unit_id)
+                    HrDocumentInfo.hr_document_step.has(staff_unit_id=staff_unit_id)
                 ),
-                HrDocumentInfo.hr_document_step.has(previous_step_id = None)
+                HrDocumentInfo.hr_document_step.has(previous_step_id=None)
             )
         ).order_by(
             desc(HrDocumentInfo.created_at)
@@ -92,7 +94,7 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
             raise NotFoundException(detail=f'Нет истории подписания!')
 
         return info
-    
+
     def get_last_unsigned_step_info(self, db: Session, id: str):
 
         info = db.query(HrDocumentInfo).filter(
@@ -117,7 +119,7 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
         db.flush()
 
         return info
-    
+
     def get_signed_by_user_id(self, db: Session, user_id: uuid.UUID, skip: int, limit: int):
 
         infos = db.query(self.model).filter(
@@ -128,11 +130,7 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
 
     def get_by_document_id(self, db: Session, id: str):
 
-        infos = db.query(HrDocumentInfo).filter(
-            HrDocumentInfo.hr_document_id == id
-        ).order_by(
-            HrDocumentInfo.signed_at.asc()
-        ).all()
+        infos = self._get_history_by_document_id(db, id)
 
         last_info = infos[len(infos)-1]
 
@@ -180,13 +178,14 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
 
         return infos
 
-
-    def get_history_by_document_id(self, db: Session, document_id: str):
+    def _get_history_by_document_id(self, db: Session, document_id: str) -> List[HrDocumentInfo]:
         infos = db.query(HrDocumentInfo).filter(
-            HrDocumentInfo.hr_document_id == id
+            HrDocumentInfo.hr_document_id == document_id
         ).order_by(
             HrDocumentInfo.signed_at.asc()
         ).all()
+
+        return infos
 
 
 hr_document_info_service = HrDocumentInfoService(HrDocumentInfo)
