@@ -1,6 +1,17 @@
 # Be careful of imports order is important!
 # Possible problems are circular imports, partial initialization of module
 
+from .base import ServiceBase
+from .jurisdiction import jurisdiction_service
+from .staff_division import staff_division_service
+from .service_staff_function_type import service_staff_function_type_service
+from .document_staff_function_type import document_staff_function_type_service
+from .service_staff_function import service_staff_function_service
+from .document_staff_function import document_staff_function_service
+
+from .staff_unit import staff_unit_service
+
+from .user import user_service
 from .badge import badge_service
 from .equipment import equipment_service
 from .event import event_service

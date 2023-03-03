@@ -4,12 +4,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel, EmailStr
 
-from .badge import BadgeRead
-from .permission import PermissionRead
-from .rank import RankRead
-from .staff_division import StaffDivisionRead
-from .staff_unit import StaffUnitRead
-from .service_function import ServiceFunctionRead
+from schemas import BadgeRead, PermissionRead, RankRead, StaffUnitRead, StaffDivisionRead, ServiceFunctionRead
 
 
 class UserBase(BaseModel):

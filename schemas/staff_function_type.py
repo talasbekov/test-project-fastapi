@@ -1,5 +1,5 @@
 import uuid
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel
 
@@ -20,7 +20,7 @@ class DocumentStaffFunctionTypeCreate(DocumentStaffFunctionTypeBase):
     pass
 
 
-class ServiceStaffFunctionTypeBase(ServiceStaffFunctionTypeBase):
+class ServiceStaffFunctionTypeCreate(ServiceStaffFunctionTypeBase):
     pass
 
 
@@ -28,7 +28,7 @@ class DocumentStaffFunctionTypeUpdate(DocumentStaffFunctionTypeBase):
     pass
 
 
-class ServiceStaffFunctionTypeBase(ServiceStaffFunctionTypeBase):
+class ServiceStaffFunctionTypeUpdate(ServiceStaffFunctionTypeBase):
     pass
 
 

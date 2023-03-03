@@ -188,7 +188,7 @@ def upgrade() -> None:
     jurisdiction4_id = get_uuid()
     jurisdiction5_id = get_uuid()
     jurisdiction6_id = get_uuid()
-    
+
     op.bulk_insert(
         Base.metadata.tables['jurisdictions'],
         [{
@@ -526,25 +526,25 @@ def upgrade() -> None:
             'staff_function_id': staff_function6_id
         }, {
             'staff_unit_id': staff_unit10_id,
-            'staff_function_id': staff_function3_id 
+            'staff_function_id': staff_function3_id
         }, {
             'staff_unit_id': staff_unit6_id,
-            'staff_function_id': staff_function8_id 
+            'staff_function_id': staff_function8_id
         }, {
             'staff_unit_id': staff_unit6_id,
-            'staff_function_id': staff_function5_id 
+            'staff_function_id': staff_function5_id
         }, {
             'staff_unit_id': staff_unit6_id,
-            'staff_function_id': staff_function2_id 
+            'staff_function_id': staff_function2_id
         }, {
             'staff_unit_id': staff_unit4_id,
-            'staff_function_id': staff_function7_id 
+            'staff_function_id': staff_function7_id
         }, {
             'staff_unit_id': staff_unit4_id,
-            'staff_function_id': staff_function4_id 
+            'staff_function_id': staff_function4_id
         }, {
             'staff_unit_id': staff_unit4_id,
-            'staff_function_id': staff_function1_id 
+            'staff_function_id': staff_function1_id
         }]
     )
 
@@ -723,6 +723,82 @@ def upgrade() -> None:
         }]
     )
 
+    doc_type1_id = get_uuid()
+    doc_type2_id = get_uuid()
+    doc_type3_id = get_uuid()
+    doc_type4_id = get_uuid()
+    doc_type5_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['document_function_types'],
+        [{
+            'id': doc_type1_id,
+            'name': "Согласующий",
+            'can_cancel': True
+        }, {
+            'id': doc_type2_id,
+            'name': "Эксперт",
+            'can_cancel': False
+        }, {
+            'id': doc_type3_id,
+            'name': "Утверждающий",
+            'can_cancel': True
+        }, {
+            'id': doc_type4_id,
+            'name': "Уведомляемый",
+            'can_cancel': False
+        }, {
+            'id': doc_type5_id,
+            'name': "Инициатор",
+            'can_cancel': True
+        }]
+    )
+
+    role_id = get_uuid()
+    role2_id = get_uuid()
+    role3_id = get_uuid()
+    role4_id = get_uuid()
+    role5_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['staff_functions'],
+        [{
+            'id': role_id,
+            'name': "Согласующий",
+            'discriminator': "document_staff_function",
+            'hours_per_week': "2",
+            'priority': "3",
+            'role_id': doc_type1_id
+        }, {
+            'id': role2_id,
+            'name': "Эксперт",
+            'discriminator': "document_staff_function",
+            'hours_per_week': "5",
+            'priority': "2",
+            'role_id': doc_type2_id
+    }, {
+            'id': role3_id,
+            'name': "Утверждающий",
+            'discriminator': "document_staff_function",
+            'hours_per_week': "2",
+            'priority': "100",
+            'role_id': doc_type3_id,
+        }, {
+            'id': role4_id,
+            'name': "Уведомляемый",
+            'discriminator': "document_staff_function",
+            'hours_per_week': "0",
+            'priority': "-1",
+            'role_id': doc_type4_id
+        }, {
+            'id': role5_id,
+            'name': "Инициатор",
+            'discriminator': "document_staff_function",
+            'hours_per_week': "3",
+            'priority': "1",
+            'role_id': doc_type5_id
+        }]
+    )
 
     step1_1 = get_uuid()
     step1_2 = get_uuid()

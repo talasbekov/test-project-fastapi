@@ -20,7 +20,7 @@ from schemas import (HrDocumentCreate, HrDocumentInit, HrDocumentRead,
 from services import (badge_service, hr_document_info_service,
                       hr_document_step_service, hr_document_template_service,
                       rank_service, staff_division_service, staff_unit_service,
-                      user_service)
+                      user_service, document_staff_function_type_service, document_staff_function_service)
 
 from .base import ServiceBase
 
@@ -91,7 +91,22 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         if next_step is None:
             return self._finish_document(db, document, document.users)
 
-        hr_document_info_service.create_info_for_step(db, document.id, step.id, user.id, True)
+        comm = ""
+
+        for key in list(template.properties):
+            value = template.properties[key]
+
+            if value['type'] != "read" and value['data_taken'] != "manual":
+                continue
+
+            if comm != "":
+                comm = ", " + comm + value['alias_name'] + ": " + document.properties[key]
+            else:
+                comm = comm + value['alias_name'] + ": " + document.properties[key] + ", "
+
+        print(comm)
+
+        hr_document_info_service.create_info_for_step(db, document.id, step.id, user.id, True, comm)
         hr_document_info_service.create_next_info_for_step(db, document.id, next_step.id)
 
         db.add(document)
@@ -113,7 +128,13 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         user: User = user_service.get_by_id(db, user_id)
 
-        if not info.hr_document_step.staff_function.can_cancel:
+        hr_document_step = hr_document_step_service.get_by_id(db, info.hr_document_step_id)
+
+        staff_function = document_staff_function_service.get_by_id(db, hr_document_step.staff_function_id)
+
+        document_type = document_staff_function_type_service.get_by_id(db, staff_function.role_id)
+
+        if not document_type.can_cancel:
             body.is_signed = True
 
         hr_document_info_service.sign(db, info, user_id, body.comment, body.is_signed)
@@ -132,7 +153,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
             step = hr_document_step_service.get_initial_step_for_template(db, document.document_template.id)
 
-            info = hr_document_info_service.create_info_for_step(db, document.id, step.id, None, None)
+            info = hr_document_info_service.create_info_for_step(db, document.id, step.id, None, None, "")
 
             document.status = HrDocumentStatus.ON_REVISION
 

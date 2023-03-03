@@ -8,8 +8,7 @@ from exceptions import InvalidOperationException, NotFoundException
 from models import StaffDivision, User
 from schemas import (StaffDivisionUpdate, UserCreate, UserGroupUpdate,
                      UserPermission, UserRead, UserServiceFunction, UserUpdate)
-from services import (service_function_service, staff_division_service,
-                      staff_unit_service)
+from services import (staff_division_service, staff_unit_service)
 
 from .base import ServiceBase
 
@@ -96,32 +95,5 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         ).all()
 
         return users
-
-    def add_service_function(self, db: Session, body: UserServiceFunction):
-        user = self.get_by_id(db, body.user_id)
-
-        for id in body.service_function_ids:
-            service_function = service_function_service.get_by_id(db, id)
-            if service_function not in user.service_functions:
-                user.service_functions.append(service_function)
-
-        db.add(user)
-        db.flush()
-
-    def remove_service_function(self, db: Session, body: UserServiceFunction):
-        user = self.get_by_id(db, body.user_id)
-
-        for id in body.service_function_ids:
-            service_function = service_function_service.get(db, id)
-            if service_function is None:
-                continue
-            try:
-                user.service_functions.remove(service_function)
-            except ValueError as e:
-                continue
-
-        db.add(user)
-        db.flush()
-
 
 user_service = UserService(User)
