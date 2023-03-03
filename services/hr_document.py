@@ -97,26 +97,26 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             due_date=body.due_date,
             properties=body.properties
         ))
-        document_info_initiator = hr_document_info_service.create_info_for_step(db, document.id, step.id, user_id, True)
+        # comm = ""
+
+        # for key in list(template.properties):
+        #     value = template.properties[key]
+
+        #     if value['type'] != "read" and value['data_taken'] != "manual":
+        #         continue
+
+        #     if comm != "":
+        #         comm = ", " + comm + value['alias_name'] + ": " + document.properties[key]
+        #     else:
+        #         comm = comm + value['alias_name'] + ": " + document.properties[key] + ", "
         
-        comm = ""
-
-        for key in list(template.properties):
-            value = template.properties[key]
-
-            if value['type'] != "read" and value['data_taken'] != "manual":
-                continue
-
-            if comm != "":
-                comm = ", " + comm + value['alias_name'] + ": " + document.properties[key]
-            else:
-                comm = comm + value['alias_name'] + ": " + document.properties[key] + ", "
-
-        hr_document_info_service.sign(db, document_info_initiator, current_user, comm, True)
+        document_info_initiator = hr_document_info_service.create_info_for_step(db, document.id, step.id, user_id, True, None)
+       
+        hr_document_info_service.sign(db, document_info_initiator, current_user, None, True)
          
         for step, user_id in zip(all_steps, users):
              
-            hr_document_info_service.create_info_for_step(db, document.id, step.id, user_id, None)
+            hr_document_info_service.create_info_for_step(db, document.id, step.id, user_id, None, None)
               
         users_document = [user_service.get_by_id(db, user_id) for user_id in body.user_ids]
 
@@ -154,6 +154,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             next_step = hr_document_step_service.get_next_step_from_priority(db, document.id, info.hr_document_step.staff_function.priority)
 
             if next_step is None:
+                print(1)
                 return self._finish_document(db, document, document.users)
 
             document.last_step = next_step

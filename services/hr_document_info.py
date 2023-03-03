@@ -37,14 +37,9 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
         document_info = HrDocumentInfoCreate(
             hr_document_id=document_id,
             hr_document_step_id=step_id,
-<<<<<<< HEAD
             assigned_to_id=user_id,
             signed_by=None,
             comment="",
-=======
-            signed_by=user_id,
-            comment=comment,
->>>>>>> 6c110be17855d7b804a09a64d79da1637d155bfa
             is_signed=is_signed,
             signed_at=datetime.now()
         )
@@ -80,11 +75,7 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
                     HrDocumentInfo.is_signed == None,
                     HrDocumentInfo.hr_document_step.has(staff_unit_id=staff_unit_id)
                 ),
-<<<<<<< HEAD
-                HrDocumentInfo.hr_document_step.has
-=======
                 HrDocumentInfo.hr_document_step.has(previous_step_id=None)
->>>>>>> 6c110be17855d7b804a09a64d79da1637d155bfa
             )
         ).order_by(
             desc(HrDocumentInfo.created_at)
