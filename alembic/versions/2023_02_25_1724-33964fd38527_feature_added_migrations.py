@@ -547,6 +547,37 @@ def upgrade() -> None:
         }]
     )
 
+    doc_type1_id = get_uuid()
+    doc_type2_id = get_uuid()
+    doc_type3_id = get_uuid()
+    doc_type4_id = get_uuid()
+    doc_type5_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['document_function_types'],
+        [{
+            'id': doc_type1_id,
+            'name': "Согласующий",
+            'can_cancel': True
+        }, {
+            'id': doc_type2_id,
+            'name': "Эксперт",
+            'can_cancel': False
+        }, {
+            'id': doc_type3_id,
+            'name': "Утверждающий",
+            'can_cancel': True
+        }, {
+            'id': doc_type4_id,
+            'name': "Уведомляемый",
+            'can_cancel': False
+        }, {
+            'id': doc_type5_id,
+            'name': "Инициатор",
+            'can_cancel': True
+        }]
+    )
+
     role_id = get_uuid()
     role2_id = get_uuid()
     role3_id = get_uuid()
@@ -558,28 +589,38 @@ def upgrade() -> None:
         [{
             'id': role_id,
             'name': "Согласующий",
-            'can_cancel': True,
-            'discriminator': "document_staff_function"
+            'discriminator': "document_staff_function",
+            'hours_per_week': "2",
+            'priority': "3",
+            'role_id': doc_type1_id
         }, {
             'id': role2_id,
             'name': "Эксперт",
-            'can_cancel': False,
-            'discriminator': "document_staff_function"
-        }, {
+            'discriminator': "document_staff_function",
+            'hours_per_week': "5",
+            'priority': "2",
+            'role_id': doc_type2_id
+    }, {
             'id': role3_id,
             'name': "Утверждающий",
-            'can_cancel': True,
-            'discriminator': "document_staff_function"
+            'discriminator': "document_staff_function",
+            'hours_per_week': "2",
+            'priority': "100",
+            'role_id': doc_type3_id,
         }, {
             'id': role4_id,
             'name': "Уведомляемый",
-            'can_cancel': False,
-            'discriminator': "document_staff_function"
+            'discriminator': "document_staff_function",
+            'hours_per_week': "0",
+            'priority': "-1",
+            'role_id': doc_type4_id
         }, {
             'id': role5_id,
             'name': "Инициатор",
-            'can_cancel': True,
-            'discriminator': "document_staff_function"
+            'discriminator': "document_staff_function",
+            'hours_per_week': "3",
+            'priority': "1",
+            'role_id': doc_type5_id
         }]
     )
 
