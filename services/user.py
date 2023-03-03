@@ -56,11 +56,9 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         if body.father_name is not None:
             user.father_name = body.father_name
         if body.staff_division_id is not None:
-            user.staff_division_id = staff_division_service.get_by_id(db, body.staff_division_id)
+            user.staff_division_id = staff_division_service.get_by_id(db, body.staff_division_id).id
         if body.staff_unit_id is not None:
-            user.staff_unit_id = staff_unit_service.get_by_id(db, body.staff_unit_id)
-        if body.staff_unit_id is not None:
-            user.staff_unit_id = staff_unit_service.get_by_id(db, body.staff_unit_id)
+            user.staff_unit_id = staff_unit_service.get_by_id(db, body.staff_unit_id).id
         if body.icon is not None:
             user.icon = body.icon
         if body.call_sign is not None:
