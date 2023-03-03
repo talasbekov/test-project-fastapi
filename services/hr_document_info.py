@@ -8,7 +8,7 @@ from sqlalchemy import and_, asc, desc, or_
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
-from models import HrDocumentInfo, HrDocumentStep
+from models import HrDocumentInfo, HrDocumentStep, HrDocument
 from schemas import (HrDocumentInfoCreate, HrDocumentInfoRead,
                      HrDocumentInfoUpdate)
 from services import (hr_document_step_service, staff_division_service,

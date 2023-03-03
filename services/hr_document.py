@@ -14,7 +14,7 @@ from sqlalchemy.orm import Session
 from core import Base
 from exceptions import (BadRequestException, ForbiddenException,
                         InvalidOperationException, NotFoundException)
-from models import HrDocument, HrDocumentInfo, HrDocumentStatus, User
+from models import HrDocument, HrDocumentInfo, HrDocumentStatus, User, HrDocumentStep
 from schemas import (HrDocumentCreate, HrDocumentInit, HrDocumentRead,
                      HrDocumentSign, HrDocumentUpdate)
 from services import (badge_service, hr_document_info_service,
@@ -53,9 +53,16 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         user = user_service.get_by_id(db, user_id)
 
-        infos = hr_document_info_service.get_not_signed_by_position(db, user.actual_staff_unit_id, skip, limit)
+        staff_unit = staff_unit_service.get_by_id(db, user.actual_staff_unit_id)
 
-        return self._return_correctly(db, infos, user)
+        staff_function_ids = [i.id for i in staff_unit.staff_functions]
+
+        documents = db.query(self.model)\
+            .join(HrDocumentStep)\
+            .filter(HrDocumentStep.staff_function_id.in_(staff_function_ids))\
+            .offset(skip).limit(limit).all()
+
+        return self._return_correctly(db, documents, user)
 
     def initialize(self, db: Session, body: HrDocumentInit, user_id: str, role: str):
 
@@ -285,23 +292,16 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             raise InvalidOperationException(f'New state is encountered! Cannot change {key}!')
         return service
     
-    def _to_response(self, db: Session, info: HrDocumentInfo) -> HrDocumentRead:
+    def _to_response(self, db: Session, document: HrDocument) -> HrDocumentRead:
 
-        response = HrDocumentRead.from_orm(info.hr_document)
-
-        hr_document_step = hr_document_step_service.get_by_id(db, info.hr_document_step_id)
-
-        staff_function = document_staff_function_service.get_by_id(db, hr_document_step.staff_function_id)
-
-        document_type = document_staff_function_type_service.get_by_id(db, staff_function.role_id)
-
-        response.can_cancel = document_type.can_cancel
+        response = HrDocumentRead.from_orm(document)
+        response.can_cancel = document.last_step.staff_function.role.can_cancel
 
         user = response.users[0]
 
         fields = user_service.get_fields()
 
-        props = info.hr_document.document_template.properties
+        props = document.document_template.properties
 
         new_val = {}
 
@@ -324,7 +324,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             
             else:
 
-                val = info.hr_document.properties.get(key)
+                val = document.properties.get(key)
                 
                 if val is None:
                     continue
@@ -357,21 +357,21 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             return True
         return False
     
-    def _return_correctly(self,db: Session, infos: List[HrDocumentInfo], user: User) -> List[HrDocumentRead]:
+    def _return_correctly(self, db: Session, documents: List[HrDocument], user: User) -> List[HrDocumentRead]:
 
         s = set()
 
         l = []
 
-        for i in infos:
-            if i.hr_document_id not in s:
-                print(i.hr_document_id)
-                s.add(i.hr_document_id)
-                subject = i.hr_document.users[0]
+        for i in documents:
+            if i.id not in s:
+                s.add(i.id)
+                subject = i.users[0]
                 # print(subject.id)
                 if self._check_for_department(db, user, subject):
                     l.append(self._to_response(db, i))
 
         return l
+
 
 hr_document_service = HrDocumentService(HrDocument)

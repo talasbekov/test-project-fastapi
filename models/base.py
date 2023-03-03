@@ -11,6 +11,8 @@ from sqlalchemy.orm import relationship
     - **created_at**: datetime - Creation timestamp of entity
     - **updated_at**: datetime - Update timestamp of entity
 """
+
+
 class Model():
 
     __abstract__ = True
@@ -28,6 +30,8 @@ class Model():
     This class is abstract entity class, which provides following columns to all inherited entities:
     - **name** : str - required
 """
+
+
 class NamedModel(Model):
 
     __abstract__ = True
@@ -38,6 +42,8 @@ class NamedModel(Model):
 """
     This class is abstract entity class, which can be nested. This is merely markdown of nested classes. This Model doesn't do anything except marking all nested classes
 """
+
+
 class NestedModel(Model):
 
     __abstract__ = True
@@ -47,6 +53,8 @@ class NestedModel(Model):
     This class is abstract entity class, which can be nested. This is merely markdown of nested classes. This Model doesn't do anything except marking all nested classes.
     Only difference between nested models is **name**
 """
+
+
 class NamedNestedModel(NamedModel):
 
     __abstract__ = True
