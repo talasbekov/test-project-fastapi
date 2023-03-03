@@ -6,7 +6,8 @@ from fastapi.logger import logger as log
 from sqlalchemy.orm import Session
 
 from exceptions import BadRequestException, NotFoundException
-from models import HrDocumentStep, HrDocumentTemplate
+from models import (HrDocumentStep, HrDocumentTemplate, DocumentStaffFunction,
+                    StaffFunction)
 from schemas import (HrDocumentStepCreate, HrDocumentStepRead,
                      HrDocumentStepUpdate)
 
@@ -28,7 +29,7 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
 
         step = db.query(HrDocumentStep).filter(
             HrDocumentStep.hr_document_template_id == template_id,
-            HrDocumentStep.previous_step_id == None
+            DocumentStaffFunction.priority > 0
         ).first()
 
         if step is None:
@@ -38,7 +39,7 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
 
     def get_next_step_from_id(self, db: Session, step_id: str) -> HrDocumentStep:
         step = db.query(HrDocumentStep).filter(
-            HrDocumentStep.previous_step_id == step_id
+            
         ).first()
 
         return step
@@ -55,9 +56,17 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
 
         steps = db.query(self.model).filter(
             self.model.hr_document_template_id == template_id
-        ).all()
+        ).join(self.model.staff_function).order_by(DocumentStaffFunction.priority.asc()).all()
 
         return steps
+    
+    def get_next_step_from_priority(self, db: Session, document_id: str, priority: int):
+
+        step = db.query(self.model).filter(
+            DocumentStaffFunction.priority > priority
+        ).first()
+
+        return step
 
 
 hr_document_step_service = HrDocumentStepService(HrDocumentStep)

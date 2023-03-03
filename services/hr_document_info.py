@@ -37,8 +37,9 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
         document_info = HrDocumentInfoCreate(
             hr_document_id=document_id,
             hr_document_step_id=step_id,
-            signed_by=user_id,
-            comment=comment,
+            assigned_to_id=user_id,
+            signed_by=None,
+            comment="",
             is_signed=is_signed,
             signed_at=datetime.now()
         )
@@ -81,6 +82,19 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
         ).offset(skip).limit(limit).all()
 
         return infos
+    
+    def get_by_document_id_and_step_id(self, db: Session, document_id: str, step_id: str) -> HrDocumentInfo:
+
+        info = db.query(self.model).filter(
+            self.model.hr_document_id == document_id,
+            self.model.hr_document_step_id == step_id,
+            self.model.is_signed == None
+        ).first()
+
+        if info is None:
+            raise NotFoundException(detail=f'Нет истории подписания!')
+        
+        return info
 
     def get_last_signed_step_info(self, db: Session, id: str):
 

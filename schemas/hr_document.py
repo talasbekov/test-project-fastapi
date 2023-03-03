@@ -36,7 +36,34 @@ class HrDocumentBase(BaseModel):
 
 class HrDocumentInit(HrDocumentBase):
     user_ids: List[uuid.UUID]
+    # list of dict, which have {int: uuid.UUID()}
+    document_step_users_ids : dict
 
+    @validator('document_step_users_ids')
+    def document_step_users_ids_validator(cls, v):
+        if v is None:
+            return v
+        if not isinstance(v, dict):
+            raise ValueError(f'document_step_users_ids should be dictionary')
+        keys = list(v)
+        
+        for key in keys:
+            value = v[key]
+            if key == -1:
+                if not isinstance(value, list):
+                    raise ValueError(f'document_step_users_ids should be list')
+                for user_id in value:
+                    if not isinstance(user_id, uuid.UUID):
+                        raise ValueError(f'document_step_users_ids should be uuid.UUID')
+            else:
+                value_to_uuid = uuid.UUID(value)
+                if not isinstance(value_to_uuid, uuid.UUID):
+                    raise ValueError(f'document_step_users_ids should be uuid.UUID')
+        
+        sorted(v, key=lambda x: keys.index(x))
+        
+        return v
+    
 
 class HrDocumentSign(BaseModel):
     comment: Optional[str]

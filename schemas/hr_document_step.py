@@ -7,11 +7,8 @@ from schemas import StaffFunctionRead, StaffUnitRead
 
 
 class HrDocumentStepBase(BaseModel):
-    hr_document_template_id: uuid.UUID
-    previous_step_id: Optional[uuid.UUID]
-    staff_unit_id: uuid.UUID
-    staff_function_id: uuid.UUID
-    jurisdiction_is: uuid.UUID
+    hr_document_template_id: uuid.UUID 
+    staff_function_id: uuid.UUID 
 
 
 class HrDocumentStepCreate(HrDocumentStepBase):
