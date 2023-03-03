@@ -55,7 +55,6 @@ class StaffFunctionRead(StaffFunctionBase):
     hours_per_week: Optional[int]
 
     class Config:
-        arbitrary_types_allowed = True
         orm_mode = True
 
 
@@ -65,14 +64,12 @@ class DocumentStaffFunctionRead(StaffFunctionRead):
     role: Optional[DocumentStaffFunctionTypeRead]
 
     class Config:
-        arbitrary_types_allowed = True
         orm_mode = True
 
 
 class ServiceStaffFunctionRead(StaffFunctionRead):
-    type_id = Optional[uuid.UUID]
-    type = Optional[ServiceStaffFunctionTypeRead]
+    type_id: Optional[uuid.UUID]
+    type: Optional[ServiceStaffFunctionTypeRead]
 
     class Config:
-        arbitrary_types_allowed = True
         orm_mode = True

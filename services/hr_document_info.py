@@ -131,7 +131,7 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
         infos = db.query(HrDocumentInfo).filter(
             HrDocumentInfo.hr_document_id == id
         ).order_by(
-            HrDocumentInfo.created_at.asc()
+            HrDocumentInfo.signed_at.asc()
         ).all()
 
         last_info = infos[len(infos)-1]

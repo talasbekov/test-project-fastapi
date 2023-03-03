@@ -48,15 +48,22 @@ class StaffFunction(Base):
     discriminator = Column(String(255))
 
     __mapper_args__ = {
-        "polymorphic_on": discriminator,
+        "polymorphic_on": "discriminator",
         "polymorphic_identity": "staff_function",
     }
+
+    staff_units = relationship(
+        "StaffUnit",
+        secondary=staff_unit_functions,
+        back_populates="staff_functions",
+        cascade="all,delete"
+    )
 
 
 class DocumentStaffFunction(StaffFunction):
 
     priority = Column(Integer(), nullable=False)
-    role_id = Column(UUID(as_uuid=True), ForeignKey("document_function_types.id"), nullable=False)
+    role_id = Column(UUID(as_uuid=True), ForeignKey("document_function_types.id", onupdate="CASCADE", ondelete="CASCADE"), nullable=False)
 
     role = relationship("DocumentFunctionType")
 
@@ -67,7 +74,7 @@ class DocumentStaffFunction(StaffFunction):
 
 class ServiceStaffFunction(StaffFunction):
 
-    type_id = Column(UUID(as_uuid=True), ForeignKey("service_function_types.id"), nullable=False)
+    type_id = Column(UUID(as_uuid=True), ForeignKey("service_function_types.id", onupdate="CASCADE", ondelete="CASCADE"), nullable=False)
 
     type = relationship("ServiceFunctionType")
 

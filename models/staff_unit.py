@@ -24,16 +24,9 @@ class StaffUnit(Base):
     updated_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))
 
-    document_staff_functions = relationship(
-        "DocumentStaffFunction",
+    staff_functions = relationship(
+        "StaffFunction",
         secondary=staff_unit_functions,
-        backref='staff_units',
-        cascade="all,delete"
-    )
-
-    service_staff_functions = relationship(
-        "ServiceStaffFunction",
-        secondary=staff_unit_functions,
-        backref="staff_units",
+        back_populates='staff_units',
         cascade="all,delete"
     )

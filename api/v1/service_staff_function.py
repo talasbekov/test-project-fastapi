@@ -15,6 +15,7 @@ router = APIRouter(prefix="/service_staff_function", tags=["ServiceStaffFunction
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
+            response_model=List[ServiceStaffFunctionRead],
             summary="Get all ServiceStaffFunction")
 async def get_all(*,
     db: Session = Depends(get_db),
@@ -34,6 +35,7 @@ async def get_all(*,
 
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
+             response_model=ServiceStaffFunctionRead,
              summary="Create ServiceStaffFunction")
 async def create(*,
     db: Session = Depends(get_db),
@@ -52,6 +54,7 @@ async def create(*,
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=ServiceStaffFunctionRead,
             summary="Get ServiceStaffFunction by id")
 async def get_by_id(*,
     db: Session = Depends(get_db),
@@ -68,6 +71,7 @@ async def get_by_id(*,
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=ServiceStaffFunctionRead,
             summary="Update ServiceStaffFunction")
 async def update(*,
     db: Session = Depends(get_db),
