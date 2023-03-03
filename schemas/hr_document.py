@@ -6,8 +6,7 @@ from pydantic import BaseModel, ValidationError, validator
 
 from models import HrDocumentStatus
 
-from .hr_document_template import HrDocumentTemplateRead
-from .user import UserRead
+from schemas import HrDocumentTemplateRead, UserRead
 
 """
 "detail": "Mapper 'Mapper[HrDocument(hr_documents)]' has no property 'user'.  If this property was indicated from other mappers or configure events, ensure registry.configure() has been called."

@@ -50,8 +50,7 @@ async def create(*,
         - **staff_function_id**: UUID - the id of StaffFunction. This is required.
     """
     Authorize.jwt_required()
-    return hr_document_step_service.create_step(db, body)
-
+    return hr_document_step_service.create(db, body)
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=HrDocumentStepRead,
@@ -92,7 +91,7 @@ async def update(*,
         > and **template will be changed for every child steps** if you want to change template for parent step
     """
     Authorize.jwt_required()
-    return hr_document_step_service.update_step(db=db, step_id=id, obj_in=body)
+    return hr_document_step_service.update(db=db, db_obj=hr_document_step_service.get_by_id(id), obj_in=body)
 
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
@@ -109,4 +108,4 @@ async def delete(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    hr_document_step_service.delete_step(db, id)
+    hr_document_step_service.remove(db, id)
