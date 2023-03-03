@@ -8,7 +8,8 @@ from sqlalchemy.orm import Session
 
 from core import get_db
 from models import User
-from schemas import UserCreate, UserPermission, UserRead, UserUpdate, UserGroupUpdate
+from schemas import (UserCreate, UserGroupUpdate, UserPermission, UserRead,
+                     UserUpdate)
 from services import user_service
 
 router = APIRouter(prefix="/users", tags=["Users"], dependencies=[Depends(HTTPBearer())])

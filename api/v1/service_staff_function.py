@@ -30,8 +30,7 @@ async def get_all(*,
        - **limit**: int - The maximum number of ServiceStaffFunction to return in the response. This parameter is optional and defaults to 100.
    """
     Authorize.jwt_required()
-    user_id = Authorize.get_jwt_subject()
-    return service_staff_function_service.get_by_user(db, user_service.get_by_id(db, user_id))
+    return service_staff_function_service.get_multi(db, skip, limit)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
@@ -109,3 +108,19 @@ async def delete(*,
     """
     Authorize.jwt_required()
     service_staff_function_service.remove(db, id)
+
+
+@router.post('/duplicate/{id}/', status_code=status.HTTP_201_CREATED,
+            response_model=ServiceStaffFunctionRead)
+async def duplicate(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Duplicate ServiceStaffFunction
+
+        - **id**: UUID - required
+    """
+    Authorize.jwt_required()
+    return service_staff_function_service.duplicate(db, id)

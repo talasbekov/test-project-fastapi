@@ -15,6 +15,7 @@ class StaffFunctionBase(BaseModel):
 class DocumentStaffFunctionBase(StaffFunctionBase):
     priority: int
     role_id: uuid.UUID
+    jurisdiction_id: uuid.UUID
 
 
 class ServiceStaffFunctionBase(StaffFunctionBase):
@@ -57,11 +58,12 @@ class StaffFunctionRead(StaffFunctionBase):
     hours_per_week: Optional[int]
 
     class Config:
-        orm_mode = True
+        orm_mode=True
         arbitrary_types_allowed = True
 
 
-class DocumentStaffFunctionRead(StaffFunctionRead):
+class DocumentStaffFunctionRead(StaffFunctionRead, DocumentStaffFunctionBase):
+    
     priority: Optional[int]
     role_id: Optional[uuid.UUID]
     role: Optional[DocumentStaffFunctionTypeRead]
@@ -69,14 +71,7 @@ class DocumentStaffFunctionRead(StaffFunctionRead):
     jurisdiction_id: Optional[uuid.UUID]
     jurisdiction: Optional[JurisdictionRead]
 
-    class Config:
-        orm_mode = True
-
-
-class ServiceStaffFunctionRead(StaffFunctionRead):
+class ServiceStaffFunctionRead(StaffFunctionRead, ServiceStaffFunctionBase):
 
     type_id: Optional[uuid.UUID]
     type: Optional[ServiceStaffFunctionTypeRead]
-
-    class Config:
-        orm_mode = True

@@ -1,5 +1,5 @@
 import uuid
-from typing import Optional, List
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -34,7 +34,7 @@ class ServiceStaffFunctionTypeUpdate(ServiceStaffFunctionTypeBase):
 
 class StaffFunctionTypeRead(StaffFunctionTypeBase):
     id: Optional[uuid.UUID]
-    name: Optional[uuid.UUID]
+    name: Optional[str]
 
     class Config:
         orm_mode=True

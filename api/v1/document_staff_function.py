@@ -30,8 +30,7 @@ async def get_all(*,
        - **limit**: int - The maximum number of DocumentStaffFunction to return in the response. This parameter is optional and defaults to 100.
    """
     Authorize.jwt_required()
-    user_id = Authorize.get_jwt_subject()
-    return document_staff_function_service.get_by_user(db, user_service.get_by_id(db, user_id))
+    return document_staff_function_service.get_multi(db, skip, limit)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -86,3 +85,14 @@ async def delete(*,
     """
     Authorize.jwt_required()
     document_staff_function_service.remove(db, id)
+
+
+@router.post('/duplicate/{id}/', status_code=status.HTTP_201_CREATED,
+            response_model=DocumentStaffFunctionRead)
+def duplicate(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    return document_staff_function_service.duplicate(db, id)

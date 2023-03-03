@@ -1,3 +1,4 @@
+import uuid
 from typing import List
 
 from sqlalchemy.orm import Session
@@ -27,6 +28,16 @@ class DocumentStaffFunctionService(ServiceBase[DocumentStaffFunction, DocumentSt
                 l.append(func)
 
         return l
+
+    def duplicate(self, db: Session, id: uuid.UUID):
+        func = self.get_by_id(db, id)
+
+        DocumentStaffFunctionCreate(
+            name=func.name,
+            hours_per_week=func.hours_per_week,
+            priority=func.priority,
+            role_id=func.role_id
+        )
 
 
 document_staff_function_service = DocumentStaffFunctionService(DocumentStaffFunction)

@@ -1,3 +1,5 @@
+import uuid
+
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
@@ -25,6 +27,16 @@ class ServiceStaffFunctionService(ServiceBase[ServiceStaffFunction, ServiceStaff
                 l.append(func)
 
         return l
+
+    def duplicate(self, db: Session, id: uuid.UUID):
+        func = self.get_by_id(db, id)
+        copy = super().create(db, ServiceStaffFunctionCreate(
+            name=func.name,
+            hours_per_week=func.name,
+            type_id=func.type_id
+        ))
+
+        return copy
 
 
 service_staff_function_service = ServiceStaffFunctionService(ServiceStaffFunction)
