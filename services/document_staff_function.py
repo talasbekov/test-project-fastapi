@@ -32,12 +32,14 @@ class DocumentStaffFunctionService(ServiceBase[DocumentStaffFunction, DocumentSt
     def duplicate(self, db: Session, id: uuid.UUID):
         func = self.get_by_id(db, id)
 
-        DocumentStaffFunctionCreate(
+        res = super().create(db, DocumentStaffFunctionCreate(
             name=func.name,
             hours_per_week=func.hours_per_week,
             priority=func.priority,
             role_id=func.role_id
-        )
+        ))
+
+        return res
 
 
 document_staff_function_service = DocumentStaffFunctionService(DocumentStaffFunction)

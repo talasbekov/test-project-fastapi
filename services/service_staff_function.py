@@ -32,7 +32,7 @@ class ServiceStaffFunctionService(ServiceBase[ServiceStaffFunction, ServiceStaff
         func = self.get_by_id(db, id)
         copy = super().create(db, ServiceStaffFunctionCreate(
             name=func.name,
-            hours_per_week=func.name,
+            hours_per_week=func.hours_per_week,
             type_id=func.type_id
         ))
 
