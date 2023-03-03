@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from core import get_db
 from schemas import (DocumentStaffFunctionCreate, DocumentStaffFunctionRead,
                      DocumentStaffFunctionUpdate)
-from services import document_staff_function_service
+from services import document_staff_function_service, user_service
 
 router = APIRouter(prefix="/document_staff_function", tags=["DocumentStaffFunction"], dependencies=[Depends(HTTPBearer())])
 
@@ -30,24 +30,8 @@ async def get_all(*,
        - **limit**: int - The maximum number of DocumentStaffFunction to return in the response. This parameter is optional and defaults to 100.
    """
     Authorize.jwt_required()
-    return document_staff_function_service.get_multi(db, skip, limit)
-
-
-@router.post("", status_code=status.HTTP_201_CREATED,
-             dependencies=[Depends(HTTPBearer())],
-             response_model=DocumentStaffFunctionRead,
-             summary="Create DocumentStaffFunction")
-async def create(*,
-    db: Session = Depends(get_db),
-    body: DocumentStaffFunctionCreate,
-    Authorize: AuthJWT = Depends()
-):
-    """
-        Create DocumentStaffFunction
-
-    """
-    Authorize.jwt_required()
-    return document_staff_function_service.create(db, body)
+    user_id = Authorize.get_jwt_subject()
+    return document_staff_function_service.get_by_user(db, user_service.get_by_id(db, user_id))
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],

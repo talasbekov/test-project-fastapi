@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from core import get_db
 from schemas import (ServiceStaffFunctionCreate, ServiceStaffFunctionRead,
                      ServiceStaffFunctionUpdate)
-from services import service_staff_function_service
+from services import service_staff_function_service, user_service
 
 router = APIRouter(prefix="/service_staff_function", tags=["ServiceStaffFunction"], dependencies=[Depends(HTTPBearer())])
 
@@ -30,7 +30,8 @@ async def get_all(*,
        - **limit**: int - The maximum number of ServiceStaffFunction to return in the response. This parameter is optional and defaults to 100.
    """
     Authorize.jwt_required()
-    return service_staff_function_service.get_multi(db, skip, limit)
+    user_id = Authorize.get_jwt_subject()
+    return service_staff_function_service.get_by_user(db, user_service.get_by_id(db, user_id))
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
