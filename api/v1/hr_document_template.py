@@ -1,5 +1,5 @@
 import uuid
-from typing import List
+from typing import List, Dict
 
 from fastapi import APIRouter, Depends, status
 from fastapi_jwt_auth import AuthJWT
@@ -73,6 +73,23 @@ async def get_by_id(*,
     """
     Authorize.jwt_required()
     return hr_document_template_service.get_by_id(db, id)
+
+
+@router.get("/steps/{id}", dependencies=[Depends(HTTPBearer())],
+            response_model=Dict[int, str],
+            summary="Get HrDocumentTemplate by step id")
+async def get_steps_by_document_template_id(*,
+    db: Session = Depends(get_db),
+    document_template_id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Get HrDocumentTemplate by step id
+
+        - **id**: UUID - required.
+    """
+    Authorize.jwt_required()
+    return hr_document_template_service.get_steps_by_document_template_id(db, document_template_id)
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
