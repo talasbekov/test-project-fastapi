@@ -7,8 +7,8 @@ from sqlalchemy.orm import Session
 from exceptions import InvalidOperationException, NotFoundException
 from models import StaffDivision, User
 from schemas import (StaffDivisionUpdate, UserCreate, UserGroupUpdate,
-                     UserPermission, UserRead, UserServiceFunction, UserUpdate)
-from services import (staff_division_service, staff_unit_service)
+                     UserPermission, UserRead, UserUpdate)
+from services import staff_division_service, staff_unit_service
 
 from .base import ServiceBase
 

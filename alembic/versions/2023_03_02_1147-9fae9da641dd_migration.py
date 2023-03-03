@@ -212,6 +212,37 @@ def upgrade() -> None:
         }]
     )
 
+    doc_type1_id = get_uuid()
+    doc_type2_id = get_uuid()
+    doc_type3_id = get_uuid()
+    doc_type4_id = get_uuid()
+    doc_type5_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['document_function_types'],
+        [{
+            'id': doc_type1_id,
+            'name': "Согласующий",
+            'can_cancel': True
+        }, {
+            'id': doc_type2_id,
+            'name': "Эксперт",
+            'can_cancel': False
+        }, {
+            'id': doc_type3_id,
+            'name': "Утверждающий",
+            'can_cancel': True
+        }, {
+            'id': doc_type4_id,
+            'name': "Уведомляемый",
+            'can_cancel': False
+        }, {
+            'id': doc_type5_id,
+            'name': "Инициатор",
+            'can_cancel': True
+        }]
+    )
+
 
     staff_function1_id = get_uuid()
     staff_function2_id = get_uuid()
@@ -231,7 +262,8 @@ def upgrade() -> None:
             'discriminator': 'document_staff_function',
             'name' : 'Инициатор приказа о назначении',
             'jurisdiction_id': jurisdiction1_id,
-            'priority': 1
+            'priority': 1,
+            'role_id': doc_type5_id
         },
         {
             'id': staff_function2_id,
@@ -239,7 +271,8 @@ def upgrade() -> None:
             'discriminator': 'document_staff_function',
             'name' : 'Эксперт приказа о назначении',
             'jurisdiction_id': jurisdiction1_id,
-            'priority': 2
+            'priority': 2,
+            'role_id': doc_type2_id
         },
         {
             'id': staff_function3_id,
@@ -247,7 +280,8 @@ def upgrade() -> None:
             'discriminator': 'document_staff_function',
             'name' : 'Утверждающий приказа о назначении',
             'jurisdiction_id': jurisdiction1_id,
-            'priority': 100
+            'priority': 100,
+            'role_id': doc_type3_id
         },
         {
             'id': staff_function4_id,
@@ -255,7 +289,8 @@ def upgrade() -> None:
             'discriminator': 'document_staff_function',
             'name' : 'Инициатор приказа о присвоения звания',
             'jurisdiction_id': jurisdiction1_id,
-            'priority': 1
+            'priority': 1,
+            'role_id': doc_type5_id
         },
         {
             'id': staff_function5_id,
@@ -263,7 +298,8 @@ def upgrade() -> None:
             'discriminator': 'document_staff_function',
             'name' : 'Эксперт приказа о присвоения звания',
             'jurisdiction_id': jurisdiction1_id,
-            'priority': 2
+            'priority': 2,
+            'role_id': doc_type2_id
         },
         {
             'id': staff_function6_id,
@@ -271,7 +307,8 @@ def upgrade() -> None:
             'discriminator': 'document_staff_function',
             'name' : 'Утверждающий приказа о присвоения звания',
             'jurisdiction_id': jurisdiction1_id,
-            'priority': 100
+            'priority': 100,
+            'role_id': doc_type3_id
         },
         {
             'id': staff_function7_id,
@@ -279,7 +316,8 @@ def upgrade() -> None:
             'discriminator': 'document_staff_function',
             'name' : 'Инициатор приказа о присвоения черного берета',
             'jurisdiction_id': jurisdiction1_id,
-            'priority': 1
+            'priority': 1,
+            'role_id': doc_type5_id
         },
         {
             'id': staff_function8_id,
@@ -287,7 +325,8 @@ def upgrade() -> None:
             'discriminator': 'document_staff_function',
             'name' : 'Эксперт приказа о присвоения черного берета',
             'jurisdiction_id': jurisdiction1_id,
-            'priority': 2
+            'priority': 2,
+            'role_id': doc_type2_id
         },
         {
             'id': staff_function9_id,
@@ -295,7 +334,8 @@ def upgrade() -> None:
             'discriminator': 'document_staff_function',
             'name' : 'Утверждающий приказа о присвоения черного берета',
             'jurisdiction_id': jurisdiction1_id,
-            'priority': 100
+            'priority': 100,
+            'role_id': doc_type3_id
         }]
     )
 
@@ -714,83 +754,6 @@ def upgrade() -> None:
                 }
             },
             'id': template3_id
-        }]
-    )
-
-    doc_type1_id = get_uuid()
-    doc_type2_id = get_uuid()
-    doc_type3_id = get_uuid()
-    doc_type4_id = get_uuid()
-    doc_type5_id = get_uuid()
-
-    op.bulk_insert(
-        Base.metadata.tables['document_function_types'],
-        [{
-            'id': doc_type1_id,
-            'name': "Согласующий",
-            'can_cancel': True
-        }, {
-            'id': doc_type2_id,
-            'name': "Эксперт",
-            'can_cancel': False
-        }, {
-            'id': doc_type3_id,
-            'name': "Утверждающий",
-            'can_cancel': True
-        }, {
-            'id': doc_type4_id,
-            'name': "Уведомляемый",
-            'can_cancel': False
-        }, {
-            'id': doc_type5_id,
-            'name': "Инициатор",
-            'can_cancel': True
-        }]
-    )
-
-    role_id = get_uuid()
-    role2_id = get_uuid()
-    role3_id = get_uuid()
-    role4_id = get_uuid()
-    role5_id = get_uuid()
-
-    op.bulk_insert(
-        Base.metadata.tables['staff_functions'],
-        [{
-            'id': role_id,
-            'name': "Согласующий",
-            'discriminator': "document_staff_function",
-            'hours_per_week': "2",
-            'priority': "3",
-            'role_id': doc_type1_id
-        }, {
-            'id': role2_id,
-            'name': "Эксперт",
-            'discriminator': "document_staff_function",
-            'hours_per_week': "5",
-            'priority': "2",
-            'role_id': doc_type2_id
-    }, {
-            'id': role3_id,
-            'name': "Утверждающий",
-            'discriminator': "document_staff_function",
-            'hours_per_week': "2",
-            'priority': "100",
-            'role_id': doc_type3_id,
-        }, {
-            'id': role4_id,
-            'name': "Уведомляемый",
-            'discriminator': "document_staff_function",
-            'hours_per_week': "0",
-            'priority': "-1",
-            'role_id': doc_type4_id
-        }, {
-            'id': role5_id,
-            'name': "Инициатор",
-            'discriminator': "document_staff_function",
-            'hours_per_week': "3",
-            'priority': "1",
-            'role_id': doc_type5_id
         }]
     )
 

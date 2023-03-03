@@ -4,7 +4,8 @@ from typing import List, Optional
 
 from pydantic import BaseModel, EmailStr
 
-from schemas import BadgeRead, PermissionRead, RankRead, StaffUnitRead, StaffDivisionRead, ServiceFunctionRead
+from schemas import (BadgeRead, PermissionRead, RankRead, StaffDivisionRead,
+                     StaffFunctionRead, StaffUnitRead)
 
 
 class UserBase(BaseModel):
@@ -55,7 +56,7 @@ class UserRead(UserBase):
     status: Optional[str]
     status_till: Optional[datetime.datetime]
     permissions: Optional[List[PermissionRead]]
-    service_functions: Optional[List[ServiceFunctionRead]]
+    service_functions: Optional[List[StaffFunctionRead]]
 
     class Config:
         orm_mode = True
