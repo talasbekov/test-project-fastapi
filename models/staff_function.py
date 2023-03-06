@@ -53,6 +53,7 @@ class DocumentStaffFunction(StaffFunction):
 
     role = relationship("DocumentFunctionType")
     jurisdiction = relationship("Jurisdiction")
+    hr_document_step = relationship("HrDocumentStep", uselist=False)
 
     __mapper_args__ = {
         "polymorphic_identity": "document_staff_function"
