@@ -16,6 +16,8 @@ from .base import ServiceBase
   "2": "uuid"
 }
 """
+
+
 class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTemplateCreate, HrDocumentTemplateUpdate]):
 
     def get_by_id(self, db: Session, id: str) -> HrDocumentTemplate:
@@ -23,6 +25,7 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
         if hr_document_template is None:
             raise NotFoundException(detail=f'HrDocumentTemplate with id: {id} is not found!')
         return hr_document_template
+
     def get_steps_by_document_template_id(self, db: Session, document_template_id: str) -> HrDocumentTemplate:
         
         all_steps = db.query(DocumentStaffFunction).filter(

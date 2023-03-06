@@ -1,15 +1,10 @@
 import uuid
 
-from fastapi import HTTPException, status
-from fastapi.encoders import jsonable_encoder
-from fastapi.logger import logger as log
 from sqlalchemy.orm import Session
 
-from exceptions import BadRequestException, NotFoundException
-from models import (DocumentStaffFunction, HrDocumentStep, HrDocumentTemplate,
-                    StaffFunction)
-from schemas import (HrDocumentStepCreate, HrDocumentStepRead,
-                     HrDocumentStepUpdate)
+from exceptions import NotFoundException
+from models import DocumentStaffFunction, HrDocumentStep
+from schemas import HrDocumentStepCreate, HrDocumentStepUpdate
 
 from .base import ServiceBase
 
@@ -69,5 +64,6 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
         ).order_by(DocumentStaffFunction.priority.asc()).first()
 
         return step
+
 
 hr_document_step_service = HrDocumentStepService(HrDocumentStep)

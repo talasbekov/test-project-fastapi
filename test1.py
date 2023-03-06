@@ -1,2 +1,3 @@
-s = "[\n  {\n    \"loc\": [\n      \"hours_per_week\"\n    ],\n    \"msg\": \"value is not a valid integer\",\n    \"type\": \"type_error.integer\"\n  }\n]"
+s = "[\n  {\n    \"loc\": [\n      \"hr_document_template_id\"\n    ],\n    \"msg\": \"field required\",\n    \"type\": \"value_error.missing\"\n  }\n]"
+
 print(s)

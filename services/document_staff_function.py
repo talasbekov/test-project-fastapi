@@ -1,11 +1,12 @@
+import datetime
 import uuid
 from typing import List
 
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
-from models import DocumentStaffFunction, StaffUnit, User
-from schemas import (DocumentStaffFunctionCreate, DocumentStaffFunctionRead,
+from models import DocumentStaffFunction, User, HrDocumentStep
+from schemas import (DocumentStaffFunctionCreate, DocumentStaffFunctionAdd,
                      DocumentStaffFunctionUpdate)
 
 from .base import ServiceBase
@@ -40,6 +41,26 @@ class DocumentStaffFunctionService(ServiceBase[DocumentStaffFunction, DocumentSt
         ))
 
         return res
+
+    def create_function(self, db: Session, body: DocumentStaffFunctionAdd):
+
+        create_function: DocumentStaffFunction = super().create(db, DocumentStaffFunctionCreate(
+            role_id=body.role_id,
+            name=body.name,
+            jurisdiction_id=body.jurisdiction_id,
+            hours_per_week=body.hours_per_week,
+            priority=body.priority
+        ))
+        new_step = HrDocumentStep(
+            hr_document_template_id=body.hr_document_template_id,
+            staff_function_id=create_function.id,
+            created_at=datetime.datetime.now()
+        )
+
+        db.add(new_step)
+        db.add(create_function)
+        db.flush()
+        return create_function
 
 
 document_staff_function_service = DocumentStaffFunctionService(DocumentStaffFunction)
