@@ -58,8 +58,23 @@ class StaffFunctionRead(StaffFunctionBase):
     hours_per_week: Optional[int]
 
     class Config:
-        orm_mode=True
+        orm_mode = True
         arbitrary_types_allowed = True
+
+
+class DocumentStaffFunctionTemplate(BaseModel):
+    id: Optional[uuid.UUID]
+    name: Optional[str]
+
+    class Config:
+        orm_mode = True
+
+
+class DocumentStaffFunctionStep(BaseModel):
+    hr_document_template: Optional[DocumentStaffFunctionTemplate]
+
+    class Config:
+        orm_mode = True
 
 
 class DocumentStaffFunctionRead(StaffFunctionRead, DocumentStaffFunctionBase):
@@ -70,6 +85,9 @@ class DocumentStaffFunctionRead(StaffFunctionRead, DocumentStaffFunctionBase):
 
     jurisdiction_id: Optional[uuid.UUID]
     jurisdiction: Optional[JurisdictionRead]
+
+    hr_document_step: Optional[DocumentStaffFunctionStep]
+
 
 class ServiceStaffFunctionRead(StaffFunctionRead, ServiceStaffFunctionBase):
 

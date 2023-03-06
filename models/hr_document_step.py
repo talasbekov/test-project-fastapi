@@ -16,5 +16,5 @@ class HrDocumentStep(Model, Base):
     hr_document_template_id = Column(UUID(as_uuid=True), ForeignKey("hr_document_templates.id", ondelete='CASCADE', onupdate='CASCADE'), nullable=False)
     staff_function_id = Column(UUID(as_uuid=True), ForeignKey("staff_functions.id", ondelete='CASCADE', onupdate='CASCADE'), nullable=False)
 
-    staff_function = relationship("StaffFunction")
+    staff_function = relationship("DocumentStaffFunction")
     hr_document_template = relationship("HrDocumentTemplate")
