@@ -16,3 +16,5 @@ from .staff_unit import StaffUnit
 from .user import User
 from .user_stat import UserStat
 from .position import Position
+
+from .education import *

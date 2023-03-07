@@ -1,8 +1,6 @@
 import time
-import uuid
 
 from fastapi import Depends, FastAPI, Request
-from fastapi.logger import logger
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
