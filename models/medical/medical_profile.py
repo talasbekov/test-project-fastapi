@@ -13,3 +13,5 @@ class MedicalProfile(Model):
     __tablename__ = "medical_profiles"
 
     profile_id = Column(UUID(as_uuid=True), ForeignKey("profiles.id"))
+
+    profile = relationship("Profile")
