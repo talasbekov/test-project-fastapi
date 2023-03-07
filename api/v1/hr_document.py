@@ -49,7 +49,8 @@ async def get_not_signed(*,
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
     return hr_document_service.get_not_signed_documents(db, user_id, skip, limit)
- 
+
+
 @router.post("", status_code=status.HTTP_201_CREATED, response_model=HrDocumentRead,
              summary="Initialize HrDocument")
 async def initialize(*,

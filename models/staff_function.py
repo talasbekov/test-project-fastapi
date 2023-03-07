@@ -49,11 +49,12 @@ class DocumentStaffFunction(StaffFunction):
 
     role_id = Column(UUID(as_uuid=True), ForeignKey("document_function_types.id"))
     jurisdiction_id = Column(UUID(as_uuid=True), ForeignKey("jurisdictions.id"))
+
     priority = Column(Integer)
 
     role = relationship("DocumentFunctionType")
     jurisdiction = relationship("Jurisdiction")
-    hr_document_step = relationship("HrDocumentStep", uselist=False)
+    hr_document_step = relationship("HrDocumentStep", back_populates='staff_function',cascade="all,delete", uselist=False)
 
     __mapper_args__ = {
         "polymorphic_identity": "document_staff_function"
