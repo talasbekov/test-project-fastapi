@@ -5,17 +5,19 @@ from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID
 from sqlalchemy.orm import relationship
 
 from core import Base
-from models import NamedModel
+from models import Model
 
 
-class DispensaryRegistration(NamedModel):
+class UserLiberations(Model):
 
-    __tablename__ = "dispensary_registrations"
+    __tablename__ = "user_liberations"
 
+
+    reason = Column(String)
+    liberation_name = Column(String)
     initiator = Column(String)
     start_date = Column(TIMESTAMP(timezone=True))
     end_date = Column(TIMESTAMP(timezone=True))
-    document_link = Column(TEXT)
     profile_id = Column(UUID(as_uuid=True), ForeignKey("medical_profiles.id"))
 
     profile = relationship("MedicalProfile")
