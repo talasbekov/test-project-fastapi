@@ -7,9 +7,9 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import (DocumentStaffFunctionCreate, DocumentStaffFunctionRead,
+from schemas import (DocumentStaffFunctionAdd, DocumentStaffFunctionRead,
                      DocumentStaffFunctionUpdate)
-from services import document_staff_function_service, user_service
+from services import document_staff_function_service
 
 router = APIRouter(prefix="/document_staff_function", tags=["DocumentStaffFunction"], dependencies=[Depends(HTTPBearer())])
 
@@ -96,3 +96,14 @@ def duplicate(*,
 ):
     Authorize.jwt_required()
     return document_staff_function_service.duplicate(db, id)
+
+
+@router.post('', status_code=status.HTTP_201_CREATED,
+            response_model=DocumentStaffFunctionRead)
+async def create_function(*,
+    db: Session = Depends(get_db),
+    body: DocumentStaffFunctionAdd,
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    return document_staff_function_service.create_function(db, body)

@@ -17,6 +17,7 @@ from .staff_division import staff_division_service
 from .service_staff_function_type import service_staff_function_type_service
 from .document_staff_function_type import document_staff_function_type_service
 from .service_staff_function import service_staff_function_service
+from .hr_document_step import hr_document_step_service
 from .document_staff_function import document_staff_function_service
 
 from .staff_unit import staff_unit_service
@@ -34,7 +35,7 @@ from .staff_division import staff_division_service
 from .staff_unit import staff_unit_service
 
 from .hr_document_template import hr_document_template_service
-from .hr_document_step import hr_document_step_service
+
 from .user import user_service
 from .auth import auth_service
 from .hr_document_info import hr_document_info_service

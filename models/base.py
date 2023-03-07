@@ -5,6 +5,8 @@ from sqlalchemy import TIMESTAMP, Column, ForeignKey, String, text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
+from core import Base
+
 """
     This class is abstract entity class, which provides following columns to all inherited entities:
     - **id** : UUID - clustered index of table
@@ -13,7 +15,7 @@ from sqlalchemy.orm import relationship
 """
 
 
-class Model():
+class Model(Base):
 
     __abstract__ = True
 

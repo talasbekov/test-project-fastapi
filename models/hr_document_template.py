@@ -24,4 +24,4 @@ class HrDocumentTemplate(NamedModel, Base):
     subject_type = Column(Enum(SubjectType))
     properties = Column(JSON(none_as_null=True))
 
-    documents = relationship("HrDocument", back_populates="document_template")
+    documents = relationship("HrDocument", cascade="all,delete", back_populates="document_template")

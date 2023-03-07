@@ -31,6 +31,10 @@ class DocumentStaffFunctionCreate(DocumentStaffFunctionBase):
     pass
 
 
+class DocumentStaffFunctionAdd(DocumentStaffFunctionBase):
+    hr_document_template_id: uuid.UUID
+
+
 class ServiceStaffFunctionCreate(ServiceStaffFunctionBase):
     pass
 
@@ -63,6 +67,7 @@ class StaffFunctionRead(StaffFunctionBase):
 
 
 class DocumentStaffFunctionTemplate(BaseModel):
+
     id: Optional[uuid.UUID]
     name: Optional[str]
 
@@ -71,10 +76,20 @@ class DocumentStaffFunctionTemplate(BaseModel):
 
 
 class DocumentStaffFunctionStep(BaseModel):
+
+    id: Optional[uuid.UUID]
     hr_document_template: Optional[DocumentStaffFunctionTemplate]
 
     class Config:
         orm_mode = True
+
+
+# class DocumentStaffFunctionInit(BaseModel):
+#     hr_document_step: Optional[DocumentStaffFunctionStep]
+#     priority: Optional[int]
+#     role_id: Optional[uuid.UUID]
+#     hours_per_week: Optional[int]
+#     jurisdiction_id: Optional[uuid.UUID]
 
 
 class DocumentStaffFunctionRead(StaffFunctionRead, DocumentStaffFunctionBase):
