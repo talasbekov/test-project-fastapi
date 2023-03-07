@@ -14,6 +14,13 @@ class ProfileService(ServiceBase[Profile, ProfileCreate, ProfileUpdate]):
         if profile is None:
             raise NotFoundException(detail=f"Profile with id: {id} is not found!")
         return profile
-
+    
+    
+    def get_by_user_id(self, db: Session, user_id: str):
+        profile = db.query(Profile).filter(Profile.user_id == user_id).first()
+        if profile is None:
+            raise NotFoundException(detail=f"Profile with user_id: {user_id} is not found!")
+        return profile
+    
 
 profile_service = ProfileService(Profile)

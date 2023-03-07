@@ -42,3 +42,4 @@ from .hr_document_info import hr_document_info_service
 from .hr_document import hr_document_service
 
 from additional import *
+from profile import *

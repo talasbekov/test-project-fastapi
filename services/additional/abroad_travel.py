@@ -22,5 +22,7 @@ class AbroadTravelService(ServiceBase[AbroadTravel, AbroadTravelCreate, AbroadTr
     def delete(self, db: Session, id: str):
         return super().delete(db, id)
 
+    def get_multi_by_user_id(self, db: Session, user_id: str, skip: int = 0, limit: int = 100, additional_profile_id: str):
+        return db.query(AbroadTravel).filter(AbroadTravel.user_id == user_id).filter(AbroadTravel.additional_profile_id == additional_profile_id).offset(skip).limit(limit).all()
 
 abroad_travel_service = AbroadTravelService(AbroadTravel)
