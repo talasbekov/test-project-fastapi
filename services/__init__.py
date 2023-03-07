@@ -1,6 +1,16 @@
 # Be careful of imports order is important!
 # Possible problems are circular imports, partial initialization of module
 
+from .profile.profile import profile_service
+from .profile.personal_profile.personal_profile import personal_profile_service
+from .profile.personal_profile.biographic_info import biographic_info_service
+from .profile.personal_profile.user_financial_info import user_financial_info_service
+from .profile.personal_profile.driving_licence import driving_licence_service
+from .profile.personal_profile.identification_card import identification_card_service
+from .profile.personal_profile.passport import passport_service
+from .profile.personal_profile.sport_achievement import sport_achievement_service
+from .profile.personal_profile.sport_degree import sport_degree_service
+from .profile.personal_profile.tax_declaration import tax_declaration_service
 from .base import ServiceBase
 from .jurisdiction import jurisdiction_service
 from .staff_division import staff_division_service
