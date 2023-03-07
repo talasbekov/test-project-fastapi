@@ -22,7 +22,6 @@ class StaffUnitUpdate(StaffUnitBase):
 
 class StaffUnitRead(StaffUnitBase):
     id: Optional[uuid.UUID]
-    max_rank_id: Optional[uuid.UUID]
     staff_division_id: Optional[uuid.UUID]
     staff_division: Optional[StaffDivisionRead]
     staff_functions: Optional[List[StaffFunctionRead]]
