@@ -43,8 +43,7 @@ class DocumentStaffFunctionService(ServiceBase[DocumentStaffFunction, DocumentSt
 
         new_step = HrDocumentStep(
             hr_document_template_id=func.hr_document_step.hr_document_template_id,
-            staff_function_id=res.id,
-            created_at=datetime.datetime.now()
+            staff_function_id=res.id
         )
 
         db.add(new_step)

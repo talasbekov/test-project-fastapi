@@ -27,7 +27,7 @@ class HrDocumentInfo(Model, Base):
 
     hr_document_id = Column(UUID(as_uuid=True), ForeignKey("hr_documents.id"), nullable=False)
 
-    hr_document_step = relationship("HrDocumentStep", cascade="all,delete")
-    signed_by = relationship("User", cascade="all, delete", foreign_keys=signed_by_id)
-    assigned_to = relationship("User", cascade="all, delete", foreign_keys=assigned_to_id)
-    hr_document = relationship("HrDocument", cascade="all,delete")
+    hr_document_step = relationship("HrDocumentStep", back_populates="hr_document_infos")
+    signed_by = relationship("User", foreign_keys=signed_by_id)
+    assigned_to = relationship("User", foreign_keys=assigned_to_id)
+    hr_document = relationship("HrDocument")
