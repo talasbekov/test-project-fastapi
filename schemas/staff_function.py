@@ -67,13 +67,17 @@ class StaffFunctionRead(StaffFunctionBase):
 
 
 class DocumentStaffFunctionTemplate(BaseModel):
+
     id: Optional[uuid.UUID]
+    name: Optional[str]
 
     class Config:
         orm_mode = True
 
 
 class DocumentStaffFunctionStep(BaseModel):
+
+    id: Optional[uuid.UUID]
     hr_document_template: Optional[DocumentStaffFunctionTemplate]
 
     class Config:

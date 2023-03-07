@@ -5,8 +5,8 @@ from typing import List
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
-from models import DocumentStaffFunction, User, HrDocumentStep
-from schemas import (DocumentStaffFunctionCreate, DocumentStaffFunctionAdd,
+from models import DocumentStaffFunction, HrDocumentStep, User
+from schemas import (DocumentStaffFunctionAdd, DocumentStaffFunctionCreate,
                      DocumentStaffFunctionUpdate)
 
 from .base import ServiceBase
@@ -36,9 +36,20 @@ class DocumentStaffFunctionService(ServiceBase[DocumentStaffFunction, DocumentSt
         res = super().create(db, DocumentStaffFunctionCreate(
             name=func.name,
             hours_per_week=func.hours_per_week,
+            jurisdiction_id=func.jurisdiction_id,
             priority=func.priority,
             role_id=func.role_id
         ))
+
+        new_step = HrDocumentStep(
+            hr_document_template_id=func.hr_document_step.hr_document_template_id,
+            staff_function_id=res.id,
+            created_at=datetime.datetime.now()
+        )
+
+        db.add(new_step)
+        db.add(res)
+        db.flush()
 
         return res
 
