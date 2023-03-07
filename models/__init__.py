@@ -17,3 +17,7 @@ from .user import User
 from .user_stat import UserStat
 from .position import Position
 from additional import *
+from .profile import Profile
+from .personal_profile import (FamilyStatusEnum, PersonalProfile, BiographicInfo, UserFinancialInfo,
+                               TaxDeclaration, SportDegree, SportAchievement,
+                               IdentificationCard, DrivingLicence, Passport)

@@ -1,3 +1,13 @@
+from .profile import ProfileCreate, ProfileUpdate, ProfileRead
+from .personal_profile import (PersonalProfileCreate, PersonalProfileUpdate, PersonalProfileRead,
+                               BiographicInfoCreate, BiographicInfoUpdate, BiographicInfoRead,
+                               UserFinancialInfoCreate, UserFinancialInfoUpdate, UserFinancialInfoRead,
+                               TaxDeclarationCreate, TaxDeclarationUpdate, TaxDeclarationRead,
+                               SportDegreeCreate, SportDegreeUpdate, SportDegreeRead,
+                               SportAchievementCreate, SportAchievementUpdate, SportAchievementRead,
+                               IdentificationCardCreate, IdentificationCardUpdate, IdentificationCardRead,
+                               DrivingLicenceCreate, DrivingLicenceUpdate, DrivingLicenceRead,
+                               PassportCreate, PassportUpdate, PassportRead)
 from .badge import BadgeCreate, BadgeRead, BadgeUpdate
 from .equipment import EquipmentCreate, EquipmentRead, EquipmentUpdate
 from .jurisdiction import JurisdictionRead, JurisdictionCreate, JurisdictionUpdate
