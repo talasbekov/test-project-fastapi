@@ -280,6 +280,9 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 return service.get_parents(db)
             else:
                 return service.get_by_id(db, id).children
+        res = service.get_multi(db)
+        print(res[0].users)
+        print(res[0].actual_users)
         return [responses.get(option).from_orm(i) for i in service.get_multi(db)]
 
     def get_signed_documents(
