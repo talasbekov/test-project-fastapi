@@ -22,12 +22,16 @@ class ServiceFunctionType(NamedModel, Base):
 
     __tablename__ = "service_function_types"
 
+    staff_functions = relationship("ServiceStaffFunction", back_populates="type", cascade="all,delete")
+
 
 class DocumentFunctionType(NamedModel, Base):
 
     __tablename__ = "document_function_types"
 
     can_cancel = Column(Boolean, nullable=False)
+
+    staff_functions = relationship("DocumentStaffFunction", back_populates="role", cascade="all,delete")
 
 
 class StaffFunction(NamedModel, Base):
@@ -65,7 +69,7 @@ class ServiceStaffFunction(StaffFunction):
 
     type_id = Column(UUID(as_uuid=True), ForeignKey("service_function_types.id"))
 
-    type = relationship("ServiceFunctionType")
+    type = relationship("ServiceFunctionType", back_populates="staff_functions")
 
     __mapper_args__ = {
         "polymorphic_identity": "service_staff_function"
