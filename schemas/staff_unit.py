@@ -9,7 +9,7 @@ from schemas import (DocumentStaffFunctionRead, PositionRead,
 
 
 class StaffUnitBase(BaseModel):
-    max_rank_id: uuid.UUID
+    pass
 
 
 class StaffUnitCreate(StaffUnitBase):
