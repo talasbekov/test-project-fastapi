@@ -11,7 +11,7 @@ class Education(Model, Base):
     __tablename__ = "educations"
 
     profile_id = Column(UUID(as_uuid=True), ForeignKey("educational_profiles.id"), nullable=True)
-    profile = relationship("EducationalProfile")
+    profile = relationship("EducationalProfile", back_populates="education")
 
     start_date = Column(DATE)
     end_date = Column(DATE)

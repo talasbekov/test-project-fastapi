@@ -9,7 +9,10 @@ class LanguageProficiencyBase(BaseModel):
     profile_id: Optional[uuid.UUID]
     language_id: Optional[uuid.UUID]
 
-
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
+        
 class LanguageProficiencyCreate(LanguageProficiencyBase):
     pass
 
@@ -24,5 +27,3 @@ class LanguageProficiencyRead(LanguageProficiencyBase):
     profile_id: Optional[uuid.UUID]
     language_id: Optional[uuid.UUID]
 
-    class Config:
-        orm_mode = True

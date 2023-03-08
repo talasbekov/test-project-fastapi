@@ -1,6 +1,5 @@
 from fastapi import APIRouter
 
-from .profile import router as profile_router
 from .academic_degree import router as academic_degree_router
 from .academic_degree_degree import router as academic_degree_degree_router
 from .academic_title import router as academic_title_router
@@ -18,7 +17,6 @@ from .course_provider import router as course_provider_router
 
 router_education = APIRouter(prefix="/education")
 
-router_education.include_router(profile_router)
 router_education.include_router(academic_degree_router)
 router_education.include_router(academic_degree_degree_router)
 router_education.include_router(academic_title_router)

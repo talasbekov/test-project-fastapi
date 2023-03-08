@@ -13,7 +13,7 @@ class Course(Model, Base):
     name = Column(String)
 
     profile_id = Column(UUID(as_uuid=True), ForeignKey("educational_profiles.id"), nullable=True)
-    profile = relationship("EducationalProfile")
+    profile = relationship("EducationalProfile", back_populates="course")
 
     provider_id = Column(String)
 

@@ -11,7 +11,7 @@ class AcademicTitle(Model, Base):
     __tablename__ = "academic_titles"
 
     profile_id = Column(UUID(as_uuid=True), ForeignKey("educational_profiles.id"), nullable=True)
-    profile = relationship("EducationalProfile")
+    profile = relationship("EducationalProfile", back_populates="academic_title")
 
     degree_id = Column(UUID(as_uuid=True), ForeignKey("academic_title_degrees.id"), nullable=True)
     degree = relationship("AcademicTitleDegree")

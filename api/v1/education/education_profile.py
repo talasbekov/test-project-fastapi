@@ -7,17 +7,21 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas.education import (EducationalProfileCreate,
-                               EducationalProfileRead,
-                               EducationalProfileUpdate)
+from schemas import (EducationalProfileCreate,
+                    EducationalProfileRead,
+                    EducationalProfileUpdate)
 from services import profile_service
 from services.education import educational_profile_service
 
 router = APIRouter(prefix="/educational_profiles", tags=["EducationalProfiles"], dependencies=[Depends(HTTPBearer())])
-
+"""
+@router.get("", dependencies=[Depends(HTTPBearer())],
+            response_model=List[PsychologicalCheckRead],
+            summary="Get all Polygraph Check")
+"""
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[EducationalProfileRead],
+            response_model=None,
             summary="Get all EducationalProfiles")
 async def get_all(*,
     db: Session = Depends(get_db),
@@ -118,4 +122,5 @@ async def get_profile(*,
 ):
     Authorize.jwt_required()
     profile = profile_service.get_by_user_id(db, Authorize.get_jwt_subject())
-    return profile.educational_profile
+    print(profile.educational_profile.language_proficiency)
+    return educational_profile_service.get_by_id(db, profile.educational_profile.id)

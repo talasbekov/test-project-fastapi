@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 from core import get_db
 from schemas import ProfileCreate, ProfileRead, ProfileUpdate
 from services import profile_service
+from models import Profile
 
 router = APIRouter(prefix="/profile", tags=["Profiles"], dependencies=[Depends(HTTPBearer())])
 
@@ -45,6 +46,9 @@ async def create(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
+    profile = db.query(Profile).filter(Profile.user_id == Authorize.get_jwt_subject()).first()
+    if profile is not None:
+        return profile
     return profile_service.create(db, {"user_id": Authorize.get_jwt_subject()})
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],

@@ -1,5 +1,4 @@
 from .profile import ProfileCreate, ProfileUpdate, ProfileRead
-from .personal import *
 from .badge import BadgeCreate, BadgeRead, BadgeUpdate
 from .equipment import EquipmentCreate, EquipmentRead, EquipmentUpdate
 from .jurisdiction import JurisdictionRead, JurisdictionCreate, JurisdictionUpdate
@@ -31,3 +30,5 @@ from .hr_document_info import (HrDocumentInfoCreate, HrDocumentInfoRead,
 from .user_stat import UserStatCreate, UserStatRead, UserStatUpdate
 from .auth import LoginForm, RegistrationForm
 from .additional import *
+from .education import *
+from .personal import *

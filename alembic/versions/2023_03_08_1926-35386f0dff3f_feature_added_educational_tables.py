@@ -1,17 +1,17 @@
-"""empty message
+"""feature: added educational tables
 
-Revision ID: f6808b853566
-Revises: 9fae9da641dd
-Create Date: 2023-03-07 14:25:20.099298
+Revision ID: 35386f0dff3f
+Revises: 0dd54afd8e53
+Create Date: 2023-03-08 19:26:23.289064
 
 """
+from alembic import op
 import sqlalchemy as sa
 
-from alembic import op
 
 # revision identifiers, used by Alembic.
-revision = 'f6808b853566'
-down_revision = '9fae9da641dd'
+revision = '35386f0dff3f'
+down_revision = '0dd54afd8e53'
 branch_labels = None
 depends_on = None
 
@@ -67,10 +67,19 @@ def upgrade() -> None:
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('educational_profiles',
+    sa.Column('profile_id', sa.UUID(), nullable=True),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['profile_id'], ['profiles.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('academic_degrees',
     sa.Column('profile_id', sa.UUID(), nullable=True),
     sa.Column('degree_id', sa.UUID(), nullable=True),
     sa.Column('science_id', sa.UUID(), nullable=True),
+    sa.Column('specialty_id', sa.UUID(), nullable=True),
     sa.Column('document_number', sa.String(), nullable=True),
     sa.Column('document_link', sa.String(), nullable=True),
     sa.Column('assignment_date', sa.DATE(), nullable=True),
@@ -78,8 +87,9 @@ def upgrade() -> None:
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['degree_id'], ['academic_degree_degrees.id'], ),
-    sa.ForeignKeyConstraint(['profile_id'], ['profiles.id'], ),
+    sa.ForeignKeyConstraint(['profile_id'], ['educational_profiles.id'], ),
     sa.ForeignKeyConstraint(['science_id'], ['sciences.id'], ),
+    sa.ForeignKeyConstraint(['specialty_id'], ['specialties.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('academic_titles',
@@ -93,7 +103,7 @@ def upgrade() -> None:
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['degree_id'], ['academic_title_degrees.id'], ),
-    sa.ForeignKeyConstraint(['profile_id'], ['profiles.id'], ),
+    sa.ForeignKeyConstraint(['profile_id'], ['educational_profiles.id'], ),
     sa.ForeignKeyConstraint(['specialty_id'], ['specialties.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -109,15 +119,7 @@ def upgrade() -> None:
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['course_provider_id'], ['course_providers.id'], ),
-    sa.ForeignKeyConstraint(['profile_id'], ['profiles.id'], ),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('educational_profiles',
-    sa.Column('profile_id', sa.UUID(), nullable=True),
-    sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.ForeignKeyConstraint(['profile_id'], ['profiles.id'], ),
+    sa.ForeignKeyConstraint(['profile_id'], ['educational_profiles.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('educations',
@@ -131,7 +133,7 @@ def upgrade() -> None:
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['institution_id'], ['institutions.id'], ),
-    sa.ForeignKeyConstraint(['profile_id'], ['profiles.id'], ),
+    sa.ForeignKeyConstraint(['profile_id'], ['educational_profiles.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('language_proficiencies',
@@ -142,7 +144,7 @@ def upgrade() -> None:
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['language_id'], ['languages.id'], ),
-    sa.ForeignKeyConstraint(['profile_id'], ['profiles.id'], ),
+    sa.ForeignKeyConstraint(['profile_id'], ['educational_profiles.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('institution_degree_types',
@@ -154,21 +156,22 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['education_id'], ['educations.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_unique_constraint(None, 'medical_profiles', ['id'])
     # ### end Alembic commands ###
 
 
 def downgrade() -> None:
     # ### commands auto generated by Alembic - please adjust! ###
+    op.drop_constraint(None, 'medical_profiles', type_='unique')
     op.drop_table('institution_degree_types')
     op.drop_table('language_proficiencies')
     op.drop_table('educations')
-    op.drop_table('educational_profiles')
     op.drop_table('courses')
     op.drop_table('academic_titles')
     op.drop_table('academic_degrees')
+    op.drop_table('educational_profiles')
     op.drop_table('specialties')
     op.drop_table('sciences')
-    op.drop_table('profiles')
     op.drop_table('languages')
     op.drop_table('institutions')
     op.drop_table('course_providers')

@@ -2,16 +2,20 @@ import uuid
 
 from pydantic import BaseModel
 from typing import Optional
-
+from datetime import date
 
 class AcademicDegreeBase(BaseModel):
-    profile_id: Optional[uuid.UUID]
-    degree_id: Optional[uuid.UUID]
-    science_id: Optional[uuid.UUID]
-    specialty_id: Optional[uuid.UUID]
+    profile_id: uuid.UUID      
+    degree_id: uuid.UUID
+    science_id: uuid.UUID
+    specialty_id: uuid.UUID
     document_number: str
     document_link: str
+    assignment_date: date
 
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
 
 class AcademicDegreeCreate(AcademicDegreeBase):
     pass
@@ -27,8 +31,6 @@ class AcademicDegreeRead(AcademicDegreeBase):
     degree_id: Optional[uuid.UUID]
     science_id: Optional[uuid.UUID]
     specialty_id: Optional[uuid.UUID]
-    document_number: str
-    document_link: str
-
-    class Config:
-        orm_mode = True
+    document_number: Optional[str]
+    document_link: Optional[str]
+    assignment_date: Optional[date]

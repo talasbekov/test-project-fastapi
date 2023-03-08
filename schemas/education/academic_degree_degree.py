@@ -6,7 +6,10 @@ from typing import Optional
 
 class AcademicDegreeDegreeBase(BaseModel):
     name: str
-
+    
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
 
 class AcademicDegreeDegreeCreate(AcademicDegreeDegreeBase):
     pass
@@ -18,7 +21,5 @@ class AcademicDegreeDegreeUpdate(AcademicDegreeDegreeBase):
 
 class AcademicDegreeDegreeRead(AcademicDegreeDegreeBase):
     id: Optional[uuid.UUID]
-    name: str
-
-    class Config:
-        orm_mode = True
+    name: Optional[str]
+     
