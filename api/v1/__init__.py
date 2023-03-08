@@ -19,6 +19,9 @@ from .equipment import router as equipment_router
 from .badge import router as badge_router
 from .rank import router as rank_router
 from .jurisdiction import router as jurisdiction_router
+from .profile import *
+from .additional import *
+from .medical import *
 from .profile import router as profile_router
 from .personal import (personal_profile_router, biographic_info_router, driving_license_router,
                        identification_card_router, passport_router, sport_achievement_router,
@@ -43,6 +46,14 @@ router.include_router(equipment_router)
 router.include_router(badge_router)
 router.include_router(rank_router)
 router.include_router(jurisdiction_router)
+
+router.include_router(router_education)
+router.include_router(anthropometric_data_router)
+router.include_router(dispensary_registrations_router) 
+router.include_router(general_user_information_router)
+router.include_router(hospital_data_router)
+router.include_router(medical_profile_router)
+router.include_router(user_liberation_router)
 router.include_router(profile_router)
 router.include_router(personal_profile_router)
 router.include_router(biographic_info_router)

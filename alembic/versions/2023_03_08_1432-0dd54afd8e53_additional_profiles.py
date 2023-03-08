@@ -26,7 +26,7 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['profile_id'], ['profiles.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('medical_profiles',
+    op.create_table('abroad_travels',
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('vehicle_type', sa.String(length=255), nullable=False),
     sa.Column('destination_country', sa.Enum('test', name='destinationcountry'), nullable=False),
@@ -98,6 +98,6 @@ def downgrade() -> None:
     op.drop_table('special_checks')
     op.drop_table('psychological_checks')
     op.drop_table('polygraph_checks')
-    op.drop_table('medical_profiles')
+    op.drop_table('abroad_travels')
     op.drop_table('additional_profiles')
     # ### end Alembic commands ###

@@ -8,7 +8,7 @@ from core import Base
 from models import Model
 
 
-class UserLiberations(Model):
+class UserLiberation(Model):
 
     __tablename__ = "user_liberations"
 

@@ -11,4 +11,4 @@ from .institution import InstitutionRead, InstitutionCreate, InstitutionUpdate
 from .science import ScienceRead, ScienceCreate, ScienceUpdate
 from .specialty import SpecialtyRead, SpecialtyCreate, SpecialtyUpdate
 from .institution_degree_type import InstitutionDegreeTypeRead, InstitutionDegreeTypeCreate, InstitutionDegreeTypeUpdate
-from .educational_profile import (EducationalProfileRead, EducationalProfileCreate, EducationalProfileUpdate)
+from .educational_profile import EducationalProfileRead, EducationalProfileCreate, EducationalProfileUpdate

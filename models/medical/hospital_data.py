@@ -20,4 +20,4 @@ class HospitalData(Model):
     document_link = Column(TEXT)
     profile_id = Column(UUID(as_uuid=True), ForeignKey("medical_profiles.id"))
 
-    profile = relationship("MedicalProfile")
+    profile = relationship("MedicalProfile", back_populates="hospital_datas")

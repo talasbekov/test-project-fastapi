@@ -2,10 +2,10 @@ from sqlalchemy.orm import Session
 from services import ServiceBase
 
 from exceptions import client
-from models.medical import UserLiberations
+from models.medical import UserLiberation
 from schemas.medical import UserLiberationsCreate,UserLiberationsRead,UserLiberationsUpdate
 
-class UserLiberationsService(ServiceBase[UserLiberations,UserLiberationsCreate,UserLiberationsUpdate]):
+class UserLiberationsService(ServiceBase[UserLiberation,UserLiberationsCreate,UserLiberationsUpdate]):
     def get_by_id(self,db: Session,id: str):
         user_liberations = super().get(db,id)
         if user_liberations is None:
@@ -13,4 +13,4 @@ class UserLiberationsService(ServiceBase[UserLiberations,UserLiberationsCreate,U
         return user_liberations
         
 
-user_liberations_service = UserLiberationsService(UserLiberations)
+user_liberations_service = UserLiberationsService(UserLiberation)

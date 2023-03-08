@@ -3,12 +3,11 @@ import uuid
 
 from pydantic import BaseModel
 
-from models.medical.general_user_information import BloodType,AgeGroup
 
 class GeneralUserInformationBase(BaseModel):
     height: int
-    blood_group: BloodType
-    age_group: AgeGroup
+    blood_group: str
+    age_group: int
     profile_id: uuid.UUID
  
     class Config:

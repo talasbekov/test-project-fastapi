@@ -32,3 +32,4 @@ from .auth import LoginForm, RegistrationForm
 from .additional import *
 from .education import *
 from .personal import *
+from .medical import *

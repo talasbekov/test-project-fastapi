@@ -1,6 +1,6 @@
 import datetime
 import uuid
-
+from typing import Optional
 from pydantic import BaseModel
 
 class UserLiberationsBase(BaseModel):
@@ -9,7 +9,7 @@ class UserLiberationsBase(BaseModel):
     initiator: str
     start_date: datetime.datetime
     end_date: datetime.datetime
-    profile_id: str
+    profile_id: uuid.UUID
 
 
 class UserLiberationsCreate(UserLiberationsBase):
@@ -21,7 +21,7 @@ class UserLiberationsUpdate(UserLiberationsBase):
 
 
 class UserLiberationsRead(UserLiberationsBase):
-    id: uuid.UUID
+    id: Optional[uuid.UUID]
 
     class Config:
         orm_mode = True
