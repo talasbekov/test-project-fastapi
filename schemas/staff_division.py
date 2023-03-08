@@ -66,8 +66,8 @@ class StaffDivisionOptionRead(StaffDivisionBase):
 
     id: Optional[uuid.UUID]
     name: Optional[str]
-    children: Optional[List['StaffDivisionRead']]
     staff_units: Optional[List[StaffUnitOptionRead]]
+    children: Optional[List['StaffDivisionRead']]
 
     class Config:
         orm_mode = True
