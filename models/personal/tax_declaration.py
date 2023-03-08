@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, ForeignKey, Boolean
+from sqlalchemy import Boolean, Column, ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -14,4 +14,4 @@ class TaxDeclaration(Model, Base):
     is_paid = Column(Boolean)
     profile_id = Column(UUID(as_uuid=True), ForeignKey("personal_profiles.id"), nullable=False)
 
-    profile = relationship("PersonalProfile")
+    profile = relationship("PersonalProfile", back_populates="tax_declarations")

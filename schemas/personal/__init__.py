@@ -1,4 +1,3 @@
-from .personal_profile import PersonalProfileCreate, PersonalProfileUpdate, PersonalProfileRead
 from .biographic_info import BiographicInfoCreate, BiographicInfoUpdate, BiographicInfoRead
 from .driving_licence import DrivingLicenceCreate, DrivingLicenceUpdate, DrivingLicenceRead
 from .identification_card import IdentificationCardCreate, IdentificationCardUpdate, IdentificationCardRead
@@ -7,3 +6,4 @@ from .sport_achievement import SportAchievementCreate, SportAchievementUpdate, S
 from .sport_degree import SportDegreeCreate, SportDegreeUpdate, SportDegreeRead
 from .tax_daclartion import TaxDeclarationCreate, TaxDeclarationUpdate, TaxDeclarationRead
 from .user_financial_info import UserFinancialInfoCreate, UserFinancialInfoUpdate, UserFinancialInfoRead
+from .personal_profile import PersonalProfileCreate, PersonalProfileUpdate, PersonalProfileRead

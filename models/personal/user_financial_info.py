@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, ForeignKey
+from sqlalchemy import Column, ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -14,4 +14,4 @@ class UserFinancialInfo(Model, Base):
     housing_payments_iban = Column(String)
     profile_id = Column(UUID(as_uuid=True), ForeignKey("personal_profiles.id"), nullable=False)
 
-    profile = relationship("PersonalProfile")
+    profile = relationship("PersonalProfile", back_populates="user_financial_infos")

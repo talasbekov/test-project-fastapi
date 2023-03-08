@@ -26,7 +26,7 @@ from .staff_function import (DocumentStaffFunctionCreate, DocumentStaffFunctionR
                              ServiceStaffFunctionCreate, ServiceStaffFunctionRead, ServiceStaffFunctionUpdate,
                              StaffUnitFunctions, StaffFunctionRead, DocumentStaffFunctionAdd)
 from .staff_division import (StaffDivisionCreate, StaffDivisionRead,
-                             StaffDivisionUpdate, StaffDivisionUpdateParentGroup)
+                             StaffDivisionUpdate, StaffDivisionUpdateParentGroup, StaffDivisionOptionRead)
 from .staff_unit import StaffUnitCreate, StaffUnitRead, StaffUnitUpdate
 from .hr_document_step import (HrDocumentStepCreate, HrDocumentStepRead,
                                HrDocumentStepUpdate)

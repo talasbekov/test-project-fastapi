@@ -13,3 +13,12 @@ class PersonalProfile(Model, Base):
     profile_id = Column(UUID(as_uuid=True), ForeignKey("profiles.id"), nullable=False)
 
     profile = relationship("Profile", cascade="all, delete")
+
+    identification_cards = relationship("IdentificationCard", back_populates="profile", cascade="all,delete")
+    biographic_infos = relationship("BiographicInfo", back_populates="profile", cascade="all,delete")
+    driving_licences = relationship("DrivingLicence", back_populates="profile", cascade="all,delete")
+    passports = relationship("Passport", back_populates="profile", cascade="all,delete")
+    sport_achievements = relationship("SportAchievement", back_populates="profile", cascade="all,delete")
+    sport_degrees = relationship("SportDegree", back_populates="profile", cascade="all,delete")
+    tax_declarations = relationship("TaxDeclaration", back_populates="profile", cascade="all,delete")
+    user_financial_infos = relationship("UserFinancialInfo", back_populates="profile", cascade="all,delete")

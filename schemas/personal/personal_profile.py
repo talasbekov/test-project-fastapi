@@ -1,9 +1,13 @@
-import uuid
 import datetime
-
-from typing import Optional, List
+import uuid
+from typing import List, Optional
 
 from pydantic import BaseModel
+
+from schemas.personal import (BiographicInfoRead, DrivingLicenceRead,
+                              IdentificationCardRead, PassportRead,
+                              SportAchievementRead, SportDegreeRead,
+                              TaxDeclarationRead, UserFinancialInfoRead)
 
 
 # base
@@ -27,6 +31,15 @@ class PersonalProfileRead(PersonalProfileBase):
     profile_id: Optional[uuid.UUID]
     created_at: Optional[datetime.date]
     updated_at: Optional[datetime.date]
+
+    identification_cards: Optional[List[IdentificationCardRead]]
+    biographic_infos: Optional[List[BiographicInfoRead]]
+    driving_licences: Optional[List[DrivingLicenceRead]]
+    passports: Optional[List[PassportRead]]
+    sport_achievements: Optional[List[SportAchievementRead]]
+    sport_degrees: Optional[List[SportDegreeRead]]
+    tax_declarations: Optional[List[TaxDeclarationRead]]
+    user_financial_infos: Optional[List[UserFinancialInfoRead]]
 
     class Config:
         orm_mode = True

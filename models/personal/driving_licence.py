@@ -17,4 +17,4 @@ class DrivingLicence(Model, Base):
     document_link = Column(String)
     profile_id = Column(UUID(as_uuid=True), ForeignKey("personal_profiles.id"), nullable=False)
 
-    profile = relationship("PersonalProfile")
+    profile = relationship("PersonalProfile", back_populates="driving_licences")

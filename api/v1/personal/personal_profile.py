@@ -1,5 +1,4 @@
 import uuid
-
 from typing import List
 
 from fastapi import APIRouter, Depends, status
@@ -8,7 +7,8 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import PersonalProfileCreate, PersonalProfileUpdate, PersonalProfileRead
+from schemas import (PersonalProfileCreate, PersonalProfileRead,
+                     PersonalProfileUpdate)
 from services import personal_profile_service
 
 router = APIRouter(prefix="/personal_profile", tags=["PersonalProfile"], dependencies=[Depends(HTTPBearer())])
@@ -98,3 +98,12 @@ async def delete(*,
     """
     Authorize.jwt_required()
     personal_profile_service.remove(db, id)
+
+
+@router.get("/profile")
+async def get_profile(*,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    personal_profile_service.get_by_user_id(db, Authorize.get_jwt_subject())

@@ -28,4 +28,4 @@ class BiographicInfo(Model, Base):
     address = Column(String)
     profile_id = Column(UUID(as_uuid=True), ForeignKey("personal_profiles.id"), nullable=False)
 
-    profile = relationship("PersonalProfile")
+    profile = relationship("PersonalProfile", back_populates="biographic_infos")

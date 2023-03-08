@@ -1,4 +1,5 @@
-from sqlalchemy import Column, String, ForeignKey, TIMESTAMP, Boolean, Enum, ARRAY
+from sqlalchemy import (ARRAY, TIMESTAMP, Boolean, Column, Enum, ForeignKey,
+                        String)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -14,4 +15,4 @@ class SportAchievement(NamedModel, Base):
     document_link = Column(String)
     profile_id = Column(UUID(as_uuid=True), ForeignKey("personal_profiles.id"), nullable=False)
 
-    profile = relationship("PersonalProfile")
+    profile = relationship("PersonalProfile", back_populates="sport_achievements")
