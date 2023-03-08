@@ -26,6 +26,7 @@ from .profile import router as profile_router
 from .personal import (personal_profile_router, biographic_info_router, driving_license_router,
                        identification_card_router, passport_router, sport_achievement_router,
                        sport_degree_router, tax_declaration_router, user_financial_info_router)
+from .family import router as family_router
 
 router = APIRouter(prefix="/v1")
 
@@ -70,3 +71,4 @@ router.include_router(polygraph_check_router)
 router.include_router(psychological_check_router)
 router.include_router(special_check_router)
 router.include_router(violation_router)
+router.include_router(family_router)
