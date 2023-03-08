@@ -17,6 +17,16 @@ from .equipment import router as equipment_router
 from .badge import router as badge_router
 from .rank import router as rank_router
 from .jurisdiction import router as jurisdiction_router
+from .profile.profile import router as profile_router
+from .profile.personal_profile.personal_profile import router as personal_profile_router
+from .profile.personal_profile.biographic_info import router as biographic_info_router
+from .profile.personal_profile.driving_licence import router as driving_licence_router
+from .profile.personal_profile.identification_card import router as identification_card_router
+from .profile.personal_profile.passport import router as passport_router
+from .profile.personal_profile.sport_achievement import router as sport_achievement_router
+from .profile.personal_profile.sport_degree import router as sport_degree_router
+from .profile.personal_profile.tax_declaration import router as tax_declaration_router
+from .profile.personal_profile.user_financial_info import router as user_financial_info_router
 
 router = APIRouter(prefix="/v1")
 
@@ -37,3 +47,13 @@ router.include_router(equipment_router)
 router.include_router(badge_router)
 router.include_router(rank_router)
 router.include_router(jurisdiction_router)
+router.include_router(profile_router)
+router.include_router(personal_profile_router)
+router.include_router(biographic_info_router)
+router.include_router(driving_licence_router)
+router.include_router(identification_card_router)
+router.include_router(passport_router)
+router.include_router(sport_achievement_router)
+router.include_router(sport_degree_router)
+router.include_router(tax_declaration_router)
+router.include_router(user_financial_info_router)

@@ -217,6 +217,138 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['signed_by_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('profiles',
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('user_id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+              nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+              nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('personal_profiles',
+    sa.Column('profile_id', sa.UUID(), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+              nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+              nullable=False),
+    sa.ForeignKeyConstraint(['profile_id'], ['profiles.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('biographic_infos',
+    sa.Column('place_birth', sa.TIMESTAMP(timezone=True), nullable=True),
+    sa.Column('gender', sa.Boolean(), nullable=True),
+    sa.Column('citizenship', sa.String(), nullable=True),
+    sa.Column('nationality', sa.String(), nullable=True),
+    sa.Column('family_status',
+              sa.Enum('MARRIED', 'WIDOWED', 'SEPARATED', 'DIVORCED', 'SINGLE', name='familystatusenum'),
+              nullable=True),
+    sa.Column('address', sa.String(), nullable=True),
+    sa.Column('profile_id', sa.UUID(), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+              nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+              nullable=False),
+    sa.ForeignKeyConstraint(['profile_id'], ['personal_profiles.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('driving_licences',
+    sa.Column('document_number', sa.String(), nullable=True),
+    sa.Column('category', sa.ARRAY(sa.String()), nullable=True),
+    sa.Column('date_of_issue', sa.TIMESTAMP(timezone=True), nullable=True),
+    sa.Column('date_to', sa.TIMESTAMP(timezone=True), nullable=True),
+    sa.Column('document_link', sa.String(), nullable=True),
+    sa.Column('profile_id', sa.UUID(), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+              nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+              nullable=False),
+    sa.ForeignKeyConstraint(['profile_id'], ['personal_profiles.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('identification_cards',
+    sa.Column('document_number', sa.String(), nullable=True),
+    sa.Column('date_of_issue', sa.TIMESTAMP(timezone=True), nullable=True),
+    sa.Column('date_to', sa.TIMESTAMP(timezone=True), nullable=True),
+    sa.Column('issued_by', sa.String(), nullable=True),
+    sa.Column('document_link', sa.String(), nullable=True),
+    sa.Column('profile_id', sa.UUID(), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+              nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+              nullable=False),
+    sa.ForeignKeyConstraint(['profile_id'], ['personal_profiles.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('passports',
+    sa.Column('document_number', sa.String(), nullable=True),
+    sa.Column('date_of_issue', sa.TIMESTAMP(timezone=True), nullable=True),
+    sa.Column('date_to', sa.TIMESTAMP(timezone=True), nullable=True),
+    sa.Column('document_link', sa.String(), nullable=True),
+    sa.Column('profile_id', sa.UUID(), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+              nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+              nullable=False),
+    sa.ForeignKeyConstraint(['profile_id'], ['personal_profiles.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('sport_achievements',
+    sa.Column('assignment_date', sa.TIMESTAMP(timezone=True), nullable=True),
+    sa.Column('document_link', sa.String(), nullable=True),
+    sa.Column('profile_id', sa.UUID(), nullable=False),
+    sa.Column('name', sa.String(), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+              nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+              nullable=False),
+    sa.ForeignKeyConstraint(['profile_id'], ['personal_profiles.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('sport_degrees',
+    sa.Column('assignment_date', sa.TIMESTAMP(timezone=True), nullable=True),
+    sa.Column('document_link', sa.String(), nullable=True),
+    sa.Column('profile_id', sa.UUID(), nullable=False),
+    sa.Column('name', sa.String(), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+              nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+              nullable=False),
+    sa.ForeignKeyConstraint(['profile_id'], ['personal_profiles.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('tax_declarations',
+    sa.Column('year', sa.String(), nullable=True),
+    sa.Column('is_paid', sa.Boolean(), nullable=True),
+    sa.Column('profile_id', sa.UUID(), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+              nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+              nullable=False),
+    sa.ForeignKeyConstraint(['profile_id'], ['personal_profiles.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('user_financial_infos',
+    sa.Column('iban', sa.String(), nullable=True),
+    sa.Column('housing_payments_iban', sa.String(), nullable=True),
+    sa.Column('profile_id', sa.UUID(), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+              nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+              nullable=False),
+    sa.ForeignKeyConstraint(['profile_id'], ['personal_profiles.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('hr_document_users',
     sa.Column('document_id', sa.UUID(), nullable=True),
     sa.Column('subject_id', sa.UUID(), nullable=True),
@@ -269,4 +401,14 @@ def downgrade() -> None:
     op.drop_table('equipments')
     op.drop_table('document_function_types')
     op.drop_table('badges')
+    op.drop_table('user_financial_infos')
+    op.drop_table('tax_declarations')
+    op.drop_table('sport_degrees')
+    op.drop_table('sport_achievements')
+    op.drop_table('passports')
+    op.drop_table('identification_cards')
+    op.drop_table('driving_licences')
+    op.drop_table('biographic_infos')
+    op.drop_table('personal_profiles')
+    op.drop_table('profiles')
     # ### end Alembic commands ###
