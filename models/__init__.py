@@ -13,7 +13,7 @@ from .staff_function import (DocumentFunctionType, DocumentStaffFunction,
                              RoleName, ServiceFunctionType,
                              ServiceStaffFunction, StaffFunction)
 from .staff_unit import StaffUnit
-from .user import User
+
 from .user_stat import UserStat
 from .position import Position
 from additional import *

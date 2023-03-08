@@ -31,11 +31,8 @@ async def get_all(*,
         - **limit**: int - The maximum number of abroad travel to return in the response. This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    credentials = Authorize.get_jwt_subject()
-    user_id = user_service.get_by_id(db, credentials)
-    profile = profile_service.get_by_user_id(db, user_id)
-    additional_profile_id = profile.additional_profile_id
-    return abroad_travel_service.get_multi(db, skip, limit, additional_profile_id)
+    credentials = Authorize.get_jwt_subject() 
+    return abroad_travel_service.get_multi_by_user_id(db, credentials, skip, limit)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
@@ -56,10 +53,8 @@ async def create(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    credentials = Authorize.get_jwt_subject()
-    user_id = user_service.get_by_id(db, credentials)
-    profile = profile_service.get_by_user_id(db, user_id)
-    body.additional_profile_id = profile.additional_profile_id
+    user_id = Authorize.get_jwt_subject() 
+    profile = profile_service.get_by_user_id(db, user_id) 
     return abroad_travel_service.create(db, body)
 
 
@@ -79,11 +74,10 @@ async def update(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    credentials = Authorize.get_jwt_subject()
-    user_id = user_service.get_by_id(db, credentials)
-    profile = profile_service.get_by_user_id(db, user_id)
+    credentials = Authorize.get_jwt_subject() 
+    profile = profile_service.get_by_user_id(db, credentials)
     abroad_travel = abroad_travel_service.get_by_id(db, id)
-    if abroad_travel.additional_profile_id != profile.additional_profile_id:
+    if abroad_travel.profile_id != profile.id: # TODO: check role logic
         raise SgoErpException("You don't have permission to update this abroad travel")
     return abroad_travel_service.update(db, abroad_travel, body)
 
@@ -105,10 +99,10 @@ async def delete(*,
     """
     Authorize.jwt_required()
     credentials = Authorize.get_jwt_subject()
-    user_id = user_service.get_by_id(db, credentials)
-    profile = profile_service.get_by_user_id(db, user_id)
+    profile = profile_service.get_by_user_id(db, credentials)
     abroad_travel = abroad_travel_service.get_by_id(db, id)
-    if abroad_travel.additional_profile_id != profile.additional_profile_id:
+    if abroad_travel.profile_id != profile.id: # TODO: check role logic
         raise SgoErpException("You don't have permission to delete this abroad travel")
     return abroad_travel_service.delete(db, abroad_travel)
+
 

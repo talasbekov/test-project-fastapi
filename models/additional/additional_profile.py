@@ -13,5 +13,4 @@ class AdditionalProfile(Model):
     __tablename__ = "additional_profiles"
 
     profile_id = Column(UUID(as_uuid=True), ForeignKey("profiles.id"))
-
     profile = relationship("Profile")

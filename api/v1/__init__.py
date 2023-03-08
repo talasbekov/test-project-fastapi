@@ -27,6 +27,7 @@ from .profile.personal_profile.sport_achievement import router as sport_achievem
 from .profile.personal_profile.sport_degree import router as sport_degree_router
 from .profile.personal_profile.tax_declaration import router as tax_declaration_router
 from .profile.personal_profile.user_financial_info import router as user_financial_info_router
+from additional import *
 
 router = APIRouter(prefix="/v1")
 
@@ -57,3 +58,4 @@ router.include_router(sport_achievement_router)
 router.include_router(sport_degree_router)
 router.include_router(tax_declaration_router)
 router.include_router(user_financial_info_router)
+router.include_router(abroad_travel_router)
