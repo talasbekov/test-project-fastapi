@@ -1,3 +1,2 @@
-s = "[\n  {\n    \"loc\": [\n      \"hr_document_template_id\"\n    ],\n    \"msg\": \"field required\",\n    \"type\": \"value_error.missing\"\n  }\n]"
-
+s = "[\n  {\n    \"loc\": [\n      \"users\",\n      0\n    ],\n    \"msg\": \"value is not a valid dict\",\n    \"type\": \"type_error.dict\"\n  },\n  {\n    \"loc\": [\n      \"actual_users\",\n      0\n    ],\n    \"msg\": \"value is not a valid dict\",\n    \"type\": \"type_error.dict\"\n  }\n]"
 print(s)

@@ -16,8 +16,10 @@ from exceptions import (BadRequestException, ForbiddenException,
                         InvalidOperationException, NotFoundException)
 from models import (HrDocument, HrDocumentInfo, HrDocumentStatus,
                     HrDocumentStep, StaffUnit, User)
-from schemas import (HrDocumentCreate, HrDocumentInit, HrDocumentRead,
-                     HrDocumentSign, HrDocumentUpdate)
+from schemas import (BadgeRead, HrDocumentCreate, HrDocumentInit,
+                     HrDocumentRead, HrDocumentSign, HrDocumentUpdate,
+                     RankRead, StaffDivisionOptionRead, StaffDivisionRead,
+                     StaffUnitRead)
 from services import (badge_service, document_staff_function_service,
                       document_staff_function_type_service,
                       hr_document_info_service, hr_document_step_service,
@@ -32,6 +34,14 @@ options = {
     "staff_division": staff_division_service,
     "rank": rank_service,
     "badges": badge_service,
+}
+
+responses = {
+    "staff_unit": StaffUnitRead,
+    "actual_staff_unit": StaffUnitRead,
+    "staff_division": StaffDivisionOptionRead,
+    "rank": RankRead,
+    "badges": BadgeRead,
 }
 
 
@@ -268,10 +278,10 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             )
         if data_taken is not None and data_taken == "matreshka":
             if id is None:
-                return service.get_parents(db)
+                return [responses.get(option).from_orm(i) for i in service.get_parents(db)]
             else:
-                return service.get_by_id(db, id).children
-        return service.get_multi(db)
+                return [responses.get(option).from_orm(i) for i in service.get_by_id(db, id).children]
+        return [responses.get(option).from_orm(i) for i in service.get_multi(db)]
 
     def get_signed_documents(
         self, db: Session, user_id: uuid.UUID, skip: int, limit: int
