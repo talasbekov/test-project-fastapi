@@ -3,6 +3,8 @@ import uuid
 from pydantic import BaseModel
 from typing import Optional
 
+from .language import LanguageRead
+
 
 class LanguageProficiencyBase(BaseModel):
     level: int
@@ -27,3 +29,4 @@ class LanguageProficiencyRead(LanguageProficiencyBase):
     profile_id: Optional[uuid.UUID]
     language_id: Optional[uuid.UUID]
 
+    language: Optional[LanguageRead]

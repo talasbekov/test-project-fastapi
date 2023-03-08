@@ -33,3 +33,4 @@ from .additional import *
 from .education import *
 from .personal import *
 from .medical import *
+from .family import *

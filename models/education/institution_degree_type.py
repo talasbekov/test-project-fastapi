@@ -3,14 +3,11 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
 
 from core import Base
-from models import Model
+from models import NamedModel
 
 
-class InstitutionDegreeType(Model, Base):
+class InstitutionDegreeType(NamedModel):
 
     __tablename__ = "institution_degree_types"
 
-    name = Column(String)
-
-    education_id = Column(UUID(as_uuid=True), ForeignKey("educations.id"), nullable=True)
-    education = relationship("Education")
+    education = relationship("Education", back_populates="degree")

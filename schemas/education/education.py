@@ -4,6 +4,10 @@ import datetime
 from pydantic import BaseModel
 from typing import Optional
 
+from .institution import InstitutionRead
+from .institution_degree_type import InstitutionDegreeTypeRead
+
+
 
 class EducationBase(BaseModel):
     name: str
@@ -13,6 +17,10 @@ class EducationBase(BaseModel):
     start_date: Optional[datetime.date]
     end_date: Optional[datetime.date]
     document_link: str
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
 
 
 class EducationCreate(EducationBase):
@@ -33,5 +41,5 @@ class EducationRead(EducationBase):
     end_date: Optional[datetime.date]
     document_link: str
 
-    class Config:
-        orm_mode = True
+    institution: Optional[InstitutionRead]
+    degree: Optional[InstitutionDegreeTypeRead]

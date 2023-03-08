@@ -4,6 +4,11 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import date
 
+from .academic_degree_degree import AcademicDegreeDegreeRead
+from .science import ScienceRead
+from .specialty import SpecialtyRead
+
+
 class AcademicDegreeBase(BaseModel):
     profile_id: uuid.UUID      
     degree_id: uuid.UUID
@@ -34,3 +39,7 @@ class AcademicDegreeRead(AcademicDegreeBase):
     document_number: Optional[str]
     document_link: Optional[str]
     assignment_date: Optional[date]
+
+    degree: Optional[AcademicDegreeDegreeRead]
+    science: Optional[ScienceRead]
+    specialty: Optional[SpecialtyRead]

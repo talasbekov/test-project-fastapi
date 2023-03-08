@@ -2,13 +2,11 @@ from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 
 from core import Base
-from models import Model
+from models import NamedModel
 
 
-class AcademicTitleDegree(Model, Base):
+class AcademicTitleDegree(NamedModel):
 
     __tablename__ = "academic_title_degrees"
 
-    name = Column(String)
-
-    academic_title = relationship("AcademicTitle")
+    academic_title = relationship("AcademicTitle", back_populates="degree")

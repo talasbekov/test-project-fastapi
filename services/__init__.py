@@ -31,3 +31,4 @@ from .hr_document import hr_document_service
 
 from .additional import *
 from .education import *
+from .family import *

@@ -2,13 +2,11 @@ from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 
 from core import Base
-from models import Model
+from models import NamedModel
 
 
-class Language(Model, Base):
+class Language(NamedModel):
 
     __tablename__ = "languages"
 
-    name = Column(String)
-
-    language_proficiency = relationship("LanguageProficiency")
+    language_proficiency = relationship("LanguageProficiency", back_populates="language")

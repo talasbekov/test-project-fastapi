@@ -21,4 +21,5 @@ from .profile import Profile
 from .personal import *
 from .additional import *
 from .education import *
+from .family import *
 from .user import User

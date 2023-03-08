@@ -1,7 +1,7 @@
 """feat: medical tables
 
 Revision ID: 0b6eb3f5b2b1
-Revises: 35386f0dff3f
+Revises: 0dd54afd8e53
 Create Date: 2023-03-08 21:31:33.334991
 
 """
@@ -11,7 +11,7 @@ from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision = '0b6eb3f5b2b1'
-down_revision = '35386f0dff3f'
+down_revision = '0dd54afd8e53'
 branch_labels = None
 depends_on = None
 

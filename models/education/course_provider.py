@@ -2,13 +2,11 @@ from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 
 from core import Base
-from models import Model
+from models import NamedModel
 
 
-class CourseProvider(Model, Base):
+class CourseProvider(NamedModel):
 
     __tablename__ = "course_providers"
 
-    name = Column(String)
-
-    course = relationship("Course")
+    course = relationship("Course", back_populates="course_provider")

@@ -22,4 +22,3 @@ class AcademicDegreeDegreeUpdate(AcademicDegreeDegreeBase):
 class AcademicDegreeDegreeRead(AcademicDegreeDegreeBase):
     id: Optional[uuid.UUID]
     name: Optional[str]
-     

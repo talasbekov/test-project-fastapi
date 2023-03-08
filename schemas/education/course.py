@@ -4,6 +4,7 @@ import datetime
 from pydantic import BaseModel
 from typing import Optional
 
+from .course_provider import CourseProviderRead
 
 class CourseBase(BaseModel):
     name: str
@@ -13,6 +14,10 @@ class CourseBase(BaseModel):
     start_date: Optional[datetime.date]
     end_date: Optional[datetime.date]
     document_link: str
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
 
 
 class CourseCreate(CourseBase):
@@ -33,5 +38,4 @@ class CourseRead(CourseBase):
     end_date: Optional[datetime.date]
     document_link: str
 
-    class Config:
-        orm_mode = True
+    course_provider: Optional[CourseProviderRead]

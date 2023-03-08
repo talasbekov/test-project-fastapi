@@ -4,6 +4,9 @@ import datetime
 from pydantic import BaseModel
 from typing import Optional
 
+from .academic_title_degree import AcademicTitleDegreeRead
+from .specialty import SpecialtyRead
+
 
 class AcademicTitleBase(BaseModel):
     profile_id: Optional[uuid.UUID]
@@ -30,6 +33,9 @@ class AcademicTitleRead(AcademicTitleBase):
     document_number: str
     document_link: str
     assignment_date: Optional[datetime.date]
+
+    degree: Optional[AcademicTitleDegreeRead]
+    specialty: Optional[SpecialtyRead]
 
     class Config:
         orm_mode = True

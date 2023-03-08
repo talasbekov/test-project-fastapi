@@ -3,17 +3,15 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
 
 from core import Base
-from models import Model
+from models import NamedModel
 
 
-class LanguageProficiency(Model, Base):
+class LanguageProficiency(NamedModel):
 
     __tablename__ = "language_proficiencies"
 
-    level = Column(Integer)
-
     language_id = Column(UUID(as_uuid=True), ForeignKey("languages.id"), nullable=True)
-    language = relationship("Language")
+    language = relationship("Language", back_populates="language_proficiency")
 
     profile_id = Column(UUID(as_uuid=True), ForeignKey("educational_profiles.id"), nullable=True)
     profile = relationship("EducationalProfile", back_populates="language_proficiency")

@@ -69,14 +69,3 @@ def authjwt_exception_handler(request: Request, exc: AuthJWTException):
 @app.get("/", include_in_schema=False)
 async def docs_redirect():
     return RedirectResponse(url="/docs")
-
-
-@app.get("/test")
-async def test(db: Session = Depends(get_db)):
-
-    steps = db.query(HrDocumentStep).join(DocumentStaffFunction).filter(
-        DocumentStaffFunction.priority > 3
-    ).all()
-
-    for step in steps:
-        print(step.staff_function.name)

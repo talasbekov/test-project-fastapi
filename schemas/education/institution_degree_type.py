@@ -20,7 +20,6 @@ class InstitutionDegreeTypeUpdate(InstitutionDegreeTypeBase):
 class InstitutionDegreeTypeRead(InstitutionDegreeTypeBase):
     id: Optional[uuid.UUID]
     name: str
-    InstitutionDegreeType_id: Optional[uuid.UUID]
 
     class Config:
         orm_mode = True
