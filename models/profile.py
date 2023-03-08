@@ -15,5 +15,4 @@ class Profile(Model, Base):
     user = relationship("User", cascade="all, delete")
 
     personal_profile = relationship("PersonalProfile", back_populates="profile", cascade="all,delete", uselist=False)
-
-    medical_profile = relationship("MedicalProfile", back_populates="profile", cascade="all,delete")
+    medical_profile = relationship("MedicalProfile", back_populates="profile", cascade="all,delete", uselist=False)
