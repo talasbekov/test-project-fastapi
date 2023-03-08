@@ -1,9 +1,8 @@
 import uuid
 
-from sqlalchemy import BigInteger, Column, ForeignKey, String, text
+from sqlalchemy import BigInteger, Column, Enum, ForeignKey, String, text
 from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID
 from sqlalchemy.orm import relationship
-from sqlalchemy import Enum
 
 from core import Base
 from models import Model
@@ -20,5 +19,4 @@ class SpecialCheck(Model):
 
     profile_id = Column(UUID(as_uuid=True), ForeignKey("additional_profiles.id"))
 
-    profile = relationship("AdditionalProfile")
-
+    profile = relationship("AdditionalProfile", back_populates="special_checks")

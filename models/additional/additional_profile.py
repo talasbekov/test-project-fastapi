@@ -6,12 +6,7 @@ from sqlalchemy.orm import relationship
 
 from core import Base
 from models import Model
-"""
- polygraph_checks: Optional[List[PolygraphCheckRead]] = []
-    violations: Optional[List[ViolationRead]] = []
-    abroad_travels: Optional[List[AbroadTravelRead]] = []
-    psychological_checks: Optional[List[PsychologicalCheckRead]] = []
-"""
+
 
 class AdditionalProfile(Model):
 
@@ -20,7 +15,8 @@ class AdditionalProfile(Model):
     profile_id = Column(UUID(as_uuid=True), ForeignKey("profiles.id"))
     profile = relationship("Profile")
     
-    polygraph_checks = relationship("PolygraphCheck", cascade="all, delete")
-    violations = relationship("Violation", cascade="all, delete")
-    abroad_travels = relationship("AbroadTravel", cascade="all, delete")
-    psychological_checks = relationship("PsychologicalCheck", cascade="all, delete")
+    polygraph_checks = relationship("PolygraphCheck", back_populates="profile", cascade="all, delete")
+    violations = relationship("Violation", back_populates="profile", cascade="all, delete")
+    abroad_travels = relationship("AbroadTravel", back_populates="profile", cascade="all, delete")
+    psychological_checks = relationship("PsychologicalCheck", back_populates="profile", cascade="all, delete")
+    special_checks = relationship("SpecialCheck", back_populates="profile", cascade="all, delete")

@@ -1,8 +1,12 @@
 import uuid
-from sqlalchemy import Column, ForeignKey, String, Enum as EnumType
+from enum import Enum
+
+from sqlalchemy import Column
+from sqlalchemy import Enum as EnumType
+from sqlalchemy import ForeignKey, String
 from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID
 from sqlalchemy.orm import relationship
-from enum import Enum
+
 from core import Base
 from models import Model
 
@@ -25,4 +29,4 @@ class AbroadTravel(Model, Base):
 
     profile_id = Column(UUID(as_uuid=True), ForeignKey("additional_profiles.id"), nullable=False)
 
-    profile = relationship("AdditionalProfile")
+    profile = relationship("AdditionalProfile", back_populates="abroad_travels")
