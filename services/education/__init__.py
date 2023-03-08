@@ -2,7 +2,6 @@ from .education import education_service
 from .science import science_service
 from .specialty import specialty_service
 from .academic_title_degree import academic_title_degree_service
-from .profile import profile_service
 from .academic_degree_degree import academic_degree_degree_service
 from .course_provider import course_provider_service
 from .course import course_service

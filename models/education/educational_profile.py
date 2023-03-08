@@ -11,11 +11,10 @@ class EducationalProfile(Model, Base):
     __tablename__ = "educational_profiles"
 
     profile_id = Column(UUID(as_uuid=True), ForeignKey("profiles.id"), nullable=True)
-    profile = relationship("Profile")
+    profile = relationship("Profile", back_populates="educational_profile")
 
     academic_degree = relationship("AcademicDegree")
     academic_title = relationship("AcademicTitle")
     education = relationship("Education")
     course = relationship("Course")
     language_proficiency = relationship("LanguageProficiency")
-    educational_profile = relationship("EducationalProfile")

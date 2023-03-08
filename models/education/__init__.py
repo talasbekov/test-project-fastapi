@@ -1,4 +1,3 @@
-from .profile import Profile
 from .education import Education
 from .course import Course
 from .academic_title import AcademicTitle

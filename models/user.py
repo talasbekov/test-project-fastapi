@@ -54,3 +54,5 @@ class User(Model, Base):
         back_populates="users",
         cascade="all,delete"
     )
+
+    profile = relationship("Profile", back_populates="user", uselist=False)

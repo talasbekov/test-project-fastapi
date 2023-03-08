@@ -11,6 +11,7 @@ from .hr_document_step import hr_document_step_service
 from .document_staff_function import document_staff_function_service
 
 from .staff_unit import staff_unit_service
+from .profile import profile_service
 
 from .user import user_service
 from .badge import badge_service

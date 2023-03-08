@@ -7,7 +7,10 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas.education import EducationalProfileCreate, EducationalProfileRead, EducationalProfileUpdate
+from schemas.education import (EducationalProfileCreate,
+                               EducationalProfileRead,
+                               EducationalProfileUpdate)
+from services import profile_service
 from services.education import educational_profile_service
 
 router = APIRouter(prefix="/educational_profiles", tags=["EducationalProfiles"], dependencies=[Depends(HTTPBearer())])
@@ -108,8 +111,11 @@ async def delete(*,
     educational_profile_service.remove(db, id)
 
 
-@router.get("/help")
-async def help(*,
-    db: Session = Depends(get_db)):
-    educational_profile_service.add_EducationalProfile(db, EducationalProfileCreate(name="test", url="sad"))
-    raise Exception('help')
+@router.get("/profile", response_model=EducationalProfileRead)
+async def get_profile(*,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    profile = profile_service.get_by_user_id(db, Authorize.get_jwt_subject())
+    return profile.educational_profile
