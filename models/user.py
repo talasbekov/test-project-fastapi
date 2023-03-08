@@ -3,7 +3,7 @@ from typing import Any
 
 from sqlalchemy import TIMESTAMP, Column, Date, ForeignKey, String, text
 from sqlalchemy.dialects.postgresql import ARRAY, JSON, TEXT, UUID
-from sqlalchemy.orm import Mapped, relationship
+from sqlalchemy.orm import relationship
 
 from core import Base
 from models import Model

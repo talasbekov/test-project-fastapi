@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 
 class ProfileBase(BaseModel):
-    user_id: uuid.UUID
+    pass
 
 
 class ProfileCreate(ProfileBase):
