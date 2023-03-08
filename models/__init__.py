@@ -18,3 +18,6 @@ from .user_stat import UserStat
 from .position import Position
 from .profile import Profile
 from .education import *
+from .personal import (BiographicInfo, DrivingLicence, IdentificationCard,
+                       Passport, PersonalProfile, SportAchievement,
+                       SportDegree, TaxDeclaration, UserFinancialInfo)

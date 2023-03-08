@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
 from models import Profile
-from schemas.education import ProfileCreate, ProfileRead, ProfileUpdate
+from schemas import ProfileCreate, ProfileRead, ProfileUpdate
 from services import ServiceBase
 
 
@@ -14,10 +14,10 @@ class ProfileService(ServiceBase[Profile, ProfileCreate, ProfileUpdate]):
             raise NotFoundException(detail=f"Profile with id: {id} is not found!")
         return profile
     
-    def get_by_user_id(self, db: Session, user_id: str):
-        profile = db.query(self.model).filter(self.model.user_id == user_id).first()
+    def get_by_user_id(self, db: Session, id: str):
+        profile = db.query(self.model.user_id == id).first()
         if profile is None:
-            raise NotFoundException(detail=f'Profile with user_id: {user_id} is not found!')
+            raise NotFoundException(detail=f"Profile with user_id: {id} is not found!")
         return profile
 
 
