@@ -10,8 +10,8 @@ class Education(Model, Base):
 
     __tablename__ = "educations"
 
-    profile_id = Column(UUID(as_uuid=True), ForeignKey("profiles.id"), nullable=True)
-    profile = relationship("Profile")
+    profile_id = Column(UUID(as_uuid=True), ForeignKey("educational_profiles.id"), nullable=True)
+    profile = relationship("EducationalProfile")
 
     start_date = Column(DATE)
     end_date = Column(DATE)

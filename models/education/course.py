@@ -1,6 +1,6 @@
 from sqlalchemy import Column, ForeignKey, String
+from sqlalchemy.dialects.postgresql import DATE, UUID
 from sqlalchemy.orm import relationship
-from sqlalchemy.dialects.postgresql import UUID, DATE
 
 from core import Base
 from models import Model
@@ -12,8 +12,8 @@ class Course(Model, Base):
 
     name = Column(String)
 
-    profile_id = Column(UUID(as_uuid=True), ForeignKey("profiles.id"), nullable=True)
-    profile = relationship("Profile")
+    profile_id = Column(UUID(as_uuid=True), ForeignKey("educational_profiles.id"), nullable=True)
+    profile = relationship("EducationalProfile")
 
     provider_id = Column(String)
 

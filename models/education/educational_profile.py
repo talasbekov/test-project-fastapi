@@ -1,6 +1,6 @@
 from sqlalchemy import Column, ForeignKey
-from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 
 from core import Base
 from models import Model
@@ -12,3 +12,10 @@ class EducationalProfile(Model, Base):
 
     profile_id = Column(UUID(as_uuid=True), ForeignKey("profiles.id"), nullable=True)
     profile = relationship("Profile")
+
+    academic_degree = relationship("AcademicDegree")
+    academic_title = relationship("AcademicTitle")
+    education = relationship("Education")
+    course = relationship("Course")
+    language_proficiency = relationship("LanguageProficiency")
+    educational_profile = relationship("EducationalProfile")

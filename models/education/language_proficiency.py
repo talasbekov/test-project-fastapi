@@ -15,5 +15,5 @@ class LanguageProficiency(Model, Base):
     language_id = Column(UUID(as_uuid=True), ForeignKey("languages.id"), nullable=True)
     language = relationship("Language")
 
-    profile_id = Column(UUID(as_uuid=True), ForeignKey("profiles.id"), nullable=True)
-    profile = relationship("Profile")
+    profile_id = Column(UUID(as_uuid=True), ForeignKey("educational_profiles.id"), nullable=True)
+    profile = relationship("EducationalProfile")
