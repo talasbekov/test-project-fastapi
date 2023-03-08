@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, ForeignKey
+from sqlalchemy import Column, ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -14,3 +14,4 @@ class Profile(Model, Base):
     user = relationship("User", cascade="all, delete")
 
     additional_profile = relationship("AdditionalProfile", cascade="all, delete", back_populates="profile")
+    personal_profile = relationship("PersonalProfile", back_populates="profile", cascade="all,delete", uselist=False)

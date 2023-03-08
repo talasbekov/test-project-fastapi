@@ -18,7 +18,8 @@ from models import (HrDocument, HrDocumentInfo, HrDocumentStatus,
                     HrDocumentStep, StaffUnit, User)
 from schemas import (BadgeRead, HrDocumentCreate, HrDocumentInit,
                      HrDocumentRead, HrDocumentSign, HrDocumentUpdate,
-                     RankRead, StaffDivisionRead, StaffUnitRead)
+                     RankRead, StaffDivisionOptionRead, StaffDivisionRead,
+                     StaffUnitRead)
 from services import (badge_service, document_staff_function_service,
                       document_staff_function_type_service,
                       hr_document_info_service, hr_document_step_service,
@@ -38,7 +39,7 @@ options = {
 responses = {
     "staff_unit": StaffUnitRead,
     "actual_staff_unit": StaffUnitRead,
-    "staff_division": StaffDivisionRead,
+    "staff_division": StaffDivisionOptionRead,
     "rank": RankRead,
     "badges": BadgeRead,
 }
@@ -277,9 +278,9 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             )
         if data_taken is not None and data_taken == "matreshka":
             if id is None:
-                return service.get_parents(db)
+                return [responses.get(option).from_orm(i) for i in service.get_parents(db)]
             else:
-                return service.get_by_id(db, id).children
+                return [responses.get(option).from_orm(i) for i in service.get_by_id(db, id).children]
         return [responses.get(option).from_orm(i) for i in service.get_multi(db)]
 
     def get_signed_documents(

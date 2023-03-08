@@ -1,13 +1,13 @@
 from .profile import ProfileCreate, ProfileUpdate, ProfileRead
-from .personal_profile import (PersonalProfileCreate, PersonalProfileUpdate, PersonalProfileRead,
-                               BiographicInfoCreate, BiographicInfoUpdate, BiographicInfoRead,
-                               UserFinancialInfoCreate, UserFinancialInfoUpdate, UserFinancialInfoRead,
-                               TaxDeclarationCreate, TaxDeclarationUpdate, TaxDeclarationRead,
-                               SportDegreeCreate, SportDegreeUpdate, SportDegreeRead,
-                               SportAchievementCreate, SportAchievementUpdate, SportAchievementRead,
-                               IdentificationCardCreate, IdentificationCardUpdate, IdentificationCardRead,
-                               DrivingLicenceCreate, DrivingLicenceUpdate, DrivingLicenceRead,
-                               PassportCreate, PassportUpdate, PassportRead)
+from .personal import (PersonalProfileCreate, PersonalProfileUpdate, PersonalProfileRead,
+                       BiographicInfoCreate, BiographicInfoUpdate, BiographicInfoRead,
+                       DrivingLicenceCreate, DrivingLicenceUpdate, DrivingLicenceRead,
+                       IdentificationCardCreate, IdentificationCardUpdate, IdentificationCardRead,
+                       PassportRead, PassportUpdate, PassportCreate,
+                       SportAchievementUpdate, SportAchievementRead, SportAchievementCreate,
+                       SportDegreeRead, SportDegreeUpdate, SportDegreeCreate,
+                       TaxDeclarationRead, TaxDeclarationUpdate, TaxDeclarationCreate,
+                       UserFinancialInfoRead, UserFinancialInfoUpdate, UserFinancialInfoCreate)
 from .badge import BadgeCreate, BadgeRead, BadgeUpdate
 from .equipment import EquipmentCreate, EquipmentRead, EquipmentUpdate
 from .jurisdiction import JurisdictionRead, JurisdictionCreate, JurisdictionUpdate
@@ -26,7 +26,7 @@ from .staff_function import (DocumentStaffFunctionCreate, DocumentStaffFunctionR
                              ServiceStaffFunctionCreate, ServiceStaffFunctionRead, ServiceStaffFunctionUpdate,
                              StaffUnitFunctions, StaffFunctionRead, DocumentStaffFunctionAdd)
 from .staff_division import (StaffDivisionCreate, StaffDivisionRead,
-                             StaffDivisionUpdate, StaffDivisionUpdateParentGroup)
+                             StaffDivisionUpdate, StaffDivisionUpdateParentGroup, StaffDivisionOptionRead)
 from .staff_unit import StaffUnitCreate, StaffUnitRead, StaffUnitUpdate
 from .hr_document_step import (HrDocumentStepCreate, HrDocumentStepRead,
                                HrDocumentStepUpdate)
@@ -38,5 +38,5 @@ from .hr_document_info import (HrDocumentInfoCreate, HrDocumentInfoRead,
                                HrDocumentInfoUpdate, HrDocumentHistoryRead)
 from .user_stat import UserStatCreate, UserStatRead, UserStatUpdate
 from .auth import LoginForm, RegistrationForm
-from additional import *
+from .additional import *
 

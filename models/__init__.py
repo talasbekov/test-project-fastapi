@@ -15,9 +15,11 @@ from .staff_function import (DocumentFunctionType, DocumentStaffFunction,
 from .staff_unit import StaffUnit
 
 from .user_stat import UserStat
-from .position import Position
-from additional import *
+from .position import Position 
 from .profile import Profile
-from .personal_profile import (FamilyStatusEnum, PersonalProfile, BiographicInfo, UserFinancialInfo,
-                               TaxDeclaration, SportDegree, SportAchievement,
-                               IdentificationCard, DrivingLicence, Passport)
+from .personal import (BiographicInfo, DrivingLicence, IdentificationCard,
+                       Passport, PersonalProfile, SportAchievement,
+                       SportDegree, TaxDeclaration, UserFinancialInfo)
+from .additional import *
+from .user import User
+

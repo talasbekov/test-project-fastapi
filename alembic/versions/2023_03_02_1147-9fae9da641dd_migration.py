@@ -395,6 +395,8 @@ def upgrade() -> None:
     staff_unit10_id = get_uuid()
     staff_unit11_id = get_uuid()
     staff_unit12_id = get_uuid()
+    staff_unit13_id = get_uuid()
+    staff_unit14_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['users'],
@@ -531,7 +533,7 @@ def upgrade() -> None:
                 "Наурызбеков",
                 'Алматович',
                 'bauyrzhan@mail.ru',
-                group3_id,
+                group1_id,
                 "Альфа 10",
                 '10',
                 staff_unit10_id,
@@ -554,6 +556,26 @@ def upgrade() -> None:
                 "http://192.168.0.199:8083/static/Erdaulet.png",
                 position4_id)
         ]
+    )
+
+    op.bulk_insert(
+        Base.metadata.tables['staff_units'],
+        [{
+            'id': staff_unit12_id,
+            'user_id': None,
+            'position_id': position5_id,
+            'staff_division_id': group1_id
+        }, {
+            'id': staff_unit13_id,
+            'user_id': None,
+            'position_id': position3_id,
+            'staff_division_id': group2_id
+        }, {
+            'id': staff_unit14_id,
+            'user_id': None,
+            'position_id': position4_id,
+            'staff_division_id': group3_id
+        }]
     )
 
     op.bulk_insert(
