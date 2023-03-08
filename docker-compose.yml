@@ -4,32 +4,32 @@ services:
 
   postgres:
     image: postgres:15.1-alpine
-    container_name: postgresql
+    container_name: postgresql-dev
     restart: always
     env_file:
       - .env
     ports:
-      - '5432:5432'
+      - '5542:5542'
     volumes:
       - ./.data:/var/lib/postgresql/data
     networks:
-      - backend
+      - backend-dev
   
   sgo-erp:
     platform: linux/amd64
-    command: bash -c "alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8001 --log-config log.ini"
+    command: bash -c "alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8101 --log-config log.ini"
     build: .
-    container_name: sgo-erp
+    container_name: sgo-erp-dev
     restart: always
     ports:
-        - "8001:8001"
+        - "8101:8101"
     volumes:
       - .:/app
     networks:
-        - backend
+        - backend-dev
     depends_on:
         - postgres
 
 networks:
-    backend:
+    backend-dev:
         driver: bridge

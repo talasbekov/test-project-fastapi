@@ -5,19 +5,19 @@ from fastapi.security import HTTPBearer
 from sqlalchemy.orm import Session
 from fastapi_jwt_auth import AuthJWT
 
-from schemas import AbroadTravelCreate, AbroadTravelRead, AbroadTravelUpdate
+from schemas import AdditionalProfileCreate, AdditionalProfileRead, AdditionalProfileUpdate
 from core import get_db, configs
-from services import abroad_travel_service, user_service, profile_service
+from services import additional_profile_service, user_service, profile_service
 from exceptions import SgoErpException
 from typing import List
 import uuid
 
-router = APIRouter(prefix="/abroad-travel", tags=["Abroad Travel"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(prefix="/additional-profile", tags=["Additional Profile"], dependencies=[Depends(HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[AbroadTravelRead],
-            summary="Get all Abroad Travel")
+            response_model=List[AdditionalProfileRead],
+            summary="Get all Additional Profile")
 async def get_all(*,
     db: Session = Depends(get_db),
     skip: int = 0,
@@ -32,18 +32,17 @@ async def get_all(*,
     """
     Authorize.jwt_required()
     credentials = Authorize.get_jwt_subject() 
-    return abroad_travel_service.get_multi_by_user_id(db, credentials, skip, limit)
+    return additional_profile_service.get_multi_by_user_id(db, credentials, skip, limit)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
                 dependencies=[Depends(HTTPBearer())],
-                response_model=AbroadTravelRead,
+                response_model=AdditionalProfileRead,
                 summary="Create")
 
 
 async def create(*,
-    db: Session = Depends(get_db),
-    body: AbroadTravelCreate,
+    db: Session = Depends(get_db), 
     Authorize: AuthJWT = Depends()
 ):
     """
@@ -55,17 +54,16 @@ async def create(*,
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject() 
     profile = profile_service.get_by_user_id(db, user_id)
-    body.profile_id = profile.id
-    return abroad_travel_service.create(db, body)
+    return additional_profile_service.create(db, {"profile_id": profile.id})
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=AbroadTravelRead,
+            response_model=AdditionalProfileRead,
             summary="Update Abroad Travel by id")
 async def update(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
-    body: AbroadTravelUpdate,
+    body: AdditionalProfileUpdate,
     Authorize: AuthJWT = Depends()
 ):
     """
@@ -77,15 +75,15 @@ async def update(*,
     Authorize.jwt_required()
     credentials = Authorize.get_jwt_subject() 
     profile = profile_service.get_by_user_id(db, credentials)
-    abroad_travel = abroad_travel_service.get_by_id(db, id)
+    abroad_travel = additional_profile_service.get_by_id(db, id)
     if abroad_travel.profile_id != profile.id: # TODO: check role logic
         raise SgoErpException("You don't have permission to update this abroad travel")
-    return abroad_travel_service.update(db, abroad_travel, body)
+    return additional_profile_service.update(db, abroad_travel, body)
 
 
 
 @router.delete("/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=AbroadTravelRead,
+            response_model=AdditionalProfileRead,
             summary="Delete Abroad Travel by id")
 async def delete(*,
     db: Session = Depends(get_db),
@@ -101,9 +99,7 @@ async def delete(*,
     Authorize.jwt_required()
     credentials = Authorize.get_jwt_subject()
     profile = profile_service.get_by_user_id(db, credentials)
-    abroad_travel = abroad_travel_service.get_by_id(db, id)
+    abroad_travel = additional_profile_service.get_by_id(db, id)
     if abroad_travel.profile_id != profile.id: # TODO: check role logic
         raise SgoErpException("You don't have permission to delete this abroad travel")
-    return abroad_travel_service.delete(db, abroad_travel)
-
-
+    return additional_profile_service.delete(db, abroad_travel)
