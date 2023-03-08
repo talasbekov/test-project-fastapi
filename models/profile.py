@@ -12,6 +12,6 @@ class Profile(Model, Base):
 
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
     user = relationship("User", back_populates="profile")
-
     educational_profile = relationship("EducationalProfile", back_populates="profile", cascade="all,delete", uselist=False)
+    additional_profile = relationship("AdditionalProfile", cascade="all, delete", back_populates="profile", uselist=False)
     personal_profile = relationship("PersonalProfile", back_populates="profile", cascade="all,delete", uselist=False)

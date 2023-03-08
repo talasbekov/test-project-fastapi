@@ -1,5 +1,4 @@
 import uuid
-
 from typing import List
 
 from fastapi import APIRouter, Depends, status
@@ -8,15 +7,16 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import DrivingLicenceCreate, DrivingLicenceUpdate, DrivingLicenceRead
-from services import driving_licence_service
+from schemas import (DrivingLicenseCreate, DrivingLicenseRead,
+                     DrivingLicenseUpdate)
+from services import driving_license_service
 
-router = APIRouter(prefix="/driving_licence", tags=["DrivingLicence"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(prefix="/driving_license", tags=["DrivingLicense"], dependencies=[Depends(HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[DrivingLicenceRead],
-            summary="Get all DrivingLicence")
+            response_model=List[DrivingLicenseRead],
+            summary="Get all DrivingLicense")
 async def get_all(*,
     db: Session = Depends(get_db),
     skip: int = 0,
@@ -24,77 +24,77 @@ async def get_all(*,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Get all DrivingLicence
+        Get all DrivingLicense
 
     """
     Authorize.jwt_required()
-    return driving_licence_service.get_multi(db, skip, limit)
+    return driving_license_service.get_multi(db, skip, limit)
 
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
-             response_model=DrivingLicenceRead,
-             summary="Create DrivingLicence")
+             response_model=DrivingLicenseRead,
+             summary="Create DrivingLicense")
 async def create(*,
     db: Session = Depends(get_db),
-    body: DrivingLicenceCreate,
+    body: DrivingLicenseCreate,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Create new DrivingLicence
+        Create new DrivingLicense
 
     """
     Authorize.jwt_required()
-    return driving_licence_service.create(db, body)
+    return driving_license_service.create(db, body)
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=DrivingLicenceRead,
-            summary="Get DrivingLicence by id")
+            response_model=DrivingLicenseRead,
+            summary="Get DrivingLicense by id")
 async def get_by_id(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Get DrivingLicence by id
+        Get DrivingLicense by id
 
         - **id**: UUID - required.
     """
     Authorize.jwt_required()
-    return driving_licence_service.get_by_id(db, id)
+    return driving_license_service.get_by_id(db, id)
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=DrivingLicenceRead,
-            summary="Update DrivingLicence")
+            response_model=DrivingLicenseRead,
+            summary="Update DrivingLicense")
 async def update(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
-    body: DrivingLicenceUpdate,
+    body: DrivingLicenseUpdate,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Update DrivingLicence
+        Update DrivingLicense
 
     """
     Authorize.jwt_required()
-    return driving_licence_service.update(
+    return driving_license_service.update(
         db,
-        db_obj=driving_licence_service.get_by_id(db, id),
+        db_obj=driving_license_service.get_by_id(db, id),
         obj_in=body)
 
 
 @router.delete("/{id}/",status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
-               summary="Delete DrivingLicence")
+               summary="Delete DrivingLicense")
 async def delete(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Delete DrivingLicence
+        Delete DrivingLicense
 
         - **id**: UUId - required
     """
     Authorize.jwt_required()
-    driving_licence_service.remove(db, id)
+    driving_license_service.remove(db, id)

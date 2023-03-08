@@ -13,11 +13,11 @@ from .staff_function import (DocumentFunctionType, DocumentStaffFunction,
                              RoleName, ServiceFunctionType,
                              ServiceStaffFunction, StaffFunction)
 from .staff_unit import StaffUnit
-from .user import User
+
 from .user_stat import UserStat
-from .position import Position
+from .position import Position 
 from .profile import Profile
+from .personal import *
+from .additional import *
 from .education import *
-from .personal import (BiographicInfo, DrivingLicence, IdentificationCard,
-                       Passport, PersonalProfile, SportAchievement,
-                       SportDegree, TaxDeclaration, UserFinancialInfo)
+from .user import User

@@ -36,7 +36,6 @@ async def get_all(*,
              summary="Create")
 async def create(*,
     db: Session = Depends(get_db),
-    body: ProfileCreate,
     Authorize: AuthJWT = Depends()
 ):
     """
@@ -46,7 +45,7 @@ async def create(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    return profile_service.create(db, body)
+    return profile_service.create(db, {"user_id": Authorize.get_jwt_subject()})
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=ProfileRead,

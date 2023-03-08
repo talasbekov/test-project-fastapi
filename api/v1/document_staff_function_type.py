@@ -7,7 +7,8 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import (DocumentStaffFunctionTypeCreate, DocumentStaffFunctionTypeRead,
+from schemas import (DocumentStaffFunctionTypeCreate,
+                     DocumentStaffFunctionTypeRead,
                      DocumentStaffFunctionTypeUpdate)
 from services import document_staff_function_type_service
 

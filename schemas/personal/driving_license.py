@@ -1,12 +1,11 @@
-import uuid
 import datetime
-
-from typing import Optional, List
+import uuid
+from typing import List, Optional
 
 from pydantic import BaseModel
 
 
-class DrivingLicenceBase(BaseModel):
+class DrivingLicenseBase(BaseModel):
     document_number: str
     category: List[str]
     date_of_issue: datetime.date
@@ -15,15 +14,15 @@ class DrivingLicenceBase(BaseModel):
     profile_id: uuid.UUID
 
 
-class DrivingLicenceCreate(DrivingLicenceBase):
+class DrivingLicenseCreate(DrivingLicenseBase):
     pass
 
 
-class DrivingLicenceUpdate(DrivingLicenceBase):
+class DrivingLicenseUpdate(DrivingLicenseBase):
     pass
 
 
-class DrivingLicenceRead(DrivingLicenceBase):
+class DrivingLicenseRead(DrivingLicenseBase):
     id: Optional[uuid.UUID]
     document_number: Optional[str]
     category: Optional[List[str]]
