@@ -34,7 +34,7 @@ class PersonalProfileRead(PersonalProfileBase):
 
     identification_cards: Optional[List[IdentificationCardRead]]
     biographic_infos: Optional[List[BiographicInfoRead]]
-    driving_licences: Optional[List[DrivingLicenseRead]]
+    driving_licenses: Optional[List[DrivingLicenseRead]]
     passports: Optional[List[PassportRead]]
     sport_achievements: Optional[List[SportAchievementRead]]
     sport_degrees: Optional[List[SportDegreeRead]]

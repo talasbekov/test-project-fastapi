@@ -1,5 +1,5 @@
 from .biographic_info import BiographicInfo
-from .driving_license import DrivingLicence
+from .driving_license import DrivingLicense
 from .identification_card import IdentificationCard
 from .passport import Passport
 from .personal_profile import PersonalProfile

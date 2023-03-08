@@ -6,8 +6,6 @@ from .identification_card import (IdentificationCardCreate,
                                   IdentificationCardRead,
                                   IdentificationCardUpdate)
 from .passport import PassportCreate, PassportRead, PassportUpdate
-from .personal_profile import (PersonalProfileCreate, PersonalProfileRead,
-                               PersonalProfileUpdate)
 from .sport_achievement import (SportAchievementCreate, SportAchievementRead,
                                 SportAchievementUpdate)
 from .sport_degree import SportDegreeCreate, SportDegreeRead, SportDegreeUpdate
@@ -16,3 +14,5 @@ from .tax_declaration import (TaxDeclarationCreate, TaxDeclarationRead,
 from .user_financial_info import (UserFinancialInfoCreate,
                                   UserFinancialInfoRead,
                                   UserFinancialInfoUpdate)
+from .personal_profile import (PersonalProfileCreate, PersonalProfileRead,
+                               PersonalProfileUpdate)

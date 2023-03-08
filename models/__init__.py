@@ -17,9 +17,6 @@ from .staff_unit import StaffUnit
 from .user_stat import UserStat
 from .position import Position 
 from .profile import Profile
-from .personal import (BiographicInfo, DrivingLicence, IdentificationCard,
-                       Passport, PersonalProfile, SportAchievement,
-                       SportDegree, TaxDeclaration, UserFinancialInfo)
+from .personal import *
 from .additional import *
 from .user import User
-

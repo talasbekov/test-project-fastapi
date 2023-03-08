@@ -5,7 +5,7 @@ from .profile.profile import profile_service
 from .profile.personal_profile.personal_profile import personal_profile_service
 from .profile.personal_profile.biographic_info import biographic_info_service
 from .profile.personal_profile.user_financial_info import user_financial_info_service
-from .profile.personal_profile.driving_licence import driving_licence_service
+from .profile.personal_profile.driving_license import driving_license_service
 from .profile.personal_profile.identification_card import identification_card_service
 from .profile.personal_profile.passport import passport_service
 from .profile.personal_profile.sport_achievement import sport_achievement_service
