@@ -15,7 +15,8 @@ from .staff_function import (DocumentFunctionType, DocumentStaffFunction,
 from .staff_unit import StaffUnit
 
 from .user_stat import UserStat
-from .position import Position 
+from .position import Position
+from .medical import *
 from .profile import Profile
 from .personal import *
 from .additional import *
