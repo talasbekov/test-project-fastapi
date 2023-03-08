@@ -16,7 +16,7 @@ class PersonalProfile(Model, Base):
 
     identification_cards = relationship("IdentificationCard", back_populates="profile", cascade="all,delete")
     biographic_infos = relationship("BiographicInfo", back_populates="profile", cascade="all,delete")
-    driving_licences = relationship("DrivingLicence", back_populates="profile", cascade="all,delete")
+    driving_licenses = relationship("DrivingLicense", back_populates="profile", cascade="all,delete")
     passports = relationship("Passport", back_populates="profile", cascade="all,delete")
     sport_achievements = relationship("SportAchievement", back_populates="profile", cascade="all,delete")
     sport_degrees = relationship("SportDegree", back_populates="profile", cascade="all,delete")

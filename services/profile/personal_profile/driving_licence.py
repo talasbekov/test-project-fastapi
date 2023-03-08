@@ -2,12 +2,12 @@ from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import DrivingLicence
-from schemas import DrivingLicenceCreate, DrivingLicenceUpdate, DrivingLicenceRead
-
+from schemas import (DrivingLicenseCreate, DrivingLicenseRead,
+                     DrivingLicenseUpdate)
 from services.base import ServiceBase
 
 
-class DrivingLicenceService(ServiceBase[DrivingLicence, DrivingLicenceCreate, DrivingLicenceUpdate]):
+class DrivingLicenceService(ServiceBase[DrivingLicence, DrivingLicenseCreate, DrivingLicenseUpdate]):
 
     def get_by_id(self, db: Session, id: str):
         driving_licence = super().get(db, id)

@@ -255,7 +255,7 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['profile_id'], ['personal_profiles.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('driving_licences',
+    op.create_table('driving_licenses',
     sa.Column('document_number', sa.String(), nullable=True),
     sa.Column('category', sa.ARRAY(sa.String()), nullable=True),
     sa.Column('date_of_issue', sa.TIMESTAMP(timezone=True), nullable=True),
