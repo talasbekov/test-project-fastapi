@@ -1,9 +1,9 @@
 from sqlalchemy.orm import Session
 
-from exceptions.client import NotFoundException
+from exceptions import NotFoundException
 from models import Profile
 from schemas import ProfileCreate, ProfileRead, ProfileUpdate
-from services.base import ServiceBase
+from services import ServiceBase
 
 
 class ProfileService(ServiceBase[Profile, ProfileCreate, ProfileUpdate]):

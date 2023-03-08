@@ -1,5 +1,7 @@
 from fastapi import APIRouter
 
+from .education import router_education
+
 from .hr_document import router as hr_document_router
 from .document_staff_function_type import router as document_staff_function_type_router
 from .document_staff_function import router as document_staff_function_router
@@ -43,6 +45,8 @@ router.include_router(equipment_router)
 router.include_router(badge_router)
 router.include_router(rank_router)
 router.include_router(jurisdiction_router)
+
+router.include_router(router_education)
 router.include_router(profile_router)
 router.include_router(personal_profile_router)
 router.include_router(biographic_info_router)

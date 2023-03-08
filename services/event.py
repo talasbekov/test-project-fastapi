@@ -1,5 +1,3 @@
-from fastapi import HTTPException, status
-from fastapi.logger import logger as log
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException

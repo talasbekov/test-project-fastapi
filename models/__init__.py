@@ -19,4 +19,5 @@ from .position import Position
 from .profile import Profile
 from .personal import *
 from .additional import *
+from .education import *
 from .user import User
