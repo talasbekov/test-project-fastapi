@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from core import get_db
 from schemas import (PersonalProfileCreate, PersonalProfileRead,
                      PersonalProfileUpdate)
-from services import personal_profile_service
+from services import personal_profile_service, profile_service
 
 router = APIRouter(prefix="/personal_profile", tags=["PersonalProfile"], dependencies=[Depends(HTTPBearer())])
 
@@ -100,10 +100,11 @@ async def delete(*,
     personal_profile_service.remove(db, id)
 
 
-@router.get("/profile")
+@router.get("/profile", response_model=PersonalProfileRead)
 async def get_profile(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
-    personal_profile_service.get_by_user_id(db, Authorize.get_jwt_subject())
+    profile = profile_service.get_by_user_id(db, Authorize.get_jwt_subject())
+    return profile.personal_profile

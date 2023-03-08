@@ -12,7 +12,7 @@ class PersonalProfile(Model, Base):
 
     profile_id = Column(UUID(as_uuid=True), ForeignKey("profiles.id"), nullable=False)
 
-    profile = relationship("Profile", cascade="all, delete")
+    profile = relationship("Profile", back_populates="personal_profile")
 
     identification_cards = relationship("IdentificationCard", back_populates="profile", cascade="all,delete")
     biographic_infos = relationship("BiographicInfo", back_populates="profile", cascade="all,delete")
