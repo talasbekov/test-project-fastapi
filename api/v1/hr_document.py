@@ -196,7 +196,8 @@ async def get_data_by_option(*,
         * badges
     """
     Authorize.jwt_required()
-    return hr_document_service.get_all_by_option(db, option, data_taken, id)
+    res = hr_document_service.get_all_by_option(db, option, data_taken, id)
+    return res
 
 
 @router.get('/signed-history', status_code=status.HTTP_200_OK)
