@@ -11,3 +11,5 @@ from models import Model
 class Profile(Model):
 
     __tablename__ = "profiles"
+
+    medical_profile = relationship("MedicalProfile", back_populates="profile", cascade="all,delete")

@@ -17,6 +17,7 @@ class AnthropometricData(Model):
     neck_circumference = Column(Integer)
     shape_size = Column(Integer)
     bust_size = Column(Integer)
+    
     profile_id = Column(UUID(as_uuid=True), ForeignKey("medical_profiles.id"))
 
     profile = relationship("MedicalProfile")

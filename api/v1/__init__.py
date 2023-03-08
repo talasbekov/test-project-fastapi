@@ -17,6 +17,7 @@ from .equipment import router as equipment_router
 from .badge import router as badge_router
 from .rank import router as rank_router
 from .jurisdiction import router as jurisdiction_router
+from .medical import *
 
 router = APIRouter(prefix="/v1")
 
@@ -37,3 +38,9 @@ router.include_router(equipment_router)
 router.include_router(badge_router)
 router.include_router(rank_router)
 router.include_router(jurisdiction_router)
+router.include_router(anthropometric_data_router)
+router.include_router(dispensary_registrations_router) 
+router.include_router(general_user_information_router)
+router.include_router(hospital_data_router)
+router.include_router(medical_profile_router)
+router.include_router(user_liberation_router)

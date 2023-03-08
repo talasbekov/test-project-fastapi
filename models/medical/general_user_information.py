@@ -8,7 +8,7 @@ from core import Base
 from models import Model
 
 
-class BloodType(Enum):
+class BloodType(str,Enum):
     O_PLUS = "0+"
     O_MINUS = "0-"
     A_PLUS = "A+"
@@ -19,7 +19,7 @@ class BloodType(Enum):
     AB_MINUS = "AB-"
 
 
-class AgeGroup(Enum):
+class AgeGroup(int,Enum):
     FIRST = 1
     SECOND = 2
     THIRD = 3

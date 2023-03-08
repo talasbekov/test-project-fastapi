@@ -14,4 +14,4 @@ class MedicalProfile(Model):
 
     profile_id = Column(UUID(as_uuid=True), ForeignKey("profiles.id"))
 
-    profile = relationship("Profile")
+    profile = relationship("Profile", back_populates="medical_profile")
