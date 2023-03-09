@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 
 class FamilyBase(BaseModel):
+    relation: str
     first_name: str
     last_name: str
     father_name: str
