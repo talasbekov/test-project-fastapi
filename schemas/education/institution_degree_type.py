@@ -6,7 +6,6 @@ from typing import Optional
 
 class InstitutionDegreeTypeBase(BaseModel):
     name: str
-    InstitutionDegreeType_id: Optional[uuid.UUID]
 
 
 class InstitutionDegreeTypeCreate(InstitutionDegreeTypeBase):

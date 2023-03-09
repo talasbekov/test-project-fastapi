@@ -3,7 +3,6 @@ from sqlalchemy.orm import Session
 from exceptions.client import NotFoundException
 from models.education import AcademicDegree
 from schemas.education import AcademicDegreeCreate, AcademicDegreeUpdate
-
 from services import ServiceBase
 
 

@@ -7,10 +7,14 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas.education import AcademicTitleDegreeCreate, AcademicTitleDegreeRead, AcademicTitleDegreeUpdate
+from schemas.education import (AcademicTitleDegreeCreate,
+                               AcademicTitleDegreeRead,
+                               AcademicTitleDegreeUpdate)
 from services.education import academic_title_degree_service
 
-router = APIRouter(prefix="/academic_title_degrees", tags=["AcademicTitleDegrees"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(prefix="/academic_title_degrees",
+                   tags=["AcademicTitleDegrees"],
+                   dependencies=[Depends(HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
@@ -106,10 +110,3 @@ async def delete(*,
     """
     Authorize.jwt_required()
     academic_title_degree_service.remove(db, id)
-
-
-@router.get("/help")
-async def help(*,
-    db: Session = Depends(get_db)):
-    academic_title_degree_service.add_AcademicTitleDegree(db, AcademicTitleDegreeCreate(name="test", url="sad"))
-    raise Exception('help')

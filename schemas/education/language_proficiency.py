@@ -14,7 +14,8 @@ class LanguageProficiencyBase(BaseModel):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
-        
+
+
 class LanguageProficiencyCreate(LanguageProficiencyBase):
     pass
 

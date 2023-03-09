@@ -7,10 +7,14 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas.education import SpecialtyCreate, SpecialtyRead, SpecialtyUpdate
+from schemas.education import (SpecialtyCreate,
+                               SpecialtyRead,
+                               SpecialtyUpdate)
 from services.education import specialty_service
 
-router = APIRouter(prefix="/specialties", tags=["Specialties"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(prefix="/specialties",
+                   tags=["Specialties"],
+                   dependencies=[Depends(HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
@@ -106,10 +110,3 @@ async def delete(*,
     """
     Authorize.jwt_required()
     specialty_service.remove(db, id)
-
-
-@router.get("/help")
-async def help(*,
-    db: Session = Depends(get_db)):
-    specialty_service.add_Specialty(db, SpecialtyCreate(name="test", url="sad"))
-    raise Exception('help')

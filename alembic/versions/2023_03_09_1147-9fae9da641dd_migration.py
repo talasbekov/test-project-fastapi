@@ -7,14 +7,12 @@ Create Date: 2023-03-02 11:47:59.787804
 """
 import uuid
 
-import sqlalchemy as sa
-
 from alembic import op
 from core import Base
 
 # revision identifiers, used by Alembic.
 revision = '9fae9da641dd'
-down_revision = 'f04c5daf7685'
+down_revision = '33853d366eba'
 branch_labels = None
 depends_on = None
 
@@ -181,7 +179,6 @@ def upgrade() -> None:
         }]
     )
 
-
     jurisdiction1_id = get_uuid()
     jurisdiction2_id = get_uuid()
     jurisdiction3_id = get_uuid()
@@ -242,7 +239,6 @@ def upgrade() -> None:
             'can_cancel': True
         }]
     )
-
 
     staff_function1_id = get_uuid()
     staff_function2_id = get_uuid()
@@ -339,7 +335,6 @@ def upgrade() -> None:
         }]
     )
 
-
     group1_id = get_uuid()
     group2_id = get_uuid()
     group3_id = get_uuid()
@@ -371,18 +366,6 @@ def upgrade() -> None:
         }]
     )
 
-
-    user1_id = get_uuid()
-    user2_id = get_uuid()
-    user3_id = get_uuid()
-    user4_id = get_uuid()
-    user5_id = get_uuid()
-    user6_id = get_uuid()
-    user7_id = get_uuid()
-    user8_id = get_uuid()
-    user9_id = get_uuid()
-    user10_id = get_uuid()
-
     staff_unit1_id = get_uuid()
     staff_unit2_id = get_uuid()
     staff_unit3_id = get_uuid()
@@ -397,6 +380,37 @@ def upgrade() -> None:
     staff_unit12_id = get_uuid()
     staff_unit13_id = get_uuid()
     staff_unit14_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['staff_units'],
+        [{
+            'id': staff_unit12_id,
+            'user_id': None,
+            'position_id': position5_id,
+            'staff_division_id': group1_id
+        }, {
+            'id': staff_unit13_id,
+            'user_id': None,
+            'position_id': position3_id,
+            'staff_division_id': group2_id
+        }, {
+            'id': staff_unit14_id,
+            'user_id': None,
+            'position_id': position4_id,
+            'staff_division_id': group3_id
+        }]
+    )
+
+    user1_id = get_uuid()
+    user2_id = get_uuid()
+    user3_id = get_uuid()
+    user4_id = get_uuid()
+    user5_id = get_uuid()
+    user6_id = get_uuid()
+    user7_id = get_uuid()
+    user8_id = get_uuid()
+    user9_id = get_uuid()
+    user10_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['users'],
@@ -556,26 +570,6 @@ def upgrade() -> None:
                 "http://192.168.0.199:8083/static/Erdaulet.png",
                 position4_id)
         ]
-    )
-
-    op.bulk_insert(
-        Base.metadata.tables['staff_units'],
-        [{
-            'id': staff_unit12_id,
-            'user_id': None,
-            'position_id': position5_id,
-            'staff_division_id': group1_id
-        }, {
-            'id': staff_unit13_id,
-            'user_id': None,
-            'position_id': position3_id,
-            'staff_division_id': group2_id
-        }, {
-            'id': staff_unit14_id,
-            'user_id': None,
-            'position_id': position4_id,
-            'staff_division_id': group3_id
-        }]
     )
 
     op.bulk_insert(
@@ -839,12 +833,366 @@ def upgrade() -> None:
         }]
     )
 
+    profile1_id = get_uuid()
+    profile2_id = get_uuid()
+    profile3_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['profiles'],
+        [{
+            'id': profile1_id,
+            'user_id': user1_id
+        }, {
+            'id': profile2_id,
+            'user_id': user2_id
+        }, {
+            'id': profile3_id,
+            'user_id': user3_id
+        }]
+    )
+
+    academic_degree_degree1_id = get_uuid()
+    academic_degree_degree2_id = get_uuid()
+    academic_degree_degree3_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['academic_degree_degrees'],
+        [{
+            'id': academic_degree_degree1_id,
+            'name': "academic_degree_degrees1"
+        }, {
+            'id': academic_degree_degree2_id,
+            'name': "academic_degree_degrees2"
+        }, {
+            'id': academic_degree_degree3_id,
+            'name': "academic_degree_degrees3"
+        }]
+    )
+
+    academic_title_degree1_id = get_uuid()
+    academic_title_degree2_id = get_uuid()
+    academic_title_degree3_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['academic_title_degrees'],
+        [{
+            'id': academic_title_degree1_id,
+            'name': "academic_title_degrees1"
+        }, {
+            'id': academic_title_degree2_id,
+            'name': "academic_title_degrees2"
+        }, {
+            'id': academic_title_degree3_id,
+            'name': "academic_title_degrees3"
+        }]
+    )
+
+    course_provider1_id = get_uuid()
+    course_provider2_id = get_uuid()
+    course_provider3_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['course_providers'],
+        [{
+            'id': course_provider1_id,
+            'name': "course_provider1"
+        }, {
+            'id': course_provider2_id,
+            'name': "course_provider2"
+        }, {
+            'id': course_provider3_id,
+            'name': "course_provider3"
+        }]
+    )
+
+    institution_degree_type1_id = get_uuid()
+    institution_degree_type2_id = get_uuid()
+    institution_degree_type3_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['institution_degree_types'],
+        [{
+            'id': institution_degree_type1_id,
+            'name': "institution_degree_type1"
+        }, {
+            'id': institution_degree_type2_id,
+            'name': "institution_degree_type2"
+        }, {
+            'id': institution_degree_type3_id,
+            'name': "institution_degree_type3"
+        }]
+    )
+
+    science1_id = get_uuid()
+    science2_id = get_uuid()
+    science3_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['sciences'],
+        [{
+            'id': science1_id,
+            'name': "science1"
+        }, {
+            'id': science2_id,
+            'name': "science2"
+        }, {
+            'id': science3_id,
+            'name': "science3"
+        }]
+    )
+
+    specialty1_id = get_uuid()
+    specialty2_id = get_uuid()
+    specialty3_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['specialties'],
+        [{
+            'id': specialty1_id,
+            'name': "specialty1"
+        }, {
+            'id': specialty2_id,
+            'name': "specialty2"
+        }, {
+            'id': specialty3_id,
+            'name': "specialty3"
+        }]
+    )
+
+    language1_id = get_uuid()
+    language2_id = get_uuid()
+    language3_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['languages'],
+        [{
+            'id': language1_id,
+            'name': "Қазақ тілі"
+        }, {
+            'id': language2_id,
+            'name': "Ағылшын тілі"
+        }, {
+            'id': language3_id,
+            'name': "Орыс тілі"
+        }]
+    )
+
+    institution1_id = get_uuid()
+    institution2_id = get_uuid()
+    institution3_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['institutions'],
+        [{
+            'id': institution1_id,
+            'name': "institution1"
+        }, {
+            'id': institution2_id,
+            'name': "institution2"
+        }, {
+            'id': institution3_id,
+            'name': "institution3"
+        }]
+    )
+
+    educational_profile1_id = get_uuid()
+    educational_profile2_id = get_uuid()
+    educational_profile3_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['educational_profiles'],
+        [{
+            'id': educational_profile1_id,
+            'profile_id': profile1_id
+        }, {
+            'id': educational_profile2_id,
+            'profile_id': profile2_id
+        }, {
+            'id': educational_profile3_id,
+            'profile_id': profile3_id
+        }]
+    )
+
+    academic_degree1_id = get_uuid()
+    academic_degree2_id = get_uuid()
+    academic_degree3_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['academic_degrees'],
+        [{
+            'id': academic_degree1_id,
+            'profile_id': educational_profile1_id,
+            'degree_id': academic_degree_degree1_id,
+            'science_id': science1_id,
+            'specialty_id': specialty1_id,
+            'document_number': 1,
+            'document_link': "document_link",
+            'assignment_date': "2022-10-07"
+        }, {
+            'id': academic_degree2_id,
+            'profile_id': educational_profile2_id,
+            'degree_id': academic_degree_degree2_id,
+            'science_id': science2_id,
+            'specialty_id': specialty2_id,
+            'document_number': 2,
+            'document_link': "document_link",
+            'assignment_date': "2022-10-08"
+        }, {
+            'id': academic_degree3_id,
+            'profile_id': educational_profile3_id,
+            'degree_id': academic_degree_degree3_id,
+            'science_id': science3_id,
+            'specialty_id': specialty3_id,
+            'document_number': 3,
+            'document_link': "document_link",
+            'assignment_date': "2022-10-09"
+        }]
+    )
+
+    language_proficiency1_id = get_uuid()
+    language_proficiency2_id = get_uuid()
+    language_proficiency3_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['language_proficiencies'],
+        [{
+            'id': language_proficiency1_id,
+            'language_id': language1_id,
+            "level": 4,
+            'profile_id': educational_profile1_id
+        }, {
+            'id': language_proficiency2_id,
+            'language_id': language2_id,
+            "level": 78,
+            'profile_id': educational_profile2_id
+        }, {
+            'id': language_proficiency3_id,
+            'language_id': language3_id,
+            "level": 80,
+            'profile_id': educational_profile3_id,
+        }]
+    )
+
+    academic_title1_id = get_uuid()
+    academic_title2_id = get_uuid()
+    academic_title3_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['academic_titles'],
+        [{
+            'id': academic_title1_id,
+            'profile_id': educational_profile1_id,
+            'degree_id': academic_title_degree1_id,
+            'specialty_id': specialty1_id,
+            'document_number': 1,
+            'document_link': "document_link",
+            'assignment_date': "2022-12-12"
+        }, {
+            'id': academic_title2_id,
+            'profile_id': educational_profile2_id,
+            'degree_id': academic_title_degree2_id,
+            'specialty_id': specialty2_id,
+            'document_number': 2,
+            'document_link': "document_link",
+            'assignment_date': "2022-12-13"
+        }, {
+            'id': academic_title3_id,
+            'profile_id': educational_profile3_id,
+            'degree_id': academic_title_degree3_id,
+            'specialty_id': specialty3_id,
+            'document_number': 3,
+            'document_link': "document_link",
+            'assignment_date': "2022-12-14"
+        }]
+    )
+
+    course1_id = get_uuid()
+    course2_id = get_uuid()
+    course3_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['courses'],
+        [{
+            'id': course1_id,
+            'name': "course1",
+            'profile_id': educational_profile1_id,
+            'course_provider_id': course_provider1_id,
+            'specialty_id': specialty1_id,
+            'document_number': 1,
+            'document_link': "document_link",
+            'assignment_date': "2022-12-12"
+        }, {
+            'id': course2_id,
+            'name': "course2",
+            'profile_id': educational_profile2_id,
+            'course_provider_id': course_provider2_id,
+            'specialty_id': specialty2_id,
+            'document_number': 2,
+            'document_link': "document_link",
+            'assignment_date': "2022-12-13"
+        }, {
+            'id': course3_id,
+            'name': "course3",
+            'profile_id': educational_profile3_id,
+            'course_provider_id': course_provider3_id,
+            'specialty_id': specialty3_id,
+            'document_number': 3,
+            'document_link': "document_link",
+            'assignment_date': "2022-12-14"
+        }]
+    )
+
+    education1_id = get_uuid()
+    education2_id = get_uuid()
+    education3_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['educations'],
+        [{
+            'id': education1_id,
+            'profile_id': educational_profile1_id,
+            'institution_id': institution1_id,
+            'degree_id': institution_degree_type1_id,
+            'start_date': "2022-09-11",
+            'end_date': "2022-09-12",
+            'document_link': "document_link1"
+        }, {
+            'id': education2_id,
+            'profile_id': educational_profile2_id,
+            'institution_id': institution2_id,
+            'degree_id': institution_degree_type2_id,
+            'start_date': "2022-09-13",
+            'end_date': "2022-09-14",
+            'document_link': "document_link2"
+        }, {
+            'id': education3_id,
+            'profile_id': educational_profile3_id,
+            'institution_id': institution3_id,
+            'degree_id': institution_degree_type3_id,
+            'start_date': "2022-09-15",
+            'end_date': "2022-09-16",
+            'document_link': "document_link3"
+        }]
+    )
+
 
 def get_uuid():
     return str(uuid.uuid4())
 
 
-def create_user(id, name, surname, father_name, email, group_id, call_sign, number,  staff_unit_id, rank_id, actual_staff_unit_id, icon, position_id):
+def create_user(id,
+                name,
+                surname,
+                father_name,
+                email,
+                group_id,
+                call_sign,
+                number,
+                staff_unit_id,
+                rank_id,
+                actual_staff_unit_id,
+                icon,
+                position_id):
     op.bulk_insert(
         Base.metadata.tables['staff_units'],
         [{

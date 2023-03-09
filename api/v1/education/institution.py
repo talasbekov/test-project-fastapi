@@ -7,10 +7,14 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas.education import InstitutionCreate, InstitutionRead, InstitutionUpdate
+from schemas.education import (InstitutionCreate,
+                               InstitutionRead,
+                               InstitutionUpdate)
 from services.education import institution_service
 
-router = APIRouter(prefix="/academic_degrees", tags=["Institutions"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(prefix="/academic_degrees",
+                   tags=["Institutions"],
+                   dependencies=[Depends(HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
@@ -106,10 +110,3 @@ async def delete(*,
     """
     Authorize.jwt_required()
     institution_service.remove(db, id)
-
-
-@router.get("/help")
-async def help(*,
-    db: Session = Depends(get_db)):
-    institution_service.add_Institution(db, InstitutionCreate(name="test", url="sad"))
-    raise Exception('help')

@@ -2,8 +2,7 @@ from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
 from models.education import LanguageProficiency
-from schemas.education import LanguageProficiencyCreate, LanguageProficiencyRead, LanguageProficiencyUpdate
-
+from schemas.education import LanguageProficiencyCreate, LanguageProficiencyUpdate
 from services import ServiceBase
 
 

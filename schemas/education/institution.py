@@ -11,6 +11,7 @@ class InstitutionBase(BaseModel):
         orm_mode = True
         arbitrary_types_allowed = True
 
+
 class InstitutionCreate(InstitutionBase):
     pass
 
