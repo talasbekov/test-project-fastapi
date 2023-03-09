@@ -487,8 +487,6 @@ def upgrade() -> None:
         }]
     )
 
-
-
     group1_id = get_uuid()
     group2_id = get_uuid()
     group3_id = get_uuid()
@@ -1040,6 +1038,16 @@ def create_user(id,
         }]
     )
 
+    personal_profile_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['personal_profiles'],
+        [{
+            'id': personal_profile_id,
+            'profile_id': profile_id,
+        }]
+    )
+
     educational_profile_id = get_uuid()
 
     op.bulk_insert(
@@ -1217,6 +1225,181 @@ def create_user(id,
             'start_date': "2022-09-15",
             'end_date': "2022-09-16",
             'document_link': "document_link3"
+        }]
+    )
+
+    sport_degree1_id = get_uuid()
+    sport_degree2_id = get_uuid()
+    sport_degree3_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['sport_degrees'],
+        [{
+            'id': sport_degree1_id,
+            'profile_id': personal_profile_id,
+            'name': "sport_degree1",
+            'assignment_date': '2022-10-09',
+            'document_link': 'document_link1'
+        }, {
+            'id': sport_degree2_id,
+            'profile_id': personal_profile_id,
+            'name': "sport_degree2",
+            'assignment_date': '2022-10-10',
+            'document_link': 'document_link2'
+        }, {
+            'id': sport_degree3_id,
+            'profile_id': personal_profile_id,
+            'name': "sport_degree3",
+            'assignment_date': '2022-10-11',
+            'document_link': 'document_link3'
+        }]
+    )
+
+    sport_achievement1_id = get_uuid()
+    sport_achievement2_id = get_uuid()
+    sport_achievement3_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['sport_achievements'],
+        [{
+            'id': sport_achievement1_id,
+            'profile_id': personal_profile_id,
+            'name': "sport_achievement1",
+            'assignment_date': '2022-10-09',
+            'document_link': 'document_link1'
+        }, {
+            'id': sport_achievement2_id,
+            'profile_id': personal_profile_id,
+            'name': "sport_achievement2",
+            'assignment_date': '2022-10-10',
+            'document_link': 'document_link2'
+        }, {
+            'id': sport_achievement3_id,
+            'profile_id': personal_profile_id,
+            'name': "sport_achievement3",
+            'assignment_date': '2022-10-11',
+            'document_link': 'document_link3'
+        }]
+    )
+
+    """
+        Table biographic_infos as BI {
+        id uuid 
+        place_birth str
+        gender bool
+        citizenship str
+        nationality str
+        family_status enum
+        address str
+        profile_id uuid
+        }
+    """
+
+    biographic_info_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['biographic_infos'],
+        [{
+            'id': biographic_info_id,
+            'place_birth': "place_birth",
+            'gender': True,
+            'citizenship': "Kazakhstan",
+            'nationality': 'kazakh',
+            'family_status': "Married",
+            'address': "address",
+            'profile_id': personal_profile_id
+        }]
+    )
+
+    tax_declaration1_id = get_uuid()
+    tax_declaration2_id = get_uuid()
+    tax_declaration3_id = get_uuid()
+    tax_declaration4_id = get_uuid()
+    tax_declaration5_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['tax_declarations'],
+        [{
+            'id': tax_declaration1_id,
+            'year': "2019",
+            'is_paid': True,
+            'profile_id': personal_profile_id
+        }, {
+            'id': tax_declaration2_id,
+            'year': "2020",
+            'is_paid': True,
+            'profile_id': personal_profile_id
+        }, {
+            'id': tax_declaration3_id,
+            'year': "2021",
+            'is_paid': False,
+            'profile_id': personal_profile_id
+        }, {
+            'id': tax_declaration4_id,
+            'year': "2022",
+            'is_paid': False,
+            'profile_id': personal_profile_id
+        }, {
+            'id': tax_declaration5_id,
+            'year': "2023",
+            'is_paid': False,
+            'profile_id': personal_profile_id
+        }]
+    )
+
+    user_financial_info_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['user_financial_infos'],
+        [{
+            'id': user_financial_info_id,
+            'iban': "iban",
+            'housing_payments_iban': "housing_payments_iban",
+            'profile_id': personal_profile_id
+        }]
+    )
+
+    identification_card_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['identification_cards'],
+        [{
+            'id': identification_card_id,
+            'document_number': "document_number",
+            'date_of_issue': "2022-09-11",
+            'date_to': "2022-09-12",
+            'issued_by': "issued_by",
+            'document_link': "document_link",
+            'profile_id': personal_profile_id
+        }]
+    )
+
+    driving_licence_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['driving_licenses'],
+        [{
+            'id': driving_licence_id,
+            'document_number': "document_number",
+            'category': ["A", "B", "C"],
+            'date_of_issue': "2022-09-11",
+            'date_to': "2022-09-12",
+            'document_link': "document_link",
+            'profile_id': personal_profile_id
+        }]
+    )
+
+    passport_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['passports'],
+        [{
+            'id': passport_id,
+            'document_number': "document_number",
+            'date_of_issue': "2022-09-11",
+            'date_to': "2022-09-12",
+            'document_link': "document_link",
+            'profile_id': personal_profile_id
         }]
     )
 

@@ -1,2 +1,2 @@
-s = "[\n  {\n    \"loc\": [\n      \"users\",\n      0\n    ],\n    \"msg\": \"value is not a valid dict\",\n    \"type\": \"type_error.dict\"\n  },\n  {\n    \"loc\": [\n      \"actual_users\",\n      0\n    ],\n    \"msg\": \"value is not a valid dict\",\n    \"type\": \"type_error.dict\"\n  }\n]"
+s = "[\n  {\n    \"loc\": [\n      \"response\",\n      \"biographic_infos\",\n      0,\n      \"place_birth\"\n    ],\n    \"msg\": \"invalid date format\",\n    \"type\": \"value_error.date\"\n  },\n  {\n    \"loc\": [\n      \"response\",\n      \"biographic_infos\",\n      0,\n      \"date_birth\"\n    ],\n    \"msg\": \"none is not an allowed value\",\n    \"type\": \"type_error.none.not_allowed\"\n  }\n]"
 print(s)
