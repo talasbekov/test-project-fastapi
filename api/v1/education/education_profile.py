@@ -8,17 +8,20 @@ from sqlalchemy.orm import Session
 
 from core import get_db
 from schemas import (EducationalProfileCreate,
-                    EducationalProfileRead,
-                    EducationalProfileUpdate)
+                     EducationalProfileRead,
+                     EducationalProfileUpdate)
 from services import profile_service
 from services.education import educational_profile_service
 
-router = APIRouter(prefix="/educational_profiles", tags=["EducationalProfiles"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(prefix="/educational_profiles",
+                   tags=["EducationalProfiles"],
+                   dependencies=[Depends(HTTPBearer())])
 """
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[PsychologicalCheckRead],
             summary="Get all Polygraph Check")
 """
+
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=None,

@@ -7,17 +7,52 @@ Create Date: 2023-03-02 11:47:59.787804
 """
 import uuid
 
-import sqlalchemy as sa
-
 from alembic import op
 from core import Base
 
 # revision identifiers, used by Alembic.
 revision = '9fae9da641dd'
-down_revision = 'f04c5daf7685'
+down_revision = '33853d366eba'
 branch_labels = None
 depends_on = None
 
+
+def get_uuid():
+    return str(uuid.uuid4())
+
+
+# Education
+academic_degree_degree1_id = get_uuid()
+academic_degree_degree2_id = get_uuid()
+academic_degree_degree3_id = get_uuid()
+
+academic_title_degree1_id = get_uuid()
+academic_title_degree2_id = get_uuid()
+academic_title_degree3_id = get_uuid()
+
+course_provider1_id = get_uuid()
+course_provider2_id = get_uuid()
+course_provider3_id = get_uuid()
+
+institution_degree_type1_id = get_uuid()
+institution_degree_type2_id = get_uuid()
+institution_degree_type3_id = get_uuid()
+
+science1_id = get_uuid()
+science2_id = get_uuid()
+science3_id = get_uuid()
+
+specialty1_id = get_uuid()
+specialty2_id = get_uuid()
+specialty3_id = get_uuid()
+
+language1_id = get_uuid()
+language2_id = get_uuid()
+language3_id = get_uuid()
+
+institution1_id = get_uuid()
+institution2_id = get_uuid()
+institution3_id = get_uuid()
 
 def upgrade() -> None:
 
@@ -28,7 +63,7 @@ def upgrade() -> None:
         [{
             "id": badge1_id,
             "name": "Черный Берет",
-            "url": "http://192.168.0.199:8083/static/black_beret.jpg"
+            "url": "http://192.168.0.198:8083/static/black_beret.jpg"
         }]
     )
 
@@ -181,7 +216,6 @@ def upgrade() -> None:
         }]
     )
 
-
     jurisdiction1_id = get_uuid()
     jurisdiction2_id = get_uuid()
     jurisdiction3_id = get_uuid()
@@ -242,7 +276,6 @@ def upgrade() -> None:
             'can_cancel': True
         }]
     )
-
 
     staff_function1_id = get_uuid()
     staff_function2_id = get_uuid()
@@ -340,6 +373,120 @@ def upgrade() -> None:
     )
 
 
+    # Educational tables
+
+    op.bulk_insert(
+        Base.metadata.tables['academic_degree_degrees'],
+        [{
+            'id': academic_degree_degree1_id,
+            'name': "academic_degree_degrees1"
+        }, {
+            'id': academic_degree_degree2_id,
+            'name': "academic_degree_degrees2"
+        }, {
+            'id': academic_degree_degree3_id,
+            'name': "academic_degree_degrees3"
+        }]
+    )
+
+    op.bulk_insert(
+        Base.metadata.tables['academic_title_degrees'],
+        [{
+            'id': academic_title_degree1_id,
+            'name': "academic_title_degrees1"
+        }, {
+            'id': academic_title_degree2_id,
+            'name': "academic_title_degrees2"
+        }, {
+            'id': academic_title_degree3_id,
+            'name': "academic_title_degrees3"
+        }]
+    )
+
+    op.bulk_insert(
+        Base.metadata.tables['course_providers'],
+        [{
+            'id': course_provider1_id,
+            'name': "course_provider1"
+        }, {
+            'id': course_provider2_id,
+            'name': "course_provider2"
+        }, {
+            'id': course_provider3_id,
+            'name': "course_provider3"
+        }]
+    )
+
+    op.bulk_insert(
+        Base.metadata.tables['institution_degree_types'],
+        [{
+            'id': institution_degree_type1_id,
+            'name': "institution_degree_type1"
+        }, {
+            'id': institution_degree_type2_id,
+            'name': "institution_degree_type2"
+        }, {
+            'id': institution_degree_type3_id,
+            'name': "institution_degree_type3"
+        }]
+    )
+
+    op.bulk_insert(
+        Base.metadata.tables['sciences'],
+        [{
+            'id': science1_id,
+            'name': "science1"
+        }, {
+            'id': science2_id,
+            'name': "science2"
+        }, {
+            'id': science3_id,
+            'name': "science3"
+        }]
+    )
+
+    op.bulk_insert(
+        Base.metadata.tables['specialties'],
+        [{
+            'id': specialty1_id,
+            'name': "specialty1"
+        }, {
+            'id': specialty2_id,
+            'name': "specialty2"
+        }, {
+            'id': specialty3_id,
+            'name': "specialty3"
+        }]
+    )
+
+    op.bulk_insert(
+        Base.metadata.tables['languages'],
+        [{
+            'id': language1_id,
+            'name': "Қазақ тілі"
+        }, {
+            'id': language2_id,
+            'name': "Ағылшын тілі"
+        }, {
+            'id': language3_id,
+            'name': "Орыс тілі"
+        }]
+    )
+
+    op.bulk_insert(
+        Base.metadata.tables['institutions'],
+        [{
+            'id': institution1_id,
+            'name': "institution1"
+        }, {
+            'id': institution2_id,
+            'name': "institution2"
+        }, {
+            'id': institution3_id,
+            'name': "institution3"
+        }]
+    )
+
     group1_id = get_uuid()
     group2_id = get_uuid()
     group3_id = get_uuid()
@@ -371,18 +518,6 @@ def upgrade() -> None:
         }]
     )
 
-
-    user1_id = get_uuid()
-    user2_id = get_uuid()
-    user3_id = get_uuid()
-    user4_id = get_uuid()
-    user5_id = get_uuid()
-    user6_id = get_uuid()
-    user7_id = get_uuid()
-    user8_id = get_uuid()
-    user9_id = get_uuid()
-    user10_id = get_uuid()
-
     staff_unit1_id = get_uuid()
     staff_unit2_id = get_uuid()
     staff_unit3_id = get_uuid()
@@ -397,166 +532,6 @@ def upgrade() -> None:
     staff_unit12_id = get_uuid()
     staff_unit13_id = get_uuid()
     staff_unit14_id = get_uuid()
-
-    op.bulk_insert(
-        Base.metadata.tables['users'],
-        [
-            create_user(
-                user1_id,
-                "Адилет",
-                "Наурызбаев",
-                'Саматович',
-                'adilet@mail.ru',
-                group2_id,
-                "Альфа 1",
-                '1',
-                staff_unit1_id,
-                rank1_id,
-                staff_unit1_id,
-                "http://192.168.0.199:8083/static/Erzhan.png",
-                position1_id),
-            create_user(
-                user2_id,
-                "Ахат",
-                "Наурызбаев",
-                'Саматович',
-                'ahat@mail.ru',
-                group3_id,
-                "Альфа 2",
-                '2',
-                staff_unit2_id,
-                rank1_id,
-                staff_unit2_id,
-                "http://192.168.0.199:8083/static/Erzhan.png",
-                position1_id),
-            create_user(
-                user3_id,
-                "Асет",
-                "Наурызбаев",
-                'Асланович',
-                'aset@mail.ru',
-                group3_id,
-                "Альфа 3",
-                '3',
-                staff_unit3_id,
-                rank1_id,
-                staff_unit3_id,
-                "http://192.168.0.199:8083/static/Almaz.png",
-                position1_id),
-            create_user(
-                user4_id,
-                "Жасулан",
-                "Наурызбеков",
-                'Дидарович',
-                'zhasulan@mail.ru',
-                group3_id,
-                "Альфа 4",
-                '4',
-                staff_unit4_id,
-                rank2_id,
-                staff_unit4_id,
-                "http://192.168.0.199:8083/static/Adil.png",
-                position2_id),
-            create_user(
-                user5_id,
-                "Ануар",
-                "Наурызбеков",
-                'Дидарович',
-                'anuar@mail.ru',
-                group2_id,
-                "Альфа 5",
-                '5',
-                staff_unit5_id,
-                rank1_id,
-                staff_unit5_id,
-                "http://192.168.0.199:8083/static/Almaz.png",
-                position1_id),
-            create_user(
-                user6_id,
-                "Бексундет",
-                "Наурызбеков",
-                'Дидарович',
-                'beksundet@mail.ru',
-                group2_id,
-                "Альфа 6",
-                '6',
-                staff_unit6_id,
-                rank3_id,
-                staff_unit6_id,
-                "http://192.168.0.199:8083/static/Ernazar.png",
-                position2_id),
-            create_user(
-                user7_id,
-                "Ерден",
-                "Наурызбеков",
-                'Алматович',
-                'erden@mail.ru',
-                group2_id,
-                "Альфа 7",
-                '7',
-                staff_unit7_id,
-                rank1_id,
-                staff_unit7_id,
-                "http://192.168.0.199:8083/static/Nurlan.png",
-                position1_id),
-            create_user(
-                user8_id,
-                "Еркин",
-                "Наурызбеков",
-                'Дидарович',
-                'erkin@mail.ru',
-                group3_id,
-                "Альфа 8",
-                '8',
-                staff_unit8_id,
-                rank1_id,
-                staff_unit8_id,
-                "http://192.168.0.199:8083/static/Erdaulet.png",
-                position1_id),
-            create_user(
-                user9_id,
-                "Арман",
-                "Наурызбеков",
-                'Алматович',
-                'arman@mail.ru',
-                group3_id,
-                "Альфа 9",
-                '9',
-                staff_unit9_id,
-                rank1_id,
-                staff_unit9_id,
-                "http://192.168.0.199:8083/static/Erdaulet.png",
-                position3_id),
-            create_user(
-                user10_id,
-                "Бауыржан",
-                "Наурызбеков",
-                'Алматович',
-                'bauyrzhan@mail.ru',
-                group1_id,
-                "Альфа 10",
-                '10',
-                staff_unit10_id,
-                rank3_id,
-                staff_unit10_id,
-                "http://192.168.0.199:8083/static/Dima.png",
-                position4_id),
-            create_user(
-                str(uuid.uuid4()),
-                "Админ",
-                "Админов",
-                "Админович",
-                'admin@mail.com',
-                group3_id,
-                'admin',
-                '123456789',
-                staff_unit11_id,
-                rank3_id,
-                staff_unit11_id,
-                "http://192.168.0.199:8083/static/Erdaulet.png",
-                position4_id)
-        ]
-    )
 
     op.bulk_insert(
         Base.metadata.tables['staff_units'],
@@ -577,6 +552,174 @@ def upgrade() -> None:
             'staff_division_id': group3_id
         }]
     )
+
+    user1_id = get_uuid()
+    user2_id = get_uuid()
+    user3_id = get_uuid()
+    user4_id = get_uuid()
+    user5_id = get_uuid()
+    user6_id = get_uuid()
+    user7_id = get_uuid()
+    user8_id = get_uuid()
+    user9_id = get_uuid()
+    user10_id = get_uuid()
+
+    
+    create_user(
+        user1_id,
+        "Адилет",
+        "Наурызбаев",
+        'Саматович',
+        'adilet@mail.ru',
+        group2_id,
+        "Альфа 1",
+        '1',
+        staff_unit1_id,
+        rank1_id,
+        staff_unit1_id,
+        "http://192.168.0.198:8083/static/Erzhan.png",
+        position1_id)
+    create_user(
+        user2_id,
+        "Ахат",
+        "Наурызбаев",
+        'Саматович',
+        'ahat@mail.ru',
+        group3_id,
+        "Альфа 2",
+        '2',
+        staff_unit2_id,
+        rank1_id,
+        staff_unit2_id,
+        "http://192.168.0.198:8083/static/Erzhan.png",
+        position1_id)
+    create_user(
+        user3_id,
+        "Асет",
+        "Наурызбаев",
+        'Асланович',
+        'aset@mail.ru',
+        group3_id,
+        "Альфа 3",
+        '3',
+        staff_unit3_id,
+        rank1_id,
+        staff_unit3_id,
+        "http://192.168.0.198:8083/static/Almaz.png",
+        position1_id)
+    create_user(
+        user4_id,
+        "Жасулан",
+        "Наурызбеков",
+        'Дидарович',
+        'zhasulan@mail.ru',
+        group3_id,
+        "Альфа 4",
+        '4',
+        staff_unit4_id,
+        rank2_id,
+        staff_unit4_id,
+        "http://192.168.0.198:8083/static/Adil.png",
+        position2_id)
+    create_user(
+        user5_id,
+        "Ануар",
+        "Наурызбеков",
+        'Дидарович',
+        'anuar@mail.ru',
+        group2_id,
+        "Альфа 5",
+        '5',
+        staff_unit5_id,
+        rank1_id,
+        staff_unit5_id,
+        "http://192.168.0.198:8083/static/Almaz.png",
+        position1_id)
+    create_user(
+        user6_id,
+        "Бексундет",
+        "Наурызбеков",
+        'Дидарович',
+        'beksundet@mail.ru',
+        group2_id,
+        "Альфа 6",
+        '6',
+        staff_unit6_id,
+        rank3_id,
+        staff_unit6_id,
+        "http://192.168.0.198:8083/static/Ernazar.png",
+        position2_id)
+    create_user(
+        user7_id,
+        "Ерден",
+        "Наурызбеков",
+        'Алматович',
+        'erden@mail.ru',
+        group2_id,
+        "Альфа 7",
+        '7',
+        staff_unit7_id,
+        rank1_id,
+        staff_unit7_id,
+        "http://192.168.0.198:8083/static/Nurlan.png",
+        position1_id)
+    create_user(
+        user8_id,
+        "Еркин",
+        "Наурызбеков",
+        'Дидарович',
+        'erkin@mail.ru',
+        group3_id,
+        "Альфа 8",
+        '8',
+        staff_unit8_id,
+        rank1_id,
+        staff_unit8_id,
+        "http://192.168.0.198:8083/static/Erdaulet.png",
+        position1_id)
+    create_user(
+        user9_id,
+        "Арман",
+        "Наурызбеков",
+        'Алматович',
+        'arman@mail.ru',
+        group3_id,
+        "Альфа 9",
+        '9',
+        staff_unit9_id,
+        rank1_id,
+        staff_unit9_id,
+        "http://192.168.0.198:8083/static/Erdaulet.png",
+        position3_id)
+    create_user(
+        user10_id,
+        "Бауыржан",
+        "Наурызбеков",
+        'Алматович',
+        'bauyrzhan@mail.ru',
+        group1_id,
+        "Альфа 10",
+        '10',
+        staff_unit10_id,
+        rank3_id,
+        staff_unit10_id,
+        "http://192.168.0.198:8083/static/Dima.png",
+        position4_id)
+    create_user(
+        str(uuid.uuid4()),
+        "Админ",
+        "Админов",
+        "Админович",
+        'admin@mail.com',
+        group3_id,
+        'admin',
+        '123456789',
+        staff_unit11_id,
+        rank3_id,
+        staff_unit11_id,
+        "http://192.168.0.198:8083/static/Erdaulet.png",
+        position4_id)
+
 
     op.bulk_insert(
         Base.metadata.tables['staff_unit_functions'],
@@ -618,7 +761,7 @@ def upgrade() -> None:
         Base.metadata.tables['hr_document_templates'],
         [{
             'name': 'Приказ о назначении',
-            'path': 'http://192.168.0.199:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7%20%D0%BE%20%D0%BD%D0%B0%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%B8%D0%B8.docx',
+            'path': 'http://192.168.0.198:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7%20%D0%BE%20%D0%BD%D0%B0%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%B8%D0%B8.docx',
             'subject_type': 1,
             'properties': {
                 "signed_at": {
@@ -681,7 +824,7 @@ def upgrade() -> None:
             'id': template1_id
         }, {
             'name': 'Приказ о присвоения звания',
-            'path': 'http://192.168.0.199:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7_%D0%BE_%D0%BF%D1%80%D0%B8%D1%81%D0%B2%D0%BE%D0%B5%D0%BD%D0%B8%D0%B8_%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F_%D0%BF%D0%BE%D0%B2%D1%8B%D1%88%D0%B5%D0%BD%D0%B8%D0%B5.docx',
+            'path': 'http://192.168.0.198:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7_%D0%BE_%D0%BF%D1%80%D0%B8%D1%81%D0%B2%D0%BE%D0%B5%D0%BD%D0%B8%D0%B8_%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F_%D0%BF%D0%BE%D0%B2%D1%8B%D1%88%D0%B5%D0%BD%D0%B8%D0%B5.docx',
             'subject_type': 1,
             'properties': {
                 "signed_at": {
@@ -724,7 +867,7 @@ def upgrade() -> None:
             'id': template2_id
         }, {
             'name': 'Приказ о присвоения черного берета',
-            'path': 'http://192.168.0.199:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7_%D0%BE_%D0%BF%D1%80%D0%B8%D1%81%D0%B2%D0%BE%D0%B5%D0%BD%D0%B8%D0%B8_%D0%A7%D0%B5%D1%80%D0%BD%D0%BE%D0%B3%D0%BE_%D0%B1%D0%B5%D1%80%D0%B5%D1%82%D0%B0.docx',
+            'path': 'http://192.168.0.198:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7_%D0%BE_%D0%BF%D1%80%D0%B8%D1%81%D0%B2%D0%BE%D0%B5%D0%BD%D0%B8%D0%B8_%D0%A7%D0%B5%D1%80%D0%BD%D0%BE%D0%B3%D0%BE_%D0%B1%D0%B5%D1%80%D0%B5%D1%82%D0%B0.docx',
             'subject_type': 1,  
             'properties': {
                 "signed_at": {
@@ -840,11 +983,19 @@ def upgrade() -> None:
     )
 
 
-def get_uuid():
-    return str(uuid.uuid4())
-
-
-def create_user(id, name, surname, father_name, email, group_id, call_sign, number,  staff_unit_id, rank_id, actual_staff_unit_id, icon, position_id):
+def create_user(id,
+                name,
+                surname,
+                father_name,
+                email,
+                group_id,
+                call_sign,
+                number,
+                staff_unit_id,
+                rank_id,
+                actual_staff_unit_id,
+                icon,
+                position_id):
     op.bulk_insert(
         Base.metadata.tables['staff_units'],
         [{
@@ -855,23 +1006,402 @@ def create_user(id, name, surname, father_name, email, group_id, call_sign, numb
         }]
     )
 
-    return {
-        'id': id,
-        'email': email,
-        'password': '$2b$12$vhg69KJxWiGgetoLxGRvie3VxElPt45i4ELJiE/V2qOj30X3c3.7m',
-        'first_name': name,
-        'last_name': surname,
-        'father_name': father_name,
-        'staff_unit_id': staff_unit_id,
-        'call_sign': call_sign,
-        'id_number': number,
-        'phone_number': '+77771234789',
-        'address': 'Мангилик Ел, 1',
-        'rank_id': rank_id,
-        'actual_staff_unit_id': actual_staff_unit_id,
-        'status': "На работе",
-        'icon': icon
-    }
+    op.bulk_insert(
+        Base.metadata.tables['users'],
+        [{
+            'id': id,
+            'email': email,
+            'password': '$2b$12$vhg69KJxWiGgetoLxGRvie3VxElPt45i4ELJiE/V2qOj30X3c3.7m',
+            'first_name': name,
+            'last_name': surname,
+            'father_name': father_name,
+            'staff_unit_id': staff_unit_id,
+            'call_sign': call_sign,
+            'id_number': number,
+            'phone_number': '+77771234789',
+            'address': 'Мангилик Ел, 1',
+            'rank_id': rank_id,
+            'actual_staff_unit_id': actual_staff_unit_id,
+            'status': "На работе",
+            'icon': icon
+        }]
+    )
+    
+
+    profile_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['profiles'],
+        [{
+            'id': profile_id,
+            'user_id': id,
+        }]
+    )
+
+    personal_profile_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['personal_profiles'],
+        [{
+            'id': personal_profile_id,
+            'profile_id': profile_id,
+        }]
+    )
+
+    educational_profile_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['educational_profiles'],
+        [{
+            'id': educational_profile_id,
+            'profile_id': profile_id
+        }]
+    )
+
+    academic_degree1_id = get_uuid()
+    academic_degree2_id = get_uuid()
+    academic_degree3_id = get_uuid()
+
+
+    op.bulk_insert(
+        Base.metadata.tables['academic_degrees'],
+        [{
+            'id': academic_degree1_id,
+            'profile_id': educational_profile_id,
+            'degree_id': academic_degree_degree1_id,
+            'science_id': science1_id,
+            'specialty_id': specialty1_id,
+            'document_number': 1,
+            'document_link': "document_link",
+            'assignment_date': "2022-10-07"
+        }, {
+            'id': academic_degree2_id,
+            'profile_id': educational_profile_id,
+            'degree_id': academic_degree_degree2_id,
+            'science_id': science2_id,
+            'specialty_id': specialty2_id,
+            'document_number': 2,
+            'document_link': "document_link",
+            'assignment_date': "2022-10-08"
+        }, {
+            'id': academic_degree3_id,
+            'profile_id': educational_profile_id,
+            'degree_id': academic_degree_degree3_id,
+            'science_id': science3_id,
+            'specialty_id': specialty3_id,
+            'document_number': 3,
+            'document_link': "document_link",
+            'assignment_date': "2022-10-09"
+        }]
+    )
+
+
+    language_proficiency1_id = get_uuid()
+    language_proficiency2_id = get_uuid()
+    language_proficiency3_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['language_proficiencies'],
+        [{
+            'id': language_proficiency1_id,
+            'language_id': language1_id,
+            "level": 4,
+            'profile_id': educational_profile_id
+        }, {
+            'id': language_proficiency2_id,
+            'language_id': language2_id,
+            "level": 3,
+            'profile_id': educational_profile_id
+        }, {
+            'id': language_proficiency3_id,
+            'language_id': language3_id,
+            "level": 4,
+            'profile_id': educational_profile_id,
+        }]
+    )
+
+    academic_title1_id = get_uuid()
+    academic_title2_id = get_uuid()
+    academic_title3_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['academic_titles'],
+        [{
+            'id': academic_title1_id,
+            'profile_id': educational_profile_id,
+            'degree_id': academic_title_degree1_id,
+            'specialty_id': specialty1_id,
+            'document_number': 1,
+            'document_link': "document_link",
+            'assignment_date': "2022-12-12"
+        }, {
+            'id': academic_title2_id,
+            'profile_id': educational_profile_id,
+            'degree_id': academic_title_degree2_id,
+            'specialty_id': specialty2_id,
+            'document_number': 2,
+            'document_link': "document_link",
+            'assignment_date': "2022-12-13"
+        }, {
+            'id': academic_title3_id,
+            'profile_id': educational_profile_id,
+            'degree_id': academic_title_degree3_id,
+            'specialty_id': specialty3_id,
+            'document_number': 3,
+            'document_link': "document_link",
+            'assignment_date': "2022-12-14"
+        }]
+    )
+
+    course1_id = get_uuid()
+    course2_id = get_uuid()
+    course3_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['courses'],
+        [{
+            'id': course1_id,
+            'name': "course1",
+            'profile_id': educational_profile_id,
+            'course_provider_id': course_provider1_id,
+            'specialty_id': specialty1_id,
+            'document_number': 1,
+            'document_link': "document_link",
+            'assignment_date': "2022-12-12",
+            'start_date': '2019-10-12',
+            'end_date': '2019-12-10'
+        }, {
+            'id': course2_id,
+            'name': "course2",
+            'profile_id': educational_profile_id,
+            'course_provider_id': course_provider2_id,
+            'specialty_id': specialty2_id,
+            'document_number': 2,
+            'document_link': "document_link",
+            'assignment_date': "2022-12-13",
+            'start_date': '2020-11-25',
+            'end_date': '2020-12-15'
+        }, {
+            'id': course3_id,
+            'name': "course3",
+            'profile_id': educational_profile_id,
+            'course_provider_id': course_provider3_id,
+            'specialty_id': specialty3_id,
+            'document_number': 3,
+            'document_link': "document_link",
+            'assignment_date': "2022-12-14",
+            'start_date': '2021-11-12',
+            'end_date': '2022-02-05'
+        }]
+    )
+
+    education1_id = get_uuid()
+    education2_id = get_uuid()
+    education3_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['educations'],
+        [{
+            'id': education1_id,
+            'profile_id': educational_profile_id,
+            'institution_id': institution1_id,
+            'degree_id': institution_degree_type1_id,
+            'start_date': "2022-09-11",
+            'end_date': "2022-09-12",
+            'document_link': "document_link1"
+        }, {
+            'id': education2_id,
+            'profile_id': educational_profile_id,
+            'institution_id': institution2_id,
+            'degree_id': institution_degree_type2_id,
+            'start_date': "2022-09-13",
+            'end_date': "2022-09-14",
+            'document_link': "document_link2"
+        }, {
+            'id': education3_id,
+            'profile_id': educational_profile_id,
+            'institution_id': institution3_id,
+            'degree_id': institution_degree_type3_id,
+            'start_date': "2022-09-15",
+            'end_date': "2022-09-16",
+            'document_link': "document_link3"
+        }]
+    )
+
+    sport_degree1_id = get_uuid()
+    sport_degree2_id = get_uuid()
+    sport_degree3_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['sport_degrees'],
+        [{
+            'id': sport_degree1_id,
+            'profile_id': personal_profile_id,
+            'name': "sport_degree1",
+            'assignment_date': '2022-10-09',
+            'document_link': 'document_link1'
+        }, {
+            'id': sport_degree2_id,
+            'profile_id': personal_profile_id,
+            'name': "sport_degree2",
+            'assignment_date': '2022-10-10',
+            'document_link': 'document_link2'
+        }, {
+            'id': sport_degree3_id,
+            'profile_id': personal_profile_id,
+            'name': "sport_degree3",
+            'assignment_date': '2022-10-11',
+            'document_link': 'document_link3'
+        }]
+    )
+
+    sport_achievement1_id = get_uuid()
+    sport_achievement2_id = get_uuid()
+    sport_achievement3_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['sport_achievements'],
+        [{
+            'id': sport_achievement1_id,
+            'profile_id': personal_profile_id,
+            'name': "sport_achievement1",
+            'assignment_date': '2022-10-09',
+            'document_link': 'document_link1'
+        }, {
+            'id': sport_achievement2_id,
+            'profile_id': personal_profile_id,
+            'name': "sport_achievement2",
+            'assignment_date': '2022-10-10',
+            'document_link': 'document_link2'
+        }, {
+            'id': sport_achievement3_id,
+            'profile_id': personal_profile_id,
+            'name': "sport_achievement3",
+            'assignment_date': '2022-10-11',
+            'document_link': 'document_link3'
+        }]
+    )
+
+    """
+        Table biographic_infos as BI {
+        id uuid 
+        place_birth str
+        gender bool
+        citizenship str
+        nationality str
+        family_status enum
+        address str
+        profile_id uuid
+        }
+    """
+
+    biographic_info_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['biographic_infos'],
+        [{
+            'id': biographic_info_id,
+            'place_birth': "place_birth",
+            'gender': True,
+            'citizenship': "Kazakhstan",
+            'nationality': 'kazakh',
+            'family_status': "Married",
+            'address': "address",
+            'profile_id': personal_profile_id
+        }]
+    )
+
+    tax_declaration1_id = get_uuid()
+    tax_declaration2_id = get_uuid()
+    tax_declaration3_id = get_uuid()
+    tax_declaration4_id = get_uuid()
+    tax_declaration5_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['tax_declarations'],
+        [{
+            'id': tax_declaration1_id,
+            'year': "2019",
+            'is_paid': True,
+            'profile_id': personal_profile_id
+        }, {
+            'id': tax_declaration2_id,
+            'year': "2020",
+            'is_paid': True,
+            'profile_id': personal_profile_id
+        }, {
+            'id': tax_declaration3_id,
+            'year': "2021",
+            'is_paid': False,
+            'profile_id': personal_profile_id
+        }, {
+            'id': tax_declaration4_id,
+            'year': "2022",
+            'is_paid': False,
+            'profile_id': personal_profile_id
+        }, {
+            'id': tax_declaration5_id,
+            'year': "2023",
+            'is_paid': False,
+            'profile_id': personal_profile_id
+        }]
+    )
+
+    user_financial_info_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['user_financial_infos'],
+        [{
+            'id': user_financial_info_id,
+            'iban': "iban",
+            'housing_payments_iban': "housing_payments_iban",
+            'profile_id': personal_profile_id
+        }]
+    )
+
+    identification_card_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['identification_cards'],
+        [{
+            'id': identification_card_id,
+            'document_number': "document_number",
+            'date_of_issue': "2022-09-11",
+            'date_to': "2022-09-12",
+            'issued_by': "issued_by",
+            'document_link': "document_link",
+            'profile_id': personal_profile_id
+        }]
+    )
+
+    driving_licence_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['driving_licenses'],
+        [{
+            'id': driving_licence_id,
+            'document_number': "document_number",
+            'category': ["A", "B", "C"],
+            'date_of_issue': "2022-09-11",
+            'date_to': "2022-09-12",
+            'document_link': "document_link",
+            'profile_id': personal_profile_id
+        }]
+    )
+
+    passport_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['passports'],
+        [{
+            'id': passport_id,
+            'document_number': "document_number",
+            'date_of_issue': "2022-09-11",
+            'date_to': "2022-09-12",
+            'document_link': "document_link",
+            'profile_id': personal_profile_id
+        }]
+    )
 
 
 def downgrade() -> None:

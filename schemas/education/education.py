@@ -8,12 +8,10 @@ from .institution import InstitutionRead
 from .institution_degree_type import InstitutionDegreeTypeRead
 
 
-
 class EducationBase(BaseModel):
-    name: str
     profile_id: Optional[uuid.UUID]
     institution_id: Optional[uuid.UUID]
-    degree_id: str
+    degree_id: Optional[uuid.UUID]
     start_date: Optional[datetime.date]
     end_date: Optional[datetime.date]
     document_link: str
@@ -33,10 +31,9 @@ class EducationUpdate(EducationBase):
 
 class EducationRead(EducationBase):
     id: Optional[uuid.UUID]
-    name: str
     profile_id: Optional[uuid.UUID]
     institution_id: Optional[uuid.UUID]
-    degree_id: str
+    degree_id: Optional[uuid.UUID]
     start_date: Optional[datetime.date]
     end_date: Optional[datetime.date]
     document_link: str

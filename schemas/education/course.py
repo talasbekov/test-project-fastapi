@@ -6,10 +6,10 @@ from typing import Optional
 
 from .course_provider import CourseProviderRead
 
+
 class CourseBase(BaseModel):
     name: str
     profile_id: Optional[uuid.UUID]
-    provider_id: str
     course_provider_id: Optional[uuid.UUID]
     start_date: Optional[datetime.date]
     end_date: Optional[datetime.date]
@@ -32,7 +32,6 @@ class CourseRead(CourseBase):
     id: Optional[uuid.UUID]
     name: str
     profile_id: Optional[uuid.UUID]
-    provider_id: str
     course_provider_id: Optional[uuid.UUID]
     start_date: Optional[datetime.date]
     end_date: Optional[datetime.date]

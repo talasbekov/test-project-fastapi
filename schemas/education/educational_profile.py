@@ -9,7 +9,6 @@ from .education import EducationRead
 from .language_proficiency import LanguageProficiencyRead
 
 
-
 class EducationalProfileBase(BaseModel):
     profile_id: Optional[uuid.UUID]
 
@@ -30,9 +29,9 @@ class EducationalProfileRead(EducationalProfileBase):
     id: Optional[uuid.UUID]
     profile_id: Optional[uuid.UUID]
 
-    academic_degree : Optional[List[AcademicDegreeRead]]
-    academic_title : Optional[List[AcademicTitleRead]]
-    education : Optional[List[EducationRead]]
-    course : Optional[List[CourseRead]]
-    language_proficiency : Optional[List[LanguageProficiencyRead]]
+    academic_degree: Optional[List[AcademicDegreeRead]]
+    academic_title: Optional[List[AcademicTitleRead]]
+    education: Optional[List[EducationRead]]
+    course: Optional[List[CourseRead]]
+    language_proficiency: Optional[List[LanguageProficiencyRead]]
 
