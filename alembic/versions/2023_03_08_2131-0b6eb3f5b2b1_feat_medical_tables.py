@@ -56,6 +56,7 @@ def upgrade() -> None:
     sa.Column('height', sa.Integer(), nullable=True),
     sa.Column('blood_group', sa.Enum('O_PLUS', 'O_MINUS', 'A_PLUS', 'A_MINUS', 'B_PLUS', 'B_MINUS', 'AB_PLUS', 'AB_MINUS', name='bloodtype'), nullable=True),
     sa.Column('age_group', sa.Enum('FIRST', 'SECOND', 'THIRD', 'FOURTH', 'FIFTH', 'SIXTH', name='agegroup'), nullable=True),
+    sa.Column('weight', sa.Integer(), nullable=True),
     sa.Column('profile_id', sa.UUID(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),

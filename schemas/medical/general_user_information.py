@@ -9,6 +9,7 @@ class GeneralUserInformationBase(BaseModel):
     blood_group: str
     age_group: int
     profile_id: uuid.UUID
+    weight: int
  
     class Config:
         use_enum_values = True
