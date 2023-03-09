@@ -63,7 +63,7 @@ def upgrade() -> None:
         [{
             "id": badge1_id,
             "name": "Черный Берет",
-            "url": "http://192.168.0.198:8083/static/black_beret.jpg"
+            "url": "http://192.168.0.172:8083/static/black_beret.jpg"
         }]
     )
 
@@ -577,7 +577,7 @@ def upgrade() -> None:
         staff_unit1_id,
         rank1_id,
         staff_unit1_id,
-        "http://192.168.0.198:8083/static/Erzhan.png",
+        "http://192.168.0.172:8083/static/Erzhan.png",
         position1_id)
     create_user(
         user2_id,
@@ -591,7 +591,7 @@ def upgrade() -> None:
         staff_unit2_id,
         rank1_id,
         staff_unit2_id,
-        "http://192.168.0.198:8083/static/Erzhan.png",
+        "http://192.168.0.172:8083/static/Erzhan.png",
         position1_id)
     create_user(
         user3_id,
@@ -605,7 +605,7 @@ def upgrade() -> None:
         staff_unit3_id,
         rank1_id,
         staff_unit3_id,
-        "http://192.168.0.198:8083/static/Almaz.png",
+        "http://192.168.0.172:8083/static/Almaz.png",
         position1_id)
     create_user(
         user4_id,
@@ -619,7 +619,7 @@ def upgrade() -> None:
         staff_unit4_id,
         rank2_id,
         staff_unit4_id,
-        "http://192.168.0.198:8083/static/Adil.png",
+        "http://192.168.0.172:8083/static/Adil.png",
         position2_id)
     create_user(
         user5_id,
@@ -633,7 +633,7 @@ def upgrade() -> None:
         staff_unit5_id,
         rank1_id,
         staff_unit5_id,
-        "http://192.168.0.198:8083/static/Almaz.png",
+        "http://192.168.0.172:8083/static/Almaz.png",
         position1_id)
     create_user(
         user6_id,
@@ -647,7 +647,7 @@ def upgrade() -> None:
         staff_unit6_id,
         rank3_id,
         staff_unit6_id,
-        "http://192.168.0.198:8083/static/Ernazar.png",
+        "http://192.168.0.172:8083/static/Ernazar.png",
         position2_id)
     create_user(
         user7_id,
@@ -661,7 +661,7 @@ def upgrade() -> None:
         staff_unit7_id,
         rank1_id,
         staff_unit7_id,
-        "http://192.168.0.198:8083/static/Nurlan.png",
+        "http://192.168.0.172:8083/static/Nurlan.png",
         position1_id)
     create_user(
         user8_id,
@@ -675,7 +675,7 @@ def upgrade() -> None:
         staff_unit8_id,
         rank1_id,
         staff_unit8_id,
-        "http://192.168.0.198:8083/static/Erdaulet.png",
+        "http://192.168.0.172:8083/static/Erdaulet.png",
         position1_id)
     create_user(
         user9_id,
@@ -689,7 +689,7 @@ def upgrade() -> None:
         staff_unit9_id,
         rank1_id,
         staff_unit9_id,
-        "http://192.168.0.198:8083/static/Erdaulet.png",
+        "http://192.168.0.172:8083/static/Erdaulet.png",
         position3_id)
     create_user(
         user10_id,
@@ -703,7 +703,7 @@ def upgrade() -> None:
         staff_unit10_id,
         rank3_id,
         staff_unit10_id,
-        "http://192.168.0.198:8083/static/Dima.png",
+        "http://192.168.0.172:8083/static/Dima.png",
         position4_id)
     create_user(
         str(uuid.uuid4()),
@@ -717,7 +717,7 @@ def upgrade() -> None:
         staff_unit11_id,
         rank3_id,
         staff_unit11_id,
-        "http://192.168.0.198:8083/static/Erdaulet.png",
+        "http://192.168.0.172:8083/static/Erdaulet.png",
         position4_id)
 
 
@@ -761,7 +761,7 @@ def upgrade() -> None:
         Base.metadata.tables['hr_document_templates'],
         [{
             'name': 'Приказ о назначении',
-            'path': 'http://192.168.0.198:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7%20%D0%BE%20%D0%BD%D0%B0%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%B8%D0%B8.docx',
+            'path': 'http://192.168.0.172:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7%20%D0%BE%20%D0%BD%D0%B0%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%B8%D0%B8.docx',
             'subject_type': 1,
             'properties': {
                 "signed_at": {
@@ -824,7 +824,7 @@ def upgrade() -> None:
             'id': template1_id
         }, {
             'name': 'Приказ о присвоения звания',
-            'path': 'http://192.168.0.198:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7_%D0%BE_%D0%BF%D1%80%D0%B8%D1%81%D0%B2%D0%BE%D0%B5%D0%BD%D0%B8%D0%B8_%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F_%D0%BF%D0%BE%D0%B2%D1%8B%D1%88%D0%B5%D0%BD%D0%B8%D0%B5.docx',
+            'path': 'http://192.168.0.172:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7_%D0%BE_%D0%BF%D1%80%D0%B8%D1%81%D0%B2%D0%BE%D0%B5%D0%BD%D0%B8%D0%B8_%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F_%D0%BF%D0%BE%D0%B2%D1%8B%D1%88%D0%B5%D0%BD%D0%B8%D0%B5.docx',
             'subject_type': 1,
             'properties': {
                 "signed_at": {
@@ -867,7 +867,7 @@ def upgrade() -> None:
             'id': template2_id
         }, {
             'name': 'Приказ о присвоения черного берета',
-            'path': 'http://192.168.0.198:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7_%D0%BE_%D0%BF%D1%80%D0%B8%D1%81%D0%B2%D0%BE%D0%B5%D0%BD%D0%B8%D0%B8_%D0%A7%D0%B5%D1%80%D0%BD%D0%BE%D0%B3%D0%BE_%D0%B1%D0%B5%D1%80%D0%B5%D1%82%D0%B0.docx',
+            'path': 'http://192.168.0.172:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7_%D0%BE_%D0%BF%D1%80%D0%B8%D1%81%D0%B2%D0%BE%D0%B5%D0%BD%D0%B8%D0%B8_%D0%A7%D0%B5%D1%80%D0%BD%D0%BE%D0%B3%D0%BE_%D0%B1%D0%B5%D1%80%D0%B5%D1%82%D0%B0.docx',
             'subject_type': 1,  
             'properties': {
                 "signed_at": {
