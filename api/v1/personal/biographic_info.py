@@ -26,9 +26,12 @@ async def get_all(*,
     """
         Get all BiographicInfo
 
+        - **skip**: int - The number of BiographicInfo to skip before returning the results. This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of BiographicInfo to return in the response. This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
     return biographic_info_service.get_multi(db, skip, limit)
+
 
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
@@ -42,9 +45,17 @@ async def create(*,
     """
         Create new BiographicInfo
 
+        - **place_birth**: datetime.date -
+        - **gender**: bool
+        - **citizenship**: str
+        - **nationality**: str
+        - **family_status**: str
+        - **address**: str
+        - **profile_id**: uuid.UUID
     """
     Authorize.jwt_required()
     return biographic_info_service.create(db, body)
+
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=BiographicInfoRead,
@@ -75,6 +86,14 @@ async def update(*,
     """
         Update BiographicInfo
 
+        - **id**: UUID - the ID of BiographicInfo to update. This is required.
+        - **place_birth**: datetime.date -
+        - **gender**: bool
+        - **citizenship**: str
+        - **nationality**: str
+        - **family_status**: str
+        - **address**: str
+        - **profile_id**: uuid.UUID
     """
     Authorize.jwt_required()
     return biographic_info_service.update(

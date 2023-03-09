@@ -1,4 +1,4 @@
-from sqlalchemy import TIMESTAMP, Column, ForeignKey, String
+from sqlalchemy import TIMESTAMP, Column, ForeignKey, String, TEXT
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -13,7 +13,7 @@ class Passport(Model, Base):
     document_number = Column(String)
     date_of_issue = Column(TIMESTAMP(timezone=True))
     date_to = Column(TIMESTAMP(timezone=True))
-    document_link = Column(String)
+    document_link = Column(TEXT)
     profile_id = Column(UUID(as_uuid=True), ForeignKey("personal_profiles.id"), nullable=False)
 
     profile = relationship("PersonalProfile", back_populates="passports")

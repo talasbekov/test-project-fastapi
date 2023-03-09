@@ -26,6 +26,8 @@ async def get_all(*,
     """
         Get all Passport
 
+        - **skip**: int - The number of Passport to skip before returning the results. This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of Passport to return in the response. This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
     return passport_service.get_multi(db, skip, limit)
@@ -42,6 +44,11 @@ async def create(*,
     """
         Create new Passport
 
+        - **document_number**: str
+        - **date_of_issue**: datetime.date
+        - **date_to**: datetime.date
+        - **document_link**: str
+        - **profile_id**: uuid.UUID
     """
     Authorize.jwt_required()
     return passport_service.create(db, body)
@@ -75,6 +82,12 @@ async def update(*,
     """
         Update Passport
 
+        - **id**: UUID - the ID of Passport to update. This is required.
+        - **document_number**: str
+        - **date_of_issue**: datetime.date
+        - **date_to**: datetime.date
+        - **document_link**: str
+        - **profile_id**: uuid.UUID
     """
     Authorize.jwt_required()
     return passport_service.update(

@@ -10,12 +10,12 @@ from core import get_db
 from schemas.medical import MedicalProfileCreate,MedicalProfileRead,MedicalProfileUpdate
 from services.medical import medical_profile_service
 
-router = APIRouter(prefix="/medical_profile", tags=["Medical Profile"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(prefix="/medical_profile", tags=["MedicalProfile"], dependencies=[Depends(HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[MedicalProfileRead],
-            summary="Get all Medical Profile") 
+            summary="Get all MedicalProfile")
 async def get_all(*,
     db: Session = Depends(get_db),
     skip: int = 0,
@@ -24,8 +24,9 @@ async def get_all(*,
 ):
     """
         Get all Medical Profile
-        - **skip**: int - The number of Medical Profile to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of Medical Profile to return in the response. This parameter is optional and defaults to 100.
+
+        - **skip**: int - The number of MedicalProfile to skip before returning the results. This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of MedicalProfile to return in the response. This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
     return medical_profile_service.get_multi(db, skip, limit)
@@ -34,16 +35,16 @@ async def get_all(*,
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=MedicalProfileRead,
-             summary="Create Medical Profile")
+             summary="Create MedicalProfile")
 async def create(*,
     db: Session = Depends(get_db),
     body: MedicalProfileCreate,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Create new Medical Profile
-        - **name**: required
-        - **url**: image url. This parameter is required
+        Create new MedicalProfile
+
+        - **profile_id**: uuid.UUID
     """
     Authorize.jwt_required()
     return medical_profile_service.create(db, body)
@@ -51,14 +52,15 @@ async def create(*,
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=MedicalProfileRead,
-            summary="Get Medical Profile by id")
+            summary="Get MedicalProfile by id")
 async def get_by_id(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Get Medical Profile by id
+        Get MedicalProfile by id
+
         - **id**: UUID - required.
     """
     Authorize.jwt_required()
@@ -67,7 +69,7 @@ async def get_by_id(*,
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model= MedicalProfileRead,
-            summary="Update Medical Profile")
+            summary="Update MedicalProfile")
 async def update(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
@@ -76,9 +78,9 @@ async def update(*,
 ):
     """
         Update Medical Profile
-        - **id**: UUID - the ID of Medical Profile to update. This is required.
-        - **name**: required.
-        - **url**: image url. This parameter is required.
+
+        - **id**: UUID - the ID of MedicalProfile to update. This is required.
+        - **profile_id**: uuid.UUID
     """
     Authorize.jwt_required()
     return medical_profile_service.update(
@@ -89,14 +91,15 @@ async def update(*,
 
 @router.delete("/{id}/",status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
-               summary="Delete Medical Profile")
+               summary="Delete MedicalProfile")
 async def delete(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Delete a Medical Profile 
+        Delete a MedicalProfile
+
         - **id**: UUId - required
     """
     Authorize.jwt_required()

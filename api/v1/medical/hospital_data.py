@@ -10,12 +10,12 @@ from core import get_db
 from schemas.medical import HospitalDataCreate,HospitalDataRead,HospitalDataUpdate
 from services.medical import hospital_data_service
 
-router = APIRouter(prefix="/hospital_data", tags=["Hospital Data"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(prefix="/hospital_data", tags=["HospitalData"], dependencies=[Depends(HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[HospitalDataRead],
-            summary="Get all Hospital Data") 
+            summary="Get all HospitalData")
 async def get_all(*,
     db: Session = Depends(get_db),
     skip: int = 0,
@@ -23,9 +23,10 @@ async def get_all(*,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Get all Hospital Data
-        - **skip**: int - The number of Hospital Data to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of Hospital Data to return in the response. This parameter is optional and defaults to 100.
+        Get all HospitalData
+
+        - **skip**: int - The number of HospitalData to skip before returning the results. This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of HospitalData to return in the response. This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
     return hospital_data_service.get_multi(db, skip, limit)
@@ -34,16 +35,22 @@ async def get_all(*,
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=HospitalDataRead,
-             summary="Create Hospital Data")
+             summary="Create HospitalData")
 async def create(*,
     db: Session = Depends(get_db),
     body: HospitalDataCreate,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Create new Hospital Data
-        - **name**: required
-        - **url**: image url. This parameter is required
+        Create new HospitalData
+
+        - **code**: str
+        - **reason**: str
+        - **place**: str
+        - **start_date**: datetime.datetime
+        - **end_date**: datetime.datetime
+        - **document_link**: str
+        - **profile_id**: uuid.UUID
     """
     Authorize.jwt_required()
     return hospital_data_service.create(db, body)
@@ -51,7 +58,7 @@ async def create(*,
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=HospitalDataRead,
-            summary="Get Hospital Data by id")
+            summary="Get HospitalData by id")
 async def get_by_id(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
@@ -59,6 +66,7 @@ async def get_by_id(*,
 ):
     """
         Get Hospital Data by id
+
         - **id**: UUID - required.
     """
     Authorize.jwt_required()
@@ -67,7 +75,7 @@ async def get_by_id(*,
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model= HospitalDataRead,
-            summary="Update Hospital Data")
+            summary="Update HospitalData")
 async def update(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
@@ -75,10 +83,16 @@ async def update(*,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Update Hospital Data
+        Update HospitalData
+
         - **id**: UUID - the ID of Hospital Data to update. This is required.
-        - **name**: required.
-        - **url**: image url. This parameter is required.
+        - **code**: str
+        - **reason**: str
+        - **place**: str
+        - **start_date**: datetime.datetime
+        - **end_date**: datetime.datetime
+        - **document_link**: str
+        - **profile_id**: uuid.UUID
     """
     Authorize.jwt_required()
     return hospital_data_service.update(
@@ -89,14 +103,15 @@ async def update(*,
 
 @router.delete("/{id}/",status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
-               summary="Delete Hospital Data")
+               summary="Delete HospitalData")
 async def delete(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Delete a Hospital Data 
+        Delete a HospitalData
+
         - **id**: UUId - required
     """
     Authorize.jwt_required()

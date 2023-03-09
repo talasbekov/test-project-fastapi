@@ -26,6 +26,8 @@ async def get_all(*,
     """
         Get all DrivingLicense
 
+        - **skip**: int - The number of DrivingLicense to skip before returning the results. This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of DrivingLicense to return in the response. This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
     return driving_license_service.get_multi(db, skip, limit)
@@ -42,6 +44,12 @@ async def create(*,
     """
         Create new DrivingLicense
 
+        - **document_number**: str
+        - **category**: List[str]
+        - **date_of_issue**: datetime.date
+        - **date_to**: datetime.date
+        - **document_link**: str
+        - **profile_id**: uuid.UUID
     """
     Authorize.jwt_required()
     return driving_license_service.create(db, body)
@@ -75,6 +83,13 @@ async def update(*,
     """
         Update DrivingLicense
 
+        - **id**: UUID - the ID of DrivingLicense to update. This is required.
+        - **document_number**: str
+        - **category**: List[str]
+        - **date_of_issue**: datetime.date
+        - **date_to**: datetime.date
+        - **document_link**: str
+        - **profile_id**: uuid.UUID
     """
     Authorize.jwt_required()
     return driving_license_service.update(

@@ -238,7 +238,7 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('biographic_infos',
-    sa.Column('place_birth', sa.TIMESTAMP(timezone=True), nullable=True),
+    sa.Column('place_birth', sa.String(), nullable=True),
     sa.Column('gender', sa.Boolean(), nullable=True),
     sa.Column('citizenship', sa.String(), nullable=True),
     sa.Column('nationality', sa.String(), nullable=True),
@@ -260,7 +260,7 @@ def upgrade() -> None:
     sa.Column('category', sa.ARRAY(sa.String()), nullable=True),
     sa.Column('date_of_issue', sa.TIMESTAMP(timezone=True), nullable=True),
     sa.Column('date_to', sa.TIMESTAMP(timezone=True), nullable=True),
-    sa.Column('document_link', sa.String(), nullable=True),
+    sa.Column('document_link', sa.TEXT(), nullable=True),
     sa.Column('profile_id', sa.UUID(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
@@ -275,7 +275,7 @@ def upgrade() -> None:
     sa.Column('date_of_issue', sa.TIMESTAMP(timezone=True), nullable=True),
     sa.Column('date_to', sa.TIMESTAMP(timezone=True), nullable=True),
     sa.Column('issued_by', sa.String(), nullable=True),
-    sa.Column('document_link', sa.String(), nullable=True),
+    sa.Column('document_link', sa.TEXT(), nullable=True),
     sa.Column('profile_id', sa.UUID(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
@@ -289,7 +289,7 @@ def upgrade() -> None:
     sa.Column('document_number', sa.String(), nullable=True),
     sa.Column('date_of_issue', sa.TIMESTAMP(timezone=True), nullable=True),
     sa.Column('date_to', sa.TIMESTAMP(timezone=True), nullable=True),
-    sa.Column('document_link', sa.String(), nullable=True),
+    sa.Column('document_link', sa.TEXT(), nullable=True),
     sa.Column('profile_id', sa.UUID(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
@@ -301,7 +301,7 @@ def upgrade() -> None:
     )
     op.create_table('sport_achievements',
     sa.Column('assignment_date', sa.TIMESTAMP(timezone=True), nullable=True),
-    sa.Column('document_link', sa.String(), nullable=True),
+    sa.Column('document_link', sa.TEXT(), nullable=True),
     sa.Column('profile_id', sa.UUID(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
@@ -314,7 +314,7 @@ def upgrade() -> None:
     )
     op.create_table('sport_degrees',
     sa.Column('assignment_date', sa.TIMESTAMP(timezone=True), nullable=True),
-    sa.Column('document_link', sa.String(), nullable=True),
+    sa.Column('document_link', sa.TEXT(), nullable=True),
     sa.Column('profile_id', sa.UUID(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),

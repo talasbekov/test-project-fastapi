@@ -10,12 +10,12 @@ from core import get_db
 from schemas.medical import DispensaryRegistrationRead,DispensaryRegistrationCreate,DispensaryRegistrationUpdate
 from services.medical import dispensary_registration_service
 
-router = APIRouter(prefix="/dispensary_registration", tags=["Dispensary Registration"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(prefix="/dispensary_registration", tags=["DispensaryRegistration"], dependencies=[Depends(HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[DispensaryRegistrationRead],
-            summary="Get all Anthropometric Data")
+            summary="Get all DispensaryRegistration")
 async def get_all(*,
     db: Session = Depends(get_db),
     skip: int = 0,
@@ -23,9 +23,10 @@ async def get_all(*,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Get all Dispensary Registration
-        - **skip**: int - The number of Dispensary Registration to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of Dispensary Registration to return in the response. This parameter is optional and defaults to 100.
+        Get all DispensaryRegistration
+
+        - **skip**: int - The number of DispensaryRegistration to skip before returning the results. This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of DispensaryRegistration to return in the response. This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
     return dispensary_registration_service.get_multi(db, skip, limit)
@@ -34,16 +35,20 @@ async def get_all(*,
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=DispensaryRegistrationRead,
-             summary="Create")
+             summary="Create DispensaryRegistration")
 async def create(*,
     db: Session = Depends(get_db),
     body: DispensaryRegistrationCreate,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Create new Dispensary Registration
-        - **name**: required
-        - **url**: image url. This parameter is required
+        Create new DispensaryRegistration
+
+        - **initiator**: str
+        - **start_date**: datetime.datetime
+        - **end_date**: datetime.datetime
+        - **document_link**: str
+        - **profile_id**: uuid.UUID
     """
     Authorize.jwt_required()
     return dispensary_registration_service.create(db, body)
@@ -51,14 +56,14 @@ async def create(*,
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=DispensaryRegistrationRead,
-            summary="Get Dispensary Registration by id")
+            summary="Get DispensaryRegistration by id")
 async def get_by_id(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Get Dispensary Registration by id
+        Get DispensaryRegistration by id
         - **id**: UUID - required.
     """
     Authorize.jwt_required()
@@ -67,7 +72,7 @@ async def get_by_id(*,
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=DispensaryRegistrationRead,
-            summary="Update Dispensary Registration")
+            summary="Update DispensaryRegistration")
 async def update(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
@@ -76,9 +81,13 @@ async def update(*,
 ):
     """
         Update AcademicDegree
-        - **id**: UUID - the ID of Anthropometric Data to update. This is required.
-        - **name**: required.
-        - **url**: image url. This parameter is required.
+
+        - **id**: UUID - the ID of DispensaryRegistration to update. This is required.
+        - **initiator**: str
+        - **start_date**: datetime.datetime
+        - **end_date**: datetime.datetime
+        - **document_link**: str
+        - **profile_id**: uuid.UUID
     """
     Authorize.jwt_required()
     return dispensary_registration_service.update(
@@ -89,14 +98,14 @@ async def update(*,
 
 @router.delete("/{id}/",status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
-               summary="Delete Dispensary Registration")
+               summary="Delete DispensaryRegistration")
 async def delete(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Delete a Dispensary Registration
+        Delete a DispensaryRegistration
         - **id**: UUId - required
     """
     Authorize.jwt_required()

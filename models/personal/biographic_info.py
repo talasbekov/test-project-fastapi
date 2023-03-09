@@ -20,7 +20,7 @@ class BiographicInfo(Model, Base):
 
     __tablename__ = "biographic_infos"
 
-    place_birth = Column(TIMESTAMP(timezone=True))
+    place_birth = Column(String)
     gender = Column(Boolean)
     citizenship = Column(String)
     nationality = Column(String)

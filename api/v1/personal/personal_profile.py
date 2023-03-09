@@ -26,6 +26,8 @@ async def get_all(*,
     """
         Get all PersonalProfiles
 
+        - **skip**: int - The number of PersonalProfiles to skip before returning the results. This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of PersonalProfiles to return in the response. This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
     return personal_profile_service.get_multi(db, skip, limit)
@@ -36,15 +38,27 @@ async def get_all(*,
              summary="Create PersonalProfiles")
 async def create(*,
     db: Session = Depends(get_db),
-    body: PersonalProfileCreate,
     Authorize: AuthJWT = Depends()
 ):
     """
         Create new PersonalProfiles
 
+        no parameters required
     """
     Authorize.jwt_required()
-    return personal_profile_service.create(db, body)
+    profile = profile_service.get_by_user_id(db, Authorize.get_jwt_subject())
+    return personal_profile_service.create(db, {"profile_id": profile.id})
+
+
+@router.get("/profile", response_model=PersonalProfileRead)
+async def get_profile(*,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    profile = profile_service.get_by_user_id(db, Authorize.get_jwt_subject())
+    return profile.personal_profile
+
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=PersonalProfileRead,
@@ -63,26 +77,6 @@ async def get_by_id(*,
     return personal_profile_service.get_by_id(db, id)
 
 
-@router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=PersonalProfileRead,
-            summary="Update PersonalProfiles")
-async def update(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    body: PersonalProfileUpdate,
-    Authorize: AuthJWT = Depends()
-):
-    """
-        Update PersonalProfiles
-
-    """
-    Authorize.jwt_required()
-    return personal_profile_service.update(
-        db,
-        db_obj=personal_profile_service.get_by_id(db, id),
-        obj_in=body)
-
-
 @router.delete("/{id}/",status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
                summary="Delete PersonalProfiles")
@@ -98,13 +92,3 @@ async def delete(*,
     """
     Authorize.jwt_required()
     personal_profile_service.remove(db, id)
-
-
-@router.get("/profile", response_model=PersonalProfileRead)
-async def get_profile(*,
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends()
-):
-    Authorize.jwt_required()
-    profile = profile_service.get_by_user_id(db, Authorize.get_jwt_subject())
-    return profile.personal_profile
