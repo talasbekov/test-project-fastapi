@@ -56,8 +56,7 @@ async def get_profile(*,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
-    profile = profile_service.get_by_user_id(db, Authorize.get_jwt_subject())
-    return profile.personal_profile
+    return personal_profile_service.get_by_user_id(db, Authorize.get_jwt_subject())
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],

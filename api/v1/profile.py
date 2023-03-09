@@ -32,7 +32,7 @@ async def get_all(*,
     return profile_service.get_multi(db, skip, limit)
 
 
-@router.get("/my", dependencies=[Depends(HTTPBearer())],
+@router.get("/profile", dependencies=[Depends(HTTPBearer())],
             response_model=ProfileRead,
             summary="Get my Profile")
 async def get_my_profile(*,
