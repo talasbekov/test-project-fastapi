@@ -14,7 +14,7 @@ from .service_housing import (ServiceHousingUpdate, ServiceHousingCreate,
                               ServiceHousingRead)
 from .properties import (PropertiesBase, PropertiesCreate,
                          PropertiesRead, PropertiesUpdate)
-from .additional_profile import (AdditionalProfileCreate, AdditionalProfileUpdate,
-                                 AdditionalProfileRead)
 from .vehicle import (VehicleBase, VehicleCreate, VehicleRead, 
                       VehicleUpdate)
+from .additional_profile import (AdditionalProfileCreate, AdditionalProfileUpdate,
+                                 AdditionalProfileRead)
