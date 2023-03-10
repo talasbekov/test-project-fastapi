@@ -2,6 +2,8 @@ from pydantic import BaseModel
 from datetime import datetime
 import uuid
 
+from typing import Optional
+
 from models import DestinationCountry
 
 class AbroadTravelBase(BaseModel):
@@ -27,4 +29,4 @@ class AbroadTravelUpdate(AbroadTravelBase):
 
 
 class AbroadTravelRead(AbroadTravelBase):
-    id: int 
+    id: Optional[uuid.UUID]
