@@ -14,24 +14,6 @@ from services import hr_document_service
 router = APIRouter(prefix="/hr-documents", tags=["HrDocuments"], dependencies=[Depends(HTTPBearer())])
 
 
-@router.get("", response_model=List[HrDocumentRead],
-            summary="Get all HrDocuments")
-async def get_all(*,
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends(),
-    skip: int = 0,
-    limit: int = 10
-):
-    """
-        Get all HrDocuments
-
-        - **skip**: int - The number of HrDocuments to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of HrDocuments to return in the response. This parameter is optional and defaults to 10.
-    """
-    Authorize.jwt_required()
-    user_id = Authorize.get_jwt_subject()
-    return hr_document_service.get_all(db, user_id, skip, limit)
-
 @router.get("/not-signed", response_model=List[HrDocumentRead],
             summary="Get all not signed HrDocuments")
 async def get_not_signed(*,
@@ -49,6 +31,25 @@ async def get_not_signed(*,
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
     return hr_document_service.get_not_signed_documents(db, user_id, skip, limit)
+
+
+@router.get("/initialized", response_model=List[HrDocumentRead],
+            summary="Get all initialized HrDocuments")
+async def get_initialized(*,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends(),
+    skip: int = 0,
+    limit: int = 10
+):
+    """
+        Get all initialized HrDocuments
+
+        - **skip**: int - The number of HrDocuments to skip before returning the results. This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of HrDocuments to return in the response. This parameter is optional and defaults to 10.
+    """
+    Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
+    return hr_document_service.get_initialized_documents(db, user_id, skip, limit)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED, response_model=HrDocumentRead,

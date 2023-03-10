@@ -3,7 +3,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-from schemas import StaffFunctionRead, StaffUnitRead
+from schemas import StaffFunctionRead, StaffUnitRead, JurisdictionRead
 
 
 class HrDocumentStepBase(BaseModel):
@@ -21,14 +21,11 @@ class HrDocumentStepUpdate(HrDocumentStepBase):
 
 class HrDocumentStepRead(HrDocumentStepBase):
     id: Optional[uuid.UUID]
-    next_step: Optional[List['HrDocumentStepRead']]
     hr_document_template_id: Optional[uuid.UUID]
-    previous_step_id: Optional[uuid.UUID]
-    staff_unit_id: Optional[uuid.UUID]
     staff_function_id: Optional[uuid.UUID]
     staff_function: Optional[StaffFunctionRead]
-    staff_unit: Optional[StaffUnitRead]
     jurisdiction_id: Optional[uuid.UUID]
+    jurisdiction: Optional[JurisdictionRead]
 
     class Config:
         orm_mode = True
