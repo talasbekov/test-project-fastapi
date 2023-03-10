@@ -11,3 +11,5 @@ from models import NamedModel
 
 class PropertyType(NamedModel):
     __tablename__ = "property_types"
+
+    properties = relationship("Properties", back_populates="type")

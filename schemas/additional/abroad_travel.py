@@ -2,9 +2,11 @@ from pydantic import BaseModel
 from datetime import datetime
 import uuid
 
+from models import DestinationCountry
+
 class AbroadTravelBase(BaseModel):
     vehicle_type: str
-    destination_country: str
+    destination_country: DestinationCountry
     date_from: datetime
     date_to: datetime
     reason: str

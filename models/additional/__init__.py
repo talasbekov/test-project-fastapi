@@ -1,4 +1,4 @@
-from .abroad_travel import AbroadTravel
+from .abroad_travel import AbroadTravel, DestinationCountry
 from .additional_profile import AdditionalProfile
 from .polygraph_check import PolygraphCheck
 from .psychological_check import PsychologicalCheck

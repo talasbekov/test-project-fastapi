@@ -1496,7 +1496,8 @@ def create_user(id,
             'initiator': "initiator",
             'start_date': "2022-09-12",
             'end_date': "2022-10-12",
-            'profile_id': medical_profile_id
+            'profile_id': medical_profile_id,
+            'document_link': "document_link"
         }]
     )
 
@@ -1625,6 +1626,7 @@ def create_user(id,
         Base.metadata.tables['families'],
         [{
             'id': families_profile_id,
+            'relation': "Father",
             'FIO': "Ахметов Арман Кожабердиулы",
             'IIN': "980206556948",
             'birthday': "1998-02-06",

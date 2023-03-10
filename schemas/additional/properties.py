@@ -4,6 +4,7 @@ import datetime
 from pydantic import BaseModel
 from typing import Optional
 
+from .property_type import PropertyTypeRead
 
 class PropertiesBase(BaseModel):
     type_id: uuid.UUID
@@ -26,3 +27,5 @@ class PropertiesUpdate(PropertiesBase):
 
 class PropertiesRead(PropertiesBase):
     id: Optional[uuid.UUID]
+
+    type: Optional[PropertyTypeRead]
