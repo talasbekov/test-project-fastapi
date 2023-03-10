@@ -10,3 +10,7 @@ from .violation import (ViolationBase, ViolationCreate,
                         ViolationUpdate, ViolationRead)
 from .additional_profile import (AdditionalProfileBase, AdditionalProfileCreate,
                                  AdditionalProfileUpdate, AdditionalProfileRead)
+from .properties import (PropertiesBase, PropertiesCreate,
+                         PropertiesRead, PropertiesUpdate)
+from .property_type import (PropertyTypeBase, PropertyTypeCreate,
+                            PropertyTypeUpdate, PropertyTypeRead)

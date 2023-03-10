@@ -89,6 +89,25 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['profile_id'], ['additional_profiles.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('property_types',
+    sa.Column('name', sa.String(length=255), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('properties',
+    sa.Column('purchase_date', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('address', sa.String(length=255), nullable=False),
+    sa.Column('profile_id', sa.UUID(), nullable=True),
+    sa.Column('type_id', sa.UUID(), nullable=True),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['profile_id'], ['additional_profiles.id'], ),
+    sa.ForeignKeyConstraint(['type_id'], ['property_types.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
     # ### end Alembic commands ###
 
 

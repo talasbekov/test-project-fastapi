@@ -53,6 +53,11 @@ language3_id = get_uuid()
 institution1_id = get_uuid()
 institution2_id = get_uuid()
 institution3_id = get_uuid()
+# Additional 
+
+property_type1_id = get_uuid()
+property_type2_id = get_uuid()
+property_type3_id = get_uuid()
 
 def upgrade() -> None:
 
@@ -487,6 +492,22 @@ def upgrade() -> None:
         }]
     )
 
+# Additional profile tables 
+
+    op.bulk_insert(
+        Base.metadata.tables['property_types'],
+        [{
+            'id': property_type1_id,
+            'name': "Двухэтажный дом"
+        }, {
+            'id': property_type2_id,
+            'name': "1-комнтаная квартира"
+        }, {
+            'id': property_type3_id,
+            'name': "2-комнатная квартира"
+        }]
+    )
+    
     group1_id = get_uuid()
     group2_id = get_uuid()
     group3_id = get_uuid()
@@ -1058,6 +1079,39 @@ def create_user(id,
         }]
     )
 
+    medical_profile_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['medical_profiles'],
+        [{
+            'id': medical_profile_id,
+            'profile_id': profile_id
+
+        }]
+    )
+
+    additional_profile_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['additional_profiles'],
+        [{
+            'id': additional_profile_id,
+            'profile_id': profile_id
+
+        }]
+    )
+
+    family_profile_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['family_profiles'],
+        [{
+            'id': family_profile_id,
+            'profile_id': profile_id
+
+        }]
+    )
+
     academic_degree1_id = get_uuid()
     academic_degree2_id = get_uuid()
     academic_degree3_id = get_uuid()
@@ -1402,6 +1456,186 @@ def create_user(id,
             'profile_id': personal_profile_id
         }]
     )
+
+    general_user_information_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['general_user_informations'],
+        [{
+            'id':general_user_information_id,
+            'height': 185,
+            'blood_group': "A+",
+            'age_group': 2,
+            'profile_id': medical_profile_id,
+            'weight': 80
+        }]
+    )
+
+    anthropometric_data_id = get_uuid()
+    
+    op.bulk_insert(
+        Base.metadata.tables['anthropometric_data'],
+        [{
+            'id': anthropometric_data_id,
+            'head_circumference': 57,
+            'shoe_size': 42,
+            'neck_circumference': 37,
+            'shape_size': 54,
+            'bust_size': 16,
+            'profile_id': medical_profile_id
+        }]
+    )
+
+    dispensary_registrations_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['dispensary_registrations'],
+        [{
+            'id': dispensary_registrations_id,
+            'name': "name",
+            'initiator': "initiator",
+            'start_date': "2022-09-12",
+            'end_date': "2022-10-12",
+            'profile_id': medical_profile_id
+        }]
+    )
+
+    user_liberations_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['user_liberations'],
+        [{
+            'id': user_liberations_id,
+            'reason': "reason",
+            'liberation_name': "liberation_name",
+            'initiator': "initiator",
+            'start_date': "2022-09-12",
+            'end_date': "2022-10-12",
+            'profile_id': medical_profile_id
+        }]
+    )
+
+    hospital_datas_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['hospital_datas'],
+        [{
+            'id': hospital_datas_id,
+            'code': "code",
+            'reason': "reason",
+            'place': "place",
+            'start_date': "2022-09-12",
+            'end_date': "2022-10-12",
+            'document_link': "document_link",
+            'profile_id': medical_profile_id
+        }]
+    )
+
+    violations_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['violations'],
+        [{
+            'id': violations_id,
+            'name': "name",
+            'date': "2022-09-12",
+            'issued_by': "admin",
+            'article_number': "article_number",
+            'consequence': "consequence",
+            'profile_id': additional_profile_id
+        }]
+    )
+
+    properties_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['properties'],
+        [{
+            'id': properties_id,
+            'type': property_type1_id,
+            'purchase_date': "2022-09-12",
+            'address': "Dostyk 5",
+            'profile_id': additional_profile_id
+        }]
+    )
+
+    abroad_travels_id = get_uuid()
+
+    op.bulk_insert(      
+        Base.metadata.tables['abroad_travels'],
+        [{
+            'id': abroad_travels_id,
+            'vehicle_type': "Plane",
+            'destination_country': "test",
+            'date_from': "2022-05-10",
+            'date_to': "2022-05-11",
+            'reason': "reason",
+            'document_link':"document_link",
+            'profile_id': additional_profile_id
+
+        }]
+    )
+
+    special_checks_id = get_uuid()
+
+    op.bulk_insert(
+            Base.metadata.tables['special_checks'],
+            [{
+                'id': special_checks_id,
+                'number': "number",
+                'issued_by': "admin",
+                'date_of_issue': "2022-01-15",
+                'document_link': "document_link",
+                "profile_id": additional_profile_id
+                
+            }]
+    )
+
+    psychological_checks_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['psychological_checks'],
+        [{
+            'id': psychological_checks_id,
+            'issued_by': "admin",
+            'date_of_issue': "2022-03-25",
+            'document_link': "document_link",
+            'profile_id': additional_profile_id
+        }]
+    )
+
+    polygraph_checks_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['polygraph_checks'],
+        [{
+            'id': polygraph_checks_id,
+            'number': "number",
+            "issued_by": "admin",
+            "date_of_issue": "2021-02-03",
+            "document_link": "document link",
+            'profile_id': additional_profile_id
+        }]
+    )
+
+    families_profile_id = get_uuid()
+
+
+    op.bulk_insert(
+        Base.metadata.tables['families'],
+        [{
+            'id': families_profile_id,
+            'FIO': "Ахметов Арман Кожабердиулы",
+            'IIN': "980206556948",
+            'birthday': "1998-02-06",
+            'death_day': "2100-02-06",
+            'birth_place': "Astana",
+            'address': "Kabanbay batyr 15",
+            'workplace': "KazMunaiGaz",
+            'profile_id': family_profile_id
+        }]
+    )
+
 
 
 def downgrade() -> None:
