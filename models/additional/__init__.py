@@ -7,3 +7,4 @@ from .violation import Violation
 from .property_type import PropertyType
 from .properties import Properties
 from .service_housing import ServiceHousing
+from .vehicle import Vehicle

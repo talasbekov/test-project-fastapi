@@ -28,6 +28,7 @@ from .user import user_service
 from .auth import auth_service
 from .hr_document_info import hr_document_info_service
 from .hr_document import hr_document_service
+from .staff_list import staff_list_service
 
 from .additional import *
 from .education import *

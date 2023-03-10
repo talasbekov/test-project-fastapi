@@ -55,4 +55,6 @@ class User(Model, Base):
         cascade="all,delete"
     )
 
+    staff_list = relationship("StaffList", back_populates="user", cascade="all,delete")
+
     profile = relationship("Profile", back_populates="user", uselist=False)

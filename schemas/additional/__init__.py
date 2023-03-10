@@ -16,3 +16,5 @@ from .properties import (PropertiesBase, PropertiesCreate,
                          PropertiesRead, PropertiesUpdate)
 from .additional_profile import (AdditionalProfileCreate, AdditionalProfileUpdate,
                                  AdditionalProfileRead)
+from .vehicle import (VehicleBase, VehicleCreate, VehicleRead, 
+                      VehicleUpdate)
