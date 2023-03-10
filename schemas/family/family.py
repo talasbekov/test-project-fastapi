@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 
 class FamilyBase(BaseModel):
+    relation: str
     first_name: str
     last_name: str
     father_name: str
@@ -32,5 +33,6 @@ class FamilyUpdate(FamilyBase):
 
 
 class FamilyRead(FamilyBase):
+
     id: Optional[uuid.UUID]
     profile_id: Optional[uuid.UUID]

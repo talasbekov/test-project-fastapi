@@ -22,6 +22,7 @@ class AcademicDegreeBase(BaseModel):
         orm_mode = True
         arbitrary_types_allowed = True
 
+
 class AcademicDegreeCreate(AcademicDegreeBase):
     pass
 

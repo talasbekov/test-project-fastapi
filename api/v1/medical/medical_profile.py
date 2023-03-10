@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 from core import get_db
 from schemas.medical import MedicalProfileCreate,MedicalProfileRead,MedicalProfileUpdate
 from services.medical import medical_profile_service
+from services import profile_service
 
 router = APIRouter(prefix="/medical_profile", tags=["MedicalProfile"], dependencies=[Depends(HTTPBearer())])
 
@@ -104,3 +105,13 @@ async def delete(*,
     """
     Authorize.jwt_required()
     medical_profile_service.remove(db, id)
+
+
+@router.get("/profile", response_model=MedicalProfileRead)
+async def get_profile(*,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    profile = profile_service.get_by_user_id(db, Authorize.get_jwt_subject())
+    return medical_profile_service.get_by_id(db, profile.medical_profile.id)

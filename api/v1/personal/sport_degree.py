@@ -32,6 +32,7 @@ async def get_all(*,
     Authorize.jwt_required()
     return sport_degree_service.get_multi(db, skip, limit)
 
+
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=SportDegreeRead,

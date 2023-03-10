@@ -67,6 +67,7 @@ async def initialize(*,
         - **due_date**: the end date of this document - format (YYYY-MM-DD). This parameter is required.
         - **properties**: A dictionary containing properties for the HrDocument.
         - **user_ids**: UUID - required and should exist in database. A list of user IDs to be assigned to the HrDocument.
+        - **document_step_users_ids**: UUID - required and should exist in database. Dictionary of priority to user IDs to be assigned to the HrDocument.
     """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()

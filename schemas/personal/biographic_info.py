@@ -8,6 +8,7 @@ from pydantic import BaseModel
 
 class BiographicInfoBase(BaseModel):
     place_birth: str
+    date_birth: datetime.datetime
     gender: bool
     citizenship: str
     nationality: str
@@ -27,6 +28,7 @@ class BiographicInfoUpdate(BiographicInfoBase):
 class BiographicInfoRead(BiographicInfoBase):
     id: Optional[uuid.UUID]
     place_birth: Optional[str]
+    date_birth: Optional[datetime.datetime]
     gender: Optional[bool]
     citizenship: Optional[str]
     nationality: Optional[str]

@@ -1,8 +1,7 @@
-from sqlalchemy import Column, ForeignKey, String
+from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID, DATE, TEXT
 
-from core import Base
 from models import Model
 
 
@@ -20,6 +19,6 @@ class Education(Model):
     institution = relationship("Institution", back_populates="education")
 
     degree_id = Column(UUID(as_uuid=True), ForeignKey("institution_degree_types.id"))
-    document_link = Column(TEXT)
-    
     degree = relationship("InstitutionDegreeType", back_populates="education", foreign_keys=degree_id)
+
+    document_link = Column(TEXT)

@@ -2,8 +2,7 @@ from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
 from models.education import Science
-from schemas.education import ScienceCreate, ScienceRead, ScienceUpdate
-
+from schemas.education import ScienceCreate, ScienceUpdate
 from services import ServiceBase
 
 

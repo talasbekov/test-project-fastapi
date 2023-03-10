@@ -32,6 +32,7 @@ async def get_all(*,
     Authorize.jwt_required()
     return personal_profile_service.get_multi(db, skip, limit)
 
+
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=PersonalProfileRead,
@@ -57,6 +58,7 @@ async def get_profile(*,
 ):
     Authorize.jwt_required()
     return personal_profile_service.get_by_user_id(db, Authorize.get_jwt_subject())
+
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],

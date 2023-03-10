@@ -7,10 +7,14 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas.education import LanguageCreate, LanguageRead, LanguageUpdate
+from schemas.education import (LanguageCreate,
+                               LanguageRead,
+                               LanguageUpdate)
 from services.education import language_service
 
-router = APIRouter(prefix="/languages", tags=["Languages"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(prefix="/languages",
+                   tags=["Languages"],
+                   dependencies=[Depends(HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
@@ -106,10 +110,3 @@ async def delete(*,
     """
     Authorize.jwt_required()
     language_service.remove(db, id)
-
-
-@router.get("/help")
-async def help(*,
-    db: Session = Depends(get_db)):
-    language_service.add_Language(db, LanguageCreate(name="test", url="sad"))
-    raise Exception('help')

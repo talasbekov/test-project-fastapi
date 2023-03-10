@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import Column, Enum as EnumType, ForeignKey, Integer, String, text
+from sqlalchemy import Column, Enum as EnumType, ForeignKey, Integer, String, text, Double
 from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID
 from sqlalchemy.orm import relationship
 from enum import Enum
@@ -37,6 +37,6 @@ class GeneralUserInformation(Model):
     blood_group = Column(EnumType(BloodType), nullable=True, default=BloodType.O_PLUS)
     age_group = Column(EnumType(AgeGroup), nullable=True, default=AgeGroup.FIRST)
     profile_id = Column(UUID(as_uuid=True), ForeignKey("medical_profiles.id"))
+    weight = Column(Integer)
 
     profile = relationship("MedicalProfile")
-    

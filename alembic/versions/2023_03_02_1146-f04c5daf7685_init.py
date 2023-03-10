@@ -239,6 +239,7 @@ def upgrade() -> None:
     )
     op.create_table('biographic_infos',
     sa.Column('place_birth', sa.String(), nullable=True),
+    sa.Column('date_birth', sa.TIMESTAMP(timezone=True), nullable=True),
     sa.Column('gender', sa.Boolean(), nullable=True),
     sa.Column('citizenship', sa.String(), nullable=True),
     sa.Column('nationality', sa.String(), nullable=True),

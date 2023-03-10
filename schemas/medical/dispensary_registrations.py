@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 
 class DispensaryRegistrationBase(BaseModel):
+    name: str
     initiator: str
     start_date: datetime.datetime
     end_date: datetime.datetime
@@ -23,6 +24,8 @@ class DispensaryRegistrationUpdate(DispensaryRegistrationBase):
 
 class DispensaryRegistrationRead(DispensaryRegistrationBase):
     id: uuid.UUID
+
+    document_link: Optional[str]
 
     class Config:
         orm_mode = True

@@ -1,6 +1,5 @@
-import datetime
 import uuid
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel
 from .family import FamilyRead
@@ -26,5 +25,6 @@ class FamilyProfileUpdate(FamilyProfileBase):
 class FamilyProfileRead(FamilyProfileBase):
 
     id: Optional[uuid.UUID]
+    profile_id: Optional[uuid.UUID]
 
-    family: Optional[FamilyRead]
+    family: Optional[List[FamilyRead]]
