@@ -39,8 +39,6 @@ async def get_all(*,
                 dependencies=[Depends(HTTPBearer())],
                 response_model=PsychologicalCheckRead,
                 summary="Create")
-
-
 async def create(*,
     db: Session = Depends(get_db),
     body: PsychologicalCheckCreate,
@@ -81,7 +79,6 @@ async def update(*,
     if abroad_travel.profile_id != profile.id: # TODO: check role logic
         raise SgoErpException("You don't have permission to update this abroad travel")
     return psychological_check_service.update(db, abroad_travel, body)
-
 
 
 @router.delete("/{id}/", dependencies=[Depends(HTTPBearer())],

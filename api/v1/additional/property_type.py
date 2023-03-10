@@ -6,7 +6,7 @@ from fastapi_jwt_auth import AuthJWT
 from schemas import PropertyTypeCreate, PropertyTypeRead, PropertyTypeUpdate
 from core import get_db
 from services import property_type_service, profile_service
-from exceptions import ForbiddenException
+from exceptions import ForbiddenException, SgoErpException
 from typing import List
 import uuid
 
@@ -79,7 +79,6 @@ async def update(*,
     if abroad_travel.profile_id != profile.id: # TODO: check role logic
         raise SgoErpException("You don't have permission to update this properties")
     return property_type_service.update(db, abroad_travel, body)
-
 
 
 @router.delete("/{id}/", dependencies=[Depends(HTTPBearer())],

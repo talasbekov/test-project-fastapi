@@ -81,7 +81,6 @@ async def update(*,
     return properties_service.update(db, abroad_travel, body)
 
 
-
 @router.delete("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=PropertiesRead,
             summary="Delete properties by id")

@@ -30,6 +30,7 @@ async def get_all(*,
     Authorize.jwt_required()
     return driving_license_service.get_multi(db, skip, limit)
 
+
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=DrivingLicenseRead,
@@ -45,6 +46,7 @@ async def create(*,
     """
     Authorize.jwt_required()
     return driving_license_service.create(db, body)
+
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=DrivingLicenseRead,
