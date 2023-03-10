@@ -12,6 +12,7 @@ from .staff_division import GroupName, StaffDivision
 from .staff_function import (DocumentFunctionType, DocumentStaffFunction,
                              RoleName, ServiceFunctionType,
                              ServiceStaffFunction, StaffFunction)
+from .staff_list import StaffList
 from .staff_unit import StaffUnit
 
 from .user_stat import UserStat
