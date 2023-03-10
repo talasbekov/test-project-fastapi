@@ -7,7 +7,7 @@ from .family import FamilyRead
 
 class FamilyProfileBase(BaseModel):
 
-    profile_id: uuid.UUID
+    profile_id: Optional[uuid.UUID]
 
     class Config:
         orm_mode = True
