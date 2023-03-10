@@ -66,22 +66,6 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
         ).offset(skip).limit(limit).all()
 
         return infos
-
-    def get_all(self, db: Session, staff_unit_id, skip: int, limit: int) -> list[HrDocumentInfo]:
-
-        infos = db.query(HrDocumentInfo).filter(
-            or_(
-                and_(
-                    HrDocumentInfo.is_signed == None,
-                    HrDocumentInfo.hr_document_step.has(staff_unit_id=staff_unit_id)
-                ),
-                HrDocumentInfo.hr_document_step.has(previous_step_id=None)
-            )
-        ).order_by(
-            desc(HrDocumentInfo.created_at)
-        ).offset(skip).limit(limit).all()
-
-        return infos
     
     def get_by_document_id_and_step_id(self, db: Session, document_id: str, step_id: str) -> HrDocumentInfo:
 
