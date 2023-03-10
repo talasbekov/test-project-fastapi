@@ -77,7 +77,7 @@ async def update(*,
     profile = profile_service.get_by_user_id(db, credentials)
     abroad_travel = property_type_service.get_by_id(db, id)
     if abroad_travel.profile_id != profile.id: # TODO: check role logic
-        raise SgoErpException("You don't have permission to update this properties")
+        raise ForbiddenException("You don't have permission to update this properties")
     return property_type_service.update(db, abroad_travel, body)
 
 
