@@ -103,3 +103,13 @@ async def delete(*,
     if abroad_travel.profile_id != profile.id: # TODO: check role logic
         raise SgoErpException("You don't have permission to delete this abroad travel")
     return additional_profile_service.delete(db, abroad_travel)
+
+
+@router.get("/profile", response_model=AdditionalProfileRead)
+async def get_profile(*,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    profile = profile_service.get_by_user_id(db, Authorize.get_jwt_subject())
+    return additional_profile_service.get_by_id(db, profile.additional_profile.id)

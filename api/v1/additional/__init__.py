@@ -4,3 +4,5 @@ from .polygraph_check import router as polygraph_check_router
 from .psychological_check import router as psychological_check_router
 from .special_check import router as special_check_router
 from .violation import router as violation_router
+from .properties import router as properties_router
+from .property_type import router as property_type_router
