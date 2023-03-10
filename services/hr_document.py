@@ -413,17 +413,17 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 if not type(val) == dict:
                     attr = getattr(user, value["field_name"])
                     if isinstance(attr, Base or isinstance(attr, list)):
-                        new_val[value["field_name"]] = self._get_service(
+                        new_val[value["field_name"]] = responses.get(value['field_name']).from_orm(self._get_service(
                             value["field_name"]
-                        ).get(db, val)
+                        ).get(db, val))
                     else:
                         new_val[value["field_name"]] = val
                 else:
                     if val["value"] == None:
                         raise BadRequestException(f"Обьект {key} должен иметь value!")
-                    new_val[value["field_name"]] = self._get_service(
+                    new_val[value["field_name"]] = responses.get(value['field_name']).from_orm(self._get_service(
                         value["field_name"]
-                    ).get(db, val["value"])
+                    ).get(db, val["value"]))
 
         response.new_value = new_val
 
