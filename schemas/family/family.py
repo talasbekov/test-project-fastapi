@@ -33,5 +33,6 @@ class FamilyUpdate(FamilyBase):
 
 
 class FamilyRead(FamilyBase):
+
     id: Optional[uuid.UUID]
     profile_id: Optional[uuid.UUID]

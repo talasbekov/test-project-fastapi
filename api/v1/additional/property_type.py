@@ -6,7 +6,7 @@ from fastapi_jwt_auth import AuthJWT
 from schemas import PropertyTypeCreate, PropertyTypeRead, PropertyTypeUpdate
 from core import get_db
 from services import property_type_service, profile_service
-from exceptions import SgoErpException
+from exceptions import ForbiddenException
 from typing import List
 import uuid
 
@@ -25,7 +25,7 @@ async def get_all(*,
     """
         Get all Properties
 
-        - **skip**: int - The number of Propertiers to skip before returning the results. This parameter is optional and defaults to 0.
+        - **skip**: int - The number of Properties to skip before returning the results. This parameter is optional and defaults to 0.
         - **limit**: int - The maximum number of Properties to return in the response. This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
@@ -101,5 +101,5 @@ async def delete(*,
     profile = profile_service.get_by_user_id(db, credentials)
     properties = property_type_service.get_by_id(db, id)
     if properties.profile_id != profile.id: # TODO: check role logic
-        raise SgoErpException("You don't have permission to delete these properties")
+        raise ForbiddenException("You don't have permission to delete these properties")
     return property_type_service.delete(db, properties)

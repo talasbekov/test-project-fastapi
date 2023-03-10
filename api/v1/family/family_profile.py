@@ -75,7 +75,7 @@ async def delete(*,
 
 @router.get("/profile", dependencies=[Depends(HTTPBearer())],
             response_model=FamilyProfileRead)
-async def get_profile(*,
+async def get_by_profile(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends()
 ):
