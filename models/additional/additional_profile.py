@@ -21,3 +21,4 @@ class AdditionalProfile(Model):
     psychological_checks = relationship("PsychologicalCheck", back_populates="profile", cascade="all, delete")
     special_checks = relationship("SpecialCheck", back_populates="profile", cascade="all, delete")
     properties = relationship("Properties", back_populates="profile")
+    service_housing = relationship("ServiceHousing", back_populates="profile")

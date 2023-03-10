@@ -8,6 +8,7 @@ from pydantic import BaseModel
 
 
 class DispensaryRegistrationBase(BaseModel):
+    name: str
     initiator: str
     start_date: datetime.datetime
     end_date: datetime.datetime

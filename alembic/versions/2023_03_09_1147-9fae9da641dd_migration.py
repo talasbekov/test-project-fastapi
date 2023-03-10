@@ -1577,6 +1577,17 @@ def create_user(id,
         }]
     )
 
+    op.bulk_insert(
+        Base.metadata.tables['service_housings'],
+        [{
+            'id': get_uuid(),
+            'type_id': property_type2_id,
+            'address': "Dostyk 5",
+            'issue_date': "2022-09-12",
+            'profile_id': additional_profile_id
+        }]
+    )
+
     special_checks_id = get_uuid()
 
     op.bulk_insert(
