@@ -52,14 +52,13 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             raise NotFoundException(detail="Document is not found!")
         return document
 
-    def get_all(self, db: Session, user_id, skip: int, limit: int):
+    def get_initialized_documents(self, db: Session, user_id: uuid.UUID, skip: int, limit: int):
+
         user = user_service.get_by_id(db, user_id)
+        
+        documents = [i.hr_document for i in hr_document_info_service.get_initialized_by_user_id(db, user_id, skip, limit)]
 
-        infos = hr_document_info_service.get_all(
-            db, user.actual_staff_unit_id, skip, limit
-        )
-
-        return self._return_correctly(db, infos, user)
+        return self._return_correctly(db, documents, user)
 
     def get_not_signed_documents(
         self, db: Session, user_id: str, skip: int, limit: int
@@ -282,15 +281,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             else:
                 return [responses.get(option).from_orm(i) for i in service.get_by_id(db, id).children]
         return [responses.get(option).from_orm(i) for i in service.get_multi(db)]
-
-    def get_signed_documents(
-        self, db: Session, user_id: uuid.UUID, skip: int, limit: int
-    ):
-        user = user_service.get_by_id(db, user_id)
-
-        infos = hr_document_info_service.get_signed_by_user_id(db, user_id, skip, limit)
-
-        return self._return_correctly(db, infos, user)
 
     def _finish_document(self, db: Session, document: HrDocument, users: List[User]):
         document.status = HrDocumentStatus.COMPLETED

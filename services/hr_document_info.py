@@ -136,6 +136,17 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
             .all()
 
         return infos
+    
+    def get_initialized_by_user_id(self, db: Session, user_id: str, skip: int, limit: int) -> List[HrDocumentInfo]:
+
+        infos = db.query(HrDocumentInfo).join(HrDocumentStep).join(DocumentStaffFunction).filter(
+            HrDocumentInfo.assigned_to_id == user_id,
+            DocumentStaffFunction.priority == 1
+        ).order_by(
+            HrDocumentInfo.created_at.desc()
+        ).offset(skip).limit(limit).all()
+
+        return infos
 
     def _get_history_by_document_id(self, db: Session, document_id: str) -> List[HrDocumentInfo]:
         infos = db.query(HrDocumentInfo).filter(
