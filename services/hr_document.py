@@ -328,6 +328,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             + "қбп/жқ"
         )
 
+        document.last_step_id = None
+
         db.add(document)
         db.flush()
 
