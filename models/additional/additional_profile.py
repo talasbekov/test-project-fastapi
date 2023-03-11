@@ -23,4 +23,3 @@ class AdditionalProfile(Model):
     properties = relationship("Properties", back_populates="profile")
     service_housing = relationship("ServiceHousing", back_populates="profile")
     user_vehicles = relationship("Vehicle", back_populates="profile")
-

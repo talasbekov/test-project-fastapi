@@ -1553,7 +1553,7 @@ def create_user(id,
         Base.metadata.tables['properties'],
         [{
             'id': properties_id,
-            'type': property_type1_id,
+            'type_id': property_type1_id,
             'purchase_date': "2022-09-12",
             'address': "Dostyk 5",
             'profile_id': additional_profile_id
