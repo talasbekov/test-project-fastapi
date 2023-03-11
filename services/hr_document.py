@@ -212,7 +212,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
             for step in steps:
                 hr_document_info_service.create_info_for_step(
-                    db, document.id, step.id, user.id, None, None
+                    db, document.id, step.id, user.id, None, None, None
                 )
 
                 if step == info.hr_document_step:
