@@ -444,6 +444,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         l = []
 
         for i in documents:
+            if i is None:
+                continue
             if i.id not in s:
                 s.add(i.id)
                 subject = i.users[0]
