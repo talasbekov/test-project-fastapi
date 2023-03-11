@@ -110,3 +110,14 @@ async def get_profile(*,
     Authorize.jwt_required()
     profile = profile_service.get_by_user_id(db, Authorize.get_jwt_subject())
     return profile.personal_profile
+
+
+@router.get('/profile/{id}', dependencies=[Depends(HTTPBearer())],
+            response_model=PersonalProfileRead)
+async def get_profile_by_id(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    return profile_service.get_by_user_id(db, id).personal_profile

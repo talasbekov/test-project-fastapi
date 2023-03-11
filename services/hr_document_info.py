@@ -152,7 +152,7 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
         infos = db.query(HrDocumentInfo).filter(
             HrDocumentInfo.hr_document_id == document_id
         ).order_by(
-            HrDocumentInfo.signed_at.asc()
+            HrDocumentInfo.signed_at.asc() 
         ).all()
 
         return infos
