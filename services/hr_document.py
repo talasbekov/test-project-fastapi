@@ -365,7 +365,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
     def _to_response(self, db: Session, document: HrDocument) -> HrDocumentRead:
         response = HrDocumentRead.from_orm(document)
-        response.can_cancel = document.last_step.staff_function.role.can_cancel
+        if document.last_step_id is not None:
+            response.can_cancel = document.last_step.staff_function.role.can_cancel
 
         user = response.users[0]
 
