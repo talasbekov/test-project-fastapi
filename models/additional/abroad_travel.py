@@ -12,7 +12,8 @@ from models import Model
 
 
 class DestinationCountry(Enum):
-    test = "test"
+    TURKEY = "Турция",
+    UAE = "ОАЭ"
 
 class AbroadTravel(Model, Base):
 
@@ -21,7 +22,7 @@ class AbroadTravel(Model, Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
 
     vehicle_type = Column(String(255), nullable=False)
-    destination_country = Column(EnumType(DestinationCountry), nullable=False, default=DestinationCountry.test)
+    destination_country = Column(EnumType(DestinationCountry), nullable=False, default=DestinationCountry.TURKEY)
     date_from = Column(TIMESTAMP(timezone=True), nullable=False)
     date_to = Column(TIMESTAMP(timezone=True), nullable=False)
     reason = Column(String(255), nullable=False, default="")

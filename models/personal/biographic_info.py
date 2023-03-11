@@ -9,11 +9,11 @@ from models import Model
 
 
 class FamilyStatusEnum(str, enum.Enum):
-    MARRIED = "Married"
-    WIDOWED = "Widowed"
+    MARRIED = "Женат"
+    WIDOWED = "Вдова"
     SEPARATED = "Separated"
-    DIVORCED = "Divorced"
-    SINGLE = "Single"
+    DIVORCED = "Разведен"
+    SINGLE = "Холостой"
 
 
 class BiographicInfo(Model, Base):

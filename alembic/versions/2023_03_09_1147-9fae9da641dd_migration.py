@@ -1291,19 +1291,19 @@ def create_user(id,
         [{
             'id': sport_degree1_id,
             'profile_id': personal_profile_id,
-            'name': "sport_degree1",
+            'name': "Мастер спорта по боксу",
             'assignment_date': '2022-10-09',
             'document_link': 'document_link1'
         }, {
             'id': sport_degree2_id,
             'profile_id': personal_profile_id,
-            'name': "sport_degree2",
+            'name': "Мастер спорта по карате",
             'assignment_date': '2022-10-10',
             'document_link': 'document_link2'
         }, {
             'id': sport_degree3_id,
             'profile_id': personal_profile_id,
-            'name': "sport_degree3",
+            'name': "Кандидат мастер спорта по джиу-джитсу",
             'assignment_date': '2022-10-11',
             'document_link': 'document_link3'
         }]
@@ -1318,19 +1318,19 @@ def create_user(id,
         [{
             'id': sport_achievement1_id,
             'profile_id': personal_profile_id,
-            'name': "sport_achievement1",
+            'name': "III место на Токийском съезде джиу-джитсу",
             'assignment_date': '2022-10-09',
             'document_link': 'document_link1'
         }, {
             'id': sport_achievement2_id,
             'profile_id': personal_profile_id,
-            'name': "sport_achievement2",
+            'name': "I место в Чемпионате Мира по боксу",
             'assignment_date': '2022-10-10',
             'document_link': 'document_link2'
         }, {
             'id': sport_achievement3_id,
             'profile_id': personal_profile_id,
-            'name': "sport_achievement3",
+            'name': "II место в Чемпионате города Астаны по карате",
             'assignment_date': '2022-10-11',
             'document_link': 'document_link3'
         }]
@@ -1355,12 +1355,12 @@ def create_user(id,
         Base.metadata.tables['biographic_infos'],
         [{
             'id': biographic_info_id,
-            'place_birth': "place_birth",
+            'place_birth': "Астана",
             'gender': True,
-            'citizenship': "Kazakhstan",
-            'nationality': 'kazakh',
-            'family_status': "Married",
-            'address': "address",
+            'citizenship': "Казахстан",
+            'nationality': 'Казах',
+            'family_status': "Женат",
+            'address': "Кабанбай батыр 87",
             'profile_id': personal_profile_id
         }]
     )
@@ -1407,8 +1407,8 @@ def create_user(id,
         Base.metadata.tables['user_financial_infos'],
         [{
             'id': user_financial_info_id,
-            'iban': "iban",
-            'housing_payments_iban': "housing_payments_iban",
+            'iban': "KZ200155980950859874",
+            'housing_payments_iban': "KZ200155980950859874",
             'profile_id': personal_profile_id
         }]
     )
@@ -1419,10 +1419,10 @@ def create_user(id,
         Base.metadata.tables['identification_cards'],
         [{
             'id': identification_card_id,
-            'document_number': "document_number",
+            'document_number': "04665766",
             'date_of_issue': "2022-09-11",
             'date_to': "2022-09-12",
-            'issued_by': "issued_by",
+            'issued_by': "МВД РК",
             'document_link': "document_link",
             'profile_id': personal_profile_id
         }]
@@ -1434,7 +1434,7 @@ def create_user(id,
         Base.metadata.tables['driving_licenses'],
         [{
             'id': driving_licence_id,
-            'document_number': "document_number",
+            'document_number': "88705845",
             'category': ["A", "B", "C"],
             'date_of_issue': "2022-09-11",
             'date_to': "2022-09-12",
@@ -1449,7 +1449,7 @@ def create_user(id,
         Base.metadata.tables['passports'],
         [{
             'id': passport_id,
-            'document_number': "document_number",
+            'document_number': "95909558",
             'date_of_issue': "2022-09-11",
             'date_to': "2022-09-12",
             'document_link': "document_link",
@@ -1492,8 +1492,8 @@ def create_user(id,
         Base.metadata.tables['dispensary_registrations'],
         [{
             'id': dispensary_registrations_id,
-            'name': "name",
-            'initiator': "initiator",
+            'name': "Сахарный диабет",
+            'initiator': "Республиканская больница",
             'start_date': "2022-09-12",
             'end_date': "2022-10-12",
             'profile_id': medical_profile_id
@@ -1506,9 +1506,9 @@ def create_user(id,
         Base.metadata.tables['user_liberations'],
         [{
             'id': user_liberations_id,
-            'reason': "reason",
-            'liberation_name': "liberation_name",
-            'initiator': "initiator",
+            'reason': "Надрыв спины II стадии",
+            'liberation_name': "Физические нагрузки",
+            'initiator': "Медицинский центр 'Тыныс'",
             'start_date': "2022-09-12",
             'end_date': "2022-10-12",
             'profile_id': medical_profile_id
@@ -1521,9 +1521,9 @@ def create_user(id,
         Base.metadata.tables['hospital_datas'],
         [{
             'id': hospital_datas_id,
-            'code': "code",
-            'reason': "reason",
-            'place': "place",
+            'code': "89561",
+            'reason': "ОРВИ",
+            'place': "ГКП на ПХВ 'Городская поликлиника #4'",
             'start_date': "2022-09-12",
             'end_date': "2022-10-12",
             'document_link': "document_link",
@@ -1537,11 +1537,11 @@ def create_user(id,
         Base.metadata.tables['violations'],
         [{
             'id': violations_id,
-            'name': "name",
+            'name': "Мелкое хулиганство",
             'date': "2022-09-12",
-            'issued_by': "admin",
-            'article_number': "article_number",
-            'consequence': "consequence",
+            'issued_by': "Районный суд Сарыаркинского района г.Астана",
+            'article_number': "122.12(УК РК)",
+            'consequence': "Штраф 40МРП",
             'profile_id': additional_profile_id
         }]
     )
@@ -1554,7 +1554,7 @@ def create_user(id,
             'id': properties_id,
             'type': property_type1_id,
             'purchase_date': "2022-09-12",
-            'address': "Dostyk 5",
+            'address': "Достык 5",
             'profile_id': additional_profile_id
         }]
     )
@@ -1565,11 +1565,11 @@ def create_user(id,
         Base.metadata.tables['abroad_travels'],
         [{
             'id': abroad_travels_id,
-            'vehicle_type': "Plane",
-            'destination_country': "test",
+            'vehicle_type': "Самолет",
+            'destination_country': "Турция",
             'date_from': "2022-05-10",
             'date_to': "2022-05-11",
-            'reason': "reason",
+            'reason': "Служебная командировка",
             'document_link':"document_link",
             'profile_id': additional_profile_id
 
@@ -1582,8 +1582,8 @@ def create_user(id,
             Base.metadata.tables['special_checks'],
             [{
                 'id': special_checks_id,
-                'number': "number",
-                'issued_by': "admin",
+                'number': "4584908",
+                'issued_by': "Иманов А.Е.",
                 'date_of_issue': "2022-01-15",
                 'document_link': "document_link",
                 "profile_id": additional_profile_id
@@ -1597,7 +1597,7 @@ def create_user(id,
         Base.metadata.tables['psychological_checks'],
         [{
             'id': psychological_checks_id,
-            'issued_by': "admin",
+            'issued_by': "Назаров К.С.",
             'date_of_issue': "2022-03-25",
             'document_link': "document_link",
             'profile_id': additional_profile_id
@@ -1610,10 +1610,10 @@ def create_user(id,
         Base.metadata.tables['polygraph_checks'],
         [{
             'id': polygraph_checks_id,
-            'number': "number",
-            "issued_by": "admin",
+            'number': "84088880",
+            "issued_by": "Жапаров Е.С.",
             "date_of_issue": "2021-02-03",
-            "document_link": "document link",
+            "document_link": "document_link",
             'profile_id': additional_profile_id
         }]
     )
@@ -1629,9 +1629,9 @@ def create_user(id,
             'IIN': "980206556948",
             'birthday': "1998-02-06",
             'death_day': "2100-02-06",
-            'birth_place': "Astana",
-            'address': "Kabanbay batyr 15",
-            'workplace': "KazMunaiGaz",
+            'birth_place': "Астана",
+            'address': "Кабанбай батыр 15",
+            'workplace': "КазМунайГаз",
             'profile_id': family_profile_id
         }]
     )
