@@ -22,6 +22,8 @@ class UserBase(BaseModel):
     birthday: Optional[datetime.date]
     status: Optional[str]
     status_till: Optional[datetime.datetime]
+    cabinet: Optional[str]
+    service_phone_number: Optional[str]
 
 
 class UserCreate(UserBase):
