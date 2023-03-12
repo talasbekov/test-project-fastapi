@@ -8,11 +8,11 @@ from sqlalchemy import and_, asc, desc, or_
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
-from models import HrDocument, HrDocumentInfo, HrDocumentStep
+from models import HrDocument, HrDocumentInfo, HrDocumentStep, DocumentStaffFunction
 from schemas import (HrDocumentInfoCreate, HrDocumentInfoRead,
                      HrDocumentInfoUpdate)
 from services import (hr_document_step_service, staff_division_service,
-                      user_service)
+                      user_service, staff_unit_service, document_staff_function_service)
 
 from .base import ServiceBase
 
@@ -63,22 +63,6 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
         infos = db.query(HrDocumentInfo).filter(
             HrDocumentInfo.is_signed == None,
             HrDocumentInfo.hr_document_step.has(staff_unit_id=staff_unit_id)
-        ).offset(skip).limit(limit).all()
-
-        return infos
-
-    def get_all(self, db: Session, staff_unit_id, skip: int, limit: int) -> list[HrDocumentInfo]:
-
-        infos = db.query(HrDocumentInfo).filter(
-            or_(
-                and_(
-                    HrDocumentInfo.is_signed == None,
-                    HrDocumentInfo.hr_document_step.has(staff_unit_id=staff_unit_id)
-                ),
-                HrDocumentInfo.hr_document_step.has(previous_step_id=None)
-            )
-        ).order_by(
-            desc(HrDocumentInfo.created_at)
         ).offset(skip).limit(limit).all()
 
         return infos
@@ -144,51 +128,23 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
 
     def get_by_document_id(self, db: Session, id: str):
 
-        infos = self._get_history_by_document_id(db, id)
+        infos = db.query(self.model)\
+            .join(HrDocumentStep)\
+            .join(DocumentStaffFunction)\
+            .filter(self.model.hr_document_id == id)\
+            .order_by(self.model.created_at.asc(), DocumentStaffFunction.priority.asc())\
+            .all()
 
-        last_info = infos[len(infos)-1]
+        return infos
+    
+    def get_initialized_by_user_id(self, db: Session, user_id: str, skip: int, limit: int) -> List[HrDocumentInfo]:
 
-        user = last_info.hr_document.users[0]
-
-        step: HrDocumentStep = last_info.hr_document_step
-
-        while step is not None:
-            
-            users = user_service.get_by_staff_unit(db, step.staff_unit_id)
-
-            res = None
-
-            for i in users:
-                if staff_division_service.get_department_id_from_staff_division_id(db, user.staff_division_id) == staff_division_service.get_department_id_from_staff_division_id(db, i.staff_division_id):
-                    res = i
-                    break
-            
-            infos.append(
-                {
-                    "id": None,
-                    "hr_document_step_id": step.id,
-                    "hr_document_step": step,
-                    "signed_by": None,
-                    "comment": None,
-                    "is_signed": None,
-                    "signed_at": None,
-                    "hr_document_id":  last_info.hr_document_id,
-                    "will_sign": i
-                }
-            )
-
-            if len(step.next_step) == 0:
-                break
-
-            print(step.next_step[0].id)
-
-            tmp = hr_document_step_service.get_by_id(db, step.next_step[0].id)
-
-            step = tmp
-
-        infos.remove(last_info)
-
-        infos.reverse()
+        infos = db.query(HrDocumentInfo).join(HrDocumentStep).join(DocumentStaffFunction).filter(
+            HrDocumentInfo.assigned_to_id == user_id,
+            DocumentStaffFunction.priority == 1
+        ).order_by(
+            HrDocumentInfo.created_at.desc()
+        ).offset(skip).limit(limit).all()
 
         return infos
 
@@ -196,7 +152,7 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
         infos = db.query(HrDocumentInfo).filter(
             HrDocumentInfo.hr_document_id == document_id
         ).order_by(
-            HrDocumentInfo.signed_at.asc()
+            HrDocumentInfo.signed_at.asc() 
         ).all()
 
         return infos

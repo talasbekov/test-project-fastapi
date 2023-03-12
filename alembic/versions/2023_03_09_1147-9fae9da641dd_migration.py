@@ -1496,7 +1496,8 @@ def create_user(id,
             'initiator': "Республиканская больница",
             'start_date': "2022-09-12",
             'end_date': "2022-10-12",
-            'profile_id': medical_profile_id
+            'profile_id': medical_profile_id,
+            'document_link': "document_link"
         }]
     )
 
@@ -1552,7 +1553,7 @@ def create_user(id,
         Base.metadata.tables['properties'],
         [{
             'id': properties_id,
-            'type': property_type1_id,
+            'type_id': property_type1_id,
             'purchase_date': "2022-09-12",
             'address': "Достык 5",
             'profile_id': additional_profile_id
@@ -1573,6 +1574,17 @@ def create_user(id,
             'document_link':"document_link",
             'profile_id': additional_profile_id
 
+        }]
+    )
+
+    op.bulk_insert(
+        Base.metadata.tables['service_housings'],
+        [{
+            'id': get_uuid(),
+            'type_id': property_type2_id,
+            'address': "Dostyk 5",
+            'issue_date': "2022-09-12",
+            'profile_id': additional_profile_id
         }]
     )
 
@@ -1625,7 +1637,10 @@ def create_user(id,
         Base.metadata.tables['families'],
         [{
             'id': families_profile_id,
-            'FIO': "Ахметов Арман Кожабердиулы",
+            'relation': "Father",
+            'first_name': "Арман",
+            'last_name': "Ахметов",
+            'father_name': "Кожабердиулы",
             'IIN': "980206556948",
             'birthday': "1998-02-06",
             'death_day': "2100-02-06",

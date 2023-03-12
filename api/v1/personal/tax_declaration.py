@@ -30,6 +30,7 @@ async def get_all(*,
     Authorize.jwt_required()
     return tax_declaration_service.get_multi(db, skip, limit)
 
+
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=TaxDeclarationRead,
@@ -45,6 +46,7 @@ async def create(*,
     """
     Authorize.jwt_required()
     return tax_declaration_service.create(db, body)
+
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=TaxDeclarationRead,
@@ -83,7 +85,7 @@ async def update(*,
         obj_in=body)
 
 
-@router.delete("/{id}/",status_code=status.HTTP_204_NO_CONTENT,
+@router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
                summary="Delete TaxDeclaration")
 async def delete(*,

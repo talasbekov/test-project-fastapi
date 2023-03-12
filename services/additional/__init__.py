@@ -6,3 +6,5 @@ from .special_check import special_check_service
 from .violation import violation_service
 from .properties import properties_service
 from .property_type import property_type_service
+from .service_housing import service_housing_service
+from .vehicle import vehicle_service

@@ -39,7 +39,7 @@ async def create(*,
     return family_profile_service.create(db, obj_in=body)
 
 
-@router.get("/{id}", dependencies=[Depends(HTTPBearer())],
+@router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=FamilyProfileRead)
 async def get(*,
     db: Session = Depends(get_db),
@@ -50,7 +50,7 @@ async def get(*,
     return family_profile_service.get_by_id(db, id)
 
 
-@router.put("/{id}", dependencies=[Depends(HTTPBearer())],
+@router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=FamilyProfileRead)
 async def update(*,
     db: Session = Depends(get_db),
@@ -62,7 +62,7 @@ async def update(*,
     return family_profile_service.update(db, db_obj=family_profile_service.get_by_id(db, id), obj_in=body)
 
 
-@router.delete("/{id}", dependencies=[Depends(HTTPBearer())],
+@router.delete("/{id}/", dependencies=[Depends(HTTPBearer())],
                 status_code=status.HTTP_204_NO_CONTENT)
 async def delete(*,
     db: Session = Depends(get_db),
@@ -75,10 +75,21 @@ async def delete(*,
 
 @router.get("/profile", dependencies=[Depends(HTTPBearer())],
             response_model=FamilyProfileRead)
-async def get_profile(*,
+async def get_by_profile(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
     profile = profile_service.get_by_user_id(db, Authorize.get_jwt_subject())
     return profile.family_profile
+
+
+@router.get('/profile/{id}/', dependencies=[Depends(HTTPBearer())],
+            response_model=FamilyProfileRead)
+async def get_by_profile_id(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    return profile_service.get_by_user_id(db, id).family_profile

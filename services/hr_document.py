@@ -52,14 +52,13 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             raise NotFoundException(detail="Document is not found!")
         return document
 
-    def get_all(self, db: Session, user_id, skip: int, limit: int):
+    def get_initialized_documents(self, db: Session, user_id: uuid.UUID, skip: int, limit: int):
+
         user = user_service.get_by_id(db, user_id)
+        
+        documents = [i.hr_document for i in hr_document_info_service.get_initialized_by_user_id(db, user_id, skip, limit)]
 
-        infos = hr_document_info_service.get_all(
-            db, user.actual_staff_unit_id, skip, limit
-        )
-
-        return self._return_correctly(db, infos, user)
+        return self._return_correctly(db, documents, user)
 
     def get_not_signed_documents(
         self, db: Session, user_id: str, skip: int, limit: int
@@ -213,7 +212,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
             for step in steps:
                 hr_document_info_service.create_info_for_step(
-                    db, document.id, step.id, user.id, None, None
+                    db, document.id, step.id, user.id, None, None, None
                 )
 
                 if step == info.hr_document_step:
@@ -283,15 +282,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 return [responses.get(option).from_orm(i) for i in service.get_by_id(db, id).children]
         return [responses.get(option).from_orm(i) for i in service.get_multi(db)]
 
-    def get_signed_documents(
-        self, db: Session, user_id: uuid.UUID, skip: int, limit: int
-    ):
-        user = user_service.get_by_id(db, user_id)
-
-        infos = hr_document_info_service.get_signed_by_user_id(db, user_id, skip, limit)
-
-        return self._return_correctly(db, infos, user)
-
     def _finish_document(self, db: Session, document: HrDocument, users: List[User]):
         document.status = HrDocumentStatus.COMPLETED
 
@@ -338,6 +328,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             + "қбп/жқ"
         )
 
+        document.last_step_id = None
+
         db.add(document)
         db.flush()
 
@@ -373,7 +365,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
     def _to_response(self, db: Session, document: HrDocument) -> HrDocumentRead:
         response = HrDocumentRead.from_orm(document)
-        response.can_cancel = document.last_step.staff_function.role.can_cancel
+        if document.last_step_id is not None:
+            response.can_cancel = document.last_step.staff_function.role.can_cancel
 
         user = response.users[0]
 
@@ -413,17 +406,17 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 if not type(val) == dict:
                     attr = getattr(user, value["field_name"])
                     if isinstance(attr, Base or isinstance(attr, list)):
-                        new_val[value["field_name"]] = self._get_service(
+                        new_val[value["field_name"]] = responses.get(value['field_name']).from_orm(self._get_service(
                             value["field_name"]
-                        ).get(db, val)
+                        ).get(db, val))
                     else:
                         new_val[value["field_name"]] = val
                 else:
                     if val["value"] == None:
                         raise BadRequestException(f"Обьект {key} должен иметь value!")
-                    new_val[value["field_name"]] = self._get_service(
+                    new_val[value["field_name"]] = responses.get(value['field_name']).from_orm(self._get_service(
                         value["field_name"]
-                    ).get(db, val["value"])
+                    ).get(db, val["value"]))
 
         response.new_value = new_val
 
@@ -452,6 +445,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         l = []
 
         for i in documents:
+            if i is None:
+                continue
             if i.id not in s:
                 s.add(i.id)
                 subject = i.users[0]

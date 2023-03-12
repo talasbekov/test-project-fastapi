@@ -5,7 +5,8 @@ from pydantic import BaseModel
 
 from schemas.additional import (AbroadTravelRead, PolygraphCheckRead,
                                 PsychologicalCheckRead, SpecialCheckRead,
-                                ViolationRead)
+                                ViolationRead, ServiceHousingRead, VehicleRead,
+                                PropertiesRead)
 
 
 class AdditionalProfileBase(BaseModel):
@@ -32,4 +33,6 @@ class AdditionalProfileRead(AdditionalProfileBase):
     abroad_travels: Optional[List[AbroadTravelRead]]
     psychological_checks: Optional[List[PsychologicalCheckRead]]
     special_checks: Optional[List[SpecialCheckRead]]
-    
+    service_housing: Optional[List[ServiceHousingRead]]
+    user_vehicles: Optional[List[VehicleRead]]
+    properties: Optional[List[PropertiesRead]]

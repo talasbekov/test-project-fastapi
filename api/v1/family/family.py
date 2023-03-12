@@ -39,7 +39,7 @@ async def create(*,
     return family_service.create(db, obj_in=body)
 
 
-@router.get("/{id}", dependencies=[Depends(HTTPBearer())],
+@router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=FamilyRead)
 async def get(*,
     db: Session = Depends(get_db),
@@ -50,7 +50,7 @@ async def get(*,
     return family_service.get_by_id(db, id)
 
 
-@router.put("/{id}", dependencies=[Depends(HTTPBearer())],
+@router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=FamilyRead)
 async def update(*,
     db: Session = Depends(get_db),
@@ -62,7 +62,7 @@ async def update(*,
     return family_service.update(db, id, obj_in=body)
 
 
-@router.delete("/{id}", dependencies=[Depends(HTTPBearer())],
+@router.delete("/{id}/", dependencies=[Depends(HTTPBearer())],
                 status_code=status.HTTP_204_NO_CONTENT)
 async def delete(*,
     db: Session = Depends(get_db),

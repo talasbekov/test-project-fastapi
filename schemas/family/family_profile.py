@@ -1,4 +1,3 @@
-import datetime
 import uuid
 from typing import Optional, List
 
@@ -26,5 +25,6 @@ class FamilyProfileUpdate(FamilyProfileBase):
 class FamilyProfileRead(FamilyProfileBase):
 
     id: Optional[uuid.UUID]
+    profile_id: Optional[uuid.UUID]
 
     family: Optional[List[FamilyRead]]
