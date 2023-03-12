@@ -132,7 +132,7 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
             .join(HrDocumentStep)\
             .join(DocumentStaffFunction)\
             .filter(self.model.hr_document_id == id)\
-            .order_by(DocumentStaffFunction.priority.asc())\
+            .order_by(self.model.created_at.asc(), DocumentStaffFunction.priority.asc())\
             .all()
 
         return infos
