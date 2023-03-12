@@ -1040,11 +1040,13 @@ def create_user(id,
             'call_sign': call_sign,
             'id_number': number,
             'phone_number': '+77771234789',
+            'birthday': '1990-01-23',
             'address': 'Мангилик Ел, 1',
             'rank_id': rank_id,
             'actual_staff_unit_id': actual_staff_unit_id,
             'status': "На работе",
-            'icon': icon
+            'icon': icon,
+            'service_phone_number': "+77771234789",
         }]
     )
     
