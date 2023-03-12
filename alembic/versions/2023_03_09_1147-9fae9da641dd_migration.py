@@ -1047,6 +1047,7 @@ def create_user(id,
             'status': "На работе",
             'icon': icon,
             'service_phone_number': "+77771234789",
+            'personal_id': number
         }]
     )
     

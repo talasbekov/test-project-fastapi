@@ -53,6 +53,7 @@ class UserRead(UserBase):
     id_number: Optional[str]
     status: Optional[str]
     status_till: Optional[datetime.datetime]
+    personal_id: Optional[str]
 
     class Config:
         orm_mode = True

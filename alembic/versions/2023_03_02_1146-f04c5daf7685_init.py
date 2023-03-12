@@ -173,6 +173,7 @@ def upgrade() -> None:
     sa.Column('description', sa.TEXT(), nullable=True),
     sa.Column('cabinet', sa.String(length=255), nullable=True),
     sa.Column('service_phone_number', sa.String(length=32), nullable=True),
+    sa.Column('personal_id', sa.String(length=255), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
