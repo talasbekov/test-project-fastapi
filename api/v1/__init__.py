@@ -79,3 +79,4 @@ router.include_router(service_housing_router)
 router.include_router(vehicle_router)
 
 router.include_router(staff_list_router)
+router.include_router(country_router)

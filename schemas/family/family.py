@@ -36,3 +36,5 @@ class FamilyRead(FamilyBase):
 
     id: Optional[uuid.UUID]
     profile_id: Optional[uuid.UUID]
+
+    birthplace: Optional[str]

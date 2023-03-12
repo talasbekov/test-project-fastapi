@@ -26,10 +26,17 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['profile_id'], ['profiles.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('countries',
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('name', sa.String(length=255), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('abroad_travels',
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('vehicle_type', sa.String(length=255), nullable=False),
-    sa.Column('destination_country', sa.Enum('Турция', name='destinationcountry'), nullable=False),
+    sa.Column('destination_country_id', sa.UUID(), nullable=False),
     sa.Column('date_from', postgresql.TIMESTAMP(timezone=True), nullable=False),
     sa.Column('date_to', postgresql.TIMESTAMP(timezone=True), nullable=False),
     sa.Column('reason', sa.String(length=255), nullable=False),
@@ -38,6 +45,7 @@ def upgrade() -> None:
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['profile_id'], ['additional_profiles.id'], ),
+    sa.ForeignKeyConstraint(['destination_country_id'], ['countries.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('id')
     )

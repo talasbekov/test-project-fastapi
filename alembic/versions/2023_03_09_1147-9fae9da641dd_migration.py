@@ -55,6 +55,8 @@ institution2_id = get_uuid()
 institution3_id = get_uuid()
 # Additional 
 
+country_id = get_uuid()
+
 property_type1_id = get_uuid()
 property_type2_id = get_uuid()
 property_type3_id = get_uuid()
@@ -492,7 +494,15 @@ def upgrade() -> None:
         }]
     )
 
-# Additional profile tables 
+# Additional profile tables
+
+    op.bulk_insert(
+        Base.metadata.tables['countries'],
+        [{
+            'id': country_id,
+            'name': "Турция"
+        }]
+    )
 
     op.bulk_insert(
         Base.metadata.tables['property_types'],
@@ -1570,7 +1580,7 @@ def create_user(id,
         [{
             'id': abroad_travels_id,
             'vehicle_type': "Самолет",
-            'destination_country': "Турция",
+            'destination_country_id': country_id,
             'date_from': "2022-05-10",
             'date_to': "2022-05-11",
             'reason': "Служебная командировка",

@@ -45,6 +45,7 @@ responses = {
 }
 
 
+
 class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpdate]):
     def get_by_id(self, db: Session, id: str) -> HrDocument:
         document = super().get(db, id)
