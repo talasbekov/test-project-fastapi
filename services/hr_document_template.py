@@ -26,7 +26,7 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
             raise NotFoundException(detail=f'HrDocumentTemplate with id: {id} is not found!')
         return hr_document_template
 
-    def get_steps_by_document_template_id(self, db: Session, document_template_id: str) -> HrDocumentTemplate:
+    def get_steps_by_document_template_id(self, db: Session, document_template_id: str) -> dict[str, uuid.UUID]:
         
         all_steps = db.query(DocumentStaffFunction).filter(
             HrDocumentStep.hr_document_template_id == document_template_id,

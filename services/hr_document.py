@@ -212,8 +212,11 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             )
 
             for step in steps:
+
+                signed_info = hr_document_info_service.get_signed_by_document_id_and_step_id(db, document.id, step.id)
+
                 hr_document_info_service.create_info_for_step(
-                    db, document.id, step.id, user.id, None, None, None
+                    db, document.id, step.id, signed_info.assigned_to_id, None, None, None
                 )
 
                 if step == info.hr_document_step:

@@ -131,12 +131,27 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
         infos = db.query(self.model)\
             .join(HrDocumentStep)\
             .join(DocumentStaffFunction)\
-            .filter(self.model.hr_document_id == id)\
+            .filter(
+                self.model.hr_document_id == id,
+                self.model.signed_by_id != None
+            )\
             .order_by(self.model.created_at.asc(), DocumentStaffFunction.priority.asc())\
             .all()
 
+        additional_infos = db.query(self.model)\
+            .join(HrDocumentStep)\
+            .join(DocumentStaffFunction)\
+            .filter(
+                self.model.hr_document_id == id,
+                self.model.signed_by_id == None
+            )\
+            .order_by(DocumentStaffFunction.priority.asc())\
+            .all()
+
+        infos.extend(additional_infos)
+
         return infos
-    
+
     def get_initialized_by_user_id(self, db: Session, user_id: str, skip: int, limit: int) -> List[HrDocumentInfo]:
 
         infos = db.query(HrDocumentInfo).join(HrDocumentStep).join(DocumentStaffFunction).filter(
@@ -156,6 +171,18 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
         ).all()
 
         return infos
+    
+    def get_signed_by_document_id_and_step_id(self, db: Session, document_id: str, step_id: str) -> HrDocumentInfo:
+        info = db.query(HrDocumentInfo).filter(
+            HrDocumentInfo.hr_document_id == document_id,
+            HrDocumentInfo.hr_document_step_id == step_id,
+            HrDocumentInfo.is_signed != None
+        ).first()
+
+        if info is None:
+            raise NotFoundException(detail=f'Нет истории подписания!')
+
+        return info
 
 
 hr_document_info_service = HrDocumentInfoService(HrDocumentInfo)
