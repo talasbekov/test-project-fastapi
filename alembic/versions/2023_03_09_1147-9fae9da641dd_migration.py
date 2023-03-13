@@ -24,11 +24,9 @@ def get_uuid():
 # Education
 academic_degree_degree1_id = get_uuid()
 academic_degree_degree2_id = get_uuid()
-academic_degree_degree3_id = get_uuid()
 
 academic_title_degree1_id = get_uuid()
 academic_title_degree2_id = get_uuid()
-academic_title_degree3_id = get_uuid()
 
 course_provider1_id = get_uuid()
 course_provider2_id = get_uuid()
@@ -40,7 +38,6 @@ institution_degree_type3_id = get_uuid()
 
 science1_id = get_uuid()
 science2_id = get_uuid()
-science3_id = get_uuid()
 
 specialty1_id = get_uuid()
 specialty2_id = get_uuid()
@@ -55,9 +52,59 @@ institution2_id = get_uuid()
 institution3_id = get_uuid()
 # Additional 
 
+country_id = get_uuid()
+
 property_type1_id = get_uuid()
 property_type2_id = get_uuid()
 property_type3_id = get_uuid()
+
+options = {
+    'adilet@mail.ru': {
+        'first_name': 'Самат',
+        'father_name': 'Наурызбекович'
+    },
+    'ahat@mail.ru': {
+        'first_name': 'Бауыржан',
+        'father_name': 'Ганыбаевич'
+    },
+    'aset@mail.ru': {
+        'first_name': 'Аслан',
+        'father_name': 'Султанович'
+    },
+    'zhasulan@mail.ru': {
+        'first_name': 'Дидар',
+        'father_name': 'Даниярович'
+    },
+    'anuar@mail.ru': {
+        'first_name': 'Дидар',
+        'father_name': 'Наурызбевович'
+    },
+    'beksundet@mail.ru': {
+        'first_name': 'Гани',
+        'father_name': 'Бахтиярович'
+    },
+    'erden@mail.ru': {
+        'first_name': 'Алмат',
+        'father_name': 'Ескендирович'
+    },
+    'erkin@mail.ru': {
+        'first_name': 'Серик',
+        'father_name': 'Рахатович'
+    },
+    'arman@mail.ru': {
+        'first_name': 'Улан',
+        'father_name': 'Бауыржанович'
+    },
+    'bauyrzhan@mail.ru': {
+        'first_name': 'Алдияр',
+        'father_name': 'Маратович'
+    },
+    'admin@mail.com': {
+        'first_name': 'Админ',
+        'father_name': 'Админович'
+    }
+}
+
 
 def upgrade() -> None:
 
@@ -384,13 +431,10 @@ def upgrade() -> None:
         Base.metadata.tables['academic_degree_degrees'],
         [{
             'id': academic_degree_degree1_id,
-            'name': "academic_degree_degrees1"
+            'name': "Доктор Наук (PhD)"
         }, {
             'id': academic_degree_degree2_id,
-            'name': "academic_degree_degrees2"
-        }, {
-            'id': academic_degree_degree3_id,
-            'name': "academic_degree_degrees3"
+            'name': "Кандидат Доктора Наук"
         }]
     )
 
@@ -398,13 +442,10 @@ def upgrade() -> None:
         Base.metadata.tables['academic_title_degrees'],
         [{
             'id': academic_title_degree1_id,
-            'name': "academic_title_degrees1"
+            'name': "Профессор"
         }, {
             'id': academic_title_degree2_id,
-            'name': "academic_title_degrees2"
-        }, {
-            'id': academic_title_degree3_id,
-            'name': "academic_title_degrees3"
+            'name': "Доцент"
         }]
     )
 
@@ -412,13 +453,13 @@ def upgrade() -> None:
         Base.metadata.tables['course_providers'],
         [{
             'id': course_provider1_id,
-            'name': "course_provider1"
+            'name': "StepUp academy"
         }, {
             'id': course_provider2_id,
-            'name': "course_provider2"
+            'name': "Udemy.com"
         }, {
             'id': course_provider3_id,
-            'name': "course_provider3"
+            'name': "Coursera.com"
         }]
     )
 
@@ -426,13 +467,13 @@ def upgrade() -> None:
         Base.metadata.tables['institution_degree_types'],
         [{
             'id': institution_degree_type1_id,
-            'name': "institution_degree_type1"
+            'name': "Среднее"
         }, {
             'id': institution_degree_type2_id,
-            'name': "institution_degree_type2"
+            'name': "Бакалавриат"
         }, {
             'id': institution_degree_type3_id,
-            'name': "institution_degree_type3"
+            'name': "Магистратура"
         }]
     )
 
@@ -440,13 +481,10 @@ def upgrade() -> None:
         Base.metadata.tables['sciences'],
         [{
             'id': science1_id,
-            'name': "science1"
+            'name': "Психологическая Наука"
         }, {
             'id': science2_id,
-            'name': "science2"
-        }, {
-            'id': science3_id,
-            'name': "science3"
+            'name': "Военная Наука"
         }]
     )
 
@@ -454,13 +492,13 @@ def upgrade() -> None:
         Base.metadata.tables['specialties'],
         [{
             'id': specialty1_id,
-            'name': "specialty1"
+            'name': "Нейронные связи"
         }, {
             'id': specialty2_id,
-            'name': "specialty2"
+            'name': "Квантовая физика"
         }, {
             'id': specialty3_id,
-            'name': "specialty3"
+            'name': "Биохимия"
         }]
     )
 
@@ -468,13 +506,13 @@ def upgrade() -> None:
         Base.metadata.tables['languages'],
         [{
             'id': language1_id,
-            'name': "Қазақ тілі"
+            'name': "Казахский язык"
         }, {
             'id': language2_id,
-            'name': "Ағылшын тілі"
+            'name': "Английский язык"
         }, {
             'id': language3_id,
-            'name': "Орыс тілі"
+            'name': "Русский язык"
         }]
     )
 
@@ -482,17 +520,22 @@ def upgrade() -> None:
         Base.metadata.tables['institutions'],
         [{
             'id': institution1_id,
-            'name': "institution1"
+            'name': 'Лицей "Бiлiм-Инновация"'
         }, {
             'id': institution2_id,
-            'name': "institution2"
-        }, {
-            'id': institution3_id,
-            'name': "institution3"
+            'name': "Astana IT University"
         }]
     )
 
-# Additional profile tables 
+# Additional profile tables
+
+    op.bulk_insert(
+        Base.metadata.tables['countries'],
+        [{
+            'id': country_id,
+            'name': "Турция"
+        }]
+    )
 
     op.bulk_insert(
         Base.metadata.tables['property_types'],
@@ -599,12 +642,13 @@ def upgrade() -> None:
         rank1_id,
         staff_unit1_id,
         "http://192.168.0.172:8083/static/Erzhan.png",
-        position1_id)
+        position1_id,
+        '1.2.213K')
     create_user(
         user2_id,
         "Ахат",
-        "Наурызбаев",
-        'Саматович',
+        "Ганыбаев",
+        'Бауыржанович',
         'ahat@mail.ru',
         group3_id,
         "Альфа 2",
@@ -613,11 +657,12 @@ def upgrade() -> None:
         rank1_id,
         staff_unit2_id,
         "http://192.168.0.172:8083/static/Erzhan.png",
-        position1_id)
+        position1_id,
+        '1.2.213K')
     create_user(
         user3_id,
         "Асет",
-        "Наурызбаев",
+        "Султанов",
         'Асланович',
         'aset@mail.ru',
         group3_id,
@@ -627,11 +672,12 @@ def upgrade() -> None:
         rank1_id,
         staff_unit3_id,
         "http://192.168.0.172:8083/static/Almaz.png",
-        position1_id)
+        position1_id,
+        '1.2.214K')
     create_user(
         user4_id,
         "Жасулан",
-        "Наурызбеков",
+        "Данияров",
         'Дидарович',
         'zhasulan@mail.ru',
         group3_id,
@@ -641,7 +687,8 @@ def upgrade() -> None:
         rank2_id,
         staff_unit4_id,
         "http://192.168.0.172:8083/static/Adil.png",
-        position2_id)
+        position2_id,
+        "1.2.214K")
     create_user(
         user5_id,
         "Ануар",
@@ -655,12 +702,13 @@ def upgrade() -> None:
         rank1_id,
         staff_unit5_id,
         "http://192.168.0.172:8083/static/Almaz.png",
-        position1_id)
+        position1_id,
+        "1.2.215K")
     create_user(
         user6_id,
         "Бексундет",
-        "Наурызбеков",
-        'Дидарович',
+        "Бахтияров",
+        'Ганиулы',
         'beksundet@mail.ru',
         group2_id,
         "Альфа 6",
@@ -669,11 +717,12 @@ def upgrade() -> None:
         rank3_id,
         staff_unit6_id,
         "http://192.168.0.172:8083/static/Ernazar.png",
-        position2_id)
+        position2_id,
+        '1.2.215K')
     create_user(
         user7_id,
         "Ерден",
-        "Наурызбеков",
+        "Ескендиров",
         'Алматович',
         'erden@mail.ru',
         group2_id,
@@ -683,12 +732,13 @@ def upgrade() -> None:
         rank1_id,
         staff_unit7_id,
         "http://192.168.0.172:8083/static/Nurlan.png",
-        position1_id)
+        position1_id,
+        '1.2.215K')
     create_user(
         user8_id,
         "Еркин",
-        "Наурызбеков",
-        'Дидарович',
+        "Рахатов",
+        'Серикович',
         'erkin@mail.ru',
         group3_id,
         "Альфа 8",
@@ -697,12 +747,13 @@ def upgrade() -> None:
         rank1_id,
         staff_unit8_id,
         "http://192.168.0.172:8083/static/Erdaulet.png",
-        position1_id)
+        position1_id,
+        "1.2.216K")
     create_user(
         user9_id,
         "Арман",
-        "Наурызбеков",
-        'Алматович',
+        "Бауыржанов",
+        'Уланович',
         'arman@mail.ru',
         group3_id,
         "Альфа 9",
@@ -711,12 +762,13 @@ def upgrade() -> None:
         rank1_id,
         staff_unit9_id,
         "http://192.168.0.172:8083/static/Erdaulet.png",
-        position3_id)
+        position3_id,
+        "1.2.217K")
     create_user(
         user10_id,
         "Бауыржан",
-        "Наурызбеков",
-        'Алматович',
+        "Маратов",
+        'Алдиярович',
         'bauyrzhan@mail.ru',
         group1_id,
         "Альфа 10",
@@ -725,7 +777,8 @@ def upgrade() -> None:
         rank3_id,
         staff_unit10_id,
         "http://192.168.0.172:8083/static/Dima.png",
-        position4_id)
+        position4_id,
+        "1.2.218K")
     create_user(
         str(uuid.uuid4()),
         "Админ",
@@ -739,7 +792,8 @@ def upgrade() -> None:
         rank3_id,
         staff_unit11_id,
         "http://192.168.0.172:8083/static/Erdaulet.png",
-        position4_id)
+        position4_id,
+        '1.2.100K')
 
 
     op.bulk_insert(
@@ -1016,7 +1070,8 @@ def create_user(id,
                 rank_id,
                 actual_staff_unit_id,
                 icon,
-                position_id):
+                position_id,
+                cabinet):
     op.bulk_insert(
         Base.metadata.tables['staff_units'],
         [{
@@ -1039,12 +1094,16 @@ def create_user(id,
             'staff_unit_id': staff_unit_id,
             'call_sign': call_sign,
             'id_number': number,
-            'phone_number': '+77771234789',
-            'address': 'Мангилик Ел, 1',
+            'phone_number': '+7 (777) 123-47-89',
+            'birthday': '1990-01-23',
+            'address': 'г. Астана, ул. Мангилик Ел, д. 1, кв. 1',
             'rank_id': rank_id,
             'actual_staff_unit_id': actual_staff_unit_id,
             'status': "На работе",
-            'icon': icon
+            'icon': icon,
+            'service_phone_number': "679-258",
+            'personal_id': number,
+            'cabinet': cabinet
         }]
     )
     
@@ -1125,7 +1184,7 @@ def create_user(id,
             'degree_id': academic_degree_degree1_id,
             'science_id': science1_id,
             'specialty_id': specialty1_id,
-            'document_number': 1,
+            'document_number': "1231262",
             'document_link': "document_link",
             'assignment_date': "2022-10-07"
         }, {
@@ -1137,15 +1196,6 @@ def create_user(id,
             'document_number': 2,
             'document_link': "document_link",
             'assignment_date': "2022-10-08"
-        }, {
-            'id': academic_degree3_id,
-            'profile_id': educational_profile_id,
-            'degree_id': academic_degree_degree3_id,
-            'science_id': science3_id,
-            'specialty_id': specialty3_id,
-            'document_number': 3,
-            'document_link': "document_link",
-            'assignment_date': "2022-10-09"
         }]
     )
 
@@ -1159,7 +1209,7 @@ def create_user(id,
         [{
             'id': language_proficiency1_id,
             'language_id': language1_id,
-            "level": 4,
+            "level": 5,
             'profile_id': educational_profile_id
         }, {
             'id': language_proficiency2_id,
@@ -1176,7 +1226,6 @@ def create_user(id,
 
     academic_title1_id = get_uuid()
     academic_title2_id = get_uuid()
-    academic_title3_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['academic_titles'],
@@ -1185,7 +1234,7 @@ def create_user(id,
             'profile_id': educational_profile_id,
             'degree_id': academic_title_degree1_id,
             'specialty_id': specialty1_id,
-            'document_number': 1,
+            'document_number': '123123',
             'document_link': "document_link",
             'assignment_date': "2022-12-12"
         }, {
@@ -1193,17 +1242,9 @@ def create_user(id,
             'profile_id': educational_profile_id,
             'degree_id': academic_title_degree2_id,
             'specialty_id': specialty2_id,
-            'document_number': 2,
+            'document_number': '123123',
             'document_link': "document_link",
             'assignment_date': "2022-12-13"
-        }, {
-            'id': academic_title3_id,
-            'profile_id': educational_profile_id,
-            'degree_id': academic_title_degree3_id,
-            'specialty_id': specialty3_id,
-            'document_number': 3,
-            'document_link': "document_link",
-            'assignment_date': "2022-12-14"
         }]
     )
 
@@ -1260,25 +1301,17 @@ def create_user(id,
             'profile_id': educational_profile_id,
             'institution_id': institution1_id,
             'degree_id': institution_degree_type1_id,
-            'start_date': "2022-09-11",
-            'end_date': "2022-09-12",
+            'start_date': "2014-09-01",
+            'end_date': "2019-06-01",
             'document_link': "document_link1"
         }, {
             'id': education2_id,
             'profile_id': educational_profile_id,
             'institution_id': institution2_id,
             'degree_id': institution_degree_type2_id,
-            'start_date': "2022-09-13",
-            'end_date': "2022-09-14",
+            'start_date': "2019-09-01",
+            'end_date': "2022-06-01",
             'document_link': "document_link2"
-        }, {
-            'id': education3_id,
-            'profile_id': educational_profile_id,
-            'institution_id': institution3_id,
-            'degree_id': institution_degree_type3_id,
-            'start_date': "2022-09-15",
-            'end_date': "2022-09-16",
-            'document_link': "document_link3"
         }]
     )
 
@@ -1291,19 +1324,19 @@ def create_user(id,
         [{
             'id': sport_degree1_id,
             'profile_id': personal_profile_id,
-            'name': "sport_degree1",
+            'name': "Мастер спорта по боксу",
             'assignment_date': '2022-10-09',
             'document_link': 'document_link1'
         }, {
             'id': sport_degree2_id,
             'profile_id': personal_profile_id,
-            'name': "sport_degree2",
+            'name': "Мастер спорта по карате",
             'assignment_date': '2022-10-10',
             'document_link': 'document_link2'
         }, {
             'id': sport_degree3_id,
             'profile_id': personal_profile_id,
-            'name': "sport_degree3",
+            'name': "Кандидат мастер спорта по джиу-джитсу",
             'assignment_date': '2022-10-11',
             'document_link': 'document_link3'
         }]
@@ -1318,19 +1351,19 @@ def create_user(id,
         [{
             'id': sport_achievement1_id,
             'profile_id': personal_profile_id,
-            'name': "sport_achievement1",
+            'name': "III место на Токийском съезде джиу-джитсу",
             'assignment_date': '2022-10-09',
             'document_link': 'document_link1'
         }, {
             'id': sport_achievement2_id,
             'profile_id': personal_profile_id,
-            'name': "sport_achievement2",
+            'name': "I место в Чемпионате Мира по боксу",
             'assignment_date': '2022-10-10',
             'document_link': 'document_link2'
         }, {
             'id': sport_achievement3_id,
             'profile_id': personal_profile_id,
-            'name': "sport_achievement3",
+            'name': "II место в Чемпионате города Астаны по карате",
             'assignment_date': '2022-10-11',
             'document_link': 'document_link3'
         }]
@@ -1355,12 +1388,12 @@ def create_user(id,
         Base.metadata.tables['biographic_infos'],
         [{
             'id': biographic_info_id,
-            'place_birth': "place_birth",
+            'place_birth': "Астана",
             'gender': True,
-            'citizenship': "Kazakhstan",
-            'nationality': 'kazakh',
-            'family_status': "Married",
-            'address': "address",
+            'citizenship': "Казахстан",
+            'nationality': 'Казах',
+            'family_status': "Женат",
+            'address': "г. Астана, ул. Мангилик Ел, д. 1, кв. 1",
             'profile_id': personal_profile_id
         }]
     )
@@ -1407,8 +1440,8 @@ def create_user(id,
         Base.metadata.tables['user_financial_infos'],
         [{
             'id': user_financial_info_id,
-            'iban': "iban",
-            'housing_payments_iban': "housing_payments_iban",
+            'iban': "KZ200155980950859874",
+            'housing_payments_iban': "KZ200155980950859874",
             'profile_id': personal_profile_id
         }]
     )
@@ -1419,10 +1452,10 @@ def create_user(id,
         Base.metadata.tables['identification_cards'],
         [{
             'id': identification_card_id,
-            'document_number': "document_number",
+            'document_number': "04665766",
             'date_of_issue': "2022-09-11",
-            'date_to': "2022-09-12",
-            'issued_by': "issued_by",
+            'date_to': "2025-09-12",
+            'issued_by': "МВД РК",
             'document_link': "document_link",
             'profile_id': personal_profile_id
         }]
@@ -1434,7 +1467,7 @@ def create_user(id,
         Base.metadata.tables['driving_licenses'],
         [{
             'id': driving_licence_id,
-            'document_number': "document_number",
+            'document_number': "88705845",
             'category': ["A", "B", "C"],
             'date_of_issue': "2022-09-11",
             'date_to': "2022-09-12",
@@ -1449,7 +1482,7 @@ def create_user(id,
         Base.metadata.tables['passports'],
         [{
             'id': passport_id,
-            'document_number': "document_number",
+            'document_number': "95909558",
             'date_of_issue': "2022-09-11",
             'date_to': "2022-09-12",
             'document_link': "document_link",
@@ -1463,11 +1496,11 @@ def create_user(id,
         Base.metadata.tables['general_user_informations'],
         [{
             'id':general_user_information_id,
-            'height': 185,
-            'blood_group': "A+",
+            'height': 189,
+            'blood_group': "AB (IV) Rh+",
             'age_group': 2,
             'profile_id': medical_profile_id,
-            'weight': 80
+            'weight': 82
         }]
     )
 
@@ -1478,24 +1511,31 @@ def create_user(id,
         [{
             'id': anthropometric_data_id,
             'head_circumference': 57,
-            'shoe_size': 42,
-            'neck_circumference': 37,
-            'shape_size': 54,
-            'bust_size': 16,
+            'shoe_size': 43,
+            'neck_circumference': 35,
+            'shape_size': 52,
+            'bust_size': 56,
             'profile_id': medical_profile_id
         }]
     )
 
     dispensary_registrations_id = get_uuid()
+    dispensary_registrations1_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['dispensary_registrations'],
         [{
             'id': dispensary_registrations_id,
-            'name': "name",
-            'initiator': "initiator",
+            'name': "Астма",
+            'initiator': 'Республиканская больница',
             'start_date': "2022-09-12",
-            'end_date': "2022-10-12",
+            'profile_id': medical_profile_id,
+            'document_link': "document_link"
+        }, {
+            'id': dispensary_registrations1_id,
+            'name': "Сахарный Диабет",
+            'initiator': 'Клиника "Нурсултан"',
+            'start_date': "2022-12-15",
             'profile_id': medical_profile_id,
             'document_link': "document_link"
         }]
@@ -1507,9 +1547,9 @@ def create_user(id,
         Base.metadata.tables['user_liberations'],
         [{
             'id': user_liberations_id,
-            'reason': "reason",
-            'liberation_name': "liberation_name",
-            'initiator': "initiator",
+            'reason': "Надрыв спины II стадии",
+            'liberation_name': "Физические нагрузки",
+            'initiator': "Медицинский центр 'Тыныс'",
             'start_date': "2022-09-12",
             'end_date': "2022-10-12",
             'profile_id': medical_profile_id
@@ -1517,18 +1557,27 @@ def create_user(id,
     )
 
     hospital_datas_id = get_uuid()
+    hospital_datas1_id = get_uuid()
+
 
     op.bulk_insert(
         Base.metadata.tables['hospital_datas'],
         [{
             'id': hospital_datas_id,
-            'code': "code",
-            'reason': "reason",
-            'place': "place",
+            'reason': "Больничный (код-829121)",
+            'place': 'ГКП на ПХВ "Городская поликлиника №3"',
             'start_date': "2022-09-12",
             'end_date': "2022-10-12",
-            'document_link': "document_link",
-            'profile_id': medical_profile_id
+            'profile_id': medical_profile_id,
+            'document_link': "document_link"
+        }, {
+            'id': hospital_datas1_id,
+            'reason': "Больничный по причине ОРВИ",
+            'place': 'ГКП на ПХВ "Городская поликлиника №3"',
+            'start_date': "2022-12-15",
+            'end_date': "2022-12-16",
+            'profile_id': medical_profile_id,
+            'document_link': "document_link"
         }]
     )
 
@@ -1538,11 +1587,11 @@ def create_user(id,
         Base.metadata.tables['violations'],
         [{
             'id': violations_id,
-            'name': "name",
+            'name': "Мелкое хулиганство",
             'date': "2022-09-12",
-            'issued_by': "admin",
-            'article_number': "article_number",
-            'consequence': "consequence",
+            'issued_by': "Районный суд Сарыаркинского района г.Астана",
+            'article_number': "122.12(УК РК)",
+            'consequence': "Штраф 40МРП",
             'profile_id': additional_profile_id
         }]
     )
@@ -1553,9 +1602,9 @@ def create_user(id,
         Base.metadata.tables['properties'],
         [{
             'id': properties_id,
-            'type': property_type1_id,
+            'type_id': property_type1_id,
             'purchase_date': "2022-09-12",
-            'address': "Dostyk 5",
+            'address': "Достык 5",
             'profile_id': additional_profile_id
         }]
     )
@@ -1566,11 +1615,11 @@ def create_user(id,
         Base.metadata.tables['abroad_travels'],
         [{
             'id': abroad_travels_id,
-            'vehicle_type': "Plane",
-            'destination_country': "test",
+            'vehicle_type': "Самолет",
+            'destination_country_id': country_id,
             'date_from': "2022-05-10",
             'date_to': "2022-05-11",
-            'reason': "reason",
+            'reason': "Служебная командировка",
             'document_link':"document_link",
             'profile_id': additional_profile_id
 
@@ -1594,8 +1643,8 @@ def create_user(id,
             Base.metadata.tables['special_checks'],
             [{
                 'id': special_checks_id,
-                'number': "number",
-                'issued_by': "admin",
+                'number': "4584908",
+                'issued_by': "Иманов А.Е.",
                 'date_of_issue': "2022-01-15",
                 'document_link': "document_link",
                 "profile_id": additional_profile_id
@@ -1609,7 +1658,7 @@ def create_user(id,
         Base.metadata.tables['psychological_checks'],
         [{
             'id': psychological_checks_id,
-            'issued_by': "admin",
+            'issued_by': "Назаров К.С.",
             'date_of_issue': "2022-03-25",
             'document_link': "document_link",
             'profile_id': additional_profile_id
@@ -1622,10 +1671,10 @@ def create_user(id,
         Base.metadata.tables['polygraph_checks'],
         [{
             'id': polygraph_checks_id,
-            'number': "number",
-            "issued_by": "admin",
+            'number': "84088880",
+            "issued_by": "Жапаров Е.С.",
             "date_of_issue": "2021-02-03",
-            "document_link": "document link",
+            "document_link": "document_link",
             'profile_id': additional_profile_id
         }]
     )
@@ -1637,16 +1686,27 @@ def create_user(id,
         Base.metadata.tables['families'],
         [{
             'id': families_profile_id,
-            'relation': "Father",
-            'first_name': "Арман",
-            'last_name': "Ахметов",
-            'father_name': "Кожабердиулы",
+            'relation': "Отец",
+            'first_name': options[email]['first_name'],
+            'last_name': 'Темирбеков',
+            'father_name': options[email]['father_name'],
             'IIN': "980206556948",
             'birthday': "1998-02-06",
-            'birthplace': "Astana",
-            'death_day': None,
-            'address': "Kabanbay batyr 15",
-            'workplace': "KazMunaiGaz",
+            'birthplace': "Астана",
+            'address': "г. Астана, ул. Кабанбай батыр, д. 15, кв. 15",
+            'workplace': "КазМунайГаз",
+            'profile_id': family_profile_id
+        }, {
+            'id': get_uuid(),
+            'relation': "Мать",
+            'first_name': "Айгуль",
+            'last_name': "Ахметова",
+            'father_name': surname,
+            'IIN': "980206556948",
+            'birthday': "1998-02-06",
+            'birthplace': "Астана",
+            'address': "г. Астана, ул. Кабанбай батыр, д. 15, кв. 15",
+            'workplace': "КазМунайГаз",
             'profile_id': family_profile_id
         }]
     )

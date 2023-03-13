@@ -22,6 +22,8 @@ class UserBase(BaseModel):
     birthday: Optional[datetime.date]
     status: Optional[str]
     status_till: Optional[datetime.datetime]
+    cabinet: Optional[str]
+    service_phone_number: Optional[str]
 
 
 class UserCreate(UserBase):
@@ -51,6 +53,7 @@ class UserRead(UserBase):
     id_number: Optional[str]
     status: Optional[str]
     status_till: Optional[datetime.datetime]
+    personal_id: Optional[str]
 
     class Config:
         orm_mode = True

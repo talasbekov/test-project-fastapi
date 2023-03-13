@@ -118,7 +118,8 @@ async def delete(*,
     educational_profile_service.remove(db, id)
 
 
-@router.get("/profile", response_model=EducationalProfileRead)
+@router.get("/profile", dependencies=[Depends(HTTPBearer())],
+            response_model=EducationalProfileRead)
 async def get_profile(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends()
@@ -127,3 +128,14 @@ async def get_profile(*,
     profile = profile_service.get_by_user_id(db, Authorize.get_jwt_subject())
     print(profile.educational_profile.language_proficiency)
     return educational_profile_service.get_by_id(db, profile.educational_profile.id)
+
+
+@router.get("/profile/{id}", dependencies=[Depends(HTTPBearer())],
+            response_model=EducationalProfileRead)
+async def get_profile_by_id(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    return profile_service.get_by_user_id(db, id).educational_profile

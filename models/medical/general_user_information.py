@@ -10,14 +10,14 @@ from models import Model
 
 
 class BloodType(str, Enum):
-    O_PLUS = "0+"
-    O_MINUS = "0-"
-    A_PLUS = "A+"
-    A_MINUS = "A-"
-    B_PLUS = "B+"
-    B_MINUS = "B-"
-    AB_PLUS = "AB+"
-    AB_MINUS = "AB-"
+    O_PLUS = "O (I) Rh+"
+    O_MINUS = "O (I) Rh-"
+    A_PLUS = "A (II) Rh+"
+    A_MINUS = "A (II) Rh-"
+    B_PLUS = "B (III) Rh+"
+    B_MINUS = "B (III) Rh-"
+    AB_PLUS = "AB (IV) Rh+"
+    AB_MINUS = "AB (IV) Rh-"
 
 
 class AgeGroup(int, Enum):

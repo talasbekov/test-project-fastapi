@@ -16,6 +16,9 @@ class HrDocumentInfoBase(BaseModel):
     hr_document_id: uuid.UUID
     signed_at: Optional[datetime.datetime]
 
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
 
 class HrDocumentInfoCreate(HrDocumentInfoBase):
     pass
@@ -34,15 +37,7 @@ class HrDocumentInfoRead(HrDocumentInfoBase):
     hr_document: Optional[HrDocumentRead]
     signed_by: Optional[UserRead]
     assigned_to: Optional[UserRead]
-    
-
-    class Config:
-        orm_mode = True
 
 
 class HrDocumentHistoryRead(HrDocumentInfoRead):
-
-    will_sign: Optional[UserRead]
-
-    class Config:
-        orm_mode = True
+    pass

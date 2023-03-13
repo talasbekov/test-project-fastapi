@@ -36,6 +36,9 @@ class User(Model, Base):
 
     birthday = Column(Date, nullable=True)
     description = Column(TEXT, nullable=True)
+    cabinet = Column(String(255), nullable=True)
+    service_phone_number = Column(String(32), nullable=True)
+    personal_id = Column(String(255), nullable=True)
 
     rank = relationship("Rank", cascade="all,delete")
     badges = relationship(
@@ -54,5 +57,7 @@ class User(Model, Base):
         back_populates="users",
         cascade="all,delete"
     )
+
+    staff_list = relationship("StaffList", back_populates="user", cascade="all,delete")
 
     profile = relationship("Profile", back_populates="user", uselist=False)

@@ -14,7 +14,7 @@ class Violation(Model):
 
     name = Column(String(255), nullable=False)
     date = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("now()"))
-    issued_by = Column(Enum("user", "admin", name="issued_by"), nullable=False)
+    issued_by = Column(String(255), nullable=False)
     article_number = Column(String(255), nullable=False)
     consequence = Column(String(255), nullable=False)
 

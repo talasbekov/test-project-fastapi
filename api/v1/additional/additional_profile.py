@@ -37,7 +37,7 @@ async def get_all(*,
 
 @router.post("", status_code=status.HTTP_201_CREATED,
                 dependencies=[Depends(HTTPBearer())],
-                response_model=AdditionalProfileRead,
+                response_model=AdditionalProfileCreate,
                 summary="Create")
 async def create(*,
     db: Session = Depends(get_db), 
@@ -102,6 +102,23 @@ async def delete(*,
     return additional_profile_service.delete(db, abroad_travel)
 
 
+@router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=AdditionalProfileRead,
+            summary="Get Additional Profile by id")
+async def get_by_id(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Get additional profile by id
+
+        - **name**: required
+    """
+    Authorize.jwt_required()
+    return additional_profile_service.get_by_id(db, id)
+
+
 @router.get("/profile", response_model=AdditionalProfileRead)
 async def get_profile(*,
     db: Session = Depends(get_db),
@@ -110,3 +127,13 @@ async def get_profile(*,
     Authorize.jwt_required()
     profile = profile_service.get_by_user_id(db, Authorize.get_jwt_subject())
     return additional_profile_service.get_by_id(db, profile.additional_profile.id)
+
+
+@router.get('/profile/{id}/', response_model=AdditionalProfileRead)
+async def get_profile_by_id(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    return profile_service.get_by_user_id(db, id).additional_profile

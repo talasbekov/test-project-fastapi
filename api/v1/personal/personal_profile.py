@@ -39,6 +39,7 @@ async def get_all(*,
              summary="Create PersonalProfiles")
 async def create(*,
     db: Session = Depends(get_db),
+    body: PersonalProfileCreate,
     Authorize: AuthJWT = Depends()
 ):
     """
@@ -49,16 +50,6 @@ async def create(*,
     Authorize.jwt_required()
     profile = profile_service.get_by_user_id(db, Authorize.get_jwt_subject())
     return personal_profile_service.create(db, {"profile_id": profile.id})
-
-
-@router.get("/profile", response_model=PersonalProfileRead)
-async def get_profile(*,
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends()
-):
-    Authorize.jwt_required()
-    return personal_profile_service.get_by_user_id(db, Authorize.get_jwt_subject())
-
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -93,3 +84,24 @@ async def delete(*,
     """
     Authorize.jwt_required()
     personal_profile_service.remove(db, id)
+
+
+@router.get("/profile", response_model=PersonalProfileRead)
+async def get_profile(*,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    profile = profile_service.get_by_user_id(db, Authorize.get_jwt_subject())
+    return profile.personal_profile
+
+
+@router.get('/profile/{id}', dependencies=[Depends(HTTPBearer())],
+            response_model=PersonalProfileRead)
+async def get_profile_by_id(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    return profile_service.get_by_user_id(db, id).personal_profile
