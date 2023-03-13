@@ -21,6 +21,15 @@ def get_uuid():
     return str(uuid.uuid4())
 
 
+# Medical
+age_group_id = get_uuid()
+age_group2_id = get_uuid()
+age_group3_id = get_uuid()
+age_group4_id = get_uuid()
+age_group5_id = get_uuid()
+age_group6_id = get_uuid()
+
+
 # Education
 academic_degree_degree1_id = get_uuid()
 academic_degree_degree2_id = get_uuid()
@@ -265,6 +274,29 @@ def upgrade() -> None:
             'id': position17_id,
             'name': 'Начальник Службы',
             'max_rank_id': rank13_id
+        }]
+    )
+
+    op.bulk_insert(
+        Base.metadata.tables['age_groups'],
+        [{
+            'id': age_group_id,
+            'group': 1
+        }, {
+            'id': age_group2_id,
+            'group': 2
+        }, {
+            'id': age_group3_id,
+            'group': 3
+        }, {
+            'id': age_group4_id,
+            'group': 4
+        }, {
+            'id': age_group5_id,
+            'group': 5
+        }, {
+            'id': age_group6_id,
+            'group': 6
         }]
     )
 
@@ -1497,8 +1529,8 @@ def create_user(id,
         [{
             'id':general_user_information_id,
             'height': 189,
-            'blood_group': "AB (IV) Rh+",
-            'age_group': 2,
+            'blood_type': "AB (IV) Rh+",
+            'age_group_id': age_group_id,
             'profile_id': medical_profile_id,
             'weight': 82
         }]

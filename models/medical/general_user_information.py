@@ -20,22 +20,13 @@ class BloodType(str, Enum):
     AB_MINUS = "AB (IV) Rh-"
 
 
-class AgeGroup(int, Enum):
-    FIRST = 1
-    SECOND = 2
-    THIRD = 3
-    FOURTH = 4
-    FIFTH = 5
-    SIXTH = 6
-
-
 class GeneralUserInformation(Model):
 
     __tablename__ = "general_user_informations"
 
     height = Column(Integer)
     blood_group = Column(EnumType(BloodType), nullable=True, default=BloodType.O_PLUS)
-    age_group = Column(EnumType(AgeGroup), nullable=True, default=AgeGroup.FIRST)
+    age_group_id = Column(UUID(as_uuid=True), ForeignKey("age_groups.id"))
     profile_id = Column(UUID(as_uuid=True), ForeignKey("medical_profiles.id"))
     weight = Column(Integer)
 

@@ -1,13 +1,13 @@
-import datetime
 import uuid
 
+from typing import Optional
 from pydantic import BaseModel
 
 
 class GeneralUserInformationBase(BaseModel):
     height: int
     blood_group: str
-    age_group: int
+    age_group_id: uuid.UUID
     profile_id: uuid.UUID
     weight: int
  
@@ -25,7 +25,12 @@ class GeneralUserInformationUpdate(GeneralUserInformationBase):
 
 
 class GeneralUserInformationRead(GeneralUserInformationBase):
-    id: uuid.UUID
+    id: Optional[uuid.UUID]
+    height: Optional[int]
+    blood_group: Optional[str]
+    age_group_id: Optional[uuid.UUID]
+    profile_id: Optional[uuid.UUID]
+    weight: Optional[int]
 
     class Config:
         orm_mode = True

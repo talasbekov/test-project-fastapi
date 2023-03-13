@@ -24,7 +24,7 @@ class HospitalDataUpdate(HospitalDataBase):
 
 
 class HospitalDataRead(HospitalDataBase):
-    id: uuid.UUID
+    id: Optional[uuid.UUID]
 
     document_link: Optional[str]
     code: Optional[str]
