@@ -26,6 +26,8 @@ async def get_all(*,
     """
         Get all TaxDeclaration
 
+        - **skip**: int - The number of TaxDeclaration to skip before returning the results. This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of TaxDeclaration to return in the response. This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
     return tax_declaration_service.get_multi(db, skip, limit)
@@ -43,6 +45,10 @@ async def create(*,
     """
         Create new TaxDeclaration
 
+        - **id**: UUID - the ID of TaxDeclaration to update. This is required.
+        - **year**: str
+        - **is_paid**: bool
+        - **profile_id**: uuid.UUID
     """
     Authorize.jwt_required()
     return tax_declaration_service.create(db, body)
@@ -77,6 +83,9 @@ async def update(*,
     """
         Update TaxDeclaration
 
+        - **year**: str
+        - **is_paid**: bool
+        - **profile_id**: uuid.UUID
     """
     Authorize.jwt_required()
     return tax_declaration_service.update(

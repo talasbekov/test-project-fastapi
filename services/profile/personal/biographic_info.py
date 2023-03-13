@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from fastapi.encoders import jsonable_encoder
 
 from exceptions.client import NotFoundException
 from models import BiographicInfo

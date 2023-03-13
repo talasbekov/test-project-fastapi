@@ -5,8 +5,6 @@ from typing import Optional
 from pydantic import BaseModel
 
 
-
-
 class DispensaryRegistrationBase(BaseModel):
     name: str
     initiator: str

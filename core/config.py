@@ -19,6 +19,9 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRES_IN: int
     JWT_ALGORITHM: str
 
+    DEBUG: bool = False
+    SENTRY_DSN: str = None
+
     class Config:
         env_file = ".env"
 

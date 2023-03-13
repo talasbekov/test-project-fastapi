@@ -4,7 +4,6 @@ from typing import Optional
 from pydantic import BaseModel
 
 
-
 class AnthropometricDataBase(BaseModel):
     head_circumference: int
     shoe_size: int
@@ -12,6 +11,7 @@ class AnthropometricDataBase(BaseModel):
     shape_size: int
     bust_size: int
     profile_id: uuid.UUID
+
 
 class AnthropometricDataCreate(AnthropometricDataBase):
     pass

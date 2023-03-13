@@ -12,7 +12,6 @@ class UserLiberation(Model):
 
     __tablename__ = "user_liberations"
 
-
     reason = Column(String)
     liberation_name = Column(String)
     initiator = Column(String)

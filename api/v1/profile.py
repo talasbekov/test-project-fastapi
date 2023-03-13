@@ -31,6 +31,23 @@ async def get_all(*,
     Authorize.jwt_required()
     return profile_service.get_multi(db, skip, limit)
 
+
+@router.get("/profile", dependencies=[Depends(HTTPBearer())],
+            response_model=ProfileRead,
+            summary="Get my Profile")
+async def get_my_profile(*,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Get my Profile
+
+        no parameters required.
+    """
+    Authorize.jwt_required()
+    return profile_service.get_by_user_id(db, Authorize.get_jwt_subject())
+
+
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=ProfileRead,
@@ -42,14 +59,14 @@ async def create(*,
     """
         Create new profile
 
-        - **name**: required
-        - **url**: image url. This parameter is required
+        no parameters required.
     """
     Authorize.jwt_required()
     profile = db.query(Profile).filter(Profile.user_id == Authorize.get_jwt_subject()).first()
     if profile is not None:
         return profile
     return profile_service.create(db, {"user_id": Authorize.get_jwt_subject()})
+
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=ProfileRead,
