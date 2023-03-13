@@ -118,7 +118,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             db,
             HrDocumentCreate(
                 hr_document_template_id=body.hr_document_template_id,
-                status=HrDocumentStatus.INITIALIZED,
+                status=HrDocumentStatus.IN_PROGRESS,
                 due_date=body.due_date,
                 properties=body.properties,
             ),
