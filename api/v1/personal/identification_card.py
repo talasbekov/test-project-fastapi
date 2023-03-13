@@ -26,6 +26,8 @@ async def get_all(*,
     """
         Get all IdentificationCard
 
+        - **skip**: int - The number of IdentificationCard to skip before returning the results. This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of IdentificationCard to return in the response. This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
     return identification_card_service.get_multi(db, skip, limit)
@@ -42,6 +44,12 @@ async def create(*,
     """
         Create new IdentificationCard
 
+        - **document_number**: str
+        - **date_of_issue**: datetime.date
+        - **date_to: datetime**.date
+        - **issued_by**: str
+        - **document_link**: str
+        - **profile_id**: uuid.UUID
     """
     Authorize.jwt_required()
     return identification_card_service.create(db, body)
@@ -75,6 +83,13 @@ async def update(*,
     """
         Update IdentificationCard
 
+        - **id**: UUID - the ID of IdentificationCard to update. This is required.
+        - **document_number**: str
+        - **date_of_issue**: datetime.date
+        - **date_to: datetime**.date
+        - **issued_by**: str
+        - **document_link**: str
+        - **profile_id**: uuid.UUID
     """
     Authorize.jwt_required()
     return identification_card_service.update(
