@@ -28,6 +28,11 @@ class DispensaryRegistrationRead(DispensaryRegistrationBase):
     id: uuid.UUID
 
     document_link: Optional[str]
+    name: Optional[str]
+    initiator: Optional[str]
+    start_date: Optional[datetime.datetime]
+    end_date: Optional[datetime.datetime]
+    profile_id: Optional[uuid.UUID]
 
     class Config:
         orm_mode = True
