@@ -9,10 +9,12 @@ from fastapi_jwt_auth import AuthJWT
 from fastapi_jwt_auth.exceptions import AuthJWTException
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
+from debug_toolbar.middleware import DebugToolbarMiddleware
+
+import sentry_sdk
 
 from api import router
-from core import configs, get_db
-from models import DocumentFunctionType, DocumentStaffFunction, HrDocumentStep
+from core import configs, get_db 
 
 app = FastAPI(
     title=configs.PROJECT_NAME,
@@ -28,6 +30,15 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+# sqlalchemy 
+app.add_middleware(DebugToolbarMiddleware,
+                   panels=['debug_toolbar.panels.versions.VersionsPanel',
+                           'debug_toolbar.panels.timer.TimerPanel',
+                           'debug_toolbar.panels.settings.SettingsPanel',
+                           'debug_toolbar.panels.headers.HeadersPanel',
+                           'debug_toolbar.panels.request.RequestPanel',
+                           'debug_toolbar.panels.sqlalchemy.SQLAlchemyPanel']
+                           )
 
 app.include_router(router)
 
@@ -35,6 +46,10 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
 
+
+if configs.DEBUG:
+    sentry_sdk.init(dsn=configs.SENTRY_DSN,
+                    traces_sample_rate=1.0)
 
 @AuthJWT.load_config
 def get_config():
@@ -57,6 +72,9 @@ def validation_error_handler(request: Request, exc: ValidationError):
         content={'detail': exc.json()}
     )
 
+@app.get("/sentry-debug")
+async def trigger_error():
+    division_by_zero = 1 / 0
 
 @app.exception_handler(AuthJWTException)
 def authjwt_exception_handler(request: Request, exc: AuthJWTException):
