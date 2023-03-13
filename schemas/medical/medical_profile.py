@@ -6,12 +6,14 @@ from schemas.medical import (AnthropometricDataRead, DispensaryRegistrationRead,
 
 from typing import List
 
+
 class MedicalProfileBase(BaseModel):
     profile_id: uuid.UUID
 
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
+
 
 class MedicalProfileCreate(MedicalProfileBase):
     pass

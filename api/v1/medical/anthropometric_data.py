@@ -10,12 +10,12 @@ from core import get_db
 from schemas.medical import AnthropometricDataRead,AnthropometricDataCreate,AnthropometricDataUpdate
 from services.medical import anthropometric_data_service
 
-router = APIRouter(prefix="/anthropometric_data", tags=["Anthropometric Data"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(prefix="/anthropometric_data", tags=["AnthropometricData"], dependencies=[Depends(HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[AnthropometricDataRead],
-            summary="Get all Anthropometric Data")
+            summary="Get all AnthropometricData")
 async def get_all(*,
     db: Session = Depends(get_db),
     skip: int = 0,
@@ -23,9 +23,10 @@ async def get_all(*,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Get all Anthropometric Data
-        - **skip**: int - The number of Anthropometric Data to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of Anthropometric Data to return in the response. This parameter is optional and defaults to 100.
+        Get all AnthropometricData
+
+        - **skip**: int - The number of AnthropometricData to skip before returning the results. This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of AnthropometricData to return in the response. This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
     return anthropometric_data_service.get_multi(db, skip, limit)
@@ -34,16 +35,21 @@ async def get_all(*,
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=AnthropometricDataRead,
-             summary="Create")
+             summary="Create AnthropometricData")
 async def create(*,
     db: Session = Depends(get_db),
     body: AnthropometricDataCreate,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Create new Anthropometric Data
-        - **name**: required
-        - **url**: image url. This parameter is required
+        Create new AnthropometricData
+
+        - **head_circumference**: int
+        - **shoe_size**: int
+        - **neck_circumference**: int
+        - **shape_size**: int
+        - **bust_size**: int
+        - **profile_id**: uuid.UUID
     """
     Authorize.jwt_required()
     return anthropometric_data_service.create(db, body)
@@ -51,7 +57,7 @@ async def create(*,
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=AnthropometricDataRead,
-            summary="Get Anthropometric Data by id")
+            summary="Get AnthropometricData by id")
 async def get_by_id(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
@@ -67,7 +73,7 @@ async def get_by_id(*,
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=AnthropometricDataRead,
-            summary="Update Anthropometric Data")
+            summary="Update AnthropometricData")
 async def update(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
@@ -75,10 +81,15 @@ async def update(*,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Update AcademicDegree
-        - **id**: UUID - the ID of Anthropometric Data to update. This is required.
-        - **name**: required.
-        - **url**: image url. This parameter is required.
+        Update AnthropometricData
+
+        - **id**: UUID - the ID of AnthropometricData to update. This is required.
+        - **head_circumference**: int
+        - **shoe_size**: int
+        - **neck_circumference**: int
+        - **shape_size**: int
+        - **bust_size**: int
+        - **profile_id**: uuid.UUID
     """
     Authorize.jwt_required()
     return anthropometric_data_service.update(
@@ -89,14 +100,14 @@ async def update(*,
 
 @router.delete("/{id}/",status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
-               summary="Delete Anthropometric Data")
+               summary="Delete AnthropometricData")
 async def delete(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Delete An
+        Delete AnthropometricData
         - **id**: UUId - required
     """
     Authorize.jwt_required()
