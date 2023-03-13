@@ -338,6 +338,9 @@ def upgrade() -> None:
     staff_function7_id = get_uuid()
     staff_function8_id = get_uuid()
     staff_function9_id = get_uuid()
+    staff_function10_id = get_uuid()
+    staff_function11_id = get_uuid()
+    staff_function12_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['staff_functions'],
@@ -421,6 +424,30 @@ def upgrade() -> None:
             'jurisdiction_id': jurisdiction1_id,
             'priority': 100,
             'role_id': doc_type3_id
+        }, {
+            'id': staff_function10_id,
+            'hours_per_week' : 3,
+            'discriminator': 'document_staff_function',
+            'name' : 'Согласующий приказа о присвоения звания',
+            'jurisdiction_id': jurisdiction1_id,
+            'priority': 3,
+            'role_id': doc_type1_id
+        }, {
+            'id': staff_function11_id,
+            'hours_per_week' : 3,
+            'discriminator': 'document_staff_function',
+            'name' : 'Согласующий приказа о присвоения черного берета',
+            'jurisdiction_id': jurisdiction1_id,
+            'priority': 3,
+            'role_id': doc_type1_id
+        }, {
+            'id': staff_function12_id,
+            'hours_per_week' : 3,
+            'discriminator': 'document_staff_function',
+            'name' : 'Согласующий приказа о назначении',
+            'jurisdiction_id': jurisdiction1_id,
+            'priority': 3,
+            'role_id': doc_type1_id
         }]
     )
 
@@ -825,6 +852,15 @@ def upgrade() -> None:
         }, {
             'staff_unit_id': staff_unit4_id,
             'staff_function_id': staff_function1_id
+        }, {
+            'staff_unit_id': staff_unit9_id,
+            'staff_function_id': staff_function10_id
+        }, {
+            'staff_unit_id': staff_unit9_id,
+            'staff_function_id': staff_function11_id
+        }, {
+            'staff_unit_id': staff_unit9_id,
+            'staff_function_id': staff_function12_id
         }]
     )
 
@@ -1000,12 +1036,15 @@ def upgrade() -> None:
     step1_1 = get_uuid()
     step1_2 = get_uuid()
     step1_3 = get_uuid()
+    step1_4 = get_uuid()
     step2_1 = get_uuid()
     step2_2 = get_uuid()
     step2_3 = get_uuid()
+    step2_4 = get_uuid()
     step3_1 = get_uuid()
     step3_2 = get_uuid()
     step3_3 = get_uuid()
+    step3_4 = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['hr_document_steps'],
@@ -1022,8 +1061,13 @@ def upgrade() -> None:
         }, {
             'hr_document_template_id': template1_id,
             'previous_step_id': step1_2,
-            'staff_function_id': staff_function3_id,
+            'staff_function_id': staff_function12_id,
             'id': step1_3
+        }, {
+            'hr_document_template_id': template1_id,
+            'previous_step_id': step1_2,
+            'staff_function_id': staff_function3_id,
+            'id': step1_4
         }, {
             'hr_document_template_id': template2_id,
             'previous_step_id': None,
@@ -1037,8 +1081,13 @@ def upgrade() -> None:
         }, {
             'hr_document_template_id': template2_id,
             'previous_step_id': step2_2,
-            'staff_function_id': staff_function6_id,
+            'staff_function_id': staff_function10_id,
             'id': step2_3
+        }, {
+            'hr_document_template_id': template2_id,
+            'previous_step_id': step2_2,
+            'staff_function_id': staff_function6_id,
+            'id': step2_4
         }, {
             'hr_document_template_id': template3_id,
             'previous_step_id': None,
@@ -1052,8 +1101,13 @@ def upgrade() -> None:
         }, {
             'hr_document_template_id': template3_id,
             'previous_step_id': step3_2,
-            'staff_function_id': staff_function9_id,
+            'staff_function_id': staff_function11_id,
             'id': step3_3
+        }, {
+            'hr_document_template_id': template3_id,
+            'previous_step_id': step3_2,
+            'staff_function_id': staff_function9_id,
+            'id': step3_4
         }]
     )
 
