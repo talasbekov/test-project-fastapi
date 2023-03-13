@@ -1256,7 +1256,7 @@ def create_user(id,
         Base.metadata.tables['courses'],
         [{
             'id': course1_id,
-            'name': "course1",
+            'name': "Backend курс",
             'profile_id': educational_profile_id,
             'course_provider_id': course_provider1_id,
             'specialty_id': specialty1_id,
@@ -1267,7 +1267,7 @@ def create_user(id,
             'end_date': '2019-12-10'
         }, {
             'id': course2_id,
-            'name': "course2",
+            'name': "Курсы по подготовке к стрельбе",
             'profile_id': educational_profile_id,
             'course_provider_id': course_provider2_id,
             'specialty_id': specialty2_id,
@@ -1278,7 +1278,7 @@ def create_user(id,
             'end_date': '2020-12-15'
         }, {
             'id': course3_id,
-            'name': "course3",
+            'name': "Front-End курс",
             'profile_id': educational_profile_id,
             'course_provider_id': course_provider3_id,
             'specialty_id': specialty3_id,
@@ -1692,9 +1692,9 @@ def create_user(id,
             'father_name': options[email]['father_name'],
             'IIN': "980206556948",
             'birthday': "1998-02-06",
-            'birthplace': "Астана",
+            'birthplace': "г. Астана",
             'address': "г. Астана, ул. Кабанбай батыр, д. 15, кв. 15",
-            'workplace': "КазМунайГаз",
+            'workplace': "Astana IT University, профессор",
             'profile_id': family_profile_id
         }, {
             'id': get_uuid(),
@@ -1704,9 +1704,9 @@ def create_user(id,
             'father_name': surname,
             'IIN': "980206556948",
             'birthday': "1998-02-06",
-            'birthplace': "Астана",
+            'birthplace': "г. Астана",
             'address': "г. Астана, ул. Кабанбай батыр, д. 15, кв. 15",
-            'workplace': "КазМунайГаз",
+            'workplace': "КазМунайГаз, бухгалтер",
             'profile_id': family_profile_id
         }]
     )
