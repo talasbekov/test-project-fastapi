@@ -300,36 +300,6 @@ def upgrade() -> None:
         }]
     )
 
-    jurisdiction1_id = get_uuid()
-    jurisdiction2_id = get_uuid()
-    jurisdiction3_id = get_uuid()
-    jurisdiction4_id = get_uuid()
-    jurisdiction5_id = get_uuid()
-    jurisdiction6_id = get_uuid()
-
-    op.bulk_insert(
-        Base.metadata.tables['jurisdictions'],
-        [{
-            'id': jurisdiction1_id,
-            'name': "Вся служба"
-        }, {
-            'id': jurisdiction2_id,
-            'name': "Личный Состав"
-        }, {
-            'id': jurisdiction3_id,
-            'name': "Боевое Подразделение"
-        }, {
-            'id': jurisdiction4_id,
-            'name': "Штабное Подразделение"
-        }, {
-            'id': jurisdiction5_id,
-            'name': "Кандидаты"
-        }, {
-            'id': jurisdiction6_id,
-            'name': "Курьируемые сотрудники"
-        }]
-    )
-
     doc_type1_id = get_uuid()
     doc_type2_id = get_uuid()
     doc_type3_id = get_uuid()
@@ -381,7 +351,7 @@ def upgrade() -> None:
             'hours_per_week' : 3,
             'discriminator': 'document_staff_function',
             'name' : 'Инициатор приказа о назначении',
-            'jurisdiction_id': jurisdiction1_id,
+            'jurisdiction': 'Личное дело',
             'priority': 1,
             'role_id': doc_type5_id
         },
@@ -390,7 +360,7 @@ def upgrade() -> None:
             'hours_per_week' : 3,
             'discriminator': 'document_staff_function',
             'name' : 'Эксперт приказа о назначении',
-            'jurisdiction_id': jurisdiction1_id,
+            'jurisdiction': 'Личное дело',
             'priority': 2,
             'role_id': doc_type2_id
         },
@@ -399,7 +369,7 @@ def upgrade() -> None:
             'hours_per_week' : 3,
             'discriminator': 'document_staff_function',
             'name' : 'Утверждающий приказа о назначении',
-            'jurisdiction_id': jurisdiction1_id,
+            'jurisdiction': 'Личное дело',
             'priority': 100,
             'role_id': doc_type3_id
         },
@@ -408,7 +378,7 @@ def upgrade() -> None:
             'hours_per_week' : 3,
             'discriminator': 'document_staff_function',
             'name' : 'Инициатор приказа о присвоения звания',
-            'jurisdiction_id': jurisdiction1_id,
+            'jurisdiction': 'Личное дело',
             'priority': 1,
             'role_id': doc_type5_id
         },
@@ -417,7 +387,7 @@ def upgrade() -> None:
             'hours_per_week' : 3,
             'discriminator': 'document_staff_function',
             'name' : 'Эксперт приказа о присвоения звания',
-            'jurisdiction_id': jurisdiction1_id,
+            'jurisdiction': 'Личное дело',
             'priority': 2,
             'role_id': doc_type2_id
         },
@@ -426,7 +396,7 @@ def upgrade() -> None:
             'hours_per_week' : 3,
             'discriminator': 'document_staff_function',
             'name' : 'Утверждающий приказа о присвоения звания',
-            'jurisdiction_id': jurisdiction1_id,
+            'jurisdiction': 'Личное дело',
             'priority': 100,
             'role_id': doc_type3_id
         },
@@ -435,7 +405,7 @@ def upgrade() -> None:
             'hours_per_week' : 3,
             'discriminator': 'document_staff_function',
             'name' : 'Инициатор приказа о присвоения черного берета',
-            'jurisdiction_id': jurisdiction1_id,
+            'jurisdiction': 'Личное дело',
             'priority': 1,
             'role_id': doc_type5_id
         },
@@ -444,7 +414,7 @@ def upgrade() -> None:
             'hours_per_week' : 3,
             'discriminator': 'document_staff_function',
             'name' : 'Эксперт приказа о присвоения черного берета',
-            'jurisdiction_id': jurisdiction1_id,
+            'jurisdiction': 'Личное дело',
             'priority': 2,
             'role_id': doc_type2_id
         },
@@ -453,7 +423,7 @@ def upgrade() -> None:
             'hours_per_week' : 3,
             'discriminator': 'document_staff_function',
             'name' : 'Утверждающий приказа о присвоения черного берета',
-            'jurisdiction_id': jurisdiction1_id,
+            'jurisdiction': 'Личное дело',
             'priority': 100,
             'role_id': doc_type3_id
         }, {
@@ -461,7 +431,7 @@ def upgrade() -> None:
             'hours_per_week' : 3,
             'discriminator': 'document_staff_function',
             'name' : 'Согласующий приказа о присвоения звания',
-            'jurisdiction_id': jurisdiction1_id,
+            'jurisdiction': 'Личное дело',
             'priority': 3,
             'role_id': doc_type1_id
         }, {
@@ -469,7 +439,7 @@ def upgrade() -> None:
             'hours_per_week' : 3,
             'discriminator': 'document_staff_function',
             'name' : 'Согласующий приказа о присвоения черного берета',
-            'jurisdiction_id': jurisdiction1_id,
+            'jurisdiction': 'Личное дело',
             'priority': 3,
             'role_id': doc_type1_id
         }, {
@@ -477,7 +447,7 @@ def upgrade() -> None:
             'hours_per_week' : 3,
             'discriminator': 'document_staff_function',
             'name' : 'Согласующий приказа о назначении',
-            'jurisdiction_id': jurisdiction1_id,
+            'jurisdiction': 'Личное дело',
             'priority': 3,
             'role_id': doc_type1_id
         }]
@@ -621,23 +591,28 @@ def upgrade() -> None:
         [{
             'parent_group_id': None,
             'id': group1_id,
-            'name': "Департамент 1"
+            'name': "Департамент 1",
+            'is_combat_unit': True
         }, {
             'parent_group_id': group1_id,
             'id': group2_id,
-            'name': "Управление 1"
+            'name': "Управление 1",
+            'is_combat_unit': False
         }, {
             'parent_group_id': group1_id,
             'id': group3_id,
-            'name': "Управление 2"
+            'name': "Управление 2",
+            'is_combat_unit': True
         }, {
             'parent_group_id': group1_id,
             'id': group4_id,
-            'name': "Управление 3"
+            'name': "Управление 3",
+            'is_combat_unit': False
         }, {
             'parent_group_id': group1_id,
             'id': group5_id,
-            'name': "Управление 4"
+            'name': "Управление 4",
+            'is_combat_unit': True
         }]
     )
 

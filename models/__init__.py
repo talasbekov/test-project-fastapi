@@ -6,12 +6,11 @@ from .hr_document import HrDocument, HrDocumentStatus
 from .hr_document_info import HrDocumentInfo
 from .hr_document_step import HrDocumentStep
 from .hr_document_template import HrDocumentTemplate, SubjectType
-from .jurisdiction import Jurisdiction
 from .rank import Rank
 from .staff_division import GroupName, StaffDivision
 from .staff_function import (DocumentFunctionType, DocumentStaffFunction,
                              RoleName, ServiceFunctionType,
-                             ServiceStaffFunction, StaffFunction)
+                             ServiceStaffFunction, StaffFunction, JurisdictionEnum)
 from .staff_list import StaffList
 from .staff_unit import StaffUnit
 

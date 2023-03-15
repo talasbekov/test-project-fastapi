@@ -36,6 +36,11 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
             StaffDivision.parent_group_id == None
         ).all()
 
+    def get_child_groups(self, db: Session, id: str) -> List[StaffDivision]:
+        return db.query(self.model).filter(
+           StaffDivision.parent_group_id == id
+        ).all()
+
     def change_parent_group(self,
             db: Session,
             id: str,

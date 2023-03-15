@@ -1,7 +1,6 @@
 from .profile import ProfileCreate, ProfileUpdate, ProfileRead
 from .badge import BadgeCreate, BadgeRead, BadgeUpdate
 from .equipment import EquipmentCreate, EquipmentRead, EquipmentUpdate
-from .jurisdiction import JurisdictionRead, JurisdictionCreate, JurisdictionUpdate
 from .event import EventCreate, EventRead, EventUpdate
 from .hr_document_template import (HrDocumentTemplateCreate,
                                    HrDocumentTemplateRead,

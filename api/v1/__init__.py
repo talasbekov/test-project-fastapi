@@ -18,7 +18,6 @@ from .auth import router as auth_router
 from .equipment import router as equipment_router
 from .badge import router as badge_router
 from .rank import router as rank_router
-from .jurisdiction import router as jurisdiction_router
 from .profile import *
 from .additional import *
 from .medical import *
@@ -47,7 +46,6 @@ router.include_router(staff_unit_router)
 router.include_router(equipment_router)
 router.include_router(badge_router)
 router.include_router(rank_router)
-router.include_router(jurisdiction_router)
 
 router.include_router(router_education)
 router.include_router(anthropometric_data_router)

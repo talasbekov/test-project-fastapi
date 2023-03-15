@@ -3,7 +3,6 @@
 from .base import ServiceBase
 from .profile import *
 
-from .jurisdiction import jurisdiction_service
 from .staff_division import staff_division_service
 from .service_staff_function_type import service_staff_function_type_service
 from .document_staff_function_type import document_staff_function_type_service
@@ -17,7 +16,6 @@ from .badge import badge_service
 from .equipment import equipment_service
 from .event import event_service
 from .rank import rank_service
-from .jurisdiction import jurisdiction_service
 from .user_stat import user_stat_service
 
 from .staff_division import staff_division_service

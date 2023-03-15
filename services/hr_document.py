@@ -15,11 +15,11 @@ from core import Base
 from exceptions import (BadRequestException, ForbiddenException,
                         InvalidOperationException, NotFoundException)
 from models import (HrDocument, HrDocumentInfo, HrDocumentStatus,
-                    HrDocumentStep, StaffUnit, User)
+                    HrDocumentStep, StaffUnit, User, DocumentStaffFunction, JurisdictionEnum, StaffDivision)
 from schemas import (BadgeRead, HrDocumentCreate, HrDocumentInit,
                      HrDocumentRead, HrDocumentSign, HrDocumentUpdate,
                      RankRead, StaffDivisionOptionRead, StaffDivisionRead,
-                     StaffUnitRead)
+                     StaffUnitRead, DocumentStaffFunctionRead)
 from services import (badge_service, document_staff_function_service,
                       document_staff_function_type_service,
                       hr_document_info_service, hr_document_step_service,
@@ -43,7 +43,6 @@ responses = {
     "rank": RankRead,
     "badges": BadgeRead,
 }
-
 
 
 class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpdate]):
@@ -97,6 +96,13 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 detail=f"Вы не можете инициализировать этот документ!"
             )
 
+        document_staff_function: DocumentStaffFunction = document_staff_function_service.get_by_id(db, step.staff_function_id)
+
+        if not self._check_jurisdiction(db, staff_unit, document_staff_function, body.user_ids):
+            raise ForbiddenException(
+                detail=f"Вы не можете инициализировать этот документ из-за юрисдикции!"
+            )
+
         all_steps: list = hr_document_step_service.get_all_by_document_template_id(
             db, template.id
         )
@@ -105,7 +111,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         if len(all_steps) < 2:
             raise BadRequestException(detail="Документ должен иметь хотя бы 2 шага!")
 
-        print(body.document_step_users_ids)
         users = [v for _, v in body.document_step_users_ids.items()]
 
         if len(users) != len(all_steps):
@@ -183,6 +188,21 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         if info.hr_document_step.staff_function not in staff_unit.staff_functions:
             raise ForbiddenException(
                 detail=f"Вы не можете подписать этот документ из-за роли!"
+            )
+
+        step: HrDocumentStep = hr_document_step_service.get_initial_step_for_template(
+            db, document.hr_document_template_id
+        )
+
+        document_staff_function: DocumentStaffFunction = document_staff_function_service.get_by_id(db, step.staff_function_id)
+
+        user_ids = []
+        for user in document.users:
+            user_ids.append(user.id)
+
+        if not self._check_jurisdiction(db, staff_unit, document_staff_function, user_ids):
+            raise ForbiddenException(
+                detail=f"Вы не можете инициализировать этот документ из-за юрисдикции!"
             )
 
         user: User = user_service.get_by_id(db, user_id)
@@ -459,6 +479,53 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                     l.append(self._to_response(db, i))
 
         return l
+
+    def _check_jurisdiction(
+            self, db: Session, staff_unit: StaffUnit, document_staff_function: DocumentStaffFunction,
+            subject_user_ids: List[uuid.UUID]
+    ) -> bool:
+        jurisdiction = document_staff_function.jurisdiction
+
+        # Проверка на вид юрисдикции "Вся служба"
+        if jurisdiction == JurisdictionEnum.ALL_SERVICE:
+            return True
+
+        staff_division = staff_division_service.get_by_id(db, staff_unit.staff_division_id)
+
+        # Проверка на вид юрисдикции "Личное дело"
+        if jurisdiction == JurisdictionEnum.PERSONNEL:
+            # Получаем все дочерние штатные группы пользователя, включая саму группу
+            staff_divisions: List[StaffDivision] = staff_division_service.get_child_groups(db, staff_unit.staff_division_id)
+            staff_divisions.append(staff_division)
+
+            # Получаем все staff unit из staff divisions
+            staff_units: List[StaffUnit] = []
+            for i in staff_divisions:
+                staff_units.extend(staff_unit_service.get_by_staff_division_id(db, i.id))
+
+            # Retrieve subject users by id
+            subject_users: List[User] = []
+            for i in subject_user_ids:
+                subject_users.append(user_service.get_by_id(db, i))
+
+            # Проверка субъекта на присутствие в штатной единице
+            # Метод возвращает True если все из субъектов относятся к штатной единице
+            # Если один из субъектов не относится к штатной единице то метод выбрасывает False
+            for i in subject_users:
+                if i.actual_staff_unit not in staff_units:
+                    return False
+
+            return True
+
+        # Проверка на вид юрисдикции "Боевое подразделение"
+        if jurisdiction == JurisdictionEnum.COMBAT_UNIT:
+            return staff_division.is_combat_unit
+
+        # Проверка на вид юрисдикции "Штатное подразделение"
+        if jurisdiction == JurisdictionEnum.STAFF_UNIT:
+            return not staff_division.is_combat_unit
+
+        return False
 
 
 hr_document_service = HrDocumentService(HrDocument)

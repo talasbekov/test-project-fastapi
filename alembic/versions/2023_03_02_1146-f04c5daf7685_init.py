@@ -52,13 +52,6 @@ def upgrade() -> None:
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('jurisdictions',
-    sa.Column('name', sa.String(), nullable=False),
-    sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.PrimaryKeyConstraint('id')
-    )
     op.create_table('ranks',
     sa.Column('order', sa.Integer(), nullable=True),
     sa.Column('url', sa.TEXT(), nullable=True),
@@ -80,6 +73,7 @@ def upgrade() -> None:
     sa.Column('description', sa.TEXT(), nullable=True),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('is_combat_unit', sa.Boolean(), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['parent_group_id'], ['staff_divisions.id'], ),
@@ -102,10 +96,10 @@ def upgrade() -> None:
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('role_id', sa.UUID(), nullable=True),
-    sa.Column('jurisdiction_id', sa.UUID(), nullable=True),
+    sa.Column('jurisdiction',
+              sa.Enum('ALL_SERVICE', 'PERSONNEL', 'COMBAT_UNIT', 'STAFF_UNIT', 'CANDIDATES', 'SUPERVISED_EMPLOYEES', name='Jurisdictionenum'), nullable=True),
     sa.Column('priority', sa.Integer(), nullable=True),
     sa.Column('type_id', sa.UUID(), nullable=True),
-    sa.ForeignKeyConstraint(['jurisdiction_id'], ['jurisdictions.id'], ),
     sa.ForeignKeyConstraint(['role_id'], ['document_function_types.id'], ),
     sa.ForeignKeyConstraint(['type_id'], ['service_function_types.id'], ),
     sa.PrimaryKeyConstraint('id')
