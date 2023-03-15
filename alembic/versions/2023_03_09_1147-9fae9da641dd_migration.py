@@ -20,6 +20,10 @@ depends_on = None
 def get_uuid():
     return str(uuid.uuid4())
 
+# Personal
+sport_type1_id = get_uuid()
+sport_type2_id = get_uuid()
+sport_type3_id = get_uuid()
 
 # Education
 academic_degree_degree1_id = get_uuid()
@@ -451,6 +455,21 @@ def upgrade() -> None:
         }]
     )
 
+    # Personal tables
+
+    op.bulk_insert(
+        Base.metadata.tables['sport_types'],
+        [{
+            'id': sport_type1_id,
+            'name': "Бокс"
+        }, {
+            'id': sport_type2_id,
+            'name': "Карате"
+        }, {
+            'id': sport_type3_id,
+            'name': "Джиу-Джитсу"
+        }]
+    )
 
     # Educational tables
 
@@ -1378,19 +1397,22 @@ def create_user(id,
             'profile_id': personal_profile_id,
             'name': "Мастер спорта по боксу",
             'assignment_date': '2022-10-09',
-            'document_link': 'document_link1'
+            'document_link': 'document_link1',
+            'sport_type_id': sport_type1_id
         }, {
             'id': sport_degree2_id,
             'profile_id': personal_profile_id,
             'name': "Мастер спорта по карате",
             'assignment_date': '2022-10-10',
-            'document_link': 'document_link2'
+            'document_link': 'document_link2',
+            'sport_type_id': sport_type2_id
         }, {
             'id': sport_degree3_id,
             'profile_id': personal_profile_id,
             'name': "Кандидат мастер спорта по джиу-джитсу",
             'assignment_date': '2022-10-11',
-            'document_link': 'document_link3'
+            'document_link': 'document_link3',
+            'sport_type_id': sport_type3_id
         }]
     )
 
@@ -1405,19 +1427,22 @@ def create_user(id,
             'profile_id': personal_profile_id,
             'name': "III место на Токийском съезде джиу-джитсу",
             'assignment_date': '2022-10-09',
-            'document_link': 'document_link1'
+            'document_link': 'document_link1',
+            'sport_type_id': sport_type3_id
         }, {
             'id': sport_achievement2_id,
             'profile_id': personal_profile_id,
             'name': "I место в Чемпионате Мира по боксу",
             'assignment_date': '2022-10-10',
-            'document_link': 'document_link2'
+            'document_link': 'document_link2',
+            'sport_type_id': sport_type1_id
         }, {
             'id': sport_achievement3_id,
             'profile_id': personal_profile_id,
             'name': "II место в Чемпионате города Астаны по карате",
             'assignment_date': '2022-10-11',
-            'document_link': 'document_link3'
+            'document_link': 'document_link3',
+            'sport_type_id': sport_type2_id
         }]
     )
 
