@@ -86,12 +86,7 @@ async def update(*,
         Update DrivingLicense
 
         - **id**: UUID - the ID of DrivingLicense to update. This is required.
-        - **document_number**: str
-        - **category**: List[str]
-        - **date_of_issue**: datetime.date
-        - **date_to**: datetime.date
-        - **document_link**: str
-        - **profile_id**: uuid.UUID
+        - **document_link**: str (url)
     """
     Authorize.jwt_required()
     return driving_license_service.update(

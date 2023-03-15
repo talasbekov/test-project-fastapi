@@ -87,13 +87,7 @@ async def update(*,
         Update BiographicInfo
 
         - **id**: UUID - the ID of BiographicInfo to update. This is required.
-        - **place_birth**: datetime.date -
-        - **gender**: bool
-        - **citizenship**: str
-        - **nationality**: str
-        - **family_status**: str
-        - **address**: str
-        - **profile_id**: uuid.UUID
+        - **residence_address**: str
     """
     Authorize.jwt_required()
     return biographic_info_service.update(

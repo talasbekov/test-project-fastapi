@@ -85,11 +85,7 @@ async def update(*,
         Update Passport
 
         - **id**: UUID - the ID of Passport to update. This is required.
-        - **document_number**: str
-        - **date_of_issue**: datetime.date
-        - **date_to**: datetime.date
-        - **document_link**: str
-        - **profile_id**: uuid.UUID
+        - **document_link**: str (url)
     """
     Authorize.jwt_required()
     return passport_service.update(
