@@ -1,8 +1,8 @@
 import uuid
-
-from pydantic import BaseModel
-from typing import Optional
 from datetime import date
+from typing import Optional
+
+from pydantic import AnyUrl, BaseModel
 
 from .academic_degree_degree import AcademicDegreeDegreeRead
 from .science import ScienceRead
@@ -15,7 +15,7 @@ class AcademicDegreeBase(BaseModel):
     science_id: uuid.UUID
     specialty_id: uuid.UUID
     document_number: str
-    document_link: str
+    document_link: AnyUrl
     assignment_date: date
 
     class Config:

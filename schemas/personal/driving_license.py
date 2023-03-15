@@ -2,7 +2,7 @@ import datetime
 import uuid
 from typing import List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, AnyUrl
 
 
 class DrivingLicenseBase(BaseModel):
@@ -10,7 +10,7 @@ class DrivingLicenseBase(BaseModel):
     category: List[str]
     date_of_issue: datetime.date
     date_to: datetime.date
-    document_link: str
+    document_link: AnyUrl
     profile_id: uuid.UUID
 
 
@@ -19,7 +19,7 @@ class DrivingLicenseCreate(DrivingLicenseBase):
 
 
 class DrivingLicenseUpdate(BaseModel):
-    document_link: Optional[str]
+    document_link: Optional[AnyUrl]
 
 
 class DrivingLicenseRead(DrivingLicenseBase):

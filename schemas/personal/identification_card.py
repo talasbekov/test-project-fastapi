@@ -1,9 +1,8 @@
-import uuid
 import datetime
+import uuid
+from typing import List, Optional
 
-from typing import Optional, List
-
-from pydantic import BaseModel
+from pydantic import AnyUrl, BaseModel
 
 
 class IdentificationCardBase(BaseModel):
@@ -11,7 +10,7 @@ class IdentificationCardBase(BaseModel):
     date_of_issue: datetime.date
     date_to: datetime.date
     issued_by: str
-    document_link: str
+    document_link: AnyUrl
     profile_id: uuid.UUID
 
 
@@ -20,7 +19,7 @@ class IdentificationCardCreate(IdentificationCardBase):
 
 
 class IdentificationCardUpdate(BaseModel):
-    document_link: Optional[str]
+    document_link: Optional[AnyUrl]
 
 
 class IdentificationCardRead(IdentificationCardBase):

@@ -1,8 +1,8 @@
-import uuid
 import datetime
-
-from pydantic import BaseModel
+import uuid
 from typing import Optional
+
+from pydantic import AnyUrl, BaseModel
 
 from .institution import InstitutionRead
 from .institution_degree_type import InstitutionDegreeTypeRead
@@ -14,7 +14,7 @@ class EducationBase(BaseModel):
     degree_id: Optional[uuid.UUID]
     start_date: Optional[datetime.date]
     end_date: Optional[datetime.date]
-    document_link: str
+    document_link: AnyUrl
 
     class Config:
         orm_mode = True
@@ -36,7 +36,7 @@ class EducationRead(EducationBase):
     degree_id: Optional[uuid.UUID]
     start_date: Optional[datetime.date]
     end_date: Optional[datetime.date]
-    document_link: str
+    document_link: Optional[str]
 
     institution: Optional[InstitutionRead]
     degree: Optional[InstitutionDegreeTypeRead]

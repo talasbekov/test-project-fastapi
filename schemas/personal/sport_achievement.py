@@ -1,15 +1,14 @@
-import uuid
 import datetime
+import uuid
+from typing import List, Optional
 
-from typing import Optional, List
-
-from pydantic import BaseModel
+from pydantic import AnyUrl, BaseModel
 
 
 class SportAchievementBase(BaseModel):
     name: str
     assignment_date: datetime.date
-    document_link: str
+    document_link: AnyUrl
     profile_id: uuid.UUID
 
 
@@ -32,5 +31,3 @@ class SportAchievementRead(SportAchievementBase):
 
     class Config:
         orm_mode = True
-
-
