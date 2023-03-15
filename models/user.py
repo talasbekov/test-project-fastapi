@@ -34,7 +34,6 @@ class User(Model, Base):
     status = Column(String(255), nullable=True)
     status_till = Column(TIMESTAMP(timezone=True), nullable=True)
 
-    birthday = Column(Date, nullable=True)
     description = Column(TEXT, nullable=True)
     cabinet = Column(String(255), nullable=True)
     service_phone_number = Column(String(32), nullable=True)

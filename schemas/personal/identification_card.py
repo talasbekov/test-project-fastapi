@@ -19,8 +19,8 @@ class IdentificationCardCreate(IdentificationCardBase):
     pass
 
 
-class IdentificationCardUpdate(IdentificationCardBase):
-    pass
+class IdentificationCardUpdate(BaseModel):
+    document_link: Optional[str]
 
 
 class IdentificationCardRead(IdentificationCardBase):

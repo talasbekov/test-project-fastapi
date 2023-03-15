@@ -17,4 +17,4 @@ class IdentificationCard(Model, Base):
     document_link = Column(TEXT)
     profile_id = Column(UUID(as_uuid=True), ForeignKey("personal_profiles.id"), nullable=False)
 
-    profile = relationship("PersonalProfile", back_populates="identification_cards")
+    profile = relationship("PersonalProfile", back_populates="identification_card")

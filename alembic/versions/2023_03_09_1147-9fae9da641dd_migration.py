@@ -1149,8 +1149,6 @@ def create_user(id,
             'call_sign': call_sign,
             'id_number': number,
             'phone_number': '+7 (777) 123-47-89',
-            'birthday': '1990-01-23',
-            'address': 'г. Астана, ул. Мангилик Ел, д. 1, кв. 1',
             'rank_id': rank_id,
             'actual_staff_unit_id': actual_staff_unit_id,
             'status': "На работе",
@@ -1423,31 +1421,20 @@ def create_user(id,
         }]
     )
 
-    """
-        Table biographic_infos as BI {
-        id uuid 
-        place_birth str
-        gender bool
-        citizenship str
-        nationality str
-        family_status enum
-        address str
-        profile_id uuid
-        }
-    """
-
     biographic_info_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['biographic_infos'],
         [{
             'id': biographic_info_id,
-            'place_birth': "Астана",
+            'place_birth': "г. Астана",
+            'date_birth': '1990-01-23',
             'gender': True,
             'citizenship': "Казахстан",
             'nationality': 'Казах',
             'family_status': "Женат",
             'address': "г. Астана, ул. Мангилик Ел, д. 1, кв. 1",
+            'residence_address': 'г. Астана, ул. Мангилик Ел, д. 1, кв. 1',
             'profile_id': personal_profile_id
         }]
     )

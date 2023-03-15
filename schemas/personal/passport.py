@@ -18,8 +18,8 @@ class PassportCreate(PassportBase):
     pass
 
 
-class PassportUpdate(PassportBase):
-    pass
+class PassportUpdate(BaseModel):
+    document_link: Optional[str]
 
 
 class PassportRead(PassportBase):

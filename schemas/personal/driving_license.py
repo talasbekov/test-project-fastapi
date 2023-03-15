@@ -18,8 +18,8 @@ class DrivingLicenseCreate(DrivingLicenseBase):
     pass
 
 
-class DrivingLicenseUpdate(DrivingLicenseBase):
-    pass
+class DrivingLicenseUpdate(BaseModel):
+    document_link: Optional[str]
 
 
 class DrivingLicenseRead(DrivingLicenseBase):
