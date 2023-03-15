@@ -9,7 +9,7 @@ class UserLiberationsService(ServiceBase[UserLiberation,UserLiberationsCreate,Us
     def get_by_id(self,db: Session,id: str):
         user_liberations = super().get(db,id)
         if user_liberations is None:
-            raise client.NotFoundException(detail="Medical profile is not found!")
+            raise client.NotFoundException(detail="User liberation is not found!")
         return user_liberations
         
 

@@ -49,7 +49,6 @@ async def create(*,
         Create new Language
 
         - **name**: required
-        - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
     return language_service.create(db, body)
@@ -86,7 +85,6 @@ async def update(*,
 
         - **id**: UUID - the ID of Language to update. This is required.
         - **name**: required.
-        - **url**: image url. This parameter is required.
     """
     Authorize.jwt_required()
     return language_service.update(

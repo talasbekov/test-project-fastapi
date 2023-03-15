@@ -48,8 +48,8 @@ async def create(*,
         no parameters required
     """
     Authorize.jwt_required()
-    profile = profile_service.get_by_user_id(db, Authorize.get_jwt_subject())
-    return personal_profile_service.create(db, {"profile_id": profile.id})
+    # profile = profile_service.get_by_user_id(db, Authorize.get_jwt_subject())
+    return personal_profile_service.create(db, body)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -102,6 +102,6 @@ async def get_profile_by_id(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
     Authorize: AuthJWT = Depends()
-):
+):   
     Authorize.jwt_required()
     return profile_service.get_by_user_id(db, id).personal_profile
