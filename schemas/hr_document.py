@@ -91,4 +91,3 @@ class HrDocumentRead(HrDocumentBase):
 
     class Config:
         orm_mode = True
-    
