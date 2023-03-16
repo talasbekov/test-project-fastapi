@@ -11,7 +11,7 @@ from .association import staff_unit_function
 
 class JurisdictionEnum(str, enum.Enum):
     ALL_SERVICE = "Вся служба"
-    PERSONNEL = "Личное дело"
+    PERSONNEL = "Личный Состав"
     COMBAT_UNIT = "Боевое Подразделение"
     STAFF_UNIT = "Штабное Подразделение"
     CANDIDATES = "Кандидаты"

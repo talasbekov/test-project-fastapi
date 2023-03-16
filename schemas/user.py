@@ -24,6 +24,7 @@ class UserBase(BaseModel):
     status_till: Optional[datetime.datetime]
     cabinet: Optional[str]
     service_phone_number: Optional[str]
+    supervised_by: Optional[uuid.UUID]
 
 
 class UserCreate(UserBase):

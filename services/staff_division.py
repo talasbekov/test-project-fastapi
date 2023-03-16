@@ -42,9 +42,13 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
         ).all()
 
     def get_by_name(self, db: Session, name: str) -> StaffDivision:
-        return db.query(self.model).filter(
+        group = db.query(self.model).filter(
             StaffDivision.name == name
         ).first()
+
+        if group is None:
+            raise NotFoundException(f"StaffDivision with name: {name} is not found!")
+        return group
 
     def change_parent_group(self,
             db: Session,
