@@ -5,8 +5,7 @@ from pydantic import BaseModel
 
 
 class HrDocumentStatusBase(BaseModel):
-    name_kz: str
-    name_ru: str
+    name: str
 
 
 class HrDocumentStatusCreate(HrDocumentStatusBase):
@@ -19,8 +18,7 @@ class HrDocumentStatusUpdate(HrDocumentStatusBase):
 
 class HrDocumentStatusRead(HrDocumentStatusBase):
     id: Optional[uuid.UUID]
-    name_kz: Optional[str]
-    name_ru: Optional[str]
+    name: Optional[str]
 
     class Config:
         orm_mode = True

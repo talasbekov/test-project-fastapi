@@ -90,8 +90,7 @@ def upgrade() -> None:
     )
     op.create_table('jurisdictions',
     sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('name_kz', sa.String(), nullable=False),
-    sa.Column('name_ru', sa.String(), nullable=False),
+    sa.Column('name', sa.String(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.PrimaryKeyConstraint('id')
@@ -134,8 +133,7 @@ def upgrade() -> None:
     )
     op.create_table('hr_document_statuses',
     sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('name_kz', sa.String(), nullable=True),
-    sa.Column('name_ru', sa.String(), nullable=True),
+    sa.Column('name', sa.String(), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
               nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
@@ -257,8 +255,7 @@ def upgrade() -> None:
     )
     op.create_table('family_statuses',
     sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('name_kz', sa.String(), nullable=False),
-    sa.Column('name_ru', sa.String(), nullable=False),
+    sa.Column('name', sa.String(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
               nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),

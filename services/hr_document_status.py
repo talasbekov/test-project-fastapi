@@ -17,8 +17,8 @@ class HrDocumentStatusService(ServiceBase[HrDocumentStatus, HrDocumentStatusCrea
             raise NotFoundException(detail=f"HrDocumentStatus with id: {id} is not found!")
         return status
 
-    def get_by_name(self, db: Session, name_ru: str) -> Optional[HrDocumentStatus]:
-        return db.query(self.model).filter(self.model.name_ru == name_ru).first()
+    def get_by_name(self, db: Session, name: str) -> Optional[HrDocumentStatus]:
+        return db.query(self.model).filter(self.model.name == name).first()
 
 
 hr_document_status_service = HrDocumentStatusService(HrDocumentStatus)

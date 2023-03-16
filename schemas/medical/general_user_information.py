@@ -7,7 +7,7 @@ from pydantic import BaseModel
 class GeneralUserInformationBase(BaseModel):
     height: int
     blood_group: str
-    age_group_id: uuid.UUID
+    age_group: str
     profile_id: uuid.UUID
     weight: int
  
@@ -28,7 +28,7 @@ class GeneralUserInformationRead(GeneralUserInformationBase):
     id: Optional[uuid.UUID]
     height: Optional[int]
     blood_group: Optional[str]
-    age_group_id: Optional[uuid.UUID]
+    age_group: Optional[str]
     profile_id: Optional[uuid.UUID]
     weight: Optional[int]
 

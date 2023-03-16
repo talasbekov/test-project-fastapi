@@ -57,13 +57,14 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
     def get_initialized_documents(self, db: Session, user_id: uuid.UUID, skip: int, limit: int):
 
         user = user_service.get_by_id(db, user_id)
-        
-        documents = [i.hr_document for i in hr_document_info_service.get_initialized_by_user_id(db, user_id, skip, limit)]
+
+        documents = [i.hr_document for i in
+                     hr_document_info_service.get_initialized_by_user_id(db, user_id, skip, limit)]
 
         return self._return_correctly(db, documents, user)
 
     def get_not_signed_documents(
-        self, db: Session, user_id: str, skip: int, limit: int
+            self, db: Session, user_id: str, skip: int, limit: int
     ):
         user = user_service.get_by_id(db, user_id)
 
@@ -98,7 +99,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 detail=f"Вы не можете инициализировать этот документ!"
             )
 
-        document_staff_function: DocumentStaffFunction = document_staff_function_service.get_by_id(db, step.staff_function_id)
+        document_staff_function: DocumentStaffFunction = document_staff_function_service.get_by_id(db,
+                                                                                                   step.staff_function_id)
 
         if not self._check_jurisdiction(db, staff_unit, document_staff_function, body.user_ids):
             raise ForbiddenException(
@@ -171,16 +173,17 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         return document
 
     def sign(
-        self,
-        db: Session,
-        document_id: str,
-        body: HrDocumentSign,
-        user_id: str,
-        role: str,
+            self,
+            db: Session,
+            document_id: str,
+            body: HrDocumentSign,
+            user_id: str,
+            role: str,
     ):
         document = self.get_by_id(db, document_id)
 
-        completed_status: HrDocumentStatus = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.COMPLETED.value)
+        completed_status: HrDocumentStatus = hr_document_status_service.get_by_name(db,
+                                                                                    HrDocumentStatusEnum.COMPLETED.value)
 
         if document.last_step is None and document.status_id is completed_status.id:
             raise InvalidOperationException(detail=f'Document is already signed!')
@@ -200,7 +203,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             db, document.hr_document_template_id
         )
 
-        document_staff_function: DocumentStaffFunction = document_staff_function_service.get_by_id(db, step.staff_function_id)
+        document_staff_function: DocumentStaffFunction = document_staff_function_service.get_by_id(db,
+                                                                                                   step.staff_function_id)
 
         user_ids = []
         for user in document.users:
@@ -230,7 +234,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
             document.last_step_id = next_step.id
 
-            in_progress_status: HrDocumentStatus = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.IN_PROGRESS.value)
+            in_progress_status: HrDocumentStatus = hr_document_status_service.get_by_name(db,
+                                                                                          HrDocumentStatusEnum.IN_PROGRESS.value)
 
             document.status_id = in_progress_status.id
 
@@ -252,7 +257,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
             document.last_step = steps[0]
 
-            on_revision_status: HrDocumentStatus = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.ON_REVISION.value)
+            on_revision_status: HrDocumentStatus = hr_document_status_service.get_by_name(db,
+                                                                                          HrDocumentStatusEnum.ON_REVISION.value)
 
             document.status_id = on_revision_status.id
 
@@ -302,7 +308,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         )
 
     def get_all_by_option(
-        self, db: Session, option: str, data_taken: str, id: uuid.UUID
+            self, db: Session, option: str, data_taken: str, id: uuid.UUID
     ):
         service = options.get(option)
         if service is None:
@@ -357,10 +363,10 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         document.signed_at = datetime.now()
         document.reg_number = (
-            str(random.randint(1, 10000))
-            + "-"
-            + str(random.randint(1, 10000))
-            + "қбп/жқ"
+                str(random.randint(1, 10000))
+                + "-"
+                + str(random.randint(1, 10000))
+                + "қбп/жқ"
         )
 
         document.last_step_id = None
@@ -473,7 +479,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         return False
 
     def _return_correctly(
-        self, db: Session, documents: List[HrDocument], user: User
+            self, db: Session, documents: List[HrDocument], user: User
     ) -> List[HrDocumentRead]:
         s = set()
 
@@ -498,17 +504,17 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         jurisdiction = jurisdiction_service.get_by_id(db, document_staff_function.jurisdiction_id)
 
         # Проверка на вид юрисдикции "Вся служба"
-        if jurisdiction.name_ru == JurisdictionEnum.ALL_SERVICE.value:
+        if jurisdiction.name == JurisdictionEnum.ALL_SERVICE.value:
             return True
 
         staff_division = staff_division_service.get_by_id(db, staff_unit.staff_division_id)
 
         # Проверка на вид юрисдикции "Боевое подразделение"
-        if jurisdiction.name_ru == JurisdictionEnum.COMBAT_UNIT.value:
+        if jurisdiction.name == JurisdictionEnum.COMBAT_UNIT.value:
             return staff_division.is_combat_unit
 
         # Проверка на вид юрисдикции "Штатное подразделение"
-        if jurisdiction.name_ru == JurisdictionEnum.STAFF_UNIT.value:
+        if jurisdiction.name == JurisdictionEnum.STAFF_UNIT.value:
             return not staff_division.is_combat_unit
 
         subject_users: List[User] = []
@@ -517,48 +523,58 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             subject_users.append(user_service.get_by_id(db, i))
 
         # Проверка на вид юрисдикции "Личное дело"
-        if jurisdiction.name_ru == JurisdictionEnum.PERSONNEL.value:
-            # Получаем все дочерние штатные группы пользователя, включая саму группу
-            staff_divisions: List[StaffDivision] = staff_division_service.get_child_groups(db, staff_unit.staff_division_id)
-            staff_divisions.append(staff_division)
-
-            # Получаем все staff unit из staff divisions
-            staff_units: List[StaffUnit] = []
-            for i in staff_divisions:
-                staff_units.extend(staff_unit_service.get_by_staff_division_id(db, i.id))
-
-            # Проверка субъекта на присутствие в штатной единице
-            # Метод возвращает True если все из субъектов относятся к штатной единице
-            # Если один из субъектов не относится к штатной единице то метод выбрасывает False
-            for i in subject_users:
-                if i.actual_staff_unit not in staff_units:
-                    return False
-
-            return True
+        if jurisdiction.name == JurisdictionEnum.PERSONNEL.value:
+            self._check_personnel_jurisdiction(db, staff_unit=staff_unit, staff_division=staff_division, subject_users=subject_users)
 
         # Проверка на вид юрисдикции Курируемые сотрудники
-        if jurisdiction.name_ru == JurisdictionEnum.SUPERVISED_EMPLOYEES.value:
-            for i in subject_users:
-                if i.supervised_by is None:
-                    return False
-
-            return True
+        if jurisdiction.name == JurisdictionEnum.SUPERVISED_EMPLOYEES.value:
+            self._check_supervised_jurisdiction(subject_users=subject_users)
 
         # Проверка на вид юрисдикции Кандидаты
-        if jurisdiction.name_ru == JurisdictionEnum.CANDIDATES.value:
-            staff_units: List[StaffUnit] = []
-            for i in subject_users:
-                staff_units.append(i.staff_unit)
-
-            candidates_staff_division = staff_division_service.get_by_name(db, StaffDivisionEnum.CANDIDATES.value)
-
-            for i in staff_units:
-                if not i.staff_division_id == candidates_staff_division.id:
-                    return False
-
-            return True
+        if jurisdiction.name == JurisdictionEnum.CANDIDATES.value:
+            self._check_candidates_jurisdiction(db, subject_users=subject_users)
 
         return False
+
+    def _check_personnel_jurisdiction(self, db: Session, staff_unit: StaffUnit, staff_division: StaffDivision,
+                                      subject_users: List[User]) -> bool:
+        # Получаем все дочерние штатные группы пользователя, включая саму группу
+        staff_divisions: List[StaffDivision] = staff_division_service.get_child_groups(db, staff_unit.staff_division_id)
+        staff_divisions.append(staff_division)
+
+        # Получаем все staff unit из staff divisions
+        staff_units: List[StaffUnit] = []
+        for i in staff_divisions:
+            staff_units.extend(staff_unit_service.get_by_staff_division_id(db, i.id))
+
+        # Проверка субъекта на присутствие в штатной единице
+        # Метод возвращает True если все из субъектов относятся к штатной единице
+        # Если один из субъектов не относится к штатной единице то метод выбрасывает False
+        for i in subject_users:
+            if i.actual_staff_unit not in staff_units:
+                return False
+
+        return True
+
+    def _check_supervised_jurisdiction(self, subject_users: List[User]) -> bool:
+        for i in subject_users:
+            if i.supervised_by is None:
+                return False
+
+        return True
+
+    def _check_candidates_jurisdiction(self, db: Session, subject_users: List[User]):
+        staff_units: List[StaffUnit] = []
+        for i in subject_users:
+            staff_units.append(i.staff_unit)
+
+        candidates_staff_division = staff_division_service.get_by_name(db, StaffDivisionEnum.CANDIDATES.value)
+
+        for i in staff_units:
+            if not i.staff_division_id == candidates_staff_division.id:
+                return False
+
+        return True
 
 
 hr_document_service = HrDocumentService(HrDocument)

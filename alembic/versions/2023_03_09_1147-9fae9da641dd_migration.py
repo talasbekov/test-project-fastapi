@@ -21,14 +21,6 @@ def get_uuid():
     return str(uuid.uuid4())
 
 
-# Medical
-age_group_id = get_uuid()
-age_group2_id = get_uuid()
-age_group3_id = get_uuid()
-age_group4_id = get_uuid()
-age_group5_id = get_uuid()
-age_group6_id = get_uuid()
-
 # Personal
 family_status_id = get_uuid()
 family_status2_id = get_uuid()
@@ -282,29 +274,6 @@ def upgrade() -> None:
         }]
     )
 
-    op.bulk_insert(
-        Base.metadata.tables['age_groups'],
-        [{
-            'id': age_group_id,
-            'group': 1
-        }, {
-            'id': age_group2_id,
-            'group': 2
-        }, {
-            'id': age_group3_id,
-            'group': 3
-        }, {
-            'id': age_group4_id,
-            'group': 4
-        }, {
-            'id': age_group5_id,
-            'group': 5
-        }, {
-            'id': age_group6_id,
-            'group': 6
-        }]
-    )
-
     hr_document_status_id = get_uuid()
     hr_document_status2_id = get_uuid()
     hr_document_status3_id = get_uuid()
@@ -315,24 +284,19 @@ def upgrade() -> None:
         Base.metadata.tables['hr_document_statuses'],
         [{
             'id': hr_document_status_id,
-            'name_kz': "Инициализацияланған",
-            'name_ru': "Иницилизирован",
+            'name': "Иницилизирован",
         }, {
             'id': hr_document_status2_id,
-            'name_kz': "Процесінде",
-            'name_ru': "В процессе",
+            'name': "В процессе",
         }, {
             'id': hr_document_status3_id,
-            'name_kz': "Аяқталды",
-            'name_ru': "Завершен",
+            'name': "Завершен",
         }, {
             'id': hr_document_status4_id,
-            'name_kz': "Жойылды",
-            'name_ru': "Отменен",
+            'name': "Отменен",
         }, {
             'id': hr_document_status5_id,
-            'name_kz': "Пысықтауда",
-            'name_ru': "На доработке",
+            'name': "На доработке",
         }]
     )
 
@@ -378,28 +342,22 @@ def upgrade() -> None:
         Base.metadata.tables['jurisdictions'],
         [{
             'id': jurisdiction_id,
-            'name_kz': "Барлық қызмет",
-            'name_ru': "Вся служба"
+            'name': "Вся служба"
         }, {
             'id': jurisdiction2_id,
-            'name_kz': "Жеке Құрам",
-            'name_ru': "Личный Состав"
+            'name': "Личный Состав"
         }, {
             'id': jurisdiction3_id,
-            'name_kz': "Жауынгерлік Бөлім",
-            'name_ru': "Боевое Подразделение"
+            'name': "Боевое Подразделение"
         }, {
             'id': jurisdiction4_id,
-            'name_kz': "Штаб Бөлімшесі",
-            'name_ru': "Штабное Подразделение"
+            'name': "Штабное Подразделение"
         }, {
             'id': jurisdiction5_id,
-            'name_kz': "Үміткерлер",
-            'name_ru': "Кандидаты"
+            'name': "Кандидаты"
         }, {
             'id': jurisdiction6_id,
-            'name_kz': "Жетекшілік ететін қызметкерлер",
-            'name_ru': "Курьируемые сотрудники"
+            'name': "Курьируемые сотрудники"
         }]
     )
 
@@ -740,20 +698,16 @@ def upgrade() -> None:
         Base.metadata.tables['family_statuses'],
         [{
             'id': family_status_id,
-            'name_kz': "Үйленген / Тұрмыс құрған",
-            'name_ru': "Женат / Замужем",
+            'name': "Женат / Замужем",
         }, {
             'id': family_status2_id,
-            'name_kz': "Уйленбеген / Тұрмыс құрмаған",
-            'name_ru': "Не женат / Не замужем",
+            'name': "Не женат / Не замужем",
         }, {
             'id': family_status3_id,
-            'name_kz': "Ажырасқан",
-            'name_ru': "Разведен-а",
+            'name': "Разведен-а",
         }, {
             'id': family_status4_id,
-            'name_kz': "Жесір",
-            'name_ru': "Вдовец / Вдова",
+            'name': "Вдовец / Вдова",
         }]
     )
 
@@ -1679,7 +1633,7 @@ def create_user(id,
             'id':general_user_information_id,
             'height': 189,
             'blood_type': "AB (IV) Rh+",
-            'age_group_id': age_group_id,
+            'age_group': 3,
             'profile_id': medical_profile_id,
             'weight': 82
         }]

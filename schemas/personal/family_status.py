@@ -6,8 +6,7 @@ from pydantic import BaseModel
 
 
 class FamilyStatusBase(BaseModel):
-    name_kz: str
-    name_ru: str
+    name: str
 
 
 class FamilyStatusCreate(FamilyStatusBase):
@@ -20,8 +19,7 @@ class FamilyStatusUpdate(FamilyStatusBase):
 
 class FamilyStatusRead(FamilyStatusBase):
     id: Optional[uuid.UUID]
-    name_kz: Optional[str]
-    name_ru: Optional[str]
+    name: Optional[str]
 
     class Config:
         orm_mode = True

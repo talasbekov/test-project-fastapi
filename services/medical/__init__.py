@@ -1,6 +1,5 @@
 from .anthropometric_data import anthropometric_data_service
 from .dispensary_registrations import dispensary_registration_service
-from .age_group import age_group_service
 from .general_user_information import general_user_information_service
 from .hospital_date import hospital_data_service
 from .medical_profile import medical_profile_service

@@ -117,24 +117,24 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         staff_division: StaffDivision = staff_division_service.get_by_id(db, staff_unit.staff_division_id)
 
         for i in jurisdictions:
-            if i.name_ru == JurisdictionEnum.ALL_SERVICE.value:
+            if i.name == JurisdictionEnum.ALL_SERVICE.value:
                 return super().get_multi(db, skip=skip, limit=limit)
 
-            if i.name_ru == JurisdictionEnum.PERSONNEL.value:
+            if i.name == JurisdictionEnum.PERSONNEL.value:
                 return self._get_users_by_personnel_jurisdiction(db, staff_division)
 
-            if i.name_ru == JurisdictionEnum.SUPERVISED_EMPLOYEES.value:
+            if i.name == JurisdictionEnum.SUPERVISED_EMPLOYEES.value:
                 return db.query(self.model).filter(
                     self.model.supervised_by.isnot(None)
                 ).all()
 
-            if i.name_ru == JurisdictionEnum.COMBAT_UNIT.value:
+            if i.name == JurisdictionEnum.COMBAT_UNIT.value:
                 return self._get_users_by_combat_unit_jurisdiction(db)
 
-            if i.name_ru == JurisdictionEnum.STAFF_UNIT.value:
+            if i.name == JurisdictionEnum.STAFF_UNIT.value:
                 return self._get_users_by_staff_unit_jurisdiction(db)
 
-            if i.name_ru == JurisdictionEnum.CANDIDATES.value:
+            if i.name == JurisdictionEnum.CANDIDATES.value:
                 return self._get_users_by_candidates_jurisdiction(db)
 
     def _get_users_by_personnel_jurisdiction(self, db: Session, staff_division: StaffDivision) -> List[User]:

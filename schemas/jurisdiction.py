@@ -5,8 +5,7 @@ from pydantic import BaseModel
 
 
 class JurisdictionBase(BaseModel):
-    name_kz: str
-    name_ru: str
+    name: str
 
 
 class JurisdictionCreate(JurisdictionBase):
@@ -19,8 +18,7 @@ class JurisdictionUpdate(JurisdictionBase):
 
 class JurisdictionRead(JurisdictionBase):
     id: Optional[uuid.UUID]
-    name_kz: Optional[str]
-    name_ru: Optional[str]
+    name: Optional[str]
 
     class Config:
         orm_mode = True
