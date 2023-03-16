@@ -1,2 +1,14 @@
-s = "[\n  {\n    \"loc\": [\n      \"response\",\n      0,\n      \"family\",\n      0,\n      \"birthplace\"\n    ],\n    \"msg\": \"none is not an allowed value\",\n    \"type\": \"type_error.none.not_allowed\"\n  },\n  {\n    \"loc\": [\n      \"response\",\n      1,\n      \"family\",\n      0,\n      \"birthplace\"\n    ],\n    \"msg\": \"none is not an allowed value\",\n    \"type\": \"type_error.none.not_allowed\"\n  },\n  {\n    \"loc\": [\n      \"response\",\n      2,\n      \"family\",\n      0,\n      \"birthplace\"\n    ],\n    \"msg\": \"none is not an allowed value\",\n    \"type\": \"type_error.none.not_allowed\"\n  },\n  {\n    \"loc\": [\n      \"response\",\n      3,\n      \"family\",\n      0,\n      \"birthplace\"\n    ],\n    \"msg\": \"none is not an allowed value\",\n    \"type\": \"type_error.none.not_allowed\"\n  },\n  {\n    \"loc\": [\n      \"response\",\n      4,\n      \"family\",\n      0,\n      \"birthplace\"\n    ],\n    \"msg\": \"none is not an allowed value\",\n    \"type\": \"type_error.none.not_allowed\"\n  },\n  {\n    \"loc\": [\n      \"response\",\n      5,\n      \"family\",\n      0,\n      \"birthplace\"\n    ],\n    \"msg\": \"none is not an allowed value\",\n    \"type\": \"type_error.none.not_allowed\"\n  },\n  {\n    \"loc\": [\n      \"response\",\n      6,\n      \"family\",\n      0,\n      \"birthplace\"\n    ],\n    \"msg\": \"none is not an allowed value\",\n    \"type\": \"type_error.none.not_allowed\"\n  },\n  {\n    \"loc\": [\n      \"response\",\n      7,\n      \"family\",\n      0,\n      \"birthplace\"\n    ],\n    \"msg\": \"none is not an allowed value\",\n    \"type\": \"type_error.none.not_allowed\"\n  },\n  {\n    \"loc\": [\n      \"response\",\n      8,\n      \"family\",\n      0,\n      \"birthplace\"\n    ],\n    \"msg\": \"none is not an allowed value\",\n    \"type\": \"type_error.none.not_allowed\"\n  },\n  {\n    \"loc\": [\n      \"response\",\n      9,\n      \"family\",\n      0,\n      \"birthplace\"\n    ],\n    \"msg\": \"none is not an allowed value\",\n    \"type\": \"type_error.none.not_allowed\"\n  },\n  {\n    \"loc\": [\n      \"response\",\n      10,\n      \"family\",\n      0,\n      \"birthplace\"\n    ],\n    \"msg\": \"none is not an allowed value\",\n    \"type\": \"type_error.none.not_allowed\"\n  }\n]"
-print(s)
+import os
+import socket
+import time
+
+# Set up socket
+HOST = ''  # Listen on all available interfaces
+PORT = 5000  # Port number to listen on
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.bind((HOST, PORT))
+sock.listen(1)
+
+# Accept a client connection
+conn, addr = sock.accept()
+print(f'Connected by {addr}')

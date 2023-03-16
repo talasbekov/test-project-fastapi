@@ -6,7 +6,7 @@ from pydantic import BaseModel, ValidationError, validator
 
 from models import HrDocumentStatus
 
-from schemas import HrDocumentTemplateRead, UserRead
+from schemas import HrDocumentTemplateRead, UserRead, HrDocumentStepRead
 
 
 class HrDocumentBase(BaseModel):
@@ -86,9 +86,8 @@ class HrDocumentRead(HrDocumentBase):
     users: Optional[List[UserRead]]
     created_at: Optional[datetime]
     updated_at: Optional[datetime]
-
+    last_step: Optional[HrDocumentStepRead]
     new_value: Optional[dict]
 
     class Config:
         orm_mode = True
-    
