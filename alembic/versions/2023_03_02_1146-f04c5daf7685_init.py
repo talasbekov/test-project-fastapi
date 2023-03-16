@@ -180,7 +180,6 @@ def upgrade() -> None:
     sa.Column('actual_staff_unit_id', sa.UUID(), nullable=False),
     sa.Column('status', sa.String(length=255), nullable=True),
     sa.Column('status_till', sa.TIMESTAMP(timezone=True), nullable=True),
-    sa.Column('birthday', sa.Date(), nullable=True),
     sa.Column('description', sa.TEXT(), nullable=True),
     sa.Column('cabinet', sa.String(length=255), nullable=True),
     sa.Column('service_phone_number', sa.String(length=32), nullable=True),
@@ -215,6 +214,13 @@ def upgrade() -> None:
     sa.Column('subject_id', sa.UUID(), nullable=True),
     sa.ForeignKeyConstraint(['document_id'], ['hr_documents.id'], ),
     sa.ForeignKeyConstraint(['subject_id'], ['equipments.id'], )
+    )
+    op.create_table('sport_types',
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('name', sa.String(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('hr_document_infos',
     sa.Column('hr_document_step_id', sa.UUID(), nullable=False),
@@ -270,6 +276,7 @@ def upgrade() -> None:
     sa.Column('nationality', sa.String(), nullable=True),
     sa.Column('family_status_id', sa.UUID(), nullable=True),
     sa.Column('address', sa.String(), nullable=True),
+    sa.Column('residence_address', sa.String(), nullable=True),
     sa.Column('profile_id', sa.UUID(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
@@ -334,7 +341,9 @@ def upgrade() -> None:
               nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
               nullable=False),
+    sa.Column('sport_type_id', sa.UUID(), nullable=False),
     sa.ForeignKeyConstraint(['profile_id'], ['personal_profiles.id'], ),
+    sa.ForeignKeyConstraint(['sport_type_id'], ['sport_types.id'],),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('sport_degrees',
@@ -347,7 +356,9 @@ def upgrade() -> None:
               nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
               nullable=False),
+    sa.Column('sport_type_id', sa.UUID(), nullable=False),
     sa.ForeignKeyConstraint(['profile_id'], ['personal_profiles.id'], ),
+    sa.ForeignKeyConstraint(['sport_type_id'], ['sport_types.id'],),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('tax_declarations',

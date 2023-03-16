@@ -1,8 +1,8 @@
-import uuid
 import datetime
-
-from pydantic import BaseModel
+import uuid
 from typing import Optional
+
+from pydantic import AnyUrl, BaseModel
 
 from .course_provider import CourseProviderRead
 
@@ -13,7 +13,7 @@ class CourseBase(BaseModel):
     course_provider_id: Optional[uuid.UUID]
     start_date: Optional[datetime.date]
     end_date: Optional[datetime.date]
-    document_link: str
+    document_link: AnyUrl
 
     class Config:
         orm_mode = True
@@ -35,6 +35,6 @@ class CourseRead(CourseBase):
     course_provider_id: Optional[uuid.UUID]
     start_date: Optional[datetime.date]
     end_date: Optional[datetime.date]
-    document_link: str
+    document_link: Optional[str]
 
     course_provider: Optional[CourseProviderRead]

@@ -19,7 +19,8 @@ class BiographicInfo(Model, Base):
     nationality = Column(String)
     address = Column(String)
     family_status_id = Column(UUID(as_uuid=True), ForeignKey("family_statuses.id"))
+    residence_address = Column(String)
     profile_id = Column(UUID(as_uuid=True), ForeignKey("personal_profiles.id"), nullable=False)
 
     family_status = relationship("FamilyStatus", cascade="all, delete")
-    profile = relationship("PersonalProfile", back_populates="biographic_infos")
+    profile = relationship("PersonalProfile", back_populates="biographic_info")

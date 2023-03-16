@@ -1,7 +1,7 @@
 import uuid
 import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, AnyUrl
 from typing import Optional
 
 from .academic_title_degree import AcademicTitleDegreeRead
@@ -13,7 +13,7 @@ class AcademicTitleBase(BaseModel):
     degree_id: Optional[uuid.UUID]
     specialty_id: Optional[uuid.UUID]
     document_number: str
-    document_link: str
+    document_link: AnyUrl
     assignment_date: Optional[datetime.date]
 
 
@@ -31,7 +31,7 @@ class AcademicTitleRead(AcademicTitleBase):
     degree_id: Optional[uuid.UUID]
     specialty_id: Optional[uuid.UUID]
     document_number: str
-    document_link: str
+    document_link: Optional[str]
     assignment_date: Optional[datetime.date]
 
     degree: Optional[AcademicTitleDegreeRead]

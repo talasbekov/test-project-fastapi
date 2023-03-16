@@ -16,6 +16,7 @@ class BiographicInfoBase(BaseModel):
     nationality: str
     family_status_id: uuid.UUID
     address: str
+    residence_address: str
     profile_id: uuid.UUID
 
 
@@ -23,23 +24,24 @@ class BiographicInfoCreate(BiographicInfoBase):
     pass
 
 
-class BiographicInfoUpdate(BiographicInfoBase):
-    pass
+class BiographicInfoUpdate(BaseModel):
+    residence_address: Optional[str]
 
 
 class BiographicInfoRead(BiographicInfoBase):
     id: Optional[uuid.UUID]
     place_birth: Optional[str]
-    date_birth: Optional[datetime.datetime]
+    date_birth: Optional[datetime.date]
     gender: Optional[bool]
     citizenship: Optional[str]
     nationality: Optional[str]
     family_status_id: Optional[uuid.UUID]
     address: Optional[str]
+    residence_address: Optional[str]
     profile_id: Optional[uuid.UUID]
+    created_at: Optional[datetime.datetime]
+    updated_at: Optional[datetime.datetime]
     family_status: Optional[FamilyStatusRead]
-    created_at: Optional[datetime.date]
-    updated_at: Optional[datetime.date]
 
     class Config:
         orm_mode = True

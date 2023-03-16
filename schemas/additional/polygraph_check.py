@@ -1,13 +1,15 @@
-from pydantic import BaseModel
+import uuid
 from datetime import datetime
 from typing import Optional
-import uuid
+
+from pydantic import AnyUrl, BaseModel
+
 
 class PolygraphCheckBase(BaseModel):
     number: str
     issued_by: str
     date_of_issue: datetime
-    document_link: str
+    document_link: AnyUrl
     
     class Config:
         orm_mode = True
@@ -25,3 +27,5 @@ class PolygraphCheckUpdate(PolygraphCheckBase):
 class PolygraphCheckRead(PolygraphCheckBase):
     profile_id: uuid.UUID
     id: uuid.UUID
+
+    document_link: Optional[str]

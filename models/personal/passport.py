@@ -16,4 +16,4 @@ class Passport(Model, Base):
     document_link = Column(TEXT)
     profile_id = Column(UUID(as_uuid=True), ForeignKey("personal_profiles.id"), nullable=False)
 
-    profile = relationship("PersonalProfile", back_populates="passports")
+    profile = relationship("PersonalProfile", back_populates="passport")

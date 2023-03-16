@@ -84,12 +84,7 @@ async def update(*,
         Update IdentificationCard
 
         - **id**: UUID - the ID of IdentificationCard to update. This is required.
-        - **document_number**: str
-        - **date_of_issue**: datetime.date
-        - **date_to: datetime**.date
-        - **issued_by**: str
-        - **document_link**: str
-        - **profile_id**: uuid.UUID
+        - **document_link**: str (url)
     """
     Authorize.jwt_required()
     return identification_card_service.update(

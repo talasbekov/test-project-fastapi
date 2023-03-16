@@ -1,16 +1,15 @@
-import uuid
 import datetime
+import uuid
+from typing import List, Optional
 
-from typing import Optional, List
-
-from pydantic import BaseModel
+from pydantic import AnyUrl, BaseModel
 
 
 class PassportBase(BaseModel):
     document_number: str
     date_of_issue: datetime.date
     date_to: datetime.date
-    document_link: str
+    document_link: AnyUrl
     profile_id: uuid.UUID
 
 
@@ -18,8 +17,8 @@ class PassportCreate(PassportBase):
     pass
 
 
-class PassportUpdate(PassportBase):
-    pass
+class PassportUpdate(BaseModel):
+    document_link: Optional[AnyUrl]
 
 
 class PassportRead(PassportBase):

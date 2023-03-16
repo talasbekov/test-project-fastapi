@@ -1,12 +1,14 @@
-from pydantic import BaseModel
-from datetime import datetime
 import uuid
+from datetime import datetime
+from typing import Optional
+
+from pydantic import AnyUrl, BaseModel
 
 
 class PsychologicalCheckBase(BaseModel):
     issued_by: str
     date_of_issue: datetime
-    document_link: str
+    document_link: AnyUrl
     profile_id: uuid.UUID
 
     class Config:
@@ -22,3 +24,4 @@ class PsychologicalCheckUpdate(PsychologicalCheckBase):
 class PsychologicalCheckRead(PsychologicalCheckBase):
     id: uuid.UUID
     
+    document_link: Optional[str]

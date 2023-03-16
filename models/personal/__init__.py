@@ -8,3 +8,4 @@ from .sport_achievement import SportAchievement
 from .sport_degree import SportDegree
 from .tax_declaration import TaxDeclaration
 from .user_financial_info import UserFinancialInfo
+from .sport_type import SportType

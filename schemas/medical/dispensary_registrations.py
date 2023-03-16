@@ -2,7 +2,7 @@ import datetime
 import uuid
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import AnyUrl, BaseModel
 
 
 class DispensaryRegistrationBase(BaseModel):
@@ -10,7 +10,7 @@ class DispensaryRegistrationBase(BaseModel):
     initiator: str
     start_date: datetime.datetime
     end_date: datetime.datetime
-    document_link: str
+    document_link: AnyUrl
     profile_id: uuid.UUID
 
 

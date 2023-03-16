@@ -4,7 +4,9 @@ from typing import Any, Dict, List, Optional, Union
 
 from pydantic import BaseModel, ValidationError, validator
 
-from schemas import HrDocumentTemplateRead, UserRead, HrDocumentStatusRead
+from models import HrDocumentStatus
+
+from schemas import HrDocumentTemplateRead, UserRead, HrDocumentStatusRead, HrDocumentStepRead
 
 
 class HrDocumentBase(BaseModel):
@@ -85,9 +87,8 @@ class HrDocumentRead(HrDocumentBase):
     users: Optional[List[UserRead]]
     created_at: Optional[datetime]
     updated_at: Optional[datetime]
-
+    last_step: Optional[HrDocumentStepRead]
     new_value: Optional[dict]
 
     class Config:
         orm_mode = True
-    

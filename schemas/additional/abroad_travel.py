@@ -1,10 +1,11 @@
-from pydantic import BaseModel, validator
-from datetime import datetime
 import uuid
-
+from datetime import datetime
 from typing import Optional
 
+from pydantic import AnyUrl, BaseModel
+
 from .country import CountryRead
+
 
 class AbroadTravelBase(BaseModel):
     vehicle_type: str
@@ -12,7 +13,7 @@ class AbroadTravelBase(BaseModel):
     date_from: datetime
     date_to: datetime
     reason: str
-    document_link: str
+    document_link: AnyUrl
     profile_id: uuid.UUID
 
     class Config:
@@ -31,4 +32,5 @@ class AbroadTravelUpdate(AbroadTravelBase):
 class AbroadTravelRead(AbroadTravelBase):
     id: Optional[uuid.UUID]
 
+    document_link: Optional[str]
     destination_country: Optional[CountryRead]

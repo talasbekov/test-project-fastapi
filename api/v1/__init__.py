@@ -26,7 +26,8 @@ from .medical import *
 from .profile import router as profile_router
 from .personal import (personal_profile_router, biographic_info_router, driving_license_router,
                        identification_card_router, passport_router, sport_achievement_router,
-                       sport_degree_router, tax_declaration_router, user_financial_info_router, family_status_router)
+                       sport_degree_router, tax_declaration_router, user_financial_info_router, sport_type_router,
+                       family_status_router)
 from .family import router as family_router
 from .staff_list import router as staff_list_router
 
@@ -84,3 +85,4 @@ router.include_router(vehicle_router)
 
 router.include_router(staff_list_router)
 router.include_router(country_router)
+router.include_router(sport_type_router)

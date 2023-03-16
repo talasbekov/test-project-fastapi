@@ -1,8 +1,8 @@
 import datetime
 import uuid
-
 from typing import Optional
-from pydantic import BaseModel
+
+from pydantic import AnyUrl, BaseModel
 
 
 class HospitalDataBase(BaseModel):
@@ -11,7 +11,7 @@ class HospitalDataBase(BaseModel):
     place: str
     start_date: datetime.datetime
     end_date: datetime.datetime
-    document_link: str
+    document_link: AnyUrl
     profile_id: uuid.UUID
 
 
