@@ -8,7 +8,7 @@ from pydantic import BaseModel
 
 class BiographicInfoBase(BaseModel):
     place_birth: str
-    date_birth: datetime.datetime
+    date_birth: datetime.date
     gender: bool
     citizenship: str
     nationality: str
