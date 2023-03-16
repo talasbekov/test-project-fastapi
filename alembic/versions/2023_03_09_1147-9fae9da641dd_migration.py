@@ -29,6 +29,11 @@ age_group4_id = get_uuid()
 age_group5_id = get_uuid()
 age_group6_id = get_uuid()
 
+# Personal
+family_status_id = get_uuid()
+family_status2_id = get_uuid()
+family_status3_id = get_uuid()
+family_status4_id = get_uuid()
 
 # Education
 academic_degree_degree1_id = get_uuid()
@@ -59,7 +64,7 @@ language3_id = get_uuid()
 institution1_id = get_uuid()
 institution2_id = get_uuid()
 institution3_id = get_uuid()
-# Additional 
+# Additional
 
 country_id = get_uuid()
 
@@ -300,6 +305,37 @@ def upgrade() -> None:
         }]
     )
 
+    hr_document_status_id = get_uuid()
+    hr_document_status2_id = get_uuid()
+    hr_document_status3_id = get_uuid()
+    hr_document_status4_id = get_uuid()
+    hr_document_status5_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['hr_document_statuses'],
+        [{
+            'id': hr_document_status_id,
+            'name_kz': "Инициализацияланған",
+            'name_ru': "Иницилизирован",
+        }, {
+            'id': hr_document_status2_id,
+            'name_kz': "Процесінде",
+            'name_ru': "В процессе",
+        }, {
+            'id': hr_document_status3_id,
+            'name_kz': "Аяқталды",
+            'name_ru': "Завершен",
+        }, {
+            'id': hr_document_status4_id,
+            'name_kz': "Жойылды",
+            'name_ru': "Отменен",
+        }, {
+            'id': hr_document_status5_id,
+            'name_kz': "Пысықтауда",
+            'name_ru': "На доработке",
+        }]
+    )
+
     doc_type1_id = get_uuid()
     doc_type2_id = get_uuid()
     doc_type3_id = get_uuid()
@@ -331,6 +367,43 @@ def upgrade() -> None:
         }]
     )
 
+    jurisdiction_id = get_uuid()
+    jurisdiction2_id = get_uuid()
+    jurisdiction3_id = get_uuid()
+    jurisdiction4_id = get_uuid()
+    jurisdiction5_id = get_uuid()
+    jurisdiction6_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['jurisdictions'],
+        [{
+            'id': jurisdiction_id,
+            'name_kz': "Барлық қызмет",
+            'name_ru': "Вся служба"
+        }, {
+            'id': jurisdiction2_id,
+            'name_kz': "Жеке Құрам",
+            'name_ru': "Личный Состав"
+        }, {
+            'id': jurisdiction3_id,
+            'name_kz': "Жауынгерлік Бөлім",
+            'name_ru': "Боевое Подразделение"
+        }, {
+            'id': jurisdiction4_id,
+            'name_kz': "Штаб Бөлімшесі",
+            'name_ru': "Штабное Подразделение"
+        }, {
+            'id': jurisdiction5_id,
+            'name_kz': "Үміткерлер",
+            'name_ru': "Кандидаты"
+        }, {
+            'id': jurisdiction6_id,
+            'name_kz': "Жетекшілік ететін қызметкерлер",
+            'name_ru': "Курьируемые сотрудники"
+        }]
+    )
+
+
     staff_function1_id = get_uuid()
     staff_function2_id = get_uuid()
     staff_function3_id = get_uuid()
@@ -351,7 +424,7 @@ def upgrade() -> None:
             'hours_per_week' : 3,
             'discriminator': 'document_staff_function',
             'name' : 'Инициатор приказа о назначении',
-            'jurisdiction': 'Личное дело',
+            'jurisdiction_id': jurisdiction_id,
             'priority': 1,
             'role_id': doc_type5_id
         },
@@ -360,7 +433,7 @@ def upgrade() -> None:
             'hours_per_week' : 3,
             'discriminator': 'document_staff_function',
             'name' : 'Эксперт приказа о назначении',
-            'jurisdiction': 'Личное дело',
+            'jurisdiction_id': jurisdiction_id,
             'priority': 2,
             'role_id': doc_type2_id
         },
@@ -369,7 +442,7 @@ def upgrade() -> None:
             'hours_per_week' : 3,
             'discriminator': 'document_staff_function',
             'name' : 'Утверждающий приказа о назначении',
-            'jurisdiction': 'Личное дело',
+            'jurisdiction_id': jurisdiction_id,
             'priority': 100,
             'role_id': doc_type3_id
         },
@@ -378,7 +451,7 @@ def upgrade() -> None:
             'hours_per_week' : 3,
             'discriminator': 'document_staff_function',
             'name' : 'Инициатор приказа о присвоения звания',
-            'jurisdiction': 'Личное дело',
+            'jurisdiction_id': jurisdiction_id,
             'priority': 1,
             'role_id': doc_type5_id
         },
@@ -387,7 +460,7 @@ def upgrade() -> None:
             'hours_per_week' : 3,
             'discriminator': 'document_staff_function',
             'name' : 'Эксперт приказа о присвоения звания',
-            'jurisdiction': 'Личное дело',
+            'jurisdiction_id': jurisdiction_id,
             'priority': 2,
             'role_id': doc_type2_id
         },
@@ -396,7 +469,7 @@ def upgrade() -> None:
             'hours_per_week' : 3,
             'discriminator': 'document_staff_function',
             'name' : 'Утверждающий приказа о присвоения звания',
-            'jurisdiction': 'Личное дело',
+            'jurisdiction_id': jurisdiction_id,
             'priority': 100,
             'role_id': doc_type3_id
         },
@@ -405,7 +478,7 @@ def upgrade() -> None:
             'hours_per_week' : 3,
             'discriminator': 'document_staff_function',
             'name' : 'Инициатор приказа о присвоения черного берета',
-            'jurisdiction': 'Личное дело',
+            'jurisdiction_id': jurisdiction_id,
             'priority': 1,
             'role_id': doc_type5_id
         },
@@ -414,7 +487,7 @@ def upgrade() -> None:
             'hours_per_week' : 3,
             'discriminator': 'document_staff_function',
             'name' : 'Эксперт приказа о присвоения черного берета',
-            'jurisdiction': 'Личное дело',
+            'jurisdiction_id': jurisdiction_id,
             'priority': 2,
             'role_id': doc_type2_id
         },
@@ -423,7 +496,7 @@ def upgrade() -> None:
             'hours_per_week' : 3,
             'discriminator': 'document_staff_function',
             'name' : 'Утверждающий приказа о присвоения черного берета',
-            'jurisdiction': 'Личное дело',
+            'jurisdiction_id': jurisdiction_id,
             'priority': 100,
             'role_id': doc_type3_id
         }, {
@@ -431,7 +504,7 @@ def upgrade() -> None:
             'hours_per_week' : 3,
             'discriminator': 'document_staff_function',
             'name' : 'Согласующий приказа о присвоения звания',
-            'jurisdiction': 'Личное дело',
+            'jurisdiction_id': jurisdiction_id,
             'priority': 3,
             'role_id': doc_type1_id
         }, {
@@ -439,7 +512,7 @@ def upgrade() -> None:
             'hours_per_week' : 3,
             'discriminator': 'document_staff_function',
             'name' : 'Согласующий приказа о присвоения черного берета',
-            'jurisdiction': 'Личное дело',
+            'jurisdiction_id': jurisdiction_id,
             'priority': 3,
             'role_id': doc_type1_id
         }, {
@@ -447,7 +520,7 @@ def upgrade() -> None:
             'hours_per_week' : 3,
             'discriminator': 'document_staff_function',
             'name' : 'Согласующий приказа о назначении',
-            'jurisdiction': 'Личное дело',
+            'jurisdiction_id': jurisdiction_id,
             'priority': 3,
             'role_id': doc_type1_id
         }]
@@ -650,6 +723,28 @@ def upgrade() -> None:
             'staff_division_id': group3_id
         }]
     )
+
+    op.bulk_insert(
+        Base.metadata.tables['family_statuses'],
+        [{
+            'id': family_status_id,
+            'name_kz': "Үйленген / Тұрмыс құрған",
+            'name_ru': "Женат / Замужем",
+        }, {
+            'id': family_status2_id,
+            'name_kz': "Уйленбеген / Тұрмыс құрмаған",
+            'name_ru': "Не женат / Не замужем",
+        }, {
+            'id': family_status3_id,
+            'name_kz': "Ажырасқан",
+            'name_ru': "Разведен-а",
+        }, {
+            'id': family_status4_id,
+            'name_kz': "Жесір",
+            'name_ru': "Вдовец / Вдова",
+        }]
+    )
+
 
     user1_id = get_uuid()
     user2_id = get_uuid()
@@ -1437,7 +1532,7 @@ def create_user(id,
         gender bool
         citizenship str
         nationality str
-        family_status enum
+        family_status uuid
         address str
         profile_id uuid
         }
@@ -1453,7 +1548,7 @@ def create_user(id,
             'gender': True,
             'citizenship': "Казахстан",
             'nationality': 'Казах',
-            'family_status': "Женат",
+            'family_status_id': family_status_id,
             'address': "г. Астана, ул. Мангилик Ел, д. 1, кв. 1",
             'profile_id': personal_profile_id
         }]

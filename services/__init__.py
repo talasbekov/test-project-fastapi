@@ -3,6 +3,7 @@
 from .base import ServiceBase
 from .profile import *
 
+from .jurisdiction import jurisdiction_service
 from .staff_division import staff_division_service
 from .service_staff_function_type import service_staff_function_type_service
 from .document_staff_function_type import document_staff_function_type_service
@@ -25,6 +26,7 @@ from .hr_document_template import hr_document_template_service
 from .user import user_service
 from .auth import auth_service
 from .hr_document_info import hr_document_info_service
+from .hr_document_status import hr_document_status_service
 from .hr_document import hr_document_service
 from .staff_list import staff_list_service
 

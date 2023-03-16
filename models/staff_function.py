@@ -9,15 +9,6 @@ from models import NamedModel
 
 from .association import staff_unit_function
 
-
-class RoleName(str, enum.Enum):
-    AGREER = "Утверждающий"
-    EXPERT = "Эксперт"
-    APPROVER = "Согласующий"
-    NOTIFIER = "Увемдомляемый"
-    INITIATOR = "Инициатор"
-
-
 class JurisdictionEnum(str, enum.Enum):
     ALL_SERVICE = "Вся служба"
     PERSONNEL = "Личное дело"
@@ -61,12 +52,13 @@ class StaffFunction(NamedModel, Base):
 class DocumentStaffFunction(StaffFunction):
 
     role_id = Column(UUID(as_uuid=True), ForeignKey("document_function_types.id"))
-    jurisdiction = Column(Enum(JurisdictionEnum))
+    jurisdiction_id = Column(UUID(as_uuid=True), ForeignKey("jurisdictions.id"))
 
     priority = Column(Integer)
 
     role = relationship("DocumentFunctionType")
     hr_document_step = relationship("HrDocumentStep", back_populates='staff_function',cascade="all,delete", uselist=False)
+    jurisdiction = relationship("Jurisdiction", cascade="all, delete")
 
     __mapper_args__ = {
         "polymorphic_identity": "document_staff_function"

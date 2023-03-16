@@ -14,8 +14,9 @@ from sqlalchemy.orm import Session
 from core import Base
 from exceptions import (BadRequestException, ForbiddenException,
                         InvalidOperationException, NotFoundException)
-from models import (HrDocument, HrDocumentInfo, HrDocumentStatus,
-                    HrDocumentStep, StaffUnit, User, DocumentStaffFunction, JurisdictionEnum, StaffDivision)
+from models import (HrDocument, HrDocumentInfo, HrDocumentStatusEnum,
+                    HrDocumentStep, StaffUnit, User, DocumentStaffFunction, StaffDivision, JurisdictionEnum,
+                    HrDocumentStatus)
 from schemas import (BadgeRead, HrDocumentCreate, HrDocumentInit,
                      HrDocumentRead, HrDocumentSign, HrDocumentUpdate,
                      RankRead, StaffDivisionOptionRead, StaffDivisionRead,
@@ -24,7 +25,8 @@ from services import (badge_service, document_staff_function_service,
                       document_staff_function_type_service,
                       hr_document_info_service, hr_document_step_service,
                       hr_document_template_service, rank_service,
-                      staff_division_service, staff_unit_service, user_service)
+                      staff_division_service, staff_unit_service, user_service,
+                      jurisdiction_service, hr_document_status_service)
 
 from .base import ServiceBase
 
@@ -119,11 +121,13 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             )
         current_user = user_service.get_by_id(db, user_id)
 
+        status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.IN_PROGRESS.value)
+
         document: HrDocument = super().create(
             db,
             HrDocumentCreate(
                 hr_document_template_id=body.hr_document_template_id,
-                status=HrDocumentStatus.IN_PROGRESS,
+                status_id=status.id,
                 due_date=body.due_date,
                 properties=body.properties,
             ),
@@ -176,7 +180,9 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
     ):
         document = self.get_by_id(db, document_id)
 
-        if document.last_step is None and document.status is HrDocumentStatus.COMPLETED:
+        completed_status: HrDocumentStatus = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.COMPLETED.value)
+
+        if document.last_step is None and document.status_id is completed_status.id:
             raise InvalidOperationException(detail=f'Document is already signed!')
 
         info = hr_document_info_service.get_by_document_id_and_step_id(
@@ -224,7 +230,9 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
             document.last_step_id = next_step.id
 
-            document.status = HrDocumentStatus.IN_PROGRESS
+            in_progress_status: HrDocumentStatus = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.IN_PROGRESS.value)
+
+            document.status_id = in_progress_status.id
 
         else:
             steps = hr_document_step_service.get_all_by_document_template_id(
@@ -244,7 +252,9 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
             document.last_step = steps[0]
 
-            document.status = HrDocumentStatus.ON_REVISION
+            on_revision_status: HrDocumentStatus = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.ON_REVISION.value)
+
+            document.status_id = on_revision_status.id
 
         db.add(document)
         db.flush()
@@ -307,7 +317,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         return [responses.get(option).from_orm(i) for i in service.get_multi(db)]
 
     def _finish_document(self, db: Session, document: HrDocument, users: List[User]):
-        document.status = HrDocumentStatus.COMPLETED
+        completed_status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.COMPLETED.value)
+        document.status_id = completed_status.id
 
         fields = user_service.get_fields()
 
@@ -484,16 +495,16 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             self, db: Session, staff_unit: StaffUnit, document_staff_function: DocumentStaffFunction,
             subject_user_ids: List[uuid.UUID]
     ) -> bool:
-        jurisdiction = document_staff_function.jurisdiction
+        jurisdiction = jurisdiction_service.get_by_id(db, document_staff_function.jurisdiction_id)
 
         # Проверка на вид юрисдикции "Вся служба"
-        if jurisdiction == JurisdictionEnum.ALL_SERVICE:
+        if jurisdiction.name_ru == JurisdictionEnum.ALL_SERVICE.value:
             return True
 
         staff_division = staff_division_service.get_by_id(db, staff_unit.staff_division_id)
 
         # Проверка на вид юрисдикции "Личное дело"
-        if jurisdiction == JurisdictionEnum.PERSONNEL:
+        if jurisdiction.name_ru == JurisdictionEnum.PERSONNEL.value:
             # Получаем все дочерние штатные группы пользователя, включая саму группу
             staff_divisions: List[StaffDivision] = staff_division_service.get_child_groups(db, staff_unit.staff_division_id)
             staff_divisions.append(staff_division)
@@ -518,11 +529,11 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             return True
 
         # Проверка на вид юрисдикции "Боевое подразделение"
-        if jurisdiction == JurisdictionEnum.COMBAT_UNIT:
+        if jurisdiction.name_ru == JurisdictionEnum.COMBAT_UNIT.value:
             return staff_division.is_combat_unit
 
         # Проверка на вид юрисдикции "Штатное подразделение"
-        if jurisdiction == JurisdictionEnum.STAFF_UNIT:
+        if jurisdiction.name_ru == JurisdictionEnum.STAFF_UNIT.value:
             return not staff_division.is_combat_unit
 
         return False

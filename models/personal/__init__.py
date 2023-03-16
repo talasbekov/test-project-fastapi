@@ -1,3 +1,4 @@
+from .family_status import FamilyStatus
 from .biographic_info import BiographicInfo
 from .driving_license import DrivingLicense
 from .identification_card import IdentificationCard

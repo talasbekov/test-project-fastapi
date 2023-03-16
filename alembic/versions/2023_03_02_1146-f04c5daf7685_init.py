@@ -88,6 +88,14 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['max_rank_id'], ['ranks.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('jurisdictions',
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('name_kz', sa.String(), nullable=False),
+    sa.Column('name_ru', sa.String(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('staff_functions',
     sa.Column('hours_per_week', sa.Integer(), nullable=True),
     sa.Column('discriminator', sa.String(length=255), nullable=True),
@@ -96,12 +104,12 @@ def upgrade() -> None:
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('role_id', sa.UUID(), nullable=True),
-    sa.Column('jurisdiction',
-              sa.Enum('ALL_SERVICE', 'PERSONNEL', 'COMBAT_UNIT', 'STAFF_UNIT', 'CANDIDATES', 'SUPERVISED_EMPLOYEES', name='Jurisdictionenum'), nullable=True),
+    sa.Column('jurisdiction_id', sa.UUID(), nullable=True),
     sa.Column('priority', sa.Integer(), nullable=True),
     sa.Column('type_id', sa.UUID(), nullable=True),
     sa.ForeignKeyConstraint(['role_id'], ['document_function_types.id'], ),
     sa.ForeignKeyConstraint(['type_id'], ['service_function_types.id'], ),
+    sa.ForeignKeyConstraint(['jurisdiction_id'], ['jurisdictions.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('hr_document_steps',
@@ -124,9 +132,19 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['staff_division_id'], ['staff_divisions.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('hr_document_statuses',
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('name_kz', sa.String(), nullable=True),
+    sa.Column('name_ru', sa.String(), nullable=True),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+              nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+              nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('hr_documents',
     sa.Column('hr_document_template_id', sa.UUID(), nullable=True),
-    sa.Column('status', sa.Enum('INITIALIZED', 'IN_PROGRESS', 'COMPLETED', 'CANCELED', 'ON_REVISION', name='hrdocumentstatus'), nullable=True),
+    sa.Column('status_id', sa.UUID(), nullable=True),
     sa.Column('due_date', sa.TIMESTAMP(timezone=True), nullable=False),
     sa.Column('properties', postgresql.JSON(none_as_null=True, astext_type=sa.Text()), nullable=True),
     sa.Column('reg_number', sa.String(), nullable=True),
@@ -137,6 +155,7 @@ def upgrade() -> None:
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['hr_document_template_id'], ['hr_document_templates.id'], ),
     sa.ForeignKeyConstraint(['last_step_id'], ['hr_document_steps.id'], ),
+    sa.ForeignKeyConstraint(['status_id'], ['hr_document_statuses.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('reg_number')
     )
@@ -234,15 +253,23 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['profile_id'], ['profiles.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('family_statuses',
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('name_kz', sa.String(), nullable=False),
+    sa.Column('name_ru', sa.String(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+              nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+              nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('biographic_infos',
     sa.Column('place_birth', sa.String(), nullable=True),
     sa.Column('date_birth', sa.TIMESTAMP(timezone=True), nullable=True),
     sa.Column('gender', sa.Boolean(), nullable=True),
     sa.Column('citizenship', sa.String(), nullable=True),
     sa.Column('nationality', sa.String(), nullable=True),
-    sa.Column('family_status',
-              sa.Enum('MARRIED', 'WIDOWED', 'SEPARATED', 'DIVORCED', 'SINGLE', name='familystatusenum'),
-              nullable=True),
+    sa.Column('family_status_id', sa.UUID(), nullable=True),
     sa.Column('address', sa.String(), nullable=True),
     sa.Column('profile_id', sa.UUID(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
@@ -251,6 +278,7 @@ def upgrade() -> None:
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
               nullable=False),
     sa.ForeignKeyConstraint(['profile_id'], ['personal_profiles.id'], ),
+    sa.ForeignKeyConstraint(['family_status_id'], ['family_statuses.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('driving_licenses',

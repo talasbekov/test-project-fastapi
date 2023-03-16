@@ -11,7 +11,7 @@ from models import Model
 from .association import hr_document_equipments, hr_documents_users
 
 
-class HrDocumentStatus(str, enum.Enum):
+class HrDocumentStatusEnum(str, enum.Enum):
     INITIALIZED = "Иницилизирован"
     IN_PROGRESS = "В процессе"
     COMPLETED = "Завершен"
@@ -25,11 +25,12 @@ class HrDocument(Model, Base):
 
     hr_document_template_id = Column(
         UUID(as_uuid=True), ForeignKey("hr_document_templates.id"), nullable=True)
-    status = Column(Enum(HrDocumentStatus))
     due_date = Column(TIMESTAMP(timezone=True), nullable=False)
     properties = Column(JSON(none_as_null=True))
     reg_number = Column(String, unique=True)
     signed_at = Column(TIMESTAMP(timezone=True), nullable=True)
+
+    status_id = Column(UUID(as_uuid=True), ForeignKey("hr_document_statuses.id"))
     last_step_id = Column(UUID(as_uuid=True), ForeignKey("hr_document_steps.id"))
 
     document_template = relationship("HrDocumentTemplate", back_populates="documents")
@@ -41,3 +42,4 @@ class HrDocument(Model, Base):
         back_populates="hr_documents"
     )
     last_step = relationship("HrDocumentStep")
+    status = relationship("HrDocumentStatus", cascade="all, delete")

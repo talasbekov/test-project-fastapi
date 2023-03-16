@@ -8,14 +8,6 @@ from core import Base
 from models import Model
 
 
-class FamilyStatusEnum(str, enum.Enum):
-    MARRIED = "Женат"
-    WIDOWED = "Вдова"
-    SEPARATED = "Separated"
-    DIVORCED = "Разведен"
-    SINGLE = "Холостой"
-
-
 class BiographicInfo(Model, Base):
 
     __tablename__ = "biographic_infos"
@@ -25,8 +17,9 @@ class BiographicInfo(Model, Base):
     gender = Column(Boolean)
     citizenship = Column(String)
     nationality = Column(String)
-    family_status = Column(Enum(FamilyStatusEnum))
     address = Column(String)
+    family_status_id = Column(UUID(as_uuid=True), ForeignKey("family_statuses.id"))
     profile_id = Column(UUID(as_uuid=True), ForeignKey("personal_profiles.id"), nullable=False)
 
+    family_status = relationship("FamilyStatus", cascade="all, delete")
     profile = relationship("PersonalProfile", back_populates="biographic_infos")

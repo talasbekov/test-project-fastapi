@@ -1,3 +1,4 @@
+from .family_status import family_status_service
 from .personal_profile import personal_profile_service
 from .biographic_info import biographic_info_service
 from .user_financial_info import user_financial_info_service
