@@ -16,7 +16,7 @@ from exceptions import (BadRequestException, ForbiddenException,
                         InvalidOperationException, NotFoundException)
 from models import (HrDocument, HrDocumentInfo, HrDocumentStatusEnum,
                     HrDocumentStep, StaffUnit, User, DocumentStaffFunction, StaffDivision, JurisdictionEnum,
-                    HrDocumentStatus)
+                    HrDocumentStatus, StaffDivisionEnum)
 from schemas import (BadgeRead, HrDocumentCreate, HrDocumentInit,
                      HrDocumentRead, HrDocumentSign, HrDocumentUpdate,
                      RankRead, StaffDivisionOptionRead, StaffDivisionRead,
@@ -503,6 +503,19 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         staff_division = staff_division_service.get_by_id(db, staff_unit.staff_division_id)
 
+        # Проверка на вид юрисдикции "Боевое подразделение"
+        if jurisdiction.name_ru == JurisdictionEnum.COMBAT_UNIT.value:
+            return staff_division.is_combat_unit
+
+        # Проверка на вид юрисдикции "Штатное подразделение"
+        if jurisdiction.name_ru == JurisdictionEnum.STAFF_UNIT.value:
+            return not staff_division.is_combat_unit
+
+        subject_users: List[User] = []
+
+        for i in subject_user_ids:
+            subject_users.append(user_service.get_by_id(db, i))
+
         # Проверка на вид юрисдикции "Личное дело"
         if jurisdiction.name_ru == JurisdictionEnum.PERSONNEL.value:
             # Получаем все дочерние штатные группы пользователя, включая саму группу
@@ -514,11 +527,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             for i in staff_divisions:
                 staff_units.extend(staff_unit_service.get_by_staff_division_id(db, i.id))
 
-            # Retrieve subject users by id
-            subject_users: List[User] = []
-            for i in subject_user_ids:
-                subject_users.append(user_service.get_by_id(db, i))
-
             # Проверка субъекта на присутствие в штатной единице
             # Метод возвращает True если все из субъектов относятся к штатной единице
             # Если один из субъектов не относится к штатной единице то метод выбрасывает False
@@ -528,13 +536,27 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
             return True
 
-        # Проверка на вид юрисдикции "Боевое подразделение"
-        if jurisdiction.name_ru == JurisdictionEnum.COMBAT_UNIT.value:
-            return staff_division.is_combat_unit
+        # Проверка на вид юрисдикции Курируемые сотрудники
+        if jurisdiction.name_ru == JurisdictionEnum.SUPERVISED_EMPLOYEES.value:
+            for i in subject_users:
+                if i.supervised_by is None:
+                    return False
 
-        # Проверка на вид юрисдикции "Штатное подразделение"
-        if jurisdiction.name_ru == JurisdictionEnum.STAFF_UNIT.value:
-            return not staff_division.is_combat_unit
+            return True
+
+        # Проверка на вид юрисдикции Кандидаты
+        if jurisdiction.name_ru == JurisdictionEnum.CANDIDATES.value:
+            staff_units: List[StaffUnit] = []
+            for i in subject_users:
+                staff_units.append(i.staff_unit)
+
+            candidates_staff_division = staff_division_service.get_by_name(db, StaffDivisionEnum.CANDIDATES.value)
+
+            for i in staff_units:
+                if not i.staff_division_id == candidates_staff_division.id:
+                    return False
+
+            return True
 
         return False
 

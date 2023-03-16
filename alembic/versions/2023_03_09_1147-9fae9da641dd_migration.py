@@ -658,6 +658,8 @@ def upgrade() -> None:
     group3_id = get_uuid()
     group4_id = get_uuid()
     group5_id = get_uuid()
+    group6_id = get_uuid()
+    group7_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['staff_divisions'],
@@ -686,6 +688,16 @@ def upgrade() -> None:
             'id': group5_id,
             'name': "Управление 4",
             'is_combat_unit': True
+        }, {
+            'parent_group_id': None,
+            'id': group6_id,
+            'name': "Особая группа",
+            'is_combat_unit': False
+        }, {
+            'parent_group_id': group6_id,
+            'id': group7_id,
+            'name': "Кандидаты",
+            'is_combat_unit': False
         }]
     )
 
@@ -756,8 +768,24 @@ def upgrade() -> None:
     user8_id = get_uuid()
     user9_id = get_uuid()
     user10_id = get_uuid()
+    user11_id = get_uuid()
 
-    
+    create_user(
+        user10_id,
+        "Бауыржан",
+        "Маратов",
+        'Алдиярович',
+        'bauyrzhan@mail.ru',
+        group1_id,
+        None,
+        "Альфа 10",
+        '10',
+        staff_unit10_id,
+        rank3_id,
+        staff_unit10_id,
+        "http://192.168.0.172:8083/static/Dima.png",
+        position4_id,
+        "1.2.218K")
     create_user(
         user1_id,
         "Адилет",
@@ -765,6 +793,7 @@ def upgrade() -> None:
         'Саматович',
         'adilet@mail.ru',
         group2_id,
+        user10_id,
         "Альфа 1",
         '1',
         staff_unit1_id,
@@ -780,6 +809,7 @@ def upgrade() -> None:
         'Бауыржанович',
         'ahat@mail.ru',
         group3_id,
+        user10_id,
         "Альфа 2",
         '2',
         staff_unit2_id,
@@ -795,6 +825,7 @@ def upgrade() -> None:
         'Асланович',
         'aset@mail.ru',
         group3_id,
+        user10_id,
         "Альфа 3",
         '3',
         staff_unit3_id,
@@ -810,6 +841,7 @@ def upgrade() -> None:
         'Дидарович',
         'zhasulan@mail.ru',
         group3_id,
+        user10_id,
         "Альфа 4",
         '4',
         staff_unit4_id,
@@ -825,6 +857,7 @@ def upgrade() -> None:
         'Дидарович',
         'anuar@mail.ru',
         group2_id,
+        user10_id,
         "Альфа 5",
         '5',
         staff_unit5_id,
@@ -840,6 +873,7 @@ def upgrade() -> None:
         'Ганиулы',
         'beksundet@mail.ru',
         group2_id,
+        user10_id,
         "Альфа 6",
         '6',
         staff_unit6_id,
@@ -855,6 +889,7 @@ def upgrade() -> None:
         'Алматович',
         'erden@mail.ru',
         group2_id,
+        user10_id,
         "Альфа 7",
         '7',
         staff_unit7_id,
@@ -870,6 +905,7 @@ def upgrade() -> None:
         'Серикович',
         'erkin@mail.ru',
         group3_id,
+        None,
         "Альфа 8",
         '8',
         staff_unit8_id,
@@ -885,6 +921,7 @@ def upgrade() -> None:
         'Уланович',
         'arman@mail.ru',
         group3_id,
+        user10_id,
         "Альфа 9",
         '9',
         staff_unit9_id,
@@ -894,27 +931,13 @@ def upgrade() -> None:
         position3_id,
         "1.2.217K")
     create_user(
-        user10_id,
-        "Бауыржан",
-        "Маратов",
-        'Алдиярович',
-        'bauyrzhan@mail.ru',
-        group1_id,
-        "Альфа 10",
-        '10',
-        staff_unit10_id,
-        rank3_id,
-        staff_unit10_id,
-        "http://192.168.0.172:8083/static/Dima.png",
-        position4_id,
-        "1.2.218K")
-    create_user(
         str(uuid.uuid4()),
         "Админ",
         "Админов",
         "Админович",
         'admin@mail.com',
         group3_id,
+        None,
         'admin',
         '123456789',
         staff_unit11_id,
@@ -1220,6 +1243,7 @@ def create_user(id,
                 father_name,
                 email,
                 group_id,
+                supervised_by,
                 call_sign,
                 number,
                 staff_unit_id,
@@ -1248,6 +1272,7 @@ def create_user(id,
             'last_name': surname,
             'father_name': father_name,
             'staff_unit_id': staff_unit_id,
+            'supervised_by': supervised_by,
             'call_sign': call_sign,
             'id_number': number,
             'phone_number': '+7 (777) 123-47-89',

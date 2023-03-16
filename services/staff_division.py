@@ -41,6 +41,11 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
            StaffDivision.parent_group_id == id
         ).all()
 
+    def get_by_name(self, db: Session, name: str) -> StaffDivision:
+        return db.query(self.model).filter(
+            StaffDivision.name == name
+        ).first()
+
     def change_parent_group(self,
             db: Session,
             id: str,

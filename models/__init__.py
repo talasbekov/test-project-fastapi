@@ -8,7 +8,7 @@ from .hr_document_info import HrDocumentInfo
 from .hr_document_step import HrDocumentStep
 from .hr_document_template import HrDocumentTemplate, SubjectType
 from .rank import Rank
-from .staff_division import StaffDivision
+from .staff_division import StaffDivision, StaffDivisionEnum
 from .jurisdiction import Jurisdiction
 from .staff_function import (DocumentFunctionType, DocumentStaffFunction,
                              ServiceFunctionType, ServiceStaffFunction, StaffFunction,

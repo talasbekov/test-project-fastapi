@@ -9,6 +9,11 @@ from core import Base
 from models import NamedNestedModel
 
 
+class StaffDivisionEnum(str, enum.Enum):
+    SPECIAL_GROUP = "Особая группа"
+    CANDIDATES = "Кандидаты"
+
+
 class StaffDivision(NamedNestedModel, Base):
 
     __tablename__ = "staff_divisions"
