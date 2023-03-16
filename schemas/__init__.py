@@ -8,6 +8,7 @@ from .hr_document_template import (HrDocumentTemplateCreate,
                                    HrDocumentTemplateUpdate)
 from .permission import (PermissionCreate, PermissionRead, PermissionUpdate,
                          UserPermission)
+
 from .rank import RankCreate, RankRead, RankUpdate
 from .position import PositionCreate, PositionUpdate, PositionRead
 from .staff_function_type import (DocumentStaffFunctionTypeCreate, DocumentStaffFunctionTypeRead,
@@ -35,3 +36,4 @@ from .education import *
 from .personal import *
 from .medical import *
 from .family import *
+from .archive import *

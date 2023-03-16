@@ -23,12 +23,13 @@ def upgrade() -> None:
     sa.Column('status', sa.String(), nullable=False),
     sa.Column('user_id', sa.UUID(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('data', postgresql.JSON(astext_type=sa.Text())),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-     
+    
     # ### end Alembic commands ###
 
 

@@ -29,6 +29,7 @@ class StaffDivisionRead(StaffDivisionBase):
     id: Optional[uuid.UUID]
     name: Optional[str]
     children: Optional[List['StaffDivisionRead']]
+    staff_units: Optional[List]
 
     class Config:
         orm_mode = True
@@ -50,24 +51,12 @@ class UserRead(BaseModel):
         orm_mode = True
 
 
-class StaffUnitOptionRead(BaseModel):
-
-    id: Optional[uuid.UUID]
-    position_id: Optional[uuid.UUID]
-    position: Optional[PositionRead]
-    users: Optional[List[Optional[UserRead]]]
-    actual_users: Optional[List[Optional[UserRead]]]
-
-    class Config:
-        orm_mode = True
-
-
 class StaffDivisionOptionRead(StaffDivisionBase):
 
     id: Optional[uuid.UUID]
     name: Optional[str]
-    staff_units: Optional[List[StaffUnitOptionRead]]
-    children: Optional[List['StaffDivisionRead']]
+    staff_units: Optional[List]
+    children: Optional[List['StaffDivisionOptionRead']]
 
     class Config:
         orm_mode = True

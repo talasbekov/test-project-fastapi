@@ -1,11 +1,13 @@
 from pydantic import BaseModel
 import uuid
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 
 class StaffListBase(BaseModel):
     name: str
     status: str
+    # list of json objects
+    data: Optional[List[dict]]
 
     class Config:
         orm_mode = True

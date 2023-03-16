@@ -23,4 +23,5 @@ from .personal import *
 from .additional import *
 from .education import *
 from .family import *
+from .archive import *
 from .user import User

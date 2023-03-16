@@ -33,3 +33,4 @@ from .staff_list import staff_list_service
 from .additional import *
 from .education import *
 from .family import *
+from .archive import *
