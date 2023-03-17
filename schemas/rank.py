@@ -6,6 +6,8 @@ from pydantic import BaseModel, AnyUrl
 
 class RankBase(BaseModel):
     name: str
+    military_url: AnyUrl
+    employee_url: AnyUrl
 
 
 class RankCreate(RankBase):
