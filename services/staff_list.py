@@ -1,15 +1,15 @@
 from sqlalchemy.orm import Session
-from services import (ServiceBase, staff_division_service, archive_staff_division_service
-                      , archive_staff_unit_service, staff_unit_service, archive_staff_function_service,
-                      document_archive_staff_function_service,
-                      service_archive_staff_function_service)
 
 from exceptions import NotFoundException, NotSupportedException
-from models import StaffList, StaffDivision, StaffUnit, DocumentStaffFunction, ServiceStaffFunction
-from schemas import (StaffListCreate,StaffListRead,StaffListUpdate, 
-                     ArchiveStaffDivisionCreate, ArchiveServiceStaffFunctionCreate, ArchiveStaffUnitCreate,
-                     ArchiveStaffUnitCreateWithStaffFunctions)
-
+from models import (DocumentStaffFunction, ServiceStaffFunction, StaffDivision,
+                    StaffList)
+from schemas import (ArchiveStaffDivisionCreate, ArchiveStaffUnitCreate,
+                     StaffListCreate, StaffListUpdate, StaffListUserCreate)
+from services import (ServiceBase, archive_staff_division_service,
+                      archive_staff_function_service,
+                      archive_staff_unit_service,
+                      document_archive_staff_function_service,
+                      service_archive_staff_function_service)
 
 options = {
     DocumentStaffFunction.__mapper_args__['polymorphic_identity']: document_archive_staff_function_service,
@@ -23,16 +23,21 @@ class StaffListService(ServiceBase[StaffList,StaffListCreate,StaffListUpdate]):
         if staff_list is None:
             raise NotFoundException(detail="Staff list is not found!")
         return staff_list
-    
-    def create_by_user_id(self,db: Session,user_id: str, obj_in: StaffListCreate):
 
-        db_obj = obj_in.dict()
-        db_obj['user_id'] = user_id
-        staff_list = super().create(db,db_obj)
+    def create_by_user_id(self,db: Session,user_id: str, obj_in: StaffListUserCreate):
+
+        create_staff_list = StaffListCreate(
+            name = obj_in.name,
+            status="IN PROGRESS"
+        )
+        staff_list = super().create(db,create_staff_list)
         staff_divisions = staff_list.archive_staff_divisions
         for staff_division in staff_divisions:
             self._create_archive_staff_division(db, staff_division, staff_list.id)
-        
+
+
+        db.add(staff_list)
+        db.flush()
         return staff_list
 
     def _create_archive_staff_division(self,db: Session,staff_division: StaffDivision,staff_list_id: str):
@@ -48,7 +53,7 @@ class StaffListService(ServiceBase[StaffList,StaffListCreate,StaffListUpdate]):
         if staff_division.children:
             for child in staff_division.children:
 
-                child_archive_staff_division = self.archive_staff_function_create_archive_staff_division(db, child, staff_list_id)
+                child_archive_staff_division = self._create_archive_staff_division(db, child, staff_list_id)
 
                 archive_division.children.append(child_archive_staff_division)
 
@@ -64,11 +69,11 @@ class StaffListService(ServiceBase[StaffList,StaffListCreate,StaffListUpdate]):
                     for staff_function in staff_unit.staff_functions:
                         if not archive_staff_function_service.exists_by_origin_id(db, staff_function.id):
 
-                            serv = options.get(staff_function.discriminator)
-                            if serv is None:
+                            service = options.get(staff_function.discriminator)
+                            if service is None:
                                 raise NotSupportedException(detail="Staff function type is not supported!")
 
-                            archive_staff_function = serv.create_archive_staff_function(db, staff_function, staff_list_id)
+                            archive_staff_function = service.create_archive_staff_function(db, staff_function, staff_list_id)
                             archive_staff_unit.staff_functions.append(archive_staff_function)
 
                 archive_staff_unit = archive_staff_unit_service.create(db,archive_staff_unit)

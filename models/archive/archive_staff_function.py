@@ -18,23 +18,23 @@ class RoleName(str, Enum):
     INITIATOR = "Инициатор"
 
 
-class ArchiveServiceFunctionType(NamedModel, Base):
-
-    __tablename__ = "archive_service_function_types"
-
-    staff_functions = relationship("ServiceStaffFunction", back_populates="type", cascade="all,delete")
-
-
-class ArchiveDocumentFunctionType(NamedModel, Base):
+class ArchiveDocumentFunctionType(NamedModel):
 
     __tablename__ = "archive_document_function_types"
 
     can_cancel = Column(Boolean, nullable=False)
 
-    staff_functions = relationship("DocumentStaffFunction", back_populates="role", cascade="all,delete")
+    staff_functions = relationship("ArchiveDocumentStaffFunction", back_populates="role", cascade="all,delete")
 
 
-class ArchiveStaffFunction(NamedModel, Base):
+class ArchiveServiceFunctionType(NamedModel):
+
+    __tablename__ = "archive_service_function_types"
+
+    staff_functions = relationship("ArchiveServiceStaffFunction", back_populates="type", cascade="all,delete")
+
+
+class ArchiveStaffFunction(NamedModel):
 
     __tablename__ = "archive_staff_functions"
 
@@ -53,14 +53,13 @@ class ArchiveStaffFunction(NamedModel, Base):
 
 class ArchiveDocumentStaffFunction(ArchiveStaffFunction):
 
-    role_id = Column(UUID(as_uuid=True), ForeignKey("document_function_types.id"))
+    role_id = Column(UUID(as_uuid=True), ForeignKey("archive_document_function_types.id"))
     jurisdiction_id = Column(UUID(as_uuid=True), ForeignKey("jurisdictions.id"))
 
     priority = Column(Integer)
 
-    role = relationship("DocumentFunctionType")
+    role = relationship("ArchiveDocumentFunctionType", back_populates="staff_functions", foreign_keys=role_id)
     jurisdiction = relationship("Jurisdiction")
-    hr_document_step = relationship("HrDocumentStep", back_populates='staff_function',cascade="all,delete", uselist=False)
 
     __mapper_args__ = {
         "polymorphic_identity": "document_staff_function"
@@ -69,9 +68,9 @@ class ArchiveDocumentStaffFunction(ArchiveStaffFunction):
 
 class ArchiveServiceStaffFunction(ArchiveStaffFunction):
 
-    type_id = Column(UUID(as_uuid=True), ForeignKey("service_function_types.id"))
+    type_id = Column(UUID(as_uuid=True), ForeignKey("archive_service_function_types.id"))
 
-    type = relationship("ServiceFunctionType", back_populates="staff_functions")
+    type = relationship("ArchiveServiceFunctionType", foreign_keys=type_id)
 
     __mapper_args__ = {
         "polymorphic_identity": "service_staff_function"

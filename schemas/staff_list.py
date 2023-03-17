@@ -5,9 +5,6 @@ from datetime import datetime
 
 class StaffListBase(BaseModel):
     name: str
-    status: str
-    # list of json objects
-    data: Optional[List[dict]]
 
     class Config:
         orm_mode = True
@@ -15,16 +12,20 @@ class StaffListBase(BaseModel):
 
 
 class StaffListCreate(StaffListBase):
-    pass
+    status: str
 
 
 class StaffListUpdate(StaffListBase):
     pass
 
 
+class StaffListUserCreate(StaffListBase):
+    pass
+
 class StaffListRead(StaffListBase):
     id: Optional[uuid.UUID]
     user_id: Optional[uuid.UUID]
+    status: Optional[str]
 
     created_at: Optional[datetime]
     updated_at: Optional[datetime]
