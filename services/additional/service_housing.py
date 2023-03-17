@@ -2,8 +2,8 @@ from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import ServiceHousing
-from services.base import ServiceBase
 from schemas import ServiceHousingCreate, ServiceHousingUpdate
+from services.base import ServiceBase
 
 
 class ServiceHousingService(ServiceBase[ServiceHousing, ServiceHousingCreate, ServiceHousingUpdate]):

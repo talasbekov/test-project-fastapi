@@ -8,7 +8,6 @@ from exceptions.client import NotFoundException
 from models import DocumentStaffFunction, HrDocumentStep, User
 from schemas import (DocumentStaffFunctionAdd, DocumentStaffFunctionCreate,
                      DocumentStaffFunctionUpdate)
-
 from .base import ServiceBase
 
 

@@ -1,8 +1,7 @@
-from sqlalchemy import ARRAY, TIMESTAMP, Column, ForeignKey, String
+from sqlalchemy import TIMESTAMP, Column, ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from core import Base
 from models import Model
 
 

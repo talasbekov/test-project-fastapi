@@ -1,9 +1,10 @@
 from sqlalchemy.orm import Session
-from services import ServiceBase
 
 from exceptions import client
 from models.medical import GeneralUserInformation
-from schemas.medical import GeneralUserInformationRead,GeneralUserInformationCreate,GeneralUserInformationUpdate
+from schemas.medical import GeneralUserInformationCreate, GeneralUserInformationUpdate
+from services import ServiceBase
+
 
 class GeneraUserInformationService(ServiceBase[GeneralUserInformation,GeneralUserInformationCreate,GeneralUserInformationUpdate]):
     def get_by_id(self,db: Session,id: str):

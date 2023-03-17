@@ -1,9 +1,10 @@
 from sqlalchemy.orm import Session
-from services import ServiceBase
 
 from exceptions import client
 from models import StaffList
-from schemas import StaffListCreate,StaffListRead,StaffListUpdate
+from schemas import StaffListCreate, StaffListUpdate
+from services import ServiceBase
+
 
 class StaffListService(ServiceBase[StaffList,StaffListCreate,StaffListUpdate]):
 

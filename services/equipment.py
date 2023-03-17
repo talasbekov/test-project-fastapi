@@ -3,7 +3,6 @@ from sqlalchemy.orm import Session
 from exceptions.client import NotFoundException
 from models import Equipment
 from schemas import EquipmentCreate, EquipmentUpdate
-
 from .base import ServiceBase
 
 

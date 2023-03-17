@@ -2,8 +2,7 @@ from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import Badge
-from schemas import BadgeCreate, BadgeRead, BadgeUpdate
-
+from schemas import BadgeCreate, BadgeUpdate
 from .base import ServiceBase
 
 
@@ -26,4 +25,3 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
 
 
 badge_service = BadgeService(Badge)
- 

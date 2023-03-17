@@ -7,9 +7,9 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas.medical import MedicalProfileCreate,MedicalProfileRead,MedicalProfileUpdate
-from services.medical import medical_profile_service
+from schemas.medical import MedicalProfileCreate, MedicalProfileRead, MedicalProfileUpdate
 from services import profile_service
+from services.medical import medical_profile_service
 
 router = APIRouter(prefix="/medical_profile", tags=["MedicalProfile"], dependencies=[Depends(HTTPBearer())])
 

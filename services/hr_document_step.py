@@ -5,7 +5,6 @@ from sqlalchemy.orm import Session
 from exceptions import NotFoundException
 from models import DocumentStaffFunction, HrDocumentStep
 from schemas import HrDocumentStepCreate, HrDocumentStepUpdate
-
 from .base import ServiceBase
 
 

@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from core import get_db
 from schemas import (StaffDivisionCreate, StaffDivisionRead,
-                     StaffDivisionUpdate, UserRead, StaffDivisionUpdateParentGroup)
+                     StaffDivisionUpdate, StaffDivisionUpdateParentGroup)
 from services import staff_division_service
 
 router = APIRouter(prefix="/staff_division", tags=["StaffDivision"], dependencies=[Depends(HTTPBearer())])

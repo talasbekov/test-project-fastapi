@@ -1,11 +1,11 @@
 import datetime
 import uuid
-from typing import List, Optional, Union
+from typing import List, Optional
 
 from pydantic import BaseModel, EmailStr
 
-from schemas import (BadgeRead, DocumentStaffFunctionRead, PositionRead,
-                     RankRead, ServiceStaffFunctionRead, StaffDivisionRead,
+from schemas import (BadgeRead, PositionRead,
+                     RankRead, StaffDivisionRead,
                      StaffFunctionRead)
 
 

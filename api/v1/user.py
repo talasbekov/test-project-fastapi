@@ -7,8 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from models import User
-from schemas import (UserCreate, UserGroupUpdate, UserPermission, UserRead,
+from schemas import (UserRead,
                      UserUpdate)
 from services import user_service
 

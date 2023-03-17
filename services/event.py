@@ -2,8 +2,7 @@ from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
 from models import Event
-from schemas import EventCreate, EventRead, EventUpdate
-
+from schemas import EventCreate, EventUpdate
 from .base import ServiceBase
 
 

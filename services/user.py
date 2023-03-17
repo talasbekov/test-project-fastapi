@@ -1,16 +1,13 @@
-import datetime
 import types
-from typing import Optional, List
+from typing import List
 
 from sqlalchemy.orm import Session
 
-from exceptions import InvalidOperationException, NotFoundException
-from models import StaffDivision, User, StaffUnit, Jurisdiction, JurisdictionEnum, DocumentStaffFunction, StaffDivisionEnum
-from schemas import (StaffDivisionUpdate, UserCreate, UserGroupUpdate,
-                     UserPermission, UserRead, UserUpdate)
-from services import (staff_division_service, staff_unit_service, staff_unit,
-                      jurisdiction_service, document_staff_function_service)
-
+from exceptions import NotFoundException
+from models import StaffDivision, User, StaffUnit, Jurisdiction, JurisdictionEnum, DocumentStaffFunction, \
+    StaffDivisionEnum
+from schemas import (UserCreate, UserUpdate)
+from services import (staff_division_service, staff_unit_service, jurisdiction_service, document_staff_function_service)
 from .base import ServiceBase
 
 CALLABLES = types.FunctionType, types.MethodType

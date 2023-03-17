@@ -1,7 +1,5 @@
-import uuid
-
-from sqlalchemy import TEXT, Column, ForeignKey, String, text
-from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID
+from sqlalchemy import Column, ForeignKey
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from core import Base

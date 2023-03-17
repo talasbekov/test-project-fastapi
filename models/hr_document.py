@@ -1,13 +1,11 @@
 import enum
-import uuid
 
-from sqlalchemy import TIMESTAMP, Column, Enum, ForeignKey, String, text
+from sqlalchemy import TIMESTAMP, Column, ForeignKey, String
 from sqlalchemy.dialects.postgresql import JSON, UUID
 from sqlalchemy.orm import relationship
 
 from core import Base
 from models import Model
-
 from .association import hr_document_equipments, hr_documents_users
 
 

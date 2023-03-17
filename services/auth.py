@@ -1,7 +1,6 @@
 from datetime import timedelta
 
 from fastapi import HTTPException, status
-from fastapi.logger import logger as log
 from fastapi_jwt_auth import AuthJWT
 from pydantic import EmailStr
 from sqlalchemy.orm import Session

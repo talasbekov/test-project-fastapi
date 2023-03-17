@@ -7,7 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas.medical import AnthropometricDataRead,AnthropometricDataCreate,AnthropometricDataUpdate
+from schemas.medical import AnthropometricDataRead, AnthropometricDataCreate, AnthropometricDataUpdate
 from services.medical import anthropometric_data_service
 
 router = APIRouter(prefix="/anthropometric_data", tags=["AnthropometricData"], dependencies=[Depends(HTTPBearer())])

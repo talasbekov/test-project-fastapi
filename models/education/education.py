@@ -1,6 +1,6 @@
 from sqlalchemy import Column, ForeignKey
-from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID, DATE, TEXT
+from sqlalchemy.orm import relationship
 
 from models import Model
 

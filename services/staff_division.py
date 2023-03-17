@@ -1,15 +1,12 @@
 import uuid
 from typing import List
 
-from fastapi import HTTPException, status
-from fastapi.logger import logger as log
 from sqlalchemy.orm import Session
 
 from exceptions import BadRequestException, NotFoundException
 from models import StaffDivision
 from schemas import (StaffDivisionCreate, StaffDivisionRead,
                      StaffDivisionUpdate, StaffDivisionUpdateParentGroup)
-
 from .base import ServiceBase
 
 
