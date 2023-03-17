@@ -17,7 +17,6 @@ from .badge import badge_service
 from .equipment import equipment_service
 from .event import event_service
 from .rank import rank_service
-from .jurisdiction import jurisdiction_service
 from .user_stat import user_stat_service
 
 from .staff_division import staff_division_service
@@ -27,6 +26,7 @@ from .hr_document_template import hr_document_template_service
 from .user import user_service
 from .auth import auth_service
 from .hr_document_info import hr_document_info_service
+from .hr_document_status import hr_document_status_service
 from .hr_document import hr_document_service
 from .staff_list import staff_list_service
 

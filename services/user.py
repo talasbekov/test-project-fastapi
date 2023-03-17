@@ -1,14 +1,15 @@
 import datetime
 import types
-from typing import Optional
+from typing import Optional, List
 
 from sqlalchemy.orm import Session
 
 from exceptions import InvalidOperationException, NotFoundException
-from models import StaffDivision, User
+from models import StaffDivision, User, StaffUnit, Jurisdiction, JurisdictionEnum, DocumentStaffFunction, StaffDivisionEnum
 from schemas import (StaffDivisionUpdate, UserCreate, UserGroupUpdate,
                      UserPermission, UserRead, UserUpdate)
-from services import staff_division_service, staff_unit_service
+from services import (staff_division_service, staff_unit_service, staff_unit,
+                      jurisdiction_service, document_staff_function_service)
 
 from .base import ServiceBase
 
@@ -93,5 +94,108 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         ).all()
 
         return users
+
+    def get_by_jurisdiction(
+            self, db: Session,
+            user_id: str,
+            skip: int = 0,
+            limit: int = 100
+    ):
+        current_user = self.get_by_id(db, user_id)
+
+        staff_unit: StaffUnit = staff_unit_service.get_by_id(db, current_user.actual_staff_unit_id)
+
+        document_staff_functions: List[DocumentStaffFunction] = []
+
+        for i in staff_unit.staff_functions:
+            document_staff_functions.append(document_staff_function_service.get_by_id(db, i.id))
+
+        jurisdictions: List[Jurisdiction] = []
+        for i in document_staff_functions:
+            jurisdictions.append(jurisdiction_service.get_by_id(db, i.jurisdiction_id))
+
+        staff_division: StaffDivision = staff_division_service.get_by_id(db, staff_unit.staff_division_id)
+
+        for i in jurisdictions:
+            if i.name == JurisdictionEnum.ALL_SERVICE.value:
+                return super().get_multi(db, skip=skip, limit=limit)
+
+            if i.name == JurisdictionEnum.PERSONNEL.value:
+                return self._get_users_by_personnel_jurisdiction(db, staff_division)
+
+            if i.name == JurisdictionEnum.SUPERVISED_EMPLOYEES.value:
+                return db.query(self.model).filter(
+                    self.model.supervised_by.isnot(None)
+                ).all()
+
+            if i.name == JurisdictionEnum.COMBAT_UNIT.value:
+                return self._get_users_by_combat_unit_jurisdiction(db)
+
+            if i.name == JurisdictionEnum.STAFF_UNIT.value:
+                return self._get_users_by_staff_unit_jurisdiction(db)
+
+            if i.name == JurisdictionEnum.CANDIDATES.value:
+                return self._get_users_by_candidates_jurisdiction(db)
+
+    def _get_users_by_personnel_jurisdiction(self, db: Session, staff_division: StaffDivision) -> List[User]:
+        # Получаем все дочерние штатные группы пользователя, включая саму группу
+        staff_divisions: List[StaffDivision] = staff_division_service.get_child_groups(db, staff_division.id)
+        staff_divisions.append(staff_division)
+
+        # Получаем все staff unit из staff divisions
+        staff_units: List[StaffUnit] = []
+        for i in staff_divisions:
+            staff_units.extend(staff_unit_service.get_by_staff_division_id(db, i.id))
+
+        users: List[User] = []
+        for i in staff_units:
+            users.extend(i.actual_users)
+
+        return users
+
+    def _get_users_by_combat_unit_jurisdiction(self, db: Session):
+        staff_divisions = db.query(StaffDivision).filter(
+            StaffDivision.is_combat_unit == True
+        ).all()
+
+        staff_units: List[StaffUnit] = []
+        for i in staff_divisions:
+            staff_units.extend(i.staff_units)
+
+        users: List[User] = []
+        for i in staff_units:
+            users.extend(i.actual_users)
+
+        return users
+
+    def _get_users_by_staff_unit_jurisdiction(self, db: Session):
+        staff_divisions = db.query(StaffDivision).filter(
+            StaffDivision.is_combat_unit == False
+        ).all()
+
+        staff_units: List[StaffUnit] = []
+        for i in staff_divisions:
+            staff_units.extend(i.staff_units)
+
+        users: List[User] = []
+        for i in staff_units:
+            users.extend(i.actual_users)
+
+        return users
+
+    def _get_users_by_candidates_jurisdiction(self, db: Session):
+        staff_division = db.query(StaffDivision).filter(
+            StaffDivision.name == StaffDivisionEnum.CANDIDATES.value
+        ).first()
+
+        staff_units: List[StaffUnit] = []
+        staff_units.extend(staff_division.staff_units)
+
+        users: List[User] = []
+        for i in staff_units:
+            users.extend(i.actual_users)
+
+        return users
+
 
 user_service = UserService(User)

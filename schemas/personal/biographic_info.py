@@ -5,6 +5,8 @@ from typing import Optional, List
 
 from pydantic import BaseModel
 
+from .family_status import FamilyStatusRead
+
 
 class BiographicInfoBase(BaseModel):
     place_birth: str
@@ -12,7 +14,7 @@ class BiographicInfoBase(BaseModel):
     gender: bool
     citizenship: str
     nationality: str
-    family_status: str
+    family_status_id: uuid.UUID
     address: str
     residence_address: str
     profile_id: uuid.UUID
@@ -33,12 +35,13 @@ class BiographicInfoRead(BiographicInfoBase):
     gender: Optional[bool]
     citizenship: Optional[str]
     nationality: Optional[str]
-    family_status: Optional[str]
+    family_status_id: Optional[uuid.UUID]
     address: Optional[str]
     residence_address: Optional[str]
     profile_id: Optional[uuid.UUID]
     created_at: Optional[datetime.datetime]
     updated_at: Optional[datetime.datetime]
+    family_status: Optional[FamilyStatusRead]
 
     class Config:
         orm_mode = True

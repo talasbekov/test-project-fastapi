@@ -6,7 +6,7 @@ from pydantic import BaseModel, ValidationError, validator
 
 from models import HrDocumentStatus
 
-from schemas import HrDocumentTemplateRead, UserRead, HrDocumentStepRead
+from schemas import HrDocumentTemplateRead, UserRead, HrDocumentStatusRead, HrDocumentStepRead
 
 
 class HrDocumentBase(BaseModel):
@@ -67,11 +67,11 @@ class HrDocumentSign(BaseModel):
 
 
 class HrDocumentCreate(HrDocumentBase):
-    status: HrDocumentStatus
+    status_id: uuid.UUID
 
 
 class HrDocumentUpdate(HrDocumentBase):
-    status: HrDocumentStatus
+    status_id: uuid.UUID
 
 
 class HrDocumentRead(HrDocumentBase):
@@ -79,7 +79,8 @@ class HrDocumentRead(HrDocumentBase):
     properties: Optional[dict]
     document_template: Optional[HrDocumentTemplateRead]
     hr_document_template_id: Optional[uuid.UUID]
-    status: Optional[HrDocumentStatus]
+    status_id: Optional[uuid.UUID]
+    status: Optional[HrDocumentStatusRead]
     due_date: Optional[datetime]
     properties: Optional[Union[dict, None]]
     can_cancel: Optional[bool]
