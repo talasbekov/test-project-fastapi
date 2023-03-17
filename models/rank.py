@@ -12,4 +12,5 @@ class Rank(NamedModel, Base):
     __tablename__ = "ranks"
 
     order = Column(Integer, nullable=True)
-    url = Column(TEXT, nullable=True)
+    military_url = Column(TEXT, nullable=True)
+    employee_url = Column(TEXT, nullable=True)
