@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from schemas.medical import (AnthropometricDataRead, DispensaryRegistrationRead, GeneralUserInformationRead,
                              HospitalDataRead, UserLiberationsRead)
 
-from typing import List
+from typing import List, Optional
 
 
 class MedicalProfileBase(BaseModel):
@@ -24,9 +24,9 @@ class MedicalProfileUpdate(MedicalProfileBase):
 
 
 class MedicalProfileRead(MedicalProfileBase):
-    id: uuid.UUID
-    general_user_informations: List[GeneralUserInformationRead]
-    dispensary_registrations: List[DispensaryRegistrationRead]
-    anthropometric_datas: List[AnthropometricDataRead]
-    hospital_datas: List[HospitalDataRead]
-    user_liberations: List[UserLiberationsRead]
+    id: Optional[uuid.UUID]
+    general_user_informations: Optional[List[GeneralUserInformationRead]]
+    dispensary_registrations: Optional[List[DispensaryRegistrationRead]]
+    anthropometric_datas: Optional[List[AnthropometricDataRead]]
+    hospital_datas: Optional[List[HospitalDataRead]]
+    user_liberations: Optional[List[UserLiberationsRead]]

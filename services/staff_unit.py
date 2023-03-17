@@ -1,3 +1,5 @@
+from typing import List
+
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
@@ -14,6 +16,9 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
         if position is None:
             raise NotFoundException(detail="StaffUnit is not found!")
         return position
+
+    def get_by_staff_division_id(self, db: Session, staff_division_id: str):
+        return db.query(self.model).filter(self.model.staff_division_id == staff_division_id).all()
 
     def add_service_staff_function(self, db: Session, body: StaffUnitFunctions):
         staff_unit = self.get_by_id(db, body.staff_unit_id)

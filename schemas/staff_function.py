@@ -3,8 +3,8 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-from schemas import (DocumentStaffFunctionTypeRead, JurisdictionRead,
-                     ServiceStaffFunctionTypeRead)
+from schemas import (DocumentStaffFunctionTypeRead,
+                     ServiceStaffFunctionTypeRead, JurisdictionRead)
 
 
 class StaffFunctionBase(BaseModel):
@@ -96,12 +96,11 @@ class DocumentStaffFunctionRead(StaffFunctionRead, DocumentStaffFunctionBase):
     
     priority: Optional[int]
     role_id: Optional[uuid.UUID]
-    role: Optional[DocumentStaffFunctionTypeRead]
-
     jurisdiction_id: Optional[uuid.UUID]
-    jurisdiction: Optional[JurisdictionRead]
 
+    role: Optional[DocumentStaffFunctionTypeRead]
     hr_document_step: Optional[DocumentStaffFunctionStep]
+    jurisdiction: Optional[JurisdictionRead]
 
 
 class ServiceStaffFunctionRead(StaffFunctionRead, ServiceStaffFunctionBase):

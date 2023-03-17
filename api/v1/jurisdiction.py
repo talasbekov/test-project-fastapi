@@ -32,24 +32,6 @@ async def get_all(*,
     return jurisdiction_service.get_multi(db, skip, limit)
 
 
-@router.post("", status_code=status.HTTP_201_CREATED,
-             dependencies=[Depends(HTTPBearer())],
-             response_model=JurisdictionRead,
-             summary="Create Jurisdiction")
-async def create(*,
-    db: Session = Depends(get_db),
-    body: JurisdictionCreate,
-    Authorize: AuthJWT = Depends()
-):
-    """
-        Create Jurisdiction
-
-        - **name**: required
-    """
-    Authorize.jwt_required()
-    return jurisdiction_service.create(db, body)
-
-
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=JurisdictionRead,
             summary="Get Jurisdiction by id")
@@ -65,42 +47,3 @@ async def get_by_id(*,
     """
     Authorize.jwt_required()
     return jurisdiction_service.get_by_id(db, id)
-
-
-@router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=JurisdictionRead,
-            summary="Update Jurisdiction")
-async def update(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    body: JurisdictionUpdate,
-    Authorize: AuthJWT = Depends()
-):
-    """
-        Update Jurisdiction
-
-        - **id**: UUID - the ID of badge to update. This is required.
-        - **name**: required.
-    """
-    Authorize.jwt_required()
-    return jurisdiction_service.update(
-        db,
-        db_obj=jurisdiction_service.get_by_id(db, id),
-        obj_in=body)
-
-
-@router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
-               dependencies=[Depends(HTTPBearer())],
-               summary="Delete Jurisdiction")
-async def delete(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
-    """
-        Delete Jurisdiction
-
-        - **id**: UUID - required
-    """
-    Authorize.jwt_required()
-    jurisdiction_service.remove(db, id)

@@ -1,7 +1,6 @@
 from .profile import ProfileCreate, ProfileUpdate, ProfileRead
 from .badge import BadgeCreate, BadgeRead, BadgeUpdate
 from .equipment import EquipmentCreate, EquipmentRead, EquipmentUpdate
-from .jurisdiction import JurisdictionRead, JurisdictionCreate, JurisdictionUpdate
 from .event import EventCreate, EventRead, EventUpdate
 from .hr_document_template import (HrDocumentTemplateCreate,
                                    HrDocumentTemplateRead,
@@ -10,6 +9,7 @@ from .permission import (PermissionCreate, PermissionRead, PermissionUpdate,
                          UserPermission)
 from .rank import RankCreate, RankRead, RankUpdate
 from .position import PositionCreate, PositionUpdate, PositionRead
+from .jurisdiction import JurisdictionRead, JurisdictionCreate, JurisdictionUpdate
 from .staff_function_type import (DocumentStaffFunctionTypeCreate, DocumentStaffFunctionTypeRead,
                                   DocumentStaffFunctionTypeUpdate, ServiceStaffFunctionTypeCreate,
                                   ServiceStaffFunctionTypeRead, ServiceStaffFunctionTypeUpdate)
@@ -22,6 +22,7 @@ from .staff_unit import StaffUnitCreate, StaffUnitRead, StaffUnitUpdate
 from .hr_document_step import (HrDocumentStepCreate, HrDocumentStepRead,
                                HrDocumentStepUpdate)
 from .user import UserCreate, UserRead, UserUpdate, UserGroupUpdate
+from .hr_document_status import HrDocumentStatusRead, HrDocumentStatusCreate, HrDocumentStatusUpdate
 from .hr_document import (HrDocumentCreate, HrDocumentInit, HrDocumentRead,
                           HrDocumentSign, HrDocumentUpdate)
 
