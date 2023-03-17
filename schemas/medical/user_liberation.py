@@ -23,6 +23,12 @@ class UserLiberationsUpdate(UserLiberationsBase):
 
 class UserLiberationsRead(UserLiberationsBase):
     id: Optional[uuid.UUID]
+    reason: Optional[str]
+    liberation_name: Optional[str]
+    initiator: Optional[str]
+    start_date: Optional[datetime.datetime]
+    end_date: Optional[datetime.datetime]
+    profile_id: Optional[uuid.UUID]
 
     class Config:
         orm_mode = True

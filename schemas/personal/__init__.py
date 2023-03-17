@@ -1,3 +1,4 @@
+from .family_status import FamilyStatusCreate, FamilyStatusRead, FamilyStatusUpdate
 from .biographic_info import (BiographicInfoCreate, BiographicInfoRead,
                               BiographicInfoUpdate)
 from .driving_license import (DrivingLicenseCreate, DrivingLicenseRead,

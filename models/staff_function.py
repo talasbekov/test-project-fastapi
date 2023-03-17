@@ -1,6 +1,6 @@
 import enum
 
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Enum
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -9,13 +9,13 @@ from models import NamedModel
 
 from .association import staff_unit_function
 
-
-class RoleName(str, enum.Enum):
-    AGREER = "Утверждающий"
-    EXPERT = "Эксперт"
-    APPROVER = "Согласующий"
-    NOTIFIER = "Увемдомляемый"
-    INITIATOR = "Инициатор"
+class JurisdictionEnum(str, enum.Enum):
+    ALL_SERVICE = "Вся служба"
+    PERSONNEL = "Личный Состав"
+    COMBAT_UNIT = "Боевое Подразделение"
+    STAFF_UNIT = "Штабное Подразделение"
+    CANDIDATES = "Кандидаты"
+    SUPERVISED_EMPLOYEES = "Курьируемые сотрудники"
 
 
 class ServiceFunctionType(NamedModel, Base):
@@ -57,8 +57,8 @@ class DocumentStaffFunction(StaffFunction):
     priority = Column(Integer)
 
     role = relationship("DocumentFunctionType")
-    jurisdiction = relationship("Jurisdiction")
     hr_document_step = relationship("HrDocumentStep", back_populates='staff_function',cascade="all,delete", uselist=False)
+    jurisdiction = relationship("Jurisdiction", cascade="all, delete")
 
     __mapper_args__ = {
         "polymorphic_identity": "document_staff_function"

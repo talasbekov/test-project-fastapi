@@ -36,6 +36,20 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
             StaffDivision.parent_group_id == None
         ).all()
 
+    def get_child_groups(self, db: Session, id: str) -> List[StaffDivision]:
+        return db.query(self.model).filter(
+           StaffDivision.parent_group_id == id
+        ).all()
+
+    def get_by_name(self, db: Session, name: str) -> StaffDivision:
+        group = db.query(self.model).filter(
+            StaffDivision.name == name
+        ).first()
+
+        if group is None:
+            raise NotFoundException(f"StaffDivision with name: {name} is not found!")
+        return group
+
     def change_parent_group(self,
             db: Session,
             id: str,

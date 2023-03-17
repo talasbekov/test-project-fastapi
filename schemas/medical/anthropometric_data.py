@@ -22,7 +22,13 @@ class AnthropometricDataUpdate(AnthropometricDataBase):
 
 
 class AnthropometricDataRead(AnthropometricDataBase):
-    id: uuid.UUID
+    id: Optional[uuid.UUID]
+    head_circumference: Optional[int]
+    shoe_size: Optional[int]
+    neck_circumference: Optional[int]
+    shape_size: Optional[int]
+    bust_size: Optional[int]
+    profile_id: Optional[uuid.UUID]
 
     class Config:
         orm_mode = True

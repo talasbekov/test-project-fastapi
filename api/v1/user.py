@@ -33,6 +33,24 @@ async def get_all(*,
     return user_service.get_multi(db, skip, limit)
 
 
+@router.get("/jurisdiction", dependencies=[Depends(HTTPBearer())], response_model=List[UserRead],
+            summary="Get all Users by Jurisdiction")
+async def get_all_by_jurisdiction(*,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends(),
+    skip: int = 0,
+    limit: int = 100
+):
+    """
+        Get all Users by juridction
+
+       - **skip**: int - The number of users to skip before returning the results. This parameter is optional and defaults to 0.
+       - **limit**: int - The maximum number of users to return in the response. This parameter is optional and defaults to 10.
+    """
+    Authorize.jwt_required()
+    return user_service.get_by_jurisdiction(db, Authorize.get_jwt_subject(), skip, limit)
+
+
 @router.patch("/{id}/", status_code=status.HTTP_202_ACCEPTED,
               dependencies=[Depends(HTTPBearer())],
               response_model=UserRead)

@@ -11,6 +11,7 @@ class StaffDivisionBase(BaseModel):
     parent_group_id: Optional[uuid.UUID]
     name: str
     description: Optional[str]
+    is_combat_unit: bool
 
 
 class StaffDivisionCreate(StaffDivisionBase):
@@ -28,6 +29,7 @@ class StaffDivisionUpdateParentGroup(BaseModel):
 class StaffDivisionRead(StaffDivisionBase):
     id: Optional[uuid.UUID]
     name: Optional[str]
+    is_combat_unit: Optional[bool]
     children: Optional[List['StaffDivisionRead']]
 
     class Config:

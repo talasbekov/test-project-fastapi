@@ -30,6 +30,7 @@ class User(Model, Base):
     
     staff_unit_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"), nullable=False)
     actual_staff_unit_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"), nullable=False)
+    supervised_by = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
     
     status = Column(String(255), nullable=True)
     status_till = Column(TIMESTAMP(timezone=True), nullable=True)

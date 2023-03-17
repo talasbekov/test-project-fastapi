@@ -1,3 +1,4 @@
+from .family_status import router as family_status_router
 from .biographic_info import router as biographic_info_router
 from .driving_license import router as driving_license_router
 from .identification_card import router as identification_card_router
