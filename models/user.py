@@ -1,7 +1,7 @@
 import uuid
 from typing import Any
 
-from sqlalchemy import TIMESTAMP, Column, Date, ForeignKey, String, text
+from sqlalchemy import TIMESTAMP, Column, Date, ForeignKey, String, text, Boolean
 from sqlalchemy.dialects.postgresql import ARRAY, JSON, TEXT, UUID
 from sqlalchemy.orm import relationship
 
@@ -38,6 +38,7 @@ class User(Model, Base):
     description = Column(TEXT, nullable=True)
     cabinet = Column(String(255), nullable=True)
     service_phone_number = Column(String(32), nullable=True)
+    is_military = Column(Boolean, nullable=True)
     personal_id = Column(String(255), nullable=True)
 
     rank = relationship("Rank", cascade="all,delete")

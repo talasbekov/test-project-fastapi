@@ -141,48 +141,88 @@ def upgrade() -> None:
     rank11_id = get_uuid()
     rank12_id = get_uuid()
     rank13_id = get_uuid()
+    rank14_id = get_uuid()
+    rank15_id = get_uuid()
+    rank16_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['ranks'],
         [{
             'id': rank1_id,
-            'name': 'Рядовой'
+            'name': 'Рядовой',
+            'military_url': "http://192.168.0.172:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A0%D1%8F%D0%B4%D0%BE%D0%B2%D0%BE%D0%B9_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png"
         }, {
             'id': rank2_id,
-            'name': 'Младший сержант'
+            'name': 'Младший сержант',
+            'military_url': "http://192.168.0.172:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9C%D0%BB%D0%B0%D0%B4%D1%88%D0%B8%D0%B9%20%D1%81%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'employee_url': "http://192.168.0.172:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9C%D0%BB%D0%B0%D0%B4%D1%88%D0%B8%D0%B9%20%D1%81%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82.png"
         }, {
             'id': rank3_id,
-            'name': 'Сержант'
+            'name': 'Сержант',
+            'military_url': "http://192.168.0.172:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'employee_url': "http://192.168.0.172:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82.png"
+        }, {
+            'id': rank14_id,
+            'name': 'Сержант 1-го класса',
+            'military_url': "http://192.168.0.172:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82%201-%D0%B3%D0%BE%20%D0%BA%D0%BB%D0%B0%D1%81%D1%81%D0%B0_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png"
+        }, {
+            'id': rank15_id,
+            'name': 'Сержант 2-го класса',
+            'military_url': "http://192.168.0.172:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82%202-%D0%B3%D0%BE%20%D0%BA%D0%BB%D0%B0%D1%81%D1%81%D0%B0_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png"
+        }, {
+            'id': rank16_id,
+            'name': 'Сержант 3-го класса',
+            'military_url': "http://192.168.0.172:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82%203-%D0%B3%D0%BE%20%D0%BA%D0%BB%D0%B0%D1%81%D1%81%D0%B0_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png"
         }, {
             'id': rank4_id,
-            'name': 'Старший сержант'
+            'name': 'Старший сержант',
+            'military_url': "http://192.168.0.172:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D1%82%D0%B0%D1%80%D1%88%D0%B8%D0%B9%20%D1%81%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'employee_url': "http://192.168.0.172:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D1%82%D0%B0%D1%80%D1%88%D0%B8%D0%B9%20%D1%81%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82.png"
         }, {
             'id': rank5_id,
-            'name': 'Лейтенант'
+            'name': 'Лейтенант',
+            'military_url': "http://192.168.0.172:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9B%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'employee_url': "http://192.168.0.172:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9B%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82.png"
         }, {
             'id': rank6_id,
-            'name': 'Старший лейтенант'
+            'name': 'Старший лейтенант',
+            'military_url': "http://192.168.0.172:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D1%82%D0%B0%D1%80%D1%88%D0%B8%D0%B9%20%D0%BB%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'employee_url': "http://192.168.0.172:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D1%82%D0%B0%D1%80%D1%88%D0%B8%D0%B9%20%D0%BB%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82.png"
         }, {
             'id': rank7_id,
-            'name': 'Капитан'
+            'name': 'Капитан',
+            'military_url': "http://192.168.0.172:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9A%D0%B0%D0%BF%D0%B8%D1%82%D0%B0%D0%BD_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'employee_url': "http://192.168.0.172:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9A%D0%B0%D0%BF%D0%B8%D1%82%D0%B0%D0%BD.png"
         }, {
             'id': rank8_id,
-            'name': 'Майор'
+            'name': 'Майор',
+            'military_url': "http://192.168.0.172:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9C%D0%B0%D0%B9%D0%BE%D1%80_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'employee_url': "http://192.168.0.172:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9C%D0%B0%D0%B9%D0%BE%D1%80.png"
         }, {
             'id': rank9_id,
-            'name': 'Подполковник'
+            'name': 'Подполковник',
+            'military_url': "http://192.168.0.172:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9F%D0%BE%D0%B4%D0%BF%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'employee_url': "http://192.168.0.172:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9F%D0%BE%D0%B4%D0%BF%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA.png"
         }, {
             'id': rank10_id,
-            'name': 'Полковник'
+            'name': 'Полковник',
+            'military_url': "http://192.168.0.172:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9F%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'employee_url': "http://192.168.0.172:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9F%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA.png"
         }, {
             'id': rank11_id,
-            'name': 'Генерал-майор'
+            'name': 'Генерал-майор',
+            'military_url': "http://192.168.0.172:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BC%D0%B0%D0%B9%D0%BE%D1%80.png",
+            'employee_url': "http://192.168.0.172:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BC%D0%B0%D0%B9%D0%BE%D1%80.png"
         }, {
             'id': rank12_id,
-            'name': 'Генерал-лейтенант'
+            'name': 'Генерал-лейтенант',
+            'military_url': "http://192.168.0.172:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BB%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82.png",
+            'employee_url': "http://192.168.0.172:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BB%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82.png"
         }, {
             'id': rank13_id,
-            'name': 'Генерал-полковник'
+            'name': 'Генерал-полковник',
+            'military_url': "http://192.168.0.172:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BF%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA.png",
+            'employee_url': "http://192.168.0.172:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BF%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA.png"
         }]
     )
 
@@ -757,6 +797,7 @@ def upgrade() -> None:
         staff_unit10_id,
         "http://192.168.0.172:8083/static/Dima.png",
         position4_id,
+        True,
         "1.2.218K")
     create_user(
         user1_id,
@@ -773,6 +814,7 @@ def upgrade() -> None:
         staff_unit1_id,
         "http://192.168.0.172:8083/static/Erzhan.png",
         position1_id,
+        True,
         '1.2.213K')
     create_user(
         user2_id,
@@ -789,6 +831,7 @@ def upgrade() -> None:
         staff_unit2_id,
         "http://192.168.0.172:8083/static/Erzhan.png",
         position1_id,
+        False,
         '1.2.213K')
     create_user(
         user3_id,
@@ -805,6 +848,7 @@ def upgrade() -> None:
         staff_unit3_id,
         "http://192.168.0.172:8083/static/Almaz.png",
         position1_id,
+        True,
         '1.2.214K')
     create_user(
         user4_id,
@@ -821,6 +865,7 @@ def upgrade() -> None:
         staff_unit4_id,
         "http://192.168.0.172:8083/static/Adil.png",
         position2_id,
+        False,
         "1.2.214K")
     create_user(
         user5_id,
@@ -837,6 +882,7 @@ def upgrade() -> None:
         staff_unit5_id,
         "http://192.168.0.172:8083/static/Almaz.png",
         position1_id,
+        True,
         "1.2.215K")
     create_user(
         user6_id,
@@ -853,6 +899,7 @@ def upgrade() -> None:
         staff_unit6_id,
         "http://192.168.0.172:8083/static/Ernazar.png",
         position2_id,
+        False,
         '1.2.215K')
     create_user(
         user7_id,
@@ -869,6 +916,7 @@ def upgrade() -> None:
         staff_unit7_id,
         "http://192.168.0.172:8083/static/Nurlan.png",
         position1_id,
+        True,
         '1.2.215K')
     create_user(
         user8_id,
@@ -885,6 +933,7 @@ def upgrade() -> None:
         staff_unit8_id,
         "http://192.168.0.172:8083/static/Erdaulet.png",
         position1_id,
+        False,
         "1.2.216K")
     create_user(
         user9_id,
@@ -901,6 +950,7 @@ def upgrade() -> None:
         staff_unit9_id,
         "http://192.168.0.172:8083/static/Erdaulet.png",
         position3_id,
+        True,
         "1.2.217K")
     create_user(
         str(uuid.uuid4()),
@@ -917,6 +967,7 @@ def upgrade() -> None:
         staff_unit11_id,
         "http://192.168.0.172:8083/static/Erdaulet.png",
         position4_id,
+        False,
         '1.2.100K')
 
 
@@ -1223,6 +1274,7 @@ def create_user(id,
                 actual_staff_unit_id,
                 icon,
                 position_id,
+                is_military,
                 cabinet):
     op.bulk_insert(
         Base.metadata.tables['staff_units'],
@@ -1254,6 +1306,7 @@ def create_user(id,
             'icon': icon,
             'service_phone_number': "679-258",
             'personal_id': number,
+            'is_military': is_military,
             'cabinet': cabinet
         }]
     )

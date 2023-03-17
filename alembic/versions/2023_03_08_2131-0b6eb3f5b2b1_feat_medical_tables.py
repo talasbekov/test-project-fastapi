@@ -52,13 +52,6 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['profile_id'], ['medical_profiles.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('age_groups',
-    sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('group', sa.Integer(), nullable=False),
-    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.PrimaryKeyConstraint('id')
-    )
     op.create_table('general_user_informations',
     sa.Column('height', sa.Integer(), nullable=True),
     sa.Column('blood_group', sa.Enum('O_PLUS', 'O_MINUS', 'A_PLUS', 'A_MINUS', 'B_PLUS', 'B_MINUS', 'AB_PLUS', 'AB_MINUS', name='bloodtype'), nullable=True),
