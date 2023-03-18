@@ -30,4 +30,3 @@ class MedicalProfileRead(MedicalProfileBase):
     anthropometric_datas: Optional[List[AnthropometricDataRead]]
     hospital_datas: Optional[List[HospitalDataRead]]
     user_liberations: Optional[List[UserLiberationRead]]
-g
