@@ -30,6 +30,9 @@ family_status2_id = get_uuid()
 family_status3_id = get_uuid()
 family_status4_id = get_uuid()
 
+family_relation_id = get_uuid()
+family_relation2_id = get_uuid()
+
 # Education
 academic_degree_degree1_id = get_uuid()
 academic_degree_degree2_id = get_uuid()
@@ -769,6 +772,16 @@ def upgrade() -> None:
         }]
     )
 
+    op.bulk_insert(
+        Base.metadata.tables['family_relations'],
+        [{
+            'id': family_relation_id,
+            'name': 'Отец'
+        }, {
+            'id': family_relation2_id,
+            'name': 'Мать'
+        }]
+    )
 
     user1_id = get_uuid()
     user2_id = get_uuid()
@@ -1898,7 +1911,7 @@ def create_user(id,
         Base.metadata.tables['families'],
         [{
             'id': families_profile_id,
-            'relation': "Отец",
+            'relation_id': family_relation_id,
             'first_name': options[email]['first_name'],
             'last_name': 'Темирбеков',
             'father_name': options[email]['father_name'],
@@ -1910,7 +1923,7 @@ def create_user(id,
             'profile_id': family_profile_id
         }, {
             'id': get_uuid(),
-            'relation': "Мать",
+            'relation_id': family_relation2_id,
             'first_name': "Айгуль",
             'last_name': "Ахметова",
             'father_name': surname,

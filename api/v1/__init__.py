@@ -28,7 +28,7 @@ from .personal import (personal_profile_router, biographic_info_router, driving_
                        identification_card_router, passport_router, sport_achievement_router,
                        sport_degree_router, tax_declaration_router, user_financial_info_router, sport_type_router,
                        family_status_router)
-from .family import router as family_router
+from .family import *
 from .staff_list import router as staff_list_router
 
 router = APIRouter(prefix="/v1")
@@ -80,6 +80,8 @@ router.include_router(violation_router)
 router.include_router(properties_router)
 router.include_router(property_type_router)
 router.include_router(family_router)
+router.include_router(family_profile_router)
+router.include_router(family_relation_router)
 router.include_router(service_housing_router)
 router.include_router(vehicle_router)
 
