@@ -70,4 +70,4 @@ class ArchiveStaffUnitService(ServiceBase[ArchiveStaffUnit, ArchiveStaffUnitCrea
         db.flush()
 
 
-archive_staff_unit_service = ArchiveStaffUnitService(ArchiveStaffUnitService)
+archive_staff_unit_service = ArchiveStaffUnitService(ArchiveStaffUnit)

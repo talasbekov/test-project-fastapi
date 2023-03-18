@@ -4,13 +4,18 @@ from typing import List, Optional, Union
 
 from pydantic import BaseModel, EmailStr
 
-from schemas import (BadgeRead, PositionRead,
-                     RankRead)
+from schemas import BadgeRead, PositionRead, RankRead
+
 from .archive_staff_division import ArchiveStaffDivisionRead
 from .archive_staff_function import ArchiveStaffFunctionRead
 
+
 class ArchiveStaffUnitBase(BaseModel):
-    pass
+    position_id: uuid.UUID
+    staff_division_id: uuid.UUID
+    user_id: Optional[uuid.UUID]
+    actual_user_id: Optional[uuid.UUID]
+    origin_id: Optional[uuid.UUID]
 
 
 class ArchiveStaffUnitCreate(ArchiveStaffUnitBase):

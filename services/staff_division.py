@@ -7,8 +7,12 @@ from sqlalchemy.orm import Session
 
 from exceptions import BadRequestException, NotFoundException
 from models import StaffDivision
-from schemas import (StaffDivisionCreate, StaffDivisionRead,
-                     StaffDivisionUpdate, StaffDivisionUpdateParentGroup)
+from schemas import (
+    StaffDivisionCreate,
+    StaffDivisionRead,
+    StaffDivisionUpdate,
+    StaffDivisionUpdateParentGroup,
+)
 
 from .base import ServiceBase
 

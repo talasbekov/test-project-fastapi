@@ -1,7 +1,7 @@
 """feat: add vehicle model 
 
 Revision ID: 68735684d0fe
-Revises: 4c811bb0aab0
+Revises: 9fae9da641dd
 Create Date: 2023-03-10 14:27:55.107935
 
 """
@@ -11,7 +11,7 @@ from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision = '68735684d0fe'
-down_revision = '4c811bb0aab0'
+down_revision = '9fae9da641dd'
 branch_labels = None
 depends_on = None
 

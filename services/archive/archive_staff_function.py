@@ -8,6 +8,8 @@ from schemas import ArchiveStaffFunctionCreate, ArchiveStaffFunctionUpdate
 
 from services.base import ServiceBase
 
+from .service_archive_staff_function_type import service_archive_staff_function_type_service
+
 
 class ArchiveStaffFunctionService(ServiceBase[ArchiveStaffFunction, ArchiveStaffFunctionCreate, ArchiveStaffFunctionUpdate]):
 
@@ -21,5 +23,6 @@ class ArchiveStaffFunctionService(ServiceBase[ArchiveStaffFunction, ArchiveStaff
         return db.query(self.model).filter(
             self.model.origin_id == origin_id
             ).first() is not None
+
 
 archive_staff_function_service = ArchiveStaffFunctionService(ArchiveStaffFunction)

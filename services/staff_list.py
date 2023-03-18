@@ -1,19 +1,48 @@
+import uuid
+
 from sqlalchemy.orm import Session
-from services import (ServiceBase, staff_division_service, archive_staff_division_service
-                      , archive_staff_unit_service, staff_unit_service, archive_staff_function_service,
-                      document_archive_staff_function_service,
-                      service_archive_staff_function_service)
 
 from exceptions import NotFoundException, NotSupportedException
-from models import StaffList, StaffDivision, StaffUnit, DocumentStaffFunction, ServiceStaffFunction
-from schemas import (StaffListCreate,StaffListRead,StaffListUpdate, 
-                     ArchiveStaffDivisionCreate, ArchiveServiceStaffFunctionCreate, ArchiveStaffUnitCreate,
-                     ArchiveStaffUnitCreateWithStaffFunctions)
-
+from models import (
+    DocumentStaffFunction,
+    ServiceStaffFunction,
+    StaffDivision,
+    StaffList,
+    StaffUnit,
+    StaffFunction,
+)
+from schemas import (
+    ArchiveStaffDivisionCreate,
+    ArchiveStaffUnitCreate,
+    StaffListCreate,
+    StaffListUpdate,
+    StaffListUserCreate,
+    DocumentArchiveStaffFunctionTypeCreate,
+    ServiceArchiveStaffFunctionTypeCreate,
+)
+from services import (
+    ServiceBase,
+    archive_staff_division_service,
+    archive_staff_function_service,
+    archive_staff_unit_service,
+    document_archive_staff_function_service,
+    service_archive_staff_function_service,
+    staff_division_service,
+    document_archive_staff_function_type_service,
+    service_archive_staff_function_type_service
+)
 
 options = {
-    DocumentStaffFunction.__mapper_args__['polymorphic_identity']: document_archive_staff_function_service,
-    ServiceStaffFunction.__mapper_args__['polymorphic_identity']: service_archive_staff_function_service,
+    DocumentStaffFunction.__mapper_args__['polymorphic_identity']: {
+        "service": document_archive_staff_function_service,
+        "type": document_archive_staff_function_type_service,
+        "type_id": "role_id",
+    },
+    ServiceStaffFunction.__mapper_args__['polymorphic_identity']: {
+        "service": service_archive_staff_function_service,
+        "type": service_archive_staff_function_type_service,
+        "type_id": "type_id"
+    },
 }
 
 class StaffListService(ServiceBase[StaffList,StaffListCreate,StaffListUpdate]):
@@ -23,58 +52,76 @@ class StaffListService(ServiceBase[StaffList,StaffListCreate,StaffListUpdate]):
         if staff_list is None:
             raise NotFoundException(detail="Staff list is not found!")
         return staff_list
-    
-    def create_by_user_id(self,db: Session,user_id: str, obj_in: StaffListCreate):
 
-        db_obj = obj_in.dict()
-        db_obj['user_id'] = user_id
-        staff_list = super().create(db,db_obj)
-        staff_divisions = staff_list.archive_staff_divisions
+    def create_by_user_id(self,db: Session, user_id: uuid.UUID, obj_in: StaffListUserCreate):
+
+        create_staff_list = StaffListCreate(
+            name = obj_in.name,
+            status="IN PROGRESS",
+            user_id=user_id
+        )
+        staff_list = super().create(db,create_staff_list)
+        staff_divisions = staff_division_service.get_departments(db, 0, 100)
         for staff_division in staff_divisions:
-            self._create_archive_staff_division(db, staff_division, staff_list.id)
-        
+            self._create_archive_staff_division(db, staff_division, staff_list.id, None)
+
+        db.add(staff_list)
+        db.flush()
         return staff_list
 
-    def _create_archive_staff_division(self,db: Session,staff_division: StaffDivision,staff_list_id: str):
+    def _create_archive_staff_division(self,db: Session, staff_division: StaffDivision, staff_list_id: str, parent_group_id: uuid.UUID):
 
-        archive_division = ArchiveStaffDivisionCreate(
-            parent_group_id=staff_division.parent_group_id,
-            name=staff_division.name,
-            description=staff_division.description,
-            children = [],
-            staff_units = []
+        archive_division = archive_staff_division_service.create(db, ArchiveStaffDivisionCreate(
+                parent_group_id=parent_group_id,
+                name=staff_division.name,
+                description=staff_division.description,
+                staff_list_id=staff_list_id,
+                origin_id=staff_division.id
+            )
         )
-        
+
         if staff_division.children:
             for child in staff_division.children:
-
-                child_archive_staff_division = self.archive_staff_function_create_archive_staff_division(db, child, staff_list_id)
-
+                child_archive_staff_division = self._create_archive_staff_division(db, child, staff_list_id, archive_division.id)
                 archive_division.children.append(child_archive_staff_division)
 
         if staff_division.staff_units:
             for staff_unit in staff_division.staff_units:
-                archive_staff_unit = ArchiveStaffUnitCreate(
-                    staff_unit_id = staff_unit.id,
-                    staff_list_id = staff_list_id,
-                    staff_functions = []
+                staff_unit: StaffUnit
+                archive_staff_unit = archive_staff_unit_service.create(db, ArchiveStaffUnitCreate(
+                        position_id=staff_unit.position_id,
+                        staff_division_id=archive_division.id,
+                        user_id=staff_unit.users[0].id if staff_unit.users else None,
+                        actual_user_id=staff_unit.actual_users[0].id if staff_unit.actual_users else None,
+                        origin_id=staff_unit.id
+                    )
                 )
 
                 if staff_unit.staff_functions:
                     for staff_function in staff_unit.staff_functions:
                         if not archive_staff_function_service.exists_by_origin_id(db, staff_function.id):
-
-                            serv = options.get(staff_function.discriminator)
-                            if serv is None:
+                            service = options.get(staff_function.discriminator)
+                            if service is None:
                                 raise NotSupportedException(detail="Staff function type is not supported!")
+                            
+                            type = service['type'].get_by_origin_id(db, staff_function)
 
-                            archive_staff_function = serv.create_archive_staff_function(db, staff_function, staff_list_id)
+                            if type is None:
+                                type = service['type'].create_archive_staff_function_type(
+                                    db,
+                                    service['type'].get_by_id(db, getattr(staff_function, service['type_id']))
+                                )
+
+                            archive_staff_function = service['service'].create_archive_staff_function(
+                                db, 
+                                staff_function, getattr(staff_function, service['type_id'])
+                            )
                             archive_staff_unit.staff_functions.append(archive_staff_function)
 
-                archive_staff_unit = archive_staff_unit_service.create(db,archive_staff_unit)
                 archive_division.staff_units.append(archive_staff_unit)
 
-        archive_division = archive_staff_division_service.create(db,archive_division)
+        db.add(archive_division)
+        db.flush()
 
         return archive_division
 
