@@ -29,7 +29,9 @@ from services import (
     service_archive_staff_function_service,
     staff_division_service,
     document_archive_staff_function_type_service,
-    service_archive_staff_function_type_service
+    service_archive_staff_function_type_service,
+    document_staff_function_type_service,
+    service_staff_function_type_service,
 )
 
 options = {
@@ -37,11 +39,13 @@ options = {
         "service": document_archive_staff_function_service,
         "type": document_archive_staff_function_type_service,
         "type_id": "role_id",
+        "origin": document_staff_function_type_service,
     },
     ServiceStaffFunction.__mapper_args__['polymorphic_identity']: {
         "service": service_archive_staff_function_service,
         "type": service_archive_staff_function_type_service,
-        "type_id": "type_id"
+        "type_id": "type_id",
+        "origin": service_staff_function_type_service,
     },
 }
 
@@ -104,18 +108,21 @@ class StaffListService(ServiceBase[StaffList,StaffListCreate,StaffListUpdate]):
                             if service is None:
                                 raise NotSupportedException(detail="Staff function type is not supported!")
                             
-                            type = service['type'].get_by_origin_id(db, staff_function)
+                            type = service['type'].get_by_origin_id(db, staff_function.id)
 
                             if type is None:
+                                print(service)
                                 type = service['type'].create_archive_staff_function_type(
                                     db,
-                                    service['type'].get_by_id(db, getattr(staff_function, service['type_id']))
+                                    service['origin'].get_by_id(db, getattr(staff_function, service['type_id']))
                                 )
 
                             archive_staff_function = service['service'].create_archive_staff_function(
-                                db, 
-                                staff_function, getattr(staff_function, service['type_id'])
+                                db,
+                                staff_function,
+                                type.id
                             )
+                            
                             archive_staff_unit.staff_functions.append(archive_staff_function)
 
                 archive_division.staff_units.append(archive_staff_unit)

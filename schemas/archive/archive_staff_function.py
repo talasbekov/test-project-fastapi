@@ -13,11 +13,12 @@ class ArchiveStaffFunctionBase(BaseModel):
     origin_id: uuid.UUID
 
 
+
 class ArchiveDocumentStaffFunctionBase(ArchiveStaffFunctionBase):
     priority: int
     role_id: uuid.UUID
     jurisdiction_id: uuid.UUID
-
+    
 
 class ArchiveServiceStaffFunctionBase(ArchiveStaffFunctionBase):
 

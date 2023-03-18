@@ -9,12 +9,12 @@ from schemas import ServiceArchiveStaffFunctionTypeCreate, ServiceArchiveStaffFu
 from services.base import ServiceBase
 
 
-class ServiceArchiveStaffFunctionType(ServiceBase[ArchiveServiceFunctionType, ServiceArchiveStaffFunctionTypeCreate, ServiceArchiveStaffFunctionTypeUpdate]):
+class ServiceArchiveStaffFunctionTypeService(ServiceBase[ArchiveServiceFunctionType, ServiceArchiveStaffFunctionTypeCreate, ServiceArchiveStaffFunctionTypeUpdate]):
 
     def get_by_id(self, db: Session, id: str) -> ArchiveServiceFunctionType:
         type = super().get(db, id)
         if type is None:
-            raise NotFoundException(detail="StaffUnit is not found!")
+            raise NotFoundException(detail="ServiceArchiveStaffFunctionType is not found!")
         return type
 
     def exists_by_origin_id(self, db: Session, origin_id: uuid.UUID) -> bool:
@@ -31,4 +31,4 @@ class ServiceArchiveStaffFunctionType(ServiceBase[ArchiveServiceFunctionType, Se
         )
 
 
-service_archive_staff_function_type_service = ServiceArchiveStaffFunctionType(ArchiveServiceFunctionType)
+service_archive_staff_function_type_service = ServiceArchiveStaffFunctionTypeService(ArchiveServiceFunctionType)

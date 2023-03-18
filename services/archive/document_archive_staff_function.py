@@ -25,12 +25,11 @@ class DocumentArchiveStaffFunction(ServiceBase[ArchiveDocumentStaffFunction, Arc
             raise NotFoundException(detail=f"DocumentArchiveStaffFunction with id: {id} is not found!")
         return document_staff_function
     
-    def create_archive_staff_function(self, db: Session, staff_function: DocumentStaffFunction, staff_list_id: uuid.UUID, role_id: uuid.UUID):
+    def create_archive_staff_function(self, db: Session, staff_function: DocumentStaffFunction, role_id: uuid.UUID):
         return super().create(db, ArchiveDocumentStaffFunctionCreate(
             name=staff_function.name,
             hours_per_week=staff_function.hours_per_week,
             role_id=role_id,
-            staff_list_id=staff_list_id,
             jurisdiction_id=staff_function.jurisdiction_id,
             priority=staff_function.priority,
             origin_id=staff_function.id

@@ -7,6 +7,7 @@ from pydantic import BaseModel, EmailStr
 class DocumentArchiveStaffFunctionTypeBase(BaseModel):
     name: str
     origin_id: Optional[uuid.UUID]
+    can_cancel: Optional[bool]
 
     class Config:
         orm_mode = True
