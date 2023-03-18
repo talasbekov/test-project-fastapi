@@ -7,15 +7,15 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas.medical import UserLiberationsRead, UserLiberationsCreate, UserLiberationsUpdate
+from schemas.medical import UserLiberationRead, UserLiberationCreate, UserLiberationUpdate
 from services.medical import user_liberations_service
 
-router = APIRouter(prefix="/user_liberations", tags=["UserLiberations"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(prefix="/user_liberations", tags=["UserLiberation"], dependencies=[Depends(HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[UserLiberationsRead],
-            summary="Get all UserLiberations")
+            response_model=List[UserLiberationRead],
+            summary="Get all UserLiberation")
 async def get_all(*,
     db: Session = Depends(get_db),
     skip: int = 0,
@@ -23,10 +23,10 @@ async def get_all(*,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Get all UserLiberations
+        Get all UserLiberation
 
-        - **skip**: int - The number of UserLiberations to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of UserLiberations to return in the response. This parameter is optional and defaults to 100.
+        - **skip**: int - The number of UserLiberation to skip before returning the results. This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of UserLiberation to return in the response. This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
     return user_liberations_service.get_multi(db, skip, limit)
@@ -34,15 +34,15 @@ async def get_all(*,
 
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
-             response_model=UserLiberationsRead,
-             summary="Create UserLiberations")
+             response_model=UserLiberationRead,
+             summary="Create UserLiberation")
 async def create(*,
     db: Session = Depends(get_db),
-    body: UserLiberationsCreate,
+    body: UserLiberationCreate,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Create new UserLiberations
+        Create new UserLiberation
 
         - **reason**: str
         - **liberation_name**: str
@@ -56,15 +56,15 @@ async def create(*,
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=UserLiberationsRead,
-            summary="Get UserLiberations by id")
+            response_model=UserLiberationRead,
+            summary="Get UserLiberation by id")
 async def get_by_id(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Get UserLiberations by id
+        Get UserLiberation by id
 
         - **id**: UUID - required.
     """
@@ -73,18 +73,18 @@ async def get_by_id(*,
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model= UserLiberationsRead,
-            summary="Update UserLiberations")
+            response_model= UserLiberationRead,
+            summary="Update UserLiberation")
 async def update(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
-    body: UserLiberationsUpdate,
+    body: UserLiberationUpdate,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Update UserLiberations
+        Update UserLiberation
 
-        - **id**: UUID - the ID of UserLiberations to update. This is required.
+        - **id**: UUID - the ID of UserLiberation to update. This is required.
         - **reason**: str
         - **liberation_name**: str
         - **initiator**: str
@@ -101,14 +101,14 @@ async def update(*,
 
 @router.delete("/{id}/",status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
-               summary="Delete UserLiberations")
+               summary="Delete UserLiberation")
 async def delete(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Delete a UserLiberations
+        Delete a UserLiberation
 
         - **id**: UUId - required
     """

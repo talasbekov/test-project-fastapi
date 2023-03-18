@@ -78,9 +78,18 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['profile_id'], ['medical_profiles.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('liberations',
+    sa.Column('name', sa.String(), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+              nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+              nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('user_liberations',
     sa.Column('reason', sa.String(), nullable=True),
-    sa.Column('liberation_name', sa.String(), nullable=True),
+    sa.Column('liberation_id', sa.UUID(), nullable=True),
     sa.Column('initiator', sa.String(), nullable=True),
     sa.Column('start_date', postgresql.TIMESTAMP(timezone=True), nullable=True),
     sa.Column('end_date', postgresql.TIMESTAMP(timezone=True), nullable=True),
@@ -89,7 +98,14 @@ def upgrade() -> None:
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['profile_id'], ['medical_profiles.id'], ),
+    sa.ForeignKeyConstraint(['liberation_id'], ['liberations.id'], ),
     sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('user_liberations_liberations',
+    sa.Column('user_liberation_id', sa.UUID(), nullable=False),
+    sa.Column('liberation_id', sa.UUID(), nullable=False),
+    sa.ForeignKeyConstraint(['user_liberation_id'], ['user_liberations.id'], ),
+    sa.ForeignKeyConstraint(['liberation_id'], ['liberations.id'], )
     )
     op.create_unique_constraint(None, 'abroad_travels', ['id'])
     # ### end Alembic commands ###

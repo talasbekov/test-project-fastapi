@@ -33,6 +33,10 @@ family_status4_id = get_uuid()
 family_relation_id = get_uuid()
 family_relation2_id = get_uuid()
 
+# Medical
+liberation_id = get_uuid()
+liberation2_id = get_uuid()
+
 # Education
 academic_degree_degree1_id = get_uuid()
 academic_degree_degree2_id = get_uuid()
@@ -780,6 +784,17 @@ def upgrade() -> None:
         }, {
             'id': family_relation2_id,
             'name': 'Мать'
+        }]
+    )
+
+    op.bulk_insert(
+        Base.metadata.tables['liberations'],
+        [{
+            'id': liberation_id,
+            'name': 'Физические нагрузки'
+        }, {
+            'id': liberation2_id,
+            'name': 'Дежурство'
         }]
     )
 
@@ -1773,7 +1788,7 @@ def create_user(id,
         [{
             'id': user_liberations_id,
             'reason': "Надрыв спины II стадии",
-            'liberation_name': "Физические нагрузки",
+            'liberation_id': liberation_id,
             'initiator': "Медицинский центр 'Тыныс'",
             'start_date': "2022-09-12",
             'end_date': "2022-10-12",
