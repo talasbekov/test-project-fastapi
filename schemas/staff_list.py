@@ -5,6 +5,7 @@ from datetime import datetime
 
 class StaffListBase(BaseModel):
     name: str
+    user_id: uuid.UUID
 
     class Config:
         orm_mode = True
@@ -19,8 +20,8 @@ class StaffListUpdate(StaffListBase):
     pass
 
 
-class StaffListUserCreate(StaffListBase):
-    pass
+class StaffListUserCreate(BaseModel):
+    name: str
 
 class StaffListRead(StaffListBase):
     id: Optional[uuid.UUID]

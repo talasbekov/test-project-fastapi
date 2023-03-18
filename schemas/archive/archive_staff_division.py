@@ -11,6 +11,8 @@ class ArchiveStaffDivisionBase(BaseModel):
     parent_group_id: Optional[uuid.UUID]
     name: str
     description: Optional[str]
+    staff_list_id: uuid.UUID
+    origin_id: Optional[uuid.UUID]
 
 
 class ArchiveStaffDivisionCreate(ArchiveStaffDivisionBase):

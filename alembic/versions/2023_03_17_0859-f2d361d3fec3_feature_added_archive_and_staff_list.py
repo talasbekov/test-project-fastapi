@@ -22,15 +22,19 @@ def upgrade() -> None:
     sa.Column('can_cancel', sa.Boolean(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('origin_id', sa.UUID(), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['origin_id'], ['document_function_types.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('archive_service_function_types',
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('origin_id', sa.UUID(), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['origin_id'], ['service_function_types.id'],),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('archive_staff_functions',
@@ -80,11 +84,15 @@ def upgrade() -> None:
     sa.Column('staff_division_id', sa.UUID(), nullable=False),
     sa.Column('origin_id', sa.UUID(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('user_id', sa.UUID(), nullable=True),
+    sa.Column('actual_user_id', sa.UUID(), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['origin_id'], ['staff_units.id'], ),
     sa.ForeignKeyConstraint(['position_id'], ['positions.id'], ),
     sa.ForeignKeyConstraint(['staff_division_id'], ['archive_staff_divisions.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'],),
+    sa.ForeignKeyConstraint(['actual_user_id'], ['users.id'],),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('archive_staff_unit_functions',

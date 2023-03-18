@@ -24,12 +24,16 @@ class ArchiveDocumentFunctionType(NamedModel):
 
     can_cancel = Column(Boolean, nullable=False)
 
+    origin_id = Column(UUID(as_uuid=True), ForeignKey("document_function_types.id"), nullable=True)
+
     staff_functions = relationship("ArchiveDocumentStaffFunction", back_populates="role", cascade="all,delete")
 
 
 class ArchiveServiceFunctionType(NamedModel):
 
     __tablename__ = "archive_service_function_types"
+
+    origin_id = Column(UUID(as_uuid=True), ForeignKey("service_function_types.id"), nullable=True)
 
     staff_functions = relationship("ArchiveServiceStaffFunction", back_populates="type", cascade="all,delete")
 
