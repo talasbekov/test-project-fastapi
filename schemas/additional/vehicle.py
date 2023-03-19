@@ -1,6 +1,8 @@
-from pydantic import BaseModel
-from datetime import datetime
 import uuid
+from datetime import datetime
+
+from pydantic import BaseModel
+
 
 class VehicleBase(BaseModel):
     number: str

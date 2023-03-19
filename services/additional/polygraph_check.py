@@ -2,9 +2,10 @@ from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import PolygraphCheck, Profile
-from services.base import ServiceBase
-from services import profile_service
 from schemas import PolygraphCheckCreate, PolygraphCheckUpdate
+from services import profile_service
+from services.base import ServiceBase
+
 
 class PolygraphCheckService(ServiceBase[PolygraphCheck, PolygraphCheckCreate, PolygraphCheckUpdate]):
 

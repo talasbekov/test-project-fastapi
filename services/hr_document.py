@@ -7,27 +7,23 @@ from datetime import datetime
 from typing import List
 
 from docxtpl import DocxTemplate
-from fastapi.logger import logger as log
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
 from core import Base
 from exceptions import (BadRequestException, ForbiddenException,
                         InvalidOperationException, NotFoundException)
-from models import (HrDocument, HrDocumentInfo, HrDocumentStatusEnum,
+from models import (HrDocument, HrDocumentStatusEnum,
                     HrDocumentStep, StaffUnit, User, DocumentStaffFunction, StaffDivision, JurisdictionEnum,
                     HrDocumentStatus, StaffDivisionEnum)
 from schemas import (BadgeRead, HrDocumentCreate, HrDocumentInit,
                      HrDocumentRead, HrDocumentSign, HrDocumentUpdate,
-                     RankRead, StaffDivisionOptionRead, StaffDivisionRead,
-                     StaffUnitRead, DocumentStaffFunctionRead)
+                     RankRead, StaffDivisionOptionRead, StaffUnitRead)
 from services import (badge_service, document_staff_function_service,
-                      document_staff_function_type_service,
                       hr_document_info_service, hr_document_step_service,
                       hr_document_template_service, rank_service,
                       staff_division_service, staff_unit_service, user_service,
                       jurisdiction_service, hr_document_status_service)
-
 from .base import ServiceBase
 
 options = {

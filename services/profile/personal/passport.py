@@ -2,8 +2,7 @@ from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import Passport
-from schemas import PassportCreate, PassportUpdate, PassportRead
-
+from schemas import PassportCreate, PassportUpdate
 from services.base import ServiceBase
 
 

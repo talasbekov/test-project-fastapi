@@ -2,18 +2,11 @@ import uuid
 from datetime import datetime
 from typing import List
 
-from fastapi import HTTPException, status
-from fastapi.logger import logger as log
-from sqlalchemy import and_, asc, desc, or_
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
-from models import HrDocument, HrDocumentInfo, HrDocumentStep, DocumentStaffFunction
-from schemas import (HrDocumentInfoCreate, HrDocumentInfoRead,
-                     HrDocumentInfoUpdate)
-from services import (hr_document_step_service, staff_division_service,
-                      user_service, staff_unit_service, document_staff_function_service)
-
+from models import HrDocumentInfo, HrDocumentStep, DocumentStaffFunction
+from schemas import (HrDocumentInfoCreate, HrDocumentInfoUpdate)
 from .base import ServiceBase
 
 
@@ -46,27 +39,6 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
 
         return super().create(db, document_info)
 
-    def create_next_info_for_step(self, db: Session, document_id: str, step_id: str):
-
-        document_info = HrDocumentInfoCreate(
-            hr_document_id=document_id,
-            hr_document_step_id=step_id,
-            signed_by=None,
-            comment="",
-            is_signed=None
-        )
-
-        return super().create(db, document_info)
-
-    def get_not_signed_by_position(self, db: Session, staff_unit_id: str, skip: int, limit: int):
-
-        infos = db.query(HrDocumentInfo).filter(
-            HrDocumentInfo.is_signed == None,
-            HrDocumentInfo.hr_document_step.has(staff_unit_id=staff_unit_id)
-        ).offset(skip).limit(limit).all()
-
-        return infos
-    
     def get_by_document_id_and_step_id(self, db: Session, document_id: str, step_id: str) -> HrDocumentInfo:
 
         info = db.query(self.model).filter(
@@ -77,31 +49,6 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
 
         if info is None:
             raise NotFoundException(detail=f'Нет истории подписания!')
-        
-        return info
-
-    def get_last_signed_step_info(self, db: Session, id: str):
-
-        info = db.query(HrDocumentInfo).filter(
-            HrDocumentInfo.hr_document_id == id
-        ).order_by(
-            desc(HrDocumentInfo.created_at)
-        ).first()
-
-        if info is None:
-            raise NotFoundException(detail=f'Нет истории подписания!')
-
-        return info
-
-    def get_last_unsigned_step_info(self, db: Session, id: str):
-
-        info = db.query(HrDocumentInfo).filter(
-            HrDocumentInfo.hr_document_id == id,
-            HrDocumentInfo.is_signed == None
-        ).first()
-
-        if info is None:
-            raise NotFoundException(detail=f'Все подписано!')
 
         return info
 

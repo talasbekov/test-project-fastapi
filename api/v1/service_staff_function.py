@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from core import get_db
 from schemas import (ServiceStaffFunctionCreate, ServiceStaffFunctionRead,
                      ServiceStaffFunctionUpdate)
-from services import service_staff_function_service, user_service
+from services import service_staff_function_service
 
 router = APIRouter(prefix="/service_staff_function", tags=["ServiceStaffFunction"], dependencies=[Depends(HTTPBearer())])
 

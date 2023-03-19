@@ -2,8 +2,7 @@ from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import Rank
-from schemas import RankCreate, RankRead, RankUpdate
-
+from schemas import RankCreate, RankUpdate
 from .base import ServiceBase
 
 

@@ -1,11 +1,9 @@
-import uuid
-
-from sqlalchemy import Column, Enum as EnumType, ForeignKey, Integer, String, text, Double
-from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID
-from sqlalchemy.orm import relationship
 from enum import Enum
 
-from core import Base
+from sqlalchemy import Column, Enum as EnumType, ForeignKey, Integer
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
+
 from models import Model
 
 

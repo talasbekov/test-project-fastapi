@@ -2,8 +2,8 @@ import uuid
 from typing import List, Dict
 
 from fastapi import APIRouter, Depends, status
-from fastapi_jwt_auth import AuthJWT
 from fastapi.security import HTTPBearer
+from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db

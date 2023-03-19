@@ -7,8 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import (HrDocumentStatusCreate, HrDocumentStatusRead,
-                     HrDocumentStatusUpdate)
+from schemas import (HrDocumentStatusRead)
 from services import hr_document_status_service
 
 router = APIRouter(prefix="/hr-document-status", tags=["HrDocumentStatus"], dependencies=[Depends(HTTPBearer())])

@@ -1,4 +1,4 @@
-from sqlalchemy import TEXT, Column, ForeignKey, String, Table
+from sqlalchemy import Column, ForeignKey, Table
 
 from core import Base
 
@@ -28,4 +28,11 @@ staff_unit_function = Table(
     Base.metadata,
     Column("staff_unit_id", ForeignKey("staff_units.id", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True),
     Column("staff_function_id", ForeignKey("staff_functions.id", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)
+)
+
+user_liberations_liberations = Table(
+    "user_liberations_liberations",
+    Base.metadata,
+    Column("user_liberation_id", ForeignKey("user_liberations.id")),
+    Column("liberation_id", ForeignKey("liberations.id"))
 )

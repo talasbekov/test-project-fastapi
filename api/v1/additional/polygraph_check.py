@@ -1,16 +1,15 @@
-from datetime import timedelta
-
-from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import HTTPBearer
-from sqlalchemy.orm import Session
-from fastapi_jwt_auth import AuthJWT
-
-from schemas import PolygraphCheckCreate, PolygraphCheckRead, PolygraphCheckUpdate
-from core import get_db, configs
-from services import polyhraph_check_service, user_service, profile_service
-from exceptions import SgoErpException
-from typing import List
 import uuid
+from typing import List
+
+from fastapi import APIRouter, Depends, status
+from fastapi.security import HTTPBearer
+from fastapi_jwt_auth import AuthJWT
+from sqlalchemy.orm import Session
+
+from core import get_db
+from exceptions import SgoErpException
+from schemas import PolygraphCheckCreate, PolygraphCheckRead, PolygraphCheckUpdate
+from services import polyhraph_check_service, profile_service
 
 router = APIRouter(prefix="/polygraph-check", tags=["Polygraph Check"], dependencies=[Depends(HTTPBearer())])
 
@@ -102,5 +101,3 @@ async def delete(*,
     if abroad_travel.profile_id != profile.id: # TODO: check role logic
         raise SgoErpException("You don't have permission to delete this abroad travel")
     return polyhraph_check_service.delete(db, abroad_travel)
-
-

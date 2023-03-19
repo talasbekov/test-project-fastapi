@@ -7,7 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas.medical import HospitalDataCreate,HospitalDataRead,HospitalDataUpdate
+from schemas.medical import HospitalDataCreate, HospitalDataRead, HospitalDataUpdate
 from services.medical import hospital_data_service
 
 router = APIRouter(prefix="/hospital_data", tags=["HospitalData"], dependencies=[Depends(HTTPBearer())])

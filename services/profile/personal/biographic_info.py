@@ -1,10 +1,8 @@
 from sqlalchemy.orm import Session
-from fastapi.encoders import jsonable_encoder
 
 from exceptions.client import NotFoundException
 from models import BiographicInfo
-from schemas import BiographicInfoCreate, BiographicInfoUpdate, BiographicInfoRead
-
+from schemas import BiographicInfoCreate, BiographicInfoUpdate
 from services.base import ServiceBase
 
 

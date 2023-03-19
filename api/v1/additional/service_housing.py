@@ -10,7 +10,6 @@ from core import get_db
 from schemas import ServiceHousingCreate, ServiceHousingUpdate, ServiceHousingRead
 from services import service_housing_service
 
-
 router = APIRouter(prefix="/service-housings", tags=["Service Housings"], dependencies=[Depends(HTTPBearer())])
 
 

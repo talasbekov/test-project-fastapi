@@ -2,8 +2,7 @@ from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import IdentificationCard
-from schemas import IdentificationCardCreate, IdentificationCardUpdate, IdentificationCardRead
-
+from schemas import IdentificationCardCreate, IdentificationCardUpdate
 from services.base import ServiceBase
 
 

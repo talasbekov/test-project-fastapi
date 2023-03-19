@@ -1,8 +1,8 @@
-import uuid
 import datetime
+import uuid
+from typing import Optional
 
 from pydantic import BaseModel, AnyUrl
-from typing import Optional
 
 from .academic_title_degree import AcademicTitleDegreeRead
 from .specialty import SpecialtyRead

@@ -2,9 +2,10 @@ from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import AdditionalProfile
-from services.base import ServiceBase
-from services import profile_service
 from schemas import AdditionalProfileCreate, AdditionalProfileUpdate
+from services import profile_service
+from services.base import ServiceBase
+
 
 class AdditionalProfileService(ServiceBase[AdditionalProfile, AdditionalProfileCreate, AdditionalProfileUpdate]):
 

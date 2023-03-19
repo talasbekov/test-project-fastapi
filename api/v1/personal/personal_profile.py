@@ -7,8 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import (PersonalProfileCreate, PersonalProfileRead,
-                     PersonalProfileUpdate)
+from schemas import (PersonalProfileCreate, PersonalProfileRead)
 from services import personal_profile_service, profile_service
 
 router = APIRouter(prefix="/personal_profile", tags=["PersonalProfile"], dependencies=[Depends(HTTPBearer())])

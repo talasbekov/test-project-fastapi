@@ -1,3 +1,4 @@
+from .liberation import Liberation
 from .anthropometric_data import AnthropometricData
 from .dispensary_registrations import DispensaryRegistration
 from .general_user_information import GeneralUserInformation, BloodType, AgeGroup

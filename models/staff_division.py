@@ -1,9 +1,8 @@
 import enum
-import uuid
 
-from sqlalchemy import TIMESTAMP, Column, Enum, ForeignKey, String, text, Boolean
-from sqlalchemy.dialects.postgresql import ARRAY, JSON, TEXT, UUID
-from sqlalchemy.orm import backref, relationship
+from sqlalchemy import Column, ForeignKey, Boolean
+from sqlalchemy.dialects.postgresql import TEXT, UUID
+from sqlalchemy.orm import relationship
 
 from core import Base
 from models import NamedNestedModel

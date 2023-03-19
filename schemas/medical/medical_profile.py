@@ -1,10 +1,10 @@
 import uuid
+from typing import List, Optional
 
 from pydantic import BaseModel
-from schemas.medical import (AnthropometricDataRead, DispensaryRegistrationRead, GeneralUserInformationRead,
-                             HospitalDataRead, UserLiberationsRead)
 
-from typing import List, Optional
+from schemas.medical import (AnthropometricDataRead, DispensaryRegistrationRead, GeneralUserInformationRead,
+                             HospitalDataRead, UserLiberationRead)
 
 
 class MedicalProfileBase(BaseModel):
@@ -29,4 +29,4 @@ class MedicalProfileRead(MedicalProfileBase):
     dispensary_registrations: Optional[List[DispensaryRegistrationRead]]
     anthropometric_datas: Optional[List[AnthropometricDataRead]]
     hospital_datas: Optional[List[HospitalDataRead]]
-    user_liberations: Optional[List[UserLiberationsRead]]
+    user_liberations: Optional[List[UserLiberationRead]]

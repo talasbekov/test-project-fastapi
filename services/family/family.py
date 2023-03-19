@@ -3,7 +3,6 @@ from sqlalchemy.orm import Session
 from exceptions.client import NotFoundException
 from models import Family
 from schemas import FamilyCreate, FamilyUpdate
-
 from services import ServiceBase
 
 

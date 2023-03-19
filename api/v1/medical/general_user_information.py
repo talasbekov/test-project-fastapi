@@ -7,7 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas.medical import GeneralUserInformationRead,GeneralUserInformationCreate,GeneralUserInformationUpdate
+from schemas.medical import GeneralUserInformationRead, GeneralUserInformationCreate, GeneralUserInformationUpdate
 from services.medical import general_user_information_service
 
 router = APIRouter(prefix="/general_user_information", tags=["GeneralUserInformation"], dependencies=[Depends(HTTPBearer())])

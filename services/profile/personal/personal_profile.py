@@ -1,9 +1,8 @@
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
-from models import PersonalProfile, Profile
-from schemas import (PersonalProfileCreate, PersonalProfileRead,
-                     PersonalProfileUpdate)
+from models import PersonalProfile
+from schemas import (PersonalProfileCreate, PersonalProfileUpdate)
 from services.base import ServiceBase
 
 

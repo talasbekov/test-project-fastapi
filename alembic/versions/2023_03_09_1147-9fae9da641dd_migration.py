@@ -30,6 +30,13 @@ family_status2_id = get_uuid()
 family_status3_id = get_uuid()
 family_status4_id = get_uuid()
 
+family_relation_id = get_uuid()
+family_relation2_id = get_uuid()
+
+# Medical
+liberation_id = get_uuid()
+liberation2_id = get_uuid()
+
 # Education
 academic_degree_degree1_id = get_uuid()
 academic_degree_degree2_id = get_uuid()
@@ -769,6 +776,27 @@ def upgrade() -> None:
         }]
     )
 
+    op.bulk_insert(
+        Base.metadata.tables['family_relations'],
+        [{
+            'id': family_relation_id,
+            'name': 'Отец'
+        }, {
+            'id': family_relation2_id,
+            'name': 'Мать'
+        }]
+    )
+
+    op.bulk_insert(
+        Base.metadata.tables['liberations'],
+        [{
+            'id': liberation_id,
+            'name': 'Физические нагрузки'
+        }, {
+            'id': liberation2_id,
+            'name': 'Дежурство'
+        }]
+    )
 
     user1_id = get_uuid()
     user2_id = get_uuid()
@@ -1760,7 +1788,7 @@ def create_user(id,
         [{
             'id': user_liberations_id,
             'reason': "Надрыв спины II стадии",
-            'liberation_name': "Физические нагрузки",
+            'liberation_id': liberation_id,
             'initiator': "Медицинский центр 'Тыныс'",
             'start_date': "2022-09-12",
             'end_date': "2022-10-12",
@@ -1898,7 +1926,7 @@ def create_user(id,
         Base.metadata.tables['families'],
         [{
             'id': families_profile_id,
-            'relation': "Отец",
+            'relation_id': family_relation_id,
             'first_name': options[email]['first_name'],
             'last_name': 'Темирбеков',
             'father_name': options[email]['father_name'],
@@ -1910,7 +1938,7 @@ def create_user(id,
             'profile_id': family_profile_id
         }, {
             'id': get_uuid(),
-            'relation': "Мать",
+            'relation_id': family_relation2_id,
             'first_name': "Айгуль",
             'last_name': "Ахметова",
             'father_name': surname,

@@ -1,14 +1,15 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import HTTPBearer
-from sqlalchemy.orm import Session
-from fastapi_jwt_auth import AuthJWT
-
-from schemas import PropertiesCreate, PropertiesRead, PropertiesUpdate
-from core import get_db
-from services import properties_service, profile_service
-from exceptions import SgoErpException
-from typing import List
 import uuid
+from typing import List
+
+from fastapi import APIRouter, Depends, status
+from fastapi.security import HTTPBearer
+from fastapi_jwt_auth import AuthJWT
+from sqlalchemy.orm import Session
+
+from core import get_db
+from exceptions import SgoErpException
+from schemas import PropertiesCreate, PropertiesRead, PropertiesUpdate
+from services import properties_service, profile_service
 
 router = APIRouter(prefix="/properties", tags=["Properties"], dependencies=[Depends(HTTPBearer())])
 

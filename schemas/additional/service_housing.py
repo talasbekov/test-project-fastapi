@@ -1,10 +1,11 @@
 import datetime
 import uuid
-
-from pydantic import BaseModel
 from typing import Optional
 
+from pydantic import BaseModel
+
 from .property_type import PropertyTypeRead
+
 
 class ServiceHousingBase(BaseModel):
 
