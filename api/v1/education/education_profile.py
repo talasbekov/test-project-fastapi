@@ -15,11 +15,6 @@ from services.education import educational_profile_service
 router = APIRouter(prefix="/educational_profiles",
                    tags=["EducationalProfiles"],
                    dependencies=[Depends(HTTPBearer())])
-"""
-@router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[PsychologicalCheckRead],
-            summary="Get all Polygraph Check")
-"""
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
@@ -54,7 +49,6 @@ async def create(*,
         Create new EducationalProfile
 
         - **name**: required
-        - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
     return educational_profile_service.create(db, body)
@@ -91,7 +85,6 @@ async def update(*,
 
         - **id**: UUID - the ID of EducationalProfile to update. This is required.
         - **name**: required.
-        - **url**: image url. This parameter is required.
     """
     Authorize.jwt_required()
     return educational_profile_service.update(

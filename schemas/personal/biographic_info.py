@@ -9,7 +9,7 @@ from .family_status import FamilyStatusRead
 
 class BiographicInfoBase(BaseModel):
     place_birth: str
-    date_birth: datetime.datetime
+    date_birth: datetime.date
     gender: bool
     citizenship: str
     nationality: str

@@ -12,7 +12,7 @@ from schemas.education import (InstitutionCreate,
                                InstitutionUpdate)
 from services.education import institution_service
 
-router = APIRouter(prefix="/academic_degrees",
+router = APIRouter(prefix="/institutions",
                    tags=["Institutions"],
                    dependencies=[Depends(HTTPBearer())])
 
@@ -49,7 +49,6 @@ async def create(*,
         Create new Institution
 
         - **name**: required
-        - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
     return institution_service.create(db, body)
@@ -86,7 +85,6 @@ async def update(*,
 
         - **id**: UUID - the ID of Institution to update. This is required.
         - **name**: required.
-        - **url**: image url. This parameter is required.
     """
     Authorize.jwt_required()
     return institution_service.update(

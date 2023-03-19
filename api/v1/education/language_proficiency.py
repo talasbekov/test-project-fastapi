@@ -49,7 +49,6 @@ async def create(*,
         Create new LanguageProficiency
 
         - **name**: required
-        - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
     return language_proficiency_service.create(db, body)
@@ -86,7 +85,6 @@ async def update(*,
 
         - **id**: UUID - the ID of LanguageProficiency to update. This is required.
         - **name**: required.
-        - **url**: image url. This parameter is required.
     """
     Authorize.jwt_required()
     return language_proficiency_service.update(
