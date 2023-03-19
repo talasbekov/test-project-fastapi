@@ -2,8 +2,6 @@ from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import SportType
-from schemas import SportTypeCreate, SportTypeUpdate, SportTypeRead
-
 from services.base import ServiceBase
 
 

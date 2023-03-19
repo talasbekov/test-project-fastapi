@@ -1,9 +1,6 @@
-import enum
-import uuid
-
-from sqlalchemy import Column, ForeignKey, Integer
+from sqlalchemy import Column, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import backref, relationship
+from sqlalchemy.orm import relationship
 
 from core import Base
 from models import Model

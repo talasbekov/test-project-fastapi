@@ -5,7 +5,6 @@ from sqlalchemy.orm import Session
 from exceptions.client import NotFoundException
 from models import ServiceStaffFunction, User
 from schemas import ServiceStaffFunctionCreate, ServiceStaffFunctionUpdate
-
 from .base import ServiceBase
 
 

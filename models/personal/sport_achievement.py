@@ -1,5 +1,5 @@
-from sqlalchemy import (ARRAY, TIMESTAMP, Boolean, Column, Enum, ForeignKey,
-                        String, TEXT)
+from sqlalchemy import (TIMESTAMP, Column, ForeignKey,
+                        TEXT)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 

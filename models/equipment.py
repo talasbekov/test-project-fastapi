@@ -1,12 +1,8 @@
-import uuid
-
-from sqlalchemy import BigInteger, Column, String, text
-from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID
+from sqlalchemy import BigInteger, Column
 from sqlalchemy.orm import relationship
 
 from core import Base
 from models import NamedModel
-
 from .association import hr_document_equipments
 
 

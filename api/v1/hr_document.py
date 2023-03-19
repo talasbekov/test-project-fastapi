@@ -7,7 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import (HrDocumentCreate, HrDocumentInit, HrDocumentRead,
+from schemas import (HrDocumentInit, HrDocumentRead,
                      HrDocumentSign, HrDocumentUpdate)
 from services import hr_document_service
 

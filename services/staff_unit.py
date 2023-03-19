@@ -1,12 +1,9 @@
-from typing import List
-
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import StaffUnit
 from schemas import StaffUnitCreate, StaffUnitUpdate, StaffUnitFunctions
 from services import service_staff_function_service, document_staff_function_service
-
 from .base import ServiceBase
 
 

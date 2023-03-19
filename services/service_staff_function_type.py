@@ -1,10 +1,9 @@
 from sqlalchemy.orm import Session
 
-from .base import ServiceBase
-
-from models import ServiceFunctionType
-from schemas import ServiceStaffFunctionTypeCreate, ServiceStaffFunctionTypeUpdate, ServiceStaffFunctionTypeRead
 from exceptions.client import NotFoundException
+from models import ServiceFunctionType
+from schemas import ServiceStaffFunctionTypeCreate, ServiceStaffFunctionTypeUpdate
+from .base import ServiceBase
 
 
 class ServiceFunctionTypeService(ServiceBase[ServiceFunctionType, ServiceStaffFunctionTypeCreate, ServiceStaffFunctionTypeUpdate]):

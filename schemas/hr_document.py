@@ -2,9 +2,7 @@ import uuid
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Union
 
-from pydantic import BaseModel, ValidationError, validator
-
-from models import HrDocumentStatus
+from pydantic import BaseModel, validator
 
 from schemas import HrDocumentTemplateRead, UserRead, HrDocumentStatusRead, HrDocumentStepRead
 

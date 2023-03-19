@@ -2,8 +2,7 @@ from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import DrivingLicense
-from schemas import (DrivingLicenseCreate, DrivingLicenseRead,
-                     DrivingLicenseUpdate)
+from schemas import (DrivingLicenseCreate, DrivingLicenseUpdate)
 from services.base import ServiceBase
 
 

@@ -10,7 +10,6 @@ from core import get_db
 from schemas import FamilyProfileCreate, FamilyProfileRead, FamilyProfileUpdate
 from services import family_profile_service, profile_service
 
-
 router = APIRouter(prefix="/family_profiles", tags=["Family Profile"], dependencies=[Depends(HTTPBearer())])
 
 

@@ -1,10 +1,11 @@
-import uuid
 import datetime
-
-from pydantic import BaseModel
+import uuid
 from typing import Optional
 
+from pydantic import BaseModel
+
 from .property_type import PropertyTypeRead
+
 
 class PropertiesBase(BaseModel):
     type_id: uuid.UUID

@@ -1,9 +1,7 @@
 import uuid
-from abc import abstractproperty
 
-from sqlalchemy import TIMESTAMP, Column, ForeignKey, String, text
+from sqlalchemy import TIMESTAMP, Column, String, text
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import relationship
 from sqlalchemy.sql.sqltypes import Boolean
 
 from core import Base

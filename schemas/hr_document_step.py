@@ -1,10 +1,9 @@
 import uuid
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import BaseModel
 
-from schemas import (DocumentStaffFunctionRead, StaffUnitRead, JurisdictionRead,
-                     StaffFunctionRead, StaffUnitRead)
+from schemas import (DocumentStaffFunctionRead, JurisdictionRead)
 
 
 class HrDocumentStepBase(BaseModel):

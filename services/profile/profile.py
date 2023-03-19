@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
 from models import Profile
-from schemas import ProfileCreate, ProfileRead, ProfileUpdate
+from schemas import ProfileCreate, ProfileUpdate
 from services import ServiceBase
 
 

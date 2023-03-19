@@ -2,9 +2,10 @@ from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import Violation
+from schemas import ViolationCreate, ViolationUpdate
 from services import profile_service
 from services.base import ServiceBase
-from schemas import ViolationCreate, ViolationUpdate
+
 
 class ViolationService(ServiceBase[Violation, ViolationCreate, ViolationUpdate]):
 

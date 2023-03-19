@@ -1,9 +1,10 @@
 from sqlalchemy.orm import Session
-from services import ServiceBase
 
 from exceptions import client
 from models.medical import AnthropometricData
-from schemas.medical import AnthropometricDataCreate,AnthropometricDataRead,AnthropometricDataUpdate
+from schemas.medical import AnthropometricDataCreate, AnthropometricDataUpdate
+from services import ServiceBase
+
 
 class AnthropometricDataService(ServiceBase[AnthropometricData,AnthropometricDataUpdate,AnthropometricDataCreate]):
     def get_by_id(self,db: Session,id: str):

@@ -3,7 +3,6 @@ from sqlalchemy.orm import Session
 from exceptions import NotFoundException
 from models import UserStat
 from schemas import UserStatCreate, UserStatUpdate
-
 from .base import ServiceBase
 
 

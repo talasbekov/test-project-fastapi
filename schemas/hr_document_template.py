@@ -4,7 +4,6 @@ from typing import Dict, Optional, Union
 from pydantic import BaseModel, validator
 
 from models import SubjectType
-
 from .validator import hr_document_templates_properties_validator
 
 

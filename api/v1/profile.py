@@ -1,5 +1,4 @@
 import uuid
-
 from typing import List
 
 from fastapi import APIRouter, Depends, status
@@ -8,9 +7,9 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import ProfileCreate, ProfileRead, ProfileUpdate
-from services import profile_service
 from models import Profile
+from schemas import ProfileRead, ProfileUpdate
+from services import profile_service
 
 router = APIRouter(prefix="/profile", tags=["Profiles"], dependencies=[Depends(HTTPBearer())])
 

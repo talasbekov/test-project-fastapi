@@ -1,13 +1,13 @@
 import uuid
 from typing import List
 
-from fastapi import APIRouter, Depends, status
-from fastapi_jwt_auth import AuthJWT
+from fastapi import APIRouter, Depends
 from fastapi.security import HTTPBearer
+from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import JurisdictionCreate, JurisdictionUpdate, JurisdictionRead
+from schemas import JurisdictionRead
 from services import jurisdiction_service
 
 router = APIRouter(prefix="/jurisdictions", tags=["Jurisdictions"], dependencies=[Depends(HTTPBearer())])
