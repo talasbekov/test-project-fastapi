@@ -22,4 +22,4 @@ async def get_all(*,
 
     """
     Authorize.jwt_required()
-    return [ag.name for ag in AgeGroup]
+    return [ag.value for ag in AgeGroup]
