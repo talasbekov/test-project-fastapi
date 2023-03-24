@@ -2,11 +2,10 @@ from sqlalchemy import (TIMESTAMP, Boolean, Column, ForeignKey)
 from sqlalchemy.dialects.postgresql import TEXT, UUID
 from sqlalchemy.orm import relationship
 
-from core import Base
 from models import Model
 
 
-class HrDocumentInfo(Model, Base):
+class HrDocumentInfo(Model):
     
     __tablename__ = "hr_document_infos"
 

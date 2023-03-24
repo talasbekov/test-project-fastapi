@@ -2,11 +2,10 @@ from sqlalchemy import Column, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from core import Base
 from models import Model
 
 
-class PersonalProfile(Model, Base):
+class PersonalProfile(Model):
 
     __tablename__ = "personal_profiles"
 
