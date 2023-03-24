@@ -1,11 +1,10 @@
 from sqlalchemy import TIMESTAMP, Column, ForeignKey
 from sqlalchemy.dialects.postgresql import TEXT, UUID
 
-from core import Base
 from models import NamedModel
 
 
-class Event(NamedModel, Base):
+class Event(NamedModel):
 
     __tablename__ = "events"
 

@@ -4,7 +4,6 @@ from sqlalchemy import Column, ForeignKey, Boolean
 from sqlalchemy.dialects.postgresql import TEXT, UUID
 from sqlalchemy.orm import relationship
 
-from core import Base
 from models import NamedNestedModel
 
 
@@ -13,7 +12,7 @@ class StaffDivisionEnum(str, enum.Enum):
     CANDIDATES = "Кандидаты"
 
 
-class StaffDivision(NamedNestedModel, Base):
+class StaffDivision(NamedNestedModel):
 
     __tablename__ = "staff_divisions"
 

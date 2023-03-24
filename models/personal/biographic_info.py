@@ -2,11 +2,10 @@ from sqlalchemy import Column, String, ForeignKey, TIMESTAMP, Boolean
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from core import Base
 from models import Model
 
 
-class BiographicInfo(Model, Base):
+class BiographicInfo(Model):
 
     __tablename__ = "biographic_infos"
 

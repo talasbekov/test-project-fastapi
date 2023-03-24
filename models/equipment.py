@@ -1,12 +1,11 @@
 from sqlalchemy import BigInteger, Column
 from sqlalchemy.orm import relationship
 
-from core import Base
 from models import NamedModel
 from .association import hr_document_equipments
 
 
-class Equipment(NamedModel, Base):
+class Equipment(NamedModel):
 
     __tablename__ = "equipments"
 

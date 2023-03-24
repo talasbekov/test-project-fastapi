@@ -2,11 +2,10 @@ from sqlalchemy import ARRAY, TIMESTAMP, Column, ForeignKey, String, TEXT
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from core import Base
 from models import Model
 
 
-class DrivingLicense(Model, Base):
+class DrivingLicense(Model):
 
     __tablename__ = "driving_licenses"
 

@@ -2,12 +2,11 @@ from sqlalchemy import Column, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from core import Base
 from models import Model
 from .association import staff_unit_function
 
 
-class StaffUnit(Model, Base):
+class StaffUnit(Model):
     __tablename__ = "staff_units"
 
     position_id = Column(UUID(as_uuid=True), ForeignKey("positions.id"), nullable=False)

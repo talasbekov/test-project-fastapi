@@ -1,12 +1,11 @@
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 
-from core import Base
 from models import NamedModel
 from .association import users_badges
 
 
-class Badge(NamedModel, Base):
+class Badge(NamedModel):
 
     __tablename__ = "badges"
 

@@ -3,11 +3,10 @@ from sqlalchemy import ForeignKey, String
 from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID
 from sqlalchemy.orm import relationship
 
-from core import Base
 from models import NamedModel
 
 
-class Vehicle(NamedModel, Base):
+class Vehicle(NamedModel):
 
     __tablename__ = "user_vehicles"
 

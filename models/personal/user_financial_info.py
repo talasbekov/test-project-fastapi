@@ -2,11 +2,10 @@ from sqlalchemy import Column, ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from core import Base
 from models import Model
 
 
-class UserFinancialInfo(Model, Base):
+class UserFinancialInfo(Model):
 
     __tablename__ = "user_financial_infos"
 

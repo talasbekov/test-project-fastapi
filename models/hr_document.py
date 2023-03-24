@@ -4,7 +4,6 @@ from sqlalchemy import TIMESTAMP, Column, ForeignKey, String
 from sqlalchemy.dialects.postgresql import JSON, UUID
 from sqlalchemy.orm import relationship
 
-from core import Base
 from models import Model
 from .association import hr_document_equipments, hr_documents_users
 
@@ -17,7 +16,7 @@ class HrDocumentStatusEnum(str, enum.Enum):
     ON_REVISION = "На доработке"
 
 
-class HrDocument(Model, Base):
+class HrDocument(Model):
 
     __tablename__ = "hr_documents"
 

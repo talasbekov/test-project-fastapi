@@ -2,11 +2,10 @@ from sqlalchemy import TIMESTAMP, Column, ForeignKey, String, TEXT
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from core import Base
 from models import Model
 
 
-class Passport(Model, Base):
+class Passport(Model):
 
     __tablename__ = "passports"
 
