@@ -6,12 +6,9 @@ from pydantic import BaseModel
 from schemas import JurisdictionRead, ServiceStaffFunctionTypeRead
 
 
-
 class ArchiveStaffFunctionBase(BaseModel):
     name: str
     hours_per_week: int
-    origin_id: uuid.UUID
-
 
 
 class ArchiveDocumentStaffFunctionBase(ArchiveStaffFunctionBase):
@@ -26,10 +23,18 @@ class ArchiveServiceStaffFunctionBase(ArchiveStaffFunctionBase):
 
 
 class ArchiveStaffFunctionCreate(ArchiveStaffFunctionBase):
-    pass
+    origin_id: Optional[uuid.UUID]
 
 
 class ArchiveDocumentStaffFunctionCreate(ArchiveDocumentStaffFunctionBase):
+    origin_id: Optional[uuid.UUID]
+
+
+class NewArchiveStaffFunctionCreate(ArchiveStaffFunctionBase):
+    pass
+
+
+class NewArchiveDocumentStaffFunctionCreate(ArchiveDocumentStaffFunctionBase):
     pass
 
 
@@ -38,18 +43,34 @@ class ArchiveDocumentStaffFunctionAdd(ArchiveDocumentStaffFunctionBase):
 
 
 class ArchiveServiceStaffFunctionCreate(ArchiveServiceStaffFunctionBase):
-    pass
+    origin_id: Optional[uuid.UUID]
 
 
 class ArchiveStaffFunctionUpdate(ArchiveStaffFunctionBase):
+    origin_id: Optional[uuid.UUID]
+
+
+class NewArchiveServiceStaffFunctionCreate(ArchiveServiceStaffFunctionBase):
+    pass
+
+
+class NewArchiveStaffFunctionUpdate(ArchiveStaffFunctionBase):
     pass
 
 
 class ArchiveServiceStaffFunctionUpdate(ArchiveServiceStaffFunctionBase):
-    pass
+    origin_id: Optional[uuid.UUID]
 
 
 class ArchiveDocumentStaffFunctionUpdate(ArchiveDocumentStaffFunctionBase):
+    origin_id: Optional[uuid.UUID]
+
+
+class NewArchiveServiceStaffFunctionUpdate(ArchiveServiceStaffFunctionBase):
+    pass
+
+
+class NewArchiveDocumentStaffFunctionUpdate(ArchiveDocumentStaffFunctionBase):
     pass
 
 

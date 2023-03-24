@@ -91,6 +91,7 @@ router.include_router(staff_list_router)
 router.include_router(country_router)
 
 router.include_router(archive_staff_division_router)
+router.include_router(archive_service_staff_function_type_router)
 router.include_router(archive_staff_function_router)
 router.include_router(archive_staff_unit_router)
 router.include_router(sport_type_router)

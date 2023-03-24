@@ -7,8 +7,8 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import (ArchiveStaffDivisionCreate, ArchiveStaffDivisionRead,
-                     ArchiveStaffDivisionUpdate, ArchiveStaffDivisionUpdateParentGroup)
+from schemas import (ArchiveStaffDivisionRead, ArchiveStaffDivisionUpdateParentGroup, NewArchiveStaffDivisionCreate,
+                     NewArchiveStaffDivisionUpdate)
 from services import archive_staff_division_service
 
 router = APIRouter(prefix="/archive_staff_division", tags=["ArchiveStaffDivision"], dependencies=[Depends(HTTPBearer())])
@@ -39,7 +39,7 @@ async def get_all(*,
              summary="Create Staff Division")
 async def create(*,
     db: Session = Depends(get_db),
-    body: ArchiveStaffDivisionCreate,
+    body: NewArchiveStaffDivisionCreate,
     Authorize: AuthJWT = Depends()
 ):
     """
@@ -50,7 +50,7 @@ async def create(*,
         - **description**: a long description. This parameter is optional.
     """
     Authorize.jwt_required()
-    return archive_staff_division_service.create(db, body)
+    return archive_staff_division_service.create_staff_division(db, body)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -76,7 +76,7 @@ async def get_by_id(*,
 async def update(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
-    body: ArchiveStaffDivisionUpdate,
+    body: NewArchiveStaffDivisionUpdate,
     Authorize: AuthJWT = Depends()
 ):
     """
@@ -89,7 +89,7 @@ async def update(*,
     """
     Authorize.jwt_required()
     obj = archive_staff_division_service.get_by_id(db, id)
-    return archive_staff_division_service.update(db, obj, body)
+    return archive_staff_division_service.update_staff_division(db, obj, body)
 
 
 @router.post("/{id}/", status_code=status.HTTP_202_ACCEPTED,

@@ -1,15 +1,13 @@
 import uuid
 from typing import List
 
-from fastapi import HTTPException, status
-from fastapi.logger import logger as log
 from sqlalchemy.orm import Session
 
 from exceptions import BadRequestException, NotFoundException
-from models import ArchiveStaffDivision
+from models import ArchiveStaffDivision, StaffDivision
 from schemas import (ArchiveStaffDivisionCreate, ArchiveStaffDivisionUpdate,
-                     ArchiveStaffDivisionUpdateParentGroup, ArchiveStaffDivisionRead)
-
+                     ArchiveStaffDivisionUpdateParentGroup, ArchiveStaffDivisionRead, NewArchiveStaffDivisionCreate,
+                     NewArchiveStaffDivisionUpdate)
 from services.base import ServiceBase
 
 
@@ -68,6 +66,32 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
         
         return res_id
 
+    def create_based_on_existing_staff_division(self, db: Session, staff_division: StaffDivision, staff_list_id: uuid.UUID, parent_group_id: uuid.UUID):
+        return super().create(db, ArchiveStaffDivisionCreate(
+            parent_group_id=parent_group_id,
+            name=staff_division.name,
+            description=staff_division.description,
+            staff_list_id=staff_list_id,
+            origin_id=staff_division.id
+        ))
+
+    def create_staff_division(self, db: Session, body: NewArchiveStaffDivisionCreate):
+        return super().create(db, ArchiveStaffDivisionCreate(
+            parent_group_id=body.parent_group_id,
+            name=body.name,
+            description=body.description,
+            staff_list_id=body.staff_list_id,
+            origin_id=None
+        ))
+
+    def update_staff_division(self, db: Session, archive_staff_division: ArchiveStaffDivision, body: NewArchiveStaffDivisionUpdate):
+        return super().update(db, db_obj=archive_staff_division, obj_in=ArchiveStaffDivisionUpdate(
+            parent_group_id=body.parent_group_id,
+            name=body.name,
+            description=body.description,
+            staff_list_id=body.staff_list_id,
+            origin_id=None
+        ))
 
 
 archive_staff_division_service = ArchiveStaffDivisionService(ArchiveStaffDivision)

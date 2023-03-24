@@ -7,20 +7,26 @@ from pydantic import BaseModel, EmailStr
 
 class ServiceArchiveStaffFunctionTypeBase(BaseModel):
     name: str
-    description: Optional[str]
-    origin_id: Optional[uuid.UUID]
 
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
 
 
-class ServiceArchiveStaffFunctionTypeCreate(ServiceArchiveStaffFunctionTypeBase):
+class NewServiceArchiveStaffFunctionTypeCreate(ServiceArchiveStaffFunctionTypeBase):
     pass
+
+
+class NewServiceArchiveStaffFunctionTypeUpdate(ServiceArchiveStaffFunctionTypeBase):
+    pass
+
+
+class ServiceArchiveStaffFunctionTypeCreate(ServiceArchiveStaffFunctionTypeBase):
+    origin_id: Optional[uuid.UUID]
 
 
 class ServiceArchiveStaffFunctionTypeUpdate(ServiceArchiveStaffFunctionTypeBase):
-    pass
+    origin_id: Optional[uuid.UUID]
 
 
 class ServiceArchiveStaffFunctionTypeRead(ServiceArchiveStaffFunctionTypeBase):

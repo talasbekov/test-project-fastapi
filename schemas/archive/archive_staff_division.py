@@ -1,10 +1,7 @@
-import datetime
 import uuid
-from typing import Any, List, Optional
+from typing import List, Optional
 
-from pydantic import BaseModel, EmailStr
-
-from schemas import PositionRead, RankRead
+from pydantic import BaseModel
 
 
 class ArchiveStaffDivisionBase(BaseModel):
@@ -12,14 +9,21 @@ class ArchiveStaffDivisionBase(BaseModel):
     name: str
     description: Optional[str]
     staff_list_id: uuid.UUID
-    origin_id: Optional[uuid.UUID]
 
 
 class ArchiveStaffDivisionCreate(ArchiveStaffDivisionBase):
-    pass
+    origin_id: Optional[uuid.UUID]
 
 
 class ArchiveStaffDivisionUpdate(ArchiveStaffDivisionBase):
+    origin_id: Optional[uuid.UUID]
+
+
+class NewArchiveStaffDivisionCreate(ArchiveStaffDivisionBase):
+    pass
+
+
+class NewArchiveStaffDivisionUpdate(ArchiveStaffDivisionBase):
     pass
 
 

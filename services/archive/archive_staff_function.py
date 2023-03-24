@@ -3,8 +3,9 @@ import uuid
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
-from models import ArchiveStaffFunction, User
-from schemas import ArchiveStaffFunctionCreate, ArchiveStaffFunctionUpdate
+from models import ArchiveStaffFunction, StaffFunction
+from schemas import ArchiveStaffFunctionCreate, ArchiveStaffFunctionUpdate, NewArchiveStaffFunctionCreate, \
+    NewArchiveStaffFunctionUpdate
 
 from services.base import ServiceBase
 
@@ -23,6 +24,27 @@ class ArchiveStaffFunctionService(ServiceBase[ArchiveStaffFunction, ArchiveStaff
         return db.query(self.model).filter(
             self.model.origin_id == origin_id
             ).first() is not None
+
+    def create_based_on_existing_staff_function(self, db: Session, staff_function: StaffFunction):
+        return super().create(db, ArchiveStaffFunctionCreate(
+            name=staff_function.name,
+            hours_per_week=staff_function.hours_per_week,
+            origin_id=staff_function.id
+        ))
+
+    def create_staff_function(self, db: Session, body: NewArchiveStaffFunctionCreate):
+        return super().create(db, ArchiveStaffFunctionCreate(
+            name=body.name,
+            hours_per_week=body.hours_per_week,
+            origin_id=None
+        ))
+
+    def update_staff_function(self, db: Session, staff_function: ArchiveStaffFunction, body: NewArchiveStaffFunctionUpdate):
+        return super().update(db, db_obj=staff_function, obj_in=ArchiveStaffFunctionUpdate(
+            name=body.name,
+            hours_per_week=body.hours_per_week,
+            origin_id=None
+        ))
 
 
 archive_staff_function_service = ArchiveStaffFunctionService(ArchiveStaffFunction)

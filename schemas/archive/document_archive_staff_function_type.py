@@ -4,9 +4,9 @@ from typing import Any, List, Optional
 
 from pydantic import BaseModel, EmailStr
 
+
 class DocumentArchiveStaffFunctionTypeBase(BaseModel):
     name: str
-    origin_id: Optional[uuid.UUID]
     can_cancel: Optional[bool]
 
     class Config:
@@ -15,10 +15,18 @@ class DocumentArchiveStaffFunctionTypeBase(BaseModel):
 
 
 class DocumentArchiveStaffFunctionTypeCreate(DocumentArchiveStaffFunctionTypeBase):
-    pass
+    origin_id: Optional[uuid.UUID]
 
 
 class DocumentArchiveStaffFunctionTypeUpdate(DocumentArchiveStaffFunctionTypeBase):
+    origin_id: Optional[uuid.UUID]
+
+
+class NewDocumentArchiveStaffFunctionTypeCreate(DocumentArchiveStaffFunctionTypeBase):
+    pass
+
+
+class NewDocumentArchiveStaffFunctionTypeUpdate(DocumentArchiveStaffFunctionTypeBase):
     pass
 
 

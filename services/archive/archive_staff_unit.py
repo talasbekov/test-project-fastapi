@@ -1,8 +1,11 @@
+import uuid
+
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
-from models import ArchiveStaffUnit
-from schemas import ArchiveStaffUnitCreate, ArchiveStaffUnitUpdate, ArchiveStaffUnitFunctions
+from models import ArchiveStaffUnit, StaffUnit
+from schemas import ArchiveStaffUnitCreate, ArchiveStaffUnitUpdate, ArchiveStaffUnitFunctions, \
+    NewArchiveStaffUnitCreate, NewArchiveStaffUnitUpdate
 from services import service_staff_function_service, document_staff_function_service
 
 from services.base import ServiceBase
@@ -68,6 +71,33 @@ class ArchiveStaffUnitService(ServiceBase[ArchiveStaffUnit, ArchiveStaffUnitCrea
 
         db.add(staff_unit)
         db.flush()
+
+    def create_based_on_existing_staff_unit(self, db: Session, staff_unit: StaffUnit, user_id: uuid.UUID, actual_user_id: uuid.UUID):
+        return super().create(db, ArchiveStaffUnitCreate(
+            position_id=staff_unit.position_id,
+            staff_division_id=staff_unit.staff_division_id,
+            user_id=user_id,
+            actual_user_id=user_id,
+            origin_id=staff_unit.id
+        ))
+
+    def create_staff_unit(self, db: Session, body: NewArchiveStaffUnitCreate):
+        return super().create(db, ArchiveStaffUnitCreate(
+            position_id=body.position_id,
+            staff_division_id=body.staff_division_id,
+            user_id=body.user_id,
+            actual_user_id=body.actual_user_id,
+            origin_id=None
+        ))
+
+    def update_staff_unit(self, db: Session, staff_unit: ArchiveStaffUnit, body: NewArchiveStaffUnitUpdate):
+        return super().update(db, db_obj=staff_unit, obj_in=ArchiveStaffUnitUpdate(
+            position_id=body.position_id,
+            staff_division_id=body.staff_division_id,
+            user_id=body.user_id,
+            actual_user_id=body.actual_user_id,
+            origin_id=None
+        ))
 
 
 archive_staff_unit_service = ArchiveStaffUnitService(ArchiveStaffUnit)

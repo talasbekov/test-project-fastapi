@@ -1,11 +1,11 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, TEXT
+from sqlalchemy import Column, ForeignKey, TEXT
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import backref, relationship
-from core import Base
+from sqlalchemy.orm import relationship
+
 from models import NamedNestedModel
 
 
-class ArchiveStaffDivision(NamedNestedModel, Base):
+class ArchiveStaffDivision(NamedNestedModel):
 
     __tablename__ = "archive_staff_divisions"
 
