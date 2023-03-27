@@ -19,7 +19,6 @@ class UserBase(BaseModel):
     id_number: Optional[str]
     phone_number: Optional[str]
     address: Optional[str]
-    birthday: Optional[datetime.date]
     status: Optional[str]
     status_till: Optional[datetime.datetime]
     cabinet: Optional[str]
