@@ -12,7 +12,7 @@ class StaffUnit(Model):
     position_id = Column(UUID(as_uuid=True), ForeignKey("positions.id"), nullable=False)
     staff_division_id = Column(
         UUID(as_uuid=True), ForeignKey("staff_divisions.id"), nullable=False
-    )
+    )   
 
     position = relationship("Position", cascade="all,delete")
     staff_division = relationship(

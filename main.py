@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi_jwt_auth import AuthJWT
-from fastapi_jwt_auth.exceptions import AuthJWTException
+from fastapi_jwt_auth.exceptions import AuthJWTException, JWTDecodeError
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
 from debug_toolbar.middleware import DebugToolbarMiddleware
@@ -72,12 +72,18 @@ def validation_error_handler(request: Request, exc: ValidationError):
         content={'detail': exc.json()}
     )
 
-@app.get("/sentry-debug")
-async def trigger_error():
-    division_by_zero = 1 / 0
+
+@app.exception_handler(JWTDecodeError)
+def jwt_decode_error_handler(request: Request, exc: JWTDecodeError):
+    return JSONResponse(
+        status_code=401,
+        content={'detail': exc.message}
+    )
+
 
 @app.exception_handler(AuthJWTException)
 def authjwt_exception_handler(request: Request, exc: AuthJWTException):
+    print(type(exc))
     return JSONResponse(
         status_code=exc.status_code,
         content={"detail": exc.message}
@@ -87,3 +93,7 @@ def authjwt_exception_handler(request: Request, exc: AuthJWTException):
 @app.get("/", include_in_schema=False)
 async def docs_redirect():
     return RedirectResponse(url="/docs")
+
+@app.get("/sentry-debug")
+async def trigger_error():
+    division_by_zero = 1 / 0

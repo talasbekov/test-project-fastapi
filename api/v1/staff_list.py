@@ -7,7 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import (StaffListCreate, StaffListRead, StaffListUpdate)
+from schemas import StaffListCreate, StaffListRead, StaffListUpdate, StaffListUserCreate
 from services import staff_list_service
 
 router = APIRouter(prefix="/staff_list", tags=["StaffList"], dependencies=[Depends(HTTPBearer())])
@@ -37,7 +37,7 @@ async def get_all(*,
              summary="Create Staff List")
 async def create(*,
     db: Session = Depends(get_db),
-    body: StaffListCreate,
+    body: StaffListUserCreate,
     Authorize: AuthJWT = Depends()
 ):
     """
@@ -96,12 +96,29 @@ async def update(*,
 async def delete(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
-    Authrorize: AuthJWT = Depends()
+    Authorize: AuthJWT = Depends()
 ):
     """
         Delete Staff List
 
         - **id**: UUID - required
     """
-    Authrorize.jwt_required()
-    return staff_list_service.delete(db, id)
+    Authorize.jwt_required()
+    return staff_list_service.remove(db, id)
+
+
+@router.post("/sign/{id}/", status_code=status.HTTP_201_CREATED,
+             dependencies=[Depends(HTTPBearer())], 
+             summary="Sign Staff List")
+async def sign(*,
+               db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Sign Staff List
+
+        - **id**: UUID - id of the Staff Division.
+    """
+    Authorize.jwt_required()
+    return staff_list_service.sign(db, str(id))

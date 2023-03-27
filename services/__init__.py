@@ -28,8 +28,10 @@ from .auth import auth_service
 from .hr_document_info import hr_document_info_service
 from .hr_document_status import hr_document_status_service
 from .hr_document import hr_document_service
-from .staff_list import staff_list_service
+
 
 from .additional import *
 from .education import *
 from .family import *
+from .archive import *
+from .staff_list import staff_list_service

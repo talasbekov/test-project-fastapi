@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel, EmailStr
 
-from schemas import (BadgeRead, RankRead, StaffUnitRead)
+from schemas import (BadgeRead, RankRead, UserStaffUnitRead)
 
 
 class UserBase(BaseModel):
@@ -43,7 +43,10 @@ class UserGroupUpdate(BaseModel):
 
 class UserRead(UserBase):
     id: Optional[uuid.UUID]
+    badges: Optional[List[BadgeRead]]
     is_military: Optional[bool]
+    staff_unit: Optional[UserStaffUnitRead]
+    actual_staff_unit: Optional[UserStaffUnitRead]
     rank: Optional[RankRead]
     email: Optional[EmailStr]
     first_name: Optional[str]
@@ -55,8 +58,8 @@ class UserRead(UserBase):
     status_till: Optional[datetime.datetime]
     personal_id: Optional[str]
     badges: Optional[List[BadgeRead]]
-    staff_unit: Optional[StaffUnitRead]
-    actual_staff_unit: Optional[StaffUnitRead]
+    staff_unit: Optional[UserStaffUnitRead]
+    actual_staff_unit: Optional[UserStaffUnitRead]
 
     class Config:
         orm_mode = True

@@ -30,6 +30,7 @@ from .personal import (personal_profile_router, biographic_info_router, driving_
                        family_status_router)
 from .family import *
 from .staff_list import router as staff_list_router
+from .archive import *
 
 router = APIRouter(prefix="/v1")
 
@@ -88,4 +89,9 @@ router.include_router(vehicle_router)
 
 router.include_router(staff_list_router)
 router.include_router(country_router)
+
+router.include_router(archive_staff_division_router)
+router.include_router(archive_service_staff_function_type_router)
+router.include_router(archive_staff_function_router)
+router.include_router(archive_staff_unit_router)
 router.include_router(sport_type_router)

@@ -143,6 +143,7 @@ async def sign(*,
     role = Authorize.get_raw_jwt()['role']
     hr_document_service.sign(db, id, body, user_id, role)
 
+
 @router.get("/{id}/", response_model=HrDocumentRead,
             summary="Get HrDocument by id")
 async def get_by_id(*,
@@ -157,7 +158,7 @@ async def get_by_id(*,
     """
     Authorize.jwt_required()
     return hr_document_service.get_by_id(db, id)
- 
+
 
 @router.get('/generate/{id}/', status_code=status.HTTP_200_OK,
             summary="Generate HrDocument")
@@ -200,15 +201,3 @@ async def get_data_by_option(*,
     Authorize.jwt_required()
     res = hr_document_service.get_all_by_option(db, option, data_taken, id)
     return res
-
-
-@router.get('/signed-history', status_code=status.HTTP_200_OK)
-async def get_signed_history(*,
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends(),
-    skip: int = 0,
-    limit: int = 10
-):
-    Authorize.jwt_required()
-    user_id = Authorize.get_jwt_subject()
-    return hr_document_service.get_signed_documents(db, user_id, skip, limit)

@@ -2,6 +2,7 @@ import uuid
 
 from sqlalchemy import TIMESTAMP, Column, String, text
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.sql.sqltypes import Boolean
 
 from core import Base
 
@@ -58,3 +59,15 @@ class NestedModel(Model):
 class NamedNestedModel(NamedModel):
 
     __abstract__ = True
+
+
+"""
+    This class is abstract entity class, which provides following columns to all inherited entities:
+    - **is_active** : bool - required
+"""
+
+class isActiveModel(Model):
+
+    __abstract__ = True
+
+    is_active = Column(Boolean, nullable=False, default=True)
