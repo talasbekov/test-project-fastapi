@@ -3,11 +3,10 @@ from sqlalchemy import (TIMESTAMP, Column, ForeignKey,
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from core import Base
 from models import NamedModel
 
 
-class SportAchievement(NamedModel, Base):
+class SportAchievement(NamedModel):
 
     __tablename__ = "sport_achievements"
 

@@ -25,6 +25,7 @@ class UserBase(BaseModel):
     cabinet: Optional[str]
     service_phone_number: Optional[str]
     supervised_by: Optional[uuid.UUID]
+    is_military: Optional[bool]
 
 
 class UserCreate(UserBase):
@@ -43,6 +44,7 @@ class UserGroupUpdate(BaseModel):
 class UserRead(UserBase):
     id: Optional[uuid.UUID]
     badges: Optional[List[BadgeRead]]
+    is_military: Optional[bool]
     staff_unit: Optional[UserStaffUnitRead]
     actual_staff_unit: Optional[UserStaffUnitRead]
     rank: Optional[RankRead]
@@ -55,6 +57,9 @@ class UserRead(UserBase):
     status: Optional[str]
     status_till: Optional[datetime.datetime]
     personal_id: Optional[str]
+    badges: Optional[List[BadgeRead]]
+    staff_unit: Optional[StaffUnitRead]
+    actual_staff_unit: Optional[StaffUnitRead]
 
     class Config:
         orm_mode = True
