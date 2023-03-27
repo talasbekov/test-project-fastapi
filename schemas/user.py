@@ -58,8 +58,8 @@ class UserRead(UserBase):
     status_till: Optional[datetime.datetime]
     personal_id: Optional[str]
     badges: Optional[List[BadgeRead]]
-    staff_unit: Optional[StaffUnitRead]
-    actual_staff_unit: Optional[StaffUnitRead]
+    staff_unit: Optional[UserStaffUnitRead]
+    actual_staff_unit: Optional[UserStaffUnitRead]
 
     class Config:
         orm_mode = True
