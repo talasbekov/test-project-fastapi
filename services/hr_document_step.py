@@ -24,7 +24,7 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
         step = db.query(HrDocumentStep).filter(
             HrDocumentStep.hr_document_template_id == template_id,
             DocumentStaffFunction.priority > 0
-        ).first()
+        ).order_by(DocumentStaffFunction.priority.asc()).first()
 
         if step is None:
             raise NotFoundException(detail=f'Initial step for template id: {template_id} is not found!')
@@ -33,9 +33,12 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
 
     def get_initial_steps(self, db: Session, skip: int, limit: int):
 
-        steps = db.query(self.model).filter(
-            self.model.previous_step_id == None
-        ).offset(skip).limit(limit).all()
+        steps = db.query(self.model)\
+            .join(DocumentStaffFunction)\
+            .filter(DocumentStaffFunction.priority == 1)\
+            .offset(skip)\
+            .limit(limit)\
+        .all()
 
         return steps
 
