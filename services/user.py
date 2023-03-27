@@ -71,6 +71,8 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             user.is_military = body.is_military
         if body.supervised_by is not None:
             user.supervised_by = body.supervised_by
+        if body.personal_id is not None:
+            user.personal_id = body.personal_id
 
         db.add(user)
         db.flush()

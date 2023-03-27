@@ -10,7 +10,7 @@ from core import get_db
 from schemas.medical import LiberationCreate, LiberationRead, LiberationUpdate
 from services.medical import liberation_service
 
-router = APIRouter(prefix="/liberation", tags=["Liberation"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(prefix="/liberations", tags=["Liberation"], dependencies=[Depends(HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],

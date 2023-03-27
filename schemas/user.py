@@ -25,6 +25,7 @@ class UserBase(BaseModel):
     service_phone_number: Optional[str]
     supervised_by: Optional[uuid.UUID]
     is_military: Optional[bool]
+    personal_id: Optional[str]
 
 
 class UserCreate(UserBase):
