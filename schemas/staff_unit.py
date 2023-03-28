@@ -46,8 +46,8 @@ class StaffUnitRead(StaffUnitBase):
     staff_functions: Optional[List[StaffFunctionRead]]
     position_id: Optional[uuid.UUID]
     position: Optional[PositionRead]
-    # users: Optional[List[Optional[UserRead]]]
-    # actual_users: Optional[List[Optional[UserRead]]]
+    users: Optional[List[Optional[UserRead]]]
+    actual_users: Optional[List[Optional[UserRead]]]
 
     class Config:
         orm_mode = True
