@@ -39,14 +39,3 @@ class ArchiveStaffDivisionRead(ArchiveStaffDivisionBase):
 
     class Config:
         orm_mode = True
-
-
-class StaffDivisionOptionRead(ArchiveStaffDivisionBase):
-
-    id: Optional[uuid.UUID]
-    name: Optional[str]
-    staff_units: Optional[List]
-    children: Optional[List['StaffDivisionOptionRead']]
-
-    class Config:
-        orm_mode = True
