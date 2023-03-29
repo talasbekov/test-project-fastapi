@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey
+from sqlalchemy import Column, ForeignKey, Boolean
 from sqlalchemy.dialects.postgresql import UUID, DATE, TEXT
 from sqlalchemy.orm import relationship
 
@@ -11,6 +11,14 @@ class Education(Model):
 
     profile_id = Column(UUID(as_uuid=True), ForeignKey("educational_profiles.id"), nullable=True)
     profile = relationship("EducationalProfile", back_populates="education")
+    is_military_school = Column(Boolean, nullable=False, default=False)
+
+    specialty_id = Column(UUID(as_uuid=True), ForeignKey("specialties.id"), nullable=True)
+    specialty = relationship("Specialty", back_populates="education")
+
+    type_of_top = Column(TEXT)
+    document_number = Column(TEXT)
+    date_of_issue = Column(DATE)
 
     start_date = Column(DATE)
     end_date = Column(DATE)
