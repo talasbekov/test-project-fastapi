@@ -21,14 +21,11 @@ from .badge import router as badge_router
 from .rank import router as rank_router
 from .jurisdiction import router as jurisdiction_router
 from .profile import *
-from .additional import *
-from .medical import *
+from .additional import additional_router
+from .medical import router_medical
 from .profile import router as profile_router
-from .personal import (personal_profile_router, biographic_info_router, driving_license_router,
-                       identification_card_router, passport_router, sport_achievement_router,
-                       sport_degree_router, tax_declaration_router, user_financial_info_router, sport_type_router,
-                       family_status_router)
-from .family import *
+from .personal import personal_router
+from .family import family_router
 from .staff_list import router as staff_list_router
 from .archive import *
 
@@ -54,44 +51,15 @@ router.include_router(rank_router)
 router.include_router(jurisdiction_router)
 
 router.include_router(router_education)
-router.include_router(anthropometric_data_router)
-router.include_router(dispensary_registrations_router)
-router.include_router(age_group_router)
-router.include_router(general_user_information_router)
-router.include_router(hospital_data_router)
-router.include_router(medical_profile_router)
-router.include_router(liberation_router)
-router.include_router(user_liberation_router)
+router.include_router(router_medical)
 router.include_router(profile_router)
-router.include_router(personal_profile_router)
-router.include_router(family_status_router)
-router.include_router(biographic_info_router)
-router.include_router(driving_license_router)
-router.include_router(identification_card_router)
-router.include_router(passport_router)
-router.include_router(sport_achievement_router)
-router.include_router(sport_degree_router)
-router.include_router(tax_declaration_router)
-router.include_router(user_financial_info_router)
-router.include_router(abroad_travel_router)
-router.include_router(additional_profile_router)
-router.include_router(polygraph_check_router)
-router.include_router(psychological_check_router)
-router.include_router(special_check_router)
-router.include_router(violation_router)
-router.include_router(properties_router)
-router.include_router(property_type_router)
+router.include_router(personal_router)
+router.include_router(additional_router)
 router.include_router(family_router)
-router.include_router(family_profile_router)
-router.include_router(family_relation_router)
-router.include_router(service_housing_router)
-router.include_router(vehicle_router)
 
 router.include_router(staff_list_router)
-router.include_router(country_router)
 
 router.include_router(archive_staff_division_router)
 router.include_router(archive_service_staff_function_type_router)
 router.include_router(archive_staff_function_router)
 router.include_router(archive_staff_unit_router)
-router.include_router(sport_type_router)

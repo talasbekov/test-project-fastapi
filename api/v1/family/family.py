@@ -10,7 +10,7 @@ from core import get_db
 from schemas import FamilyCreate, FamilyRead, FamilyUpdate
 from services import family_service
 
-router = APIRouter(prefix="/family", tags=["Family Members"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(prefix="/families", tags=["Family Members"], dependencies=[Depends(HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
