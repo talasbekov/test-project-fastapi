@@ -333,6 +333,7 @@ def upgrade() -> None:
     hr_document_status3_id = get_uuid()
     hr_document_status4_id = get_uuid()
     hr_document_status5_id = get_uuid()
+    hr_document_status6_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['hr_document_statuses'],
@@ -351,6 +352,9 @@ def upgrade() -> None:
         }, {
             'id': hr_document_status5_id,
             'name': "На доработке",
+        }, {
+            'id': hr_document_status6_id,
+            'name': "Черновик",
         }]
     )
 

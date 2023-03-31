@@ -11,7 +11,7 @@ class Education(Model):
 
     profile_id = Column(UUID(as_uuid=True), ForeignKey("educational_profiles.id"), nullable=True)
     profile = relationship("EducationalProfile", back_populates="education")
-    is_military_school = Column(Boolean, nullable=False, default=False)
+    is_military_school = Column(Boolean, nullable=True, default=False)
 
     specialty_id = Column(UUID(as_uuid=True), ForeignKey("specialties.id"), nullable=True)
     specialty = relationship("Specialty", back_populates="education")
