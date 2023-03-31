@@ -49,6 +49,7 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('id')
     )
+    
     op.create_table('polygraph_checks',
     sa.Column('number', sa.String(length=255), nullable=False),
     sa.Column('issued_by', sa.String(length=255), nullable=False),
@@ -67,6 +68,7 @@ def upgrade() -> None:
     sa.Column('document_link', sa.String(length=255), nullable=False),
     sa.Column('profile_id', sa.UUID(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('document_number', sa.String(length=255), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['profile_id'], ['additional_profiles.id'], ),

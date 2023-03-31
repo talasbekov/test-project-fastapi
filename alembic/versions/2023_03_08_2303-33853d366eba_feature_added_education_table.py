@@ -128,6 +128,7 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['profile_id'], ['educational_profiles.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+     
     op.create_table('educations',
     sa.Column('profile_id', sa.UUID(), nullable=True),
     sa.Column('start_date', sa.DATE(), nullable=True),
@@ -135,13 +136,19 @@ def upgrade() -> None:
     sa.Column('institution_id', sa.UUID(), nullable=True),
     sa.Column('degree_id', sa.UUID(), nullable=True),
     sa.Column('document_link', sa.TEXT(), nullable=True),
+    sa.Column('specialty_id', sa.UUID(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['degree_id'], ['institution_degree_types.id'], ),
     sa.ForeignKeyConstraint(['institution_id'], ['institutions.id'], ),
     sa.ForeignKeyConstraint(['profile_id'], ['educational_profiles.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.Column('is_military_school', sa.Boolean(), nullable=False, server_default=sa.text('false')),
+    sa.ForeignKeyConstraint(['specialty_id'], ['specialties.id'],),
+    sa.Column('type_of_top', sa.TEXT(), nullable=True),
+    sa.Column('document_number', sa.TEXT(), nullable=True),
+    sa.Column('date_of_issue', sa.DATE(), nullable=True),
     )
     op.create_table('language_proficiencies',
     sa.Column('level', sa.Integer(), nullable=True),
