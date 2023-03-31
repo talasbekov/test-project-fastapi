@@ -15,10 +15,10 @@ from exceptions import (BadRequestException, ForbiddenException,
                         InvalidOperationException, NotFoundException)
 from models import (HrDocument, HrDocumentStatusEnum,
                     HrDocumentStep, StaffUnit, User, DocumentStaffFunction, StaffDivision, JurisdictionEnum,
-                    HrDocumentStatus, StaffDivisionEnum)
+                    HrDocumentStatus, StaffDivisionEnum, HrDocumentTemplate)
 from schemas import (BadgeRead, HrDocumentCreate, HrDocumentInit,
                      HrDocumentRead, HrDocumentSign, HrDocumentUpdate,
-                     RankRead, StaffDivisionOptionRead, StaffUnitRead)
+                     RankRead, StaffDivisionOptionRead, StaffUnitRead, DraftHrDocumentCreate, DraftHrDocumentInit)
 from services import (badge_service, document_staff_function_service,
                       hr_document_info_service, hr_document_step_service,
                       hr_document_template_service, rank_service,
@@ -68,8 +68,11 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         staff_function_ids = [i.id for i in staff_unit.staff_functions]
 
+        draft_status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.DRAFT.value)
+
         documents = (
             db.query(self.model)
+            .filter(self.model.status_id != draft_status.id)
             .join(HrDocumentStep)
             .filter(HrDocumentStep.staff_function_id.in_(staff_function_ids))
             .order_by(self.model.due_date.asc())
@@ -80,6 +83,108 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         return self._return_correctly(db, documents, user)
 
+    def get_draft_documents(self, db: Session, user_id: str, skip: int = 0, limit: int = 100):
+        status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.DRAFT.value)
+
+        return db.query(self.model).filter(
+            self.model.status_id == status.id,
+            self.model.initialized_by_id == user_id
+        ).offset(skip).limit(limit).all()
+
+    def save_to_draft(self, db: Session, user_id: str, body: DraftHrDocumentCreate, role: str):
+        template = hr_document_template_service.get_by_id(
+            db, body.hr_document_template_id
+        )
+
+        step: HrDocumentStep = hr_document_step_service.get_initial_step_for_template(
+            db, template.id
+        )
+
+        self._validate_document(db, body=body, role=role, step=step)
+
+        status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.DRAFT.value)
+
+        document: HrDocument = super().create(
+            db,
+            HrDocumentCreate(
+                hr_document_template_id=body.hr_document_template_id,
+                status_id=status.id,
+                due_date=body.due_date,
+                properties=body.properties,
+            ),
+        )
+
+        users_document = [
+            user_service.get_by_id(db, user_id) for user_id in body.user_ids
+        ]
+
+        document.users = users_document
+        document.initialized_by_id = user_id
+
+        db.add(document)
+        db.flush()
+
+        return document
+
+    def initialize_draft_document(self, db: Session, body: DraftHrDocumentInit, document_id: str, user_id: str, role: str):
+        document = hr_document_service.get_by_id(db, document_id)
+
+        print(document.hr_document_template_id)
+
+        template = hr_document_template_service.get_by_id(
+            db, document.hr_document_template_id
+        )
+
+        step: HrDocumentStep = hr_document_step_service.get_initial_step_for_template(
+            db, template.id
+        )
+
+        all_steps: list = hr_document_step_service.get_all_by_document_template_id(
+            db, template.id
+        )
+
+        users = [v for _, v in body.document_step_users_ids.items()]
+        subject_users_ids: List[uuid.UUID] = []
+
+        for user in document.users:
+            subject_users_ids.append(user.id)
+
+        hr_document_init = HrDocumentInit(
+            properties=document.properties,
+            due_date=document.due_date,
+            hr_document_template_id=document.hr_document_template_id,
+            user_ids=subject_users_ids,
+            document_step_users_ids=body.document_step_users_ids
+        )
+
+        self._validate_document(db, hr_document_init, role=role, step=step)
+        self._validate_document_for_steps(step=step, all_steps=all_steps, users=users)
+
+        current_user = user_service.get_by_id(db, user_id)
+
+        status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.IN_PROGRESS.value)
+
+        document_info_initiator = hr_document_info_service.create_info_for_step(
+            db, document_id, step.id, user_id, True, None, datetime.now()
+        )
+
+        hr_document_info_service.sign(
+            db, document_info_initiator, current_user, None, True
+        )
+
+        for step, user_id in zip(all_steps, users):
+            hr_document_info_service.create_info_for_step(
+                db, document.id, step.id, user_id, None, None, None
+            )
+
+        document.last_step_id = all_steps[0].id
+        document.status_id = status.id
+
+        db.add(document)
+        db.flush()
+
+        return document
+
     def initialize(self, db: Session, body: HrDocumentInit, user_id: str, role: str):
         template = hr_document_template_service.get_by_id(
             db, body.hr_document_template_id
@@ -89,35 +194,15 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             db, template.id
         )
 
-        staff_unit: StaffUnit = staff_unit_service.get_by_id(db, role)
-
-        if step.staff_function not in staff_unit.staff_functions:
-            raise ForbiddenException(
-                detail=f"Вы не можете инициализировать этот документ!"
-            )
-
-        document_staff_function: DocumentStaffFunction = document_staff_function_service.get_by_id(db,
-                                                                                                   step.staff_function_id)
-
-        if not self._check_jurisdiction(db, staff_unit, document_staff_function, body.user_ids):
-            raise ForbiddenException(
-                detail=f"Вы не можете инициализировать этот документ из-за юрисдикции!"
-            )
-
         all_steps: list = hr_document_step_service.get_all_by_document_template_id(
             db, template.id
         )
-        all_steps.remove(step)
-
-        if len(all_steps) < 2:
-            raise BadRequestException(detail="Документ должен иметь хотя бы 2 шага!")
 
         users = [v for _, v in body.document_step_users_ids.items()]
 
-        if len(users) != len(all_steps):
-            raise BadRequestException(
-                detail="Количество пользователей не соответствует количеству шагов!"
-            )
+        self._validate_document(db, body=body, role=role, step=step)
+        self._validate_document_for_steps(step=step, all_steps=all_steps, users=users)
+
         current_user = user_service.get_by_id(db, user_id)
 
         status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.IN_PROGRESS.value)
@@ -318,6 +403,35 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             else:
                 return [responses.get(option).from_orm(i) for i in service.get_by_id(db, id).children]
         return [responses.get(option).from_orm(i) for i in service.get_multi(db)]
+
+    def _validate_document(self, db: Session, body: HrDocumentInit, role: str, step: HrDocumentStep):
+
+        staff_unit: StaffUnit = staff_unit_service.get_by_id(db, role)
+
+        if step.staff_function not in staff_unit.staff_functions:
+            raise ForbiddenException(
+                detail=f"Вы не можете инициализировать этот документ!"
+            )
+
+        document_staff_function: DocumentStaffFunction = document_staff_function_service.get_by_id(db,
+                                                                                                   step.staff_function_id)
+
+        if not self._check_jurisdiction(db, staff_unit, document_staff_function, body.user_ids):
+            raise ForbiddenException(
+                detail=f"Вы не можете инициализировать этот документ из-за юрисдикции!"
+            )
+
+    def _validate_document_for_steps(self, step: HrDocumentStep, all_steps: list, users: list):
+
+        all_steps.remove(step)
+
+        if len(all_steps) < 2:
+            raise BadRequestException(detail="Документ должен иметь хотя бы 2 шага!")
+
+        if len(users) != len(all_steps):
+            raise BadRequestException(
+                detail="Количество пользователей не соответствует количеству шагов!"
+            )
 
     def _finish_document(self, db: Session, document: HrDocument, users: List[User]):
         completed_status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.COMPLETED.value)

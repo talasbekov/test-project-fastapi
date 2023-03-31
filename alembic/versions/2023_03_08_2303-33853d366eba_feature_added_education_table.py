@@ -137,6 +137,7 @@ def upgrade() -> None:
     sa.Column('degree_id', sa.UUID(), nullable=True),
     sa.Column('document_link', sa.TEXT(), nullable=True),
     sa.Column('specialty_id', sa.UUID(), nullable=True),
+    sa.Column('is_military_school', sa.Boolean(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),

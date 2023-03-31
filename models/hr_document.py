@@ -14,6 +14,7 @@ class HrDocumentStatusEnum(str, enum.Enum):
     COMPLETED = "Завершен"
     CANCELED = "Отменен"
     ON_REVISION = "На доработке"
+    DRAFT = "Черновик"
 
 
 class HrDocument(Model):
@@ -27,6 +28,7 @@ class HrDocument(Model):
     reg_number = Column(String, unique=True)
     signed_at = Column(TIMESTAMP(timezone=True), nullable=True)
 
+    initialized_by_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
     status_id = Column(UUID(as_uuid=True), ForeignKey("hr_document_statuses.id"))
     last_step_id = Column(UUID(as_uuid=True), ForeignKey("hr_document_steps.id"))
 
@@ -40,3 +42,4 @@ class HrDocument(Model):
     )
     last_step = relationship("HrDocumentStep")
     status = relationship("HrDocumentStatus", cascade="all, delete")
+    initialized_by = relationship("User", cascade="all, delete")

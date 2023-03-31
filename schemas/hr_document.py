@@ -28,10 +28,12 @@ class HrDocumentBase(BaseModel):
         return v
 
 
-class HrDocumentInit(HrDocumentBase):
+class DraftHrDocumentCreate(HrDocumentBase):
     user_ids: List[uuid.UUID]
-    # list of dict, which have {int: uuid.UUID()}
-    document_step_users_ids : dict
+
+
+class DraftHrDocumentInit(BaseModel):
+    document_step_users_ids: dict
 
     @validator('document_step_users_ids')
     def document_step_users_ids_validator(cls, v):
@@ -59,6 +61,10 @@ class HrDocumentInit(HrDocumentBase):
         return v
     
 
+class HrDocumentInit(DraftHrDocumentCreate, DraftHrDocumentInit):
+    pass
+    
+
 class HrDocumentSign(BaseModel):
     comment: Optional[str]
     is_signed: bool
@@ -79,6 +85,8 @@ class HrDocumentRead(HrDocumentBase):
     hr_document_template_id: Optional[uuid.UUID]
     status_id: Optional[uuid.UUID]
     status: Optional[HrDocumentStatusRead]
+    initialized_by_id: Optional[uuid.UUID]
+    initialized_by: Optional[UserRead]
     due_date: Optional[datetime]
     properties: Optional[Union[dict, None]]
     can_cancel: Optional[bool]
