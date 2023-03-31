@@ -72,6 +72,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             db.query(self.model)
             .join(HrDocumentStep)
             .filter(HrDocumentStep.staff_function_id.in_(staff_function_ids))
+            .order_by(self.model.due_date.desc())
             .offset(skip)
             .limit(limit)
             .all()
