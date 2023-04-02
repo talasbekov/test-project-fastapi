@@ -131,7 +131,7 @@ def upgrade() -> None:
         [{
             "id": badge1_id,
             "name": "Черный Берет",
-            "url": "http://192.168.1.169:8083/static/black_beret.jpg"
+            "url": "http://192.168.0.169:8083/static/black_beret.jpg"
         }]
     )
 
@@ -157,83 +157,83 @@ def upgrade() -> None:
         [{
             'id': rank1_id,
             'name': 'Рядовой',
-            'military_url': "http://192.168.1.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A0%D1%8F%D0%B4%D0%BE%D0%B2%D0%BE%D0%B9_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A0%D1%8F%D0%B4%D0%BE%D0%B2%D0%BE%D0%B9_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': None
         }, {
             'id': rank2_id,
             'name': 'Младший сержант',
-            'military_url': "http://192.168.1.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9C%D0%BB%D0%B0%D0%B4%D1%88%D0%B8%D0%B9%20%D1%81%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
-            'employee_url': "http://192.168.1.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9C%D0%BB%D0%B0%D0%B4%D1%88%D0%B8%D0%B9%20%D1%81%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82.png"
+            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9C%D0%BB%D0%B0%D0%B4%D1%88%D0%B8%D0%B9%20%D1%81%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9C%D0%BB%D0%B0%D0%B4%D1%88%D0%B8%D0%B9%20%D1%81%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82.png"
         }, {
             'id': rank3_id,
             'name': 'Сержант',
-            'military_url': "http://192.168.1.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
-            'employee_url': "http://192.168.1.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82.png"
+            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82.png"
         }, {
             'id': rank14_id,
             'name': 'Сержант 1-го класса',
-            'military_url': "http://192.168.1.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82%201-%D0%B3%D0%BE%20%D0%BA%D0%BB%D0%B0%D1%81%D1%81%D0%B0_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82%201-%D0%B3%D0%BE%20%D0%BA%D0%BB%D0%B0%D1%81%D1%81%D0%B0_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': None
         }, {
             'id': rank15_id,
             'name': 'Сержант 2-го класса',
-            'military_url': "http://192.168.1.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82%202-%D0%B3%D0%BE%20%D0%BA%D0%BB%D0%B0%D1%81%D1%81%D0%B0_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82%202-%D0%B3%D0%BE%20%D0%BA%D0%BB%D0%B0%D1%81%D1%81%D0%B0_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': None
         }, {
             'id': rank16_id,
             'name': 'Сержант 3-го класса',
-            'military_url': "http://192.168.1.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82%203-%D0%B3%D0%BE%20%D0%BA%D0%BB%D0%B0%D1%81%D1%81%D0%B0_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82%203-%D0%B3%D0%BE%20%D0%BA%D0%BB%D0%B0%D1%81%D1%81%D0%B0_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': None
         }, {
             'id': rank4_id,
             'name': 'Старший сержант',
-            'military_url': "http://192.168.1.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D1%82%D0%B0%D1%80%D1%88%D0%B8%D0%B9%20%D1%81%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
-            'employee_url': "http://192.168.1.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D1%82%D0%B0%D1%80%D1%88%D0%B8%D0%B9%20%D1%81%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82.png"
+            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D1%82%D0%B0%D1%80%D1%88%D0%B8%D0%B9%20%D1%81%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D1%82%D0%B0%D1%80%D1%88%D0%B8%D0%B9%20%D1%81%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82.png"
         }, {
             'id': rank5_id,
             'name': 'Лейтенант',
-            'military_url': "http://192.168.1.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9B%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
-            'employee_url': "http://192.168.1.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9B%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82.png"
+            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9B%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9B%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82.png"
         }, {
             'id': rank6_id,
             'name': 'Старший лейтенант',
-            'military_url': "http://192.168.1.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D1%82%D0%B0%D1%80%D1%88%D0%B8%D0%B9%20%D0%BB%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
-            'employee_url': "http://192.168.1.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D1%82%D0%B0%D1%80%D1%88%D0%B8%D0%B9%20%D0%BB%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82.png"
+            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D1%82%D0%B0%D1%80%D1%88%D0%B8%D0%B9%20%D0%BB%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D1%82%D0%B0%D1%80%D1%88%D0%B8%D0%B9%20%D0%BB%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82.png"
         }, {
             'id': rank7_id,
             'name': 'Капитан',
-            'military_url': "http://192.168.1.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9A%D0%B0%D0%BF%D0%B8%D1%82%D0%B0%D0%BD_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
-            'employee_url': "http://192.168.1.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9A%D0%B0%D0%BF%D0%B8%D1%82%D0%B0%D0%BD.png"
+            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9A%D0%B0%D0%BF%D0%B8%D1%82%D0%B0%D0%BD_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9A%D0%B0%D0%BF%D0%B8%D1%82%D0%B0%D0%BD.png"
         }, {
             'id': rank8_id,
             'name': 'Майор',
-            'military_url': "http://192.168.1.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9C%D0%B0%D0%B9%D0%BE%D1%80_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
-            'employee_url': "http://192.168.1.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9C%D0%B0%D0%B9%D0%BE%D1%80.png"
+            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9C%D0%B0%D0%B9%D0%BE%D1%80_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9C%D0%B0%D0%B9%D0%BE%D1%80.png"
         }, {
             'id': rank9_id,
             'name': 'Подполковник',
-            'military_url': "http://192.168.1.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9F%D0%BE%D0%B4%D0%BF%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
-            'employee_url': "http://192.168.1.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9F%D0%BE%D0%B4%D0%BF%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA.png"
+            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9F%D0%BE%D0%B4%D0%BF%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9F%D0%BE%D0%B4%D0%BF%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA.png"
         }, {
             'id': rank10_id,
             'name': 'Полковник',
-            'military_url': "http://192.168.1.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9F%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
-            'employee_url': "http://192.168.1.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9F%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA.png"
+            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9F%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9F%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA.png"
         }, {
             'id': rank11_id,
             'name': 'Генерал-майор',
-            'military_url': "http://192.168.1.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BC%D0%B0%D0%B9%D0%BE%D1%80.png",
-            'employee_url': "http://192.168.1.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BC%D0%B0%D0%B9%D0%BE%D1%80.png"
+            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BC%D0%B0%D0%B9%D0%BE%D1%80.png",
+            'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BC%D0%B0%D0%B9%D0%BE%D1%80.png"
         }, {
             'id': rank12_id,
             'name': 'Генерал-лейтенант',
-            'military_url': "http://192.168.1.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BB%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82.png",
-            'employee_url': "http://192.168.1.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BB%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82.png"
+            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BB%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82.png",
+            'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BB%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82.png"
         }, {
             'id': rank13_id,
             'name': 'Генерал-полковник',
-            'military_url': "http://192.168.1.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BF%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA.png",
-            'employee_url': "http://192.168.1.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BF%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA.png"
+            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BF%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA.png",
+            'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BF%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA.png"
         }]
     )
 
@@ -831,7 +831,7 @@ def upgrade() -> None:
         staff_unit10_id,
         rank3_id,
         staff_unit10_id,
-        "http://192.168.1.169:8083/static/Dima.png",
+        "http://192.168.0.169:8083/static/Dima.png",
         position4_id,
         True,
         "1.2.218K")
@@ -848,7 +848,7 @@ def upgrade() -> None:
         staff_unit1_id,
         rank1_id,
         staff_unit1_id,
-        "http://192.168.1.169:8083/static/Erzhan.png",
+        "http://192.168.0.169:8083/static/Erzhan.png",
         position1_id,
         True,
         '1.2.213K')
@@ -865,7 +865,7 @@ def upgrade() -> None:
         staff_unit2_id,
         rank1_id,
         staff_unit2_id,
-        "http://192.168.1.169:8083/static/Erzhan.png",
+        "http://192.168.0.169:8083/static/Erzhan.png",
         position1_id,
         False,
         '1.2.213K')
@@ -882,7 +882,7 @@ def upgrade() -> None:
         staff_unit3_id,
         rank1_id,
         staff_unit3_id,
-        "http://192.168.1.169:8083/static/Almaz.png",
+        "http://192.168.0.169:8083/static/Almaz.png",
         position1_id,
         True,
         '1.2.214K')
@@ -899,7 +899,7 @@ def upgrade() -> None:
         staff_unit4_id,
         rank2_id,
         staff_unit4_id,
-        "http://192.168.1.169:8083/static/Adil.png",
+        "http://192.168.0.169:8083/static/Adil.png",
         position2_id,
         False,
         "1.2.214K")
@@ -916,7 +916,7 @@ def upgrade() -> None:
         staff_unit5_id,
         rank1_id,
         staff_unit5_id,
-        "http://192.168.1.169:8083/static/Almaz.png",
+        "http://192.168.0.169:8083/static/Almaz.png",
         position1_id,
         True,
         "1.2.215K")
@@ -933,7 +933,7 @@ def upgrade() -> None:
         staff_unit6_id,
         rank3_id,
         staff_unit6_id,
-        "http://192.168.1.169:8083/static/Ernazar.png",
+        "http://192.168.0.169:8083/static/Ernazar.png",
         position2_id,
         False,
         '1.2.215K')
@@ -950,7 +950,7 @@ def upgrade() -> None:
         staff_unit7_id,
         rank1_id,
         staff_unit7_id,
-        "http://192.168.1.169:8083/static/Nurlan.png",
+        "http://192.168.0.169:8083/static/Nurlan.png",
         position1_id,
         True,
         '1.2.215K')
@@ -967,7 +967,7 @@ def upgrade() -> None:
         staff_unit8_id,
         rank1_id,
         staff_unit8_id,
-        "http://192.168.1.169:8083/static/Erdaulet.png",
+        "http://192.168.0.169:8083/static/Erdaulet.png",
         position1_id,
         False,
         "1.2.216K")
@@ -984,7 +984,7 @@ def upgrade() -> None:
         staff_unit9_id,
         rank1_id,
         staff_unit9_id,
-        "http://192.168.1.169:8083/static/Erdaulet.png",
+        "http://192.168.0.169:8083/static/Erdaulet.png",
         position3_id,
         True,
         "1.2.217K")
@@ -1001,7 +1001,7 @@ def upgrade() -> None:
         staff_unit11_id,
         rank3_id,
         staff_unit11_id,
-        "http://192.168.1.169:8083/static/Erdaulet.png",
+        "http://192.168.0.169:8083/static/Erdaulet.png",
         position4_id,
         False,
         '1.2.100K')
@@ -1056,7 +1056,7 @@ def upgrade() -> None:
         Base.metadata.tables['hr_document_templates'],
         [{
             'name': 'Приказ о назначении',
-            'path': 'http://192.168.1.169:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7%20%D0%BE%20%D0%BD%D0%B0%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%B8%D0%B8.docx',
+            'path': 'http://192.168.0.169:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7%20%D0%BE%20%D0%BD%D0%B0%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%B8%D0%B8.docx',
             'subject_type': 1,
             'properties': {
                 "signed_at": {
@@ -1119,7 +1119,7 @@ def upgrade() -> None:
             'id': template1_id
         }, {
             'name': 'Приказ о присвоения звания',
-            'path': 'http://192.168.1.169:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7_%D0%BE_%D0%BF%D1%80%D0%B8%D1%81%D0%B2%D0%BE%D0%B5%D0%BD%D0%B8%D0%B8_%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F_%D0%BF%D0%BE%D0%B2%D1%8B%D1%88%D0%B5%D0%BD%D0%B8%D0%B5.docx',
+            'path': 'http://192.168.0.169:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7_%D0%BE_%D0%BF%D1%80%D0%B8%D1%81%D0%B2%D0%BE%D0%B5%D0%BD%D0%B8%D0%B8_%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F_%D0%BF%D0%BE%D0%B2%D1%8B%D1%88%D0%B5%D0%BD%D0%B8%D0%B5.docx',
             'subject_type': 1,
             'properties': {
                 "signed_at": {
@@ -1162,7 +1162,7 @@ def upgrade() -> None:
             'id': template2_id
         }, {
             'name': 'Приказ о присвоения черного берета',
-            'path': 'http://192.168.1.169:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7_%D0%BE_%D0%BF%D1%80%D0%B8%D1%81%D0%B2%D0%BE%D0%B5%D0%BD%D0%B8%D0%B8_%D0%A7%D0%B5%D1%80%D0%BD%D0%BE%D0%B3%D0%BE_%D0%B1%D0%B5%D1%80%D0%B5%D1%82%D0%B0.docx',
+            'path': 'http://192.168.0.169:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7_%D0%BE_%D0%BF%D1%80%D0%B8%D1%81%D0%B2%D0%BE%D0%B5%D0%BD%D0%B8%D0%B8_%D0%A7%D0%B5%D1%80%D0%BD%D0%BE%D0%B3%D0%BE_%D0%B1%D0%B5%D1%80%D0%B5%D1%82%D0%B0.docx',
             'subject_type': 1,  
             'properties': {
                 "signed_at": {
