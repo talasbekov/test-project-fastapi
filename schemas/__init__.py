@@ -39,3 +39,4 @@ from .personal import *
 from .medical import *
 from .family import *
 from .archive import *
+from .user_candidates import *

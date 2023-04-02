@@ -25,4 +25,5 @@ from .additional import *
 from .education import *
 from .family import *
 from .archive import *
+from .user_candidates import *
 from .user import User

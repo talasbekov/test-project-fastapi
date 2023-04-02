@@ -1,0 +1,7 @@
+from .candidate import candidate_service
+from .candidate_stage import candidate_stage_service
+from .candidate_stage_type import candidate_stage_type_service
+from .candidate_essay_type import candidate_essay_type_service
+from .candidate_stage_question import candidate_stage_question_service
+from .candidate_stage_info import candidate_stage_info_service
+from .candidate_stage_answer import candidate_stage_answer_service
