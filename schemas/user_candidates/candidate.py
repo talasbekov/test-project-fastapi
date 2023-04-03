@@ -1,7 +1,9 @@
 import uuid
-from typing import Optional, List, Union
-from pydantic import BaseModel
 from datetime import datetime
+from typing import Optional, List
+
+from pydantic import BaseModel
+
 
 class CandidateBase(BaseModel):
     candidate_stage_id: Optional[uuid.UUID] 

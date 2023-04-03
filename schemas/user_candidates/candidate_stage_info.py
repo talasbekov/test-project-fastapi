@@ -1,10 +1,13 @@
-from typing import Optional
 import uuid
-from pydantic import BaseModel
-from typing import Any
-# import date
 from datetime import datetime
-from .candidate_stage_question import CandidateStageQuestionRead
+from typing import Any
+from typing import Optional
+
+from pydantic import BaseModel
+
+from .candidate_stage import CandidateStageRead
+from .candidate_stage_type import CandidateStageTypeRead
+
 
 class CandidateStageInfoBase(BaseModel):
     status: Optional[str]
@@ -28,4 +31,6 @@ class CandidateStageInfoUpdate(CandidateStageInfoBase):
 
 class CandidateStageInfoRead(CandidateStageInfoBase):
     date_sign: Optional[Any]
-    id: Optional[uuid.UUID] 
+    id: Optional[uuid.UUID]
+    candidate_stage_type: Optional[CandidateStageTypeRead]
+    candidate_stage: Optional[CandidateStageRead]

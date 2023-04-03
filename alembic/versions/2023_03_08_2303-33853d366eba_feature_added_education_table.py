@@ -204,6 +204,19 @@ def upgrade() -> None:
                         ['profile_id'], ['educational_profiles.id'], ),
                     sa.PrimaryKeyConstraint('id')
                     )
+    op.alter_column('educations', 'is_military_school',
+                    existing_type=sa.BOOLEAN(),
+                    nullable=True,
+                    existing_server_default=sa.text('false'))
+    op.alter_column('hr_document_statuses', 'name',
+                    existing_type=sa.VARCHAR(),
+                    nullable=False)
+    op.alter_column('user_liberations_liberations', 'user_liberation_id',
+                    existing_type=sa.UUID(),
+                    nullable=True)
+    op.alter_column('user_liberations_liberations', 'liberation_id',
+                    existing_type=sa.UUID(),
+                    nullable=True)
     # ### end Alembic commands ###
 
 

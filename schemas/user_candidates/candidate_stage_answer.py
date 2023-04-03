@@ -1,7 +1,9 @@
-from typing import Optional
 import uuid
+from typing import Optional
 
 from pydantic import BaseModel
+
+from .candidate_category import CandidateCategoryRead
 
 
 class CandidateStageAnswerBase(BaseModel):
@@ -14,7 +16,8 @@ class CandidateStageAnswerBase(BaseModel):
     document_number: Optional[str]
     candidate_essay_type_id: Optional[uuid.UUID]
     candidate_id: uuid.UUID
-    
+    category_id: Optional[uuid.UUID]
+    category: Optional[CandidateCategoryRead]
 
     class Config:
         orm_mode = True
