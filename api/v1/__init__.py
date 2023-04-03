@@ -28,6 +28,7 @@ from .personal import personal_router
 from .family import family_router
 from .staff_list import router as staff_list_router
 from .archive import *
+from .user_candidates import *
 
 router = APIRouter(prefix="/v1")
 
@@ -63,3 +64,10 @@ router.include_router(archive_staff_division_router)
 router.include_router(archive_service_staff_function_type_router)
 router.include_router(archive_staff_function_router)
 router.include_router(archive_staff_unit_router)
+
+router.include_router(candidate_stage_router)
+router.include_router(candidate_stage_info_router)
+router.include_router(candidate_stage_question_router)
+router.include_router(candidate_essay_type_router)
+router.include_router(candidate_stage_type_router)
+router.include_router(candidate_stage_answer_router)
