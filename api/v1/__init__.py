@@ -29,6 +29,7 @@ from .family import family_router
 from .staff_list import router as staff_list_router
 from .archive import *
 from .user_candidates import *
+from .history import router as history_router
 
 router = APIRouter(prefix="/v1")
 
@@ -71,3 +72,4 @@ router.include_router(candidate_stage_question_router)
 router.include_router(candidate_essay_type_router)
 router.include_router(candidate_stage_type_router)
 router.include_router(candidate_stage_answer_router)
+router.include_router(history_router)
