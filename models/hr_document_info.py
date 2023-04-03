@@ -25,4 +25,4 @@ class HrDocumentInfo(Model):
     hr_document_step = relationship("HrDocumentStep", back_populates="hr_document_infos")
     signed_by = relationship("User", foreign_keys=signed_by_id)
     assigned_to = relationship("User", foreign_keys=assigned_to_id)
-    hr_document = relationship("HrDocument")
+    hr_document = relationship("HrDocument", back_populates="hr_document_infos" )

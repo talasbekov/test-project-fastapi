@@ -18,7 +18,6 @@ class HrDocumentStatusEnum(str, enum.Enum):
 
 
 class HrDocument(Model):
-
     __tablename__ = "hr_documents"
 
     hr_document_template_id = Column(
@@ -43,3 +42,4 @@ class HrDocument(Model):
     last_step = relationship("HrDocumentStep")
     status = relationship("HrDocumentStatus", cascade="all, delete")
     initialized_by = relationship("User", cascade="all, delete")
+    hr_document_infos = relationship("HrDocumentInfo", back_populates="hr_document", cascade="all,delete")
