@@ -3,6 +3,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from models import Model
+from models.user_candidates import CandidateStageQuestionTypeEnum
  
 
 class CandidateStageAnswer(Model):
@@ -27,7 +28,7 @@ class CandidateStageAnswerDefault(CandidateStageAnswer):
     answer_str = Column(String, nullable=True)
 
     __mapper_args__ = {
-        'polymorphic_identity': 'candidate_stage_answer_string',
+        'polymorphic_identity': CandidateStageQuestionTypeEnum.STRING_TYPE.value,
     }
 
 
@@ -37,7 +38,7 @@ class CandidateStageAnswerChoice(CandidateStageAnswer):
     document_number = Column(String, nullable=True)
 
     __mapper_args__ = {
-        'polymorphic_identity': 'candidate_stage_answer_choice',
+        'polymorphic_identity': CandidateStageQuestionTypeEnum.CHOICE_TYPE.value,
     }
 
 
@@ -46,7 +47,7 @@ class CandidateStageAnswerText(CandidateStageAnswer):
     answer = Column(TEXT, nullable=True)
 
     __mapper_args__ = {
-        'polymorphic_identity': 'candidate_stage_answer_text',
+        'polymorphic_identity': CandidateStageQuestionTypeEnum.TEXT_TYPE.value,
     }
 
 
@@ -55,7 +56,7 @@ class CandidateStageAnswerDocument(CandidateStageAnswer):
     document_link = Column(String, nullable=True)
 
     __mapper_args__ = {
-        'polymorphic_identity': 'candidate_stage_answer_document', 
+        'polymorphic_identity': CandidateStageQuestionTypeEnum.DOCUMENT_TYPE.value,
     }
 
 
@@ -65,7 +66,7 @@ class CandidateEssayAnswer(CandidateStageAnswer):
     candidate_essay_type = relationship("CandidateEssayType", back_populates="candidate_essay_answers", foreign_keys=candidate_essay_type_id)
 
     __mapper_args__ = {
-        'polymorphic_identity': 'candidate_essay_answer',
+        'polymorphic_identity': CandidateStageQuestionTypeEnum.ESSAY_TYPE.value,
     }
 
 
@@ -74,5 +75,14 @@ class CandidateSportAnswer(CandidateStageAnswer):
 
 
     __mapper_args__ = {
-        'polymorphic_identity': 'candidate_sport_answer',
+        'polymorphic_identity': CandidateStageQuestionTypeEnum.SPORT_SCORE_TYPE.value,
+    }
+
+
+class CandidateDropdownAnswer(CandidateStageAnswer):
+    category_id = Column(UUID(as_uuid=True), ForeignKey("candidate_categories.id"), nullable=True)
+    category = relationship("CandidateCategory", cascade="all, delete")
+
+    __mapper_args__ = {
+        'polymorphic_identity': CandidateStageQuestionTypeEnum.DROPDOWN_TYPE.value,
     }

@@ -5,8 +5,10 @@ from sqlalchemy.orm import Session
 from models import (
     CandidateStageAnswer, CandidateStageAnswerChoice, 
     CandidateStageAnswerDocument, CandidateStageAnswerText, 
-    CandidateEssayAnswer, CandidateStageAnswerDefault, CandidateSportAnswer
+    CandidateEssayAnswer, CandidateStageAnswerDefault, CandidateSportAnswer,
 )
+
+from models.user_candidates import CandidateStageQuestionTypeEnum
 
 from schemas import (
     CandidateStageAnswerCreate, CandidateStageAnswerRead, 
@@ -37,40 +39,41 @@ class CandidateStageAnswerService(ServiceBase[CandidateStageAnswer, CandidateSta
         db.flush()
         db.refresh(db_obj)  
         return {"id": db_obj.id, "type": answer_type}
+
     def _create_candidate_stage_answer_string(self, answer_type, body_data):
         db_obj = None
-        if answer_type == 'candidate_stage_answer_string':
+        if answer_type == CandidateStageQuestionTypeEnum.STRING_TYPE.value:
             db_obj = CandidateStageAnswerDefault(
                 answer_str=body_data['answer_str'],
                 candidate_stage_question_id=body_data['candidate_stage_question_id'],
                 candidate_id=body_data['candidate_id']
             )
-        elif answer_type == 'candidate_stage_answer_choice':
+        elif answer_type == CandidateStageQuestionTypeEnum.CHOICE_TYPE.value:
             db_obj = CandidateStageAnswerChoice(
                 answer_bool=body_data['answer_bool'],
                 candidate_stage_question_id=body_data['candidate_stage_question_id'],
                 candidate_id=body_data['candidate_id'],
                 document_number=body_data['document_number']
             )
-        elif answer_type == 'candidate_stage_answer_text':
+        elif answer_type == CandidateStageQuestionTypeEnum.TEXT_TYPE.value:
             db_obj = CandidateStageAnswerText(
                 answer=body_data['answer'],
                 candidate_stage_question_id=body_data['candidate_stage_question_id'],
                 candidate_id=body_data['candidate_id']
             )
-        elif answer_type == 'candidate_stage_answer_document':
+        elif answer_type == CandidateStageQuestionTypeEnum.DOCUMENT_TYPE.value:
             db_obj = CandidateStageAnswerDocument(
                 document_link=body_data['document_link'],
                 candidate_stage_question_id=body_data['candidate_stage_question_id'],
                 candidate_id=body_data['candidate_id']
             )
-        elif answer_type == 'candidate_essay_answer':
+        elif answer_type == CandidateStageQuestionTypeEnum.ESSAY_TYPE.value:
             db_obj = CandidateEssayAnswer(
                 candidate_essay_type_id=body_data['candidate_essay_type_id'],
                 candidate_stage_question_id=body_data['candidate_stage_question_id'],
                 candidate_id=body_data['candidate_id'],
             )
-        elif answer_type == 'candidate_sport_score':
+        elif answer_type == CandidateStageQuestionTypeEnum.SPORT_SCORE_TYPE.value:
             score = body_data['sport_score']
             if score <= 50:
                 db_obj = CandidateSportAnswer(
