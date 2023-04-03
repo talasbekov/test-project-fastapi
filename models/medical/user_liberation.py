@@ -1,11 +1,9 @@
-import uuid
-
-from sqlalchemy import TEXT, Column, Enum, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, String
 from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID
 from sqlalchemy.orm import relationship
 
-from core import Base
 from models import Model
+from models.association import user_liberations_liberations
 
 
 class UserLiberation(Model):
@@ -13,10 +11,16 @@ class UserLiberation(Model):
     __tablename__ = "user_liberations"
 
     reason = Column(String)
-    liberation_name = Column(String)
     initiator = Column(String)
     start_date = Column(TIMESTAMP(timezone=True))
     end_date = Column(TIMESTAMP(timezone=True))
     profile_id = Column(UUID(as_uuid=True), ForeignKey("medical_profiles.id"))
+    liberation_id = Column(UUID(as_uuid=True), ForeignKey("liberations.id"))
 
     profile = relationship("MedicalProfile")
+    liberations = relationship(
+        "Liberation",
+        secondary=user_liberations_liberations,
+        back_populates='user_liberations',
+        cascade="all,delete"
+    )

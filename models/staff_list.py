@@ -1,11 +1,11 @@
-from sqlalchemy import Column, ForeignKey, Integer, String
-from sqlalchemy.dialects.postgresql import UUID, JSON
+from sqlalchemy import Column, ForeignKey, String
+from sqlalchemy.dialects.postgresql import JSON, UUID
 from sqlalchemy.orm import relationship
-from core import Base
+
 from models import NamedModel
 
 
-class StaffList(NamedModel, Base):
+class StaffList(NamedModel):
 
     __tablename__ = "staff_lists"
 

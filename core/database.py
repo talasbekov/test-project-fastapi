@@ -1,15 +1,10 @@
-import json
 import logging
-import traceback
-from functools import wraps
 
-from fastapi import HTTPException
-from jwt.exceptions import ExpiredSignatureError
-from pydantic import BaseModel
-from sqlalchemy import *
 from sqlalchemy.engine import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import SQLAlchemyError
+from fastapi import HTTPException
 
 from .config import configs
 
@@ -29,15 +24,9 @@ def get_db():
     try:
         yield db
         db.commit()
-    # except Exception as e:
-    #     db.rollback()
-    #     if isinstance(e, HTTPException):
-    #         raise e
-    #     elif isinstance(e, ExpiredSignatureError):
-    #         raise HTTPException(status_code=400, detail=f"Signature is expired!")
-    #     else:
-    #         logging.error("%s", e, exc_info=True)
-    #         raise HTTPException(status_code=400, detail=str(e))
+    except SQLAlchemyError as e:
+        db.rollback()
+        raise HTTPException(status_code=400, detail=str(e))
     finally:
         if db:
             db.close()

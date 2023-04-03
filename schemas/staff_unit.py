@@ -1,11 +1,11 @@
 import datetime
 import uuid
-from typing import List, Optional, Union
+from typing import List, Optional
 
 from pydantic import BaseModel, EmailStr
 
-from schemas import (BadgeRead, DocumentStaffFunctionRead, PositionRead,
-                     RankRead, ServiceStaffFunctionRead, StaffDivisionRead,
+from schemas import (BadgeRead, PositionRead,
+                     RankRead, StaffUnitDivisionRead,
                      StaffFunctionRead)
 
 
@@ -42,12 +42,25 @@ class UserRead(BaseModel):
 class StaffUnitRead(StaffUnitBase):
     id: Optional[uuid.UUID]
     staff_division_id: Optional[uuid.UUID]
-    staff_division: Optional[StaffDivisionRead]
+    staff_division: Optional[StaffUnitDivisionRead]
     staff_functions: Optional[List[StaffFunctionRead]]
     position_id: Optional[uuid.UUID]
     position: Optional[PositionRead]
     users: Optional[List[Optional[UserRead]]]
     actual_users: Optional[List[Optional[UserRead]]]
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
+
+
+class UserStaffUnitRead(StaffUnitBase):
+    id: Optional[uuid.UUID]
+    staff_division_id: Optional[uuid.UUID]
+    staff_division: Optional[StaffUnitDivisionRead]
+    staff_functions: Optional[List[StaffFunctionRead]]
+    position_id: Optional[uuid.UUID]
+    position: Optional[PositionRead]
 
     class Config:
         orm_mode = True

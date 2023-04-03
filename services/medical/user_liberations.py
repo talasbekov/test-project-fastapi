@@ -1,16 +1,17 @@
 from sqlalchemy.orm import Session
-from services import ServiceBase
 
 from exceptions import client
 from models.medical import UserLiberation
-from schemas.medical import UserLiberationsCreate,UserLiberationsRead,UserLiberationsUpdate
+from schemas.medical import UserLiberationCreate, UserLiberationUpdate
+from services import ServiceBase
 
-class UserLiberationsService(ServiceBase[UserLiberation,UserLiberationsCreate,UserLiberationsUpdate]):
+
+class UserLiberationService(ServiceBase[UserLiberation,UserLiberationCreate,UserLiberationUpdate]):
     def get_by_id(self,db: Session,id: str):
         user_liberations = super().get(db,id)
         if user_liberations is None:
-            raise client.NotFoundException(detail="Medical profile is not found!")
+            raise client.NotFoundException(detail="User liberation is not found!")
         return user_liberations
         
 
-user_liberations_service = UserLiberationsService(UserLiberation)
+user_liberations_service = UserLiberationService(UserLiberation)

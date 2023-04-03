@@ -7,8 +7,8 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import (ArchiveServiceStaffFunctionCreate, ArchiveServiceStaffFunctionRead,
-                     ArchiveServiceStaffFunctionUpdate)
+from schemas import (ArchiveServiceStaffFunctionRead, NewArchiveServiceStaffFunctionCreate,
+                     NewArchiveServiceStaffFunctionUpdate)
 from services import service_archive_staff_function_service
 
 router = APIRouter(prefix="/archive_service_staff_function", tags=["ArchiveServiceStaffFunction"], dependencies=[Depends(HTTPBearer())])
@@ -39,7 +39,7 @@ async def get_all(*,
              summary="Create ServiceStaffFunction")
 async def create(*,
     db: Session = Depends(get_db),
-    body: ArchiveServiceStaffFunctionCreate,
+    body: NewArchiveServiceStaffFunctionCreate,
     Authorize: AuthJWT = Depends()
 ):
     """
@@ -50,7 +50,8 @@ async def create(*,
         - **spend_hours_per_week**: int - optional.
     """
     Authorize.jwt_required()
-    return service_archive_staff_function_service.create(db, body)
+    service_archive_staff_function_service.get_by_id(body.type_id)
+    return service_archive_staff_function_service.create_archive_staff_function(db, body)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -76,7 +77,7 @@ async def get_by_id(*,
 async def update(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
-    body: ArchiveServiceStaffFunctionUpdate,
+    body: NewArchiveServiceStaffFunctionUpdate,
     Authorize: AuthJWT = Depends()
 ):
     """
@@ -87,10 +88,10 @@ async def update(*,
         - **spend_hours_per_week**: int - optional.
     """
     Authorize.jwt_required()
-    return service_archive_staff_function_service.update(
+    return service_archive_staff_function_service.update_archive_staff_function(
         db,
-        db_obj=service_archive_staff_function_service.get_by_id(db, id),
-        obj_in=body)
+        staff_function=service_archive_staff_function_service.get_by_id(db, id),
+        body=body)
 
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,

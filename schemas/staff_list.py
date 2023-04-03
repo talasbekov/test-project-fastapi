@@ -1,7 +1,9 @@
-from pydantic import BaseModel
 import uuid
-from typing import Optional, List
 from datetime import datetime
+from typing import Optional, List
+
+from pydantic import BaseModel
+
 
 class StaffListBase(BaseModel):
     name: str

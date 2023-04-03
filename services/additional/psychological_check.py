@@ -2,9 +2,10 @@ from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import PsychologicalCheck
-from services.base import ServiceBase
-from services import profile_service
 from schemas import PsychologicalCheckCreate, PsychologicalCheckUpdate
+from services import profile_service
+from services.base import ServiceBase
+
 
 class PsychologicalService(ServiceBase[PsychologicalCheck, PsychologicalCheckCreate, PsychologicalCheckUpdate]):
 

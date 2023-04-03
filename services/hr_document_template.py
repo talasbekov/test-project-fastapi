@@ -1,13 +1,10 @@
 import uuid
 
-from fastapi import HTTPException, status
-from fastapi.logger import logger as log
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
 from models import HrDocumentTemplate, HrDocumentStep, DocumentStaffFunction, User
 from schemas import HrDocumentTemplateCreate, HrDocumentTemplateUpdate
-
 from .base import ServiceBase
 
 """

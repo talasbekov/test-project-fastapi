@@ -13,6 +13,8 @@ from .document_staff_function import document_staff_function_service
 
 from .staff_unit import staff_unit_service
 
+from .candidates import *
+
 from .badge import badge_service
 from .equipment import equipment_service
 from .event import event_service

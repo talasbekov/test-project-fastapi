@@ -7,7 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import ArchiveStaffUnitCreate, ArchiveStaffUnitRead, ArchiveStaffUnitUpdate, ArchiveStaffUnitFunctions
+from schemas import NewArchiveStaffUnitCreate, ArchiveStaffUnitRead, ArchiveStaffUnitFunctions, NewArchiveStaffUnitUpdate
 from services import rank_service, archive_staff_unit_service
 
 router = APIRouter(prefix="/archive_staff_unit", tags=["ArchiveStaffUnit"], dependencies=[Depends(HTTPBearer())])
@@ -38,7 +38,7 @@ async def get_all(*,
              summary="Create Staff Unit")
 async def create(*,
     db: Session = Depends(get_db),
-    body: ArchiveStaffUnitCreate,
+    body: NewArchiveStaffUnitCreate,
     Authorize: AuthJWT = Depends()
 ):
     """
@@ -49,7 +49,7 @@ async def create(*,
         - **description**: a long description. This parameter is optional.
     """
     Authorize.jwt_required()
-    return archive_staff_unit_service.create(db, body)
+    return archive_staff_unit_service.create_staff_unit(db, body)
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -58,7 +58,7 @@ async def create(*,
 async def update(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
-    body: ArchiveStaffUnitUpdate,
+    body: NewArchiveStaffUnitUpdate,
     Authorize: AuthJWT = Depends()
 ):
     """
@@ -70,8 +70,8 @@ async def update(*,
         - **description**: a long description. This parameter is optional.
     """
     Authorize.jwt_required()
-    rank_service.get_by_id(db, body.max_rank_id)
-    return archive_staff_unit_service.update(
+    rank_service.get_by_id(db, body.position_id)
+    return archive_staff_unit_service.update_staff_unit(
         db=db,
         db_obj=archive_staff_unit_service.get_by_id(db, id),
         obj_in=body)

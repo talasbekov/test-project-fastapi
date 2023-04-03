@@ -1,13 +1,10 @@
-import uuid
-
-from sqlalchemy import TIMESTAMP, Column, ForeignKey, Integer, text
+from sqlalchemy import Column, ForeignKey, Integer
 from sqlalchemy.dialects.postgresql import UUID
 
-from core import Base
 from models import Model
 
 
-class UserStat(Model, Base):
+class UserStat(Model):
 
     __tablename__ = "user_stats"
 

@@ -5,7 +5,6 @@ from sqlalchemy.orm import Session
 from exceptions.client import NotFoundException
 from models import HrDocumentStatus
 from schemas import HrDocumentStatusCreate, HrDocumentStatusUpdate
-
 from .base import ServiceBase
 
 

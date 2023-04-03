@@ -4,11 +4,10 @@ from sqlalchemy import Column, ForeignKey, String
 from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID
 from sqlalchemy.orm import relationship
 
-from core import Base
 from models import Model
 
 
-class AbroadTravel(Model, Base):
+class AbroadTravel(Model):
 
     __tablename__ = "abroad_travels"
 

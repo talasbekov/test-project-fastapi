@@ -141,23 +141,6 @@ def upgrade() -> None:
               nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('hr_documents',
-    sa.Column('hr_document_template_id', sa.UUID(), nullable=True),
-    sa.Column('status_id', sa.UUID(), nullable=True),
-    sa.Column('due_date', sa.TIMESTAMP(timezone=True), nullable=False),
-    sa.Column('properties', postgresql.JSON(none_as_null=True, astext_type=sa.Text()), nullable=True),
-    sa.Column('reg_number', sa.String(), nullable=True),
-    sa.Column('signed_at', sa.TIMESTAMP(timezone=True), nullable=True),
-    sa.Column('last_step_id', sa.UUID(), nullable=True),
-    sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.ForeignKeyConstraint(['hr_document_template_id'], ['hr_document_templates.id'], ),
-    sa.ForeignKeyConstraint(['last_step_id'], ['hr_document_steps.id'], ),
-    sa.ForeignKeyConstraint(['status_id'], ['hr_document_statuses.id'], ),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('reg_number')
-    )
     op.create_table('staff_unit_functions',
     sa.Column('staff_unit_id', sa.UUID(), nullable=False),
     sa.Column('staff_function_id', sa.UUID(), nullable=False),
@@ -198,6 +181,27 @@ def upgrade() -> None:
     sa.UniqueConstraint('call_sign'),
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('id_number')
+    )
+    op.create_table('hr_documents',
+    sa.Column('hr_document_template_id', sa.UUID(), nullable=True),
+    sa.Column('status_id', sa.UUID(), nullable=True),
+    sa.Column('initialized_by_id', sa.UUID(), nullable=True),
+    sa.Column('due_date', sa.TIMESTAMP(timezone=True), nullable=False),
+    sa.Column('properties', postgresql.JSON(none_as_null=True, astext_type=sa.Text()), nullable=True),
+    sa.Column('reg_number', sa.String(), nullable=True),
+    sa.Column('signed_at', sa.TIMESTAMP(timezone=True), nullable=True),
+    sa.Column('last_step_id', sa.UUID(), nullable=True),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+              nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+              nullable=False),
+    sa.ForeignKeyConstraint(['initialized_by_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['hr_document_template_id'], ['hr_document_templates.id'], ),
+    sa.ForeignKeyConstraint(['last_step_id'], ['hr_document_steps.id'], ),
+    sa.ForeignKeyConstraint(['status_id'], ['hr_document_statuses.id'], ),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('reg_number')
     )
     op.create_table('events',
     sa.Column('user_id', sa.UUID(), nullable=True),

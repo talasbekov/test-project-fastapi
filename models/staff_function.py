@@ -1,13 +1,12 @@
 import enum
 
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Enum
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from core import Base
 from models import NamedModel
-
 from .association import staff_unit_function
+
 
 class JurisdictionEnum(str, enum.Enum):
     ALL_SERVICE = "Вся служба"
@@ -18,14 +17,14 @@ class JurisdictionEnum(str, enum.Enum):
     SUPERVISED_EMPLOYEES = "Курьируемые сотрудники"
 
 
-class ServiceFunctionType(NamedModel, Base):
+class ServiceFunctionType(NamedModel):
 
     __tablename__ = "service_function_types"
 
     staff_functions = relationship("ServiceStaffFunction", back_populates="type", cascade="all,delete")
 
 
-class DocumentFunctionType(NamedModel, Base):
+class DocumentFunctionType(NamedModel):
 
     __tablename__ = "document_function_types"
 
@@ -34,7 +33,7 @@ class DocumentFunctionType(NamedModel, Base):
     staff_functions = relationship("DocumentStaffFunction", back_populates="role", cascade="all,delete")
 
 
-class StaffFunction(NamedModel, Base):
+class StaffFunction(NamedModel):
 
     __tablename__ = "staff_functions"
 

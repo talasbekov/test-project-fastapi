@@ -1,10 +1,7 @@
-import uuid
-
-from sqlalchemy import BigInteger, Column, Enum, ForeignKey, String, text
+from sqlalchemy import Column, ForeignKey, String
 from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID
 from sqlalchemy.orm import relationship
 
-from core import Base
 from models import Model
 
 
@@ -15,6 +12,7 @@ class PsychologicalCheck(Model):
     issued_by = Column(String(255), nullable=False)
     date_of_issue = Column(TIMESTAMP(timezone=True), nullable=False)
     document_link = Column(String(255), nullable=False)
+    document_number = Column(String(255), nullable=True)
 
     profile_id = Column(UUID(as_uuid=True), ForeignKey("additional_profiles.id"))
 

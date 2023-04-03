@@ -1,13 +1,12 @@
-from sqlalchemy import (ARRAY, TIMESTAMP, Boolean, Column, Enum, ForeignKey,
-                        String, TEXT)
+from sqlalchemy import (TIMESTAMP, Column, ForeignKey,
+                        TEXT)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from core import Base
 from models import NamedModel
 
 
-class SportAchievement(NamedModel, Base):
+class SportAchievement(NamedModel):
 
     __tablename__ = "sport_achievements"
 

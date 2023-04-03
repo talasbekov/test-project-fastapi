@@ -1,5 +1,5 @@
 import uuid
-from typing import List
+from typing import List, Mapping
 
 from fastapi import APIRouter, Depends, status
 from fastapi.security import HTTPBearer

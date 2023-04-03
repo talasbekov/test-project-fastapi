@@ -5,6 +5,11 @@ services:
   postgres:
     image: postgres:15.1-alpine
     container_name: postgresql-dev
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
     restart: always
     env_file:
       - .env
@@ -28,7 +33,8 @@ services:
     networks:
         - backend-dev
     depends_on:
-        - postgres
+        postgres:
+          condition: service_healthy
 
 networks:
     backend-dev:

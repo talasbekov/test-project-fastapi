@@ -1,14 +1,11 @@
-from datetime import timedelta
-
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import HTTPBearer
-from sqlalchemy.orm import Session
 from fastapi_jwt_auth import AuthJWT
+from sqlalchemy.orm import Session
 
-from schemas import LoginForm, RegistrationForm, UserRead
-from core import get_db, configs
-from services import auth_service, user_service
-from exceptions import SgoErpException
+from core import get_db
+from schemas import LoginForm, RegistrationForm
+from services import auth_service
 
 router = APIRouter(prefix="/auth", tags=["Authorization"])
 

@@ -1,8 +1,6 @@
 import uuid
 from typing import List
 
-from fastapi import HTTPException, status
-from fastapi.logger import logger as log
 from sqlalchemy.orm import Session
 
 from exceptions import BadRequestException, NotFoundException

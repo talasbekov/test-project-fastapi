@@ -1,14 +1,13 @@
 import uuid
-
 from typing import List
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends
 from fastapi.security import HTTPBearer
 from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import FamilyStatusCreate, FamilyStatusUpdate, FamilyStatusRead
+from schemas import FamilyStatusRead
 from services import family_status_service
 
 router = APIRouter(prefix="/family_status", tags=["FamilyStatus"], dependencies=[Depends(HTTPBearer())])
@@ -48,4 +47,3 @@ async def get_by_id(*,
     """
     Authorize.jwt_required()
     return family_status_service.get_by_id(db, id)
-

@@ -1,17 +1,12 @@
-import uuid
-from typing import Any
-
-from sqlalchemy import TIMESTAMP, Column, Date, ForeignKey, String, text, Boolean
-from sqlalchemy.dialects.postgresql import ARRAY, JSON, TEXT, UUID
+from sqlalchemy import TIMESTAMP, Column, ForeignKey, String, Boolean
+from sqlalchemy.dialects.postgresql import TEXT, UUID
 from sqlalchemy.orm import relationship
 
-from core import Base
 from models import Model
-
 from .association import hr_documents_users, users_badges
 
 
-class User(Model, Base):
+class User(Model):
 
     __tablename__ = "users"
 

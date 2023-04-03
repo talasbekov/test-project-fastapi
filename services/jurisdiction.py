@@ -3,7 +3,6 @@ from sqlalchemy.orm import Session
 from exceptions.client import NotFoundException
 from models import Jurisdiction
 from schemas import JurisdictionCreate, JurisdictionUpdate
-
 from .base import ServiceBase
 
 

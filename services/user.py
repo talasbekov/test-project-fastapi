@@ -1,16 +1,13 @@
-import datetime
 import types
-from typing import Optional, List
+from typing import List
 
 from sqlalchemy.orm import Session
 
-from exceptions import InvalidOperationException, NotFoundException
-from models import StaffDivision, User, StaffUnit, Jurisdiction, JurisdictionEnum, DocumentStaffFunction, StaffDivisionEnum
-from schemas import (StaffDivisionUpdate, UserCreate, UserGroupUpdate,
-                     UserPermission, UserRead, UserUpdate)
-from services import (staff_division_service, staff_unit_service, staff_unit,
-                      jurisdiction_service, document_staff_function_service)
-
+from exceptions import NotFoundException
+from models import StaffDivision, User, StaffUnit, Jurisdiction, JurisdictionEnum, DocumentStaffFunction, \
+    StaffDivisionEnum
+from schemas import (UserCreate, UserUpdate)
+from services import (staff_division_service, staff_unit_service, jurisdiction_service, document_staff_function_service)
 from .base import ServiceBase
 
 CALLABLES = types.FunctionType, types.MethodType
@@ -56,10 +53,6 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             user.last_name = body.last_name
         if body.father_name is not None:
             user.father_name = body.father_name
-        if body.staff_division_id is not None:
-            user.staff_division_id = staff_division_service.get_by_id(db, body.staff_division_id).id
-        if body.staff_unit_id is not None:
-            user.staff_unit_id = staff_unit_service.get_by_id(db, body.staff_unit_id).id
         if body.icon is not None:
             user.icon = body.icon
         if body.call_sign is not None:
@@ -70,12 +63,16 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             user.phone_number = body.phone_number
         if body.address is not None:
             user.address = body.address
-        if body.birthday is not None:
-            user.birthday = body.birthday
-        if body.status is not None:
-            user.status = body.status
-        if body.status_till is not None:
-            user.status_till = body.status_till
+        if body.service_phone_number is not None:
+            user.service_phone_number = body.service_phone_number
+        if body.cabinet is not None:
+            user.cabinet = body.cabinet
+        if body.is_military is not None:
+            user.is_military = body.is_military
+        if body.supervised_by is not None:
+            user.supervised_by = body.supervised_by
+        if body.personal_id is not None:
+            user.personal_id = body.personal_id
 
         db.add(user)
         db.flush()

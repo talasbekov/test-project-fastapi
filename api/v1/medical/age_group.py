@@ -1,7 +1,4 @@
-import uuid
-from typing import List
-
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends
 from fastapi.security import HTTPBearer
 from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
@@ -15,9 +12,6 @@ router = APIRouter(prefix="/age_group", tags=["AgeGroup"], dependencies=[Depends
 @router.get("", dependencies=[Depends(HTTPBearer())],
             summary="Get all AgeGroup")
 async def get_all(*,
-    db: Session = Depends(get_db),
-    skip: int = 0,
-    limit: int = 100,
     Authorize: AuthJWT = Depends()
 ):
     """
@@ -25,4 +19,4 @@ async def get_all(*,
 
     """
     Authorize.jwt_required()
-    return [ag.name for ag in AgeGroup]
+    return [ag.value for ag in AgeGroup]

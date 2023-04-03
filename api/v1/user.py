@@ -7,8 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from models import User
-from schemas import (UserCreate, UserGroupUpdate, UserPermission, UserRead,
+from schemas import (UserRead,
                      UserUpdate)
 from services import user_service
 
@@ -68,14 +67,11 @@ async def update_user_patch(*,
         - **first_name**: required.
         - **last_name**: required.
         - **father_name**: optional.
-        - **group_id**: UUID - required and should exist in the database
-        - **position_id**: UUID - required and should exist in the database.
         - **icon**: image with url format. This parameter is optional.
         - **call_sign**: required.
         - **id_number**: unique employee number. This parameter is required.
         - **phone_number**: format (+77xxxxxxxxx). This parameter is optional.
         - **address**: optional.
-        - **birthday**: format (YYYY-MM-DD). This parameter is optional.
         - **status**: the current status of the employee (e.g. "working", "on vacation", "sick", etc.). This parameter is optional.
         - **status_till**: the date when the current status of the employee will end. This parameter is optional.
     """

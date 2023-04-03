@@ -1,13 +1,10 @@
 import enum
-import uuid
 
-from sqlalchemy import TIMESTAMP, Column, Enum, ForeignKey, String, text
+from sqlalchemy import TIMESTAMP, Column, ForeignKey, String
 from sqlalchemy.dialects.postgresql import JSON, UUID
 from sqlalchemy.orm import relationship
 
-from core import Base
 from models import Model
-
 from .association import hr_document_equipments, hr_documents_users
 
 
@@ -17,9 +14,10 @@ class HrDocumentStatusEnum(str, enum.Enum):
     COMPLETED = "Завершен"
     CANCELED = "Отменен"
     ON_REVISION = "На доработке"
+    DRAFT = "Черновик"
 
 
-class HrDocument(Model, Base):
+class HrDocument(Model):
 
     __tablename__ = "hr_documents"
 
@@ -30,6 +28,7 @@ class HrDocument(Model, Base):
     reg_number = Column(String, unique=True)
     signed_at = Column(TIMESTAMP(timezone=True), nullable=True)
 
+    initialized_by_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
     status_id = Column(UUID(as_uuid=True), ForeignKey("hr_document_statuses.id"))
     last_step_id = Column(UUID(as_uuid=True), ForeignKey("hr_document_steps.id"))
 
@@ -43,3 +42,4 @@ class HrDocument(Model, Base):
     )
     last_step = relationship("HrDocumentStep")
     status = relationship("HrDocumentStatus", cascade="all, delete")
+    initialized_by = relationship("User", cascade="all, delete")

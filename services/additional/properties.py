@@ -2,9 +2,10 @@ from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import Properties, Profile
-from services.base import ServiceBase
-from services import profile_service
 from schemas import PropertiesCreate, PropertiesUpdate
+from services import profile_service
+from services.base import ServiceBase
+
 
 class PropertiesService(ServiceBase[Properties, PropertiesCreate, PropertiesUpdate]):
 

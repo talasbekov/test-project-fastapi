@@ -15,17 +15,30 @@ class ArchiveStaffUnitBase(BaseModel):
     staff_division_id: uuid.UUID
     user_id: Optional[uuid.UUID]
     actual_user_id: Optional[uuid.UUID]
-    origin_id: Optional[uuid.UUID]
 
 
 class ArchiveStaffUnitCreate(ArchiveStaffUnitBase):
-    pass
+    origin_id: Optional[uuid.UUID]
+
 
 class ArchiveStaffUnitCreateWithStaffFunctions(ArchiveStaffUnitBase):
+    origin_id: Optional[uuid.UUID]
     staff_functions: Optional[List[ArchiveStaffFunctionRead]]
 
 
 class ArchiveStaffUnitUpdate(ArchiveStaffUnitBase):
+    origin_id: Optional[uuid.UUID]
+
+
+class NewArchiveStaffUnitCreate(ArchiveStaffUnitBase):
+    pass
+
+
+class NewArchiveStaffUnitCreateWithStaffFunctions(ArchiveStaffUnitBase):
+    staff_functions: Optional[List[ArchiveStaffFunctionRead]]
+
+
+class NewArchiveStaffUnitUpdate(ArchiveStaffUnitBase):
     pass
 
 

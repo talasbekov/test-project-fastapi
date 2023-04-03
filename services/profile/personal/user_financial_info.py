@@ -2,8 +2,7 @@ from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import UserFinancialInfo
-from schemas import UserFinancialInfoCreate, UserFinancialInfoUpdate, UserFinancialInfoRead
-
+from schemas import UserFinancialInfoCreate, UserFinancialInfoUpdate
 from services.base import ServiceBase
 
 

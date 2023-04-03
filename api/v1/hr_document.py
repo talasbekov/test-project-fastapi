@@ -7,8 +7,8 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import (HrDocumentCreate, HrDocumentInit, HrDocumentRead,
-                     HrDocumentSign, HrDocumentUpdate)
+from schemas import (HrDocumentInit, HrDocumentRead,
+                     HrDocumentSign, HrDocumentUpdate, DraftHrDocumentCreate, DraftHrDocumentInit)
 from services import hr_document_service
 
 router = APIRouter(prefix="/hr-documents", tags=["HrDocuments"], dependencies=[Depends(HTTPBearer())])
@@ -74,6 +74,72 @@ async def initialize(*,
     user_id = Authorize.get_jwt_subject()
     role = Authorize.get_raw_jwt()['role']
     return hr_document_service.initialize(db, body, user_id, role)
+
+
+@router.get("/drafts", response_model=List[HrDocumentRead],
+            summary="Get all Draft HrDocuments")
+async def get_draft_documents(*,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends(),
+    skip: int = 0,
+    limit: int = 10
+):
+    """
+        Get all Draft HrDocuments
+
+        - **skip**: int - The number of HrDocuments to skip before returning the results. This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of HrDocuments to return in the response. This parameter is optional and defaults to 10.
+    """
+    Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
+    return hr_document_service.get_draft_documents(db, user_id, skip, limit)
+
+
+@router.post("/drafts", status_code=status.HTTP_201_CREATED, response_model=HrDocumentRead,
+             summary="Save HrDocument to Draft")
+async def save_to_draft(*,
+    db: Session = Depends(get_db),
+    body: DraftHrDocumentCreate,
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Save HrDocument
+
+        The user must have a role that allows them to create HR documents.
+
+        - **hr_document_template_id**: UUID - required. HrDocument will be initialized based on HrDocumentTemplate.
+        - **due_date**: the end date of this document - format (YYYY-MM-DD). This parameter is required.
+        - **properties**: A dictionary containing properties for the HrDocument.
+        - **user_ids**: UUID - required and should exist in database. A list of user IDs to be assigned to the HrDocument.
+        - **document_step_users_ids**: UUID - required and should exist in database. Dictionary of priority to user IDs to be assigned to the HrDocument.
+    """
+    Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
+    role = Authorize.get_raw_jwt()['role']
+    return hr_document_service.save_to_draft(db, user_id, body, role)
+
+
+@router.post("/drafts/{id}", status_code=status.HTTP_201_CREATED, response_model=HrDocumentRead,
+             summary="Initialize Draft HrDocument")
+async def initialize_draft_document(*,
+    db: Session = Depends(get_db),
+    body: DraftHrDocumentInit,
+    Authorize: AuthJWT = Depends(),
+    id: uuid.UUID
+):
+    """
+        Initialize Draft HrDocument
+
+        The user must have a role that allows them to create HR documents.
+
+        - **document_id**: UUID - required.
+        - **document_step_users_ids**: UUID - required and should exist in database. Dictionary of priority to user IDs to be assigned to the HrDocument.
+    """
+    Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
+    role = Authorize.get_raw_jwt()['role']
+    return hr_document_service.initialize_draft_document(db, body, id, user_id, role)
+
 
 @router.put("/{id}/", response_model=HrDocumentRead,
             summary="Update HrDocument")
@@ -143,6 +209,7 @@ async def sign(*,
     role = Authorize.get_raw_jwt()['role']
     hr_document_service.sign(db, id, body, user_id, role)
 
+
 @router.get("/{id}/", response_model=HrDocumentRead,
             summary="Get HrDocument by id")
 async def get_by_id(*,
@@ -157,7 +224,7 @@ async def get_by_id(*,
     """
     Authorize.jwt_required()
     return hr_document_service.get_by_id(db, id)
- 
+
 
 @router.get('/generate/{id}/', status_code=status.HTTP_200_OK,
             summary="Generate HrDocument")
@@ -200,15 +267,3 @@ async def get_data_by_option(*,
     Authorize.jwt_required()
     res = hr_document_service.get_all_by_option(db, option, data_taken, id)
     return res
-
-
-@router.get('/signed-history', status_code=status.HTTP_200_OK)
-async def get_signed_history(*,
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends(),
-    skip: int = 0,
-    limit: int = 10
-):
-    Authorize.jwt_required()
-    user_id = Authorize.get_jwt_subject()
-    return hr_document_service.get_signed_documents(db, user_id, skip, limit)

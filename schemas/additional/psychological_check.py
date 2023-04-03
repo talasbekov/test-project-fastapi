@@ -10,6 +10,7 @@ class PsychologicalCheckBase(BaseModel):
     date_of_issue: datetime
     document_link: AnyUrl
     profile_id: uuid.UUID
+    document_number: Optional[str]
 
     class Config:
         orm_mode = True

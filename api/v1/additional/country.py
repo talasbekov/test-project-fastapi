@@ -1,17 +1,14 @@
 import uuid
-from datetime import timedelta
-
-from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import HTTPBearer
-from sqlalchemy.orm import Session
-from fastapi_jwt_auth import AuthJWT
-
-from schemas import CountryCreate, CountryUpdate, CountryRead
-from core import get_db, configs
-from services import country_service
-from exceptions import SgoErpException
 from typing import List
 
+from fastapi import APIRouter, Depends, status
+from fastapi.security import HTTPBearer
+from fastapi_jwt_auth import AuthJWT
+from sqlalchemy.orm import Session
+
+from core import get_db
+from schemas import CountryCreate, CountryUpdate, CountryRead
+from services import country_service
 
 router = APIRouter(prefix="/country", tags=["Country"], dependencies=[Depends(HTTPBearer())])
 

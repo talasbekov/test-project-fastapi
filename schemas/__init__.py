@@ -18,15 +18,16 @@ from .staff_function import (DocumentStaffFunctionCreate, DocumentStaffFunctionR
                              ServiceStaffFunctionCreate, ServiceStaffFunctionRead, ServiceStaffFunctionUpdate,
                              StaffUnitFunctions, StaffFunctionRead, DocumentStaffFunctionAdd)
 from .staff_division import (StaffDivisionCreate, StaffDivisionRead,
-                             StaffDivisionUpdate, StaffDivisionUpdateParentGroup, StaffDivisionOptionRead)
-from .staff_unit import StaffUnitCreate, StaffUnitRead, StaffUnitUpdate
+                             StaffDivisionUpdate, StaffDivisionUpdateParentGroup,
+                             StaffDivisionOptionRead, StaffUnitDivisionRead)
+from .staff_unit import StaffUnitCreate, StaffUnitRead, StaffUnitUpdate, UserStaffUnitRead
 from .hr_document_step import (HrDocumentStepCreate, HrDocumentStepRead,
                                HrDocumentStepUpdate)
 from .user import UserCreate, UserRead, UserUpdate, UserGroupUpdate
 from .hr_document_status import HrDocumentStatusRead, HrDocumentStatusCreate, HrDocumentStatusUpdate
 from .hr_document import (HrDocumentCreate, HrDocumentInit, HrDocumentRead,
-                          HrDocumentSign, HrDocumentUpdate)
-
+                          HrDocumentSign, HrDocumentUpdate, DraftHrDocumentCreate,
+                          DraftHrDocumentInit)
 from .hr_document_info import (HrDocumentInfoCreate, HrDocumentInfoRead,
                                HrDocumentInfoUpdate, HrDocumentHistoryRead)
 from .user_stat import UserStatCreate, UserStatRead, UserStatUpdate
@@ -38,3 +39,4 @@ from .personal import *
 from .medical import *
 from .family import *
 from .archive import *
+from .user_candidates import *

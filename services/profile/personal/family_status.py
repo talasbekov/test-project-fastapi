@@ -2,8 +2,7 @@ from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import FamilyStatus
-from schemas import FamilyStatusCreate, FamilyStatusUpdate, FamilyStatusRead
-
+from schemas import FamilyStatusCreate, FamilyStatusUpdate
 from services.base import ServiceBase
 
 

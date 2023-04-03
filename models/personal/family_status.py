@@ -1,8 +1,6 @@
-from core import Base
-
 from models import NamedModel
 
 
-class FamilyStatus(NamedModel, Base):
+class FamilyStatus(NamedModel):
 
     __tablename__ = "family_statuses"

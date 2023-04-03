@@ -1,11 +1,12 @@
-from sqlalchemy import Column, ForeignKey, Table
+from sqlalchemy import Column, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
+
 from models import Model
-from core import Base
 from .association import archive_staff_unit_function
 
-class ArchiveStaffUnit(Model, Base):
+
+class ArchiveStaffUnit(Model):
     __tablename__ = "archive_staff_units"
 
     position_id = Column(UUID(as_uuid=True), ForeignKey("positions.id"), nullable=False)

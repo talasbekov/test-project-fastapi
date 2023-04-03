@@ -2,8 +2,7 @@ from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import TaxDeclaration
-from schemas import TaxDeclarationCreate, TaxDeclarationUpdate, TaxDeclarationRead
-
+from schemas import TaxDeclarationCreate, TaxDeclarationUpdate
 from services.base import ServiceBase
 
 

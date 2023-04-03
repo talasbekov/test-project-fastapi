@@ -2,8 +2,8 @@ from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import Country
-from services.base import ServiceBase
 from schemas import CountryCreate, CountryUpdate
+from services.base import ServiceBase
 
 
 class CountryService(ServiceBase[Country, CountryCreate, CountryUpdate]):

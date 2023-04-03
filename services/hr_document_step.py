@@ -5,7 +5,6 @@ from sqlalchemy.orm import Session
 from exceptions import NotFoundException
 from models import DocumentStaffFunction, HrDocumentStep
 from schemas import HrDocumentStepCreate, HrDocumentStepUpdate
-
 from .base import ServiceBase
 
 
@@ -25,25 +24,21 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
         step = db.query(HrDocumentStep).filter(
             HrDocumentStep.hr_document_template_id == template_id,
             DocumentStaffFunction.priority > 0
-        ).first()
+        ).order_by(DocumentStaffFunction.priority.asc()).first()
 
         if step is None:
             raise NotFoundException(detail=f'Initial step for template id: {template_id} is not found!')
 
         return step
 
-    def get_next_step_from_id(self, db: Session, step_id: str) -> HrDocumentStep:
-        step = db.query(HrDocumentStep).filter(
-            
-        ).first()
-
-        return step
-
     def get_initial_steps(self, db: Session, skip: int, limit: int):
 
-        steps = db.query(self.model).filter(
-            self.model.previous_step_id == None
-        ).offset(skip).limit(limit).all()
+        steps = db.query(self.model)\
+            .join(DocumentStaffFunction)\
+            .filter(DocumentStaffFunction.priority == 1)\
+            .offset(skip)\
+            .limit(limit)\
+        .all()
 
         return steps
 

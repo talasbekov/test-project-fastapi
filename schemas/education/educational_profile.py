@@ -2,6 +2,7 @@ import uuid
 from typing import List, Optional
 
 from pydantic import BaseModel
+
 from .academic_degree import AcademicDegreeRead
 from .academic_title import AcademicTitleRead
 from .course import CourseRead
@@ -34,4 +35,3 @@ class EducationalProfileRead(EducationalProfileBase):
     education: Optional[List[EducationRead]]
     course: Optional[List[CourseRead]]
     language_proficiency: Optional[List[LanguageProficiencyRead]]
-
