@@ -19,6 +19,10 @@ class StaffDivision(NamedNestedModel):
     parent_group_id = Column(UUID(as_uuid=True), ForeignKey("staff_divisions.id"), nullable=True)
     description = Column(TEXT)
     is_combat_unit = Column(Boolean)
+    leader_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"), nullable=True)
 
     children = relationship("StaffDivision")
-    staff_units = relationship("StaffUnit", back_populates="staff_division")
+
+    staff_units = relationship("StaffUnit", back_populates="staff_division", cascade="all,delete", foreign_keys="StaffUnit.staff_division_id")
+
+    leader = relationship("StaffUnit", foreign_keys=leader_id)

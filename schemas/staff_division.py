@@ -12,6 +12,7 @@ class StaffDivisionBase(BaseModel):
     name: str
     description: Optional[str]
     is_combat_unit: bool
+    leader_id: Optional[uuid.UUID]
 
 
 class StaffDivisionCreate(StaffDivisionBase):
