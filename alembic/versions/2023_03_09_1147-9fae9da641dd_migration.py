@@ -1549,6 +1549,16 @@ def upgrade() -> None:
         }]
     )
 
+    candidate_id = get_uuid()
+    op.bulk_insert(
+        Base.metadata.tables['candidates'],
+        [{
+            'id': candidate_id,
+            'staff_unit_id': staff_unit1_id,
+            'staff_unit_curator_id': staff_unit2_id,
+        }]
+    )
+
     candidate_stage_info_id = get_uuid()
 
     op.bulk_insert(

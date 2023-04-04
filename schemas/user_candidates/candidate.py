@@ -8,8 +8,7 @@ from pydantic import BaseModel
 from .candidate_stage_info import CandidateStageInfoRead
 
 
-class CandidateBase(BaseModel):
-    candidate_stage_id: Optional[uuid.UUID]
+class CandidateBase(BaseModel): 
 
     class Config:
         orm_mode = True
