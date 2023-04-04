@@ -1,8 +1,8 @@
 """migration
 
-Revision ID: 9fae9da641dd
-Revises: f04c5daf7685
-Create Date: 2023-03-02 11:47:59.787804
+Revision ID: b829f910efe2
+Revises: 1ed0c27c469a
+Create Date: 2023-04-04 10:57:42.845460
 
 """
 import uuid
@@ -11,11 +11,10 @@ from alembic import op
 from core import Base
 
 # revision identifiers, used by Alembic.
-revision = '9fae9da641dd'
-down_revision = '33853d366eba'
+revision = 'b829f910efe2'
+down_revision = '1ed0c27c469a'
 branch_labels = None
 depends_on = None
-
 
 def get_uuid():
     return str(uuid.uuid4())
@@ -684,6 +683,21 @@ def upgrade() -> None:
         }]
     )
     
+    staff_unit1_id = get_uuid()
+    staff_unit2_id = get_uuid()
+    staff_unit3_id = get_uuid()
+    staff_unit4_id = get_uuid()
+    staff_unit5_id = get_uuid()
+    staff_unit6_id = get_uuid()
+    staff_unit7_id = get_uuid()
+    staff_unit8_id = get_uuid()
+    staff_unit9_id = get_uuid()
+    staff_unit10_id = get_uuid()
+    staff_unit11_id = get_uuid()
+    staff_unit12_id = get_uuid()
+    staff_unit13_id = get_uuid()
+    staff_unit14_id = get_uuid()
+    
     group1_id = get_uuid()
     group2_id = get_uuid()
     group3_id = get_uuid()
@@ -698,7 +712,7 @@ def upgrade() -> None:
             'parent_group_id': None,
             'id': group1_id,
             'name': "Департамент 1",
-            'is_combat_unit': True
+            'is_combat_unit': True,
         }, {
             'parent_group_id': group1_id,
             'id': group2_id,
@@ -731,21 +745,6 @@ def upgrade() -> None:
             'is_combat_unit': False
         }]
     )
-
-    staff_unit1_id = get_uuid()
-    staff_unit2_id = get_uuid()
-    staff_unit3_id = get_uuid()
-    staff_unit4_id = get_uuid()
-    staff_unit5_id = get_uuid()
-    staff_unit6_id = get_uuid()
-    staff_unit7_id = get_uuid()
-    staff_unit8_id = get_uuid()
-    staff_unit9_id = get_uuid()
-    staff_unit10_id = get_uuid()
-    staff_unit11_id = get_uuid()
-    staff_unit12_id = get_uuid()
-    staff_unit13_id = get_uuid()
-    staff_unit14_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['staff_units'],
@@ -1005,7 +1004,13 @@ def upgrade() -> None:
         position4_id,
         False,
         '1.2.100K')
-
+    
+    # Update staff_division set leader_id = staff_unit10_id where id = staff_division1_id
+    op.execute(
+        "UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(
+            staff_unit10_id, group1_id
+        )
+    )
 
     op.bulk_insert(
         Base.metadata.tables['staff_unit_functions'],

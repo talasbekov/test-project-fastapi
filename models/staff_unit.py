@@ -7,6 +7,7 @@ from .association import staff_unit_function
 
 
 class StaffUnit(Model):
+
     __tablename__ = "staff_units"
 
     position_id = Column(UUID(as_uuid=True), ForeignKey("positions.id"), nullable=False)
@@ -16,7 +17,7 @@ class StaffUnit(Model):
 
     position = relationship("Position", cascade="all,delete")
     staff_division = relationship(
-        "StaffDivision", back_populates="staff_units", cascade="all,delete"
+        "StaffDivision", back_populates="staff_units", foreign_keys=[staff_division_id]
     )
 
     users = relationship("User", back_populates="staff_unit", foreign_keys="User.staff_unit_id")
