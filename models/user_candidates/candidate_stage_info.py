@@ -8,9 +8,9 @@ from models import Model
 
 
 class CandidateStageInfoStatusEnum(str, enum.Enum):
-    PENDING = "В ожидании"
-    APPROVED = "Одобрен"
-    DECLINED = "Отклонен"
+    PENDING = "В прогрессе"
+    APPROVED = "Пройдет успешно"
+    DECLINED = "Завален"
     NOT_STARTED = "Не начат"
 
 
