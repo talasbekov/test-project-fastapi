@@ -17,7 +17,6 @@ class CandidateStageAnswerBase(BaseModel):
     candidate_essay_type_id: Optional[uuid.UUID]
     candidate_id: uuid.UUID
     category_id: Optional[uuid.UUID]
-    category: Optional[CandidateCategoryRead]
 
     class Config:
         orm_mode = True
@@ -27,8 +26,10 @@ class CandidateStageAnswerBase(BaseModel):
 class CandidateStageAnswerCreate(CandidateStageAnswerBase):
     sport_score: Optional[int]
 
+
 class CandidateStageListAnswerCreate(BaseModel):
     candidate_stage_answers: Optional[list[CandidateStageAnswerBase]]
+
 
 class CandidateStageAnswerUpdate(CandidateStageAnswerBase):
     pass
@@ -37,6 +38,7 @@ class CandidateStageAnswerUpdate(CandidateStageAnswerBase):
 class CandidateStageAnswerRead(CandidateStageAnswerBase):
     id: Optional[uuid.UUID]
     is_sport_passed: Optional[bool]
+
 
 class CandidateStageAnswerIdRead(BaseModel):
     id: Optional[uuid.UUID]
