@@ -1560,6 +1560,22 @@ def upgrade() -> None:
     )
 
     candidate_stage_info_id = get_uuid()
+    candidate_stage_info_id1 = get_uuid()
+    candidate_stage_info_id2 = get_uuid()
+    candidate_stage_info_id3 = get_uuid()
+    candidate_stage_info_id4 = get_uuid()
+    candidate_stage_info_id5 = get_uuid()
+    candidate_stage_info_id6 = get_uuid()
+    candidate_stage_info_id7 = get_uuid()
+    candidate_stage_info_id8 = get_uuid()
+    candidate_stage_info_id9 = get_uuid()
+    candidate_stage_info_id10 = get_uuid()
+    candidate_stage_info_id11 = get_uuid()
+    candidate_stage_info_id12 = get_uuid()
+    candidate_stage_info_id13 = get_uuid()
+    candidate_stage_info_id14 = get_uuid()
+    candidate_stage_info_id15 = get_uuid()
+    candidate_stage_info_id16 = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['candidate_stage_infos'],
@@ -1567,8 +1583,125 @@ def upgrade() -> None:
             'id': candidate_stage_info_id,
             'staff_unit_coordinate_id': staff_unit1_id,
             'candidate_stage_type_id': candidate_stage_types1_id,
-            'is_waits': True
-        }]
+            'is_waits': True,
+            'candidate_id': candidate_id,
+        },
+        {
+            'id': candidate_stage_info_id1,
+            'staff_unit_coordinate_id': staff_unit1_id,
+            'candidate_stage_type_id': candidate_stage_types2_id,
+            'is_waits': True,
+            'candidate_id': candidate_id,
+        },
+        {
+            'id': candidate_stage_info_id2,
+            'staff_unit_coordinate_id': staff_unit1_id,
+            'candidate_stage_type_id': candidate_stage_types3_id,
+            'is_waits': True,
+            'candidate_id': candidate_id,
+        },
+        {
+            'id': candidate_stage_info_id3,
+            'staff_unit_coordinate_id': staff_unit1_id,
+            'candidate_stage_type_id': candidate_stage_types4_id,
+            'is_waits': True,
+            'candidate_id': candidate_id,
+        },
+        {
+            'id': candidate_stage_info_id4,
+            'staff_unit_coordinate_id': staff_unit1_id,
+            'candidate_stage_type_id': candidate_stage_types5_id,
+            'is_waits': True,
+            'candidate_id': candidate_id,
+        },
+        {
+            'id': candidate_stage_info_id5,
+            'staff_unit_coordinate_id': staff_unit1_id,
+            'candidate_stage_type_id': candidate_stage_types6_id,
+            'is_waits': True,
+            'candidate_id': candidate_id,
+        },
+        {
+            'id': candidate_stage_info_id6,
+            'staff_unit_coordinate_id': staff_unit1_id,
+            'candidate_stage_type_id': candidate_stage_types7_id,
+            'is_waits': True,
+            'candidate_id': candidate_id,
+        },
+        {
+            'id': candidate_stage_info_id7,
+            'staff_unit_coordinate_id': staff_unit1_id,
+            'candidate_stage_type_id': candidate_stage_types8_id,
+            'is_waits': True,
+            'candidate_id': candidate_id,
+
+        },
+        {
+            'id': candidate_stage_info_id8,
+            'staff_unit_coordinate_id': staff_unit1_id,
+            'candidate_stage_type_id': candidate_stage_types9_id,
+            'is_waits': True,
+            'candidate_id': candidate_id,
+        },
+        {
+            'id': candidate_stage_info_id9,
+            'staff_unit_coordinate_id': staff_unit1_id,
+            'candidate_stage_type_id': candidate_stage_types10_id,
+            'is_waits': True,
+            'candidate_id': candidate_id,
+        },
+        {
+            'id': candidate_stage_info_id10,
+            'staff_unit_coordinate_id': staff_unit1_id,
+            'candidate_stage_type_id': candidate_stage_types11_id,
+            'is_waits': True,
+            'candidate_id': candidate_id,
+        },
+        {
+            'id': candidate_stage_info_id11,
+            'staff_unit_coordinate_id': staff_unit1_id,
+            'candidate_stage_type_id': candidate_stage_types12_id,
+            'is_waits': True,
+            'candidate_id': candidate_id,
+
+        },
+        {
+            'id': candidate_stage_info_id12,
+            'staff_unit_coordinate_id': staff_unit1_id,
+            'candidate_stage_type_id': candidate_stage_types13_id,
+            'is_waits': True,
+            'candidate_id': candidate_id,
+        },
+        {
+            'id': candidate_stage_info_id13,
+            'staff_unit_coordinate_id': staff_unit1_id,
+            'candidate_stage_type_id': candidate_stage_types14_id,
+            'is_waits': True,
+            'candidate_id': candidate_id,
+        },
+        {
+            'id': candidate_stage_info_id14,
+            'staff_unit_coordinate_id': staff_unit1_id,
+            'candidate_stage_type_id': candidate_stage_types15_id,
+            'is_waits': True,
+            'candidate_id': candidate_id,
+        },
+        {
+            'id': candidate_stage_info_id15,
+            'staff_unit_coordinate_id': staff_unit1_id, 
+            'candidate_stage_type_id': candidate_stage_types16_id,
+            'is_waits': True,
+            'candidate_id': candidate_id,
+        },
+        {
+            'id': candidate_stage_info_id16,
+            'staff_unit_coordinate_id': staff_unit1_id,
+            'candidate_stage_type_id': candidate_stage_types17_id,
+            'is_waits': True,
+            'candidate_id': candidate_id,
+        },
+        
+        ] 
     )
 
 
