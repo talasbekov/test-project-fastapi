@@ -47,6 +47,7 @@ async def get_by_id(
     Authorize.jwt_required()
     return candidate_stage_info_service.get_by_id(db, id)
 
+
 @router.get("/all/{staff_unit_id}", dependencies=[Depends(HTTPBearer())],
             response_model=List[CandidateStageInfoRead],
             summary="Get all Candidates by staff_unit_id")
@@ -60,6 +61,7 @@ async def get_all_by_staff_unit_id(
     """
     Authorize.jwt_required()
     return candidate_stage_info_service.get_all_by_staff_unit_id(db, staff_unit_id)
+
 
 @router.get("/all/candidate/{candidate_id}", dependencies=[Depends(HTTPBearer())],
             response_model=List[CandidateStageInfoRead],
@@ -75,9 +77,10 @@ async def get_all_by_candidate_id(
     Authorize.jwt_required()
     return candidate_stage_info_service.get_all_by_candidate_id(db, candidate_id)
 
+
 @router.post("", dependencies=[Depends(HTTPBearer())],
             summary="Create a Candidate",
-            response_model=CandidateStageInfoRead,
+            response_model=CandidateStageInfoRead
             )
 async def create(
     db: Session = Depends(get_db),
@@ -89,6 +92,44 @@ async def create(
     """
     Authorize.jwt_required()
     return candidate_stage_info_service.create(db, candidate_stage)
+
+
+@router.patch("/{id}/sign", dependencies=[Depends(HTTPBearer())],
+            summary="Sign a CandidateStageInfo",
+            status_code=status.HTTP_202_ACCEPTED,
+            response_model=CandidateStageInfoRead
+)
+async def sign_candidate(
+        db: Session = Depends(get_db),
+        Authorize: AuthJWT = Depends(),
+        id: uuid.UUID = None,
+):
+    """
+        Sign a CandidateStageInfo
+
+        - **id**: UUID - required.
+    """
+    Authorize.jwt_required()
+    return candidate_stage_info_service.sign_candidate(db, id)
+
+
+@router.patch("/{id}/reject", dependencies=[Depends(HTTPBearer())],
+              summary="Sign a CandidateStageInfo",
+              status_code=status.HTTP_202_ACCEPTED,
+              response_model=CandidateStageInfoRead
+)
+async def reject_candidate(
+        db: Session = Depends(get_db),
+        Authorize: AuthJWT = Depends(),
+        id: uuid.UUID = None,
+):
+    """
+        Reject a CandidateStageInfo
+
+        - **id**: UUID - required.
+    """
+    Authorize.jwt_required()
+    return candidate_stage_info_service.reject_candidate(db, id)
 
 
 @router.put("/{id}", dependencies=[Depends(HTTPBearer())],
