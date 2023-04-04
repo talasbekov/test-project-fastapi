@@ -1378,7 +1378,8 @@ def upgrade() -> None:
             'name': 'Беседа с родителями'
         }, {
             'id': candidate_stage_types6_id,
-            'name': 'Беседа о проф. пригодности'
+            'name': 'Беседа о проф. пригодности',
+            'is_curator_review_required': True
         }, {
             'id': candidate_stage_types7_id,
             'name': 'Справка по результатам оперативного задания'
@@ -1387,13 +1388,15 @@ def upgrade() -> None:
             'name': 'Беседа с психологом'
         }, {
             'id': candidate_stage_types9_id,
-            'name': 'Беседа с УСБ'
+            'name': 'Беседа с УСБ',
+            'is_curator_review_required': True
         }, {
             'id': candidate_stage_types10_id,
             'name': 'Беседа с руководителем структурного подразделения'
         }, {
             'id': candidate_stage_types11_id,
-            'name': 'Беседа с руководителем руководством департамента кадров'
+            'name': 'Беседа с руководителем руководством департамента кадров',
+            'is_curator_review_required': True
         }, {
             'id': candidate_stage_types12_id,
             'name': 'Рецензия на эссе'
@@ -1411,7 +1414,8 @@ def upgrade() -> None:
             'name': 'Заключение по спец. проверке'
         }, {
             'id': candidate_stage_types17_id,
-            'name': 'Заключение о зачислении '
+            'name': 'Заключение о зачислении',
+            'is_curator_review_required': True
         }]
     )
 

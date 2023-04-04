@@ -41,18 +41,14 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
         staff_unit_service.get_by_id(db, body.staff_unit_id)
         candidate = super().create(db, body)
         return CandidateRead.from_orm(candidate).dict()
-    
-    def get_by_id(self, db: Session, id: uuid.UUID):
-        candidate = super().get_by_id(db, id)
-        return CandidateRead.from_orm(candidate).dict()
 
-    def update(self, db: Session, id: uuid.UUID, body: CandidateUpdate):
+    def update(self, db: Session, id: str, body: CandidateUpdate):
         staff_unit_service.get_by_id(db, body.staff_unit_curator_id)
         staff_unit_service.get_by_id(db, body.staff_unit_id)
         candidate = super().update(db, db_obj=super().get_by_id(db, id), obj_in=body)
         return CandidateRead.from_orm(candidate).dict()
 
-    def remove(self, db: Session, id: uuid.UUID):
+    def remove(self, db: Session, id: str):
         super().get_by_id(db, id)
         super().remove(db, id)
         return {"message": f"{self.model.__name__} deleted successfully!"}

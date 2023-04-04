@@ -9,7 +9,6 @@ from .candidate_stage_type import CandidateStageTypeRead
 
 class CandidateStageInfoBase(BaseModel):
     candidate_id: uuid.UUID
-    status: Optional[str]
     date_sign: Optional[datetime.date]
     candidate_stage_type_id: Optional[uuid.UUID]
     candidate_stage_id : Optional[uuid.UUID]
@@ -31,6 +30,7 @@ class CandidateStageInfoUpdate(CandidateStageInfoBase):
 
 class CandidateStageInfoRead(CandidateStageInfoBase):
     id: Optional[uuid.UUID]
+    status: Optional[str]
     date_sign: Optional[datetime.date]
     candidate_stage_type: Optional[CandidateStageTypeRead]
     candidate_id: Optional[uuid.UUID]

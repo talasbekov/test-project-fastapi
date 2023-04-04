@@ -2,27 +2,26 @@ import uuid
 
 from fastapi import APIRouter, Depends, status
 from fastapi.security import HTTPBearer
-from fastapi_jwt_auth import AuthJWT 
+from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
-from typing import List 
+from typing import List
 
 from core import get_db
 from schemas import CandidateStageTypeCreate, CandidateStageTypeRead, CandidateStageTypeUpdate
 from services import candidate_stage_type_service
-
 
 router = APIRouter(prefix="/candidate_stage_type", tags=["CandidateStageType"], dependencies=[Depends(HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[CandidateStageTypeRead],
-            summary="Get all Candidates")
+            summary="Get all CandidateStageType")
 async def get_all(
-    db: Session = Depends(get_db),
-    skip: int = 0,
-    limit: int = 100,
-    Authorize: AuthJWT = Depends()
-):    
+        db: Session = Depends(get_db),
+        skip: int = 0,
+        limit: int = 100,
+        Authorize: AuthJWT = Depends()
+):
     """
         Get all Candidates.
 
@@ -35,30 +34,34 @@ async def get_all(
 
 @router.get("/{id}", dependencies=[Depends(HTTPBearer())],
             response_model=CandidateStageTypeRead,
-            summary="Get a Candidate by id")
+            summary="Get a CandidateStageType by id")
 async def get_by_id(
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends(),
-    id: uuid.UUID = None
+        db: Session = Depends(get_db),
+        Authorize: AuthJWT = Depends(),
+        id: uuid.UUID = None
 ):
     """
-        Get a Candidate by id.
+        Get a CandidateStageType by id.
+
+        - **id**: UUID - required and should exist in the database.
     """
     Authorize.jwt_required()
     return candidate_stage_type_service.get_by_id(db, id)
 
 
 @router.post("", dependencies=[Depends(HTTPBearer())],
-            summary="Create a Candidate",
-            response_model=CandidateStageTypeRead,
-            )
+             status_code=status.HTTP_201_CREATED,
+             summary="Create a CandidateStageType",
+             response_model=CandidateStageTypeRead)
 async def create(
-    db: Session = Depends(get_db),
-    candidate_stage: CandidateStageTypeCreate = None,
-    Authorize: AuthJWT = Depends()
+        db: Session = Depends(get_db),
+        candidate_stage: CandidateStageTypeCreate = None,
+        Authorize: AuthJWT = Depends()
 ):
     """
-        Create a Candidate.
+        Create a CandidateStageType.
+
+        - **name**: str - required
     """
     Authorize.jwt_required()
     return candidate_stage_type_service.create(db, candidate_stage)
@@ -66,30 +69,35 @@ async def create(
 
 @router.put("/{id}", dependencies=[Depends(HTTPBearer())],
             response_model=CandidateStageTypeRead,
-            summary="Update a Candidate")
+            summary="Update a CandidateStageType")
 async def update(
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends(),
-    id: uuid.UUID = None,
-    candidate_stage: CandidateStageTypeRead = None
+        db: Session = Depends(get_db),
+        Authorize: AuthJWT = Depends(),
+        id: uuid.UUID = None,
+        candidate_stage: CandidateStageTypeRead = None
 ):
     """
-        Update a Candidate.
+        Update a CandidateStageType.
+
+        - **id**: UUID - required and should exist in the database.
+        - **name**: str - required
     """
     Authorize.jwt_required()
     return candidate_stage_type_service.update(db, id, candidate_stage)
 
 
 @router.delete("/{id}", dependencies=[Depends(HTTPBearer())],
-            response_description="Candidate deleted",
-            summary="Delete a Candidate")
+               status_code=status.HTTP_204_NO_CONTENT,
+               summary="Delete a CandidateStageType")
 async def delete(
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends(),
-    id: uuid.UUID = None
+        db: Session = Depends(get_db),
+        Authorize: AuthJWT = Depends(),
+        id: uuid.UUID = None
 ):
     """
-        Delete a Candidate.
+        Delete a CandidateStageType.
+
+        - **id**: UUID - required and should exist in the database.
     """
     Authorize.jwt_required()
     return candidate_stage_type_service.remove(db, id)

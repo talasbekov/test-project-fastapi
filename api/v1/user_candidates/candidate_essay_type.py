@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, status
 from fastapi.security import HTTPBearer
 from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
-from typing import List 
+from typing import List
 
 from core import get_db
 from schemas import CandidateEssayTypeCreate, CandidateEssayTypeRead, CandidateEssayTypeUpdate
@@ -15,18 +15,18 @@ router = APIRouter(prefix="/candidate_essay_type", tags=["CandidateEssayType"], 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[CandidateEssayTypeRead],
-            summary="Get all Candidates")
+            summary="Get all CandidateEssayType")
 async def get_all(
-    db: Session = Depends(get_db),
-    skip: int = 0,
-    limit: int = 100,
-    Authorize: AuthJWT = Depends()
-):    
+        db: Session = Depends(get_db),
+        skip: int = 0,
+        limit: int = 100,
+        Authorize: AuthJWT = Depends()
+):
     """
-        Get all Candidates.
+        Get all CandidateEssayType.
 
-        - **skip**: int - The number of badges to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of badges to return in the response. This parameter is optional and defaults to 100.
+        - **skip**: int - The number of CandidateEssayType to skip before returning the results. This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of CandidateEssayType to return in the response. This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
     return candidate_essay_type_service.get_multiple(db, skip, limit)
@@ -34,61 +34,71 @@ async def get_all(
 
 @router.get("/{id}", dependencies=[Depends(HTTPBearer())],
             response_model=CandidateEssayTypeRead,
-            summary="Get a Candidate by id")
+            summary="Get a CandidateEssayType by id")
 async def get_by_id(
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends(),
-    id: uuid.UUID = None
+        db: Session = Depends(get_db),
+        Authorize: AuthJWT = Depends(),
+        id: uuid.UUID = None
 ):
     """
-        Get a Candidate by id.
+        Get a CandidateEssayType by id.
+
+        - **id**: required and should exist in the database.
     """
     Authorize.jwt_required()
     return candidate_essay_type_service.get_by_id(db, id)
 
 
-@router.post("", dependencies=[Depends(HTTPBearer())],
-            summary="Create a Candidate",
-            response_model=CandidateEssayTypeRead,
-            )
+@router.post("", status_code=status.HTTP_201_CREATED,
+             dependencies=[Depends(HTTPBearer())],
+             summary="Create a CandidateEssayType",
+             response_model=CandidateEssayTypeRead)
 async def create(
-    db: Session = Depends(get_db),
-    candidate_stage: CandidateEssayTypeCreate = None,
-    Authorize: AuthJWT = Depends()
+        db: Session = Depends(get_db),
+        body: CandidateEssayTypeCreate = None,
+        Authorize: AuthJWT = Depends()
 ):
     """
-        Create a Candidate.
+        Create a CandidateEssayType.
+
+        - **name**: str - required
     """
     Authorize.jwt_required()
-    return candidate_essay_type_service.create(db, candidate_stage)
+    return candidate_essay_type_service.create(db, body)
 
 
-@router.put("/{id}", dependencies=[Depends(HTTPBearer())],
+@router.put("/{id}", status_code=status.HTTP_201_CREATED,
+            dependencies=[Depends(HTTPBearer())],
             response_model=CandidateEssayTypeRead,
-            summary="Update a Candidate")
+            summary="Update a CandidateEssayType")
 async def update(
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends(),
-    id: uuid.UUID = None,
-    candidate_stage: CandidateEssayTypeUpdate = None
+        db: Session = Depends(get_db),
+        Authorize: AuthJWT = Depends(),
+        id: uuid.UUID = None,
+        body: CandidateEssayTypeUpdate = None
 ):
     """
-        Update a Candidate.
+        Update a CandidateEssayType.
+
+        - **id**: required and should exist in the database.
+        - **name**: str - required
     """
     Authorize.jwt_required()
-    return candidate_essay_type_service.update(db, id, candidate_stage)
+    return candidate_essay_type_service.update(db, id, body)
 
 
-@router.delete("/{id}", dependencies=[Depends(HTTPBearer())],
-            response_description="Candidate deleted",
-            summary="Delete a Candidate")
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT,
+               dependencies=[Depends(HTTPBearer())],
+               summary="Delete a CandidateEssayType")
 async def delete(
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends(),
-    id: uuid.UUID = None
+        db: Session = Depends(get_db),
+        Authorize: AuthJWT = Depends(),
+        id: uuid.UUID = None
 ):
     """
-        Delete a Candidate.
+        Delete a CandidateEssayType.
+
+        - **id**: required and should exist in the database.
     """
     Authorize.jwt_required()
     return candidate_essay_type_service.remove(db, id)

@@ -26,6 +26,7 @@ class CandidateStageAnswerCreate(CandidateStageAnswerBase):
 
 
 class CandidateStageListAnswerCreate(BaseModel):
+    sport_score: Optional[int]
     candidate_stage_answers: Optional[List[CandidateStageAnswerBase]]
 
 
