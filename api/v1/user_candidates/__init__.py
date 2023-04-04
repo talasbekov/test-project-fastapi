@@ -1,5 +1,4 @@
 from .candidate import router as candidate_router
-from .candidate_stage import router as candidate_stage_router
 from .candidate_stage_info import router as candidate_stage_info_router
 from .candidate_stage_question_type import router as candidate_stage_question_type_router
 from .candidate_stage_question import router as candidate_stage_question_router
