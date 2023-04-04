@@ -27,4 +27,4 @@ from .family import *
 from .archive import *
 from .user_candidates import *
 from .user import User
-from .history import History
+from .history import History, RankHistory, StaffUnitHistory
