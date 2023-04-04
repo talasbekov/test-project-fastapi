@@ -3,8 +3,6 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from .candidate_category import CandidateCategoryRead
-
 
 class CandidateStageAnswerBase(BaseModel):
     candidate_stage_question_id: uuid.UUID

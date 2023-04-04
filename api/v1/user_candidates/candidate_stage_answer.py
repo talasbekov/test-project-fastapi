@@ -63,13 +63,26 @@ async def create(
     Authorize: AuthJWT = Depends()
 ):
     """
-        Create a Candidate.
+        Create a Answer for Question.
+
+        - **candidate_stage_question_id**: UUID - required. Уникальный идентификатор для вопроса, на который дается ответ.
+        - **type**: str - optional. Тип данных ответа, который может быть String, Choice, Text, Document, Essay, Sport score, Dropdown
+        - **answer_str**: str - optional. Фактический ответ, предоставленный кандидатом, если тип ответа - строка.
+        - **answer_bool**: boolean - optional. Логическое значение, представляющее ответ, если тип ответа является логическим.
+        - **answer**: str - optional. Фактический ответ, предоставленный кандидатом, если тип ответа TEXT.
+        - **document_link**: str - optional. Ссылка на документ или ресурс, подтверждающий ответ, предоставленный кандидатом, если тип ответа Document.
+        - **document_number**: str - optional. Уникальный идентификатор документа или ресурса, на который ссылается поле document_link.
+        - **candidate_essay_type_id**: UUID - optional. Уникальный идентификатор для типа вопроса эссе, на который требуется ответить, если type Essay
+        - **candidate_id**: UUID - required. Уникальный идентификатор кандидата, который предоставляет ответ.
+        - **category_id**: UUID - optional. Уникальный идентификатор для категории dropdown вопроса, на который дается ответ.
+        - **sport_score**: int - optional. Числовая оценка.
     """
     Authorize.jwt_required()
     return candidate_stage_answer_service.create(db, candidate_stage)
 
+
 @router.post("/list", dependencies=[Depends(HTTPBearer())],
-            summary="Create a list of Candidate",
+            summary="Create a list of answers",
             )
 async def create_list(
     db: Session = Depends(get_db),
