@@ -1,11 +1,10 @@
 import uuid
-from typing import Optional
-import uuid
+
 from pydantic import BaseModel
 
 
 class CandidateStageBase(BaseModel):    
- 
+    pass
 
     class Config:
         orm_mode = True

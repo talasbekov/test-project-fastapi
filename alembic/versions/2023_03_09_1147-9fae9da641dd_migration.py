@@ -1295,6 +1295,288 @@ def upgrade() -> None:
         }]
     )
 
+    candidate_category1_id = get_uuid()
+    candidate_category2_id = get_uuid()
+    candidate_category3_id = get_uuid()
+    candidate_category4_id = get_uuid()
+    candidate_category5_id = get_uuid()
+    candidate_category6_id = get_uuid()
+    candidate_category7_id = get_uuid()
+    candidate_category8_id = get_uuid()
+    candidate_category9_id = get_uuid()
+    candidate_category10_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['candidate_categories'],
+        [{
+            'id': candidate_category1_id,
+            'name': 'Оперативная служба СГО РК'
+        }, {
+            'id': candidate_category2_id,
+            'name': 'Оперативная воинская служба СОО СГО РК'
+        }, {
+            'id': candidate_category3_id,
+            'name': 'Оперативно-постовая служба СГО РК'
+        }, {
+            'id': candidate_category4_id,
+            'name': 'Оперативно-постовая воинская служба СОО СГО РК'
+        }, {
+            'id': candidate_category5_id,
+            'name': 'Оперативно-техническая и информационно-аналитическая служба СГО РК '
+        }, {
+            'id': candidate_category6_id,
+            'name': 'Оперативно-техническая и информационно-аналитическая воинская служба СОО СГО РК'
+        }, {
+            'id': candidate_category7_id,
+            'name': 'Инжерено-техническая, медицинская, административная и хозяйственная служба СГО РК'
+        }, {
+            'id': candidate_category8_id,
+            'name': 'Инжерено-техническая, медицинская, административная и хозяйственная воинская служба СОО СГО РК'
+        }, {
+            'id': candidate_category9_id,
+            'name': 'Водители службы СГО РК'
+        }, {
+            'id': candidate_category10_id,
+            'name': 'Водители воинской службы СОО СГО РК'
+        }, ]
+    )
+
+    candidate_stage_id = get_uuid()
+    candidate_stage2_id = get_uuid()
+    candidate_stage3_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['candidate_stages'],
+        [{
+            'id': candidate_stage_id
+        }, {
+            'id': candidate_stage2_id
+        }, {
+            'id': candidate_stage3_id
+        }]
+    )
+
+    candidate_stage_types1_id = get_uuid()
+    candidate_stage_types2_id = get_uuid()
+    candidate_stage_types3_id = get_uuid()
+    candidate_stage_types4_id = get_uuid()
+    candidate_stage_types5_id = get_uuid()
+    candidate_stage_types6_id = get_uuid()
+    candidate_stage_types7_id = get_uuid()
+    candidate_stage_types8_id = get_uuid()
+    candidate_stage_types9_id = get_uuid()
+    candidate_stage_types10_id = get_uuid()
+    candidate_stage_types11_id = get_uuid()
+    candidate_stage_types12_id = get_uuid()
+    candidate_stage_types13_id = get_uuid()
+    candidate_stage_types14_id = get_uuid()
+    candidate_stage_types15_id = get_uuid()
+    candidate_stage_types16_id = get_uuid()
+    candidate_stage_types17_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['candidate_stage_types'],
+        [{
+            'id': candidate_stage_types1_id,
+            'name': 'Первичная беседа'
+        }, {
+            'id': candidate_stage_types2_id,
+            'name': 'Дополнительная беседа по необходимости'
+        }, {
+            'id': candidate_stage_types3_id,
+            'name': 'Запросы с внешних источников (др. гос органы)'
+        }, {
+            'id': candidate_stage_types4_id,
+            'name': 'Беседа о религии'
+        }, {
+            'id': candidate_stage_types5_id,
+            'name': 'Беседа с родителями'
+        }, {
+            'id': candidate_stage_types6_id,
+            'name': 'Беседа о проф. пригодности'
+        }, {
+            'id': candidate_stage_types7_id,
+            'name': 'Справка по результатам оперативного задания'
+        }, {
+            'id': candidate_stage_types8_id,
+            'name': 'Беседа с психологом'
+        }, {
+            'id': candidate_stage_types9_id,
+            'name': 'Беседа с УСБ'
+        }, {
+            'id': candidate_stage_types10_id,
+            'name': 'Беседа с руководителем структурного подразделения'
+        }, {
+            'id': candidate_stage_types11_id,
+            'name': 'Беседа с руководителем руководством департамента кадров'
+        }, {
+            'id': candidate_stage_types12_id,
+            'name': 'Рецензия на эссе'
+        }, {
+            'id': candidate_stage_types13_id,
+            'name': 'Военной врачебная комиссия '
+        }, {
+            'id': candidate_stage_types14_id,
+            'name': 'Результаты физической подготовки'
+        }, {
+            'id': candidate_stage_types15_id,
+            'name': 'Результаты полиграфического исследования'
+        }, {
+            'id': candidate_stage_types16_id,
+            'name': 'Заключение по спец. проверке'
+        }, {
+            'id': candidate_stage_types17_id,
+            'name': 'Заключение о зачислении '
+        }]
+    )
+
+    candidate_stage_question1_id = get_uuid()
+    candidate_stage_question2_id = get_uuid()
+    candidate_stage_question3_id = get_uuid()
+    candidate_stage_question4_id = get_uuid()
+    candidate_stage_question5_id = get_uuid()
+    candidate_stage_question6_id = get_uuid()
+    candidate_stage_question7_id = get_uuid()
+    candidate_stage_question8_id = get_uuid()
+    candidate_stage_question9_id = get_uuid()
+    candidate_stage_question10_id = get_uuid()
+    candidate_stage_question11_id = get_uuid()
+    candidate_stage_question12_id = get_uuid()
+    candidate_stage_question13_id = get_uuid()
+    candidate_stage_question14_id = get_uuid()
+    candidate_stage_question15_id = get_uuid()
+    candidate_stage_question16_id = get_uuid()
+    candidate_stage_question17_id = get_uuid()
+    candidate_stage_question18_id = get_uuid()
+    candidate_stage_question19_id = get_uuid()
+    candidate_stage_question20_id = get_uuid()
+    candidate_stage_question21_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['candidate_stage_questions'],
+        [{
+            'id': candidate_stage_question1_id,
+            'question_type': 'String',
+            'candidate_stage_type_id': candidate_stage_types1_id,
+            'question': 'Кем подобран и кем рекомендован',
+        }, {
+            'id': candidate_stage_question2_id,
+            'question_type': 'String',
+            'candidate_stage_type_id': candidate_stage_types1_id,
+            'question': 'Краткие сведения из автобиографии',
+            'description': '(о рождении, школе, учебе в колледже/ВУЗе, срочной службе, трудовой деятельности)'
+        }, {
+            'id': candidate_stage_question3_id,
+            'question_type': 'String',
+            'candidate_stage_type_id': candidate_stage_types1_id,
+            'question': 'Как характеризуется с последнего места работы',
+            'description': '(сведения из характеристики с места работы)'
+        }, {
+            'id': candidate_stage_question4_id,
+            'question_type': 'String',
+            'candidate_stage_type_id': candidate_stage_types1_id,
+            'question': 'Доведение требований к службе в СГО РК',
+        }, {
+            'id': candidate_stage_question5_id,
+            'question_type': 'String',
+            'candidate_stage_type_id': candidate_stage_types1_id,
+            'question': 'Мотив кандидата на службу в СГО РК',
+        }, {
+            'id': candidate_stage_question6_id,
+            'question_type': 'String',
+            'candidate_stage_type_id': candidate_stage_types1_id,
+            'question': 'Рекомендация кандидату (читать газеты, смотреть мировые новости и тд.)',
+        }, {
+            'id': candidate_stage_question7_id,
+            'question_type': 'String',
+            'candidate_stage_type_id': candidate_stage_types1_id,
+            'question': 'Сведения о родственниках кандидата',
+        }, {
+            'id': candidate_stage_question8_id,
+            'question_type': 'String',
+            'candidate_stage_type_id': candidate_stage_types1_id,
+            'question': 'Дополнительные сведения (физическая подготовка)',
+        }, {
+            'id': candidate_stage_question9_id,
+            'question_type': 'String',
+            'candidate_stage_type_id': candidate_stage_types1_id,
+            'question': 'Подведение итогов беседы',
+        }, {
+            'id': candidate_stage_question10_id,
+            'question_type': 'Dropdown',
+            'candidate_stage_type_id': candidate_stage_types1_id,
+            'question': 'Категория кандидата',
+        }, {
+            'id': candidate_stage_question11_id,
+            'question_type': 'Document',
+            'candidate_stage_type_id': candidate_stage_types3_id,
+            'question': None
+        }, {
+            'id': candidate_stage_question12_id,
+            'question_type': 'Text',
+            'candidate_stage_type_id': candidate_stage_types4_id,
+            'question': None
+        }, {
+            'id': candidate_stage_question13_id,
+            'question_type': 'Text',
+            'candidate_stage_type_id': candidate_stage_types5_id,
+            'question': None
+        }, {
+            'id': candidate_stage_question14_id,
+            'question_type': 'Text',
+            'candidate_stage_type_id': candidate_stage_types2_id,
+            'question': None
+        }, {
+            'id': candidate_stage_question15_id,
+            'question_type': 'Text',
+            'candidate_stage_type_id': candidate_stage_types9_id,
+            'question': None
+        }, {
+            'id': candidate_stage_question16_id,
+            'question_type': 'Text',
+            'candidate_stage_type_id': candidate_stage_types11_id,
+            'question': None
+        }, {
+            'id': candidate_stage_question17_id,
+            'question_type': 'Text',
+            'candidate_stage_type_id': candidate_stage_types12_id,
+            'question': None
+        }, {
+            'id': candidate_stage_question18_id,
+            'question_type': 'Text',
+            'candidate_stage_type_id': candidate_stage_types16_id,
+            'question': None
+        }, {
+            'id': candidate_stage_question19_id,
+            'question_type': 'Text',
+            'candidate_stage_type_id': candidate_stage_types17_id,
+            'question': None
+        }, {
+            'id': candidate_stage_question20_id,
+            'question_type': 'Choice',
+            'candidate_stage_type_id': candidate_stage_types13_id,
+            'question': None
+        }, {
+            'id': candidate_stage_question21_id,
+            'question_type': 'Choice',
+            'candidate_stage_type_id': candidate_stage_types15_id,
+            'question': None
+        }]
+    )
+
+    candidate_stage_info_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['candidate_stage_infos'],
+        [{
+            'id': candidate_stage_info_id,
+            'candidate_stage_id': candidate_stage_id,
+            'staff_unit_coordinate_id': staff_unit1_id,
+            'candidate_stage_type_id': candidate_stage_types1_id,
+            'is_waits': True
+        }]
+    )
+
 
 def create_user(id,
                 name,

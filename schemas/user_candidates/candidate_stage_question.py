@@ -1,11 +1,13 @@
 import uuid
-from typing import Optional
-import uuid
+from typing import Optional, List
+
 from pydantic import BaseModel
+
 from .candidate_stage_answer import CandidateStageAnswerRead
 
-class CandidateStageQuestionBase(BaseModel):    
-    question: str
+
+class CandidateStageQuestionBase(BaseModel):
+    question: Optional[str]
     question_type: Optional[str]
 
     class Config:
@@ -22,5 +24,5 @@ class CandidateStageQuestionUpdate(CandidateStageQuestionBase):
 
 class CandidateStageQuestionRead(CandidateStageQuestionBase):
     id: Optional[uuid.UUID]
-    candidate_stage_answers: Optional[list[CandidateStageAnswerRead]]
     candidate_stage_type_id: Optional[uuid.UUID]
+    candidate_stage_answers: Optional[List[CandidateStageAnswerRead]]
