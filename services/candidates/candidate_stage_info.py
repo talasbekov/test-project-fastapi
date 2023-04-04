@@ -20,13 +20,9 @@ class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageIn
         return candidates
 
     def get_all_by_candidate_id(self, db: Session, candidate_id: uuid.UUID):
-        candidate = db.query(Candidate).filter(
-            Candidate.id == candidate_id
-        ).first()
         candidates = db.query(CandidateStageInfo).filter(
-            CandidateStageInfo.candidate_stage_id == candidate.candidate_stage_id,
+            CandidateStageInfo.candidate_id == candidate_id,
             ).all()
-        candidates = [CandidateStageInfoRead.from_orm(candidate).dict() for candidate in candidates]
         return candidates
 
     def sign_candidate(self, db: Session, id: uuid.UUID):
