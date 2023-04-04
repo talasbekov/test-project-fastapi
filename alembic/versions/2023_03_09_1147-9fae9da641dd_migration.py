@@ -1341,21 +1341,6 @@ def upgrade() -> None:
         }, ]
     )
 
-    candidate_stage_id = get_uuid()
-    candidate_stage2_id = get_uuid()
-    candidate_stage3_id = get_uuid()
-
-    op.bulk_insert(
-        Base.metadata.tables['candidate_stages'],
-        [{
-            'id': candidate_stage_id
-        }, {
-            'id': candidate_stage2_id
-        }, {
-            'id': candidate_stage3_id
-        }]
-    )
-
     candidate_stage_types1_id = get_uuid()
     candidate_stage_types2_id = get_uuid()
     candidate_stage_types3_id = get_uuid()
@@ -1570,7 +1555,6 @@ def upgrade() -> None:
         Base.metadata.tables['candidate_stage_infos'],
         [{
             'id': candidate_stage_info_id,
-            'candidate_stage_id': candidate_stage_id,
             'staff_unit_coordinate_id': staff_unit1_id,
             'candidate_stage_type_id': candidate_stage_types1_id,
             'is_waits': True

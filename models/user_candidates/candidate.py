@@ -3,7 +3,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from models import Model
- 
+
 
 class Candidate(Model):
 
@@ -16,7 +16,4 @@ class Candidate(Model):
     staff_unit = relationship("StaffUnit", foreign_keys=staff_unit_id)
 
     candidate_stage_answers = relationship("CandidateStageAnswer", back_populates="candidate", cascade="all, delete")
-
-    candidate_stage_id = Column(UUID(as_uuid=True), ForeignKey("candidate_stages.id"), nullable=True)
-    candidate_stage = relationship("CandidateStage", back_populates="candidate", foreign_keys=candidate_stage_id)
-    
+    candidate_stage_infos = relationship("CandidateStageInfo", back_populates="candidate", cascade="all, delete")
