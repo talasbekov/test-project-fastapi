@@ -1441,7 +1441,7 @@ def upgrade() -> None:
         Base.metadata.tables['candidate_stage_questions'],
         [{
             'id': candidate_stage_question1_id,
-            'question_type': 'String',
+            'question_type': 'Dropdown',
             'candidate_stage_type_id': candidate_stage_types1_id,
             'question': 'Кем подобран и кем рекомендован',
         }, {

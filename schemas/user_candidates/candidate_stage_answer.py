@@ -1,5 +1,5 @@
 import uuid
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel
 
@@ -26,7 +26,7 @@ class CandidateStageAnswerCreate(CandidateStageAnswerBase):
 
 
 class CandidateStageListAnswerCreate(BaseModel):
-    candidate_stage_answers: Optional[list[CandidateStageAnswerBase]]
+    candidate_stage_answers: Optional[List[CandidateStageAnswerBase]]
 
 
 class CandidateStageAnswerUpdate(CandidateStageAnswerBase):

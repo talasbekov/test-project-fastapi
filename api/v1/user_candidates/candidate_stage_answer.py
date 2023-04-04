@@ -55,7 +55,7 @@ async def get_by_id(
 
 @router.post("", dependencies=[Depends(HTTPBearer())],
             summary="Create a Candidate",
-            response_model=CandidateStageAnswerIdRead,
+            response_model=CandidateStageAnswerRead,
             )
 async def create(
     db: Session = Depends(get_db),
@@ -83,7 +83,7 @@ async def create(
 
 @router.post("/list", dependencies=[Depends(HTTPBearer())],
             summary="Create a list of answers",
-            )
+            response_model=List[CandidateStageAnswerRead])
 async def create_list(
     db: Session = Depends(get_db),
     candidate_stage: CandidateStageListAnswerCreate = None,
