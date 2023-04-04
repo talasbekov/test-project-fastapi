@@ -444,14 +444,6 @@ def upgrade() -> None:
                               nullable=False),
                     sa.PrimaryKeyConstraint('id')
                     )
-    op.create_table('candidate_stages',
-                    sa.Column('id', sa.UUID(), nullable=False),
-                    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
-                              nullable=False),
-                    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
-                              nullable=False),
-                    sa.PrimaryKeyConstraint('id')
-                    )
     op.create_table('candidate_stage_questions',
                     sa.Column('question', sa.String(), nullable=True),
                     sa.Column('description', sa.TEXT(), nullable=True),
@@ -467,36 +459,34 @@ def upgrade() -> None:
                     sa.ForeignKeyConstraint(['candidate_stage_type_id'], ['candidate_stage_types.id'], ),
                     sa.PrimaryKeyConstraint('id')
                     )
+    op.create_table('candidates',
+                    sa.Column('staff_unit_curator_id', sa.UUID(), nullable=True),
+                    sa.Column('staff_unit_id', sa.UUID(), nullable=True),
+                    sa.Column('id', sa.UUID(), nullable=False),
+                    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+                              nullable=False),
+                    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+                              nullable=False),
+                    sa.ForeignKeyConstraint(['staff_unit_curator_id'], ['staff_units.id'], ),
+                    sa.ForeignKeyConstraint(['staff_unit_id'], ['staff_units.id'], ),
+                    sa.PrimaryKeyConstraint('id')
+                    )
     op.create_table('candidate_stage_infos',
                     sa.Column('status', sa.Enum('PENDING', 'APPROVED', 'DECLINED', 'NOT_STARTED', name='CandidateStageInfoStatusEnum'),
                               nullable=True, server_default='NOT_STARTED'),
                     sa.Column('date_sign', sa.TIMESTAMP(), nullable=True),
                     sa.Column('candidate_stage_type_id', sa.UUID(), nullable=True),
                     sa.Column('staff_unit_coordinate_id', sa.UUID(), nullable=True),
+                    sa.Column('candidate_id', sa.UUID()),
                     sa.Column('is_waits', sa.Boolean(), nullable=True),
-                    sa.Column('candidate_stage_id', sa.UUID(), nullable=True),
                     sa.Column('id', sa.UUID(), nullable=False),
                     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
                               nullable=False),
                     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
                               nullable=False),
-                    sa.ForeignKeyConstraint(['candidate_stage_id'], ['candidate_stages.id'], ),
                     sa.ForeignKeyConstraint(['candidate_stage_type_id'], ['candidate_stage_types.id'], ),
                     sa.ForeignKeyConstraint(['staff_unit_coordinate_id'], ['staff_units.id'], ),
-                    sa.PrimaryKeyConstraint('id')
-                    )
-    op.create_table('candidates',
-                    sa.Column('staff_unit_curator_id', sa.UUID(), nullable=True),
-                    sa.Column('staff_unit_id', sa.UUID(), nullable=True),
-                    sa.Column('candidate_stage_id', sa.UUID(), nullable=True),
-                    sa.Column('id', sa.UUID(), nullable=False),
-                    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
-                              nullable=False),
-                    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
-                              nullable=False),
-                    sa.ForeignKeyConstraint(['candidate_stage_id'], ['candidate_stages.id'], ),
-                    sa.ForeignKeyConstraint(['staff_unit_curator_id'], ['staff_units.id'], ),
-                    sa.ForeignKeyConstraint(['staff_unit_id'], ['staff_units.id'], ),
+                    sa.ForeignKeyConstraint(['candidate_id'], ['candidates.id'], ),
                     sa.PrimaryKeyConstraint('id')
                     )
     op.create_table('candidate_stage_answers',
@@ -560,7 +550,6 @@ def downgrade() -> None:
     op.drop_table('candidates')
     op.drop_table('candidate_stage_infos')
     op.drop_table('candidate_stage_questions')
-    op.drop_table('candidate_stages')
     op.drop_table('candidate_stage_types')
     op.drop_table('candidate_essay_types')
     # ### end Alembic commands ###
