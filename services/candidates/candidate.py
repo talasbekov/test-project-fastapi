@@ -22,12 +22,12 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
             candidate_stage_info_success_count = db.query(
                 CandidateStageInfo).filter(
                 CandidateStageInfo.candidate_stage_id == candidate_stage_id, 
-                CandidateStageInfo.status == 'success'
+                CandidateStageInfo.status == 'Одобрен'
             ).count()
             candidate['progress'] = candidate_stage_info_success_count / candidate_stage_info_count * 100
             current_stage_info = db.query(CandidateStageInfo).filter(
                 CandidateStageInfo.candidate_stage_id == candidate_stage_id,
-                CandidateStageInfo.status == 'pending'
+                CandidateStageInfo.status == 'В ожидании'
             ).order_by(CandidateStageInfo.created_at.desc()).first()
             if current_stage_info:
                 candidate['current_stage'] = current_stage_info.id
