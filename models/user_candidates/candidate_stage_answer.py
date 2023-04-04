@@ -53,7 +53,7 @@ class CandidateStageAnswerText(CandidateStageAnswer):
 
 class CandidateStageAnswerDocument(CandidateStageAnswer):
     
-    document_link = Column(String, nullable=True)
+    document_link = Column(String, nullable=True) 
 
     __mapper_args__ = {
         'polymorphic_identity': CandidateStageQuestionTypeEnum.DOCUMENT_TYPE.value,

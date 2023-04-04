@@ -44,16 +44,21 @@ class CandidateStageAnswerService(ServiceBase[CandidateStageAnswer, CandidateSta
 
         for item in body_data.get('candidate_stage_answers', []):
             answer_type = item.get('type')
-            db_obj = self._create_candidate_stage_answer_string(answer_type, item)
-
-            if db_obj is None:
-                raise Exception(f"Invalid answer type {answer_type}!")
-
-            db.add(db_obj)
-            db.flush()
-
-            db_obj_list.append(CandidateStageAnswerRead.from_orm(db_obj))
-
+            if not item.get('answer_id'):
+                db_obj = self._create_candidate_stage_answer_string(answer_type, item)
+                if db_obj is None:
+                    raise Exception(f"Invalid answer type {answer_type}!")
+                db.add(db_obj)
+                db.flush()
+                db_obj_list.append(CandidateStageAnswerRead.from_orm(db_obj))
+            else:
+                answer_id = item.pop('answer_id')
+                item_update_obj = self.get(db, id=answer_id)
+                if item_update is None:
+                    raise NotFoundException(f"Answer with id {item.get('answer_id')} not found!")
+                item_update = CandidateStageAnswerUpdate(**item)
+                db_obj = self.update(db, db_obj=item_update_obj, obj_in=item_update)
+                db_obj_list.append(db_obj)
         return db_obj_list
 
     def _create_candidate_stage_answer_string(self, answer_type, body_data):

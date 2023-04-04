@@ -57,6 +57,7 @@ def upgrade() -> None:
     op.create_table('candidate_stage_types',
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('is_curator_review_required', sa.Boolean(), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.PrimaryKeyConstraint('id')
