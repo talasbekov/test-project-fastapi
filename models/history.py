@@ -1,4 +1,5 @@
 from sqlalchemy import TIMESTAMP, Column, ForeignKey, String
+from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import TEXT, UUID
 
 from models import NamedModel
@@ -22,7 +23,8 @@ class History(NamedModel):
 
 class StaffUnitHistory(History):
 
-    staff_unit_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"))
+    position_id = Column(UUID(as_uuid=True), ForeignKey("positions.id"))
+    position = relationship("Position", foreign_keys=position_id)
 
     __mapper_args__ = {
         "polymorphic_identity": "staff_unit_history",
@@ -32,18 +34,8 @@ class StaffUnitHistory(History):
 class RankHistory(History):
 
     rank_id = Column(UUID(as_uuid=True), ForeignKey("ranks.id"))
+    rank = relationship("Rank", foreign_keys=rank_id)
 
     __mapper_args__ = {
         "polymorphic_identity": "rank_history",
     }
-
-
-class PositionHistory(History):
-
-    position_id = Column(UUID(as_uuid=True), ForeignKey("positions.id"))
-
-    __mapper_args__ = {
-        "polymorphic_identity": "position_history",
-    }
-
-
