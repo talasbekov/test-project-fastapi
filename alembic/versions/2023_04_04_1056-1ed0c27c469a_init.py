@@ -268,11 +268,13 @@ def upgrade() -> None:
     op.create_table('candidates',
     sa.Column('staff_unit_curator_id', sa.UUID(), nullable=True),
     sa.Column('staff_unit_id', sa.UUID(), nullable=True),
+    sa.Column('essay_id', sa.UUID(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['staff_unit_curator_id'], ['staff_units.id'], ),
     sa.ForeignKeyConstraint(['staff_unit_id'], ['staff_units.id'], ),
+    sa.ForeignKeyConstraint(['essay_id'], ['candidate_essay_types.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('staff_functions',

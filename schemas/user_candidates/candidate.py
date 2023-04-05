@@ -6,6 +6,7 @@ from typing import Optional, List
 from pydantic import BaseModel
 
 from .candidate_stage_info import CandidateStageInfoRead
+from .candidate_essay_type import CandidateEssayTypeRead
 
 
 class CandidateBase(BaseModel):
@@ -49,6 +50,8 @@ class CandidateRead(CandidateBase):
     id: Optional[uuid.UUID]
     progress: Optional[int]
     current_stage: Optional[uuid.UUID]
+    essay_id: Optional[uuid.UUID]
+    essay: Optional[CandidateEssayTypeRead]
     last_edit_date: Optional[datetime.date]
     staff_unit_curator_id: Optional[uuid.UUID]
     staff_unit_curator: Optional[StaffUnitCandidateRead]

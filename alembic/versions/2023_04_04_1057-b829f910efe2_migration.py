@@ -1363,6 +1363,7 @@ def upgrade() -> None:
     candidate_stage_types15_id = get_uuid()
     candidate_stage_types16_id = get_uuid()
     candidate_stage_types17_id = get_uuid()
+    candidate_stage_types18_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['candidate_stage_types'],
@@ -1371,7 +1372,7 @@ def upgrade() -> None:
             'name': 'Первичная беседа'
         }, {
             'id': candidate_stage_types2_id,
-            'name': 'Дополнительная беседа по необходимости'
+            'name': 'Дополнительная беседа (не обязательно)'
         }, {
             'id': candidate_stage_types3_id,
             'name': 'Запросы с внешних источников (др. гос органы)'
@@ -1387,38 +1388,41 @@ def upgrade() -> None:
             'is_curator_review_required': True
         }, {
             'id': candidate_stage_types7_id,
-            'name': 'Справка по результатам оперативного задания'
+            'name': 'Справка по результатам оперативного задания (не обязательно)'
         }, {
             'id': candidate_stage_types8_id,
             'name': 'Беседа с психологом'
         }, {
             'id': candidate_stage_types9_id,
-            'name': 'Беседа с УСБ',
+            'name': 'Беседа с представителем УСБ',
             'is_curator_review_required': True
         }, {
             'id': candidate_stage_types10_id,
             'name': 'Беседа с руководителем структурного подразделения'
         }, {
             'id': candidate_stage_types11_id,
-            'name': 'Беседа с руководителем руководством департамента кадров',
+            'name': 'Беседа с руководством департамента кадров',
             'is_curator_review_required': True
         }, {
             'id': candidate_stage_types12_id,
             'name': 'Рецензия на эссе'
         }, {
             'id': candidate_stage_types13_id,
-            'name': 'Военной врачебная комиссия '
+            'name': 'Военно-врачебная комиссия'
         }, {
             'id': candidate_stage_types14_id,
             'name': 'Результаты физической подготовки'
         }, {
             'id': candidate_stage_types15_id,
-            'name': 'Результаты полиграфического исследования'
+            'name': 'Результаты полиграфологического исследования'
         }, {
             'id': candidate_stage_types16_id,
-            'name': 'Заключение по спец. проверке'
+            'name': 'Результаты тестирования на знание законодательства РК'
         }, {
             'id': candidate_stage_types17_id,
+            'name': 'Заключение по спец. проверке'
+        }, {
+            'id': candidate_stage_types18_id,
             'name': 'Заключение о зачислении',
             'is_curator_review_required': True
         }]
