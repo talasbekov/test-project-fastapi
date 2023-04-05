@@ -682,7 +682,7 @@ def upgrade() -> None:
             'name': "2-комнатная квартира"
         }]
     )
-    
+
     staff_unit1_id = get_uuid()
     staff_unit2_id = get_uuid()
     staff_unit3_id = get_uuid()
@@ -697,7 +697,7 @@ def upgrade() -> None:
     staff_unit12_id = get_uuid()
     staff_unit13_id = get_uuid()
     staff_unit14_id = get_uuid()
-    
+
     group1_id = get_uuid()
     group2_id = get_uuid()
     group3_id = get_uuid()
@@ -1004,7 +1004,7 @@ def upgrade() -> None:
         position4_id,
         False,
         '1.2.100K')
-    
+
     # Update staff_division set leader_id = staff_unit10_id where id = staff_division1_id
     op.execute(
         "UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(
@@ -1093,7 +1093,7 @@ def upgrade() -> None:
                     "alias_name": "Отчество субъекта",
                     "type": "read",
                     "data_taken": "auto"
-                }, 
+                },
                 "id_number": {
                     "alias_name": "Идентификационный номер субъекта",
                     "type": "read",
@@ -1151,7 +1151,7 @@ def upgrade() -> None:
                     "alias_name": "Отчество субъекта",
                     "type": "read",
                     "data_taken": "auto"
-                }, 
+                },
                 "id_number": {
                     "alias_name": "Идентификационный номер субъекта",
                     "type": "read",
@@ -1168,7 +1168,7 @@ def upgrade() -> None:
         }, {
             'name': 'Приказ о присвоения черного берета',
             'path': 'http://192.168.0.169:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7_%D0%BE_%D0%BF%D1%80%D0%B8%D1%81%D0%B2%D0%BE%D0%B5%D0%BD%D0%B8%D0%B8_%D0%A7%D0%B5%D1%80%D0%BD%D0%BE%D0%B3%D0%BE_%D0%B1%D0%B5%D1%80%D0%B5%D1%82%D0%B0.docx',
-            'subject_type': 1,  
+            'subject_type': 1,
             'properties': {
                 "signed_at": {
                     "alias_name": "Дата подписания",
@@ -1194,7 +1194,7 @@ def upgrade() -> None:
                     "alias_name": "Отчество субъекта",
                     "type": "read",
                     "data_taken": "auto"
-                }, 
+                },
                 "id_number": {
                     "alias_name": "Идентификационный номер субъекта",
                     "type": "read",
@@ -1364,6 +1364,10 @@ def upgrade() -> None:
     candidate_stage_types16_id = get_uuid()
     candidate_stage_types17_id = get_uuid()
     candidate_stage_types18_id = get_uuid()
+    candidate_stage_types19_id = get_uuid()
+    candidate_stage_types21_id = get_uuid()  # Психологическое заключение в отношении кандидата
+    candidate_stage_types22_id = get_uuid()  # Комиссия военно-врачебной экспертизы
+    candidate_stage_types23_id = get_uuid()  # Прохождение физической подготовки
 
     op.bulk_insert(
         Base.metadata.tables['candidate_stage_types'],
@@ -1389,6 +1393,9 @@ def upgrade() -> None:
         }, {
             'id': candidate_stage_types7_id,
             'name': 'Справка по результатам оперативного задания (не обязательно)'
+        }, {
+            'id': candidate_stage_types21_id,
+            'name': 'Психологическое заключение в отношении кандидата'
         }, {
             'id': candidate_stage_types8_id,
             'name': 'Беседа с психологом'
@@ -1425,30 +1432,43 @@ def upgrade() -> None:
             'id': candidate_stage_types18_id,
             'name': 'Заключение о зачислении',
             'is_curator_review_required': True
+        }, {
+            'id': candidate_stage_types19_id,
+            'name': 'Выдача темы для эссе'
+        }, {
+           'id': candidate_stage_types23_id,
+           'name': 'Прохождение физической подготовки'
+        }, {
+            'id': candidate_stage_types22_id,
+            'name': 'Комиссия военно-врачебной экспертизы'
         }]
     )
 
-    candidate_stage_question1_id = get_uuid()
-    candidate_stage_question2_id = get_uuid()
-    candidate_stage_question3_id = get_uuid()
-    candidate_stage_question4_id = get_uuid()
-    candidate_stage_question5_id = get_uuid()
-    candidate_stage_question6_id = get_uuid()
-    candidate_stage_question7_id = get_uuid()
-    candidate_stage_question8_id = get_uuid()
-    candidate_stage_question9_id = get_uuid()
-    candidate_stage_question10_id = get_uuid()
-    candidate_stage_question11_id = get_uuid()
-    candidate_stage_question12_id = get_uuid()
-    candidate_stage_question13_id = get_uuid()
-    candidate_stage_question14_id = get_uuid()
-    candidate_stage_question15_id = get_uuid()
-    candidate_stage_question16_id = get_uuid()
-    candidate_stage_question17_id = get_uuid()
-    candidate_stage_question18_id = get_uuid()
-    candidate_stage_question19_id = get_uuid()
-    candidate_stage_question20_id = get_uuid()
-    candidate_stage_question21_id = get_uuid()
+    candidate_stage_question1_id = get_uuid()  # Первичная беседа
+    candidate_stage_question2_id = get_uuid()  # Первичная беседа
+    candidate_stage_question3_id = get_uuid()  # Первичная беседа
+    candidate_stage_question4_id = get_uuid()  # Первичная беседа
+    candidate_stage_question5_id = get_uuid()  # Первичная беседа
+    candidate_stage_question6_id = get_uuid()  # Первичная беседа
+    candidate_stage_question7_id = get_uuid()  # Первичная беседа
+    candidate_stage_question8_id = get_uuid()  # Первичная беседа
+    candidate_stage_question9_id = get_uuid()  # Первичная беседа
+    candidate_stage_question10_id = get_uuid()  # Первичная беседа
+    candidate_stage_question11_id = get_uuid()  # Запросы с внешних источников (др. гос органы)
+    candidate_stage_question12_id = get_uuid()  # Беседа о религии
+    candidate_stage_question13_id = get_uuid()  # Беседа с родителями
+    candidate_stage_question24_id = get_uuid()  # Справка о профессиональной пригодности
+    candidate_stage_question14_id = get_uuid()  # Дополнительная беседа (не обязательно)
+    candidate_stage_question25_id = get_uuid()  # Психологическое заключение в отношении кандидата
+    candidate_stage_question15_id = get_uuid()  # Беседа с представителем УСБ
+    candidate_stage_question16_id = get_uuid()  # Беседа с руководством департамента кадров
+    candidate_stage_question17_id = get_uuid()  # Рецензия на эссе
+    candidate_stage_question19_id = get_uuid()  # Заключение по спец. проверке
+    candidate_stage_question22_id = get_uuid()  # Заключение о зачислении
+    candidate_stage_question18_id = get_uuid()  # Результаты тестирования на знание законодательства РК
+    candidate_stage_question20_id = get_uuid()  # Военно-врачебная комиссия
+    candidate_stage_question21_id = get_uuid()  # Результаты полиграфологического исследования
+    candidate_stage_question23_id = get_uuid()  # Выдача темы для эссе
 
     op.bulk_insert(
         Base.metadata.tables['candidate_stage_questions'],
@@ -1520,9 +1540,19 @@ def upgrade() -> None:
             'candidate_stage_type_id': candidate_stage_types5_id,
             'question': None
         }, {
+            'id': candidate_stage_question24_id,
+            'question_type': 'Text',
+            'candidate_stage_type_id': candidate_stage_types6_id,
+            'question': None
+        },{
             'id': candidate_stage_question14_id,
             'question_type': 'Text',
             'candidate_stage_type_id': candidate_stage_types2_id,
+            'question': None
+        }, {
+            'id': candidate_stage_question25_id,
+            'question_type': 'Text',
+            'candidate_stage_type_id': candidate_stage_types21_id,
             'question': None
         }, {
             'id': candidate_stage_question15_id,
@@ -1540,14 +1570,19 @@ def upgrade() -> None:
             'candidate_stage_type_id': candidate_stage_types12_id,
             'question': None
         }, {
-            'id': candidate_stage_question18_id,
-            'question_type': 'Text',
-            'candidate_stage_type_id': candidate_stage_types16_id,
-            'question': None
-        }, {
             'id': candidate_stage_question19_id,
             'question_type': 'Text',
             'candidate_stage_type_id': candidate_stage_types17_id,
+            'question': None
+        }, {
+            'id': candidate_stage_question22_id,
+            'question_type': 'Text',
+            'candidate_stage_type_id': candidate_stage_types18_id,
+            'question': None
+        }, {
+            'id': candidate_stage_question18_id,
+            'question_type': 'String',
+            'candidate_stage_type_id': candidate_stage_types16_id,
             'question': None
         }, {
             'id': candidate_stage_question20_id,
@@ -1558,6 +1593,12 @@ def upgrade() -> None:
             'id': candidate_stage_question21_id,
             'question_type': 'Choice',
             'candidate_stage_type_id': candidate_stage_types15_id,
+            'question': None
+        }, {
+            'id': candidate_stage_question23_id,
+            'question_type': 'String',
+            'question_type': 'Dropdown',
+            'candidate_stage_type_id': candidate_stage_types19_id,
             'question': None
         }]
     )
@@ -1701,7 +1742,7 @@ def upgrade() -> None:
         },
         {
             'id': candidate_stage_info_id15,
-            'staff_unit_coordinate_id': staff_unit1_id, 
+            'staff_unit_coordinate_id': staff_unit1_id,
             'candidate_stage_type_id': candidate_stage_types16_id,
             'is_waits': True,
             'candidate_id': candidate_id,
@@ -1713,8 +1754,8 @@ def upgrade() -> None:
             'is_waits': True,
             'candidate_id': candidate_id,
         },
-        
-        ] 
+
+        ]
     )
 
 
@@ -1768,7 +1809,7 @@ def create_user(id,
             'cabinet': cabinet
         }]
     )
-    
+
 
     profile_id = get_uuid()
 
@@ -2175,7 +2216,7 @@ def create_user(id,
     )
 
     anthropometric_data_id = get_uuid()
-    
+
     op.bulk_insert(
         Base.metadata.tables['anthropometric_data'],
         [{
@@ -2281,7 +2322,7 @@ def create_user(id,
 
     abroad_travels_id = get_uuid()
 
-    op.bulk_insert(      
+    op.bulk_insert(
         Base.metadata.tables['abroad_travels'],
         [{
             'id': abroad_travels_id,
@@ -2318,7 +2359,7 @@ def create_user(id,
                 'date_of_issue': "2022-01-15",
                 'document_link': "document_link",
                 "profile_id": additional_profile_id
-                
+
             }]
     )
 
