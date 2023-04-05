@@ -5,6 +5,7 @@ from models import CandidateStageInfoStatusEnum
 from schemas import CandidateCreate, CandidateUpdate
 from schemas import CandidateRead
 from services import ServiceBase, staff_unit_service
+from .candidate_essay_type import candidate_essay_type_service
 
 
 class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate]):
@@ -45,6 +46,17 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
         staff_unit_service.get_by_id(db, body.staff_unit_id)
 
         return super().update(db, db_obj=super().get_by_id(db, id), obj_in=body)
+
+    def update_essay(self, db: Session, id: str, essay_id: str):
+        candidate = self.get_by_id(db, id)
+        essay = candidate_essay_type_service.get_by_id(db, essay_id)
+
+        candidate.essay_id = essay_id
+
+        db.add(candidate)
+        db.flush()
+
+        return candidate
 
 
 candidate_service = CandidateService(Candidate) # type: ignore

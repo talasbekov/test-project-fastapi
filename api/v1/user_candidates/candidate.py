@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from core import get_db
-from schemas import CandidateRead, CandidateCreate, CandidateUpdate
+from schemas import CandidateRead, CandidateCreate, CandidateUpdate, CandidateEssayUpdate
 from services import candidate_service
 
 router = APIRouter(prefix="/candidates", tags=["Candidates"], dependencies=[Depends(HTTPBearer())])
@@ -74,7 +74,7 @@ async def update(
         db: Session = Depends(get_db),
         Authorize: AuthJWT = Depends(),
         id: uuid.UUID = None,
-        body: CandidateCreate = None
+        body: CandidateUpdate = None
 ):
     """
         Update a Candidate.
@@ -84,6 +84,25 @@ async def update(
     """
     Authorize.jwt_required()
     return candidate_service.update(db, id, body)
+
+
+@router.patch("/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=CandidateRead,
+            summary="Update Essay for Candidate")
+async def update_essay(
+        db: Session = Depends(get_db),
+        Authorize: AuthJWT = Depends(),
+        id: uuid.UUID = None,
+        body: CandidateEssayUpdate = None
+):
+    """
+        Update a Candidate.
+
+        - **id**: UUID - required and should exist in the database.
+        - **essay_id**: UUID - required and should exist in the database.
+    """
+    Authorize.jwt_required()
+    return candidate_service.update_essay(db=db, id=id, essay_id=body.essay_id)
 
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT,

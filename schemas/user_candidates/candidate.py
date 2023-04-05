@@ -46,6 +46,10 @@ class CandidateUpdate(CandidateBase):
     pass
 
 
+class CandidateEssayUpdate(BaseModel):
+    essay_id: uuid.UUID
+
+
 class CandidateRead(CandidateBase):
     id: Optional[uuid.UUID]
     progress: Optional[int]
