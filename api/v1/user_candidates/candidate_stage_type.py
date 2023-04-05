@@ -55,7 +55,7 @@ async def get_by_id(
              response_model=CandidateStageTypeRead)
 async def create(
         db: Session = Depends(get_db),
-        candidate_stage: CandidateStageTypeCreate = None,
+        body: CandidateStageTypeCreate = None,
         Authorize: AuthJWT = Depends()
 ):
     """
@@ -64,7 +64,7 @@ async def create(
         - **name**: str - required
     """
     Authorize.jwt_required()
-    return candidate_stage_type_service.create(db, candidate_stage)
+    return candidate_stage_type_service.create(db, body)
 
 
 @router.put("/{id}", dependencies=[Depends(HTTPBearer())],
@@ -74,7 +74,7 @@ async def update(
         db: Session = Depends(get_db),
         Authorize: AuthJWT = Depends(),
         id: uuid.UUID = None,
-        candidate_stage: CandidateStageTypeRead = None
+        body: CandidateStageTypeUpdate = None
 ):
     """
         Update a CandidateStageType.
@@ -85,7 +85,7 @@ async def update(
     Authorize.jwt_required()
     return candidate_stage_type_service.update(db,
                                                db_obj=candidate_stage_type_service.get_by_id(db, id),
-                                               obj_in=candidate_stage)
+                                               obj_in=body)
 
 
 @router.delete("/{id}", dependencies=[Depends(HTTPBearer())],

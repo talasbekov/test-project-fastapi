@@ -157,6 +157,7 @@ async def update(
         - **candidate_stage_type_id**: UUID - required and should exist in the database.
         - **staff_unit_coordinate_id**: UUID - required and should exist in the database.
         - **is_waits**: bool - optional.
+        - **status**: str - optional.
     """
     Authorize.jwt_required()
     return candidate_stage_info_service.update(db,
