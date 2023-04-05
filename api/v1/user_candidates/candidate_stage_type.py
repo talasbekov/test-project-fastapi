@@ -29,7 +29,7 @@ async def get_all(
         - **limit**: int - The maximum number of badges to return in the response. This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    return candidate_stage_type_service.get_multiple(db, skip, limit)
+    return candidate_stage_type_service.get_multi(db, skip, limit)
 
 
 @router.get("/{id}", dependencies=[Depends(HTTPBearer())],
@@ -83,7 +83,9 @@ async def update(
         - **name**: str - required
     """
     Authorize.jwt_required()
-    return candidate_stage_type_service.update(db, id, candidate_stage)
+    return candidate_stage_type_service.update(db,
+                                               db_obj=candidate_stage_type_service.get_by_id(db, id),
+                                               obj_in=candidate_stage)
 
 
 @router.delete("/{id}", dependencies=[Depends(HTTPBearer())],
@@ -100,4 +102,4 @@ async def delete(
         - **id**: UUID - required and should exist in the database.
     """
     Authorize.jwt_required()
-    return candidate_stage_type_service.remove(db, id)
+    candidate_stage_type_service.remove(db, id)

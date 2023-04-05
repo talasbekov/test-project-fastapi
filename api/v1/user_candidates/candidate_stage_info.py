@@ -29,7 +29,7 @@ async def get_all(
         - **limit**: int - The maximum number of CandidateStageInfo to return in the response. This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    return candidate_stage_info_service.get_multiple(db, skip, limit)
+    return candidate_stage_info_service.get_multi(db, skip, limit)
 
 
 @router.get("/{id}", dependencies=[Depends(HTTPBearer())],
@@ -96,9 +96,7 @@ async def create(
         Create a CandidateStageInfo.
 
         - **candidate_id**: UUID - required and should exist in the database.
-        - **date_sign**: date - Optional
         - **candidate_stage_type_id**: UUID - required and should exist in the database.
-        - **candidate_stage_id**: UUID - required and should exist in the database.
         - **staff_unit_coordinate_id**: UUID - required and should exist in the database.
         - **is_waits**: bool - optional.
     """
@@ -156,14 +154,14 @@ async def update(
 
         - **id**: UUID - required and should exist in the database.
         - **candidate_id**: UUID - required and should exist in the database.
-        - **date_sign**: date - Optional
         - **candidate_stage_type_id**: UUID - required and should exist in the database.
-        - **candidate_stage_id**: UUID - required and should exist in the database.
         - **staff_unit_coordinate_id**: UUID - required and should exist in the database.
         - **is_waits**: bool - optional.
     """
     Authorize.jwt_required()
-    return candidate_stage_info_service.update(db, id, body)
+    return candidate_stage_info_service.update(db,
+                                               db_obj=candidate_stage_info_service.get_by_id(db, id),
+                                               obj_in=body)
 
 
 @router.delete("/{id}", dependencies=[Depends(HTTPBearer())],
@@ -180,4 +178,4 @@ async def delete(
         - **id**: UUID - required and should exist in the database.
     """
     Authorize.jwt_required()
-    return candidate_stage_info_service.remove(db, id)
+    candidate_stage_info_service.remove(db, id)

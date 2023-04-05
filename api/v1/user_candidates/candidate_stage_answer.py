@@ -136,7 +136,9 @@ async def update(
         - **category_id**: UUID - optional. Уникальный идентификатор для категории dropdown вопроса, на который дается ответ.
     """
     Authorize.jwt_required()
-    return candidate_stage_answer_service.update(db, id, body)
+    return candidate_stage_answer_service.update(db,
+                                                 db_obj=candidate_stage_answer_service.get_by_id(db, id),
+                                                 obj_in=body)
 
 
 @router.delete("/{id}", dependencies=[Depends(HTTPBearer())],
@@ -153,4 +155,4 @@ async def delete(
         - **id**: required and should exist in the database.
     """
     Authorize.jwt_required()
-    return candidate_stage_answer_service.delete(db, id)
+    candidate_stage_answer_service.delete(db, id)

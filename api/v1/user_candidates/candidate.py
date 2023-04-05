@@ -86,8 +86,8 @@ async def update(
     return candidate_service.update(db, id, body)
 
 
-@router.delete("/{id}", dependencies=[Depends(HTTPBearer())],
-               response_description="Candidate deleted",
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT,
+               dependencies=[Depends(HTTPBearer())],
                summary="Delete a Candidate")
 async def delete(
         db: Session = Depends(get_db),
@@ -100,4 +100,4 @@ async def delete(
         - **id**: required and should exist in the database.
     """
     Authorize.jwt_required()
-    return candidate_service.remove(db, id)
+    candidate_service.remove(db, id)
