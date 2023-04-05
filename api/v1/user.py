@@ -49,6 +49,21 @@ async def get_all_by_jurisdiction(*,
     Authorize.jwt_required()
     return user_service.get_by_jurisdiction(db, Authorize.get_jwt_subject(), skip, limit)
 
+@router.get("/staff-unit/{id}", dependencies=[Depends(HTTPBearer())], response_model=List[UserRead],
+            summary="Get all Users by Staff Unit")
+async def get_all_by_staff_unit(*,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends(),
+    id: uuid.UUID
+):
+    """
+        Get all Users by Staff Unit
+
+       - **id**: UUID - required and should exist in the database.
+    """
+    Authorize.jwt_required()
+    return user_service.get_by_staff_unit(db, id)
+
 
 @router.patch("/{id}/", status_code=status.HTTP_202_ACCEPTED,
               dependencies=[Depends(HTTPBearer())],

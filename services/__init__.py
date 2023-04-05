@@ -37,3 +37,5 @@ from .education import *
 from .family import *
 from .archive import *
 from .staff_list import staff_list_service
+
+from .history import history_service

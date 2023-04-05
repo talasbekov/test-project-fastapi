@@ -14,8 +14,8 @@ class CandidateStageAnswerBase(BaseModel):
     document_number: Optional[str]
     candidate_essay_type_id: Optional[uuid.UUID]
     candidate_id: uuid.UUID
-    category_id: Optional[uuid.UUID]
-
+    category_id: Optional[uuid.UUID] 
+    
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
@@ -23,11 +23,11 @@ class CandidateStageAnswerBase(BaseModel):
 
 class CandidateStageAnswerCreate(CandidateStageAnswerBase):
     sport_score: Optional[int]
+    answer_id: Optional[uuid.UUID]
 
 
 class CandidateStageListAnswerCreate(BaseModel):
-    sport_score: Optional[int]
-    candidate_stage_answers: Optional[List[CandidateStageAnswerBase]]
+    candidate_stage_answers: Optional[List[CandidateStageAnswerCreate]]
 
 
 class CandidateStageAnswerUpdate(CandidateStageAnswerBase):
