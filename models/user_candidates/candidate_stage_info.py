@@ -1,6 +1,6 @@
 import enum
 
-from sqlalchemy import Column, String, Integer, ForeignKey, TIMESTAMP, Boolean, Enum
+from sqlalchemy import Column, ForeignKey, TIMESTAMP, Boolean, Enum
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 

@@ -25,3 +25,4 @@ class CandidateStageTypeUpdate(CandidateStageTypeBase):
 class CandidateStageTypeRead(CandidateStageTypeBase):
     id: Optional[uuid.UUID]
     candidate_stage_questions: Optional[List[CandidateStageQuestionRead]]
+    name: Optional[str]

@@ -1,27 +1,21 @@
-import json
-from typing import List, Optional, Type, TypeVar
+from typing import List
 
+from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
 from models import (
-    CandidateStageAnswer, CandidateStageAnswerChoice, 
-    CandidateStageAnswerDocument, CandidateStageAnswerText, 
+    CandidateStageAnswer, CandidateStageAnswerChoice,
+    CandidateStageAnswerDocument, CandidateStageAnswerText,
     CandidateEssayAnswer, CandidateStageAnswerDefault, CandidateSportAnswer,
 )
-
 from models.user_candidates import CandidateStageQuestionTypeEnum
-
 from schemas import (
-    CandidateStageAnswerCreate, CandidateStageAnswerRead, 
+    CandidateStageAnswerCreate, CandidateStageAnswerRead,
     CandidateStageAnswerUpdate, CandidateStageListAnswerCreate
 )
 from services import ServiceBase
 
-from exceptions import NotFoundException
 
-from fastapi.encoders import jsonable_encoder
-
- 
 class CandidateStageAnswerService(ServiceBase[CandidateStageAnswer, CandidateStageAnswerCreate, CandidateStageAnswerUpdate]):
 
     def get_multiple(self, db: Session, skip: int = 0, limit: int = 100):
@@ -110,5 +104,6 @@ class CandidateStageAnswerService(ServiceBase[CandidateStageAnswer, CandidateSta
                     candidate_id=body_data['candidate_id'],
                 )
         return db_obj
+
 
 candidate_stage_answer_service = CandidateStageAnswerService(CandidateStageAnswer)

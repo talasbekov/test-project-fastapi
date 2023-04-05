@@ -9,11 +9,8 @@ from .candidate_stage_type import CandidateStageTypeRead
 
 class CandidateStageInfoBase(BaseModel):
     candidate_id: uuid.UUID
-    status: Optional[str]
-    date_sign: Optional[datetime.date]
-    candidate_stage_type_id: Optional[uuid.UUID]
-    candidate_stage_id : Optional[uuid.UUID]
-    staff_unit_coordinate_id: Optional[uuid.UUID]
+    candidate_stage_type_id: uuid.UUID
+    staff_unit_coordinate_id: uuid.UUID
     is_waits: Optional[bool]
     
     class Config:
@@ -31,6 +28,9 @@ class CandidateStageInfoUpdate(CandidateStageInfoBase):
 
 class CandidateStageInfoRead(CandidateStageInfoBase):
     id: Optional[uuid.UUID]
-    date_sign: Optional[datetime.date]
-    candidate_stage_type: Optional[CandidateStageTypeRead]
+    status: Optional[str]
     candidate_id: Optional[uuid.UUID]
+    staff_unit_coordinate_id: Optional[uuid.UUID]
+    candidate_stage_type_id: Optional[uuid.UUID]
+    candidate_stage_type: Optional[CandidateStageTypeRead]
+    date_sign: Optional[datetime.date]

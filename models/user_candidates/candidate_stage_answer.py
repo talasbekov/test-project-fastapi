@@ -23,7 +23,7 @@ class CandidateStageAnswer(Model):
         "polymorphic_on": type,
     }
 
-class CandidateStageAnswerDefault(CandidateStageAnswer):    
+class CandidateStageAnswerDefault(CandidateStageAnswer):
 
     answer_str = Column(String, nullable=True)
 
