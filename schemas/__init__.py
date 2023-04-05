@@ -30,10 +30,13 @@ from .hr_document import (HrDocumentCreate, HrDocumentInit, HrDocumentRead,
                           DraftHrDocumentInit)
 from .hr_document_info import (HrDocumentInfoCreate, HrDocumentInfoRead,
                                HrDocumentInfoUpdate, HrDocumentHistoryRead)
-from .history import HistoryRead, HistoryCreate, HistoryUpdate
+from .history.history import HistoryRead, HistoryCreate, HistoryUpdate
 from .user_stat import UserStatCreate, UserStatRead, UserStatUpdate
 from .auth import LoginForm, RegistrationForm
 from .staff_list import (StaffListCreate, StaffListRead, StaffListUpdate, StaffListUserCreate)
+from .service_id import (ServiceIDCreate, ServiceIDRead, ServiceIDUpdate)
+from .military_unit import (MilitaryUnitCreate, MilitaryUnitRead, MilitaryUnitUpdate)
+from .user_oath import (UserOathCreate, UserOathRead, UserOathUpdate)
 from .additional import *
 from .education import *
 from .personal import *
@@ -41,3 +44,4 @@ from .medical import *
 from .family import *
 from .archive import *
 from .user_candidates import *
+from .history import *

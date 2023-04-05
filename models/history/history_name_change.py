@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String, Column, ForeignKey, UUID
 from sqlalchemy.orm import relationship
 
 from models import Model
@@ -7,13 +7,12 @@ from models import Model
 
 class NameChange(Model):
     __tablename__ = "name_changes"
-
+    
     name_before = Column(String, nullable=True)
     name_after = Column(String, nullable=True)
+    name_type = Column(String, nullable=True)
 
-    last_name_before = Column(String, nullable=True)
-    last_name_after = Column(String, nullable=True)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
 
-    father_name_before = Column(String, nullable=True)
-    father_name_after = Column(String, nullable=True)
- 
+    name_change_histories = relationship("NameChangeHistory", back_populates="name_change")
+     

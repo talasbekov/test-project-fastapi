@@ -36,6 +36,8 @@ from .additional import *
 from .education import *
 from .family import *
 from .archive import *
+from .history import *
 from .staff_list import staff_list_service
-
-from .history import history_service
+from .service_id import service_id_service
+from .military_unit import military_unit_service
+from .user_oath import user_oath_service

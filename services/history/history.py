@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from exceptions import NotFoundException, NotSupportedException
 from models import History, RankHistory, StaffUnitHistory
 from schemas import HistoryCreate, HistoryUpdate
-from .base import ServiceBase
+from services import ServiceBase
 
 options = {
     'rank_history': RankHistory,

@@ -15,7 +15,9 @@ from .staff_function import (DocumentFunctionType, DocumentStaffFunction,
                              JurisdictionEnum)
 from .staff_list import StaffList
 from .staff_unit import StaffUnit
-
+from .service_id import ServiceID, ServiceIDStatus
+from .military_unit import MilitaryUnit
+from .user_oath import UserOath
 from .user_stat import UserStat
 from .position import Position
 from .medical import *

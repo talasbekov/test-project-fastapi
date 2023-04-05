@@ -1,6 +1,6 @@
 from sqlalchemy import TIMESTAMP, Column, ForeignKey, String, Double, Integer
 from sqlalchemy.dialects.postgresql import TEXT, UUID
-
+from sqlalchemy.orm import relationship
 from models import NamedModel
 
 
@@ -93,8 +93,9 @@ class SecondmentHistory(History):
 
 class NameChangeHistory(History):
 
-    history_name_change_id = Column(UUID(as_uuid=True), ForeignKey("name_change_histories.id"), nullable=True)
-
+    name_change_id = Column(UUID(as_uuid=True), ForeignKey("name_changes.id"), nullable=True)
+    name_change = relationship("NameChange", back_populates="name_change_histories")
+    
     __mapper_args__ = {
         "polymorphic_identity": "name_change_history",
     }
