@@ -1,7 +1,7 @@
 """feat(history): add history model
 
 Revision ID: 0c959d785ed4
-Revises: a3bed1d83c94
+Revises: f2d361d3fec3
 Create Date: 2023-04-03 08:33:22.825073
 
 """
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = '0c959d785ed4'
-down_revision = 'a3bed1d83c94'
+down_revision = 'f2d361d3fec3'
 branch_labels = None
 depends_on = None
 

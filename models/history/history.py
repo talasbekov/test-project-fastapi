@@ -71,6 +71,10 @@ class EmergencyServiceHistory(History):
 
     staff_division_id = Column(UUID(as_uuid=True), ForeignKey("staff_divisions.id"), nullable=True)
 
+    __mapper_args__ = {
+        'polymorphic_identity': 'emergency_service_history'
+    }
+
 
 class WorkExperienceHistory(History):
     name_of_organization = Column(String, nullable=True)
@@ -113,10 +117,9 @@ class ServiceCharacteristicHistory(History):
     }
 
 
-class HollidayReviewHistory(History):
-    
-    
+class HolidayReviewHistory(History):
+
     __mapper_args__ = {
-        "polymorphic_identity": "holliday_review_history",
+        "polymorphic_identity": "holiday_review_history",
     }
  
