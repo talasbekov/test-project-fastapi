@@ -15,7 +15,7 @@ from schemas import (
 )
 from exceptions import NotFoundException
 from services import ServiceBase
-
+from exceptions import SgoErpException
 
 class CandidateStageAnswerService(ServiceBase[CandidateStageAnswer, CandidateStageAnswerCreate, CandidateStageAnswerUpdate]):
 
@@ -42,22 +42,14 @@ class CandidateStageAnswerService(ServiceBase[CandidateStageAnswer, CandidateSta
     def create_list(self, db: Session, body: List[CandidateStageListAnswerCreate]) -> List[CandidateStageAnswerRead]:
         body_data = jsonable_encoder(body)
         db_obj_list = []
-        """
-            STRING_TYPE = "String"
-            CHOICE_TYPE = "Choice"
-            TEXT_TYPE = "Text"
-            DOCUMENT_TYPE = "Document"
-            ESSAY_TYPE = "Essay"
-            SPORT_SCORE_TYPE = "Sport score"
-            DROPDOWN_TYPE = "Dropdown"
-        """ 
+         
         for item in body_data.get('candidate_stage_answers', []):
             answer_type = item.get('type')
             if not item.get('answer_id'):
                 
-                answer_id = db.query(CandidateStageAnswer).filter(CandidateStageAnswer.candidate_id == item.get('candidate_id'), CandidateStageAnswer.candidate_stage_question_id == item.get('candidate_stage_question_id')).first()
-                if answer_id:
-                    raise Exception(f"Answer already exists for candidate {item.get('candidate_id')} and question {item.get('candidate_stage_question_id')}!")
+                answer = db.query(CandidateStageAnswer).filter(CandidateStageAnswer.candidate_id == item.get('candidate_id'), CandidateStageAnswer.candidate_stage_question_id == item.get('candidate_stage_question_id')).first()
+                if answer:
+                    raise SgoErpException(detail=f"Answer with id {answer.id} already exists!", status_code=400)
                 print(1)
                 db_obj = self._create_candidate_stage_answer_string(answer_type, item)
                 print(db_obj)
@@ -69,21 +61,47 @@ class CandidateStageAnswerService(ServiceBase[CandidateStageAnswer, CandidateSta
             else: 
                 answer_id = item.pop('answer_id')
                 item.pop('sport_score')
-                 
-                item_update_obj = super().get_by_id(db, answer_id)
-                 
+                print(item)
+                chosen_class = self._get_chosen_class(answer_type)
+
+                item_update_obj = db.query(
+                    chosen_class
+                ).filter(
+                    CandidateStageAnswerText.id == answer_id
+                ).first()
+
+                print(item_update_obj)
                 if item_update_obj is None:
                     raise NotFoundException(f"Answer with id {item.get('answer_id')} not found!")
                  
                 if item['type'] == 'Dropdown':
                     item['type'] = 'String'
+                print(1) 
                 item_update = CandidateStageAnswerUpdate(**item)
                 print(item_update)
                 db_obj = super().update(db, db_obj=item_update_obj, obj_in=item_update)
+                 
                 db_obj_list.append(db_obj)
                
         return db_obj_list
-
+    def _get_chosen_class(self, type):
+        if type == CandidateStageQuestionTypeEnum.STRING_TYPE.value:
+            return CandidateStageAnswerDefault
+        elif type == CandidateStageQuestionTypeEnum.CHOICE_TYPE.value:
+            return CandidateStageAnswerChoice
+        elif type == CandidateStageQuestionTypeEnum.TEXT_TYPE.value:
+            return CandidateStageAnswerText
+        elif type == CandidateStageQuestionTypeEnum.DOCUMENT_TYPE.value:
+            return CandidateStageAnswerDocument
+        elif type == CandidateStageQuestionTypeEnum.ESSAY_TYPE.value:
+            return CandidateEssayAnswer
+        elif type == CandidateStageQuestionTypeEnum.SPORT_SCORE_TYPE.value:
+            return CandidateSportAnswer
+        elif type == CandidateStageQuestionTypeEnum.DROPDOWN_TYPE.value:
+            return CandidateStageAnswerDefault
+        else:
+            return None
+    
     def _create_candidate_stage_answer_string(self, answer_type, body_data):
         db_obj = None
         if answer_type == CandidateStageQuestionTypeEnum.STRING_TYPE.value:
@@ -141,5 +159,7 @@ class CandidateStageAnswerService(ServiceBase[CandidateStageAnswer, CandidateSta
         print('success')
         return db_obj
 
+    
+     
 
 candidate_stage_answer_service = CandidateStageAnswerService(CandidateStageAnswer)
