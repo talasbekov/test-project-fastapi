@@ -1,12 +1,12 @@
-import logging
-from datetime import datetime
 import uuid
-from models import CandidateStageInfo, Candidate
-from schemas import CandidateStageInfoRead, CandidateStageInfoCreate, CandidateStageInfoUpdate
-from services import ServiceBase
+from datetime import datetime
+
 from sqlalchemy.orm import Session
 
+from models import CandidateStageInfo
 from models import CandidateStageInfoStatusEnum
+from schemas import (CandidateStageInfoRead, CandidateStageInfoCreate, CandidateStageInfoUpdate)
+from services import ServiceBase
 
 
 class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageInfoCreate, CandidateStageInfoUpdate]):

@@ -23,7 +23,7 @@ class CandidateStageInfoCreate(CandidateStageInfoBase):
 
 
 class CandidateStageInfoUpdate(CandidateStageInfoBase):
-    pass
+    status: Optional[str]
 
 
 class CandidateStageInfoRead(CandidateStageInfoBase):
