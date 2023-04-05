@@ -1758,6 +1758,28 @@ def upgrade() -> None:
         ]
     )
 
+    candidate_essay_type1_id = get_uuid()
+    candidate_essay_type2_id = get_uuid()
+    candidate_essay_type3_id = get_uuid()
+    candidate_essay_type4_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['candidate_essay_types'],
+        [{
+            'id': candidate_essay_type1_id,
+            'name': 'Мое любимое время года'
+        }, {
+            'id': candidate_essay_type2_id,
+            'name': 'Путешествие моей мечты'
+        }, {
+            'id': candidate_essay_type3_id,
+            'name': 'Как я провожу свои выходные'
+        }, {
+            'id': candidate_essay_type4_id,
+            'name': 'Мои хобби и увлечения'
+        }]
+    )
+
 
 def create_user(id,
                 name,
