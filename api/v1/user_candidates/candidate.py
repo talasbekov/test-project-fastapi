@@ -29,7 +29,9 @@ async def get_all(
         - **limit**: int - The maximum number of Candidate to return in the response. This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    return candidate_service.get_multiple(db, skip, limit)
+    user_id = Authorize.get_jwt_subject()
+    role = Authorize.get_raw_jwt()['role']
+    return candidate_service.get_multiple(db, user_id=user_id, role_id=role, skip=skip, limit=limit)
 
 
 @router.get("/drafts", dependencies=[Depends(HTTPBearer())],

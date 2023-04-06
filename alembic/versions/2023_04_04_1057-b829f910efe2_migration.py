@@ -253,6 +253,11 @@ def upgrade() -> None:
     position15_id = get_uuid()
     position16_id = get_uuid()
     position17_id = get_uuid()
+    position18_id = get_uuid()
+    position19_id = get_uuid()
+    position20_id = get_uuid()
+    position21_id = get_uuid()
+
 
     op.bulk_insert(
         Base.metadata.tables['positions'],
@@ -324,6 +329,22 @@ def upgrade() -> None:
             'id': position17_id,
             'name': 'Начальник Службы',
             'max_rank_id': rank13_id
+        }, {
+            'id': position18_id,
+            'name': 'Начальник кадров',
+            'max_rank_id': rank10_id
+        }, {
+            'id': position19_id,
+            'name': 'Заместители начальника кадров',
+            'max_rank_id': rank10_id
+        }, {
+            'id': position20_id,
+            'name': 'Начальник управления кандидатами',
+            'max_rank_id': rank10_id
+        }, {
+            'id': position21_id,
+            'name': 'Политический гос. служащий',
+            'max_rank_id': rank16_id
         }]
     )
 
@@ -1604,10 +1625,61 @@ def upgrade() -> None:
     )
 
     candidate_id = get_uuid()
+    candidate2_id = get_uuid()
+    candidate3_id = get_uuid()
+    candidate4_id = get_uuid()
+    candidate5_id = get_uuid()
+    candidate6_id = get_uuid()
+    candidate7_id = get_uuid()
+    candidate8_id = get_uuid()
+    candidate9_id = get_uuid()
+    candidate10_id = get_uuid()
+    candidate11_id = get_uuid()
+
     op.bulk_insert(
         Base.metadata.tables['candidates'],
         [{
             'id': candidate_id,
+            'staff_unit_id': staff_unit1_id,
+            'staff_unit_curator_id': staff_unit2_id,
+        }, {
+            'id': candidate2_id,
+            'staff_unit_id': staff_unit1_id,
+            'staff_unit_curator_id': staff_unit11_id,
+        }, {
+            'id': candidate3_id,
+            'staff_unit_id': staff_unit1_id,
+            'staff_unit_curator_id': staff_unit11_id,
+        }, {
+            'id': candidate4_id,
+            'staff_unit_id': staff_unit4_id,
+            'staff_unit_curator_id': staff_unit2_id,
+        }, {
+            'id': candidate5_id,
+            'staff_unit_id': staff_unit4_id,
+            'staff_unit_curator_id': staff_unit2_id,
+        }, {
+            'id': candidate6_id,
+            'staff_unit_id': staff_unit6_id,
+            'staff_unit_curator_id': staff_unit2_id,
+        }, {
+            'id': candidate7_id,
+            'staff_unit_id': staff_unit6_id,
+            'staff_unit_curator_id': staff_unit2_id,
+        }, {
+            'id': candidate8_id,
+            'staff_unit_id': staff_unit10_id,
+            'staff_unit_curator_id': staff_unit2_id,
+        }, {
+            'id': candidate9_id,
+            'staff_unit_id': staff_unit10_id,
+            'staff_unit_curator_id': staff_unit2_id,
+        }, {
+            'id': candidate10_id,
+            'staff_unit_id': staff_unit1_id,
+            'staff_unit_curator_id': staff_unit2_id,
+        }, {
+            'id': candidate11_id,
             'staff_unit_id': staff_unit1_id,
             'staff_unit_curator_id': staff_unit2_id,
         }]

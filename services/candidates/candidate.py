@@ -1,20 +1,26 @@
+import uuid
+from typing import List
+
 from sqlalchemy.orm import Session
 
 from models import Candidate, CandidateStageInfo, CandidateStageType
 from models import CandidateStageInfoStatusEnum
 from schemas import CandidateCreate, CandidateUpdate
 from schemas import CandidateRead
-from services import ServiceBase, staff_unit_service
+from services import ServiceBase, staff_unit_service, user_service
 from .candidate_essay_type import candidate_essay_type_service
-from models import CandidateStatusEnum
+from models import CandidateStatusEnum, Position
 
 
 class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate]):
-    def get_multiple(self, db: Session, skip: int = 0, limit: int = 100):
+    def get_multiple(self, db: Session, user_id: str, role_id: str, skip: int = 0, limit: int = 100):
 
-        candidates = db.query(self.model).filter(
-            self.model.status == CandidateStatusEnum.ACTIVE.value
-        ).offset(skip).limit(limit).all()
+        if self._check_by_role(db, role_id):
+            candidates = db.query(self.model).filter(
+                self.model.status == CandidateStatusEnum.ACTIVE.value
+            ).offset(skip).limit(limit).all()
+        else:
+            candidates = self._get_supervised_candidates(db, user_id)
 
         candidates = [CandidateRead.from_orm(candidate).dict() for candidate in candidates]
         for candidate in candidates: 
@@ -79,6 +85,44 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
         db.flush()
 
         return candidate
+
+    def _check_by_role(self, db: Session, role_id: str) -> bool:
+        staff_unit = staff_unit_service.get_by_id(db, role_id)
+
+        available_all = {
+            'Начальник кадров',
+            'Заместители начальника кадров',
+            'Начальник управления кандидатами',
+            'Политический гос. служащий'
+        }
+
+        available_all_roles = []
+
+        for i in available_all:
+            available_all_roles.append(self._get_role_by_name(db, i))
+
+        for i in available_all_roles:
+            if staff_unit.position_id == i:
+                return True
+
+        return False
+
+    def _get_role_by_name(self, db: Session, name: str) -> Position:
+        role = db.query(Position).filter(
+            Position.name == name
+        ).first()
+
+        if role:
+            return role.id
+        else:
+            return None
+
+    def _get_supervised_candidates(self, db: Session, user_id: str):
+        user = user_service.get_by_id(db, user_id)
+
+        return db.query(self.model).filter(
+            self.model.staff_unit_curator_id == user.actual_staff_unit_id
+        ).all()
 
 
 candidate_service = CandidateService(Candidate) # type: ignore
