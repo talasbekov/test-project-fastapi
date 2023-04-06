@@ -9,6 +9,7 @@ class VehicleBase(BaseModel):
     date_from: datetime
     name: str
     profile_id: uuid.UUID
+    document_link: str
 
     class Config:
         orm_mode = True
@@ -17,6 +18,7 @@ class VehicleBase(BaseModel):
 
 class VehicleCreate(VehicleBase):
     pass
+
 
 class VehicleUpdate(VehicleBase):
     pass
