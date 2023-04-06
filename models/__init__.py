@@ -16,10 +16,13 @@ from .staff_function import (DocumentFunctionType, DocumentStaffFunction,
 from .staff_list import StaffList
 from .staff_unit import StaffUnit
 from .service_id import ServiceID, ServiceIDStatus
+from .privelege_emergency import PrivelegeEmergency, FormEnum
+from .coolness import Coolness, SpecialityEnum
 from .military_unit import MilitaryUnit
 from .user_oath import UserOath
 from .user_stat import UserStat
 from .position import Position
+from .personnal_reserve import PersonnalReserve, ReserveEnum
 from .medical import *
 from .profile import Profile
 from .personal import *

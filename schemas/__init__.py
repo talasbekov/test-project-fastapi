@@ -36,7 +36,10 @@ from .auth import LoginForm, RegistrationForm
 from .staff_list import (StaffListCreate, StaffListRead, StaffListUpdate, StaffListUserCreate)
 from .service_id import (ServiceIDCreate, ServiceIDRead, ServiceIDUpdate)
 from .military_unit import (MilitaryUnitCreate, MilitaryUnitRead, MilitaryUnitUpdate)
+from .personnal_reserve import (PersonnalReserveCreate, PersonnalReserveRead, PersonnalReserveUpdate)
 from .user_oath import (UserOathCreate, UserOathRead, UserOathUpdate)
+from .privelege_emergency import (PrivelegeEmergencyCreate, PrivelegeEmergencyRead, PrivelegeEmergencyUpdate)
+from .coolness import (CoolnessCreate, CoolnessRead, CoolnessUpdate)
 from .additional import *
 from .education import *
 from .personal import *

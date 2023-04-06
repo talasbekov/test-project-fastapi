@@ -2,7 +2,22 @@ from sqlalchemy import TIMESTAMP, Column, ForeignKey, String, Double, Integer
 from sqlalchemy.dialects.postgresql import TEXT, UUID
 from sqlalchemy.orm import relationship
 from models import NamedModel
+from enum import Enum as BaseEnum
 
+class HistoryEnum(BaseEnum):
+    staff_unit_history = "staff_unit_history"
+    rank_history = "rank_history"
+    position_history = "position_history"
+    penalty_history = "penalty_history"
+    contact_history = "contact_history"
+    emergency_service_history = "emergency_service_history"
+    work_experience_history = "work_experience_history"
+    secondment_history = "secondment_history"
+    name_change_history = "name_change_history"
+    attestation = "attestation"
+    service_characteristic_history = "service_characteristic_history"
+    holiday_review_history = "holiday_review_history"
+     
 
 class History(NamedModel):
 

@@ -23,5 +23,12 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
         db.flush()
         return badge
 
+    def get_by_user_id(self, db: Session, user_id: str):
+        badge = db.query(self.model).filter(self.model.user_id == user_id).first()
+        return badge
+    
+    def get_black_beret_by_user_id(self, db: Session, user_id: str):
+        badge = db.query(self.model).filter(self.model.user_id == user_id).filter(self.model.badge_type.name == 'Черный Берет').first()
+        return badge
 
 badge_service = BadgeService(Badge)

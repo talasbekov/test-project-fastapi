@@ -7,8 +7,9 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import HistoryCreate, HistoryUpdate, HistoryRead
+from schemas import HistoryCreate, HistoryUpdate, HistoryRead, HistoryServiceDetailRead
 from services import history_service
+from models import HistoryEnum
 
 router = APIRouter(prefix="/histories", tags=["Histories"], dependencies=[Depends(HTTPBearer())])
 
@@ -29,6 +30,37 @@ async def get_all(*,
     """
     Authorize.jwt_required()
     return history_service.get_multi(db, skip, limit)
+
+# get enums
+@router.get("/enums", dependencies=[Depends(HTTPBearer())],
+            response_model=List[str],
+            summary="Get all History Enums")
+async def get_all_enums(*,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Get all History Enums
+    """
+    Authorize.jwt_required()
+    return [e.value for e in HistoryEnum]
+
+
+@router.get("/{user_id}", dependencies=[Depends(HTTPBearer())],
+            response_model=List[HistoryServiceDetailRead],
+            summary="Get all Service and Details by user id")
+async def get_all_by_user_id(*,
+    db: Session = Depends(get_db),
+    user_id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Get all Histories by user id
+
+        - **user_id**: UUID - required
+    """
+    Authorize.jwt_required()
+    return history_service.get_all_by_user_id(db, user_id)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,

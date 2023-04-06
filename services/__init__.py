@@ -24,14 +24,14 @@ from .user_stat import user_stat_service
 from .staff_division import staff_division_service
 
 from .hr_document_template import hr_document_template_service
-
+from .personnal_reserve import personnal_reserve_service
 from .user import user_service
 from .auth import auth_service
 from .hr_document_info import hr_document_info_service
 from .hr_document_status import hr_document_status_service
 from .hr_document import hr_document_service
-
-
+from .privelege_emergency import privelege_emergency_service
+from .coolness import coolness_service
 from .additional import *
 from .education import *
 from .family import *
