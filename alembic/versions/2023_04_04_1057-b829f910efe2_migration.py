@@ -1641,47 +1641,58 @@ def upgrade() -> None:
         [{
             'id': candidate_id,
             'staff_unit_id': staff_unit1_id,
-            'staff_unit_curator_id': staff_unit2_id,
+            'staff_unit_curator_id': staff_unit11_id,
+            'status': 'ACTIVE'
         }, {
             'id': candidate2_id,
             'staff_unit_id': staff_unit1_id,
             'staff_unit_curator_id': staff_unit11_id,
+            'status': 'ACTIVE'
         }, {
             'id': candidate3_id,
             'staff_unit_id': staff_unit1_id,
             'staff_unit_curator_id': staff_unit11_id,
+            'status': 'ACTIVE'
         }, {
             'id': candidate4_id,
-            'staff_unit_id': staff_unit4_id,
-            'staff_unit_curator_id': staff_unit2_id,
+            'staff_unit_id': staff_unit1_id,
+            'staff_unit_curator_id': staff_unit4_id,
+            'status': 'ACTIVE'
         }, {
             'id': candidate5_id,
-            'staff_unit_id': staff_unit4_id,
-            'staff_unit_curator_id': staff_unit2_id,
+            'staff_unit_id': staff_unit1_id,
+            'staff_unit_curator_id': staff_unit4_id,
+            'status': 'ACTIVE'
         }, {
             'id': candidate6_id,
-            'staff_unit_id': staff_unit6_id,
-            'staff_unit_curator_id': staff_unit2_id,
+            'staff_unit_id': staff_unit1_id,
+            'staff_unit_curator_id': staff_unit6_id,
+            'status': 'ACTIVE'
         }, {
             'id': candidate7_id,
-            'staff_unit_id': staff_unit6_id,
-            'staff_unit_curator_id': staff_unit2_id,
+            'staff_unit_id': staff_unit1_id,
+            'staff_unit_curator_id': staff_unit6_id,
+            'status': 'DRAFT'
         }, {
             'id': candidate8_id,
-            'staff_unit_id': staff_unit10_id,
-            'staff_unit_curator_id': staff_unit2_id,
+            'staff_unit_id': staff_unit1_id,
+            'staff_unit_curator_id': staff_unit10_id,
+            'status': 'ACTIVE'
         }, {
             'id': candidate9_id,
-            'staff_unit_id': staff_unit10_id,
-            'staff_unit_curator_id': staff_unit2_id,
+            'staff_unit_id': staff_unit1_id,
+            'staff_unit_curator_id': staff_unit10_id,
+            'status': 'ACTIVE'
         }, {
             'id': candidate10_id,
             'staff_unit_id': staff_unit1_id,
-            'staff_unit_curator_id': staff_unit2_id,
+            'staff_unit_curator_id': staff_unit10_id,
+            'status': 'DRAFT'
         }, {
             'id': candidate11_id,
             'staff_unit_id': staff_unit1_id,
-            'staff_unit_curator_id': staff_unit2_id,
+            'staff_unit_curator_id': staff_unit10_id,
+            'status': 'DRAFT'
         }]
     )
 
@@ -1707,56 +1718,56 @@ def upgrade() -> None:
         Base.metadata.tables['candidate_stage_infos'],
         [{
             'id': candidate_stage_info_id,
-            'staff_unit_coordinate_id': staff_unit1_id,
+            'staff_unit_coordinate_id': staff_unit11_id,
             'candidate_stage_type_id': candidate_stage_types1_id,
             'is_waits': True,
             'candidate_id': candidate_id,
         },
         {
             'id': candidate_stage_info_id1,
-            'staff_unit_coordinate_id': staff_unit1_id,
+            'staff_unit_coordinate_id': staff_unit11_id,
             'candidate_stage_type_id': candidate_stage_types2_id,
             'is_waits': True,
             'candidate_id': candidate_id,
         },
         {
             'id': candidate_stage_info_id2,
-            'staff_unit_coordinate_id': staff_unit1_id,
+            'staff_unit_coordinate_id': staff_unit11_id,
             'candidate_stage_type_id': candidate_stage_types3_id,
             'is_waits': True,
             'candidate_id': candidate_id,
         },
         {
             'id': candidate_stage_info_id3,
-            'staff_unit_coordinate_id': staff_unit1_id,
+            'staff_unit_coordinate_id': staff_unit11_id,
             'candidate_stage_type_id': candidate_stage_types4_id,
             'is_waits': True,
             'candidate_id': candidate_id,
         },
         {
             'id': candidate_stage_info_id4,
-            'staff_unit_coordinate_id': staff_unit1_id,
+            'staff_unit_coordinate_id': staff_unit11_id,
             'candidate_stage_type_id': candidate_stage_types5_id,
             'is_waits': True,
             'candidate_id': candidate_id,
         },
         {
             'id': candidate_stage_info_id5,
-            'staff_unit_coordinate_id': staff_unit1_id,
+            'staff_unit_coordinate_id': staff_unit11_id,
             'candidate_stage_type_id': candidate_stage_types6_id,
             'is_waits': True,
             'candidate_id': candidate_id,
         },
         {
             'id': candidate_stage_info_id6,
-            'staff_unit_coordinate_id': staff_unit1_id,
+            'staff_unit_coordinate_id': staff_unit11_id,
             'candidate_stage_type_id': candidate_stage_types7_id,
             'is_waits': True,
             'candidate_id': candidate_id,
         },
         {
             'id': candidate_stage_info_id7,
-            'staff_unit_coordinate_id': staff_unit1_id,
+            'staff_unit_coordinate_id': staff_unit11_id,
             'candidate_stage_type_id': candidate_stage_types8_id,
             'is_waits': True,
             'candidate_id': candidate_id,
@@ -1764,28 +1775,28 @@ def upgrade() -> None:
         },
         {
             'id': candidate_stage_info_id8,
-            'staff_unit_coordinate_id': staff_unit1_id,
+            'staff_unit_coordinate_id': staff_unit11_id,
             'candidate_stage_type_id': candidate_stage_types9_id,
             'is_waits': True,
             'candidate_id': candidate_id,
         },
         {
             'id': candidate_stage_info_id9,
-            'staff_unit_coordinate_id': staff_unit1_id,
+            'staff_unit_coordinate_id': staff_unit11_id,
             'candidate_stage_type_id': candidate_stage_types10_id,
             'is_waits': True,
             'candidate_id': candidate_id,
         },
         {
             'id': candidate_stage_info_id10,
-            'staff_unit_coordinate_id': staff_unit1_id,
+            'staff_unit_coordinate_id': staff_unit11_id,
             'candidate_stage_type_id': candidate_stage_types11_id,
             'is_waits': True,
             'candidate_id': candidate_id,
         },
         {
             'id': candidate_stage_info_id11,
-            'staff_unit_coordinate_id': staff_unit1_id,
+            'staff_unit_coordinate_id': staff_unit11_id,
             'candidate_stage_type_id': candidate_stage_types12_id,
             'is_waits': True,
             'candidate_id': candidate_id,
@@ -1793,35 +1804,35 @@ def upgrade() -> None:
         },
         {
             'id': candidate_stage_info_id12,
-            'staff_unit_coordinate_id': staff_unit1_id,
+            'staff_unit_coordinate_id': staff_unit11_id,
             'candidate_stage_type_id': candidate_stage_types13_id,
             'is_waits': True,
             'candidate_id': candidate_id,
         },
         {
             'id': candidate_stage_info_id13,
-            'staff_unit_coordinate_id': staff_unit1_id,
+            'staff_unit_coordinate_id': staff_unit11_id,
             'candidate_stage_type_id': candidate_stage_types14_id,
             'is_waits': True,
             'candidate_id': candidate_id,
         },
         {
             'id': candidate_stage_info_id14,
-            'staff_unit_coordinate_id': staff_unit1_id,
+            'staff_unit_coordinate_id': staff_unit11_id,
             'candidate_stage_type_id': candidate_stage_types15_id,
             'is_waits': True,
             'candidate_id': candidate_id,
         },
         {
             'id': candidate_stage_info_id15,
-            'staff_unit_coordinate_id': staff_unit1_id,
+            'staff_unit_coordinate_id': staff_unit11_id,
             'candidate_stage_type_id': candidate_stage_types16_id,
             'is_waits': True,
             'candidate_id': candidate_id,
         },
         {
             'id': candidate_stage_info_id16,
-            'staff_unit_coordinate_id': staff_unit1_id,
+            'staff_unit_coordinate_id': staff_unit11_id,
             'candidate_stage_type_id': candidate_stage_types17_id,
             'is_waits': True,
             'candidate_id': candidate_id,
