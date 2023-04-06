@@ -1,4 +1,4 @@
-from .candidate import Candidate
+from .candidate import Candidate, CandidateStatusEnum
 from .candidate_essay_type import CandidateEssayType
 from .candidate_category import CandidateCategory
 from .candidate_stage_question import CandidateStageQuestion, CandidateStageQuestionTypeEnum

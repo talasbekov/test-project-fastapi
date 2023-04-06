@@ -1,14 +1,22 @@
-from sqlalchemy import Column, ForeignKey
+import enum
+
+from sqlalchemy import Column, ForeignKey, Enum
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from models import Model
 
 
+class CandidateStatusEnum(str, enum.Enum):
+    ACTIVE = "Активный"
+    DRAFT = "Черновик"
+
+
 class Candidate(Model):
 
     __tablename__ = "candidates"
 
+    status = Column(Enum(CandidateStatusEnum), server_default=CandidateStatusEnum.ACTIVE)
     staff_unit_curator_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"), nullable=True)
     staff_unit_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"), nullable=True)
     essay_id = Column(UUID(as_uuid=True), ForeignKey("candidate_essay_types.id"), nullable=True)

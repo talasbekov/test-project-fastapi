@@ -43,7 +43,9 @@ class CandidateCreate(CandidateBase):
 
 
 class CandidateUpdate(CandidateBase):
-    pass
+    staff_unit_curator_id: Optional[uuid.UUID]
+    staff_unit_id: Optional[uuid.UUID]
+    status: Optional[str]
 
 
 class CandidateEssayUpdate(BaseModel):
@@ -52,6 +54,7 @@ class CandidateEssayUpdate(BaseModel):
 
 class CandidateRead(CandidateBase):
     id: Optional[uuid.UUID]
+    status: Optional[str]
     progress: Optional[int]
     current_stage: Optional[uuid.UUID]
     essay_id: Optional[uuid.UUID]

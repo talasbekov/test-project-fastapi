@@ -270,6 +270,7 @@ def upgrade() -> None:
     sa.Column('staff_unit_id', sa.UUID(), nullable=True),
     sa.Column('essay_id', sa.UUID(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('status', sa.Enum('ACTIVE', 'DRAFT', name='CandidateStatusEnum'), nullable=False, server_default='ACTIVE'),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['staff_unit_curator_id'], ['staff_units.id'], ),
