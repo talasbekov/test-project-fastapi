@@ -1,5 +1,6 @@
 import uuid
 from datetime import datetime
+from typing import Optional
 
 from pydantic import BaseModel
 
@@ -9,7 +10,7 @@ class VehicleBase(BaseModel):
     date_from: datetime
     name: str
     profile_id: uuid.UUID
-    document_link: str
+    document_link: Optional[str]
 
     class Config:
         orm_mode = True

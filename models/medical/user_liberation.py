@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, String
+from sqlalchemy import Column, ForeignKey, String, TEXT
 from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID
 from sqlalchemy.orm import relationship
 
@@ -14,6 +14,7 @@ class UserLiberation(Model):
     initiator = Column(String)
     start_date = Column(TIMESTAMP(timezone=True))
     end_date = Column(TIMESTAMP(timezone=True))
+    document_link = Column(TEXT, nullable=True)
     profile_id = Column(UUID(as_uuid=True), ForeignKey("medical_profiles.id"))
     liberation_id = Column(UUID(as_uuid=True), ForeignKey("liberations.id"))
 

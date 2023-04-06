@@ -897,6 +897,7 @@ def upgrade() -> None:
     sa.Column('initiator', sa.String(), nullable=True),
     sa.Column('start_date', postgresql.TIMESTAMP(timezone=True), nullable=True),
     sa.Column('end_date', postgresql.TIMESTAMP(timezone=True), nullable=True),
+    sa.Column('document_link', sa.TEXT, nullable=True),
     sa.Column('profile_id', sa.UUID(), nullable=True),
     sa.Column('liberation_id', sa.UUID(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
