@@ -13,8 +13,6 @@ from .document_staff_function import document_staff_function_service
 
 from .staff_unit import staff_unit_service
 
-from .candidates import *
-
 from .badge import badge_service
 from .equipment import equipment_service
 from .event import event_service
@@ -39,3 +37,4 @@ from .archive import *
 from .staff_list import staff_list_service
 
 from .history import history_service
+from .candidates import *
