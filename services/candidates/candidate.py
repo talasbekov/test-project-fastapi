@@ -24,36 +24,31 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
 
         candidates = [CandidateRead.from_orm(candidate).dict() for candidate in candidates]
         for candidate in candidates: 
-            candidate_stage_info_count = db.query(CandidateStageType).count()
-
-            candidate_stage_info_success_count = db.query(
-                CandidateStageInfo).filter( 
-                CandidateStageInfo.status == CandidateStageInfoStatusEnum.APPROVED.value,
-                CandidateStageInfo.candidate_id == candidate['id']
-            ).count()
-
-            candidate['progress'] = candidate_stage_info_success_count / candidate_stage_info_count * 100 if candidate_stage_info_count > 0 else 0
-            
-            current_stage_info = db.query(CandidateStageInfo).filter(
-                CandidateStageInfo.status == CandidateStageInfoStatusEnum.PENDING.value,
-                CandidateStageInfo.candidate_id == candidate['id']
-            ).order_by(CandidateStageInfo.created_at.desc()).first()
-            
-            if current_stage_info:
-                candidate['current_stage'] = current_stage_info.id
-            candidate_obj = super().get_by_id(db, candidate['id'])
-            if candidate_obj.candidate_stage_answers:
-                candidate['last_edit_date'] = candidate_obj.candidate_stage_answers[0].created_at
+            self._validate_candidate(db, candidate)
         return candidates
 
     def get_draft_candidates(self, db: Session, user_id: str, role_id: str, skip: int = 0, limit: int = 100):
 
         if self._check_by_role(db, role_id):
-            return db.query(self.model).filter(
+            candidates = db.query(self.model).filter(
                 self.model.status == CandidateStatusEnum.DRAFT.value
             ).order_by(self.model.id.asc()).offset(skip).limit(limit).all()
         else:
-            return self._get_supervised_draft_candidates(db, user_id)
+            candidates = self._get_supervised_draft_candidates(db, user_id)
+
+        candidates = [CandidateRead.from_orm(candidate).dict() for candidate in candidates]
+        for candidate in candidates:
+            self._validate_candidate(db, candidate)
+        return candidates
+
+    def get_by_id(self, db: Session, id: str):
+        candidate = super().get_by_id(db, id)
+
+        candidate = CandidateRead.from_orm(candidate).dict()
+
+        self._validate_candidate(db, candidate)
+
+        return candidate
 
     def create(self, db: Session, body: CandidateCreate):
         staff_unit_service.get_by_id(db, body.staff_unit_curator_id)
@@ -141,6 +136,35 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
             self.model.staff_unit_curator_id == user.actual_staff_unit_id,
             self.model.status == CandidateStatusEnum.DRAFT.value
         ).order_by(self.model.id.asc()).offset(skip).limit(limit).all()
+
+    def _validate_candidate(self, db: Session, candidate):
+        candidate_stage_info_count = db.query(CandidateStageType).count()
+
+        candidate_stage_info_success_count = db.query(
+            CandidateStageInfo).filter(
+            CandidateStageInfo.status == CandidateStageInfoStatusEnum.APPROVED.value,
+            CandidateStageInfo.candidate_id == candidate['id']
+        ).count()
+
+        candidate[
+            'progress'] = candidate_stage_info_success_count / candidate_stage_info_count * 100 if candidate_stage_info_count > 0 else 0
+
+        current_stage_info = db.query(CandidateStageInfo).filter(
+            CandidateStageInfo.status == CandidateStageInfoStatusEnum.PENDING.value,
+            CandidateStageInfo.candidate_id == candidate['id']
+        ).order_by(CandidateStageInfo.created_at.desc()).first()
+
+        if current_stage_info:
+            current_stage_type = db.query(CandidateStageType).filter(
+                CandidateStageType.id == current_stage_info.candidate_stage_type_id
+            ).first()
+
+            if current_stage_type:
+                candidate['current_stage'] = current_stage_type.name
+
+        candidate_obj = super().get_by_id(db, candidate['id'])
+        if candidate_obj.candidate_stage_answers:
+            candidate['last_edit_date'] = candidate_obj.candidate_stage_answers[0].created_at
 
 
 candidate_service = CandidateService(Candidate) # type: ignore
