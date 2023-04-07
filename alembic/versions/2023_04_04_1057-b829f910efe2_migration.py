@@ -1642,57 +1642,68 @@ def upgrade() -> None:
             'id': candidate_id,
             'staff_unit_id': staff_unit1_id,
             'staff_unit_curator_id': staff_unit11_id,
-            'status': 'ACTIVE'
+            'status': 'ACTIVE',
+            'debarment_reason': None
         }, {
             'id': candidate2_id,
             'staff_unit_id': staff_unit2_id,
             'staff_unit_curator_id': staff_unit11_id,
-            'status': 'ACTIVE'
+            'status': 'ACTIVE',
+            'debarment_reason': None
         }, {
             'id': candidate3_id,
             'staff_unit_id': staff_unit3_id,
             'staff_unit_curator_id': staff_unit11_id,
-            'status': 'ACTIVE'
+            'status': 'ACTIVE',
+            'debarment_reason': None
         }, {
             'id': candidate4_id,
             'staff_unit_id': staff_unit5_id,
             'staff_unit_curator_id': staff_unit11_id,
-            'status': 'ACTIVE'
+            'status': 'ACTIVE',
+            'debarment_reason': None
         }, {
             'id': candidate5_id,
             'staff_unit_id': staff_unit7_id,
             'staff_unit_curator_id': staff_unit11_id,
-            'status': 'ACTIVE'
+            'status': 'ACTIVE',
+            'debarment_reason': None
         }, {
             'id': candidate6_id,
             'staff_unit_id': staff_unit8_id,
             'staff_unit_curator_id': staff_unit11_id,
-            'status': 'ACTIVE'
+            'status': 'ACTIVE',
+            'debarment_reason': None
         }, {
             'id': candidate7_id,
             'staff_unit_id': staff_unit9_id,
             'staff_unit_curator_id': staff_unit11_id,
-            'status': 'DRAFT'
+            'status': 'DRAFT',
+            'debarment_reason': 'Недостаточный уровень квалификации: кандидат не соответствует необходимым требованиям по опыту и навыкам для данной вакансии'
         }, {
             'id': candidate8_id,
             'staff_unit_id': staff_unit1_id,
             'staff_unit_curator_id': staff_unit10_id,
-            'status': 'ACTIVE'
+            'status': 'ACTIVE',
+            'debarment_reason': None
         }, {
             'id': candidate9_id,
             'staff_unit_id': staff_unit1_id,
             'staff_unit_curator_id': staff_unit10_id,
-            'status': 'ACTIVE'
+            'status': 'ACTIVE',
+            'debarment_reason': None
         }, {
             'id': candidate10_id,
             'staff_unit_id': staff_unit1_id,
             'staff_unit_curator_id': staff_unit10_id,
-            'status': 'DRAFT'
+            'status': 'DRAFT',
+            'debarment_reason': 'Недостаточное количество опыта: кандидат не имеет достаточного опыта работы в данной области или на аналогичной должности'
         }, {
             'id': candidate11_id,
             'staff_unit_id': staff_unit1_id,
             'staff_unit_curator_id': staff_unit10_id,
-            'status': 'DRAFT'
+            'status': 'DRAFT',
+            'debarment_reason': 'Нарушение правил: кандидат нарушил правила собеседования или требования к вакансии.'
         }]
     )
 

@@ -3,8 +3,9 @@ import datetime
 
 from typing import Optional, List
 
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
+from models import CandidateStatusEnum
 from .candidate_stage_info import CandidateStageInfoRead
 from .candidate_essay_type import CandidateEssayTypeRead
 
@@ -46,6 +47,16 @@ class CandidateUpdate(CandidateBase):
     staff_unit_curator_id: Optional[uuid.UUID]
     staff_unit_id: Optional[uuid.UUID]
     status: Optional[str]
+    debarment_reason: Optional[str]
+
+    @validator('debarment_reason', pre=True)
+    def validate_debarment_reason(cls, value, values):
+        status = values.get('status')
+        if status == CandidateStatusEnum.ACTIVE and value is not None:
+            raise ValueError('debarment_reason должен быть пустым для статуса Активный')
+        elif status == CandidateStatusEnum.DRAFT and value is None:
+            raise ValueError('debarment_reason обязателен для статуса Черновик')
+        return value
 
 
 class CandidateEssayUpdate(BaseModel):
@@ -55,6 +66,7 @@ class CandidateEssayUpdate(BaseModel):
 class CandidateRead(CandidateBase):
     id: Optional[uuid.UUID]
     status: Optional[str]
+    debarment_reason: Optional[str]
     progress: Optional[int]
     current_stage: Optional[uuid.UUID]
     essay_id: Optional[uuid.UUID]
