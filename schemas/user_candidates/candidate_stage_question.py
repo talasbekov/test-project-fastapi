@@ -1,4 +1,4 @@
-import uuid
+import uuid, datetime
 from typing import Optional, List
 
 from pydantic import BaseModel
@@ -29,3 +29,5 @@ class CandidateStageQuestionRead(CandidateStageQuestionBase):
     candidate_stage_answers: Optional[List[CandidateStageAnswerRead]]
     question: Optional[str]
     question_type: Optional[str]
+    created_at: Optional[datetime.datetime]
+    updated_at: Optional[datetime.datetime]

@@ -18,7 +18,7 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
         if self._check_by_role(db, role_id):
             candidates = db.query(self.model).filter(
                 self.model.status == CandidateStatusEnum.ACTIVE.value
-            ).offset(skip).limit(limit).all()
+            ).order_by(self.model.id.asc()).offset(skip).limit(limit).all()
         else:
             candidates = self._get_supervised_active_candidates(db, user_id, skip, limit)
 
@@ -51,7 +51,7 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
         if self._check_by_role(db, role_id):
             return db.query(self.model).filter(
                 self.model.status == CandidateStatusEnum.DRAFT.value
-            ).offset(skip).limit(limit).all()
+            ).order_by(self.model.id.asc()).offset(skip).limit(limit).all()
         else:
             return self._get_supervised_draft_candidates(db, user_id)
 
@@ -132,7 +132,7 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
         return db.query(self.model).filter(
             self.model.staff_unit_curator_id == user.actual_staff_unit_id,
             self.model.status == CandidateStatusEnum.ACTIVE.value
-        ).offset(skip).limit(limit).all()
+        ).order_by(self.model.id.asc()).offset(skip).limit(limit).all()
 
     def _get_supervised_draft_candidates(self, db: Session, user_id: str, skip: int = 0, limit: int = 100):
         user = user_service.get_by_id(db, user_id)
@@ -140,7 +140,7 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
         return db.query(self.model).filter(
             self.model.staff_unit_curator_id == user.actual_staff_unit_id,
             self.model.status == CandidateStatusEnum.DRAFT.value
-        ).offset(skip).limit(limit).all()
+        ).order_by(self.model.id.asc()).offset(skip).limit(limit).all()
 
 
 candidate_service = CandidateService(Candidate) # type: ignore

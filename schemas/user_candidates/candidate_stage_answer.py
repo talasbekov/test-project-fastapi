@@ -1,4 +1,4 @@
-import uuid
+import uuid, datetime
 from typing import Optional, List
 
 from pydantic import BaseModel
@@ -37,6 +37,8 @@ class CandidateStageAnswerUpdate(CandidateStageAnswerBase):
 class CandidateStageAnswerRead(CandidateStageAnswerBase):
     id: Optional[uuid.UUID]
     is_sport_passed: Optional[bool]
+    created_at: Optional[datetime.datetime]
+    updated_at: Optional[datetime.datetime]
 
 
 class CandidateStageAnswerIdRead(BaseModel):

@@ -2256,22 +2256,6 @@ def upgrade() -> None:
                                 staff_unit10_id,
                                 candidate_stage_types17_id)
 
-
-def create_candidate_stage_info(candidate_id,
-                                staff_unit_coordinate_id,
-                                candidate_stage_type_id):
-    op.bulk_insert(
-        Base.metadata.tables['candidate_stage_infos'],
-        [{
-            'id': get_uuid(),
-            'staff_unit_coordinate_id': staff_unit_coordinate_id,
-            'candidate_stage_type_id': candidate_stage_type_id,
-            'is_waits': True,
-            'candidate_id': candidate_id,
-        }]
-    )
-
-
     candidate_essay_type1_id = get_uuid()
     candidate_essay_type2_id = get_uuid()
     candidate_essay_type3_id = get_uuid()
@@ -2291,6 +2275,21 @@ def create_candidate_stage_info(candidate_id,
         }, {
             'id': candidate_essay_type4_id,
             'name': 'Мои хобби и увлечения'
+        }]
+    )
+
+
+def create_candidate_stage_info(candidate_id,
+                                staff_unit_coordinate_id,
+                                candidate_stage_type_id):
+    op.bulk_insert(
+        Base.metadata.tables['candidate_stage_infos'],
+        [{
+            'id': get_uuid(),
+            'staff_unit_coordinate_id': staff_unit_coordinate_id,
+            'candidate_stage_type_id': candidate_stage_type_id,
+            'is_waits': True,
+            'candidate_id': candidate_id,
         }]
     )
 
