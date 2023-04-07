@@ -50,5 +50,4 @@ typing-inspect==0.8.0
 typing_extensions==4.4.0
 urllib3==1.26.15
 uvicorn==0.20.0
--sdk[fastapi]
 fastapi-debug-toolbar==0.3.2

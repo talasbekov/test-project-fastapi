@@ -25,9 +25,18 @@ class ProfileService(ServiceBase[Profile, ProfileCreate, ProfileUpdate]):
     def generate_profile_doc(self, db: Session, user_id: str):
         profile = self.get_by_user_id(db, user_id)
 
-        data = {
+        # data = {
+        #     "last_name": profile.user.last_name,
+        #     "first_name": profile.user.first_name,
+        #     "father_name": profile.user.father_name,
+        #     "iin": "",
+        #     "id_number": profile.user.id_number,
+        #     "rank": profile.user.rank,
+        #     "by_order": "",
+        #     "date_birth": profile.user.
+        # }
 
-        }
+        print(profile.user.last_name)
 
         return
 
