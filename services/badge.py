@@ -30,7 +30,8 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
         return badge
     
     def get_black_beret_by_user_id(self, db: Session, user_id: str):
-        badge = db.query(self.model).filter(self.model.user_id == user_id).filter(self.model.badge_type.name == 'Черный Берет').first()
+        badge_type = db.query(BadgeType).filter(BadgeType.name == "Черный Берет").first()
+        badge = db.query(self.model).filter(self.model.user_id == user_id).filter(self.model.type_id == badge_type.id).first()
         return badge
     
     def create_relation(self, db: Session, user_id: str, badge_type_id: uuid.UUID):

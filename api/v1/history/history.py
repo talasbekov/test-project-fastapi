@@ -46,8 +46,25 @@ async def get_all_enums(*,
     return [e.value for e in HistoryEnum]
 
 
+@router.get("/personal/{user_id}", dependencies=[Depends(HTTPBearer())],
+            response_model=List[HistoryRead],
+            summary="Get all Histories by user id")
+async def get_all_personal(*,
+    db: Session = Depends(get_db),
+    user_id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Get all Histories by user id
+
+        - **user_id**: UUID - required
+    """
+    Authorize.jwt_required()
+    return history_service.get_all_personal(db, user_id)
+
+
 @router.get("/{user_id}", dependencies=[Depends(HTTPBearer())],
-            response_model=List[HistoryServiceDetailRead],
+            response_model=HistoryServiceDetailRead,
             summary="Get all Service and Details by user id")
 async def get_all_by_user_id(*,
     db: Session = Depends(get_db),

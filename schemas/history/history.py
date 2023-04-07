@@ -7,14 +7,22 @@ from .general_information import GeneralInformationRead
 class HistoryBase(BaseModel):
     date_from: Optional[datetime]
     date_to: Optional[datetime]
-    staff_unit_id: Optional[uuid.UUID]
-    rank_id: Optional[uuid.UUID]
     position_id: Optional[uuid.UUID]
-    equipment_id: Optional[uuid.UUID]
+    rank_id: Optional[uuid.UUID]
+    penalty_id: Optional[uuid.UUID]
+    emergency_service_id: Optional[uuid.UUID]
+    work_experience_id: Optional[uuid.UUID]
+    secondment_id: Optional[uuid.UUID]
+    name_change_id: Optional[uuid.UUID]
+    attestation_id: Optional[uuid.UUID]
+    service_characteristic_id: Optional[uuid.UUID]
+    status_id: Optional[uuid.UUID]
+    coolness_id: Optional[uuid.UUID]
+    contract_id: Optional[uuid.UUID]
     name: Optional[str]
     user_id: uuid.UUID
     type: str
-    
+
 
     class Config:
         orm_mode = True
@@ -171,9 +179,9 @@ class EquipmentRead(BaseModel):
     type: Optional[str]
     document_link: Optional[str]
     document_number: Optional[str]
-    count: Optional[int]
+    inventory_number: Optional[int]
     date_start: Optional[datetime]
-    number_of_magazines: Optional[int]
+    count_of_ammo: Optional[int]
 
     class Config:
         orm_mode = True
@@ -181,9 +189,7 @@ class EquipmentRead(BaseModel):
 
 
 class HistoryServiceDetailRead(BaseModel):
-
-    id: uuid.UUID
-
+ 
     general_information: Optional[GeneralInformationRead]
     attendance: Optional[AttendanceRead]
     service_id_info: Optional[ServiceIdInfoRead]

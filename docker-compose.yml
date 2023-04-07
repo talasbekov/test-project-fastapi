@@ -7,14 +7,14 @@ services:
     container_name: postgresql-dev
     healthcheck:
       test: ["CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'"]
-      interval: 10s
+      interval: 5s
       timeout: 3s
       retries: 3
     restart: always
     env_file:
       - .env
     ports:
-      - '5544:5544'
+      - '5544:5432'
     volumes:
       - ./.data:/var/lib/postgresql/data
     networks:

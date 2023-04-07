@@ -15,6 +15,7 @@ class Equipment(Model):
     hr_documents = relationship("HrDocument", secondary=hr_document_equipments,
                                 back_populates="equipments")
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
+    user = relationship("User", back_populates="equipments")
     
     __mapper_args__ = {
         "polymorphic_identity": "equipment",
