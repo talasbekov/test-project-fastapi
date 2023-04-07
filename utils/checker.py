@@ -1,3 +1,4 @@
+import uuid
 import re
 
 from fastapi import HTTPException
@@ -14,3 +15,10 @@ def is_valid_phone_number(phone_number: str):
 def is_owner(user_role: str):
     if user_role != "OWNER":
         raise HTTPException(status_code=403, detail="You don't have permission!")
+
+def is_valid_uuid(uuid_str):
+    try:
+        uuid_obj = uuid.UUID(uuid_str, version=4)
+    except ValueError:
+        return False
+    return str(uuid_obj) == uuid_str

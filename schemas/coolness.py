@@ -1,14 +1,12 @@
 import uuid
-from typing import Optional
+from typing import Optional, Union
 
 from pydantic import BaseModel
 from datetime import datetime
 
 
 class CoolnessBase(BaseModel):
-    speciality: Optional[str]
-    date_from: Optional[datetime]
-    date_to: Optional[datetime]
+    type_id: Optional[uuid.UUID]
     user_id: Optional[uuid.UUID]
 
     class Config:
@@ -27,5 +25,3 @@ class CoolnessUpdate(CoolnessBase):
 class CoolnessRead(CoolnessBase):
 
     id: Optional[uuid.UUID] 
-
-     

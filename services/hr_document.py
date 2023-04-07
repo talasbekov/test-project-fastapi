@@ -23,7 +23,9 @@ from services import (badge_service, document_staff_function_service,
                       hr_document_info_service, hr_document_step_service,
                       hr_document_template_service, rank_service,
                       staff_division_service, staff_unit_service, user_service,
-                      jurisdiction_service, hr_document_status_service)
+                      jurisdiction_service, hr_document_status_service, history_service,
+                      status_service, secondment_service, coolness_service, penalty_service,
+                      contract_service)
 from .base import ServiceBase
 
 options = {
@@ -32,6 +34,11 @@ options = {
     "staff_division": staff_division_service,
     "rank": rank_service,
     "badges": badge_service,
+    'statuses': status_service,
+    'secondments': secondment_service,
+    'coolnesses': coolness_service,
+    'penalties': penalty_service,
+    'contracts': contract_service,
 }
 
 responses = {
@@ -187,7 +194,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
     def initialize(self, db: Session, body: HrDocumentInit, user_id: str, role: str):
         template = hr_document_template_service.get_by_id(
-            db, body.hr_document_template_id
+            db, body.hr_document_template_idcreate_history
         )
 
         step: HrDocumentStep = hr_document_step_service.get_initial_step_for_template(
@@ -390,7 +397,13 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         )
 
     def get_all_by_option(
-            self, db: Session, option: str, data_taken: str, id: uuid.UUID
+        self,
+        db: Session,
+        option: str,
+        data_taken: str,
+        id: uuid.UUID,
+        skip: int,
+        limit: int
     ):
         service = options.get(option)
         if service is None:
@@ -399,10 +412,10 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             )
         if data_taken is not None and data_taken == "matreshka":
             if id is None:
-                return [responses.get(option).from_orm(i) for i in service.get_parents(db)]
+                return [responses.get(option).from_orm(i) for i in service.get_parents(db, skip, limit)]
             else:
                 return [responses.get(option).from_orm(i) for i in service.get_by_id(db, id).children]
-        return [responses.get(option).from_orm(i) for i in service.get_multi(db)]
+        return [service.get_by_option(db, skip, limit)]
 
     def _validate_document(self, db: Session, body: HrDocumentInit, role: str, step: HrDocumentStep):
 
@@ -493,11 +506,17 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         if isinstance(attr, Base):
             res = self._get_service(key).get_by_id(db, value)
             setattr(user, key, res)
+            history_service.create_history(db, user.id, res)
 
         elif isinstance(attr, list):
-            res = self._get_service(key).get_by_id(db, value)
+            if getattr(self._get_service(key), 'create_relation') is None:
+                raise InvalidOperationException(
+                    f"New state is encountered! Cannot change {key}!"
+                )
+            res = self._get_service(key).create_relation(db, user.id, value)
             attr.append(res)
             setattr(user, key, attr)
+            history_service.create_history(db, user.id, res)
 
         else:
             setattr(user, key, value)

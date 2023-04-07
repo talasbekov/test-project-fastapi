@@ -1,7 +1,5 @@
 from .general_information import (
     OathRead,
-    PrivelegeEmergencySecretsRead,
-    PersonnelReserveRead,
     GeneralInformationRead
 )
 

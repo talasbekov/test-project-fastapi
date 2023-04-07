@@ -1,11 +1,37 @@
+import uuid
+from datetime import datetime
+
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException, NotSupportedException
-from models import (History, RankHistory, StaffUnitHistory,
-                    PositionHistory, PenaltyHistory, ContactHistory,
-                    EmergencyServiceHistory, WorkExperienceHistory, SecondmentHistory,
-                    NameChangeHistory, AttestationHistory, ServiceCharacteristicHistory,
-                    HolidayReviewHistory, UserOath)
+from models import (
+    History,
+    RankHistory,
+    StaffUnitHistory,
+    PenaltyHistory,
+    ContractHistory,
+    EmergencyServiceHistory,
+    WorkExperienceHistory,
+    SecondmentHistory,
+    NameChangeHistory,
+    AttestationHistory,
+    ServiceCharacteristicHistory,
+    StatusHistory,
+    CoolnessHistory,
+    UserOath,
+    StaffUnit,
+    Rank,
+    Penalty,
+    Contract,
+    Secondment,
+    NameChange,
+    Attestation,
+    Status,
+    Badge,
+    Coolness,
+    PersonnalReserve,
+    PrivelegeEmergency,
+)
 from schemas import HistoryCreate, HistoryUpdate
 from services import ServiceBase
 
@@ -25,21 +51,51 @@ from services import (privelege_emergency_service, coolness_service, badge_servi
                       personnal_reserve_service, service_id_service)
 
 
+classes = {
+    StaffUnit: 'staff_unit_history',
+    Rank: 'rank_history',
+    Penalty: 'penalty_history',
+    Contract: 'contract_history',
+    Secondment: 'secondment_history',
+    NameChange: 'name_change_history',
+    Attestation: 'attestation_history',
+    Status: 'status_history',
+    Coolness: 'coolness_history'
+}
 
 options = {
     'staff_unit_history': StaffUnitHistory,
     'rank_history': RankHistory,
-    'position_history': PositionHistory,
     'penalty_history': PenaltyHistory,
-    'contact_history': ContactHistory,
+    'contract_history': ContractHistory,
     'emergency_service_history': EmergencyServiceHistory,
     'work_experience_history': WorkExperienceHistory,
     'secondment_history': SecondmentHistory,
     'name_change_history': NameChangeHistory,
     'attestation_history': AttestationHistory,
     'service_characteristic_history': ServiceCharacteristicHistory,
-    'holiday_review_history': HolidayReviewHistory
+    'status_history': StatusHistory,
+    'coolness_history': CoolnessHistory
 }
+
+
+def get_last_by_user_id(db: Session, user_id: str, type: str):
+    cls: History = options.get(type)
+    if cls is None:
+        raise NotSupportedException(detail=f'Type: {type} is not supported!')
+    res = db.query(cls).filter(
+        cls.user_id == user_id,
+        cls.date_to == None
+    ).order_by(cls.date_to.desc()).first()
+    return res
+
+def finish_last(db: Session, user_id: str, type: str):
+    last_history: History = get_last_by_user_id(db, user_id, type)
+    if last_history is None:
+        return
+    last_history.date_to = datetime.now()
+    db.add(last_history)
+    db.flush()
 
 
 class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
@@ -133,8 +189,14 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
 
         return general_information_read
 
-    def get_badges_by_user_id(self, db: Session, user_id: str):
-        badges = badge_service.get_all_by_user_id(db, user_id)
-        return badges
+    def create_history(self, db: Session, user_id: uuid.UUID,  object):
+        diff = classes.get(type(object))
+        if diff is None:
+            raise NotSupportedException(detail=f'Type: {diff} is not supported!')
+        cls = options.get(diff)
+        if cls is None:
+            raise NotSupportedException(detail=f'In options: {diff} is not present!')
+        cls.create_history(db, user_id, object.id, finish_last)
+
 
 history_service = HistoryService(History)

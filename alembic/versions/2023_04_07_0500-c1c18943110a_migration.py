@@ -1,8 +1,8 @@
 """migration
 
-Revision ID: 9fae9da641dd
-Revises: f04c5daf7685
-Create Date: 2023-03-02 11:47:59.787804
+Revision ID: c1c18943110a
+Revises: c16115060b49
+Create Date: 2023-04-07 05:00:02.845809
 
 """
 import uuid
@@ -10,12 +10,12 @@ import uuid
 from alembic import op
 from core import Base
 
+
 # revision identifiers, used by Alembic.
-revision = '9fae9da641dd'
-down_revision = '33853d366eba'
+revision = 'c1c18943110a'
+down_revision = 'c16115060b49'
 branch_labels = None
 depends_on = None
-
 
 def get_uuid():
     return str(uuid.uuid4())
@@ -127,7 +127,7 @@ def upgrade() -> None:
     badge1_id = get_uuid()
 
     op.bulk_insert(
-        Base.metadata.tables['badges'],
+        Base.metadata.tables['badge_types'],
         [{
             "id": badge1_id,
             "name": "Черный Берет",

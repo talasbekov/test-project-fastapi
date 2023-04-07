@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import StaffUnit
-from schemas import StaffUnitCreate, StaffUnitUpdate, StaffUnitFunctions
+from schemas import StaffUnitCreate, StaffUnitUpdate, StaffUnitFunctions, StaffUnitRead
 from services import service_staff_function_service, document_staff_function_service
 from .base import ServiceBase
 
@@ -60,9 +60,7 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
         staff_unit = self.get_by_id(db, body.staff_unit_id)
 
         for id in body.staff_function_ids:
-            staff_function = document_staff_function_service.get_by_id(db, id)
-            if staff_function is None:
-                continue
+            staff_function = get_by_option
             try:
                 staff_unit.staff_functions.remove(staff_function)
             except ValueError as e:
@@ -70,6 +68,9 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
 
         db.add(staff_unit)
         db.flush()
+
+    def get_by_option(self, db: Session, skip: int, limit: int):
+        return [StaffUnitRead.from_orm(item) for item in super().get_multi(db, skip, limit)]
 
 
 staff_unit_service = StaffUnitService(StaffUnit)

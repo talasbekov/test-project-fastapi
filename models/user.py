@@ -3,7 +3,7 @@ from sqlalchemy.dialects.postgresql import TEXT, UUID
 from sqlalchemy.orm import relationship
 
 from models import Model
-from .association import hr_documents_users, users_badges
+from .association import hr_documents_users
 
 
 class User(Model):
@@ -26,9 +26,6 @@ class User(Model):
     staff_unit_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"), nullable=False)
     actual_staff_unit_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"), nullable=False)
     supervised_by = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
-    
-    status = Column(String(255), nullable=True)
-    status_till = Column(TIMESTAMP(timezone=True), nullable=True)
 
     description = Column(TEXT, nullable=True)
     cabinet = Column(String(255), nullable=True)
@@ -37,12 +34,7 @@ class User(Model):
     personal_id = Column(String(255), nullable=True)
 
     rank = relationship("Rank", cascade="all,delete")
-    badges = relationship(
-        "Badge",
-        secondary=users_badges,
-        back_populates='users',
-        cascade="all,delete"
-    )
+    badges = relationship("Badge", back_populates='user', cascade="all,delete")
 
     staff_unit = relationship("StaffUnit", back_populates="users", foreign_keys=staff_unit_id)
     actual_staff_unit = relationship("StaffUnit", back_populates="actual_users", foreign_keys=actual_staff_unit_id)
@@ -57,3 +49,11 @@ class User(Model):
     staff_list = relationship("StaffList", back_populates="user", cascade="all,delete")
 
     profile = relationship("Profile", back_populates="user", uselist=False)
+
+    statuses = relationship("Status", back_populates="user", cascade="all,delete")
+    secondments = relationship("Secondment", back_populates="user", cascade="all,delete")
+    attestations = relationship("Attestation", back_populates="user", cascade="all,delete")
+    coolnesses = relationship("Coolness", back_populates="user", cascade="all,delete")
+    penalties = relationship("Penalty", back_populates="user", cascade="all,delete")
+    privelege_emergencies = relationship("PrivelegeEmergency", back_populates="user", cascade="all,delete")
+    contracts = relationship("Contract", back_populates="user", cascade="all,delete")

@@ -1,5 +1,5 @@
 from .base import Model, NamedModel, NestedModel, NamedNestedModel
-from .badge import Badge
+from .badge import Badge, BadgeType
 from .equipment import Equipment
 from .event import Event
 from .hr_document_status import HrDocumentStatus
@@ -31,5 +31,11 @@ from .education import *
 from .family import *
 from .archive import *
 from .user_candidates import *
+from .penalty import Penalty, PenaltyType
+from .contract import Contract, ContractType
+from .secondment import Secondment
+from .attestation import Attestation
+from .status import Status
+from .coolness import Coolness, CoolnessType
 from .history import *
 from .user import User

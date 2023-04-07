@@ -1,6 +1,17 @@
-from .history import (History, RankHistory, StaffUnitHistory,
-                    PositionHistory, PenaltyHistory, ContactHistory,
-                    EmergencyServiceHistory, WorkExperienceHistory, SecondmentHistory,
-                    NameChangeHistory, AttestationHistory, ServiceCharacteristicHistory,
-                    HolidayReviewHistory, HistoryEnum)
+from .history import (
+    History,
+    RankHistory,
+    StaffUnitHistory,
+    PenaltyHistory,
+    ContractHistory,
+    EmergencyServiceHistory,
+    WorkExperienceHistory,
+    SecondmentHistory,
+    NameChangeHistory,
+    ServiceCharacteristicHistory,
+    HistoryEnum,
+    AttestationHistory,
+    CoolnessHistory,
+    StatusHistory
+)
 from .history_name_change import NameChange

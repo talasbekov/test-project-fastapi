@@ -9,6 +9,9 @@ class OathRead(BaseModel):
     date: Optional[datetime]
     military_name: Optional[str]
 
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
  
 
 class GeneralInformationRead(BaseModel):

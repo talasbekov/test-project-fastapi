@@ -20,3 +20,4 @@ class PrivelegeEmergency(Model):
     date_to = Column(TIMESTAMP(timezone=True), nullable=True)
 
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
+    user = relationship("User", back_populates="privelege_emergencies")
