@@ -20,7 +20,7 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
                 self.model.status == CandidateStatusEnum.ACTIVE.value
             ).offset(skip).limit(limit).all()
         else:
-            candidates = self._get_supervised_active_candidates(db, user_id)
+            candidates = self._get_supervised_active_candidates(db, user_id, skip, limit)
 
         candidates = [CandidateRead.from_orm(candidate).dict() for candidate in candidates]
         for candidate in candidates: 
@@ -126,21 +126,21 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
         else:
             return None
 
-    def _get_supervised_active_candidates(self, db: Session, user_id: str):
+    def _get_supervised_active_candidates(self, db: Session, user_id: str, skip: int = 0, limit: int = 100):
         user = user_service.get_by_id(db, user_id)
 
         return db.query(self.model).filter(
             self.model.staff_unit_curator_id == user.actual_staff_unit_id,
             self.model.status == CandidateStatusEnum.ACTIVE.value
-        ).all()
+        ).offset(skip).limit(limit).all()
 
-    def _get_supervised_draft_candidates(self, db: Session, user_id: str):
+    def _get_supervised_draft_candidates(self, db: Session, user_id: str, skip: int = 0, limit: int = 100):
         user = user_service.get_by_id(db, user_id)
 
         return db.query(self.model).filter(
             self.model.staff_unit_curator_id == user.actual_staff_unit_id,
             self.model.status == CandidateStatusEnum.DRAFT.value
-        ).all()
+        ).offset(skip).limit(limit).all()
 
 
 candidate_service = CandidateService(Candidate) # type: ignore
