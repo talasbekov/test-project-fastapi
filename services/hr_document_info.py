@@ -2,6 +2,7 @@ import uuid
 from datetime import datetime
 from typing import List
 
+from sqlalchemy import Subquery
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
@@ -107,6 +108,14 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
         ).order_by(
             HrDocumentInfo.created_at.desc()
         ).offset(skip).limit(limit).all()
+
+        return infos
+
+    def get_initialized_by_user_id_subquery(self, db: Session, user_id: str) -> Subquery:
+        infos = db.query(HrDocumentInfo).join(HrDocumentStep).join(DocumentStaffFunction).filter(
+            HrDocumentInfo.assigned_to_id == user_id,
+            DocumentStaffFunction.priority == 1
+        ).distinct(HrDocumentInfo.hr_document_id).subquery()
 
         return infos
 

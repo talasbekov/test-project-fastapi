@@ -22,7 +22,8 @@ from models import (
     Coolness,
     CoolnessType,
     Contract,
-    StaffDivision
+    StaffDivision,
+    Badge
 )
 from utils import is_valid_uuid
 
@@ -40,6 +41,7 @@ class HistoryEnum(BaseEnum):
     status_history = "status_history"
     coolness_history = "coolness_history"
     contract_history = "contract_history"
+    badge_history = "badge_history"
 
 
 """
@@ -63,6 +65,7 @@ class History(NamedModel):
     document_number = Column(String, nullable=True)
     type = Column(String, nullable=True)
 
+    @classmethod
     def create_history(self, **kwargs):
         raise NotSupportedException(detail="Method create_history must be implemented in child class")
 
@@ -77,11 +80,12 @@ class StaffUnitHistory(History):
     position_id = Column(UUID(as_uuid=True), ForeignKey("positions.id"), nullable=True)
     position = relationship("Position")
 
-    def create_history(self, db: Session, user_id: uuid.UUID, staff_unit_id: uuid.UUID, finish_last):
-        staff_unit = db.query(StaffUnit).filter(StaffUnit.id == staff_unit_id).first()
+    @classmethod
+    def create_history(self, db: Session, user_id: uuid.UUID, id: uuid.UUID, finish_last):
+        staff_unit = db.query(StaffUnit).filter(StaffUnit.id == id).first()
         if staff_unit is None:
             raise NotFoundException(detail="Staff unit not found")
-        finish_last(db, user_id, self.__mapper_args__["polymorphic_identity"])
+        finish_last(db, user_id, cls.__mapper_args__["polymorphic_identity"])
         db.add(StaffUnitHistory(
                 date_from=datetime.datetime.now(),
                 date_to=None,
@@ -101,16 +105,17 @@ class RankHistory(History):
     rank_id = Column(UUID(as_uuid=True), ForeignKey("ranks.id"), nullable=True)
     rank = relationship("Rank")
 
-    def create_history(self, db: Session, user_id: uuid.UUID, rank_id: uuid.UUID, finish_last):
-        rank = db.query(Rank).filter(Rank.id == rank_id).first()
+    @classmethod
+    def create_history(cls, db: Session, user_id: uuid.UUID, id: uuid.UUID, finish_last):
+        rank = db.query(Rank).filter(Rank.id == id).first()
         if rank is None:
             raise NotFoundException(detail="Rank not found")
-        finish_last(db, user_id, self.__mapper_args__["polymorphic_identity"])
+        finish_last(db, user_id, cls.__mapper_args__["polymorphic_identity"])
         db.add(RankHistory(
                 date_from=datetime.datetime.now(),
                 date_to=None,
                 user_id=user_id,
-                rank_id=rank_id,
+                rank_id=id,
                 name=rank.name,
             )
             )
@@ -119,22 +124,47 @@ class RankHistory(History):
         "polymorphic_identity": "rank_history",
     }
 
+class BadgeHistory(History):
+
+    badge_id = Column(UUID(as_uuid=True), ForeignKey("badges.id"), nullable=True)
+    badge = relationship("Badge")
+
+    @classmethod
+    def create_history(cls, db: Session, user_id: uuid.UUID, id: uuid.UUID, finish_last):
+        badge = db.query(Badge).filter(Badge.id == id).first()
+        if badge is None:
+            raise NotFoundException(detail="Badge not found")
+        finish_last(db, user_id, cls.__mapper_args__["polymorphic_identity"])
+        db.add(BadgeHistory(
+                date_from=datetime.datetime.now(),
+                date_to=None,
+                user_id=user_id,
+                badge_id=id,
+                name="",
+                )
+            )
+
+    __mapper_args__ = {
+        "polymorphic_identity": "badge_history",
+    }
+
 
 class PenaltyHistory(History):
 
     penalty_id = Column(UUID(as_uuid=True), ForeignKey("penalties.id"), nullable=True)
     penalty = relationship("Penalty")
 
-    def create_history(self, db: Session, user_id: uuid.UUID, penalty_id: uuid.UUID, finish_last):
-        penalty = db.query(Penalty).filter(Penalty.id == penalty_id).first()
+    @classmethod
+    def create_history(cls, db: Session, user_id: uuid.UUID, id: uuid.UUID, finish_last):
+        penalty = db.query(Penalty).filter(Penalty.id == id).first()
         if penalty is None:
             raise NotFoundException(detail="Penalty not found")
-        finish_last(db, user_id, self.__mapper_args__["polymorphic_identity"])
+        finish_last(db, user_id, cls.__mapper_args__["polymorphic_identity"])
         db.add(PenaltyHistory(
                 date_from=datetime.datetime.now(),
                 date_to=None,
                 user_id=user_id,
-                penalty_id=penalty_id,
+                penalty_id=id,
                 name=penalty.name,
             )
         )
@@ -163,16 +193,17 @@ class ContractHistory(History):
     contract_id = Column(UUID(as_uuid=True), ForeignKey("contracts.id"), nullable=True)
     contract = relationship("Contract")
 
-    def create_history(self, db: Session, user_id: uuid.UUID, contract_id: uuid.UUID, finish_last):
-        contract = db.query(Contract).filter(Contract.id == contract_id).first()
+    @classmethod
+    def create_history(cls, db: Session, user_id: uuid.UUID, id: uuid.UUID, finish_last):
+        contract = db.query(Contract).filter(Contract.id == id).first()
         if contract is None:
             raise NotFoundException(detail="Contract not found")
-        finish_last(db, user_id, self.__mapper_args__["polymorphic_identity"])
+        finish_last(db, user_id, cls.__mapper_args__["polymorphic_identity"])
         db.add(ContractHistory(
                 date_from=datetime.datetime.now(),
                 date_to=None,
                 user_id=user_id,
-                contract_id=contract_id,
+                contract_id=id,
                 name=contract.name,
                 experience_years=contract.experience_years,
             )
@@ -187,18 +218,19 @@ class CoolnessHistory(History):
     coolness_id = Column(UUID(as_uuid=True), ForeignKey("coolnesses.id"), nullable=True)
     coolness = relationship("Coolness")
 
-    def create_history(self, db: Session, user_id: uuid.UUID, coolness_id: uuid.UUID, finish_last):
-        if db.query(Coolness).filter(Coolness.id == coolness_id).first() is None:
+    @classmethod
+    def create_history(cls, db: Session, user_id: uuid.UUID, id: uuid.UUID, finish_last):
+        if db.query(Coolness).filter(Coolness.id == id).first() is None:
             raise NotFoundException(detail="Coolness not found")
-        finish_last(db, user_id, self.__mapper_args__["polymorphic_identity"])
+        finish_last(db, user_id, cls.__mapper_args__["polymorphic_identity"])
         db.add(CoolnessHistory(
                 date_from=datetime.datetime.now(),
                 date_to=None,
                 user_id=user_id,
-                coolness_id=coolness_id,
+                coolness_id=id,
                 name='',
             )
-        )               
+        )
 
     # coefficient = Column(Double, nullable=True)
     # percentage = Column(Integer, nullable=True)
@@ -224,15 +256,16 @@ class SecondmentHistory(History):
     secondment_id = Column(UUID(as_uuid=True), ForeignKey("secondments.id"), nullable=True)
     secondment = relationship("Secondment")
 
-    def create_history(self, db: Session, user_id: uuid.UUID, value: uuid.UUID, finish_last):
-        secondment = db.query(Secondment).filter(Secondment.id == value).first()
+    @classmethod
+    def create_history(cls, db: Session, user_id: uuid.UUID, id: uuid.UUID, finish_last):
+        secondment = db.query(Secondment).filter(Secondment.id == id).first()
         if secondment is None:
             raise NotFoundException(detail="Secondment not found")
         db.add(SecondmentHistory(
                 date_from=datetime.datetime.now(),
                 date_to=None,
                 user_id=user_id,
-                secondment_id=value,
+                secondment_id=id,
                 name="",
             )
         )
@@ -259,15 +292,16 @@ class AttestationHistory(History):
 
     attestation_status = Column(String, nullable=True)
 
-    def create_history(self, db: Session, user_id: uuid.UUID, value: uuid.UUID, finish_last):
-        attestation = db.query(Attestation).filter(Attestation.id == value).first()
+    @classmethod
+    def create_history(cls, db: Session, user_id: uuid.UUID, id: uuid.UUID, finish_last):
+        attestation = db.query(Attestation).filter(Attestation.id == id).first()
         if attestation is None:
             raise NotFoundException(detail="Attestation not found")
         db.add(AttestationHistory(
                 date_from=datetime.datetime.now(),
                 date_to=None,
                 user_id=user_id,
-                attestation_id=value,
+                attestation_id=id,
                 name="",
             )
         )
@@ -292,15 +326,16 @@ class StatusHistory(History):
     status_id = Column(UUID(as_uuid=True), ForeignKey("statuses.id"), nullable=True)
     status = relationship("Status")
 
-    def create_history(self, db: Session, user_id: uuid.UUID, value: uuid.UUID, finish_last):
-        status = db.query(Status).filter(Status.id == value).first()
+    @classmethod
+    def create_history(cls, db: Session, user_id: uuid.UUID, id: uuid.UUID, finish_last):
+        status = db.query(Status).filter(Status.id == id).first()
         if status is None:
             raise NotFoundException(detail="Status not found")
         db.add(StatusHistory(
                 date_from=datetime.datetime.now(),
                 date_to=None,
                 user_id=user_id,
-                status_id=value,
+                status_id=id,
                 name="",
             )
         )

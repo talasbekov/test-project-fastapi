@@ -18,6 +18,7 @@ from models import (
     ServiceCharacteristicHistory,
     StatusHistory,
     CoolnessHistory,
+    BadgeHistory,
     UserOath,
     StaffUnit,
     Rank,
@@ -44,7 +45,7 @@ from schemas import (
     CoolnessRead,
     AttendanceRead,
     ServiceIDRead
-    
+
 )
 
 from services import (privelege_emergency_service, coolness_service, badge_service,
@@ -60,7 +61,8 @@ classes = {
     NameChange: 'name_change_history',
     Attestation: 'attestation_history',
     Status: 'status_history',
-    Coolness: 'coolness_history'
+    Coolness: 'coolness_history',
+    Badge: 'badge_history',
 }
 
 options = {
@@ -75,7 +77,8 @@ options = {
     'attestation_history': AttestationHistory,
     'service_characteristic_history': ServiceCharacteristicHistory,
     'status_history': StatusHistory,
-    'coolness_history': CoolnessHistory
+    'coolness_history': CoolnessHistory,
+    'badge_history': BadgeHistory,
 }
 
 
@@ -189,14 +192,15 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
 
         return general_information_read
 
-    def create_history(self, db: Session, user_id: uuid.UUID,  object):
+    def create_history(self, db: Session, user_id: uuid.UUID, object):
+        print(type(object))
         diff = classes.get(type(object))
         if diff is None:
             raise NotSupportedException(detail=f'Type: {diff} is not supported!')
         cls = options.get(diff)
         if cls is None:
             raise NotSupportedException(detail=f'In options: {diff} is not present!')
-        cls.create_history(db, user_id, object.id, finish_last)
+        cls.create_history(db=db, user_id=user_id, id=object.id, finish_last=finish_last)
 
 
 history_service = HistoryService(History)

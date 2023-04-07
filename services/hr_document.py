@@ -57,17 +57,31 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             raise NotFoundException(detail="Document is not found!")
         return document
 
-    def get_initialized_documents(self, db: Session, user_id: uuid.UUID, skip: int, limit: int):
+
+    def get_initialized_documents(self, db: Session, user_id: uuid.UUID, filter: str, skip: int, limit: int):
 
         user = user_service.get_by_id(db, user_id)
-
-        documents = [i.hr_document for i in
-                     hr_document_info_service.get_initialized_by_user_id(db, user_id, skip, limit)]
+        subquery = hr_document_info_service.get_initialized_by_user_id_subquery(db, user_id)
+        if filter is not None:
+            documents = (
+                db.query(self.model).select_from(subquery)
+                .join(self.model.users)
+                .filter((User.first_name.contains(filter)) |
+                        (User.last_name.contains(filter)) |
+                        (User.father_name.contains(filter)))
+                .order_by(self.model.due_date.asc())
+                .offset(skip)
+                .limit(limit)
+                .all()
+            )
+        else:
+            documents = [i.hr_document for i in
+                         hr_document_info_service.get_initialized_by_user_id(db, user_id, skip, limit)]
 
         return self._return_correctly(db, documents, user)
 
     def get_not_signed_documents(
-            self, db: Session, user_id: str, skip: int, limit: int
+            self, db: Session, user_id: str, filter: str, skip: int, limit: int
     ):
         user = user_service.get_by_id(db, user_id)
 
@@ -77,16 +91,35 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         draft_status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.DRAFT.value)
 
-        documents = (
-            db.query(self.model)
-            .filter(self.model.status_id != draft_status.id)
-            .join(HrDocumentStep)
-            .filter(HrDocumentStep.staff_function_id.in_(staff_function_ids))
-            .order_by(self.model.due_date.asc())
-            .offset(skip)
-            .limit(limit)
-            .all()
-        )
+        if filter is not None:
+            documents = (
+                db.query(self.model)
+                .filter(self.model.status_id != draft_status.id)
+                .join(HrDocumentStep)
+                .join(self.model.users)
+                .filter(
+                    HrDocumentStep.staff_function_id.in_(staff_function_ids) & (
+                            (User.first_name.contains(filter)) |
+                            (User.last_name.contains(filter)) |
+                            (User.father_name.contains(filter))
+                    )
+                )
+                .order_by(self.model.due_date.asc())
+                .offset(skip)
+                .limit(limit)
+                .all()
+            )
+        else:
+            documents = (
+                db.query(self.model)
+                .filter(self.model.status_id != draft_status.id)
+                .join(HrDocumentStep)
+                .filter(HrDocumentStep.staff_function_id.in_(staff_function_ids))
+                .order_by(self.model.due_date.asc())
+                .offset(skip)
+                .limit(limit)
+                .all()
+            )
 
         return self._return_correctly(db, documents, user)
 
@@ -194,7 +227,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
     def initialize(self, db: Session, body: HrDocumentInit, user_id: str, role: str):
         template = hr_document_template_service.get_by_id(
-            db, body.hr_document_template_idcreate_history
+            db, body.hr_document_template_id
         )
 
         step: HrDocumentStep = hr_document_step_service.get_initial_step_for_template(

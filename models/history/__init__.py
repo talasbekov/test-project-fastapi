@@ -12,6 +12,7 @@ from .history import (
     HistoryEnum,
     AttestationHistory,
     CoolnessHistory,
-    StatusHistory
+    StatusHistory,
+    BadgeHistory,
 )
 from .history_name_change import NameChange

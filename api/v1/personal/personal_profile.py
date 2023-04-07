@@ -32,6 +32,23 @@ async def get_all(*,
     return personal_profile_service.get_multi(db, skip, limit)
 
 
+@router.get("/rand/{id}/", dependencies=[Depends(HTTPBearer())],
+            summary="Get random personal document")
+async def get_rand(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Get all PersonalProfiles
+
+        - **skip**: int - The number of PersonalProfiles to skip before returning the results. This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of PersonalProfiles to return in the response. This parameter is optional and defaults to 100.
+    """
+    Authorize.jwt_required()
+    return personal_profile_service.get_rand(db, id)
+
+
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=PersonalProfileRead,

@@ -738,6 +738,8 @@ def upgrade() -> None:
     sa.Column('attestation_status', sa.String(), nullable=True),
     sa.Column('characteristic_initiator', sa.String(), nullable=True),
     sa.Column('status_id', sa.UUID(), nullable=True),
+    sa.Column('badge_id', sa.UUID(), nullable=True),
+    sa.ForeignKeyConstraint(['badge_id'], ['badges.id']),
     sa.ForeignKeyConstraint(['attestation_id'], ['attestations.id'], ),
     sa.ForeignKeyConstraint(['contract_id'], ['contracts.id'], ),
     sa.ForeignKeyConstraint(['coolness_id'], ['coolnesses.id'], ),
