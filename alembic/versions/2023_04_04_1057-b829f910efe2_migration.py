@@ -1645,33 +1645,33 @@ def upgrade() -> None:
             'status': 'ACTIVE'
         }, {
             'id': candidate2_id,
-            'staff_unit_id': staff_unit1_id,
+            'staff_unit_id': staff_unit2_id,
             'staff_unit_curator_id': staff_unit11_id,
             'status': 'ACTIVE'
         }, {
             'id': candidate3_id,
-            'staff_unit_id': staff_unit1_id,
+            'staff_unit_id': staff_unit3_id,
             'staff_unit_curator_id': staff_unit11_id,
             'status': 'ACTIVE'
         }, {
             'id': candidate4_id,
-            'staff_unit_id': staff_unit1_id,
-            'staff_unit_curator_id': staff_unit4_id,
+            'staff_unit_id': staff_unit5_id,
+            'staff_unit_curator_id': staff_unit11_id,
             'status': 'ACTIVE'
         }, {
             'id': candidate5_id,
-            'staff_unit_id': staff_unit1_id,
-            'staff_unit_curator_id': staff_unit4_id,
+            'staff_unit_id': staff_unit7_id,
+            'staff_unit_curator_id': staff_unit11_id,
             'status': 'ACTIVE'
         }, {
             'id': candidate6_id,
-            'staff_unit_id': staff_unit1_id,
-            'staff_unit_curator_id': staff_unit6_id,
+            'staff_unit_id': staff_unit8_id,
+            'staff_unit_curator_id': staff_unit11_id,
             'status': 'ACTIVE'
         }, {
             'id': candidate7_id,
-            'staff_unit_id': staff_unit1_id,
-            'staff_unit_curator_id': staff_unit6_id,
+            'staff_unit_id': staff_unit9_id,
+            'staff_unit_curator_id': staff_unit11_id,
             'status': 'DRAFT'
         }, {
             'id': candidate8_id,

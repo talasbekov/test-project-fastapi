@@ -111,7 +111,7 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
 
         return False
 
-    def _get_role_by_name(self, db: Session, name: str) -> Position:
+    def _get_role_by_name(self, db: Session, name: str):
         role = db.query(Position).filter(
             Position.name == name
         ).first()
