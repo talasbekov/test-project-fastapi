@@ -56,6 +56,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         subquery = hr_document_info_service.get_initialized_by_user_id_subquery(db, user_id)
         if filter is not None:
             key_words = filter.lower().split()
+
             documents = (
                 db.query(self.model).select_from(subquery)
                 .join(self.model.users)
@@ -89,6 +90,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         if filter is not None:
             key_words = filter.lower().split()
+
             documents = (
                 db.query(self.model)
                 .filter(self.model.status_id != draft_status.id)
@@ -120,6 +122,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             )
 
         return self._return_correctly(db, documents, user)
+
     def get_draft_documents(self, db: Session, user_id: str, skip: int = 0, limit: int = 100):
         status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.DRAFT.value)
 
