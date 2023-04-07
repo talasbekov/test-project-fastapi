@@ -64,10 +64,12 @@ class CandidateEssayUpdate(BaseModel):
 
 class CandidateRead(CandidateBase):
     id: Optional[uuid.UUID]
+    created_at: Optional[datetime.datetime]
+    updated_at: Optional[datetime.datetime]
     status: Optional[str]
     debarment_reason: Optional[str]
     progress: Optional[int]
-    current_stage: Optional[uuid.UUID]
+    current_stage: Optional[str]
     essay_id: Optional[uuid.UUID]
     essay: Optional[CandidateEssayTypeRead]
     last_edit_date: Optional[datetime.date]

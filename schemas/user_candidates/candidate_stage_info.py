@@ -34,3 +34,5 @@ class CandidateStageInfoRead(CandidateStageInfoBase):
     candidate_stage_type_id: Optional[uuid.UUID]
     candidate_stage_type: Optional[CandidateStageTypeRead]
     date_sign: Optional[datetime.date]
+    created_at: Optional[datetime.datetime]
+    updated_at: Optional[datetime.datetime]

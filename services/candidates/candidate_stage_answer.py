@@ -6,7 +6,8 @@ from sqlalchemy.orm import Session
 from models import (
     CandidateStageAnswer, CandidateStageAnswerChoice,
     CandidateStageAnswerDocument, CandidateStageAnswerText,
-    CandidateEssayAnswer, CandidateStageAnswerDefault, CandidateSportAnswer,
+    CandidateEssayAnswer, CandidateStageAnswerDefault, CandidateSportAnswer, Candidate, CandidateStageType,
+    CandidateStageQuestion, CandidateStageInfo, CandidateStageInfoStatusEnum
 )
 from models.user_candidates import CandidateStageQuestionTypeEnum
 from schemas import (
@@ -35,6 +36,12 @@ class CandidateStageAnswerService(ServiceBase[CandidateStageAnswer, CandidateSta
             raise Exception(f"Invalid answer type {answer_type}!")
 
         db.add(db_obj)
+
+        current_stage_info = self._set_pending_status_to_current_stage_info(db=db, candidate_id=body.candidate_id,
+                                                                            candidate_stage_question_id=body.candidate_stage_question_id)
+        if current_stage_info:
+            db.add(current_stage_info)
+
         db.flush()
 
         return CandidateStageAnswerRead.from_orm(db_obj)
@@ -159,7 +166,27 @@ class CandidateStageAnswerService(ServiceBase[CandidateStageAnswer, CandidateSta
         print('success')
         return db_obj
 
-    
+    def _set_pending_status_to_current_stage_info(self, db: Session, candidate_id: str, candidate_stage_question_id: str):
+        question = db.query(CandidateStageQuestion).filter(
+            CandidateStageQuestion.id == candidate_stage_question_id
+        ).first()
+
+        candidate_stage_type = db.query(CandidateStageType).filter(
+            CandidateStageType.candidate_stage_questions.contains(question),
+        ).first()
+
+        if candidate_stage_type:
+
+            current_stage_info = db.query(CandidateStageInfo).filter(
+                CandidateStageInfo.candidate_id == candidate_id,
+                CandidateStageInfo.candidate_stage_type_id == candidate_stage_type.id
+            ).first()
+
+            current_stage_info.status = CandidateStageInfoStatusEnum.PENDING.value
+
+            return current_stage_info
+
+        return None
      
 
 candidate_stage_answer_service = CandidateStageAnswerService(CandidateStageAnswer)

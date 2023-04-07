@@ -15,14 +15,14 @@ class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageIn
         candidates = db.query(CandidateStageInfo).filter(
             CandidateStageInfo.staff_unit_coordinate_id == staff_unit_id,
             CandidateStageInfo.is_waits == True
-            ).all()
+        ).order_by(self.model.id.asc()).all()
         candidates = [CandidateStageInfoRead.from_orm(candidate).dict() for candidate in candidates]
         return candidates
 
     def get_all_by_candidate_id(self, db: Session, candidate_id: uuid.UUID):
         candidates = db.query(CandidateStageInfo).filter(
             CandidateStageInfo.candidate_id == candidate_id,
-            ).all()
+        ).order_by(self.model.id.asc()).all()
         return candidates
 
     def sign_candidate(self, db: Session, id: uuid.UUID):
