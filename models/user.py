@@ -32,6 +32,8 @@ class User(Model):
     service_phone_number = Column(String(32), nullable=True)
     is_military = Column(Boolean, nullable=True)
     personal_id = Column(String(255), nullable=True)
+    iin = Column(String(255), nullable=True)
+    date_birth = Column(TIMESTAMP(timezone=True))
 
     rank = relationship("Rank", cascade="all,delete")
     badges = relationship("Badge", back_populates='user', cascade="all,delete")

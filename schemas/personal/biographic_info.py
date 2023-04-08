@@ -9,7 +9,6 @@ from .family_status import FamilyStatusRead
 
 class BiographicInfoBase(BaseModel):
     place_birth: str
-    date_birth: datetime.date
     gender: bool
     citizenship: str
     nationality: str
@@ -30,7 +29,6 @@ class BiographicInfoUpdate(BaseModel):
 class BiographicInfoRead(BiographicInfoBase):
     id: Optional[uuid.UUID]
     place_birth: Optional[str]
-    date_birth: Optional[datetime.date]
     gender: Optional[bool]
     citizenship: Optional[str]
     nationality: Optional[str]

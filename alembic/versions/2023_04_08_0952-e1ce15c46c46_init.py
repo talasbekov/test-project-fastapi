@@ -383,6 +383,8 @@ def upgrade() -> None:
     sa.Column('service_phone_number', sa.String(length=32), nullable=True),
     sa.Column('is_military', sa.Boolean(), nullable=True),
     sa.Column('personal_id', sa.String(length=255), nullable=True),
+    sa.Column('iin', sa.String(length=255), nullable=True),
+    sa.Column('date_birth', sa.TIMESTAMP(timezone=True), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
@@ -847,7 +849,6 @@ def upgrade() -> None:
     )
     op.create_table('biographic_infos',
     sa.Column('place_birth', sa.String(), nullable=True),
-    sa.Column('date_birth', sa.TIMESTAMP(timezone=True), nullable=True),
     sa.Column('gender', sa.Boolean(), nullable=True),
     sa.Column('citizenship', sa.String(), nullable=True),
     sa.Column('nationality', sa.String(), nullable=True),

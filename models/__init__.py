@@ -39,4 +39,3 @@ from .status import Status
 from .coolness import Coolness, CoolnessType
 from .history import *
 from .user import User
-from .history import History, RankHistory, StaffUnitHistory

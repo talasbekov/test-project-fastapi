@@ -11,7 +11,7 @@ from schemas import StaffUnitRead
 class CandidateStageInfoBase(BaseModel):
     candidate_id: uuid.UUID
     candidate_stage_type_id: uuid.UUID
-    staff_unit_coordinate_id: uuid.UUID
+    staff_unit_coordinate_id: Optional[uuid.UUID]
     is_waits: Optional[bool]
     
     class Config:
@@ -38,3 +38,6 @@ class CandidateStageInfoRead(CandidateStageInfoBase):
     date_sign: Optional[datetime.date]
     created_at: Optional[datetime.datetime]
     updated_at: Optional[datetime.datetime]
+
+
+ 
