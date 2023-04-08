@@ -26,7 +26,6 @@ class CandidateStageQuestionUpdate(CandidateStageQuestionBase):
 class CandidateStageQuestionRead(CandidateStageQuestionBase):
     id: Optional[uuid.UUID]
     candidate_stage_type_id: Optional[uuid.UUID]
-    candidate_stage_answers: Optional[List[CandidateStageAnswerRead]]
     question: Optional[str]
     question_type: Optional[str]
     created_at: Optional[datetime.datetime]
