@@ -45,9 +45,8 @@ from schemas import (
     CoolnessRead,
     AttendanceRead,
     ServiceIDRead,
-    HistoryServiceDetailRead,
-    HistoryRead
-    
+    HistoryRead,
+    HistoryServiceDetailRead,    
 )
 
 from services import (privelege_emergency_service, coolness_service, badge_service,
@@ -113,12 +112,11 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         cls = options.get(obj_in.type) 
         if cls is None:
             raise NotSupportedException(detail=f'Type: {obj_in.type} is not supported!')
-        obj_db = cls(**obj_in.dict(exclude_none=True))
-        db.add(obj_db)
-        db.flush()
-        return obj_db
+        # obj_in which exclude all null fields
+        obj_in = obj_in.dict(exclude_none=True)
+        finish_last(db, obj_in['user_id'], obj_in['type'])
+        return cls.create(db, obj_in)
     
-
     def get_type_by_user_id(self, db: Session, user_id: str, type: str):
         cls = options.get(type)
         if cls is None:
