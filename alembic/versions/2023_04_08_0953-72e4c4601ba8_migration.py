@@ -1057,7 +1057,7 @@ def upgrade() -> None:
         [{
             'name': 'Приказ о назначении',
             'path': 'http://192.168.0.169:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7%20%D0%BE%20%D0%BD%D0%B0%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%B8%D0%B8.docx',
-            'subject_type': 1,
+            'subject_type': "EMPLOYEE",
             'properties': {
                 "signed_at": {
                     "alias_name": "Дата подписания",
@@ -1120,7 +1120,7 @@ def upgrade() -> None:
         }, {
             'name': 'Приказ о присвоения звания',
             'path': 'http://192.168.0.169:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7_%D0%BE_%D0%BF%D1%80%D0%B8%D1%81%D0%B2%D0%BE%D0%B5%D0%BD%D0%B8%D0%B8_%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F_%D0%BF%D0%BE%D0%B2%D1%8B%D1%88%D0%B5%D0%BD%D0%B8%D0%B5.docx',
-            'subject_type': 1,
+            'subject_type': "EMPLOYEE",
             'properties': {
                 "signed_at": {
                     "alias_name": "Дата подписания",
@@ -1163,7 +1163,7 @@ def upgrade() -> None:
         }, {
             'name': 'Приказ о присвоения черного берета',
             'path': 'http://192.168.0.169:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7_%D0%BE_%D0%BF%D1%80%D0%B8%D1%81%D0%B2%D0%BE%D0%B5%D0%BD%D0%B8%D0%B8_%D0%A7%D0%B5%D1%80%D0%BD%D0%BE%D0%B3%D0%BE_%D0%B1%D0%B5%D1%80%D0%B5%D1%82%D0%B0.docx',
-            'subject_type': 1,  
+            'subject_type': "EMPLOYEE", 
             'properties': {
                 "signed_at": {
                     "alias_name": "Дата подписания",
