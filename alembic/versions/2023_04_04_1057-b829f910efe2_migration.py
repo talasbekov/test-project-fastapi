@@ -1721,7 +1721,9 @@ def upgrade() -> None:
     create_candidate_stage_info(candidate_id,
                                 staff_unit11_id,
                                 candidate_stage_types5_id)
-
+    create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
+                                candidate_stage_types6_id)
     create_candidate_stage_info(candidate_id,
                                 staff_unit11_id,
                                 candidate_stage_types7_id)
@@ -1755,6 +1757,9 @@ def upgrade() -> None:
     create_candidate_stage_info(candidate_id,
                                 staff_unit11_id,
                                 candidate_stage_types17_id)
+    create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
+                                candidate_stage_types18_id)
 
     # candidate2_id
     create_candidate_stage_info(candidate2_id,
@@ -1774,6 +1779,9 @@ def upgrade() -> None:
                                 candidate_stage_types5_id)
     create_candidate_stage_info(candidate2_id,
                                 staff_unit11_id,
+                                candidate_stage_types6_id)
+    create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
                                 candidate_stage_types7_id)
     create_candidate_stage_info(candidate2_id,
                                 staff_unit11_id,
@@ -1805,6 +1813,9 @@ def upgrade() -> None:
     create_candidate_stage_info(candidate2_id,
                                 staff_unit11_id,
                                 candidate_stage_types17_id)
+    create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
+                                candidate_stage_types18_id)
 
     # candidate3_id
     create_candidate_stage_info(candidate3_id,
@@ -1824,6 +1835,9 @@ def upgrade() -> None:
                                 candidate_stage_types5_id)
     create_candidate_stage_info(candidate3_id,
                                 staff_unit11_id,
+                                candidate_stage_types6_id)
+    create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
                                 candidate_stage_types7_id)
     create_candidate_stage_info(candidate3_id,
                                 staff_unit11_id,
@@ -1855,6 +1869,9 @@ def upgrade() -> None:
     create_candidate_stage_info(candidate3_id,
                                 staff_unit11_id,
                                 candidate_stage_types17_id)
+    create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
+                                candidate_stage_types18_id)
 
     # candidate4_id
     create_candidate_stage_info(candidate4_id,
@@ -1874,6 +1891,9 @@ def upgrade() -> None:
                                 candidate_stage_types5_id)
     create_candidate_stage_info(candidate4_id,
                                 staff_unit11_id,
+                                candidate_stage_types6_id)
+    create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
                                 candidate_stage_types7_id)
     create_candidate_stage_info(candidate4_id,
                                 staff_unit11_id,
@@ -1905,6 +1925,9 @@ def upgrade() -> None:
     create_candidate_stage_info(candidate4_id,
                                 staff_unit11_id,
                                 candidate_stage_types17_id)
+    create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
+                                candidate_stage_types18_id)
 
     # candidate5_id
     create_candidate_stage_info(candidate5_id,
@@ -1924,6 +1947,9 @@ def upgrade() -> None:
                                 candidate_stage_types5_id)
     create_candidate_stage_info(candidate5_id,
                                 staff_unit11_id,
+                                candidate_stage_types6_id)
+    create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
                                 candidate_stage_types7_id)
     create_candidate_stage_info(candidate5_id,
                                 staff_unit11_id,
@@ -1955,6 +1981,9 @@ def upgrade() -> None:
     create_candidate_stage_info(candidate5_id,
                                 staff_unit11_id,
                                 candidate_stage_types17_id)
+    create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
+                                candidate_stage_types18_id)
 
     # candidate6_id
     create_candidate_stage_info(candidate6_id,
@@ -1974,6 +2003,9 @@ def upgrade() -> None:
                                 candidate_stage_types5_id)
     create_candidate_stage_info(candidate6_id,
                                 staff_unit11_id,
+                                candidate_stage_types6_id)
+    create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
                                 candidate_stage_types7_id)
     create_candidate_stage_info(candidate6_id,
                                 staff_unit11_id,
@@ -2005,6 +2037,9 @@ def upgrade() -> None:
     create_candidate_stage_info(candidate6_id,
                                 staff_unit11_id,
                                 candidate_stage_types17_id)
+    create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
+                                candidate_stage_types18_id)
 
     # candidate7_id
     create_candidate_stage_info(candidate7_id,
@@ -2024,6 +2059,9 @@ def upgrade() -> None:
                                 candidate_stage_types5_id)
     create_candidate_stage_info(candidate7_id,
                                 staff_unit11_id,
+                                candidate_stage_types6_id)
+    create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
                                 candidate_stage_types7_id)
     create_candidate_stage_info(candidate7_id,
                                 staff_unit11_id,
@@ -2055,6 +2093,9 @@ def upgrade() -> None:
     create_candidate_stage_info(candidate7_id,
                                 staff_unit11_id,
                                 candidate_stage_types17_id)
+    create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
+                                candidate_stage_types18_id)
 
     # candidate8_id
     create_candidate_stage_info(candidate8_id,
@@ -2074,6 +2115,9 @@ def upgrade() -> None:
                                 candidate_stage_types5_id)
     create_candidate_stage_info(candidate8_id,
                                 staff_unit10_id,
+                                candidate_stage_types6_id)
+    create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
                                 candidate_stage_types7_id)
     create_candidate_stage_info(candidate8_id,
                                 staff_unit10_id,
@@ -2105,6 +2149,9 @@ def upgrade() -> None:
     create_candidate_stage_info(candidate8_id,
                                 staff_unit10_id,
                                 candidate_stage_types17_id)
+    create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
+                                candidate_stage_types18_id)
 
     # candidate9_id
     create_candidate_stage_info(candidate9_id,
@@ -2124,6 +2171,9 @@ def upgrade() -> None:
                                 candidate_stage_types5_id)
     create_candidate_stage_info(candidate9_id,
                                 staff_unit10_id,
+                                candidate_stage_types6_id)
+    create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
                                 candidate_stage_types7_id)
     create_candidate_stage_info(candidate9_id,
                                 staff_unit10_id,
@@ -2155,6 +2205,9 @@ def upgrade() -> None:
     create_candidate_stage_info(candidate9_id,
                                 staff_unit10_id,
                                 candidate_stage_types17_id)
+    create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
+                                candidate_stage_types18_id)
 
     # candidate10_id
     create_candidate_stage_info(candidate10_id,
@@ -2174,6 +2227,9 @@ def upgrade() -> None:
                                 candidate_stage_types5_id)
     create_candidate_stage_info(candidate10_id,
                                 staff_unit10_id,
+                                candidate_stage_types6_id)
+    create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
                                 candidate_stage_types7_id)
     create_candidate_stage_info(candidate10_id,
                                 staff_unit10_id,
@@ -2205,6 +2261,9 @@ def upgrade() -> None:
     create_candidate_stage_info(candidate10_id,
                                 staff_unit10_id,
                                 candidate_stage_types17_id)
+    create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
+                                candidate_stage_types18_id)
 
     # candidate11_id
     create_candidate_stage_info(candidate11_id,
@@ -2224,6 +2283,9 @@ def upgrade() -> None:
                                 candidate_stage_types5_id)
     create_candidate_stage_info(candidate11_id,
                                 staff_unit10_id,
+                                candidate_stage_types6_id)
+    create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
                                 candidate_stage_types7_id)
     create_candidate_stage_info(candidate11_id,
                                 staff_unit10_id,
@@ -2255,26 +2317,70 @@ def upgrade() -> None:
     create_candidate_stage_info(candidate11_id,
                                 staff_unit10_id,
                                 candidate_stage_types17_id)
+    create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
+                                candidate_stage_types18_id)
 
     candidate_essay_type1_id = get_uuid()
     candidate_essay_type2_id = get_uuid()
     candidate_essay_type3_id = get_uuid()
     candidate_essay_type4_id = get_uuid()
+    candidate_essay_type5_id = get_uuid()
+    candidate_essay_type6_id = get_uuid()
+    candidate_essay_type7_id = get_uuid()
+    candidate_essay_type8_id = get_uuid()
+    candidate_essay_type9_id = get_uuid()
+    candidate_essay_type10_id = get_uuid()
+    candidate_essay_type11_id = get_uuid()
+    candidate_essay_type12_id = get_uuid()
+    candidate_essay_type13_id = get_uuid()
+    candidate_essay_type14_id = get_uuid()
+
 
     op.bulk_insert(
         Base.metadata.tables['candidate_essay_types'],
         [{
             'id': candidate_essay_type1_id,
-            'name': 'Мое любимое время года'
+            'name': 'Будущее Казахстана - мое будущее'
         }, {
             'id': candidate_essay_type2_id,
-            'name': 'Путешествие моей мечты'
+            'name': '«Я патриот! А это значит ...»'
         }, {
             'id': candidate_essay_type3_id,
-            'name': 'Как я провожу свои выходные'
+            'name': 'Мое образование - мой капитал'
         }, {
             'id': candidate_essay_type4_id,
-            'name': 'Мои хобби и увлечения'
+            'name': 'Социальные сети: плюсы и минусы'
+        }, {
+            'id': candidate_essay_type5_id,
+            'name': 'Армия в моей жизни.'
+        }, {
+            'id': candidate_essay_type6_id,
+            'name': 'Будущее Казахстана.'
+        }, {
+            'id': candidate_essay_type7_id,
+            'name': 'В чем смысл жизни?'
+        }, {
+            'id': candidate_essay_type8_id,
+            'name': 'Верность долгу, и измена Родине'
+        }, {
+            'id': candidate_essay_type9_id,
+            'name': 'Где начинается Родина'
+        }, {
+            'id': candidate_essay_type10_id,
+            'name': 'Как вы понимаете значение слова подвиг'
+        }, {
+            'id': candidate_essay_type11_id,
+            'name': 'Почему я хочу служить в СГО РК'
+        }, {
+            'id': candidate_essay_type12_id,
+            'name': 'Кто для меня Президент'
+        }, {
+            'id': candidate_essay_type13_id,
+            'name': 'Что я могу сделать для Родины'
+        }, {
+            'id': candidate_essay_type14_id,
+            'name': 'Герои нашего времени'
         }]
     )
 
