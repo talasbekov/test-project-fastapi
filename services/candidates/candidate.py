@@ -87,7 +87,7 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
         for stage_type in stage_types:
             candidate_stage_info = CandidateStageInfoCreate(
                 candidate_id=candidate.id,
-                stage_type_id=stage_type.id,
+                candidate_stage_type_id=stage_type.id,
                 staff_unit_coordinate_id=None,
                 status=CandidateStageInfoStatusEnum.PENDING.value
             )
