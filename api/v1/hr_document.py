@@ -256,6 +256,8 @@ async def get_data_by_option(*,
     option: str,
     data_taken: Optional[str] = None,
     id: Optional[uuid.UUID] = None,
+    skip: int = 0,
+    limit: int = 10,
     Authorize: AuthJWT = Depends()
 ):
     """
@@ -270,5 +272,5 @@ async def get_data_by_option(*,
         * badges
     """
     Authorize.jwt_required()
-    res = hr_document_service.get_all_by_option(db, option, data_taken, id)
+    res = hr_document_service.get_all_by_option(db, option, data_taken, id, skip, limit)
     return res
