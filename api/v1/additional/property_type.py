@@ -11,7 +11,7 @@ from exceptions import ForbiddenException
 from schemas import PropertyTypeCreate, PropertyTypeRead, PropertyTypeUpdate
 from services import property_type_service, profile_service
 
-router = APIRouter(prefix="/properties", tags=["Properties"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(prefix="/property_types", tags=["Properties"], dependencies=[Depends(HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],

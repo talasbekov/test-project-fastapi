@@ -57,7 +57,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             raise NotFoundException(detail="Document is not found!")
         return document
 
-
     def get_initialized_documents(self, db: Session, user_id: uuid.UUID, filter: str, skip: int, limit: int):
 
         user = user_service.get_by_id(db, user_id)

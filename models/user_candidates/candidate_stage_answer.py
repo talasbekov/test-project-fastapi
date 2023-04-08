@@ -23,7 +23,7 @@ class CandidateStageAnswer(Model):
         "polymorphic_on": type,
     }
 
-class CandidateStageAnswerDefault(CandidateStageAnswer):    
+class CandidateStageAnswerDefault(CandidateStageAnswer):
 
     answer_str = Column(String, nullable=True)
 
@@ -53,7 +53,7 @@ class CandidateStageAnswerText(CandidateStageAnswer):
 
 class CandidateStageAnswerDocument(CandidateStageAnswer):
     
-    document_link = Column(String, nullable=True)
+    document_link = Column(String, nullable=True) 
 
     __mapper_args__ = {
         'polymorphic_identity': CandidateStageQuestionTypeEnum.DOCUMENT_TYPE.value,

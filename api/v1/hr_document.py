@@ -21,13 +21,15 @@ async def get_not_signed(*,
     Authorize: AuthJWT = Depends(),
     filter: str = None,
     skip: int = 0,
-    limit: int = 10
+    limit: int = 10,
+    filter: str = None
 ):
     """
         Get all not signed HrDocuments
 
         - **skip**: int - The number of HrDocuments to skip before returning the results. This parameter is optional and defaults to 0.
         - **limit**: int - The maximum number of HrDocuments to return in the response. This parameter is optional and defaults to 10.
+        - **filter**: str - The value which returns filtered results. This parameter is optional and defaults to None
     """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
@@ -41,13 +43,16 @@ async def get_initialized(*,
     Authorize: AuthJWT = Depends(),
     filter: str = None,
     skip: int = 0,
-    limit: int = 10
+    limit: int = 10,
+    filter: str = None
 ):
     """
         Get all initialized HrDocuments
 
         - **skip**: int - The number of HrDocuments to skip before returning the results. This parameter is optional and defaults to 0.
         - **limit**: int - The maximum number of HrDocuments to return in the response. This parameter is optional and defaults to 10.
+        - **filter**: str - The value which returns filtered results. This parameter is optional and defaults to None
+
     """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()

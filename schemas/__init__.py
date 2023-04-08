@@ -33,7 +33,7 @@ from .hr_document_info import (HrDocumentInfoCreate, HrDocumentInfoRead,
 from .privelege_emergency import (PrivelegeEmergencyCreate, PrivelegeEmergencyRead, PrivelegeEmergencyUpdate)
 from .personnal_reserve import (PersonnalReserveCreate, PersonnalReserveRead, PersonnalReserveUpdate)
 from .coolness import (CoolnessCreate, CoolnessRead, CoolnessUpdate)
-from .history.history import HistoryRead, HistoryCreate, HistoryUpdate
+from .history import HistoryRead, HistoryCreate, HistoryUpdate
 from .user_stat import UserStatCreate, UserStatRead, UserStatUpdate
 from .auth import LoginForm, RegistrationForm
 from .staff_list import (StaffListCreate, StaffListRead, StaffListUpdate, StaffListUserCreate)

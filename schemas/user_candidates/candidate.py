@@ -1,12 +1,17 @@
 import uuid
-from datetime import datetime
+import datetime
+
 from typing import Optional, List
 
 from pydantic import BaseModel
 
+from .candidate_stage_info import CandidateStageInfoRead
+
 
 class CandidateBase(BaseModel):
-    candidate_stage_id: Optional[uuid.UUID] 
+    staff_unit_curator_id: uuid.UUID
+    staff_unit_id: uuid.UUID
+
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
@@ -22,10 +27,10 @@ class CandidateUserRead(BaseModel):
     class Config:
         orm_mode = True
 
+
 class StaffUnitCandidateRead(BaseModel):
     id: uuid.UUID
     users: Optional[List[CandidateUserRead]] = None
-
 
     class Config:
         orm_mode = True
@@ -33,20 +38,20 @@ class StaffUnitCandidateRead(BaseModel):
          
 
 class CandidateCreate(CandidateBase):
-    staff_unit_curator_id: Optional[uuid.UUID]
-    staff_unit_id: Optional[uuid.UUID]
+    pass
 
 
 class CandidateUpdate(CandidateBase):
-    staff_unit_curator_id: Optional[uuid.UUID]
-    staff_unit_id: Optional[uuid.UUID]
-
+    pass
 
 
 class CandidateRead(CandidateBase):
-    id: uuid.UUID
+    id: Optional[uuid.UUID]
     progress: Optional[int]
     current_stage: Optional[uuid.UUID]
-    last_edit_date: Optional[datetime]
+    last_edit_date: Optional[datetime.date]
+    staff_unit_curator_id: Optional[uuid.UUID]
     staff_unit_curator: Optional[StaffUnitCandidateRead]
+    staff_unit_id: Optional[uuid.UUID]
     staff_unit: Optional[StaffUnitCandidateRead]
+    candidate_stage_infos: Optional[List[CandidateStageInfoRead]]

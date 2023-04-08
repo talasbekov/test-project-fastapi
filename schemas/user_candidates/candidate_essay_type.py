@@ -11,8 +11,10 @@ class CandidateEssayTypeBase(BaseModel):
         orm_mode = True
         arbitrary_types_allowed = True
 
+
 class CandidateEssayTypeCreate(CandidateEssayTypeBase):
     pass
+
 
 class CandidateEssayTypeUpdate(CandidateEssayTypeBase):
     pass
@@ -20,3 +22,4 @@ class CandidateEssayTypeUpdate(CandidateEssayTypeBase):
 
 class CandidateEssayTypeRead(CandidateEssayTypeBase):
     id: Optional[uuid.UUID]
+    name: Optional[str]
