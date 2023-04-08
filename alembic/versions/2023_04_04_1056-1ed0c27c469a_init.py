@@ -269,6 +269,8 @@ def upgrade() -> None:
     sa.Column('staff_unit_curator_id', sa.UUID(), nullable=True),
     sa.Column('staff_unit_id', sa.UUID(), nullable=True),
     sa.Column('essay_id', sa.UUID(), nullable=True),
+    sa.Column('is_physical_passed', sa.Boolean(), nullable=True),
+    sa.Column('attempt_number', sa.Integer(), nullable=True, server_default='0'),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('status', sa.Enum('ACTIVE', 'DRAFT', name='CandidateStatusEnum'), nullable=False, server_default='ACTIVE'),
     sa.Column('debarment_reason', sa.String, nullable=True),

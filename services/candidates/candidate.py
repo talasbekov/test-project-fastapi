@@ -8,7 +8,7 @@ from models import (Candidate, CandidateStageInfo, CandidateStageType,
                     StaffUnit, CandidateStatusEnum, Position, User)
 from models import CandidateStageInfoStatusEnum
 
-from schemas import CandidateCreate, CandidateUpdate, CandidateRead
+from schemas import CandidateCreate, CandidateUpdate, CandidateRead, CandidateStageInfoCreate
 from services import ServiceBase, staff_unit_service, user_service
 from .candidate_stage_info import candidate_stage_info_service
 from .candidate_essay_type import candidate_essay_type_service
@@ -112,6 +112,9 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
                 candidate.debarment_reason = body.debarment_reason
             elif candidate.status == CandidateStatusEnum.ACTIVE.value:
                 candidate.debarment_reason = None
+        if body.is_physical_passed is not None:
+            if body.is_physical_passed:
+                candidate.is_physical_passed = body.is_physical_passed
 
         db.add(candidate)
         db.flush()

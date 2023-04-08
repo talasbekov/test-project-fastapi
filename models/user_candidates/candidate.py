@@ -1,6 +1,6 @@
 import enum
 
-from sqlalchemy import Column, ForeignKey, Enum, String
+from sqlalchemy import Column, ForeignKey, Enum, String, Boolean, Integer
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship, validates
 
@@ -18,6 +18,8 @@ class Candidate(Model):
 
     status = Column(Enum(CandidateStatusEnum), server_default=CandidateStatusEnum.ACTIVE)
     debarment_reason = Column(String, nullable=True)
+    is_physical_passed = Column(Boolean, nullable=True)
+    attempt_number = Column(Integer, server_default='0', nullable=True)
     staff_unit_curator_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"), nullable=True)
     staff_unit_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"), nullable=True)
     essay_id = Column(UUID(as_uuid=True), ForeignKey("candidate_essay_types.id"), nullable=True)
