@@ -5,7 +5,7 @@ import uuid
 
 
 class PenaltyReadHistory(BaseModel):
-    type: Optional[str]
+    name: Optional[str]
 
     class Config:
         orm_mode = True
@@ -14,30 +14,12 @@ class PenaltyReadHistory(BaseModel):
     @classmethod
     def from_orm(cls, orm_obj):
         return cls(
-            type=orm_obj.type.name,
+            name=orm_obj.type.name,
         )
 
 
 class WorkExperienceRead(BaseModel):
-    num_of_organization: Optional[str]
-
-    class Config:
-        orm_mode = True
-        arbitrary_types_allowed = True
-
-
-class EmergencyServiceRead(BaseModel):
-    coefficient: Optional[Decimal]
-    percentage: Optional[int]
-    staff_division: Optional[str]
-
-    class Config:
-        orm_mode = True
-        arbitrary_types_allowed = True
-
-
-class AttestationReadHistory(BaseModel):
-    status: Optional[str]
+    name: Optional[str]
 
     class Config:
         orm_mode = True
@@ -45,24 +27,68 @@ class AttestationReadHistory(BaseModel):
 
     @classmethod
     def from_orm(cls, orm_obj):
-        print(orm_obj.attestation_history.attestation_status)
         return cls(
-            status=orm_obj.attestation_history.attestation_status,
+            name=orm_obj.num_of_organization,
+        )
+
+class EmergencyServiceRead(BaseModel):
+    name: Optional[str]
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
+
+    @classmethod
+    def from_orm(cls, orm_obj):
+        coefficient = orm_obj.coefficient
+        percentage = orm_obj.percentage
+        staff_division = orm_obj.staff_division.name
+
+        return cls(
+            name=f"{staff_division} Департмент - ({coefficient}:{percentage}%)",
+        )
+
+class AttestationReadHistory(BaseModel):
+    name: Optional[str]
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
+
+    @classmethod
+    def from_orm(cls, orm_obj): 
+        return cls(
+            name=orm_obj.attestation_history.attestation_status,
         )
 
 
 class NameChangeReadHistory(BaseModel):
-    name_before: Optional[str]
-    name_after: Optional[str]
-    name_type: str
+    name: str
 
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
 
+    @classmethod
+    def from_orm(cls, orm_obj):
+        name_before = orm_obj.name_before
+        name_after = orm_obj.name_after
+        name_type = orm_obj.name_type
+
+        if name_type == 'name':
+            name_type = 'Имя'
+        elif name_type == 'surname':
+            name_type = 'Фамилия'
+        elif name_type == 'father_name':
+            name_type = 'Отчество'
+        name = f"{name_type}: {name_before} -> {name_after}"
+        return cls(
+            name=name,
+        )
+    
 
 class ServiceCharacteristicRead(BaseModel):
-    characteristic_initiator: Optional[str]
+    name: Optional[str]
 
     class Config:
         orm_mode = True
@@ -71,7 +97,7 @@ class ServiceCharacteristicRead(BaseModel):
     @classmethod
     def from_orm(cls, orm_obj):
         return cls(
-            characteristic_initiator=orm_obj.characteristic_initiator,
+            name=orm_obj.characteristic_initiator,
         )
 
 
@@ -98,16 +124,28 @@ class CoolnessReadHistory(BaseModel):
 
 
 class ContractReadHistory(BaseModel):
-    number_of_years: Optional[int]
+    name: Optional[str]
 
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
 
+    @classmethod
+    def from_orm(cls, orm_obj):
+
+        return cls(
+            name=orm_obj.type.name,
+        )
 
 class SecondmentReadHistory(BaseModel):
-    staff_division_id: Optional[uuid.UUID]
+    name: Optional[str]
 
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
+
+    @classmethod
+    def from_orm(cls, orm_obj):
+        return cls(
+            name=orm_obj.staff_division.name,
+        )
