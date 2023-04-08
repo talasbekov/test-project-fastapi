@@ -121,6 +121,20 @@ options = {
     }
 }
 
+def create_candidate_stage_info(candidate_id,
+                                staff_unit_coordinate_id,
+                                candidate_stage_type_id):
+    op.bulk_insert(
+        Base.metadata.tables['candidate_stage_infos'],
+        [{
+            'id': get_uuid(),
+            'staff_unit_coordinate_id': staff_unit_coordinate_id,
+            'candidate_stage_type_id': candidate_stage_type_id,
+            'is_waits': True,
+            'candidate_id': candidate_id,
+        }]
+    )
+
 
 def upgrade() -> None:
 
@@ -1295,6 +1309,89 @@ def upgrade() -> None:
         }]
     )
 
+    candidate_id = get_uuid()
+    candidate2_id = get_uuid()
+    candidate3_id = get_uuid()
+    candidate4_id = get_uuid()
+    candidate5_id = get_uuid()
+    candidate6_id = get_uuid()
+    candidate7_id = get_uuid()
+    candidate8_id = get_uuid()
+    candidate9_id = get_uuid()
+    candidate10_id = get_uuid()
+    candidate11_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['candidates'],
+        [{
+            'id': candidate_id,
+            'staff_unit_id': staff_unit1_id,
+            'staff_unit_curator_id': staff_unit11_id,
+            'status': 'ACTIVE',
+            'debarment_reason': None
+        }, {
+            'id': candidate2_id,
+            'staff_unit_id': staff_unit2_id,
+            'staff_unit_curator_id': staff_unit11_id,
+            'status': 'ACTIVE',
+            'debarment_reason': None
+        }, {
+            'id': candidate3_id,
+            'staff_unit_id': staff_unit3_id,
+            'staff_unit_curator_id': staff_unit11_id,
+            'status': 'ACTIVE',
+            'debarment_reason': None
+        }, {
+            'id': candidate4_id,
+            'staff_unit_id': staff_unit5_id,
+            'staff_unit_curator_id': staff_unit11_id,
+            'status': 'ACTIVE',
+            'debarment_reason': None
+        }, {
+            'id': candidate5_id,
+            'staff_unit_id': staff_unit7_id,
+            'staff_unit_curator_id': staff_unit11_id,
+            'status': 'ACTIVE',
+            'debarment_reason': None
+        }, {
+            'id': candidate6_id,
+            'staff_unit_id': staff_unit8_id,
+            'staff_unit_curator_id': staff_unit11_id,
+            'status': 'ACTIVE',
+            'debarment_reason': None
+        }, {
+            'id': candidate7_id,
+            'staff_unit_id': staff_unit9_id,
+            'staff_unit_curator_id': staff_unit11_id,
+            'status': 'DRAFT',
+            'debarment_reason': 'Недостаточный уровень квалификации: кандидат не соответствует необходимым требованиям по опыту и навыкам для данной вакансии'
+        }, {
+            'id': candidate8_id,
+            'staff_unit_id': staff_unit1_id,
+            'staff_unit_curator_id': staff_unit10_id,
+            'status': 'ACTIVE',
+            'debarment_reason': None
+        }, {
+            'id': candidate9_id,
+            'staff_unit_id': staff_unit1_id,
+            'staff_unit_curator_id': staff_unit10_id,
+            'status': 'ACTIVE',
+            'debarment_reason': None
+        }, {
+            'id': candidate10_id,
+            'staff_unit_id': staff_unit1_id,
+            'staff_unit_curator_id': staff_unit10_id,
+            'status': 'DRAFT',
+            'debarment_reason': 'Недостаточное количество опыта: кандидат не имеет достаточного опыта работы в данной области или на аналогичной должности'
+        }, {
+            'id': candidate11_id,
+            'staff_unit_id': staff_unit1_id,
+            'staff_unit_curator_id': staff_unit10_id,
+            'status': 'DRAFT',
+            'debarment_reason': 'Нарушение правил: кандидат нарушил правила собеседования или требования к вакансии.'
+        }]
+    )
+
     candidate_category1_id = get_uuid()
     candidate_category2_id = get_uuid()
     candidate_category3_id = get_uuid()
@@ -1358,194 +1455,919 @@ def upgrade() -> None:
     candidate_stage_types15_id = get_uuid()
     candidate_stage_types16_id = get_uuid()
     candidate_stage_types17_id = get_uuid()
+    candidate_stage_types18_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['candidate_stage_types'],
         [{
             'id': candidate_stage_types1_id,
-            'name': 'Первичная беседа'
-        }, {
-            'id': candidate_stage_types2_id,
-            'name': 'Дополнительная беседа по необходимости'
-        }, {
-            'id': candidate_stage_types3_id,
             'name': 'Запросы с внешних источников (др. гос органы)'
         }, {
-            'id': candidate_stage_types4_id,
-            'name': 'Беседа о религии'
+            'id': candidate_stage_types2_id,
+            'name': 'Первичная беседа'
         }, {
-            'id': candidate_stage_types5_id,
-            'name': 'Беседа с родителями'
-        }, {
-            'id': candidate_stage_types6_id,
-            'name': 'Беседа о проф. пригодности'
-        }, {
-            'id': candidate_stage_types7_id,
-            'name': 'Справка по результатам оперативного задания'
-        }, {
-            'id': candidate_stage_types8_id,
-            'name': 'Беседа с психологом'
-        }, {
-            'id': candidate_stage_types9_id,
-            'name': 'Беседа с УСБ'
-        }, {
-            'id': candidate_stage_types10_id,
-            'name': 'Беседа с руководителем структурного подразделения'
-        }, {
-            'id': candidate_stage_types11_id,
-            'name': 'Беседа с руководителем руководством департамента кадров'
-        }, {
-            'id': candidate_stage_types12_id,
+            'id': candidate_stage_types3_id,
             'name': 'Рецензия на эссе'
         }, {
+            'id': candidate_stage_types4_id,
+            'name': 'Дополнительная беседа (не обязательно)'
+        }, {
+            'id': candidate_stage_types5_id,
+            'name': 'Военно-врачебная комиссия'
+        }, {
+            'id': candidate_stage_types6_id,
+            'name': 'Беседа с психологом',
+            'is_curator_review_required': True
+        }, {
+            'id': candidate_stage_types7_id,
+            'name': 'Результаты тестирования на знание законодательства РК'
+        }, {
+            'id': candidate_stage_types8_id,
+            'name': 'Беседа о религии'
+        }, {
+            'id': candidate_stage_types9_id,
+            'name': 'Беседа с родителями'
+        }, {
+            'id': candidate_stage_types10_id,
+            'name': 'Справка по результатам оперативного задания (не обязательно)',
+            'is_curator_review_required': True
+        }, {
+            'id': candidate_stage_types11_id,
+            'name': 'Беседа о проф. пригодности',
+            'is_curator_review_required': True
+        }, {
+            'id': candidate_stage_types12_id,
+            'name': 'Беседа с представителем УСБ',
+            'is_curator_review_required': True
+        }, {
             'id': candidate_stage_types13_id,
-            'name': 'Военной врачебная комиссия '
+            'name': 'Беседа с руководителем структурного подразделения',
+            'is_curator_review_required': True
         }, {
             'id': candidate_stage_types14_id,
-            'name': 'Результаты физической подготовки'
+            'name': 'Беседа с руководством департамента кадров',
+            'is_curator_review_required': True
         }, {
             'id': candidate_stage_types15_id,
-            'name': 'Результаты полиграфического исследования'
+            'name': 'Результаты полиграфологического исследования'
         }, {
             'id': candidate_stage_types16_id,
-            'name': 'Заключение по спец. проверке'
+            'name': 'Результаты физической подготовки'
         }, {
             'id': candidate_stage_types17_id,
-            'name': 'Заключение о зачислении '
+            'name': 'Заключение по спец. проверке'
+        }, {
+            'id': candidate_stage_types18_id,
+            'name': 'Заключение о зачислении',
+            'is_curator_review_required': True
         }]
     )
 
-    candidate_stage_question1_id = get_uuid()
-    candidate_stage_question2_id = get_uuid()
-    candidate_stage_question3_id = get_uuid()
-    candidate_stage_question4_id = get_uuid()
-    candidate_stage_question5_id = get_uuid()
-    candidate_stage_question6_id = get_uuid()
-    candidate_stage_question7_id = get_uuid()
-    candidate_stage_question8_id = get_uuid()
-    candidate_stage_question9_id = get_uuid()
-    candidate_stage_question10_id = get_uuid()
-    candidate_stage_question11_id = get_uuid()
-    candidate_stage_question12_id = get_uuid()
-    candidate_stage_question13_id = get_uuid()
-    candidate_stage_question14_id = get_uuid()
-    candidate_stage_question15_id = get_uuid()
-    candidate_stage_question16_id = get_uuid()
-    candidate_stage_question17_id = get_uuid()
-    candidate_stage_question18_id = get_uuid()
-    candidate_stage_question19_id = get_uuid()
-    candidate_stage_question20_id = get_uuid()
-    candidate_stage_question21_id = get_uuid()
+    candidate_stage_question1_id = get_uuid()  # Первичная беседа
+    candidate_stage_question2_id = get_uuid()  # Первичная беседа
+    candidate_stage_question3_id = get_uuid()  # Первичная беседа
+    candidate_stage_question4_id = get_uuid()  # Первичная беседа
+    candidate_stage_question5_id = get_uuid()  # Первичная беседа
+    candidate_stage_question6_id = get_uuid()  # Первичная беседа
+    candidate_stage_question7_id = get_uuid()  # Первичная беседа
+    candidate_stage_question8_id = get_uuid()  # Первичная беседа
+    candidate_stage_question9_id = get_uuid()  # Первичная беседа
+    candidate_stage_question10_id = get_uuid()  # Первичная беседа
+    candidate_stage_question11_id = get_uuid()  # Запросы с внешних источников (др. гос органы)
+    candidate_stage_question12_id = get_uuid()  # Беседа о религии
+    candidate_stage_question13_id = get_uuid()  # Беседа с родителями
+    candidate_stage_question14_id = get_uuid()  # Справка о профессиональной пригодности
+    candidate_stage_question15_id = get_uuid()  # Дополнительная беседа (не обязательно)
+    candidate_stage_question16_id = get_uuid()  # Беседа с представителем УСБ
+    candidate_stage_question17_id = get_uuid()  # Беседа с руководством департамента кадров
+    candidate_stage_question18_id = get_uuid()  # Рецензия на эссе
+    candidate_stage_question19_id = get_uuid()  # Заключение по спец. проверке
+    candidate_stage_question20_id = get_uuid()  # Заключение о зачислении
+    candidate_stage_question21_id = get_uuid()  # Результаты тестирования на знание законодательства РК
+    candidate_stage_question22_id = get_uuid()  # Военно-врачебная комиссия
+    candidate_stage_question23_id = get_uuid()
+    candidate_stage_question24_id = get_uuid()
+    candidate_stage_question25_id = get_uuid()
+    candidate_stage_question26_id = get_uuid()
+    candidate_stage_question27_id = get_uuid()
+
 
     op.bulk_insert(
         Base.metadata.tables['candidate_stage_questions'],
         [{
             'id': candidate_stage_question1_id,
-            'question_type': 'String',
+            'question_type': 'Document',
             'candidate_stage_type_id': candidate_stage_types1_id,
-            'question': 'Кем подобран и кем рекомендован',
+            'question': None,
         }, {
             'id': candidate_stage_question2_id,
-            'question_type': 'String',
-            'candidate_stage_type_id': candidate_stage_types1_id,
-            'question': 'Краткие сведения из автобиографии',
-            'description': '(о рождении, школе, учебе в колледже/ВУЗе, срочной службе, трудовой деятельности)'
+            'question_type': 'Dropdown',
+            'candidate_stage_type_id': candidate_stage_types2_id,
+            'question': 'Кем подобран и кем рекомендован',
         }, {
             'id': candidate_stage_question3_id,
             'question_type': 'String',
-            'candidate_stage_type_id': candidate_stage_types1_id,
-            'question': 'Как характеризуется с последнего места работы',
-            'description': '(сведения из характеристики с места работы)'
+            'candidate_stage_type_id': candidate_stage_types2_id,
+            'question': 'Краткие сведения из автобиографии',
+            'description': '(о рождении, школе, учебе в колледже/ВУЗе, срочной службе, трудовой деятельности)'
         }, {
             'id': candidate_stage_question4_id,
             'question_type': 'String',
-            'candidate_stage_type_id': candidate_stage_types1_id,
-            'question': 'Доведение требований к службе в СГО РК',
+            'candidate_stage_type_id': candidate_stage_types2_id,
+            'question': 'Как характеризуется с последнего места работы',
+            'description': '(сведения из характеристики с места работы)'
         }, {
             'id': candidate_stage_question5_id,
             'question_type': 'String',
-            'candidate_stage_type_id': candidate_stage_types1_id,
-            'question': 'Мотив кандидата на службу в СГО РК',
+            'candidate_stage_type_id': candidate_stage_types2_id,
+            'question': 'Доведение требований к службе в СГО РК',
         }, {
             'id': candidate_stage_question6_id,
             'question_type': 'String',
-            'candidate_stage_type_id': candidate_stage_types1_id,
-            'question': 'Рекомендация кандидату (читать газеты, смотреть мировые новости и тд.)',
+            'candidate_stage_type_id': candidate_stage_types2_id,
+            'question': 'Мотив кандидата на службу в СГО РК',
         }, {
             'id': candidate_stage_question7_id,
             'question_type': 'String',
-            'candidate_stage_type_id': candidate_stage_types1_id,
-            'question': 'Сведения о родственниках кандидата',
+            'candidate_stage_type_id': candidate_stage_types2_id,
+            'question': 'Рекомендация кандидату (читать газеты, смотреть мировые новости и тд.)',
         }, {
             'id': candidate_stage_question8_id,
             'question_type': 'String',
-            'candidate_stage_type_id': candidate_stage_types1_id,
-            'question': 'Дополнительные сведения (физическая подготовка)',
+            'candidate_stage_type_id': candidate_stage_types2_id,
+            'question': 'Сведения о родственниках кандидата',
         }, {
             'id': candidate_stage_question9_id,
             'question_type': 'String',
-            'candidate_stage_type_id': candidate_stage_types1_id,
-            'question': 'Подведение итогов беседы',
+            'candidate_stage_type_id': candidate_stage_types2_id,
+            'question': 'Дополнительные сведения (физическая подготовка)',
         }, {
             'id': candidate_stage_question10_id,
-            'question_type': 'Dropdown',
-            'candidate_stage_type_id': candidate_stage_types1_id,
-            'question': 'Категория кандидата',
+            'question_type': 'String',
+            'candidate_stage_type_id': candidate_stage_types2_id,
+            'question': 'Подведение итогов беседы',
         }, {
             'id': candidate_stage_question11_id,
-            'question_type': 'Document',
-            'candidate_stage_type_id': candidate_stage_types3_id,
-            'question': None
+            'question_type': 'Dropdown',
+            'candidate_stage_type_id': candidate_stage_types2_id,
+            'question': 'Категория кандидата',
         }, {
             'id': candidate_stage_question12_id,
             'question_type': 'Text',
-            'candidate_stage_type_id': candidate_stage_types4_id,
+            'candidate_stage_type_id': candidate_stage_types3_id,
             'question': None
         }, {
             'id': candidate_stage_question13_id,
             'question_type': 'Text',
-            'candidate_stage_type_id': candidate_stage_types5_id,
+            'candidate_stage_type_id': candidate_stage_types4_id,
             'question': None
         }, {
             'id': candidate_stage_question14_id,
-            'question_type': 'Text',
-            'candidate_stage_type_id': candidate_stage_types2_id,
+            'question_type': 'Choice',
+            'candidate_stage_type_id': candidate_stage_types5_id,
             'question': None
         }, {
             'id': candidate_stage_question15_id,
             'question_type': 'Text',
-            'candidate_stage_type_id': candidate_stage_types9_id,
+            'candidate_stage_type_id': candidate_stage_types6_id,
             'question': None
         }, {
             'id': candidate_stage_question16_id,
-            'question_type': 'Text',
-            'candidate_stage_type_id': candidate_stage_types11_id,
+            'question_type': 'String',
+            'candidate_stage_type_id': candidate_stage_types7_id,
             'question': None
         }, {
             'id': candidate_stage_question17_id,
             'question_type': 'Text',
-            'candidate_stage_type_id': candidate_stage_types12_id,
+            'candidate_stage_type_id': candidate_stage_types8_id,
             'question': None
         }, {
             'id': candidate_stage_question18_id,
             'question_type': 'Text',
-            'candidate_stage_type_id': candidate_stage_types16_id,
+            'candidate_stage_type_id': candidate_stage_types9_id,
             'question': None
         }, {
             'id': candidate_stage_question19_id,
             'question_type': 'Text',
-            'candidate_stage_type_id': candidate_stage_types17_id,
+            'candidate_stage_type_id': candidate_stage_types10_id,
             'question': None
         }, {
             'id': candidate_stage_question20_id,
-            'question_type': 'Choice',
-            'candidate_stage_type_id': candidate_stage_types13_id,
+            'question_type': 'Text',
+            'candidate_stage_type_id': candidate_stage_types11_id,
             'question': None
         }, {
             'id': candidate_stage_question21_id,
+            'question_type': 'Text',
+            'candidate_stage_type_id': candidate_stage_types12_id,
+            'question': None
+        }, {
+            'id': candidate_stage_question22_id,
+            'question_type': 'Text',
+            'candidate_stage_type_id': candidate_stage_types13_id,
+            'question': None
+        }, {
+            'id': candidate_stage_question23_id,
+            'question_type': 'Text',
+            'candidate_stage_type_id': candidate_stage_types14_id,
+            'question': None
+        }, {
+            'id': candidate_stage_question24_id,
             'question_type': 'Choice',
             'candidate_stage_type_id': candidate_stage_types15_id,
             'question': None
+        }, {
+            'id': candidate_stage_question25_id,
+            'question_type': 'String',
+            'candidate_stage_type_id': candidate_stage_types16_id,
+            'question': None
+        }, {
+            'id': candidate_stage_question26_id,
+            'question_type': 'Document',
+            'candidate_stage_type_id': candidate_stage_types17_id,
+            'question': None
+        }, {
+            'id': candidate_stage_question27_id,
+            'question_type': 'Document',
+            'candidate_stage_type_id': candidate_stage_types18_id,
+            'question': None
+        }]
+    )
+    
+    create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
+                                candidate_stage_types1_id)
+    create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
+                                candidate_stage_types2_id)
+    create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
+                                candidate_stage_types3_id)
+    create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
+                                candidate_stage_types4_id)
+    create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
+                                candidate_stage_types5_id)
+    create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
+                                candidate_stage_types6_id)
+    create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
+                                candidate_stage_types7_id)
+    create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
+                                candidate_stage_types8_id)
+    create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
+                                candidate_stage_types9_id)
+    create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
+                                candidate_stage_types10_id)
+    create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
+                                candidate_stage_types11_id)
+    create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
+                                candidate_stage_types12_id)
+    create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
+                                candidate_stage_types13_id)
+    create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
+                                candidate_stage_types14_id)
+    create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
+                                candidate_stage_types15_id)
+    create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
+                                candidate_stage_types16_id)
+    create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
+                                candidate_stage_types17_id)
+    create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
+                                candidate_stage_types18_id)
+
+    # candidate2_id
+    create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
+                                candidate_stage_types1_id)
+    create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
+                                candidate_stage_types2_id)
+    create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
+                                candidate_stage_types3_id)
+    create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
+                                candidate_stage_types4_id)
+    create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
+                                candidate_stage_types5_id)
+    create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
+                                candidate_stage_types6_id)
+    create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
+                                candidate_stage_types7_id)
+    create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
+                                candidate_stage_types8_id)
+    create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
+                                candidate_stage_types9_id)
+    create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
+                                candidate_stage_types10_id)
+    create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
+                                candidate_stage_types11_id)
+    create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
+                                candidate_stage_types12_id)
+    create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
+                                candidate_stage_types13_id)
+    create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
+                                candidate_stage_types14_id)
+    create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
+                                candidate_stage_types15_id)
+    create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
+                                candidate_stage_types16_id)
+    create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
+                                candidate_stage_types17_id)
+    create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
+                                candidate_stage_types18_id)
+
+    # candidate3_id
+    create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
+                                candidate_stage_types1_id)
+    create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
+                                candidate_stage_types2_id)
+    create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
+                                candidate_stage_types3_id)
+    create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
+                                candidate_stage_types4_id)
+    create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
+                                candidate_stage_types5_id)
+    create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
+                                candidate_stage_types6_id)
+    create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
+                                candidate_stage_types7_id)
+    create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
+                                candidate_stage_types8_id)
+    create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
+                                candidate_stage_types9_id)
+    create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
+                                candidate_stage_types10_id)
+    create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
+                                candidate_stage_types11_id)
+    create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
+                                candidate_stage_types12_id)
+    create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
+                                candidate_stage_types13_id)
+    create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
+                                candidate_stage_types14_id)
+    create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
+                                candidate_stage_types15_id)
+    create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
+                                candidate_stage_types16_id)
+    create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
+                                candidate_stage_types17_id)
+    create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
+                                candidate_stage_types18_id)
+
+    # candidate4_id
+    create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
+                                candidate_stage_types1_id)
+    create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
+                                candidate_stage_types2_id)
+    create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
+                                candidate_stage_types3_id)
+    create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
+                                candidate_stage_types4_id)
+    create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
+                                candidate_stage_types5_id)
+    create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
+                                candidate_stage_types6_id)
+    create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
+                                candidate_stage_types7_id)
+    create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
+                                candidate_stage_types8_id)
+    create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
+                                candidate_stage_types9_id)
+    create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
+                                candidate_stage_types10_id)
+    create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
+                                candidate_stage_types11_id)
+    create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
+                                candidate_stage_types12_id)
+    create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
+                                candidate_stage_types13_id)
+    create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
+                                candidate_stage_types14_id)
+    create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
+                                candidate_stage_types15_id)
+    create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
+                                candidate_stage_types16_id)
+    create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
+                                candidate_stage_types17_id)
+    create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
+                                candidate_stage_types18_id)
+
+    # candidate5_id
+    create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
+                                candidate_stage_types1_id)
+    create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
+                                candidate_stage_types2_id)
+    create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
+                                candidate_stage_types3_id)
+    create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
+                                candidate_stage_types4_id)
+    create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
+                                candidate_stage_types5_id)
+    create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
+                                candidate_stage_types6_id)
+    create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
+                                candidate_stage_types7_id)
+    create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
+                                candidate_stage_types8_id)
+    create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
+                                candidate_stage_types9_id)
+    create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
+                                candidate_stage_types10_id)
+    create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
+                                candidate_stage_types11_id)
+    create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
+                                candidate_stage_types12_id)
+    create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
+                                candidate_stage_types13_id)
+    create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
+                                candidate_stage_types14_id)
+    create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
+                                candidate_stage_types15_id)
+    create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
+                                candidate_stage_types16_id)
+    create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
+                                candidate_stage_types17_id)
+    create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
+                                candidate_stage_types18_id)
+
+    # candidate6_id
+    create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
+                                candidate_stage_types1_id)
+    create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
+                                candidate_stage_types2_id)
+    create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
+                                candidate_stage_types3_id)
+    create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
+                                candidate_stage_types4_id)
+    create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
+                                candidate_stage_types5_id)
+    create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
+                                candidate_stage_types6_id)
+    create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
+                                candidate_stage_types7_id)
+    create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
+                                candidate_stage_types8_id)
+    create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
+                                candidate_stage_types9_id)
+    create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
+                                candidate_stage_types10_id)
+    create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
+                                candidate_stage_types11_id)
+    create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
+                                candidate_stage_types12_id)
+    create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
+                                candidate_stage_types13_id)
+    create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
+                                candidate_stage_types14_id)
+    create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
+                                candidate_stage_types15_id)
+    create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
+                                candidate_stage_types16_id)
+    create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
+                                candidate_stage_types17_id)
+    create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
+                                candidate_stage_types18_id)
+
+    # candidate7_id
+    create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
+                                candidate_stage_types1_id)
+    create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
+                                candidate_stage_types2_id)
+    create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
+                                candidate_stage_types3_id)
+    create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
+                                candidate_stage_types4_id)
+    create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
+                                candidate_stage_types5_id)
+    create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
+                                candidate_stage_types6_id)
+    create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
+                                candidate_stage_types7_id)
+    create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
+                                candidate_stage_types8_id)
+    create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
+                                candidate_stage_types9_id)
+    create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
+                                candidate_stage_types10_id)
+    create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
+                                candidate_stage_types11_id)
+    create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
+                                candidate_stage_types12_id)
+    create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
+                                candidate_stage_types13_id)
+    create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
+                                candidate_stage_types14_id)
+    create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
+                                candidate_stage_types15_id)
+    create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
+                                candidate_stage_types16_id)
+    create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
+                                candidate_stage_types17_id)
+    create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
+                                candidate_stage_types18_id)
+
+    # candidate8_id
+    create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
+                                candidate_stage_types1_id)
+    create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
+                                candidate_stage_types2_id)
+    create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
+                                candidate_stage_types3_id)
+    create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
+                                candidate_stage_types4_id)
+    create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
+                                candidate_stage_types5_id)
+    create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
+                                candidate_stage_types6_id)
+    create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
+                                candidate_stage_types7_id)
+    create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
+                                candidate_stage_types8_id)
+    create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
+                                candidate_stage_types9_id)
+    create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
+                                candidate_stage_types10_id)
+    create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
+                                candidate_stage_types11_id)
+    create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
+                                candidate_stage_types12_id)
+    create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
+                                candidate_stage_types13_id)
+    create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
+                                candidate_stage_types14_id)
+    create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
+                                candidate_stage_types15_id)
+    create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
+                                candidate_stage_types16_id)
+    create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
+                                candidate_stage_types17_id)
+    create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
+                                candidate_stage_types18_id)
+
+    # candidate9_id
+    create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
+                                candidate_stage_types1_id)
+    create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
+                                candidate_stage_types2_id)
+    create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
+                                candidate_stage_types3_id)
+    create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
+                                candidate_stage_types4_id)
+    create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
+                                candidate_stage_types5_id)
+    create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
+                                candidate_stage_types6_id)
+    create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
+                                candidate_stage_types7_id)
+    create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
+                                candidate_stage_types8_id)
+    create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
+                                candidate_stage_types9_id)
+    create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
+                                candidate_stage_types10_id)
+    create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
+                                candidate_stage_types11_id)
+    create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
+                                candidate_stage_types12_id)
+    create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
+                                candidate_stage_types13_id)
+    create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
+                                candidate_stage_types14_id)
+    create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
+                                candidate_stage_types15_id)
+    create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
+                                candidate_stage_types16_id)
+    create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
+                                candidate_stage_types17_id)
+    create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
+                                candidate_stage_types18_id)
+
+    # candidate10_id
+    create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
+                                candidate_stage_types1_id)
+    create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
+                                candidate_stage_types2_id)
+    create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
+                                candidate_stage_types3_id)
+    create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
+                                candidate_stage_types4_id)
+    create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
+                                candidate_stage_types5_id)
+    create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
+                                candidate_stage_types6_id)
+    create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
+                                candidate_stage_types7_id)
+    create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
+                                candidate_stage_types8_id)
+    create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
+                                candidate_stage_types9_id)
+    create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
+                                candidate_stage_types10_id)
+    create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
+                                candidate_stage_types11_id)
+    create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
+                                candidate_stage_types12_id)
+    create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
+                                candidate_stage_types13_id)
+    create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
+                                candidate_stage_types14_id)
+    create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
+                                candidate_stage_types15_id)
+    create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
+                                candidate_stage_types16_id)
+    create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
+                                candidate_stage_types17_id)
+    create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
+                                candidate_stage_types18_id)
+
+    # candidate11_id
+    create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
+                                candidate_stage_types1_id)
+    create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
+                                candidate_stage_types2_id)
+    create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
+                                candidate_stage_types3_id)
+    create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
+                                candidate_stage_types4_id)
+    create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
+                                candidate_stage_types5_id)
+    create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
+                                candidate_stage_types6_id)
+    create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
+                                candidate_stage_types7_id)
+    create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
+                                candidate_stage_types8_id)
+    create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
+                                candidate_stage_types9_id)
+    create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
+                                candidate_stage_types10_id)
+    create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
+                                candidate_stage_types11_id)
+    create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
+                                candidate_stage_types12_id)
+    create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
+                                candidate_stage_types13_id)
+    create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
+                                candidate_stage_types14_id)
+    create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
+                                candidate_stage_types15_id)
+    create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
+                                candidate_stage_types16_id)
+    create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
+                                candidate_stage_types17_id)
+    create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
+                                candidate_stage_types18_id)
+    
+    candidate_essay_type1_id = get_uuid()
+    candidate_essay_type2_id = get_uuid()
+    candidate_essay_type3_id = get_uuid()
+    candidate_essay_type4_id = get_uuid()
+    candidate_essay_type5_id = get_uuid()
+    candidate_essay_type6_id = get_uuid()
+    candidate_essay_type7_id = get_uuid()
+    candidate_essay_type8_id = get_uuid()
+    candidate_essay_type9_id = get_uuid()
+    candidate_essay_type10_id = get_uuid()
+    candidate_essay_type11_id = get_uuid()
+    candidate_essay_type12_id = get_uuid()
+    candidate_essay_type13_id = get_uuid()
+    candidate_essay_type14_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['candidate_essay_types'],
+        [{
+            'id': candidate_essay_type1_id,
+            'name': 'Будущее Казахстана - мое будущее'
+        }, {
+            'id': candidate_essay_type2_id,
+            'name': '«Я патриот! А это значит ...»'
+        }, {
+            'id': candidate_essay_type3_id,
+            'name': 'Мое образование - мой капитал'
+        }, {
+            'id': candidate_essay_type4_id,
+            'name': 'Социальные сети: плюсы и минусы'
+        }, {
+            'id': candidate_essay_type5_id,
+            'name': 'Армия в моей жизни.'
+        }, {
+            'id': candidate_essay_type6_id,
+            'name': 'Будущее Казахстана.'
+        }, {
+            'id': candidate_essay_type7_id,
+            'name': 'В чем смысл жизни?'
+        }, {
+            'id': candidate_essay_type8_id,
+            'name': 'Верность долгу, и измена Родине'
+        }, {
+            'id': candidate_essay_type9_id,
+            'name': 'Где начинается Родина'
+        }, {
+            'id': candidate_essay_type10_id,
+            'name': 'Как вы понимаете значение слова подвиг'
+        }, {
+            'id': candidate_essay_type11_id,
+            'name': 'Почему я хочу служить в СГО РК'
+        }, {
+            'id': candidate_essay_type12_id,
+            'name': 'Кто для меня Президент'
+        }, {
+            'id': candidate_essay_type13_id,
+            'name': 'Что я могу сделать для Родины'
+        }, {
+            'id': candidate_essay_type14_id,
+            'name': 'Герои нашего времени'
         }]
     )
 

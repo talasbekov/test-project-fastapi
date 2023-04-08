@@ -19,6 +19,7 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
     def get_multiple(self, db: Session, filter: str, user_id: str, role_id: str, skip: int = 0, limit: int = 100):
 
         if self._check_by_role(db, role_id):
+            print(type(filter))
             if filter is not None:
                 filter = filter.lower()
                 print(filter)
@@ -142,7 +143,7 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
 
         for i in available_all:
             available_all_roles.append(self._get_role_by_name(db, i))
-
+        
         for i in available_all_roles:
             if staff_unit.position_id == i:
                 return True
@@ -231,6 +232,6 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
         candidate_obj = super().get_by_id(db, candidate['id'])
         if candidate_obj.candidate_stage_answers:
             candidate['last_edit_date'] = candidate_obj.candidate_stage_answers[0].created_at
-
+        print(candidate)
 
 candidate_service = CandidateService(Candidate)  # type: ignore
