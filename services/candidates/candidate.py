@@ -8,7 +8,7 @@ from models import (Candidate, CandidateStageInfo, CandidateStageType,
                     StaffUnit, CandidateStatusEnum, Position, User)
 from models import CandidateStageInfoStatusEnum
 
-from schemas import CandidateCreate, CandidateUpdate, CandidateRead
+from schemas import CandidateCreate, CandidateUpdate, CandidateRead, CandidateStageInfoCreate
 from services import ServiceBase, staff_unit_service, user_service
 from .candidate_stage_info import candidate_stage_info_service
 from .candidate_essay_type import candidate_essay_type_service
