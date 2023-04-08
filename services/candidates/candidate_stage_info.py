@@ -5,7 +5,8 @@ from sqlalchemy.orm import Session
 
 from models import CandidateStageInfo
 from models import CandidateStageInfoStatusEnum
-from schemas import (CandidateStageInfoRead, CandidateStageInfoCreate, CandidateStageInfoUpdate)
+from schemas import (CandidateStageInfoRead, CandidateStageInfoCreate, CandidateStageInfoUpdate,
+                      CandidateStageQuestionReadIn, CandidateStageQuestionType)
 from services import ServiceBase
 
 
@@ -23,6 +24,7 @@ class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageIn
         candidates = db.query(CandidateStageInfo).filter(
             CandidateStageInfo.candidate_id == candidate_id,
         ).order_by(self.model.id.asc()).all()
+        
         return candidates
 
     def sign_candidate(self, db: Session, id: uuid.UUID):

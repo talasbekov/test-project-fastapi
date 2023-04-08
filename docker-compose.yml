@@ -4,7 +4,7 @@ services:
 
   postgres:
     image: postgres:15.1-alpine
-    container_name: postgresql-dev
+    container_name: postgresql-test
     healthcheck:
       test: ["CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'"]
       interval: 10s
@@ -14,7 +14,7 @@ services:
     env_file:
       - .env
     ports:
-      - '5544:5544'
+      - '5412:5412'
     volumes:
       - ./.data:/var/lib/postgresql/data
     networks:
@@ -22,12 +22,12 @@ services:
   
   sgo-erp:
     platform: linux/amd64
-    command: bash -c "alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8101 --log-config log.ini"
+    command: bash -c "alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8002 --log-config log.ini"
     build: .
-    container_name: sgo-erp-dev
+    container_name: sgo-erp-test
     restart: always
     ports:
-        - "8101:8101"
+        - "8002:8002"
     volumes:
       - .:/app
     networks:

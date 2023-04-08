@@ -11,18 +11,19 @@ from exceptions import SgoErpException
 from schemas import PsychologicalCheckCreate, PsychologicalCheckRead, PsychologicalCheckUpdate
 from services import psychological_check_service, profile_service
 
-router = APIRouter(prefix="/psychological-check", tags=["Psychological Check"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(prefix="/psychological-check",
+                   tags=["Psychological Check"], dependencies=[Depends(HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[PsychologicalCheckRead],
             summary="Get all Polygraph Check")
 async def get_all(*,
-    db: Session = Depends(get_db),
-    skip: int = 0,
-    limit: int = 100,
-    Authorize: AuthJWT = Depends()
-):
+                  db: Session = Depends(get_db),
+                  skip: int = 0,
+                  limit: int = 100,
+                  Authorize: AuthJWT = Depends()
+                  ):
     """
         Get all Abroad Travel
 
@@ -30,19 +31,19 @@ async def get_all(*,
         - **limit**: int - The maximum number of abroad travel to return in the response. This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    credentials = Authorize.get_jwt_subject() 
+    credentials = Authorize.get_jwt_subject()
     return psychological_check_service.get_multi_by_user_id(db, credentials, skip, limit)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
-                dependencies=[Depends(HTTPBearer())],
-                response_model=PsychologicalCheckRead,
-                summary="Create")
+             dependencies=[Depends(HTTPBearer())],
+             response_model=PsychologicalCheckRead,
+             summary="Create")
 async def create(*,
-    db: Session = Depends(get_db),
-    body: PsychologicalCheckCreate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 body: PsychologicalCheckCreate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Create new abroad travel
 
@@ -50,9 +51,7 @@ async def create(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    credentials = Authorize.get_jwt_subject()  
-    profile = profile_service.get_by_user_id(db, credentials)
-    body.profile_id = profile.additional_profile.id
+    credentials = Authorize.get_jwt_subject()
     return psychological_check_service.create(db, body)
 
 
@@ -60,11 +59,11 @@ async def create(*,
             response_model=PsychologicalCheckRead,
             summary="Update Abroad Travel by id")
 async def update(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    body: PsychologicalCheckUpdate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 body: PsychologicalCheckUpdate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Update abroad travel by id
 
@@ -72,18 +71,18 @@ async def update(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    abroad_travel = psychological_check_service.get_by_id(db, id)
-    return psychological_check_service.update(db, abroad_travel, body)
+    check = psychological_check_service.get_by_id(db, id)
+    return psychological_check_service.update(db, check, body)
 
 
 @router.delete("/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=PsychologicalCheckRead,
-            summary="Delete Abroad Travel by id")
+               response_model=PsychologicalCheckRead,
+               summary="Delete Abroad Travel by id")
 async def delete(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Delete abroad travel by id
 

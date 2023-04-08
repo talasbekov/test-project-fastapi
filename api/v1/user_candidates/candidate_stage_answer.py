@@ -55,6 +55,23 @@ async def get_by_id(
     return candidate_stage_answer_service.get_by_id(db, id)
 
 
+@router.get("/all/candidate/{candidate_id}", dependencies=[Depends(HTTPBearer())],
+            
+            summary="Get all CandidateStageAnswer by candidate_id")
+async def get_all_by_candidate_id(
+        db: Session = Depends(get_db),
+        Authorize: AuthJWT = Depends(),
+        candidate_id: uuid.UUID = None
+):
+    """
+        Get all CandidateStageAnswer by candidate_id.
+
+        - **candidate_id**: required and should exist in the database.
+    """
+    Authorize.jwt_required()
+    return candidate_stage_answer_service.get_all_by_candidate_id(db, candidate_id)
+
+
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              summary="Create a CandidateStageAnswer for single question",

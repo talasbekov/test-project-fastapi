@@ -50,9 +50,6 @@ async def create(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    credentials = Authorize.get_jwt_subject()  
-    profile = profile_service.get_by_user_id(db, credentials)
-    body.profile_id = profile.additional_profile.id
     return polyhraph_check_service.create(db, body)
 
 
@@ -72,8 +69,8 @@ async def update(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    abroad_travel = polyhraph_check_service.get_by_id(db, id)
-    return polyhraph_check_service.update(db, abroad_travel, body)
+    check = polyhraph_check_service.get_by_id(db, id)
+    return polyhraph_check_service.update(db, check, body)
 
 
 @router.delete("/{id}/", dependencies=[Depends(HTTPBearer())],
