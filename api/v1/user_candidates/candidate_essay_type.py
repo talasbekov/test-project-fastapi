@@ -7,7 +7,8 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from core import get_db
-from schemas import CandidateEssayTypeCreate, CandidateEssayTypeRead, CandidateEssayTypeUpdate
+from schemas import (CandidateEssayTypeCreate, CandidateEssayTypeRead, CandidateEssayTypeUpdate,
+                     CandidateEssayTypeSetToCandidate)
 from services import candidate_essay_type_service
 
 router = APIRouter(prefix="/candidate_essay_type", tags=["CandidateEssayType"], dependencies=[Depends(HTTPBearer())])
@@ -65,6 +66,29 @@ async def create(
     """
     Authorize.jwt_required()
     return candidate_essay_type_service.create(db, body)
+
+
+@router.post("/candidate/{candidate_id}", status_code=status.HTTP_201_CREATED,
+             dependencies=[Depends(HTTPBearer())],
+             summary="Create a CandidateEssayType and set to Candidate",
+             response_model=CandidateEssayTypeRead)
+async def create_and_set_to_candidate(
+        db: Session = Depends(get_db),
+        candidate_id: uuid.UUID = None,
+        body: CandidateEssayTypeSetToCandidate = None,
+        Authorize: AuthJWT = Depends()
+):
+    """
+        Create a CandidateEssayType and set to Candidate.
+
+        - **id**: UUID - optional and should exist in the database.
+        - **name**: str - optional
+
+        1. If candidate chooses from existing essay types then you can set id of essay
+        2. If candidate creates a new essay you can send name of the new essay to create
+    """
+    Authorize.jwt_required()
+    return candidate_essay_type_service.set_to_candidate(db, body, candidate_id)
 
 
 @router.put("/{id}", status_code=status.HTTP_201_CREATED,

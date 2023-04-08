@@ -70,11 +70,7 @@ async def update(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    credentials = Authorize.get_jwt_subject() 
-    profile = profile_service.get_by_user_id(db, credentials)
     abroad_travel = additional_profile_service.get_by_id(db, id)
-    if abroad_travel.profile_id != profile.id: # TODO: check role logic
-        raise SgoErpException("You don't have permission to update this abroad travel")
     return additional_profile_service.update(db, abroad_travel, body)
 
 
@@ -93,11 +89,7 @@ async def delete(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    credentials = Authorize.get_jwt_subject()
-    profile = profile_service.get_by_user_id(db, credentials)
     abroad_travel = additional_profile_service.get_by_id(db, id)
-    if abroad_travel.profile_id != profile.id: # TODO: check role logic
-        raise SgoErpException("You don't have permission to delete this abroad travel")
     return additional_profile_service.delete(db, abroad_travel)
 
 

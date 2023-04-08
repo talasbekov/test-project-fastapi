@@ -9,6 +9,7 @@ from typing import List
 from docxtpl import DocxTemplate
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
+from sqlalchemy import func, or_
 
 from core import Base
 from exceptions import (BadRequestException, ForbiddenException,
@@ -58,16 +59,20 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         return document
 
     def get_initialized_documents(self, db: Session, user_id: uuid.UUID, filter: str, skip: int, limit: int):
-
         user = user_service.get_by_id(db, user_id)
         subquery = hr_document_info_service.get_initialized_by_user_id_subquery(db, user_id)
         if filter is not None:
+            key_words = filter.lower().split()
+
             documents = (
                 db.query(self.model).select_from(subquery)
                 .join(self.model.users)
-                .filter((User.first_name.contains(filter)) |
-                        (User.last_name.contains(filter)) |
-                        (User.father_name.contains(filter)))
+                .join(self.model.document_template)
+                .filter((or_(*[func.lower(User.first_name).contains(name) for name in key_words])) |
+                        (or_(*[func.lower(User.last_name).contains(name) for name in key_words])) |
+                        (or_(*[func.lower(User.father_name).contains(name) for name in key_words]) |
+                         (or_(*[func.lower(HrDocumentTemplate.name).contains(name) for name in key_words])))
+                        )
                 .order_by(self.model.due_date.asc())
                 .offset(skip)
                 .limit(limit)
@@ -91,6 +96,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         draft_status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.DRAFT.value)
 
         if filter is not None:
+            key_words = filter.lower().split()
+
             documents = (
                 db.query(self.model)
                 .filter(self.model.status_id != draft_status.id)
@@ -98,9 +105,10 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 .join(self.model.users)
                 .filter(
                     HrDocumentStep.staff_function_id.in_(staff_function_ids) & (
-                            (User.first_name.contains(filter)) |
-                            (User.last_name.contains(filter)) |
-                            (User.father_name.contains(filter))
+                            (or_(*[func.lower(User.first_name).contains(name) for name in key_words])) |
+                            (or_(*[func.lower(User.last_name).contains(name) for name in key_words])) |
+                            (or_(*[func.lower(User.father_name).contains(name) for name in key_words])) |
+                            (or_(*[func.lower(HrDocumentTemplate.name).contains(name) for name in key_words]))
                     )
                 )
                 .order_by(self.model.due_date.asc())

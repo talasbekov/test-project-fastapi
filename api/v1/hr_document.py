@@ -22,7 +22,6 @@ async def get_not_signed(*,
     filter: str = None,
     skip: int = 0,
     limit: int = 10,
-    filter: str = None
 ):
     """
         Get all not signed HrDocuments
@@ -44,7 +43,6 @@ async def get_initialized(*,
     filter: str = None,
     skip: int = 0,
     limit: int = 10,
-    filter: str = None
 ):
     """
         Get all initialized HrDocuments

@@ -14,6 +14,7 @@ class UserLiberationBase(BaseModel):
     start_date: datetime.datetime
     end_date: datetime.datetime
     profile_id: uuid.UUID
+    document_link: Optional[str]
 
 
 class UserLiberationCreate(UserLiberationBase):

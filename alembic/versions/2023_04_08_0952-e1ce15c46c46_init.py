@@ -1,8 +1,8 @@
 """init
 
-Revision ID: c16115060b49
+Revision ID: e1ce15c46c46
 Revises: 
-Create Date: 2023-04-07 04:58:14.153602
+Create Date: 2023-04-08 09:52:34.709526
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = 'c16115060b49'
+revision = 'e1ce15c46c46'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -56,12 +56,6 @@ def upgrade() -> None:
     )
     op.create_table('candidate_stage_types',
     sa.Column('name', sa.String(), nullable=False),
-    sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('candidate_stages',
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
@@ -128,6 +122,7 @@ def upgrade() -> None:
     sa.Column('path', sa.String(length=255), nullable=True),
     sa.Column('subject_type', sa.Enum('CANDIDATE', 'EMPLOYEE', 'PERSONNEL', 'STAFF', name='subjecttype'), nullable=True),
     sa.Column('properties', postgresql.JSON(none_as_null=True, astext_type=sa.Text()), nullable=True),
+    sa.Column('description', sa.String(length=255), nullable=True),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
@@ -200,6 +195,15 @@ def upgrade() -> None:
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('positions',
+    sa.Column('max_rank_id', sa.UUID(), nullable=True),
+    sa.Column('name', sa.String(), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['max_rank_id'], ['ranks.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('sciences',
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
@@ -232,6 +236,7 @@ def upgrade() -> None:
     sa.Column('parent_group_id', sa.UUID(), nullable=True),
     sa.Column('description', sa.TEXT(), nullable=True),
     sa.Column('is_combat_unit', sa.Boolean(), nullable=True),
+    sa.Column('leader_id', sa.UUID(), nullable=True),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
@@ -239,6 +244,17 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['parent_group_id'], ['staff_divisions.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('staff_units',
+    sa.Column('position_id', sa.UUID(), nullable=False),
+    sa.Column('staff_division_id', sa.UUID(), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['position_id'], ['positions.id'], ),
+    sa.ForeignKeyConstraint(['staff_division_id'], ['staff_divisions.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_foreign_key('staff_division_leader_fk', 'staff_divisions', 'staff_units', ['leader_id'], ['id'])
     op.create_table('type_army_equipments',
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
@@ -290,13 +306,18 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['candidate_stage_type_id'], ['candidate_stage_types.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('positions',
-    sa.Column('max_rank_id', sa.UUID(), nullable=True),
-    sa.Column('name', sa.String(), nullable=False),
+    op.create_table('candidates',
+    sa.Column('status', sa.Enum('ACTIVE', 'DRAFT', name='candidatestatusenum'), server_default='ACTIVE', nullable=True),
+    sa.Column('debarment_reason', sa.String(), nullable=True),
+    sa.Column('staff_unit_curator_id', sa.UUID(), nullable=True),
+    sa.Column('staff_unit_id', sa.UUID(), nullable=True),
+    sa.Column('essay_id', sa.UUID(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.ForeignKeyConstraint(['max_rank_id'], ['ranks.id'], ),
+    sa.ForeignKeyConstraint(['essay_id'], ['candidate_essay_types.id'], ),
+    sa.ForeignKeyConstraint(['staff_unit_curator_id'], ['staff_units.id'], ),
+    sa.ForeignKeyConstraint(['staff_unit_id'], ['staff_units.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('staff_functions',
@@ -342,78 +363,6 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['type_of_other_equipment_id'], ['type_other_equipments.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('archive_staff_functions',
-    sa.Column('hours_per_week', sa.Integer(), nullable=True),
-    sa.Column('discriminator', sa.String(length=255), nullable=True),
-    sa.Column('origin_id', sa.UUID(), nullable=True),
-    sa.Column('name', sa.String(), nullable=False),
-    sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('role_id', sa.UUID(), nullable=True),
-    sa.Column('jurisdiction_id', sa.UUID(), nullable=True),
-    sa.Column('priority', sa.Integer(), nullable=True),
-    sa.Column('type_id', sa.UUID(), nullable=True),
-    sa.ForeignKeyConstraint(['jurisdiction_id'], ['jurisdictions.id'], ),
-    sa.ForeignKeyConstraint(['origin_id'], ['staff_functions.id'], ),
-    sa.ForeignKeyConstraint(['role_id'], ['archive_document_function_types.id'], ),
-    sa.ForeignKeyConstraint(['type_id'], ['archive_service_function_types.id'], ),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('hr_document_steps',
-    sa.Column('hr_document_template_id', sa.UUID(), nullable=False),
-    sa.Column('staff_function_id', sa.UUID(), nullable=False),
-    sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.ForeignKeyConstraint(['hr_document_template_id'], ['hr_document_templates.id'], onupdate='CASCADE', ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['staff_function_id'], ['staff_functions.id'], onupdate='CASCADE', ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('staff_units',
-    sa.Column('position_id', sa.UUID(), nullable=False),
-    sa.Column('staff_division_id', sa.UUID(), nullable=False),
-    sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.ForeignKeyConstraint(['position_id'], ['positions.id'], ),
-    sa.ForeignKeyConstraint(['staff_division_id'], ['staff_divisions.id'], ),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('candidate_stage_infos',
-    sa.Column('status', sa.Enum('PENDING', 'APPROVED', 'DECLINED', 'NOT_STARTED', name='candidatestageinfostatusenum'), server_default='NOT_STARTED', nullable=True),
-    sa.Column('date_sign', sa.TIMESTAMP(), nullable=True),
-    sa.Column('candidate_stage_type_id', sa.UUID(), nullable=True),
-    sa.Column('staff_unit_coordinate_id', sa.UUID(), nullable=True),
-    sa.Column('is_waits', sa.Boolean(), nullable=True),
-    sa.Column('candidate_stage_id', sa.UUID(), nullable=True),
-    sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.ForeignKeyConstraint(['candidate_stage_id'], ['candidate_stages.id'], ),
-    sa.ForeignKeyConstraint(['candidate_stage_type_id'], ['candidate_stage_types.id'], ),
-    sa.ForeignKeyConstraint(['staff_unit_coordinate_id'], ['staff_units.id'], ),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('candidates',
-    sa.Column('staff_unit_curator_id', sa.UUID(), nullable=True),
-    sa.Column('staff_unit_id', sa.UUID(), nullable=True),
-    sa.Column('candidate_stage_id', sa.UUID(), nullable=True),
-    sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.ForeignKeyConstraint(['candidate_stage_id'], ['candidate_stages.id'], ),
-    sa.ForeignKeyConstraint(['staff_unit_curator_id'], ['staff_units.id'], ),
-    sa.ForeignKeyConstraint(['staff_unit_id'], ['staff_units.id'], ),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('staff_unit_functions',
-    sa.Column('staff_unit_id', sa.UUID(), nullable=False),
-    sa.Column('staff_function_id', sa.UUID(), nullable=False),
-    sa.ForeignKeyConstraint(['staff_function_id'], ['staff_functions.id'], onupdate='CASCADE', ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['staff_unit_id'], ['staff_units.id'], onupdate='CASCADE', ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('staff_unit_id', 'staff_function_id')
-    )
     op.create_table('users',
     sa.Column('email', sa.String(length=150), nullable=True),
     sa.Column('password', sa.String(length=255), nullable=False),
@@ -445,6 +394,24 @@ def upgrade() -> None:
     sa.UniqueConstraint('call_sign'),
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('id_number')
+    )
+    op.create_table('archive_staff_functions',
+    sa.Column('hours_per_week', sa.Integer(), nullable=True),
+    sa.Column('discriminator', sa.String(length=255), nullable=True),
+    sa.Column('origin_id', sa.UUID(), nullable=True),
+    sa.Column('name', sa.String(), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('role_id', sa.UUID(), nullable=True),
+    sa.Column('jurisdiction_id', sa.UUID(), nullable=True),
+    sa.Column('priority', sa.Integer(), nullable=True),
+    sa.Column('type_id', sa.UUID(), nullable=True),
+    sa.ForeignKeyConstraint(['jurisdiction_id'], ['jurisdictions.id'], ),
+    sa.ForeignKeyConstraint(['origin_id'], ['staff_functions.id'], ),
+    sa.ForeignKeyConstraint(['role_id'], ['archive_document_function_types.id'], ),
+    sa.ForeignKeyConstraint(['type_id'], ['archive_service_function_types.id'], ),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('attestations',
     sa.Column('user_id', sa.UUID(), nullable=True),
@@ -483,6 +450,21 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['candidate_id'], ['candidates.id'], ),
     sa.ForeignKeyConstraint(['candidate_stage_question_id'], ['candidate_stage_questions.id'], ),
     sa.ForeignKeyConstraint(['category_id'], ['candidate_categories.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('candidate_stage_infos',
+    sa.Column('status', sa.Enum('PENDING', 'APPROVED', 'DECLINED', 'NOT_STARTED', name='candidatestageinfostatusenum'), server_default='NOT_STARTED', nullable=True),
+    sa.Column('date_sign', sa.TIMESTAMP(), nullable=True),
+    sa.Column('candidate_id', sa.UUID(), nullable=True),
+    sa.Column('candidate_stage_type_id', sa.UUID(), nullable=True),
+    sa.Column('staff_unit_coordinate_id', sa.UUID(), nullable=True),
+    sa.Column('is_waits', sa.Boolean(), nullable=True),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['candidate_id'], ['candidates.id'], ),
+    sa.ForeignKeyConstraint(['candidate_stage_type_id'], ['candidate_stage_types.id'], ),
+    sa.ForeignKeyConstraint(['staff_unit_coordinate_id'], ['staff_units.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('contracts',
@@ -534,24 +516,15 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('hr_documents',
-    sa.Column('hr_document_template_id', sa.UUID(), nullable=True),
-    sa.Column('due_date', sa.TIMESTAMP(timezone=True), nullable=False),
-    sa.Column('properties', postgresql.JSON(none_as_null=True, astext_type=sa.Text()), nullable=True),
-    sa.Column('reg_number', sa.String(), nullable=True),
-    sa.Column('signed_at', sa.TIMESTAMP(timezone=True), nullable=True),
-    sa.Column('initialized_by_id', sa.UUID(), nullable=True),
-    sa.Column('status_id', sa.UUID(), nullable=True),
-    sa.Column('last_step_id', sa.UUID(), nullable=True),
+    op.create_table('hr_document_steps',
+    sa.Column('hr_document_template_id', sa.UUID(), nullable=False),
+    sa.Column('staff_function_id', sa.UUID(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.ForeignKeyConstraint(['hr_document_template_id'], ['hr_document_templates.id'], ),
-    sa.ForeignKeyConstraint(['initialized_by_id'], ['users.id'], ),
-    sa.ForeignKeyConstraint(['last_step_id'], ['hr_document_steps.id'], ),
-    sa.ForeignKeyConstraint(['status_id'], ['hr_document_statuses.id'], ),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('reg_number')
+    sa.ForeignKeyConstraint(['hr_document_template_id'], ['hr_document_templates.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['staff_function_id'], ['staff_functions.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('name_changes',
     sa.Column('name_before', sa.String(), nullable=True),
@@ -639,6 +612,13 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('staff_unit_functions',
+    sa.Column('staff_unit_id', sa.UUID(), nullable=False),
+    sa.Column('staff_function_id', sa.UUID(), nullable=False),
+    sa.ForeignKeyConstraint(['staff_function_id'], ['staff_functions.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['staff_unit_id'], ['staff_units.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('staff_unit_id', 'staff_function_id')
+    )
     op.create_table('statuses',
     sa.Column('user_id', sa.UUID(), nullable=True),
     sa.Column('name', sa.String(), nullable=False),
@@ -724,6 +704,7 @@ def upgrade() -> None:
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('position_id', sa.UUID(), nullable=True),
     sa.Column('rank_id', sa.UUID(), nullable=True),
+    sa.Column('badge_id', sa.UUID(), nullable=True),
     sa.Column('penalty_id', sa.UUID(), nullable=True),
     sa.Column('coefficient', sa.Double(), nullable=True),
     sa.Column('percentage', sa.Integer(), nullable=True),
@@ -738,9 +719,8 @@ def upgrade() -> None:
     sa.Column('attestation_status', sa.String(), nullable=True),
     sa.Column('characteristic_initiator', sa.String(), nullable=True),
     sa.Column('status_id', sa.UUID(), nullable=True),
-    sa.Column('badge_id', sa.UUID(), nullable=True),
-    sa.ForeignKeyConstraint(['badge_id'], ['badges.id']),
     sa.ForeignKeyConstraint(['attestation_id'], ['attestations.id'], ),
+    sa.ForeignKeyConstraint(['badge_id'], ['badges.id'], ),
     sa.ForeignKeyConstraint(['contract_id'], ['contracts.id'], ),
     sa.ForeignKeyConstraint(['coolness_id'], ['coolnesses.id'], ),
     sa.ForeignKeyConstraint(['name_change_id'], ['name_changes.id'], ),
@@ -753,34 +733,24 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('hr_document_equipments',
-    sa.Column('document_id', sa.UUID(), nullable=True),
-    sa.Column('subject_id', sa.UUID(), nullable=True),
-    sa.ForeignKeyConstraint(['document_id'], ['hr_documents.id'], ),
-    sa.ForeignKeyConstraint(['subject_id'], ['equipments.id'], )
-    )
-    op.create_table('hr_document_infos',
-    sa.Column('hr_document_step_id', sa.UUID(), nullable=False),
-    sa.Column('assigned_to_id', sa.UUID(), nullable=True),
-    sa.Column('signed_by_id', sa.UUID(), nullable=True),
-    sa.Column('comment', sa.TEXT(), nullable=True),
-    sa.Column('is_signed', sa.Boolean(), nullable=True),
+    op.create_table('hr_documents',
+    sa.Column('hr_document_template_id', sa.UUID(), nullable=True),
+    sa.Column('due_date', sa.TIMESTAMP(timezone=True), nullable=False),
+    sa.Column('properties', postgresql.JSON(none_as_null=True, astext_type=sa.Text()), nullable=True),
+    sa.Column('reg_number', sa.String(), nullable=True),
     sa.Column('signed_at', sa.TIMESTAMP(timezone=True), nullable=True),
-    sa.Column('hr_document_id', sa.UUID(), nullable=False),
+    sa.Column('initialized_by_id', sa.UUID(), nullable=True),
+    sa.Column('status_id', sa.UUID(), nullable=True),
+    sa.Column('last_step_id', sa.UUID(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.ForeignKeyConstraint(['assigned_to_id'], ['users.id'], ),
-    sa.ForeignKeyConstraint(['hr_document_id'], ['hr_documents.id'], ),
-    sa.ForeignKeyConstraint(['hr_document_step_id'], ['hr_document_steps.id'], ),
-    sa.ForeignKeyConstraint(['signed_by_id'], ['users.id'], ),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('hr_document_users',
-    sa.Column('document_id', sa.UUID(), nullable=True),
-    sa.Column('subject_id', sa.UUID(), nullable=True),
-    sa.ForeignKeyConstraint(['document_id'], ['hr_documents.id'], ),
-    sa.ForeignKeyConstraint(['subject_id'], ['users.id'], )
+    sa.ForeignKeyConstraint(['hr_document_template_id'], ['hr_document_templates.id'], ),
+    sa.ForeignKeyConstraint(['initialized_by_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['last_step_id'], ['hr_document_steps.id'], ),
+    sa.ForeignKeyConstraint(['status_id'], ['hr_document_statuses.id'], ),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('reg_number')
     )
     op.create_table('medical_profiles',
     sa.Column('profile_id', sa.UUID(), nullable=True),
@@ -998,6 +968,35 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['profile_id'], ['medical_profiles.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('hr_document_equipments',
+    sa.Column('document_id', sa.UUID(), nullable=True),
+    sa.Column('subject_id', sa.UUID(), nullable=True),
+    sa.ForeignKeyConstraint(['document_id'], ['hr_documents.id'], ),
+    sa.ForeignKeyConstraint(['subject_id'], ['equipments.id'], )
+    )
+    op.create_table('hr_document_infos',
+    sa.Column('hr_document_step_id', sa.UUID(), nullable=False),
+    sa.Column('assigned_to_id', sa.UUID(), nullable=True),
+    sa.Column('signed_by_id', sa.UUID(), nullable=True),
+    sa.Column('comment', sa.TEXT(), nullable=True),
+    sa.Column('is_signed', sa.Boolean(), nullable=True),
+    sa.Column('signed_at', sa.TIMESTAMP(timezone=True), nullable=True),
+    sa.Column('hr_document_id', sa.UUID(), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['assigned_to_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['hr_document_id'], ['hr_documents.id'], ),
+    sa.ForeignKeyConstraint(['hr_document_step_id'], ['hr_document_steps.id'], ),
+    sa.ForeignKeyConstraint(['signed_by_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('hr_document_users',
+    sa.Column('document_id', sa.UUID(), nullable=True),
+    sa.Column('subject_id', sa.UUID(), nullable=True),
+    sa.ForeignKeyConstraint(['document_id'], ['hr_documents.id'], ),
+    sa.ForeignKeyConstraint(['subject_id'], ['users.id'], )
+    )
     op.create_table('identification_cards',
     sa.Column('document_number', sa.String(), nullable=True),
     sa.Column('date_of_issue', sa.TIMESTAMP(timezone=True), nullable=True),
@@ -1145,6 +1144,7 @@ def upgrade() -> None:
     sa.Column('initiator', sa.String(), nullable=True),
     sa.Column('start_date', postgresql.TIMESTAMP(timezone=True), nullable=True),
     sa.Column('end_date', postgresql.TIMESTAMP(timezone=True), nullable=True),
+    sa.Column('document_link', sa.TEXT(), nullable=True),
     sa.Column('profile_id', sa.UUID(), nullable=True),
     sa.Column('liberation_id', sa.UUID(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
@@ -1157,6 +1157,7 @@ def upgrade() -> None:
     op.create_table('user_vehicles',
     sa.Column('date_from', postgresql.TIMESTAMP(timezone=True), nullable=False),
     sa.Column('number', sa.String(length=255), nullable=False),
+    sa.Column('document_link', sa.TEXT(), nullable=True),
     sa.Column('profile_id', sa.UUID(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
@@ -1213,6 +1214,9 @@ def downgrade() -> None:
     op.drop_table('passports')
     op.drop_table('language_proficiencies')
     op.drop_table('identification_cards')
+    op.drop_table('hr_document_users')
+    op.drop_table('hr_document_infos')
+    op.drop_table('hr_document_equipments')
     op.drop_table('hospital_datas')
     op.drop_table('general_user_informations')
     op.drop_table('families')
@@ -1228,9 +1232,7 @@ def downgrade() -> None:
     op.drop_table('abroad_travels')
     op.drop_table('personal_profiles')
     op.drop_table('medical_profiles')
-    op.drop_table('hr_document_users')
-    op.drop_table('hr_document_infos')
-    op.drop_table('hr_document_equipments')
+    op.drop_table('hr_documents')
     op.drop_table('histories')
     op.drop_table('family_profiles')
     op.drop_table('educational_profiles')
@@ -1239,6 +1241,7 @@ def downgrade() -> None:
     op.drop_table('user_stats')
     op.drop_table('user_oaths')
     op.drop_table('statuses')
+    op.drop_table('staff_unit_functions')
     op.drop_table('staff_lists')
     op.drop_table('service_ids')
     op.drop_table('secondments')
@@ -1247,32 +1250,30 @@ def downgrade() -> None:
     op.drop_table('personnal_reserves')
     op.drop_table('penalties')
     op.drop_table('name_changes')
-    op.drop_table('hr_documents')
+    op.drop_table('hr_document_steps')
     op.drop_table('events')
     op.drop_table('equipments')
     op.drop_table('coolnesses')
     op.drop_table('contracts')
+    op.drop_table('candidate_stage_infos')
     op.drop_table('candidate_stage_answers')
     op.drop_table('badges')
     op.drop_table('attestations')
-    op.drop_table('users')
-    op.drop_table('staff_unit_functions')
-    op.drop_table('candidates')
-    op.drop_table('candidate_stage_infos')
-    op.drop_table('staff_units')
-    op.drop_table('hr_document_steps')
     op.drop_table('archive_staff_functions')
+    op.drop_table('users')
     op.drop_table('type_other_equipment_models')
     op.drop_table('type_clothing_equipment_models')
     op.drop_table('type_army_equipment_models')
     op.drop_table('staff_functions')
     op.drop_table('positions')
+    op.drop_table('candidates')
     op.drop_table('candidate_stage_questions')
     op.drop_table('archive_service_function_types')
     op.drop_table('archive_document_function_types')
     op.drop_table('type_other_equipments')
     op.drop_table('type_clothing_equipments')
     op.drop_table('type_army_equipments')
+    op.drop_table('staff_units')
     op.drop_table('staff_divisions')
     op.drop_table('sport_types')
     op.drop_table('specialties')
@@ -1296,7 +1297,6 @@ def downgrade() -> None:
     op.drop_table('countries')
     op.drop_table('coolness_types')
     op.drop_table('contract_types')
-    op.drop_table('candidate_stages')
     op.drop_table('candidate_stage_types')
     op.drop_table('candidate_essay_types')
     op.drop_table('candidate_categories')

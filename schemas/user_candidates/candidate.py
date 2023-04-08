@@ -1,11 +1,12 @@
-import uuid
 import datetime
-
+import uuid
 from typing import Optional, List
 
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
+from models import CandidateStatusEnum
 from .candidate_stage_info import CandidateStageInfoRead
+from .candidate_essay_type import CandidateEssayTypeRead
 
 
 class CandidateBase(BaseModel):
@@ -42,13 +43,35 @@ class CandidateCreate(CandidateBase):
 
 
 class CandidateUpdate(CandidateBase):
-    pass
+    staff_unit_curator_id: Optional[uuid.UUID]
+    staff_unit_id: Optional[uuid.UUID]
+    status: Optional[str]
+    debarment_reason: Optional[str]
+
+    @validator('debarment_reason', pre=True)
+    def validate_debarment_reason(cls, value, values):
+        status = values.get('status')
+        if status == CandidateStatusEnum.ACTIVE and value is not None:
+            raise ValueError('debarment_reason должен быть пустым для статуса Активный')
+        elif status == CandidateStatusEnum.DRAFT and value is None:
+            raise ValueError('debarment_reason обязателен для статуса Черновик')
+        return value
+
+
+class CandidateEssayUpdate(BaseModel):
+    essay_id: uuid.UUID
 
 
 class CandidateRead(CandidateBase):
     id: Optional[uuid.UUID]
+    created_at: Optional[datetime.datetime]
+    updated_at: Optional[datetime.datetime]
+    status: Optional[str]
+    debarment_reason: Optional[str]
     progress: Optional[int]
-    current_stage: Optional[uuid.UUID]
+    current_stage: Optional[str]
+    essay_id: Optional[uuid.UUID]
+    essay: Optional[CandidateEssayTypeRead]
     last_edit_date: Optional[datetime.date]
     staff_unit_curator_id: Optional[uuid.UUID]
     staff_unit_curator: Optional[StaffUnitCandidateRead]

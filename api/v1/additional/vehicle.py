@@ -85,12 +85,11 @@ async def update(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    credentials = Authorize.get_jwt_subject() 
-    profile = profile_service.get_by_user_id(db, credentials)
-    vehicle = vehicle_service.get_by_id(db, id)
-    if vehicle.profile_id != profile.id: # TODO: check role logic
-        raise SgoErpException("You don't have permission to update this abroad travel")
-    return vehicle_service.update(db, vehicle, body)
+    return vehicle_service.update(
+        db,
+        db_obj=vehicle_service.get_by_id(db, id),
+        obj_in=body
+    )
 
 
 @router.delete("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -108,9 +107,5 @@ async def delete(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    credentials = Authorize.get_jwt_subject()
-    profile = profile_service.get_by_user_id(db, credentials)
     abroad_travel = vehicle_service.get_by_id(db, id)
-    if abroad_travel.profile_id != profile.id: # TODO: check role logic
-        raise SgoErpException("You don't have permission to delete this abroad travel")
     return vehicle_service.delete(db, abroad_travel)

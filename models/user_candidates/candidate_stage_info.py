@@ -28,3 +28,4 @@ class CandidateStageInfo(Model):
     is_waits = Column(Boolean, nullable=True, default=False)
 
     candidate = relationship("Candidate", back_populates="candidate_stage_infos")
+    staff_unit_coordinate = relationship("StaffUnit", cascade="all, delete")
