@@ -1,8 +1,24 @@
 from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional, List, Union
+from decimal import Decimal
 import uuid
 from .general_information import GeneralInformationRead
+from schemas import PositionRead, RankRead
+
+from .history_personal import (
+    PenaltyReadHistory,
+    WorkExperienceRead,
+    EmergencyServiceRead,
+    AttestationReadHistory,
+    NameChangeReadHistory,
+    ServiceCharacteristicRead,
+    StatusReadHistory,
+    CoolnessReadHistory,
+    SecondmentReadHistory,
+    ContractReadHistory,
+)
+
 
 class HistoryBase(BaseModel):
     date_from: Optional[datetime]
@@ -39,6 +55,32 @@ class HistoryUpdate(HistoryBase):
 class HistoryRead(HistoryBase):
     id: uuid.UUID
 
+ 
+
+class HistoryPersonalRead(BaseModel):
+    id: uuid.UUID
+    date_from: Optional[datetime]
+    date_to: Optional[datetime] 
+    position: Optional[PositionRead]
+    rank: Optional['RankRead']
+    penalty: Optional['PenaltyReadHistory']
+    emergency_service: Optional['EmergencyServiceRead']
+    work_experience: Optional['WorkExperienceRead']
+    secondment: Optional['SecondmentReadHistory']
+    name_change: Optional['NameChangeReadHistory']
+    attestation: Optional['AttestationReadHistory']
+    service_characteristic: Optional['ServiceCharacteristicRead']
+    status: Optional['StatusReadHistory']
+    coolness: Optional['CoolnessReadHistory']
+    contract: Optional['ContractReadHistory']
+    document_link: Optional[str]
+    document_number: Optional[str]
+    user_id: uuid.UUID
+    type: str
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
 
 
 class AttendanceRead(BaseModel):

@@ -17,8 +17,10 @@ down_revision = 'e1ce15c46c46'
 branch_labels = None
 depends_on = None
 
+
 def get_uuid():
     return str(uuid.uuid4())
+
 
 # Personal
 sport_type1_id = get_uuid()
@@ -120,6 +122,7 @@ options = {
         'father_name': 'Админович'
     }
 }
+
 
 def create_candidate_stage_info(candidate_id,
                                 staff_unit_coordinate_id,
@@ -433,7 +436,6 @@ def upgrade() -> None:
         }]
     )
 
-
     staff_function1_id = get_uuid()
     staff_function2_id = get_uuid()
     staff_function3_id = get_uuid()
@@ -451,105 +453,105 @@ def upgrade() -> None:
         Base.metadata.tables['staff_functions'],
         [{
             'id': staff_function1_id,
-            'hours_per_week' : 3,
+            'hours_per_week': 3,
             'discriminator': 'document_staff_function',
-            'name' : 'Инициатор приказа о назначении',
+            'name': 'Инициатор приказа о назначении',
             'jurisdiction_id': jurisdiction_id,
             'priority': 1,
             'role_id': doc_type5_id
         },
-        {
+            {
             'id': staff_function2_id,
-            'hours_per_week' : 3,
+            'hours_per_week': 3,
             'discriminator': 'document_staff_function',
-            'name' : 'Эксперт приказа о назначении',
+            'name': 'Эксперт приказа о назначении',
             'jurisdiction_id': jurisdiction_id,
             'priority': 2,
             'role_id': doc_type2_id
         },
-        {
+            {
             'id': staff_function3_id,
-            'hours_per_week' : 3,
+            'hours_per_week': 3,
             'discriminator': 'document_staff_function',
-            'name' : 'Утверждающий приказа о назначении',
+            'name': 'Утверждающий приказа о назначении',
             'jurisdiction_id': jurisdiction_id,
             'priority': 100,
             'role_id': doc_type3_id
         },
-        {
+            {
             'id': staff_function4_id,
-            'hours_per_week' : 3,
+            'hours_per_week': 3,
             'discriminator': 'document_staff_function',
-            'name' : 'Инициатор приказа о присвоения звания',
+            'name': 'Инициатор приказа о присвоения звания',
             'jurisdiction_id': jurisdiction_id,
             'priority': 1,
             'role_id': doc_type5_id
         },
-        {
+            {
             'id': staff_function5_id,
-            'hours_per_week' : 3,
+            'hours_per_week': 3,
             'discriminator': 'document_staff_function',
-            'name' : 'Эксперт приказа о присвоения звания',
+            'name': 'Эксперт приказа о присвоения звания',
             'jurisdiction_id': jurisdiction_id,
             'priority': 2,
             'role_id': doc_type2_id
         },
-        {
+            {
             'id': staff_function6_id,
-            'hours_per_week' : 3,
+            'hours_per_week': 3,
             'discriminator': 'document_staff_function',
-            'name' : 'Утверждающий приказа о присвоения звания',
+            'name': 'Утверждающий приказа о присвоения звания',
             'jurisdiction_id': jurisdiction_id,
             'priority': 100,
             'role_id': doc_type3_id
         },
-        {
+            {
             'id': staff_function7_id,
-            'hours_per_week' : 3,
+            'hours_per_week': 3,
             'discriminator': 'document_staff_function',
-            'name' : 'Инициатор приказа о присвоения черного берета',
+            'name': 'Инициатор приказа о присвоения черного берета',
             'jurisdiction_id': jurisdiction_id,
             'priority': 1,
             'role_id': doc_type5_id
         },
-        {
+            {
             'id': staff_function8_id,
-            'hours_per_week' : 3,
+            'hours_per_week': 3,
             'discriminator': 'document_staff_function',
-            'name' : 'Эксперт приказа о присвоения черного берета',
+            'name': 'Эксперт приказа о присвоения черного берета',
             'jurisdiction_id': jurisdiction_id,
             'priority': 2,
             'role_id': doc_type2_id
         },
-        {
+            {
             'id': staff_function9_id,
-            'hours_per_week' : 3,
+            'hours_per_week': 3,
             'discriminator': 'document_staff_function',
-            'name' : 'Утверждающий приказа о присвоения черного берета',
+            'name': 'Утверждающий приказа о присвоения черного берета',
             'jurisdiction_id': jurisdiction_id,
             'priority': 100,
             'role_id': doc_type3_id
         }, {
             'id': staff_function10_id,
-            'hours_per_week' : 3,
+            'hours_per_week': 3,
             'discriminator': 'document_staff_function',
-            'name' : 'Согласующий приказа о присвоения звания',
+            'name': 'Согласующий приказа о присвоения звания',
             'jurisdiction_id': jurisdiction_id,
             'priority': 3,
             'role_id': doc_type1_id
         }, {
             'id': staff_function11_id,
-            'hours_per_week' : 3,
+            'hours_per_week': 3,
             'discriminator': 'document_staff_function',
-            'name' : 'Согласующий приказа о присвоения черного берета',
+            'name': 'Согласующий приказа о присвоения черного берета',
             'jurisdiction_id': jurisdiction_id,
             'priority': 3,
             'role_id': doc_type1_id
         }, {
             'id': staff_function12_id,
-            'hours_per_week' : 3,
+            'hours_per_week': 3,
             'discriminator': 'document_staff_function',
-            'name' : 'Согласующий приказа о назначении',
+            'name': 'Согласующий приказа о назначении',
             'jurisdiction_id': jurisdiction_id,
             'priority': 3,
             'role_id': doc_type1_id
@@ -697,7 +699,7 @@ def upgrade() -> None:
             'name': "2-комнатная квартира"
         }]
     )
-    
+
     group1_id = get_uuid()
     group2_id = get_uuid()
     group3_id = get_uuid()
@@ -1020,7 +1022,6 @@ def upgrade() -> None:
         False,
         '1.2.100K')
 
-
     op.bulk_insert(
         Base.metadata.tables['staff_unit_functions'],
         [{
@@ -1102,7 +1103,7 @@ def upgrade() -> None:
                     "alias_name": "Отчество субъекта",
                     "type": "read",
                     "data_taken": "auto"
-                }, 
+                },
                 "id_number": {
                     "alias_name": "Идентификационный номер субъекта",
                     "type": "read",
@@ -1160,7 +1161,7 @@ def upgrade() -> None:
                     "alias_name": "Отчество субъекта",
                     "type": "read",
                     "data_taken": "auto"
-                }, 
+                },
                 "id_number": {
                     "alias_name": "Идентификационный номер субъекта",
                     "type": "read",
@@ -1177,7 +1178,7 @@ def upgrade() -> None:
         }, {
             'name': 'Приказ о присвоения черного берета',
             'path': 'http://192.168.0.169:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7_%D0%BE_%D0%BF%D1%80%D0%B8%D1%81%D0%B2%D0%BE%D0%B5%D0%BD%D0%B8%D0%B8_%D0%A7%D0%B5%D1%80%D0%BD%D0%BE%D0%B3%D0%BE_%D0%B1%D0%B5%D1%80%D0%B5%D1%82%D0%B0.docx',
-            'subject_type': "EMPLOYEE", 
+            'subject_type': "EMPLOYEE",
             'properties': {
                 "signed_at": {
                     "alias_name": "Дата подписания",
@@ -1203,7 +1204,7 @@ def upgrade() -> None:
                     "alias_name": "Отчество субъекта",
                     "type": "read",
                     "data_taken": "auto"
-                }, 
+                },
                 "id_number": {
                     "alias_name": "Идентификационный номер субъекта",
                     "type": "read",
@@ -1392,6 +1393,484 @@ def upgrade() -> None:
         }]
     )
 
+    penalty_type_id = get_uuid()
+    penalty_type2_id = get_uuid()
+    penalty_type3_id = get_uuid()
+    penalty_type4_id = get_uuid()
+    penalty_type5_id = get_uuid()
+    penalty_type6_id = get_uuid()
+    penalty_type7_id = get_uuid()
+    penalty_type8_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['penalty_types'],
+        [{
+            'id': penalty_type_id,
+            'name': 'Замечание',
+        },
+            {
+            'id': penalty_type2_id,
+            'name': 'Выговор',
+        },
+            {
+            'id': penalty_type3_id,
+            'name': 'Строгий выговор',
+        },
+            {
+            'id': penalty_type4_id,
+            'name': 'Предупреждение о неполном служебном соответствии',
+        },
+            {
+            'id': penalty_type5_id,
+            'name': 'Увольнение со службы по отрицательным мотивам',
+        },
+            {
+            'id': penalty_type6_id,
+            'name': 'Снижение воинского звания',
+        },
+            {
+            'id': penalty_type7_id,
+            'name': 'Неполное служебное соответствие',
+
+        },
+            {
+            'id': penalty_type8_id,
+            'name': 'Письменное предупреждение',
+        }]
+    )
+
+    penalty_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['penalties'],
+        [{
+            'id': penalty_id,
+            'type_id': penalty_type_id,
+            'user_id': user1_id,
+        }]
+    )
+
+    
+    import datetime
+
+
+    secondment_id = get_uuid()
+    secondment2_id = get_uuid()
+    secondment3_id = get_uuid()
+
+
+    op.bulk_insert(
+        Base.metadata.tables['secondments'],
+        [{
+            'id': secondment_id,
+            'staff_division_id': group1_id,
+            'user_id': user1_id,
+            'name': 'Перевод в другую группу'
+        },
+            {
+            'id': secondment2_id,
+            'staff_division_id': group2_id,
+            'user_id': user1_id,
+            'name': 'Перевод в другую группу'
+        },
+            {
+            'id': secondment3_id,
+            'staff_division_id': group3_id,
+            'user_id': user1_id,
+            'name': 'Перевод в другую группу'
+        }]
+    )
+
+
+    name_change_id = get_uuid()
+    name_change2_id = get_uuid()
+    name_change3_id = get_uuid()
+
+
+    op.bulk_insert(
+        Base.metadata.tables['name_changes'],
+        [{
+            'id': name_change_id,
+            'name_before': 'Иван',
+            'name_after': 'Петр',
+            'name_type': 'name'
+        },
+            {
+            'id': name_change2_id,
+            'name_before': 'Петр',
+            'name_after': 'Самат',
+            'name_type': 'name'
+            },
+            {
+            'id': name_change3_id,
+            'name_before': 'Иванов',
+            'name_after': 'Петров',
+            'name_type': 'surname'
+            }]
+    )    
+
+    attestation_id = get_uuid()
+    attestation2_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['attestations'],
+        [{
+            'id': attestation_id,
+            'user_id': user1_id,
+        }]
+    )
+
+    status_id = get_uuid()
+    status2_id = get_uuid()
+    status3_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['statuses'],
+        [{
+            'id': status_id,
+            'name': 'Статус 1',
+            'user_id': user1_id,
+        },
+            {
+            'id': status2_id,
+            'name': 'Статус 2',
+            'user_id': user1_id,
+        },
+        ]
+    )
+
+    coolness_type_id = get_uuid()
+    coolness_type2_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['coolness_types'],
+        [{
+            'id': coolness_type_id,
+            'name': 'Специалист 1 класса',
+        },
+            {
+            'id': coolness_type2_id,
+            'name': 'Специалист 2 класса',
+        },
+        ]
+    )
+
+    coolness_id = get_uuid()
+    coolness2_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['coolnesses'],
+        [{
+            'id': coolness_id,
+            'type_id': coolness_type_id,
+            'user_id': user1_id,
+        },
+            {
+            'id': coolness2_id,
+            'type_id': coolness_type2_id,
+            'user_id': user1_id,
+        },
+        ]
+    )
+
+    contract_type_id = get_uuid()
+    contract_type2_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['contract_types'],
+        [{
+            'id': contract_type_id,
+            'name': 'Тип 1',
+        },
+            {
+            'id': contract_type2_id,
+            'name': 'Тип 2',
+        },
+        ]
+    )
+
+    contract_id = get_uuid()
+    contract2_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['contracts'],
+        [{
+            'id': contract_id,
+            'type_id': contract_type_id,
+            'user_id': user1_id,
+        },
+            {
+            'id': contract2_id,
+            'type_id': contract_type2_id,
+            'user_id': user1_id,
+        },
+        ]
+    )
+    history_id = get_uuid()
+    history2_id = get_uuid()
+    history3_id = get_uuid() 
+    history6_id = get_uuid()
+    history7_id = get_uuid()
+    history8_id = get_uuid() 
+    history10_id = get_uuid()
+    history11_id = get_uuid()
+    history12_id = get_uuid()
+    history13_id = get_uuid()
+
+    type_of_histories = [
+        "staff_unit_history",
+        "rank_history",
+        "penalty_history",
+        "emergency_service_history",
+        "work_experience_history",
+        "secondment_history",
+        "name_change_history",
+        "attestation",
+        "service_characteristic_history",
+        "status_history",
+        "coolness_history",
+        "contract_history",
+        "badge_history"
+    ]
+
+
+    op.bulk_insert(
+        Base.metadata.tables['histories'],
+        [{
+            'id': history_id,
+            'date_from': str(datetime.datetime(2019, 1, 1)),
+            'date_to': str(datetime.datetime(2019, 1, 31)),
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 59124',
+            'type': type_of_histories[0],
+            'name': '1 history',
+            'position_id': position1_id,
+            'rank_id': None,  # Add the missing parameter here
+            'penalty_id': None,  # Add the missing parameter here
+            'emergency_service_id': None,  # Add the missing parameter here
+            'work_experience_id': None,  # Add the missing parameter here
+            'secondment_id': None,  # Add the missing parameter here
+            'name_change_id': None,  # Add the missing parameter here
+            'attestation_id': None,  # Add the missing parameter here
+            'service_characteristic_id': None,  # Add the missing parameter here
+            'status_id': None,  # Add the missing parameter here
+            'coolness_id': None,  # Add the missing parameter here
+            'contract_id': None,  # Add the missing parameter here
+            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+        },
+            {
+            'id': history2_id,
+            'date_from': str(datetime.datetime(2019, 2, 1)),
+            'date_to': str(datetime.datetime(2019, 2, 28)),
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 59124',
+            'type': type_of_histories[1],
+            'rank_id': rank1_id,
+            'name': '2 history',
+            'position_id': None,  # Add the missing parameter here
+            'penalty_id': None,  # Add the missing parameter here
+            'emergency_service_id': None,  # Add the missing parameter here
+            'work_experience_id': None,  # Add the missing parameter here
+            'secondment_id': None,  # Add the missing parameter here
+            'name_change_id': None,  # Add the missing parameter here
+            'attestation_id': None,  # Add the missing parameter here
+            'service_characteristic_id': None,  # Add the missing parameter here
+            'status_id': None,  # Add the missing parameter here
+            'coolness_id': None,  # Add the missing parameter here
+            'contract_id': None,  # Add the missing parameter here
+            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+        },
+            {
+            'id': history3_id,
+            'date_from': datetime.datetime(2019, 3, 1),
+            'date_to': datetime.datetime(2019, 3, 31),
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 59124',
+            'type': type_of_histories[2],
+            'penalty_id': penalty_id,
+            'name': '3 history',
+            'position_id': None,  # Add the missing parameter here
+            'rank_id': None,  # Add the missing parameter here
+            'emergency_service_id': None,  # Add the missing parameter here
+            'work_experience_id': None,  # Add the missing parameter here
+            'secondment_id': None,  # Add the missing parameter here
+            'name_change_id': None,  # Add the missing parameter here
+            'attestation_id': None,  # Add the missing parameter here
+            'service_characteristic_id': None,  # Add the missing parameter here
+            'status_id': None,  # Add the missing parameter here
+            'coolness_id': None,  # Add the missing parameter here
+            'contract_id': None,  # Add the missing parameter here
+            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+        },
+             
+            {
+            'id': history6_id,
+            'date_from': datetime.datetime(2020, 3, 1),
+            'date_to': datetime.datetime(2021, 3, 31),
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 12421',
+            'type': type_of_histories[5],
+            'penalty_id': None,
+            'name': '3 history',
+            'position_id': None,  # Add the missing parameter here
+            'rank_id': None,  # Add the missing parameter here
+            'emergency_service_id': None,  # Add the missing parameter here
+            'work_experience_id': None,  # Add the missing parameter here
+            'secondment_id': secondment_id,  # МЕНЯТЬ НА secondment_id
+            'name_change_id': None,  # Add the missing parameter here
+            'attestation_id': None,  # Add the missing parameter here
+            'service_characteristic_id': None,  # Add the missing parameter here
+            'status_id': None,  # Add the missing parameter here
+            'coolness_id': None,  # Add the missing parameter here
+            'contract_id': None,  # Add the missing parameter here
+            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+        },
+            {
+            'id': history7_id,
+            'date_from': datetime.datetime(2012, 3, 1),
+            'date_to': None,
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 12421',
+            'type': type_of_histories[6],
+            'penalty_id': None,
+            'name': '3 history',
+            'position_id': None,  # Add the missing parameter here
+            'rank_id': None,  # Add the missing parameter here
+            'emergency_service_id': None,  # Add the missing parameter here
+            'work_experience_id': None,  # Add the missing parameter here
+            'secondment_id': None,  # Add the missing parameter here
+            'name_change_id': name_change_id,  # МЕНЯТЬ НА name_change_id
+            'attestation_id': None,  # Add the missing parameter here
+            'service_characteristic_id': None,  # Add the missing parameter here
+            'status_id': None,  # Add the missing parameter here
+            'coolness_id': None,  # Add the missing parameter here
+            'contract_id': None,  # Add the missing parameter here
+            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+        },
+        {
+            'id': history13_id,
+            'date_from': datetime.datetime(2015, 5, 5),
+            'date_to': None,
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 12421',
+            'type': type_of_histories[6],
+            'penalty_id': None,
+            'name': '3 history',
+            'position_id': None,  # Add the missing parameter here
+            'rank_id': None,  # Add the missing parameter here
+            'emergency_service_id': None,  # Add the missing parameter here
+            'work_experience_id': None,  # Add the missing parameter here
+            'secondment_id': None,  # Add the missing parameter here
+            'name_change_id': name_change2_id,  # МЕНЯТЬ НА name_change_id
+            'attestation_id': None,  # Add the missing parameter here
+            'service_characteristic_id': None,  # Add the missing parameter here
+            'status_id': None,  # Add the missing parameter here
+            'coolness_id': None,  # Add the missing parameter here
+            'contract_id': None,  # Add the missing parameter here
+            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+        },
+            {
+            'id': history8_id,
+            'date_from': datetime.datetime(2012, 3, 1),
+            'date_to': datetime.datetime(2021, 3, 31),
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 12421',
+            'type': type_of_histories[7],
+            'attestation_status': 'Подтверждено',  # МЕНЯТЬ НА attestation_status
+            'penalty_id': None,
+            'name': '3 history',
+            'position_id': None,  # Add the missing parameter here
+            'rank_id': None,  # Add the missing parameter here
+            'emergency_service_id': None,  # Add the missing parameter here
+            'work_experience_id': None,  # Add the missing parameter here
+            'secondment_id': None,  # Add the missing parameter here
+            'name_change_id': None,  # Add the missing parameter here
+            'attestation_id': attestation_id,  # МЕНЯТЬ НА attestation_id
+            'service_characteristic_id': None,  # Add the missing parameter here
+            'status_id': None,  # Add the missing parameter here
+            'coolness_id': None,  # Add the missing parameter here
+            'contract_id': None,  # Add the missing parameter here
+            
+        },
+           
+            {
+            'id': history10_id,
+            'date_from': datetime.datetime(2020, 3, 1),
+            'date_to': datetime.datetime(2021, 3, 31),
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 12421',
+            'type': type_of_histories[9],
+            'penalty_id': None,
+            'name': '3 history',
+            'position_id': None,  # Add the missing parameter here
+            'rank_id': None,  # Add the missing parameter here
+            'emergency_service_id': None,  # Add the missing parameter here
+            'work_experience_id': None,  # Add the missing parameter here
+            'secondment_id': None,  # Add the missing parameter here
+            'name_change_id': None,  # Add the missing parameter here
+            'attestation_id': None,  # Add the missing parameter here
+            'service_characteristic_id': None,  # Add the missing parameter here
+            'status_id': status_id,  # МЕНЯТЬ НА status_id
+            'coolness_id': None,  # Add the missing parameter here
+            'contract_id': None,  # Add the missing parameter here
+            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+        },
+            {
+            'id': history11_id,
+            'date_from': datetime.datetime(2020, 3, 1),
+            'date_to': datetime.datetime(2021, 3, 31),
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 12421',
+            'type': type_of_histories[10],
+            'penalty_id': None,
+            'name': '3 history',
+            'position_id': None,  # Add the missing parameter here
+            'rank_id': None,  # Add the missing parameter here
+            'emergency_service_id': None,  # Add the missing parameter here
+            'work_experience_id': None,  # Add the missing parameter here
+            'secondment_id': None,  # Add the missing parameter here
+            'name_change_id': None,  # Add the missing parameter here
+            'attestation_id': None,  # Add the missing parameter here
+            'service_characteristic_id': None,  # Add the missing parameter here
+            'status_id': None,  # Add the missing parameter here
+            'coolness_id': coolness_id,  # МЕНЯТЬ НА coolness_id
+            'contract_id': None,  # Add the missing parameter here
+            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+        },
+            {
+            'id': history12_id,
+            'date_from': datetime.datetime(2020, 3, 1),
+            'date_to': datetime.datetime(2021, 3, 31),
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 12421',
+            'type': type_of_histories[11],
+            'penalty_id': None,
+            'name': '3 history',
+            'position_id': None,  # Add the missing parameter here
+            'rank_id': None,  # Add the missing parameter here
+            'emergency_service_id': None,  # Add the missing parameter here
+            'work_experience_id': None,  # Add the missing parameter here
+            'secondment_id': None,  # Add the missing parameter here
+            'name_change_id': None,  # Add the missing parameter here
+            'attestation_id': None,  # Add the missing parameter here
+            'service_characteristic_id': None,  # Add the missing parameter here
+            'status_id': None,  # Add the missing parameter here
+            'coolness_id': None,  # Add the missing parameter here
+            'contract_id': contract_id,  # МЕНЯТЬ НА contract_id
+            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+        }
+        ])
+
     candidate_category1_id = get_uuid()
     candidate_category2_id = get_uuid()
     candidate_category3_id = get_uuid()
@@ -1533,24 +2012,28 @@ def upgrade() -> None:
     candidate_stage_question8_id = get_uuid()  # Первичная беседа
     candidate_stage_question9_id = get_uuid()  # Первичная беседа
     candidate_stage_question10_id = get_uuid()  # Первичная беседа
-    candidate_stage_question11_id = get_uuid()  # Запросы с внешних источников (др. гос органы)
+    # Запросы с внешних источников (др. гос органы)
+    candidate_stage_question11_id = get_uuid()
     candidate_stage_question12_id = get_uuid()  # Беседа о религии
     candidate_stage_question13_id = get_uuid()  # Беседа с родителями
-    candidate_stage_question14_id = get_uuid()  # Справка о профессиональной пригодности
-    candidate_stage_question15_id = get_uuid()  # Дополнительная беседа (не обязательно)
+    # Справка о профессиональной пригодности
+    candidate_stage_question14_id = get_uuid()
+    # Дополнительная беседа (не обязательно)
+    candidate_stage_question15_id = get_uuid()
     candidate_stage_question16_id = get_uuid()  # Беседа с представителем УСБ
-    candidate_stage_question17_id = get_uuid()  # Беседа с руководством департамента кадров
+    # Беседа с руководством департамента кадров
+    candidate_stage_question17_id = get_uuid()
     candidate_stage_question18_id = get_uuid()  # Рецензия на эссе
     candidate_stage_question19_id = get_uuid()  # Заключение по спец. проверке
     candidate_stage_question20_id = get_uuid()  # Заключение о зачислении
-    candidate_stage_question21_id = get_uuid()  # Результаты тестирования на знание законодательства РК
+    # Результаты тестирования на знание законодательства РК
+    candidate_stage_question21_id = get_uuid()
     candidate_stage_question22_id = get_uuid()  # Военно-врачебная комиссия
     candidate_stage_question23_id = get_uuid()
     candidate_stage_question24_id = get_uuid()
     candidate_stage_question25_id = get_uuid()
     candidate_stage_question26_id = get_uuid()
     candidate_stage_question27_id = get_uuid()
-
 
     op.bulk_insert(
         Base.metadata.tables['candidate_stage_questions'],
@@ -1693,7 +2176,7 @@ def upgrade() -> None:
             'question': None
         }]
     )
-    
+
     create_candidate_stage_info(candidate_id,
                                 staff_unit11_id,
                                 candidate_stage_types1_id)
@@ -2308,7 +2791,7 @@ def upgrade() -> None:
     create_candidate_stage_info(candidate11_id,
                                 staff_unit10_id,
                                 candidate_stage_types18_id)
-    
+
     candidate_essay_type1_id = get_uuid()
     candidate_essay_type2_id = get_uuid()
     candidate_essay_type3_id = get_uuid()
@@ -2434,7 +2917,6 @@ def create_user(id,
             'cabinet': cabinet
         }]
     )
-    
 
     profile_id = get_uuid()
 
@@ -2503,7 +2985,6 @@ def create_user(id,
     academic_degree2_id = get_uuid()
     academic_degree3_id = get_uuid()
 
-
     op.bulk_insert(
         Base.metadata.tables['academic_degrees'],
         [{
@@ -2526,7 +3007,6 @@ def create_user(id,
             'assignment_date': "2022-10-08"
         }]
     )
-
 
     language_proficiency1_id = get_uuid()
     language_proficiency2_id = get_uuid()
@@ -2831,7 +3311,7 @@ def create_user(id,
     op.bulk_insert(
         Base.metadata.tables['general_user_informations'],
         [{
-            'id':general_user_information_id,
+            'id': general_user_information_id,
             'height': 189,
             'blood_type': "AB (IV) Rh+",
             'age_group': 3,
@@ -2841,7 +3321,7 @@ def create_user(id,
     )
 
     anthropometric_data_id = get_uuid()
-    
+
     op.bulk_insert(
         Base.metadata.tables['anthropometric_data'],
         [{
@@ -2895,7 +3375,6 @@ def create_user(id,
     hospital_datas_id = get_uuid()
     hospital_datas1_id = get_uuid()
 
-
     op.bulk_insert(
         Base.metadata.tables['hospital_datas'],
         [{
@@ -2947,7 +3426,7 @@ def create_user(id,
 
     abroad_travels_id = get_uuid()
 
-    op.bulk_insert(      
+    op.bulk_insert(
         Base.metadata.tables['abroad_travels'],
         [{
             'id': abroad_travels_id,
@@ -2956,7 +3435,7 @@ def create_user(id,
             'date_from': "2022-05-10",
             'date_to': "2022-05-11",
             'reason': "Служебная командировка",
-            'document_link':"document_link",
+            'document_link': "document_link",
             'profile_id': additional_profile_id
 
         }]
@@ -2976,16 +3455,16 @@ def create_user(id,
     special_checks_id = get_uuid()
 
     op.bulk_insert(
-            Base.metadata.tables['special_checks'],
-            [{
-                'id': special_checks_id,
-                'number': "4584908",
-                'issued_by': "Иманов А.Е.",
-                'date_of_issue': "2022-01-15",
-                'document_link': "document_link",
-                "profile_id": additional_profile_id
-                
-            }]
+        Base.metadata.tables['special_checks'],
+        [{
+            'id': special_checks_id,
+            'number': "4584908",
+            'issued_by': "Иманов А.Е.",
+            'date_of_issue': "2022-01-15",
+            'document_link': "document_link",
+            "profile_id": additional_profile_id
+
+        }]
     )
 
     psychological_checks_id = get_uuid()
@@ -3017,7 +3496,6 @@ def create_user(id,
 
     families_profile_id = get_uuid()
 
-
     op.bulk_insert(
         Base.metadata.tables['families'],
         [{
@@ -3046,7 +3524,6 @@ def create_user(id,
             'profile_id': family_profile_id
         }]
     )
-
 
 
 def downgrade() -> None:

@@ -7,7 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import HistoryCreate, HistoryUpdate, HistoryRead, HistoryServiceDetailRead
+from schemas import HistoryCreate, HistoryUpdate, HistoryRead, HistoryServiceDetailRead, HistoryPersonalRead
 from services import history_service
 from models import HistoryEnum
 
@@ -47,12 +47,14 @@ async def get_all_enums(*,
 
 
 @router.get("/personal/{user_id}", dependencies=[Depends(HTTPBearer())],
-            response_model=List[HistoryRead],
+            response_model=List[HistoryPersonalRead],
             summary="Get all Histories by user id")
 async def get_all_personal(*,
     db: Session = Depends(get_db),
     user_id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
+    Authorize: AuthJWT = Depends(),
+    skip: int = 0,
+    limit: int = 10
 ):
     """
         Get all Histories by user id
@@ -60,7 +62,7 @@ async def get_all_personal(*,
         - **user_id**: UUID - required
     """
     Authorize.jwt_required()
-    return history_service.get_all_personal(db, user_id)
+    return history_service.get_all_personal(db, user_id, skip, limit)
 
 
 @router.get("/{user_id}", dependencies=[Depends(HTTPBearer())],

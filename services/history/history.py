@@ -46,7 +46,8 @@ from schemas import (
     AttendanceRead,
     ServiceIDRead,
     HistoryRead,
-    HistoryServiceDetailRead,    
+    HistoryServiceDetailRead,
+    HistoryPersonalRead
 )
 
 from services import (privelege_emergency_service, coolness_service, badge_service,
@@ -60,7 +61,7 @@ classes = {
     Contract: 'contract_history',
     Secondment: 'secondment_history',
     NameChange: 'name_change_history',
-    Attestation: 'attestation_history',
+    Attestation: 'attestation',
     Status: 'status_history',
     Coolness: 'coolness_history',
     Badge: 'badge_history',
@@ -75,7 +76,7 @@ options = {
     'work_experience_history': WorkExperienceHistory,
     'secondment_history': SecondmentHistory,
     'name_change_history': NameChangeHistory,
-    'attestation_history': AttestationHistory,
+    'attestation': AttestationHistory,
     'service_characteristic_history': ServiceCharacteristicHistory,
     'status_history': StatusHistory,
     'coolness_history': CoolnessHistory, 
@@ -112,10 +113,10 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         cls = options.get(obj_in.type) 
         if cls is None:
             raise NotSupportedException(detail=f'Type: {obj_in.type} is not supported!')
-        # obj_in which exclude all null fields
-        obj_in = obj_in.dict(exclude_none=True)
-        finish_last(db, obj_in['user_id'], obj_in['type'])
-        return cls.create(db, obj_in)
+        obj_db = cls(**obj_in.dict(exclude_none=True))
+        db.add(obj_db)
+        db.flush()
+        return obj_db
     
     def get_type_by_user_id(self, db: Session, user_id: str, type: str):
         cls = options.get(type)
@@ -250,15 +251,20 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             raise NotSupportedException(detail=f'In options: {diff} is not present!')
         cls.create_history(db, user_id, object.id, finish_last)
 
-    def get_all_personal(self, db: Session, user_id: uuid.UUID):
+
+
+    def get_all_personal(self, db: Session, user_id: uuid.UUID, skip: int = 0, limit: int = 100):
         histories = db.query(self.model).filter(
             self.model.user_id == user_id
-            ).order_by(self.model.date_from.desc()).all()
+            ).order_by(self.model.date_from.desc()).offset(skip).limit(limit).all()
+        
         lis_of_histories = []
         for history in histories:
             type_cls = self.get_type_by_user_id(db, user_id, history.type)
             obj = db.query(type_cls).filter(type_cls.id == history.id).first()
-            lis_of_histories.append(HistoryRead.from_orm(obj))
+            
+            lis_of_histories.append(HistoryPersonalRead.from_orm(obj))
+        lis_of_histories.sort(key=lambda x: x.date_from, reverse=True)
         return lis_of_histories
     
     

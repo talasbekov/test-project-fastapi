@@ -180,7 +180,8 @@ class EmergencyServiceHistory(History):
     percentage = Column(Integer, nullable=True)
 
     staff_division_id = Column(UUID(as_uuid=True), ForeignKey("staff_divisions.id"), nullable=True)
-
+    staff_division = relationship("StaffDivision")
+    
     __mapper_args__ = {
         'polymorphic_identity': 'emergency_service_history'
     }
@@ -291,6 +292,8 @@ class AttestationHistory(History):
     attestation = relationship("Attestation")
 
     attestation_status = Column(String, nullable=True)
+    
+
 
     @classmethod
     def create_history(cls, db: Session, user_id: uuid.UUID, id: uuid.UUID, finish_last):

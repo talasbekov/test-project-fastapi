@@ -9,7 +9,8 @@ from .history import (
     HistoryRead,
     HistoryUpdate,
     HistoryServiceDetailRead,
-    AttendanceRead
+    AttendanceRead,
+    HistoryPersonalRead
 )
 from .history_name_change import (
     HistoryNameChangeBase,
