@@ -5,6 +5,7 @@ from typing import Optional
 from pydantic import BaseModel
 
 from .candidate_stage_type import CandidateStageTypeRead
+from schemas import StaffUnitRead
 
 
 class CandidateStageInfoBase(BaseModel):
@@ -31,6 +32,7 @@ class CandidateStageInfoRead(CandidateStageInfoBase):
     status: Optional[str]
     candidate_id: Optional[uuid.UUID]
     staff_unit_coordinate_id: Optional[uuid.UUID]
+    staff_unit_coordinate: Optional[StaffUnitRead]
     candidate_stage_type_id: Optional[uuid.UUID]
     candidate_stage_type: Optional[CandidateStageTypeRead]
     date_sign: Optional[datetime.date]
