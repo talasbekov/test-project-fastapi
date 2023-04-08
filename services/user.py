@@ -73,6 +73,10 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             user.supervised_by = body.supervised_by
         if body.personal_id is not None:
             user.personal_id = body.personal_id
+        if body.date_birth is not None:
+            user.date_birth = body.date_birth
+        if body.iin is not None:
+            user.iin = body.iin
 
         db.add(user)
         db.flush()

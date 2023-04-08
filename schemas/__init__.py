@@ -30,7 +30,7 @@ from .hr_document import (HrDocumentCreate, HrDocumentInit, HrDocumentRead,
                           DraftHrDocumentInit)
 from .hr_document_info import (HrDocumentInfoCreate, HrDocumentInfoRead,
                                HrDocumentInfoUpdate, HrDocumentHistoryRead)
-from .history import HistoryRead, HistoryCreate, HistoryUpdate
+from .history import *
 from .user_stat import UserStatCreate, UserStatRead, UserStatUpdate
 from .auth import LoginForm, RegistrationForm
 from .staff_list import (StaffListCreate, StaffListRead, StaffListUpdate, StaffListUserCreate)

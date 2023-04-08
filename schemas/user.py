@@ -26,6 +26,8 @@ class UserBase(BaseModel):
     supervised_by: Optional[uuid.UUID]
     is_military: Optional[bool]
     personal_id: Optional[str]
+    date_birth: Optional[datetime.date]
+    iin: Optional[str]
 
 
 class UserCreate(UserBase):
@@ -60,6 +62,8 @@ class UserRead(UserBase):
     badges: Optional[List[BadgeRead]]
     staff_unit: Optional[UserStaffUnitRead]
     actual_staff_unit: Optional[UserStaffUnitRead]
+    date_birth: Optional[datetime.date]
+    iin: Optional[str]
 
     class Config:
         orm_mode = True

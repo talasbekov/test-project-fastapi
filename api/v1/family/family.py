@@ -58,7 +58,7 @@ async def update(*,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
-    return family_service.update(db, id, obj_in=body)
+    return family_service.update(db, db_obj=family_service.get_by_id(db, id), obj_in=body)
 
 
 @router.delete("/{id}/", dependencies=[Depends(HTTPBearer())],

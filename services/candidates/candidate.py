@@ -7,9 +7,12 @@ from sqlalchemy.orm import Session
 from models import (Candidate, CandidateStageInfo, CandidateStageType,
                     StaffUnit, CandidateStatusEnum, Position, User)
 from models import CandidateStageInfoStatusEnum
+
 from schemas import CandidateCreate, CandidateUpdate, CandidateRead
 from services import ServiceBase, staff_unit_service, user_service
+from .candidate_stage_info import candidate_stage_info_service
 from .candidate_essay_type import candidate_essay_type_service
+from models import CandidateStatusEnum, Position, CandidateStageType
 
 
 class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate]):
@@ -78,8 +81,19 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
     def create(self, db: Session, body: CandidateCreate):
         staff_unit_service.get_by_id(db, body.staff_unit_curator_id)
         staff_unit_service.get_by_id(db, body.staff_unit_id)
+        candidate = super().create(db, body)
+        
+        stage_types = db.query(CandidateStageType).all()
+        for stage_type in stage_types:
+            candidate_stage_info = CandidateStageInfoCreate(
+                candidate_id=candidate.id,
+                stage_type_id=stage_type.id,
+                staff_unit_coordinate_id=None,
+                status=CandidateStageInfoStatusEnum.PENDING.value
+            )
+            candidate_stage_info_service.create(db, candidate_stage_info)
 
-        return super().create(db, body)
+        return candidate
 
     def update(self, db: Session, id: str, body: CandidateUpdate):
 
@@ -107,7 +121,6 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
     def update_essay(self, db: Session, id: str, essay_id: str):
         candidate = self.get_by_id(db, id)
         essay = candidate_essay_type_service.get_by_id(db, essay_id)
-
         candidate.essay_id = essay_id
 
         db.add(candidate)

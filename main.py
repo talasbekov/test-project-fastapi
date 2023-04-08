@@ -14,7 +14,7 @@ from debug_toolbar.middleware import DebugToolbarMiddleware
 import sentry_sdk
 
 from api import router
-from core import configs, get_db 
+from core import configs, get_db
 
 app = FastAPI(
     title=configs.PROJECT_NAME,
@@ -30,7 +30,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-# sqlalchemy 
+# sqlalchemy
 app.add_middleware(DebugToolbarMiddleware,
                    panels=['debug_toolbar.panels.versions.VersionsPanel',
                            'debug_toolbar.panels.timer.TimerPanel',
@@ -38,11 +38,9 @@ app.add_middleware(DebugToolbarMiddleware,
                            'debug_toolbar.panels.headers.HeadersPanel',
                            'debug_toolbar.panels.request.RequestPanel',
                            'debug_toolbar.panels.sqlalchemy.SQLAlchemyPanel']
-                           )
+                   )
 
 app.include_router(router)
-
-app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
 
@@ -50,6 +48,7 @@ templates = Jinja2Templates(directory="templates")
 if configs.DEBUG:
     sentry_sdk.init(dsn=configs.SENTRY_DSN,
                     traces_sample_rate=1.0)
+
 
 @AuthJWT.load_config
 def get_config():
@@ -93,6 +92,7 @@ def authjwt_exception_handler(request: Request, exc: AuthJWTException):
 @app.get("/", include_in_schema=False)
 async def docs_redirect():
     return RedirectResponse(url="/docs")
+
 
 @app.get("/sentry-debug")
 async def trigger_error():
