@@ -22,9 +22,6 @@ class Settings(BaseSettings):
     DEBUG: bool = False
     SENTRY_DSN: str = None
 
-    TEMPLATE_FILE_PATH: str
-    GENERATED_FILE_PATH: str
-
     class Config:
         env_file = ".env"
 

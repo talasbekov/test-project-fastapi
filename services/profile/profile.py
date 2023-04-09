@@ -1,13 +1,9 @@
 from sqlalchemy.orm import Session
-from docxtpl import DocxTemplate
 
 from exceptions import NotFoundException
 from models import Profile
-from schemas import ProfileCreate, ProfileUpdate, AcademicDegreeRead, AbroadTravelRead, LanguageProficiencyRead, SportDegreeRead
+from schemas import ProfileCreate, ProfileUpdate
 from services import ServiceBase
-from .personal import biographic_info_service
-from services.education import education_service
-from core import configs
 
 
 class ProfileService(ServiceBase[Profile, ProfileCreate, ProfileUpdate]):
