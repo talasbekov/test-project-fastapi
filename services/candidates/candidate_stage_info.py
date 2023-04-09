@@ -4,10 +4,11 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 from sqlalchemy import func, or_
 
+from exceptions import ForbiddenException
 from models import CandidateStageInfo, Candidate, StaffUnit, User
 from models import CandidateStageInfoStatusEnum
 from schemas import (CandidateStageInfoRead, CandidateStageInfoCreate, CandidateStageInfoUpdate)
-from services import ServiceBase
+from services import ServiceBase, staff_unit_service
 
 
 class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageInfoCreate, CandidateStageInfoUpdate]):
@@ -32,48 +33,56 @@ class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageIn
                                     func.lower(User.last_name).contains(filter),
                                     func.lower(User.father_name).contains(filter))
                             ).order_by(self.model.id.asc()).offset(skip).limit(limit).all()
-
-            candidates = [CandidateStageInfoRead.from_orm(candidate).dict() for candidate in candidates]
-
-            return candidates
         else:
             candidates = db.query(CandidateStageInfo).filter(
                 CandidateStageInfo.staff_unit_coordinate_id == staff_unit_id,
                 CandidateStageInfo.is_waits == True
             ).order_by(self.model.id.asc()).offset(skip).limit(limit).all()
 
-            candidates = [CandidateStageInfoRead.from_orm(candidate).dict() for candidate in candidates]
+        candidates = [CandidateStageInfoRead.from_orm(candidate).dict() for candidate in candidates]
 
-            return candidates
+        return candidates
 
     def get_all_by_candidate_id(self, db: Session, skip: int, limit: int, candidate_id: uuid.UUID):
         return db.query(CandidateStageInfo).filter(
             CandidateStageInfo.candidate_id == candidate_id,
         ).order_by(self.model.id.asc()).offset(skip).limit(limit).all()
 
-    def sign_candidate(self, db: Session, id: uuid.UUID):
-        candidate: CandidateStageInfo = super().get_by_id(db, id)
+    def sign_candidate(self, db: Session, id: uuid.UUID, staff_unit_id: str):
+        candidate_stage_info: CandidateStageInfo = super().get_by_id(db, id)
 
-        candidate.status = CandidateStageInfoStatusEnum.APPROVED.value
-        candidate.is_waits = False
-        candidate.date_sign = datetime.now()  # set the current date to the date_sign field
+        self._validate_access(db, candidate_stage_info, staff_unit_id)
 
-        db.add(candidate)
+        candidate_stage_info.status = CandidateStageInfoStatusEnum.APPROVED.value
+        candidate_stage_info.is_waits = False
+        candidate_stage_info.date_sign = datetime.now()  # set the current date to the date_sign field
+
+        db.add(candidate_stage_info)
         db.flush()
 
-        return candidate
+        return candidate_stage_info
 
-    def reject_candidate(self, db: Session, id: uuid.UUID):
-        candidate = super().get_by_id(db, id)
+    def reject_candidate(self, db: Session, id: uuid.UUID, staff_unit_id: str):
+        candidate_stage_info: CandidateStageInfo = super().get_by_id(db, id)
 
-        candidate.status = CandidateStageInfoStatusEnum.DECLINED.value
-        candidate.is_waits = False
-        candidate.date_sign = datetime.now()  # set the current date to the date_sign field
+        self._validate_access(db, candidate_stage_info, staff_unit_id)
 
-        db.add(candidate)
+        candidate_stage_info.status = CandidateStageInfoStatusEnum.DECLINED.value
+        candidate_stage_info.is_waits = False
+        candidate_stage_info.date_sign = datetime.now()  # set the current date to the date_sign field
+
+        db.add(candidate_stage_info)
         db.flush()
 
-        return candidate
+        return candidate_stage_info
+
+    def _validate_access(self, db: Session, candidate_stage_info: CandidateStageInfo, staff_unit_id: str):
+        current_user_staff_unit = staff_unit_service.get_by_id(db, staff_unit_id)
+
+        if not candidate_stage_info.is_waits or current_user_staff_unit.id != candidate_stage_info.staff_unit_coordinate_id:
+            raise ForbiddenException(
+                detail=f"У вас нет доступа к информации о стадии кандидата для CandidateStageInfo with id: {candidate_stage_info.id}!"
+            )
 
 
 candidate_stage_info_service = CandidateStageInfoService(CandidateStageInfo) # type: ignore

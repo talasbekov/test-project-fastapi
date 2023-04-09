@@ -1,18 +1,13 @@
-import uuid
-from typing import List
-
 from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
 
-from models import (Candidate, CandidateStageInfo, CandidateStageType,
-                    StaffUnit, CandidateStatusEnum, Position, User)
-from models import CandidateStageInfoStatusEnum
-
+from models import (Candidate, CandidateStageInfo, StaffUnit, User,
+                    CandidateStatusEnum, Position, CandidateStageType,
+                    PositionNameEnum, CandidateStageInfoStatusEnum)
 from schemas import CandidateCreate, CandidateUpdate, CandidateRead, CandidateStageInfoCreate
 from services import ServiceBase, staff_unit_service, user_service
-from .candidate_stage_info import candidate_stage_info_service
 from .candidate_essay_type import candidate_essay_type_service
-from models import CandidateStatusEnum, Position, CandidateStageType
+from .candidate_stage_info import candidate_stage_info_service
 
 
 class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate]):
@@ -135,10 +130,10 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
         staff_unit = staff_unit_service.get_by_id(db, role_id)
 
         available_all = {
-            'Начальник кадров',
-            'Заместители начальника кадров',
-            'Начальник управления кандидатами',
-            'Политический гос. служащий'
+            PositionNameEnum.PERSONNEL_HEAD.value,
+            PositionNameEnum.DEPUTY_PERSONNEL_HEAD.value,
+            PositionNameEnum.CANDIDATE_MANAGEMENT_HEAD.value,
+            PositionNameEnum.POLITICS_GOVERNMENT_SERVANT.value
         }
 
         available_all_roles = []

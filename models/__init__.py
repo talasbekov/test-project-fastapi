@@ -17,7 +17,7 @@ from .staff_list import StaffList
 from .staff_unit import StaffUnit
 
 from .user_stat import UserStat
-from .position import Position
+from .position import Position, PositionNameEnum
 from .medical import *
 from .profile import Profile
 from .personal import *

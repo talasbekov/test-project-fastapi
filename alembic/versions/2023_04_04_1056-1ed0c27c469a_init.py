@@ -205,7 +205,11 @@ def upgrade() -> None:
     )
     op.create_table('positions',
     sa.Column('max_rank_id', sa.UUID(), nullable=True),
-    sa.Column('name', sa.String(), nullable=False),
+    sa.Column('name', sa.Enum('CONSCRIPT_SOLDIER', 'SECURITY_OFFICER_1_LEVEL', 'SECURITY_OFFICER_2_LEVEL',
+                              'SECURITY_OFFICER_3_LEVEL', 'PERSONNEL_HEAD', 'DEPUTY_PERSONNEL_HEAD',
+                              'CANDIDATE_MANAGEMENT_HEAD', 'POLITICS_GOVERNMENT_SERVANT', 'PSYCHOLOGIST',
+                              'REPRESENTATIVE_OF_SECURITY_DEPARTMENT', 'POLYGRAPH_EXAMINER', 'SECUTIRY_OFFICER',
+                              name='PositionNameEnum'), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
