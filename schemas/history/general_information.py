@@ -12,7 +12,13 @@ class OathRead(BaseModel):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
- 
+    
+    @classmethod
+    def from_orm(cls, orm_obj):
+        return cls(
+            date=orm_obj.date,
+            military_name=orm_obj.military_unit.name,
+        )
 
 class GeneralInformationRead(BaseModel):
     oath: Optional[OathRead]

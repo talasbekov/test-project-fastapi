@@ -141,12 +141,15 @@ def create_candidate_stage_info(candidate_id,
 
 def upgrade() -> None:
 
-    badge1_id = get_uuid()
+
+    
+
+    badgetype1_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['badge_types'],
         [{
-            "id": badge1_id,
+            "id": badgetype1_id,
             "name": "Черный Берет",
             "url": "http://192.168.0.169:8083/static/black_beret.jpg"
         }]
@@ -1225,7 +1228,7 @@ def upgrade() -> None:
                     "type": "write",
                     "data_taken": "auto",
                     "field_name": "badges",
-                    "value": badge1_id
+                    "value": badgetype1_id
                 }
             },
             'id': template3_id
@@ -1454,6 +1457,250 @@ def upgrade() -> None:
     import datetime
 
 
+    badge_id = get_uuid()
+    op.bulk_insert(
+        Base.metadata.tables['badges'],
+        [{
+            'id': badge_id,
+            'user_id': user1_id,
+            'type_id': badgetype1_id
+        }])
+    
+    type_army_equipment_id = get_uuid()
+    type_army_equipment2_id = get_uuid()
+    type_army_equipment3_id = get_uuid()
+    
+    op.bulk_insert(
+        Base.metadata.tables['type_army_equipments'],
+        [{
+            'id': type_army_equipment_id,
+            'name': 'Автомат',
+        },
+            {
+            'id': type_army_equipment2_id,
+            'name': 'РПГ',
+        },
+            {
+            'id': type_army_equipment3_id,
+            'name': 'Артиллерия',
+        }
+        ])
+            
+            
+
+    type_army_equipment_model_id = get_uuid()
+    type_army_equipment_model2_id = get_uuid()
+    type_army_equipment_model3_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['type_army_equipment_models'],
+        [{
+            'id': type_army_equipment_model_id,
+            'name': 'Автомат винтовка',
+            'type_army_equipment_id': type_army_equipment_id
+        },
+            {
+            'id': type_army_equipment_model2_id,
+            'name': 'Автомат пулемет',
+            'type_army_equipment_id': type_army_equipment_id
+        },
+            {
+            'id': type_army_equipment_model3_id,
+            'name': 'Автомат пулемет',
+            'type_army_equipment_id': type_army_equipment_id
+        }] 
+    )  
+
+    type_of_clothing_equipment_id = get_uuid()
+    type_of_clothing_equipment2_id = get_uuid()
+    type_of_clothing_equipment3_id = get_uuid()
+    type_of_clothing_equipment4_id = get_uuid()
+    type_of_clothing_equipment5_id = get_uuid()
+    type_of_clothing_equipment6_id = get_uuid()
+    type_of_clothing_equipment7_id = get_uuid()
+    type_of_clothing_equipment8_id = get_uuid()
+
+
+    op.bulk_insert(
+        Base.metadata.tables['type_clothing_equipments'],
+        [{
+            'id': type_of_clothing_equipment_id,
+            'name': 'Шапка',
+        },
+            {
+            'id': type_of_clothing_equipment2_id,
+            'name': 'Куртка',
+        },
+            {
+            'id': type_of_clothing_equipment3_id,
+            'name': 'Футболка',
+        },
+            {
+            'id': type_of_clothing_equipment4_id,
+            'name': 'Кофта',
+        },
+            {
+            'id': type_of_clothing_equipment5_id,
+            'name': 'Штаны',
+            },
+            {
+            'id': type_of_clothing_equipment6_id,
+            'name': 'Термобелье',
+            },
+            {
+            'id': type_of_clothing_equipment7_id,
+            'name': 'Ботинки',
+            },
+            {
+            'id': type_of_clothing_equipment8_id,
+            'name': 'Носки',
+            }])
+
+    type_of_clothing_equipment_model_id = get_uuid()
+    type_of_clothing_equipment_model2_id = get_uuid()
+    type_of_clothing_equipment_model3_id = get_uuid()
+    type_of_clothing_equipment_model4_id = get_uuid()
+    type_of_clothing_equipment_model5_id = get_uuid()
+    type_of_clothing_equipment_model6_id = get_uuid()
+    type_of_clothing_equipment_model7_id = get_uuid()
+    type_of_clothing_equipment_model8_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['type_clothing_equipment_models'],
+        [{
+            'id': type_of_clothing_equipment_model_id,
+            'name': 'Шапка военная',
+            'type_of_clothing_equipment_id': type_of_clothing_equipment_id
+        },
+            {
+            'id': type_of_clothing_equipment_model2_id,
+            'name': 'Куртка военная',
+            'type_of_clothing_equipment_id': type_of_clothing_equipment2_id
+        },
+            {
+            'id': type_of_clothing_equipment_model3_id,
+            'name': 'Футболка военная',
+            'type_of_clothing_equipment_id': type_of_clothing_equipment3_id
+        },
+            {
+            'id': type_of_clothing_equipment_model4_id,
+            'name': 'Кофта военная',
+            'type_of_clothing_equipment_id': type_of_clothing_equipment4_id
+        },
+            {
+            'id': type_of_clothing_equipment_model5_id,
+            'name': 'Штаны военные',
+            'type_of_clothing_equipment_id': type_of_clothing_equipment5_id
+        },
+            {
+            'id': type_of_clothing_equipment_model6_id,
+            'name': 'Термобелье военное',
+            'type_of_clothing_equipment_id': type_of_clothing_equipment6_id
+        },
+            {
+            'id': type_of_clothing_equipment_model7_id,
+            'name': 'Ботинки военные',
+            'type_of_clothing_equipment_id': type_of_clothing_equipment7_id
+        },
+            {
+            'id': type_of_clothing_equipment_model8_id,
+            'name': 'Носки военные',
+            'type_of_clothing_equipment_id': type_of_clothing_equipment8_id
+        }])
+    
+
+    type_other_equipment_id = get_uuid()
+    
+    op.bulk_insert(
+        Base.metadata.tables['type_other_equipments'],
+        [{
+            'id': type_other_equipment_id,
+            'name': 'Техника',
+        }]
+    )
+
+    type_other_equipment_model_id = get_uuid()
+    type_other_equipment_model2_id = get_uuid()
+    type_other_equipment_model3_id = get_uuid()
+    type_other_equipment_model4_id = get_uuid()
+    type_other_equipment_model5_id = get_uuid()
+    type_other_equipment_model6_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['type_other_equipment_models'],
+        [{
+            'id': type_other_equipment_model_id,
+            'name': 'Принтер',
+            'type_other_equipment_id': type_other_equipment_id
+        },
+            {
+            'id': type_other_equipment_model2_id,
+            'name': 'Радиостанция',
+            'type_other_equipment_id': type_other_equipment_id
+        },
+            {
+            'id': type_other_equipment_model3_id,
+            'name': 'Персональный компьютер',
+            'type_other_equipment_id': type_other_equipment_id
+        },
+            {
+            'id': type_other_equipment_model4_id,
+            'name': 'Телефон',
+            'type_other_equipment_id': type_other_equipment_id
+        },
+            {
+            'id': type_other_equipment_model5_id,
+            'name': 'Ноутбук',
+            'type_other_equipment_id': type_other_equipment_id
+        },
+            {
+            'id': type_other_equipment_model6_id,
+            'name': 'Копировальный аппарат',
+            'type_other_equipment_id': type_other_equipment_id
+        }])
+    
+
+
+
+    army_equipment_id = get_uuid()
+    clothing_equipment_id = get_uuid()
+    other_equipment_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['equipments'],
+        [{
+            'id': army_equipment_id,
+            'type_of_army_equipment_model_id': type_army_equipment_model_id,
+            'count_of_ammo': 100,
+            'inventory_number': '123456789',
+            'user_id': user1_id,
+            'type_of_equipment': 'army_equipment',
+            'type_of_clothing_equipment_model_id': None,
+            'type_of_other_equipment_model_id': None,
+        },
+         {
+            'id': clothing_equipment_id,
+            'type_of_clothing_equipment_model_id': type_of_clothing_equipment_model_id,
+            'user_id': user1_id,
+            'type_of_equipment': 'clothing_equipment',
+            'count_of_ammo': None,
+            'inventory_number': None,
+            'type_of_army_equipment_model_id': None,
+            'type_of_other_equipment_model_id': None,
+         },
+         {
+            'id': other_equipment_id,
+            'type_of_other_equipment_model_id': type_other_equipment_model_id,
+            'user_id': user1_id,
+            'type_of_equipment': 'other_equipment',
+            'count_of_ammo': None,
+            'inventory_number': None,
+            'type_of_army_equipment_model_id': None,
+            'type_of_clothing_equipment_model_id': None,
+         }
+        ])
+    
+
     secondment_id = get_uuid()
     secondment2_id = get_uuid()
     secondment3_id = get_uuid()
@@ -1616,7 +1863,11 @@ def upgrade() -> None:
     history11_id = get_uuid()
     history12_id = get_uuid()
     history13_id = get_uuid()
-
+    history14_id = get_uuid()
+    history15_id = get_uuid()
+    history16_id = get_uuid()
+    history17_id = get_uuid()
+    
     type_of_histories = [
         "staff_unit_history",
         "rank_history",
@@ -1633,10 +1884,124 @@ def upgrade() -> None:
         "badge_history"
     ]
 
+    military_unit_id = get_uuid()
+    military_unit2_id = get_uuid()
+    military_unit3_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['military_units'],
+        [{
+            'id': military_unit_id,
+            'name': 'Военная часть 1',
+        },
+            {
+            'id': military_unit2_id,
+            'name': 'Военная часть 2',
+        },
+            {
+            'id': military_unit3_id,
+            'name': 'Военная часть 3',
+        },
+        ]
+    )
+    oauth_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['user_oaths'],
+        [{
+            'id': oauth_id,
+            'date': datetime.datetime.now(),
+            'user_id': user1_id,
+            'military_unit_id': military_unit_id,
+        }])
+    
+    privelege_emergency_service_id = get_uuid()
+    privelege_emergency_service2_id = get_uuid()
+
+    from models import FormEnum
+
+    op.bulk_insert(
+        Base.metadata.tables['privelege_emergencies'],
+        [{
+            'id': privelege_emergency_service_id,
+            'form': 'form1',
+            'date_from': datetime.datetime.now(),
+            'date_to': datetime.datetime.now() + datetime.timedelta(days=1),
+            'user_id': user1_id,
+        } 
+        ]
+    )
+
+    personnel_reserve_id = get_uuid()
+
+
+    op.bulk_insert(
+        Base.metadata.tables['personnal_reserves'],
+        [{
+            'id': personnel_reserve_id,
+            'reserve': 'enlisted',
+            'date_from': datetime.datetime.now() - datetime.timedelta(days=365),
+            'date_to': datetime.datetime.now() + datetime.timedelta(days=365),
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 59124',
+        },
+        ]
+    )
+     
+    service_id_info_id = get_uuid()
+    service_id_info2_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['service_ids'],
+        [{
+            'id': service_id_info_id,
+            'number': '№ 59124',
+            'date_to': datetime.datetime.now() + datetime.timedelta(days=365),
+            'token_status': 'RECEIVED',
+            'id_status': 'RECEIVED',
+            'user_id': user1_id,
+        },
+        ])
+
+
+
+
 
     op.bulk_insert(
         Base.metadata.tables['histories'],
-        [{
+        [
+        {
+            'id': history17_id, # TODO: change the id
+            'date_from': datetime.datetime(2012, 3, 1),
+            'date_to': datetime.datetime(2014, 3, 31),
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 12421',
+            'type': 'badge_history',
+            'penalty_id': None,
+            'name': '3 history',
+            'position_id': None,  # Add the missing parameter here
+            'rank_id': None,  # Add the missing parameter here
+            'emergency_service_id': None,  # Add the missing parameter here
+            'work_experience_id': None,  # Add the missing parameter here
+            'secondment_id': None,  # Add the missing parameter here
+            'name_change_id': None,  # МЕНЯТЬ НА name_change_id
+            'attestation_id': None,  # Add the missing parameter here
+            'service_characteristic_id': None,  # Add the missing parameter here
+            'status_id': None,  # Add the missing parameter here
+            'coolness_id': None,  # Add the missing parameter here
+            'contract_id': None,  # Add the missing parameter here
+            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+            'experience_years': None,  # Add the missing parameter here
+            'characteristic_initiator': None,  # Add the missing parameter here
+            'coefficient' : None,
+            'percentage' : None,
+            'staff_division_id' : None,
+            'badge_id' : badge_id,
+            'name_of_organization': None,
+         },
+        {
             'id': history_id,
             'date_from': str(datetime.datetime(2019, 1, 1)),
             'date_to': str(datetime.datetime(2019, 1, 31)),
@@ -1658,6 +2023,43 @@ def upgrade() -> None:
             'coolness_id': None,  # Add the missing parameter here
             'contract_id': None,  # Add the missing parameter here
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+            'experience_years': None,  # Add the missing parameter here
+            'characteristic_initiator': None,  # Add the missing parameter here
+            'coefficient' : None,
+            'percentage' : None,
+            'staff_division_id' : None,
+            'name_of_organization': None,
+            'badge_id' : None,
+        },
+        {
+            'id': history14_id,
+            'date_from': str(datetime.datetime(2019, 2, 1)),
+            'date_to': str(datetime.datetime(2019, 2, 28)),
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 59124',
+            'type': type_of_histories[3],
+            'rank_id': None,  # Add the missing parameter here
+            'name': '2 history',
+            'position_id': None,  # Add the missing parameter here
+            'penalty_id': None,  # Add the missing parameter here
+            'emergency_service_id': None,  # Add the missing parameter here
+            'work_experience_id': None,  # Add the missing parameter here
+            'secondment_id': None,  # Add the missing parameter here
+            'name_change_id': None,  # Add the missing parameter here
+            'attestation_id': None,  # Add the missing parameter here
+            'service_characteristic_id': None,  # Add the missing parameter here
+            'status_id': None,  # Add the missing parameter here
+            'coolness_id': None,  # Add the missing parameter here
+            'contract_id': None,  # Add the missing parameter here
+            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+            'experience_years': None,  # Add the missing parameter here
+            'characteristic_initiator': None,  # Add the missing parameter here
+            'coefficient' : 1.5,
+            'percentage' : 10,
+            'staff_division_id' : group1_id,
+            'name_of_organization': None,
+            'badge_id' : None,
         },
             {
             'id': history2_id,
@@ -1681,6 +2083,13 @@ def upgrade() -> None:
             'coolness_id': None,  # Add the missing parameter here
             'contract_id': None,  # Add the missing parameter here
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+            'experience_years': None,  # Add the missing parameter here
+            'characteristic_initiator': None,  # Add the missing parameter here
+            'coefficient' : None,
+            'percentage' : None,
+            'staff_division_id' : None,
+            'name_of_organization': None,
+            'badge_id' : None,
         },
             {
             'id': history3_id,
@@ -1704,6 +2113,13 @@ def upgrade() -> None:
             'coolness_id': None,  # Add the missing parameter here
             'contract_id': None,  # Add the missing parameter here
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+            'experience_years': None,  # Add the missing parameter here
+            'characteristic_initiator': None,  # Add the missing parameter here
+            'coefficient' : None,
+            'percentage' : None,
+            'staff_division_id' : None,
+            'name_of_organization': None,
+            'badge_id' : None,
         },
              
             {
@@ -1728,6 +2144,13 @@ def upgrade() -> None:
             'coolness_id': None,  # Add the missing parameter here
             'contract_id': None,  # Add the missing parameter here
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+            'experience_years': None,  # Add the missing parameter here
+            'characteristic_initiator': None,  # Add the missing parameter here
+            'coefficient' : None,
+            'percentage' : None,
+            'staff_division_id' : None,
+            'name_of_organization': None,
+            'badge_id': None
         },
             {
             'id': history7_id,
@@ -1751,9 +2174,46 @@ def upgrade() -> None:
             'coolness_id': None,  # Add the missing parameter here
             'contract_id': None,  # Add the missing parameter here
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+            'experience_years': None,  # Add the missing parameter here
+            'characteristic_initiator': None,  # Add the missing parameter here
+            'coefficient' : None,
+            'percentage' : None,
+            'staff_division_id' : None,
+            'name_of_organization': None,
+            'badge_id': None
         },
+         {
+            'id': history15_id, # TODO: change the id
+            'date_from': datetime.datetime(2012, 3, 1),
+            'date_to': datetime.datetime(2014, 3, 31),
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 12421',
+            'type': 'work_experience_history',
+            'penalty_id': None,
+            'name': '3 history',
+            'position_id': None,  # Add the missing parameter here
+            'rank_id': None,  # Add the missing parameter here
+            'emergency_service_id': None,  # Add the missing parameter here
+            'work_experience_id': None,  # Add the missing parameter here
+            'secondment_id': None,  # Add the missing parameter here
+            'name_change_id': None,  # МЕНЯТЬ НА name_change_id
+            'attestation_id': None,  # Add the missing parameter here
+            'service_characteristic_id': None,  # Add the missing parameter here
+            'status_id': None,  # Add the missing parameter here
+            'coolness_id': None,  # Add the missing parameter here
+            'contract_id': None,  # Add the missing parameter here
+            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+            'experience_years': None,  # Add the missing parameter here
+            'characteristic_initiator': None,  # Add the missing parameter here
+            'coefficient' : None,
+            'percentage' : None,
+            'staff_division_id' : None,
+            'name_of_organization': 'Cleverest Technologies',
+            'badge_id': None
+         },
         {
-            'id': history13_id,
+            'id': history16_id,
             'date_from': datetime.datetime(2015, 5, 5),
             'date_to': None,
             'user_id': user1_id,
@@ -1774,6 +2234,13 @@ def upgrade() -> None:
             'coolness_id': None,  # Add the missing parameter here
             'contract_id': None,  # Add the missing parameter here
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+            'experience_years': None,  # Add the missing parameter here
+            'characteristic_initiator': None,  # Add the missing parameter here
+            'coefficient' : None,
+            'percentage' : None,
+            'staff_division_id' : None,
+            'name_of_organization': None,
+            'badge_id': None
         },
             {
             'id': history8_id,
@@ -1797,7 +2264,14 @@ def upgrade() -> None:
             'status_id': None,  # Add the missing parameter here
             'coolness_id': None,  # Add the missing parameter here
             'contract_id': None,  # Add the missing parameter here
-            
+            'experience_years': None,  # Add the missing parameter here
+            'characteristic_initiator': None,  # Add the missing parameter here
+            'coefficient' : None,
+            'percentage' : None,
+            'staff_division_id' : None,
+            'name_of_organization': None,
+            'badge_id': None
+
         },
            
             {
@@ -1822,6 +2296,13 @@ def upgrade() -> None:
             'coolness_id': None,  # Add the missing parameter here
             'contract_id': None,  # Add the missing parameter here
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+            'experience_years': None,  # Add the missing parameter here
+            'characteristic_initiator': None,  # Add the missing parameter here
+            'coefficient' : None,
+            'percentage' : None,
+            'staff_division_id' : None,
+            'name_of_organization': None,
+            'badge_id': None
         },
             {
             'id': history11_id,
@@ -1845,6 +2326,13 @@ def upgrade() -> None:
             'coolness_id': coolness_id,  # МЕНЯТЬ НА coolness_id
             'contract_id': None,  # Add the missing parameter here
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+            'experience_years': None,  # Add the missing parameter here
+            'characteristic_initiator': None,  # Add the missing parameter here
+            'coefficient' : None,
+            'percentage' : None,
+            'staff_division_id' : None,
+            'name_of_organization': None,
+            'badge_id': None
         },
             {
             'id': history12_id,
@@ -1868,6 +2356,43 @@ def upgrade() -> None:
             'coolness_id': None,  # Add the missing parameter here
             'contract_id': contract_id,  # МЕНЯТЬ НА contract_id
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+            'experience_years': 5,
+            'characteristic_initiator' : None, # МЕНЯТЬ НА characteristic_initiator
+            'coefficient' : None,
+            'percentage' : None,
+            'staff_division_id' : None,
+            'name_of_organization': None,
+            'badge_id': None
+        },
+         {
+            'id': history13_id,
+            'date_from': datetime.datetime(2020, 3, 1),
+            'date_to': datetime.datetime(2021, 3, 31),
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 12421',
+            'type': type_of_histories[8],
+            'penalty_id': None,
+            'name': '3 history',
+            'position_id': None,  # Add the missing parameter here
+            'rank_id': None,  # Add the missing parameter here
+            'emergency_service_id': None,  # Add the missing parameter here
+            'work_experience_id': None,  # Add the missing parameter here
+            'secondment_id': None,  # Add the missing parameter here
+            'name_change_id': None,  # Add the missing parameter here
+            'attestation_id': None,  # Add the missing parameter here
+            'service_characteristic_id': None,  # Add the missing parameter here
+            'characteristic_initiator': None,
+            'status_id': None,  # Add the missing parameter here
+            'coolness_id': None,  # Add the missing parameter here
+            'contract_id': contract_id,  # МЕНЯТЬ НА contract_id
+            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+            'experience_years': 5,
+            'coefficient' : None,
+            'percentage' : None,
+            'staff_division_id' : None,
+            'name_of_organization': None,
+            'badge_id': None
         }
         ])
 
@@ -1916,6 +2441,8 @@ def upgrade() -> None:
             'name': 'Водители воинской службы СОО СГО РК'
         }, ]
     )
+
+    
 
     candidate_stage_types1_id = get_uuid()
     candidate_stage_types2_id = get_uuid()
