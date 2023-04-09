@@ -1,18 +1,14 @@
-import uuid
-from typing import List
-
 from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
 
-from models import (Candidate, CandidateStageInfo, CandidateStageType,
-                    StaffUnit, CandidateStatusEnum, Position, User)
-from models import CandidateStageInfoStatusEnum
-
+from exceptions import NotFoundException
+from models import (Candidate, CandidateStageInfo, StaffUnit, User,
+                    CandidateStatusEnum, Position, CandidateStageType,
+                    PositionNameEnum, CandidateStageInfoStatusEnum)
 from schemas import CandidateCreate, CandidateUpdate, CandidateRead, CandidateStageInfoCreate
 from services import ServiceBase, staff_unit_service, user_service
-from .candidate_stage_info import candidate_stage_info_service
 from .candidate_essay_type import candidate_essay_type_service
-from models import CandidateStatusEnum, Position, CandidateStageType
+from .candidate_stage_info import candidate_stage_info_service
 
 
 class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate]):
@@ -98,14 +94,17 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
 
     def update(self, db: Session, id: str, body: CandidateUpdate):
 
-        candidate = candidate_service.get_by_id(db, id)
+        candidate = super().get(db, id)
+
+        if candidate is None:
+            raise NotFoundException(detail=f"Candidate with id {id} not found!")
 
         if body.staff_unit_id is not None:
-            staff_unit_service.get_by_id(db, body.staff_unit_id)
-            candidate.staff_unit_id = body.staff_unit_id
+            staff_unit = staff_unit_service.get_by_id(db, body.staff_unit_id)
+            candidate.staff_unit_id = staff_unit.id
         if body.staff_unit_curator_id is not None:
-            staff_unit_service.get_by_id(db, body.staff_unit_curator_id)
-            candidate.staff_unit_curator_id = body.staff_unit_curator_id
+            staff_unit = staff_unit_service.get_by_id(db, body.staff_unit_curator_id)
+            candidate.staff_unit_curator_id = staff_unit.id
         if body.status is not None:
             candidate.status = body.status
 
@@ -113,6 +112,9 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
                 candidate.debarment_reason = body.debarment_reason
             elif candidate.status == CandidateStatusEnum.ACTIVE.value:
                 candidate.debarment_reason = None
+        if body.is_physical_passed is not None:
+            if body.is_physical_passed:
+                candidate.is_physical_passed = body.is_physical_passed
 
         db.add(candidate)
         db.flush()
@@ -133,10 +135,10 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
         staff_unit = staff_unit_service.get_by_id(db, role_id)
 
         available_all = {
-            'Начальник кадров',
-            'Заместители начальника кадров',
-            'Начальник управления кандидатами',
-            'Политический гос. служащий'
+            PositionNameEnum.PERSONNEL_HEAD.value,
+            PositionNameEnum.DEPUTY_PERSONNEL_HEAD.value,
+            PositionNameEnum.CANDIDATE_MANAGEMENT_HEAD.value,
+            PositionNameEnum.POLITICS_GOVERNMENT_SERVANT.value
         }
 
         available_all_roles = []

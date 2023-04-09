@@ -133,7 +133,6 @@ def create_candidate_stage_info(candidate_id,
             'id': get_uuid(),
             'staff_unit_coordinate_id': staff_unit_coordinate_id,
             'candidate_stage_type_id': candidate_stage_type_id,
-            'is_waits': True,
             'candidate_id': candidate_id,
         }]
     )
@@ -1515,17 +1514,17 @@ def upgrade() -> None:
         [{
             'id': type_army_equipment_model_id,
             'name': 'Автомат винтовка',
-            'type_army_equipment_id': type_army_equipment_id
+            'type_of_army_equipment_id': type_army_equipment_id
         },
             {
             'id': type_army_equipment_model2_id,
             'name': 'Автомат пулемет',
-            'type_army_equipment_id': type_army_equipment_id
+            'type_of_army_equipment_id': type_army_equipment_id
         },
             {
             'id': type_army_equipment_model3_id,
             'name': 'Автомат пулемет',
-            'type_army_equipment_id': type_army_equipment_id
+            'type_of_army_equipment_id': type_army_equipment_id
         }] 
     )  
 
@@ -1649,32 +1648,32 @@ def upgrade() -> None:
         [{
             'id': type_other_equipment_model_id,
             'name': 'Принтер',
-            'type_other_equipment_id': type_other_equipment_id
+            'type_of_other_equipment_id': type_other_equipment_id
         },
             {
             'id': type_other_equipment_model2_id,
             'name': 'Радиостанция',
-            'type_other_equipment_id': type_other_equipment_id
+            'type_of_other_equipment_id': type_other_equipment_id
         },
             {
             'id': type_other_equipment_model3_id,
             'name': 'Персональный компьютер',
-            'type_other_equipment_id': type_other_equipment_id
+            'type_of_other_equipment_id': type_other_equipment_id
         },
             {
             'id': type_other_equipment_model4_id,
             'name': 'Телефон',
-            'type_other_equipment_id': type_other_equipment_id
+            'type_of_other_equipment_id': type_other_equipment_id
         },
             {
             'id': type_other_equipment_model5_id,
             'name': 'Ноутбук',
-            'type_other_equipment_id': type_other_equipment_id
+            'type_of_other_equipment_id': type_other_equipment_id
         },
             {
             'id': type_other_equipment_model6_id,
             'name': 'Копировальный аппарат',
-            'type_other_equipment_id': type_other_equipment_id
+            'type_of_other_equipment_id': type_other_equipment_id
         }])
     
 

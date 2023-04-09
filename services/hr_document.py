@@ -9,14 +9,14 @@ from typing import List
 from docxtpl import DocxTemplate
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
-from sqlalchemy import func, or_
+from sqlalchemy import func, or_, select
 
 from core import Base
 from exceptions import (BadRequestException, ForbiddenException,
                         InvalidOperationException, NotFoundException)
 from models import (HrDocument, HrDocumentStatusEnum,
                     HrDocumentStep, StaffUnit, User, DocumentStaffFunction, StaffDivision, JurisdictionEnum,
-                    HrDocumentStatus, StaffDivisionEnum, HrDocumentTemplate)
+                    HrDocumentStatus, StaffDivisionEnum, HrDocumentTemplate,HrDocumentInfo)
 from schemas import (BadgeRead, HrDocumentCreate, HrDocumentInit,
                      HrDocumentRead, HrDocumentSign, HrDocumentUpdate,
                      RankRead, StaffDivisionOptionRead, StaffUnitRead, DraftHrDocumentCreate, DraftHrDocumentInit)
@@ -56,12 +56,17 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
     def get_initialized_documents(self, db: Session, user_id: uuid.UUID, filter: str, skip: int, limit: int):
         user = user_service.get_by_id(db, user_id)
-        subquery = hr_document_info_service.get_initialized_by_user_id_subquery(db, user_id)
         if filter is not None:
             key_words = filter.lower().split()
-
             documents = (
-                db.query(self.model).select_from(subquery)
+                db.query(self.model)
+                .join(self.model.hr_document_infos)
+                .join(HrDocumentStep)
+                .join(DocumentStaffFunction)
+                .filter(
+                    HrDocumentInfo.assigned_to_id == user_id,
+                    DocumentStaffFunction.priority == 1
+                    )
                 .join(self.model.users)
                 .join(self.model.document_template)
                 .filter((or_(*[func.lower(User.first_name).contains(name) for name in key_words])) |

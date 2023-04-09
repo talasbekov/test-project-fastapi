@@ -31,6 +31,7 @@ class UserRead(BaseModel):
     staff_unit_id: Optional[uuid.UUID]
     call_sign: Optional[str]
     id_number: Optional[str]
+    icon: Optional[str]
     status: Optional[str]
     status_till: Optional[datetime.datetime]
 

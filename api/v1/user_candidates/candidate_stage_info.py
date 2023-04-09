@@ -4,10 +4,11 @@ from fastapi import APIRouter, Depends, status
 from fastapi.security import HTTPBearer
 from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 
 from core import get_db
-from schemas import CandidateStageInfoCreate, CandidateStageInfoRead, CandidateStageInfoUpdate
+from schemas import (CandidateStageInfoCreate, CandidateStageInfoRead, CandidateStageInfoUpdate,
+                     CandidateStageInfoSendToApproval)
 from services import candidate_stage_info_service
 
 router = APIRouter(prefix="/candidate_stage_info", tags=["CandidateStageInfo"], dependencies=[Depends(HTTPBearer())])
@@ -20,7 +21,8 @@ async def get_all(
         db: Session = Depends(get_db),
         skip: int = 0,
         limit: int = 100,
-        Authorize: AuthJWT = Depends()
+        Authorize: AuthJWT = Depends(),
+        filter: str = None
 ):
     """
         Get all CandidateStageInfo.
@@ -29,7 +31,8 @@ async def get_all(
         - **limit**: int - The maximum number of CandidateStageInfo to return in the response. This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    return candidate_stage_info_service.get_multi(db, skip, limit)
+    role = Authorize.get_raw_jwt()['role']
+    return candidate_stage_info_service.get_all_by_staff_unit_id(db, skip, limit, role)
 
 
 @router.get("/{id}", dependencies=[Depends(HTTPBearer())],
@@ -49,30 +52,15 @@ async def get_by_id(
     return candidate_stage_info_service.get_by_id(db, id)
 
 
-@router.get("/all/{staff_unit_id}", dependencies=[Depends(HTTPBearer())],
-            response_model=List[CandidateStageInfoRead],
-            summary="Get all CandidateStageInfo by staff_unit_id")
-async def get_all_by_staff_unit_id(
-        db: Session = Depends(get_db),
-        Authorize: AuthJWT = Depends(),
-        staff_unit_id: uuid.UUID = None
-):
-    """
-        Get all CandidateStageInfo by staff_unit_id.
-
-        - **staff_unit_id**: UUID - required and should exist in the database.
-    """
-    Authorize.jwt_required()
-    return candidate_stage_info_service.get_all_by_staff_unit_id(db, staff_unit_id)
-
-
 @router.get("/all/candidate/{candidate_id}", dependencies=[Depends(HTTPBearer())],
             response_model=List[CandidateStageInfoRead],
             summary="Get all CandidateStageInfo by candidate_id")
 async def get_all_by_candidate_id(
         db: Session = Depends(get_db),
+        candidate_id: uuid.UUID = None,
+        skip: int = 0,
+        limit: int = 100,
         Authorize: AuthJWT = Depends(),
-        candidate_id: uuid.UUID = None
 ):
     """
         Get all CandidateStageInfo by candidate_id.
@@ -80,7 +68,8 @@ async def get_all_by_candidate_id(
         - **candidate_id**: UUID - required and should exist in the database.
     """
     Authorize.jwt_required()
-    return candidate_stage_info_service.get_all_by_candidate_id(db, candidate_id)
+    role = Authorize.get_raw_jwt()['role']
+    return candidate_stage_info_service.get_all_by_candidate_id(db, skip, limit, candidate_id, role)
 
 
 @router.post("", dependencies=[Depends(HTTPBearer())],
@@ -104,10 +93,31 @@ async def create(
     return candidate_stage_info_service.create(db, body)
 
 
-@router.patch("/{id}/sign", dependencies=[Depends(HTTPBearer())],
-              summary="Sign a CandidateStageInfo",
-              status_code=status.HTTP_202_ACCEPTED,
-              response_model=CandidateStageInfoRead)
+@router.put("/{id}/send", dependencies=[Depends(HTTPBearer())],
+            summary="Send CandidateStageInfo send to Approval",
+            status_code=status.HTTP_202_ACCEPTED,
+            response_model=CandidateStageInfoRead)
+async def send_to_approval(
+        db: Session = Depends(get_db),
+        Authorize: AuthJWT = Depends(),
+        id: uuid.UUID = None,
+        body: CandidateStageInfoSendToApproval = None
+):
+    """
+        Send CandidateStageInfo send to Approval
+
+        - **id**: UUID - required.
+        - **staff_unit_coordinate_id**: uuid - optional and should exists in database
+    """
+    Authorize.jwt_required()
+    role = Authorize.get_raw_jwt()['role']
+    return candidate_stage_info_service.send_to_approval(db=db, id=id, body=body, staff_unit_id=role)
+
+
+@router.put("/{id}/sign", dependencies=[Depends(HTTPBearer())],
+            summary="Sign a CandidateStageInfo",
+            status_code=status.HTTP_202_ACCEPTED,
+            response_model=CandidateStageInfoRead)
 async def sign_candidate(
         db: Session = Depends(get_db),
         Authorize: AuthJWT = Depends(),
@@ -119,13 +129,14 @@ async def sign_candidate(
         - **id**: UUID - required.
     """
     Authorize.jwt_required()
-    return candidate_stage_info_service.sign_candidate(db, id)
+    role = Authorize.get_raw_jwt()['role']
+    return candidate_stage_info_service.sign_candidate(db, id, role)
 
 
-@router.patch("/{id}/reject", dependencies=[Depends(HTTPBearer())],
-              summary="Sign a CandidateStageInfo",
-              status_code=status.HTTP_202_ACCEPTED,
-              response_model=CandidateStageInfoRead)
+@router.put("/{id}/reject", dependencies=[Depends(HTTPBearer())],
+            summary="Reject a CandidateStageInfo",
+            status_code=status.HTTP_202_ACCEPTED,
+            response_model=CandidateStageInfoRead)
 async def reject_candidate(
         db: Session = Depends(get_db),
         Authorize: AuthJWT = Depends(),
@@ -137,7 +148,8 @@ async def reject_candidate(
         - **id**: UUID - required and should exist in the database.
     """
     Authorize.jwt_required()
-    return candidate_stage_info_service.reject_candidate(db, id)
+    role = Authorize.get_raw_jwt()['role']
+    return candidate_stage_info_service.reject_candidate(db, id, role)
 
 
 @router.put("/{id}", dependencies=[Depends(HTTPBearer())],
@@ -153,10 +165,8 @@ async def update(
         Update a CandidateStageInfo.
 
         - **id**: UUID - required and should exist in the database.
-        - **candidate_id**: UUID - required and should exist in the database.
-        - **candidate_stage_type_id**: UUID - required and should exist in the database.
-        - **staff_unit_coordinate_id**: UUID - required and should exist in the database.
-        - **is_waits**: bool - optional.
+        - **candidate_id**: UUID - optional and should exist in the database.
+        - **candidate_stage_type_id**: UUID - optional and should exist in the database.
         - **status**: str - optional.
     """
     Authorize.jwt_required()

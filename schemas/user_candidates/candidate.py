@@ -5,7 +5,6 @@ from typing import Optional, List
 from pydantic import BaseModel, validator
 
 from models import CandidateStatusEnum
-from .candidate_stage_info import CandidateStageInfoRead
 from .candidate_essay_type import CandidateEssayTypeRead
 
 
@@ -47,6 +46,7 @@ class CandidateUpdate(CandidateBase):
     staff_unit_id: Optional[uuid.UUID]
     status: Optional[str]
     debarment_reason: Optional[str]
+    is_physical_passed: Optional[bool]
 
     @validator('debarment_reason', pre=True)
     def validate_debarment_reason(cls, value, values):
@@ -67,6 +67,8 @@ class CandidateRead(CandidateBase):
     created_at: Optional[datetime.datetime]
     updated_at: Optional[datetime.datetime]
     status: Optional[str]
+    is_physical_passed: Optional[bool]
+    attempt_number: Optional[int]
     debarment_reason: Optional[str]
     progress: Optional[int]
     current_stage: Optional[str]
@@ -77,4 +79,3 @@ class CandidateRead(CandidateBase):
     staff_unit_curator: Optional[StaffUnitCandidateRead]
     staff_unit_id: Optional[uuid.UUID]
     staff_unit: Optional[StaffUnitCandidateRead]
-    candidate_stage_infos: Optional[List[CandidateStageInfoRead]]
