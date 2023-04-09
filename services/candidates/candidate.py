@@ -15,10 +15,8 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
     def get_multiple(self, db: Session, filter: str, user_id: str, role_id: str, skip: int = 0, limit: int = 100):
 
         if self._check_by_role(db, role_id):
-            print(type(filter))
             if filter is not None:
                 filter = filter.lower()
-                print(filter)
                 candidates = db.query(self.model). \
                     join(StaffUnit, self.model.staff_unit_id == StaffUnit.id). \
                     join(User, User.staff_unit_id == StaffUnit.id). \
@@ -168,7 +166,6 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
 
         if filter is not None:
             filter = filter.lower()
-            print(filter)
             return db.query(self.model). \
                 join(StaffUnit, self.model.staff_unit_id == StaffUnit.id). \
                 join(User, User.staff_unit_id == StaffUnit.id). \
@@ -234,6 +231,5 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
         candidate_obj = super().get_by_id(db, candidate['id'])
         if candidate_obj.candidate_stage_answers:
             candidate['last_edit_date'] = candidate_obj.candidate_stage_answers[0].created_at
-        print(candidate)
 
 candidate_service = CandidateService(Candidate)  # type: ignore

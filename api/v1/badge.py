@@ -7,14 +7,14 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import BadgeCreate, BadgeRead, BadgeUpdate
+from schemas import BadgeCreate, BadgeRead, BadgeUpdate, BadgeTypeRead
 from services import badge_service
 
 router = APIRouter(prefix="/badges", tags=["Badges"], dependencies=[Depends(HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[BadgeRead],
+            response_model=List[BadgeTypeRead],
             summary="Get all Badges")
 async def get_all(*,
     db: Session = Depends(get_db),
@@ -33,7 +33,7 @@ async def get_all(*,
 
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
-             response_model=BadgeRead,
+             response_model=BadgeTypeRead,
              summary="Create")
 async def create(*,
     db: Session = Depends(get_db),
@@ -50,7 +50,7 @@ async def create(*,
     return badge_service.create_badge(db, body)
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=BadgeRead,
+            response_model=BadgeTypeRead,
             summary="Get Badge by id")
 async def get_by_id(*,
     db: Session = Depends(get_db),
@@ -67,7 +67,7 @@ async def get_by_id(*,
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=BadgeRead,
+            response_model=BadgeTypeRead,
             summary="Update Badge")
 async def update(*,
     db: Session = Depends(get_db),

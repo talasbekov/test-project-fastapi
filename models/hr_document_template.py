@@ -7,7 +7,7 @@ from sqlalchemy.orm import relationship
 from models import NamedModel
 
 
-class SubjectType(enum.Enum):
+class SubjectType(str, enum.Enum):
     CANDIDATE = "Кандидат"
     EMPLOYEE = "Сотрудник"
     PERSONNEL = "Персонал"

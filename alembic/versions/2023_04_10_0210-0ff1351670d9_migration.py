@@ -1,8 +1,8 @@
 """migration
 
-Revision ID: 72e4c4601ba8
-Revises: e1ce15c46c46
-Create Date: 2023-04-08 09:52:48.224890
+Revision ID: 0ff1351670d9
+Revises: 81b69562a2ac
+Create Date: 2023-04-10 02:10:00.528430
 
 """
 import uuid
@@ -12,8 +12,8 @@ from core import Base
 
 
 # revision identifiers, used by Alembic.
-revision = '72e4c4601ba8'
-down_revision = 'e1ce15c46c46'
+revision = '0ff1351670d9'
+down_revision = '81b69562a2ac'
 branch_labels = None
 depends_on = None
 
@@ -1783,24 +1783,26 @@ def upgrade() -> None:
             'user_id': user1_id,
         }]
     )
+    
+    status_type = get_uuid()
+    
+    op.bulk_insert(
+        Base.metadata.tables['status_types'],
+        [{
+            'id': status_type,
+            'name': 'Статус 1'
+        }]
+    )
 
     status_id = get_uuid()
-    status2_id = get_uuid()
-    status3_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['statuses'],
         [{
             'id': status_id,
-            'name': 'Статус 1',
             'user_id': user1_id,
-        },
-            {
-            'id': status2_id,
-            'name': 'Статус 2',
-            'user_id': user1_id,
-        },
-        ]
+            'type_id': status_type,
+        }]
     )
 
     coolness_type_id = get_uuid()

@@ -273,5 +273,5 @@ async def get_data_by_option(*,
         * badges
     """
     Authorize.jwt_required()
-    res = hr_document_service.get_all_by_option(db, option, data_taken, id, skip, limit)
+    res = hr_document_service.get_all_by_option(db, option, data_taken, id, type, skip, limit)
     return res

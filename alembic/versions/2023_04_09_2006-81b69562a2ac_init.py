@@ -1,8 +1,8 @@
 """init
 
-Revision ID: e1ce15c46c46
+Revision ID: 81b69562a2ac
 Revises: 
-Create Date: 2023-04-08 09:52:34.709526
+Create Date: 2023-04-09 20:06:15.748767
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = 'e1ce15c46c46'
+revision = '81b69562a2ac'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -196,8 +196,8 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('positions',
+    sa.Column('name', sa.String(), nullable=True),
     sa.Column('max_rank_id', sa.UUID(), nullable=True),
-    sa.Column('name', sa.String(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
@@ -254,7 +254,14 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['staff_division_id'], ['staff_divisions.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_foreign_key('staff_division_leader_fk', 'staff_divisions', 'staff_units', ['leader_id'], ['id'])
+    op.create_foreign_key("staff_division_leader_id_fkey", "staff_divisions", "staff_units", ["leader_id"], ["id"])
+    op.create_table('status_types',
+    sa.Column('name', sa.String(), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('type_army_equipments',
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
@@ -309,11 +316,11 @@ def upgrade() -> None:
     op.create_table('candidates',
     sa.Column('status', sa.Enum('ACTIVE', 'DRAFT', name='candidatestatusenum'), server_default='ACTIVE', nullable=True),
     sa.Column('debarment_reason', sa.String(), nullable=True),
+    sa.Column('is_physical_passed', sa.Boolean(), nullable=True),
+    sa.Column('attempt_number', sa.Integer(), server_default='0', nullable=True),
     sa.Column('staff_unit_curator_id', sa.UUID(), nullable=True),
     sa.Column('staff_unit_id', sa.UUID(), nullable=True),
     sa.Column('essay_id', sa.UUID(), nullable=True),
-    sa.Column('is_physical_passed', sa.Boolean(), nullable=True),
-    sa.Column('attempt_number', sa.Integer(), nullable=True, server_default='0'),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
@@ -624,11 +631,12 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('staff_unit_id', 'staff_function_id')
     )
     op.create_table('statuses',
+    sa.Column('type_id', sa.UUID(), nullable=True),
     sa.Column('user_id', sa.UUID(), nullable=True),
-    sa.Column('name', sa.String(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['type_id'], ['status_types.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -1276,6 +1284,7 @@ def downgrade() -> None:
     op.drop_table('type_other_equipments')
     op.drop_table('type_clothing_equipments')
     op.drop_table('type_army_equipments')
+    op.drop_table('status_types')
     op.drop_table('staff_units')
     op.drop_table('staff_divisions')
     op.drop_table('sport_types')
