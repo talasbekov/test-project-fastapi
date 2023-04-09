@@ -229,7 +229,7 @@ class HolidayRead(BaseModel):
             date_to=orm_obj.date_to,
             document_link=orm_obj.document_link,
             document_number=orm_obj.document_number,
-            status=orm_obj.status.name,
+            status=orm_obj.status.type.name,
         )
 
 class EmergencyContactRead(BaseModel):
