@@ -120,6 +120,38 @@ options = {
     'admin@mail.com': {
         'first_name': 'Админ',
         'father_name': 'Админович'
+    },
+    'elena@mail.ru': {
+        'first_name': 'Елена',
+        'father_name': 'Петрова'
+    },
+    'aidar@mail.ru': {
+        'first_name': 'Айдар',
+        'father_name': 'Жакупов'
+    },
+    'kuat@mail.ru': {
+        'first_name': 'Куат',
+        'father_name': 'Жанатов'
+    },
+    'daulet@mail.ru': {
+        'first_name': 'Даулет',
+        'father_name': 'Кайратұлы'
+    },
+    'akzhol@mail.ru': {
+        'first_name': 'Ақжол',
+        'father_name': 'Бекмұхаметов'
+    },
+    'kairat@mail.ru': {
+        'first_name': 'Қайрат',
+        'father_name': 'Мақсұтұлы'
+    },
+    'sanzhar@mail.ru': {
+        'first_name': 'Санжар',
+        'father_name': 'Бекжанов'
+    },
+    'koktem@mail.ru': {
+        'first_name': 'Көктем',
+        'father_name': 'Исмаилова'
     }
 }
 
@@ -139,9 +171,6 @@ def create_candidate_stage_info(candidate_id,
 
 
 def upgrade() -> None:
-
-
-    
 
     badgetype1_id = get_uuid()
 
@@ -289,6 +318,14 @@ def upgrade() -> None:
     position15_id = get_uuid()
     position16_id = get_uuid()
     position17_id = get_uuid()
+    position18_id = get_uuid()
+    position19_id = get_uuid()
+    position20_id = get_uuid()
+    position21_id = get_uuid()
+    position22_id = get_uuid()  # Психолог
+    position23_id = get_uuid()  # УСБ
+    position24_id = get_uuid()  # Полиграфолог
+    position25_id = get_uuid()  # Инструктор
 
     op.bulk_insert(
         Base.metadata.tables['positions'],
@@ -360,7 +397,42 @@ def upgrade() -> None:
             'id': position17_id,
             'name': 'Начальник Службы',
             'max_rank_id': rank13_id
-        }]
+        },
+        {
+            'id': position18_id,
+            'name': 'PERSONNEL_HEAD',
+            'max_rank_id': rank10_id
+        }, {
+            'id': position19_id,
+            'name': 'DEPUTY_PERSONNEL_HEAD',
+            'max_rank_id': rank10_id
+        }, {
+            'id': position20_id,
+            'name': 'CANDIDATE_MANAGEMENT_HEAD',
+            'max_rank_id': rank10_id
+        }, {
+            'id': position21_id,
+            'name': 'POLITICS_GOVERNMENT_SERVANT',
+            'max_rank_id': rank16_id
+        }, {
+            'id': position22_id,
+            'name': 'PSYCHOLOGIST',
+            'max_rank_id': None
+        }, {
+            'id': position23_id,
+            'name': 'REPRESENTATIVE_OF_SECURITY_DEPARTMENT',
+            'max_rank_id': None
+        }, {
+            'id': position24_id,
+            'name': 'POLYGRAPH_EXAMINER',
+            'max_rank_id': None
+        }, {
+            'id': position25_id,
+            'name': 'INSTRUCTOR',
+            'max_rank_id': None
+        }
+        
+        ]
     )
 
     hr_document_status_id = get_uuid()
@@ -780,6 +852,15 @@ def upgrade() -> None:
     staff_unit12_id = get_uuid()
     staff_unit13_id = get_uuid()
     staff_unit14_id = get_uuid()
+    staff_unit15_id = get_uuid()
+    staff_unit16_id = get_uuid()
+    staff_unit17_id = get_uuid()
+    staff_unit18_id = get_uuid()
+    staff_unit19_id = get_uuid()
+    staff_unit20_id = get_uuid()
+    staff_unit21_id = get_uuid()
+    staff_unit22_id = get_uuid()
+
 
     op.bulk_insert(
         Base.metadata.tables['staff_units'],
@@ -851,6 +932,13 @@ def upgrade() -> None:
     user9_id = get_uuid()
     user10_id = get_uuid()
     user11_id = get_uuid()
+    user12_id = get_uuid()
+    user13_id = get_uuid()
+    user14_id = get_uuid()
+    user15_id = get_uuid()
+    user16_id = get_uuid()
+    user17_id = get_uuid()
+    user18_id = get_uuid()
 
     create_user(
         user10_id,
@@ -1020,6 +1108,142 @@ def upgrade() -> None:
         staff_unit9_id,
         "http://192.168.0.169:8083/static/Erdaulet.png",
         position3_id,
+        True,
+        "1.2.217K")
+    create_user(
+        user11_id,
+        "Елена",
+        "Петрова",
+        'Игоревна',
+        'elena@mail.ru',
+        group3_id,
+        None,
+        "Альфа 11",
+        '11',
+        staff_unit15_id,
+        None,
+        staff_unit15_id,
+        "http://192.168.0.169:8083/static/Erdaulet.png",
+        position22_id,
+        True,
+        "1.2.217K")
+    create_user(
+        user12_id,
+        "Айдар",
+        "Жакупов",
+        'Азаматұлы',
+        'aidar@mail.ru',
+        group3_id,
+        None,
+        "Альфа 12",
+        '12',
+        staff_unit16_id,
+        None,
+        staff_unit16_id,
+        "http://192.168.0.169:8083/static/Erdaulet.png",
+        position23_id,
+        True,
+        "1.2.217K")
+    create_user(
+        user13_id,
+        "Куат",
+        "Жанатов",
+        'Нурсултанович',
+        'kuat@mail.ru',
+        group3_id,
+        None,
+        "Альфа 13",
+        '13',
+        staff_unit17_id,
+        None,
+        staff_unit17_id,
+        "http://192.168.0.169:8083/static/Erdaulet.png",
+        position24_id,
+        True,
+        "1.2.217K")
+    create_user(
+        user14_id,
+        "Даулет",
+        "Кайратұлы",
+        'Темірбеков',
+        'daulet@mail.ru',
+        group3_id,
+        None,
+        "Альфа 14",
+        '14',
+        staff_unit18_id,
+        None,
+        staff_unit18_id,
+        "http://192.168.0.169:8083/static/Erdaulet.png",
+        position21_id,
+        True,
+        "1.2.217K")
+    create_user(
+        user15_id,
+        "Ақжол",
+        "Бекмұхаметов",
+        'Құдайбергенұлы',
+        'akzhol@mail.ru',
+        group3_id,
+        None,
+        "Альфа 15",
+        '15',
+        staff_unit19_id,
+        None,
+        staff_unit19_id,
+        "http://192.168.0.169:8083/static/Erdaulet.png",
+        position20_id,
+        True,
+        "1.2.217K")
+    create_user(
+        user16_id,
+        "Қайрат",
+        "Мақсұтұлы",
+        'Мұқанов',
+        'kairat@mail.ru',
+        group3_id,
+        None,
+        "Альфа 16",
+        '16',
+        staff_unit20_id,
+        None,
+        staff_unit20_id,
+        "http://192.168.0.169:8083/static/Erdaulet.png",
+        position19_id,
+        True,
+        "1.2.217K")
+    create_user(
+        user17_id,
+        "Санжар",
+        "Бекжанов",
+        'Қуанышбекұлы',
+        'sanzhar@mail.ru',
+        group3_id,
+        None,
+        "Альфа 17",
+        '17',
+        staff_unit21_id,
+        None,
+        staff_unit21_id,
+        "http://192.168.0.169:8083/static/Erdaulet.png",
+        position18_id,
+        True,
+        "1.2.217K")
+    create_user(
+        user18_id,
+        "Көктем",
+        "Исмаилова",
+        None,
+        'koktem@mail.ru',
+        group3_id,
+        None,
+        "Альфа 18",
+        '18',
+        staff_unit22_id,
+        None,
+        staff_unit22_id,
+        "http://192.168.0.169:8083/static/Erdaulet.png",
+        position25_id,
         True,
         "1.2.217K")
     create_user(
@@ -2558,28 +2782,24 @@ def upgrade() -> None:
     candidate_stage_question8_id = get_uuid()  # Первичная беседа
     candidate_stage_question9_id = get_uuid()  # Первичная беседа
     candidate_stage_question10_id = get_uuid()  # Первичная беседа
-    # Запросы с внешних источников (др. гос органы)
-    candidate_stage_question11_id = get_uuid()
+    candidate_stage_question11_id = get_uuid()  # Запросы с внешних источников (др. гос органы)
     candidate_stage_question12_id = get_uuid()  # Беседа о религии
     candidate_stage_question13_id = get_uuid()  # Беседа с родителями
-    # Справка о профессиональной пригодности
-    candidate_stage_question14_id = get_uuid()
-    # Дополнительная беседа (не обязательно)
-    candidate_stage_question15_id = get_uuid()
+    candidate_stage_question14_id = get_uuid()  # Справка о профессиональной пригодности
+    candidate_stage_question15_id = get_uuid()  # Дополнительная беседа (не обязательно)
     candidate_stage_question16_id = get_uuid()  # Беседа с представителем УСБ
-    # Беседа с руководством департамента кадров
-    candidate_stage_question17_id = get_uuid()
+    candidate_stage_question17_id = get_uuid()  # Беседа с руководством департамента кадров
     candidate_stage_question18_id = get_uuid()  # Рецензия на эссе
     candidate_stage_question19_id = get_uuid()  # Заключение по спец. проверке
     candidate_stage_question20_id = get_uuid()  # Заключение о зачислении
-    # Результаты тестирования на знание законодательства РК
-    candidate_stage_question21_id = get_uuid()
+    candidate_stage_question21_id = get_uuid()  # Результаты тестирования на знание законодательства РК
     candidate_stage_question22_id = get_uuid()  # Военно-врачебная комиссия
     candidate_stage_question23_id = get_uuid()
     candidate_stage_question24_id = get_uuid()
     candidate_stage_question25_id = get_uuid()
     candidate_stage_question26_id = get_uuid()
     candidate_stage_question27_id = get_uuid()
+    candidate_stage_question28_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['candidate_stage_questions'],
@@ -2593,6 +2813,11 @@ def upgrade() -> None:
             'question_type': 'Dropdown',
             'candidate_stage_type_id': candidate_stage_types2_id,
             'question': 'Кем подобран и кем рекомендован',
+        }, {
+            'id': candidate_stage_question28_id,
+            'question_type': 'Document',
+            'candidate_stage_type_id': candidate_stage_types2_id,
+            'question': None,
         }, {
             'id': candidate_stage_question3_id,
             'question_type': 'String',
