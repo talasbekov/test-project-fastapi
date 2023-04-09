@@ -36,6 +36,7 @@ class HistoryBase(BaseModel):
     status_id: Optional[uuid.UUID]
     coolness_id: Optional[uuid.UUID]
     contract_id: Optional[uuid.UUID]
+    characteristic_initiator: Optional[str]
     name: Optional[str]
     user_id: uuid.UUID
     type: str

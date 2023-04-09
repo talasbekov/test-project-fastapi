@@ -8,7 +8,7 @@ from .association import hr_document_equipments
 class Equipment(Model):
 
     __tablename__ = "equipments"
- 
+    
     
     type_of_equipment = Column(String, nullable=True)
 

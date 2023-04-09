@@ -1,6 +1,12 @@
 from .profile import ProfileCreate, ProfileUpdate, ProfileRead
 from .badge import BadgeCreate, BadgeRead, BadgeUpdate
-from .equipment import EquipmentCreate, EquipmentRead, EquipmentUpdate
+from .equipment import (EquipmentCreate, 
+                        EquipmentRead, 
+                        EquipmentUpdate,
+                        TypeClothingEquipmentRead, 
+                        TypeArmyEquipmentRead, 
+                        TypeOtherEquipmentRead)
+
 from .event import EventCreate, EventRead, EventUpdate
 from .hr_document_template import (HrDocumentTemplateCreate,
                                    HrDocumentTemplateRead,
