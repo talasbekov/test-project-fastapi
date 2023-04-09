@@ -600,10 +600,15 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
             if value["data_taken"] == "auto":
                 attr = getattr(user, value["field_name"])
-                if isinstance(attr, Base) or isinstance(attr, list):
+                if isinstance(attr, Base):
                     new_val[value["field_name"]] = self._get_service(
                         value["field_name"]
                     ).get(db, value["value"])
+                elif isinstance(attr, list):
+                    print(value["value"])
+                    new_val[value["field_name"]] = self._get_service(
+                        value["field_name"]
+                    ).get_object(db, value["value"])
                 else:
                     new_val[value["field_name"]] = value["value"]
 

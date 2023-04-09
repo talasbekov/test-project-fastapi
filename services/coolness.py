@@ -27,5 +27,8 @@ class CoolnessService(ServiceBase[Coolness, CoolnessCreate, CoolnessUpdate]):
     def get_by_option(self, db: Session, skip: int, limit: int):
         return [i for i in db.query(CoolnessType).offset(skip).limit(limit).all()]
 
+    def get_object(self, db: Session, id: str):
+        return db.query(CoolnessType).filter(CoolnessType.id == id).first()
+
 
 coolness_service = CoolnessService(Coolness)

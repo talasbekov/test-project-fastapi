@@ -48,6 +48,10 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
     
     def get_by_option(self, db: Session, skip: int, limit: int):
         return [BadgeRead.from_orm(badge) for badge in super().get_multi(db, skip, limit)]
+    
+    def get_object(self, db: Session, id: str):
+        res = db.query(BadgeType).filter(BadgeType.id == id).first()
+        return res
 
 
 badge_service = BadgeService(Badge)

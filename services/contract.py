@@ -17,5 +17,8 @@ class ContractService(ServiceBase[Contract, ContractCreate, ContractUpdate]):
     def get_by_option(self, db: Session, skip: int, limit: int):
         return [i for i in db.query(ContractType).offset(skip).limit(limit).all()]
 
+    def get_object(self, db: Session, id: str):
+        return db.query(ContractType).filter(ContractType.id == id).first()
+
 
 contract_service = ContractService(Contract)
