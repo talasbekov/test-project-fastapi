@@ -9,11 +9,17 @@ class EducationalProfile(Model):
 
     __tablename__ = "educational_profiles"
 
-    profile_id = Column(UUID(as_uuid=True), ForeignKey("profiles.id"), nullable=True)
+    profile_id = Column(UUID(as_uuid=True), ForeignKey(
+        "profiles.id"), nullable=True)
     profile = relationship("Profile", back_populates="educational_profile")
 
-    academic_degree = relationship("AcademicDegree", back_populates="profile", cascade="all, delete")
-    academic_title = relationship("AcademicTitle", back_populates="profile", cascade="all, delete")
-    education = relationship("Education", back_populates="profile", cascade="all, delete")
-    course = relationship("Course", back_populates="profile", cascade="all, delete")
-    language_proficiency = relationship("LanguageProficiency", back_populates="profile", cascade="all, delete")
+    academic_degree = relationship(
+        "AcademicDegree", back_populates="profile", cascade="all, delete")
+    academic_title = relationship(
+        "AcademicTitle", back_populates="profile", cascade="all, delete")
+    education = relationship(
+        "Education", back_populates="profile", cascade="all, delete")
+    course = relationship(
+        "Course", back_populates="profile", cascade="all, delete")
+    language_proficiency = relationship(
+        "LanguageProficiency", back_populates="profile", cascade="all, delete")
