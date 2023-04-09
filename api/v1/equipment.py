@@ -169,7 +169,7 @@ async def get_all_other(*,
     return equipment_service.get_all_other_equipments(db, skip, limit)
 
 
-@router.get("/types/", dependencies=[Depends(HTTPBearer())],
+@router.get("/type/all", dependencies=[Depends(HTTPBearer())],
             response_model=List[str],
             summary="Get all Types of Equipments")
 async def get_all_types(*,
