@@ -3,7 +3,7 @@ from typing import List
 
 from sqlalchemy.orm import Session
 
-from exceptions import BadRequestException, NotFoundException
+from exceptions import BadRequestException, NotFoundException, NotSupportedException
 from models import StaffDivision
 from schemas import (
     StaffDivisionCreate,
@@ -83,6 +83,9 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
             parent_id = tmp.parent_group_id
         
         return res_id
+    
+    def get_by_option(self, db: Session, type: str, id: uuid.UUID, skip: int, limit: int):
+        raise NotSupportedException(detail=f'Use matreshka with instead')
 
 
 

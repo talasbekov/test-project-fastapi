@@ -10,7 +10,7 @@ class ReserveEnum(EnumBase):
     enlisted = "Зачислен"
     reserve = "Резерв"
 
-class PersonnalReserve(Model):
+class PersonalReserve(Model):
 
     __tablename__ = "personnal_reserves"
     reserve = Column(Enum(ReserveEnum), nullable=True)

@@ -1,12 +1,12 @@
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
-from models import PrivelegeEmergency
+from models import PrivilegeEmergency
 from schemas import PrivelegeEmergencyCreate, PrivelegeEmergencyRead, PrivelegeEmergencyUpdate
 from .base import ServiceBase
 
 
-class PrivelegeEmergencyService(ServiceBase[PrivelegeEmergency, PrivelegeEmergencyCreate, PrivelegeEmergencyUpdate]):
+class PrivelegeEmergencyService(ServiceBase[PrivilegeEmergency, PrivelegeEmergencyCreate, PrivelegeEmergencyUpdate]):
 
     def get_by_id(self, db: Session, id: str):
         rank = super().get(db, id)
@@ -18,4 +18,4 @@ class PrivelegeEmergencyService(ServiceBase[PrivelegeEmergency, PrivelegeEmergen
         privelege_emergency = db.query(self.model).filter(self.model.user_id == user_id).first()
         return privelege_emergency
 
-privelege_emergency_service = PrivelegeEmergencyService(PrivelegeEmergency)
+privelege_emergency_service = PrivelegeEmergencyService(PrivilegeEmergency)

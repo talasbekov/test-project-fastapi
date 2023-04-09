@@ -7,10 +7,10 @@ from models import Model, NamedModel
 from enum import Enum as EnumBase
 
 
-class SpecialityEnum(EnumBase):
-    speciality1 = "Специалист 1 класса - наставник (мастер)"
-    speciality2 = "Специалист 2 класса - наставник (мастер)"
-    speciality3 = "Специалист 3 класса - наставник (мастер)"
+class SpecialtyEnum(EnumBase):
+    specialty1 = "Специалист 1 класса - наставник (мастер)"
+    specialty2 = "Специалист 2 класса - наставник (мастер)"
+    specialty3 = "Специалист 3 класса - наставник (мастер)"
 
 
 class CoolnessType(NamedModel):

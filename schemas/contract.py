@@ -5,6 +5,26 @@ from typing import Optional
 from pydantic import BaseModel
 
 
+class ContractTypeBase(BaseModel):
+    name: str
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
+
+
+class ContractTypeCreate(ContractTypeBase):
+    pass
+
+
+class ContractTypeUpdate(ContractTypeBase):
+    pass
+
+
+class ContractTypeRead(ContractTypeBase):
+    name: str
+
+
 class ContractBase(BaseModel):
 
     type_id: uuid.UUID
@@ -25,3 +45,5 @@ class ContractUpdate(ContractBase):
 
 class ContractRead(ContractBase):
     id: uuid.UUID
+    
+    type: Optional[ContractTypeRead]

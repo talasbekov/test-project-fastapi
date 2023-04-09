@@ -256,6 +256,7 @@ async def get_data_by_option(*,
     option: str,
     data_taken: Optional[str] = None,
     id: Optional[uuid.UUID] = None,
+    type: str = "write",
     skip: int = 0,
     limit: int = 10,
     Authorize: AuthJWT = Depends()

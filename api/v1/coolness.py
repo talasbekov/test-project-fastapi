@@ -9,14 +9,14 @@ from sqlalchemy.orm import Session
 from core import get_db
 from schemas import CoolnessCreate, CoolnessUpdate, CoolnessRead
 from services import coolness_service
-from models import SpecialityEnum
+from models import SpecialtyEnum
 
 
 router = APIRouter(prefix="/coolness", tags=["Coolness"], dependencies=[Depends(HTTPBearer())])
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[CoolnessRead],
-            summary="Get all Privelege Emergencies")
+            summary="Get all Coolness")
 async def get_all(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
@@ -24,10 +24,10 @@ async def get_all(*,
     limit: int = 10
 ):
     """
-       Get all Military Units
+       Get all Coolness
 
-       - **skip**: int - The number of Military Units to skip before returning the results. This parameter is optional and defaults to 0.
-       - **limit**: int - The maximum number of Military Units to return in the response. This parameter is optional and defaults to 10.
+       - **skip**: int - The number of Coolness to skip before returning the results. This parameter is optional and defaults to 0.
+       - **limit**: int - The maximum number of Coolness to return in the response. This parameter is optional and defaults to 10.
    """
     Authorize.jwt_required()
     return coolness_service.get_multi(db, skip, limit)
@@ -36,14 +36,14 @@ async def get_all(*,
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=CoolnessRead,
-             summary="Create Military Unit")
+             summary="Create Coolness")
 async def create(*,
     db: Session = Depends(get_db),
     body: CoolnessCreate,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Create Military Unit
+        Create Coolness
 
         **name** - required - str
     """
@@ -52,45 +52,45 @@ async def create(*,
 
 
 @router.get("/forms/", dependencies=[Depends(HTTPBearer())],
-            summary="Get all Speciality Enum")
+            summary="Get all Specialty Enum")
 async def get_all_forms(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
 ):
     """
-       Get all Speciality Enum
+       Get all Specialty Enum
    """
     Authorize.jwt_required()
-    return [speciality_enum.value for speciality_enum in SpecialityEnum]
+    return [specialty_enum.value for specialty_enum in SpecialtyEnum]
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=SpecialityEnum,
-            summary="Update Privelege Emergency")
+            response_model=CoolnessRead,
+            summary="Update Coolness")
 async def update(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
-    body: SpecialityEnum,
+    body: SpecialtyEnum,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Update Privelege Emergency
+        Update Coolness
 
         **name** - required - str
     """
     Authorize.jwt_required()
-    privelege_emergency = coolness_service.get_by_id(db, id)
-    return coolness_service.update(db, db_obj=privelege_emergency, obj_in=body)
+    coolness_emergency = coolness_service.get_by_id(db, id)
+    return coolness_service.update(db, db_obj=coolness_emergency, obj_in=body)
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=CoolnessRead,
-            summary="Get Privelege Emergency Unit by id")
+            summary="Get Coolness by id")
 async def get_by_id(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Get Privelege Emergency by id
+        Get Coolness by id
 
         - **id** - UUID - required
     """
@@ -100,14 +100,14 @@ async def get_by_id(*,
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
-               summary="Delete Privelege Emergency ")
+               summary="Delete Coolness ")
 async def delete(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Delete Military Unit
+        Delete Coolness
 
         - **id** - UUID - required
     """

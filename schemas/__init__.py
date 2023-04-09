@@ -1,5 +1,5 @@
 from .profile import ProfileCreate, ProfileUpdate, ProfileRead
-from .badge import BadgeCreate, BadgeRead, BadgeUpdate
+from .badge import *
 from .equipment import EquipmentCreate, EquipmentRead, EquipmentUpdate
 from .event import EventCreate, EventRead, EventUpdate
 from .hr_document_template import (HrDocumentTemplateCreate,
@@ -32,7 +32,7 @@ from .hr_document_info import (HrDocumentInfoCreate, HrDocumentInfoRead,
                                HrDocumentInfoUpdate, HrDocumentHistoryRead)
 from .privelege_emergency import (PrivelegeEmergencyCreate, PrivelegeEmergencyRead, PrivelegeEmergencyUpdate)
 from .personnal_reserve import (PersonnalReserveCreate, PersonnalReserveRead, PersonnalReserveUpdate)
-from .coolness import (CoolnessCreate, CoolnessRead, CoolnessUpdate)
+from .coolness import *
 from .history import *
 from .user_stat import UserStatCreate, UserStatRead, UserStatUpdate
 from .auth import LoginForm, RegistrationForm

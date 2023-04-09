@@ -4,9 +4,32 @@ from typing import Optional
 from pydantic import BaseModel
 
 
-class BadgeBase(BaseModel):
+class BadgeTypeBase(BaseModel):
     name: str
     url: str
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
+
+
+class BadgeTypeCreate(BadgeTypeBase):
+    pass
+
+
+class BadgeTypeUpdate(BadgeTypeBase):
+    pass
+
+
+class BadgeTypeRead(BadgeTypeBase):
+    id: uuid.UUID
+    name: str
+    url: str
+
+
+class BadgeBase(BaseModel):
+    user_id: uuid.UUID
+    type_id: uuid.UUID
 
 
 class BadgeCreate(BadgeBase):
@@ -19,8 +42,7 @@ class BadgeUpdate(BadgeBase):
 
 class BadgeRead(BadgeBase):
     id: Optional[uuid.UUID]
-    name: Optional[str]
-    url: Optional[str]
+    type: Optional[BadgeTypeRead]
 
     class Config:
         orm_mode = True

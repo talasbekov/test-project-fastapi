@@ -2,7 +2,7 @@ import uuid
 
 from sqlalchemy.orm import Session
 
-from exceptions.client import NotFoundException
+from exceptions.client import NotFoundException, NotSupportedException
 from models import Secondment, StaffDivision
 from schemas import SecondmentRead, SecondmentCreate, SecondmentUpdate
 from .base import ServiceBase
@@ -20,8 +20,8 @@ class SecondmentService(ServiceBase[Secondment, SecondmentCreate, SecondmentUpda
             status = super().create(db, SecondmentCreate(user_id=user_id, staff_division_id=None, name=value))
         return status
     
-    def get_by_option(self, db: Session, skip: int, limit: int):
-        pass
+    def get_by_option(self, db: Session, option: str, type: str, id: uuid.UUID, skip: int, limit: int):
+        raise NotSupportedException(detail="Use 'staff_division' with 'matreshka' instead of 'option'!")
 
     def get_object(self, db: Session, value: str):
         if is_valid_uuid(value):

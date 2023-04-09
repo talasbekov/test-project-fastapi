@@ -29,7 +29,7 @@ async def get_all(*,
         - **limit**: int - The maximum number of badges to return in the response. This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    return badge_service.get_multi(db, skip, limit)
+    return badge_service.get_multiple(db, skip, limit)
 
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
@@ -47,7 +47,7 @@ async def create(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    return badge_service.create(db, body)
+    return badge_service.create_badge(db, body)
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=BadgeRead,
@@ -63,7 +63,7 @@ async def get_by_id(*,
         - **id**: UUID - required.
     """
     Authorize.jwt_required()
-    return badge_service.get_by_id(db, id)
+    return badge_service.get_badge_by_id(db, id)
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -83,10 +83,7 @@ async def update(*,
         - **url**: image url. This parameter is required.
     """
     Authorize.jwt_required()
-    return badge_service.update(
-        db,
-        db_obj=badge_service.get_by_id(db, id),
-        obj_in=body)
+    return badge_service.update_badge(db, id, body)
 
 
 @router.delete("/{id}/",status_code=status.HTTP_204_NO_CONTENT,
@@ -103,11 +100,16 @@ async def delete(*,
         - **id**: UUId - required
     """
     Authorize.jwt_required()
-    badge_service.remove(db, id)
+    badge_service.delete_badge(db, id)
 
 
-@router.get("/help")
-async def help(*,
-    db: Session = Depends(get_db)):
-    badge_service.add_badge(db, BadgeCreate(name="test", url="sad"))
-    raise Exception('help')
+@router.get('/black-beret', dependencies=[Depends(HTTPBearer())])
+async def black_beret(*,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Get black beret badge
+    """
+    Authorize.jwt_required()
+    return badge_service.get_black_beret(db)

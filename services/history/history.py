@@ -30,8 +30,8 @@ from models import (
     Status,
     Badge,
     Coolness,
-    PersonnalReserve,
-    PrivelegeEmergency,
+    PersonalReserve,
+    PrivilegeEmergency,
 )
 from schemas import HistoryCreate, HistoryUpdate
 from services import ServiceBase

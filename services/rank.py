@@ -1,3 +1,5 @@
+import uuid
+
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
@@ -14,8 +16,8 @@ class RankService(ServiceBase[Rank, RankCreate, RankUpdate]):
             raise NotFoundException(detail=f"Rank with id: {id} is not found!")
         return rank
     
-    def get_by_option(self, db: Session, skip: int, limit: int):
-        return [RankRead.from_orm(rank) for rank in super().get_multi(db, skip, limit)]
+    def get_by_option(self, db: Session, type: str, id: uuid.UUID, skip: int, limit: int):
+        return [RankRead.from_orm(rank).dict() for rank in super().get_multi(db, skip, limit)]
 
 
 rank_service = RankService(Rank)

@@ -1,12 +1,12 @@
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
-from models import PersonnalReserve
+from models import PersonalReserve
 from schemas import PersonnalReserveCreate, PersonnalReserveRead, PersonnalReserveUpdate
 from .base import ServiceBase
 
 
-class PersonnalReserveService(ServiceBase[PersonnalReserve, PersonnalReserveCreate, PersonnalReserveUpdate]):
+class PersonnalReserveService(ServiceBase[PersonalReserve, PersonnalReserveCreate, PersonnalReserveUpdate]):
 
     def get_by_id(self, db: Session, id: str):
         rank = super().get(db, id)
@@ -18,4 +18,4 @@ class PersonnalReserveService(ServiceBase[PersonnalReserve, PersonnalReserveCrea
         personnal_reserve = db.query(self.model).filter(self.model.user_id == user_id).first()
         return personnal_reserve
 
-personnal_reserve_service = PersonnalReserveService(PersonnalReserve)
+personnal_reserve_service = PersonnalReserveService(PersonalReserve)

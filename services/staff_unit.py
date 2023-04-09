@@ -1,3 +1,5 @@
+import uuid
+
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
@@ -60,7 +62,7 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
         staff_unit = self.get_by_id(db, body.staff_unit_id)
 
         for id in body.staff_function_ids:
-            staff_function = get_by_option
+            staff_function = document_staff_function_service.get_by_id(db, id)
             try:
                 staff_unit.staff_functions.remove(staff_function)
             except ValueError as e:
@@ -69,8 +71,8 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
         db.add(staff_unit)
         db.flush()
 
-    def get_by_option(self, db: Session, skip: int, limit: int):
-        return [StaffUnitRead.from_orm(item) for item in super().get_multi(db, skip, limit)]
+    def get_by_option(self, db: Session, type: str, id: uuid.UUID, skip: int, limit: int):
+        return [StaffUnitRead.from_orm(item).dict() for item in super().get_multi(db, skip, limit)]
 
 
 staff_unit_service = StaffUnitService(StaffUnit)

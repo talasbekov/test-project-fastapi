@@ -12,7 +12,7 @@ class FormEnum(EnumBase):
     form3 = "Форма 3"
 
 
-class PrivelegeEmergency(Model):
+class PrivilegeEmergency(Model):
 
     __tablename__ = "privelege_emergencies"
     form = Column(Enum(FormEnum), nullable=True)

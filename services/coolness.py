@@ -3,8 +3,8 @@ import uuid
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
-from models import Coolness, CoolnessType
-from schemas import CoolnessCreate, CoolnessRead, CoolnessUpdate
+from models import Coolness, CoolnessType, User
+from schemas import CoolnessCreate, CoolnessRead, CoolnessUpdate, CoolnessTypeRead
 from .base import ServiceBase
 
 
@@ -24,8 +24,14 @@ class CoolnessService(ServiceBase[Coolness, CoolnessCreate, CoolnessUpdate]):
         coolness = super().create(db, CoolnessCreate(user_id=user_id, type_id=type_id))
         return coolness
     
-    def get_by_option(self, db: Session, skip: int, limit: int):
-        return [i for i in db.query(CoolnessType).offset(skip).limit(limit).all()]
+    def get_by_option(self, db: Session, option: str, type: str, id: uuid.UUID, skip: int, limit: int):
+        if type == 'write':
+            return [CoolnessTypeRead.from_orm(i).dict() for i in db.query(CoolnessType).offset(skip).limit(limit).all()]
+        else:
+            user = db.query(User).filter(User.id == id).first()
+            if user is None:
+                raise NotFoundException(detail=f"User with id: {id} is not found!")
+            return [CoolnessRead.from_orm(status).dict() for status in user.coolnesses]
 
     def get_object(self, db: Session, id: str):
         return db.query(CoolnessType).filter(CoolnessType.id == id).first()
