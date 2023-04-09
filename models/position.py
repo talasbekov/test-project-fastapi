@@ -20,6 +20,7 @@ class PositionNameEnum(str, enum.Enum):
     PSYCHOLOGIST = 'Психолог'
     REPRESENTATIVE_OF_SECURITY_DEPARTMENT = 'Представитель Управление собственной безопасности'
     POLYGRAPH_EXAMINER = 'Полиграфолог'
+    INSTRUCTOR = 'Инструктор'
 
 
 class Position(Model):

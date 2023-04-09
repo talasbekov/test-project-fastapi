@@ -145,6 +145,10 @@ options = {
     'sanzhar@mail.ru': {
         'first_name': 'Санжар',
         'father_name': 'Бекжанов'
+    },
+    'koktem@mail.ru': {
+        'first_name': 'Көктем',
+        'father_name': 'Исмаилова'
     }
 }
 
@@ -288,6 +292,7 @@ def upgrade() -> None:
     position22_id = get_uuid()  # Психолог
     position23_id = get_uuid()  # УСБ
     position24_id = get_uuid()  # Полиграфолог
+    position25_id = get_uuid()  # Инструктор
 
     op.bulk_insert(
         Base.metadata.tables['positions'],
@@ -389,6 +394,10 @@ def upgrade() -> None:
         }, {
             'id': position24_id,
             'name': 'POLYGRAPH_EXAMINER',
+            'max_rank_id': None
+        }, {
+            'id': position25_id,
+            'name': 'INSTRUCTOR',
             'max_rank_id': None
         }]
     )
@@ -770,7 +779,7 @@ def upgrade() -> None:
     staff_unit19_id = get_uuid()
     staff_unit20_id = get_uuid()
     staff_unit21_id = get_uuid()
-
+    staff_unit22_id = get_uuid()
 
     group1_id = get_uuid()
     group2_id = get_uuid()
@@ -896,6 +905,7 @@ def upgrade() -> None:
     user15_id = get_uuid()
     user16_id = get_uuid()
     user17_id = get_uuid()
+    user18_id = get_uuid()
 
     create_user(
         user10_id,
@@ -1184,6 +1194,23 @@ def upgrade() -> None:
         staff_unit21_id,
         "http://192.168.0.169:8083/static/Erdaulet.png",
         position18_id,
+        True,
+        "1.2.217K")
+    create_user(
+        user18_id,
+        "Көктем",
+        "Исмаилова",
+        None,
+        'koktem@mail.ru',
+        group3_id,
+        None,
+        "Альфа 18",
+        '18',
+        staff_unit22_id,
+        None,
+        staff_unit22_id,
+        "http://192.168.0.169:8083/static/Erdaulet.png",
+        position25_id,
         True,
         "1.2.217K")
     create_user(
@@ -1657,6 +1684,7 @@ def upgrade() -> None:
     candidate_stage_question25_id = get_uuid()
     candidate_stage_question26_id = get_uuid()
     candidate_stage_question27_id = get_uuid()
+    candidate_stage_question28_id = get_uuid()
 
 
     op.bulk_insert(
@@ -1671,6 +1699,11 @@ def upgrade() -> None:
             'question_type': 'Dropdown',
             'candidate_stage_type_id': candidate_stage_types2_id,
             'question': 'Кем подобран и кем рекомендован',
+        }, {
+            'id': candidate_stage_question28_id,
+            'question_type': 'Document',
+            'candidate_stage_type_id': candidate_stage_types2_id,
+            'question': None,
         }, {
             'id': candidate_stage_question3_id,
             'question_type': 'String',
