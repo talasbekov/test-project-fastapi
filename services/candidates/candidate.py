@@ -1,6 +1,7 @@
 from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
 
+from exceptions import NotFoundException
 from models import (Candidate, CandidateStageInfo, StaffUnit, User,
                     CandidateStatusEnum, Position, CandidateStageType,
                     PositionNameEnum, CandidateStageInfoStatusEnum)
@@ -92,14 +93,17 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
 
     def update(self, db: Session, id: str, body: CandidateUpdate):
 
-        candidate = candidate_service.get_by_id(db, id)
+        candidate = super().get(db, id)
+
+        if candidate is None:
+            raise NotFoundException(detail=f"Candidate with id {id} not found!")
 
         if body.staff_unit_id is not None:
-            staff_unit_service.get_by_id(db, body.staff_unit_id)
-            candidate.staff_unit_id = body.staff_unit_id
+            staff_unit = staff_unit_service.get_by_id(db, body.staff_unit_id)
+            candidate.staff_unit_id = staff_unit.id
         if body.staff_unit_curator_id is not None:
-            staff_unit_service.get_by_id(db, body.staff_unit_curator_id)
-            candidate.staff_unit_curator_id = body.staff_unit_curator_id
+            staff_unit = staff_unit_service.get_by_id(db, body.staff_unit_curator_id)
+            candidate.staff_unit_curator_id = staff_unit.id
         if body.status is not None:
             candidate.status = body.status
 
