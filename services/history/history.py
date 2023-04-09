@@ -269,11 +269,8 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         for history in histories:
             type_cls = self.get_type_by_user_id(db, user_id, history.type)
             obj = db.query(type_cls).filter(type_cls.id == history.id).first()
-            
-            lis_of_histories.append(HistoryPersonalRead.from_orm(obj))
-        lis_of_histories.sort(key=lambda x: x.date_from, reverse=True)
+            lis_of_histories.append(HistoryPersonalRead.from_orm(obj)) 
         return lis_of_histories
-    
     
     
 

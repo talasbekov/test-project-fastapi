@@ -7,7 +7,12 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import EquipmentCreate, EquipmentUpdate, EquipmentRead
+from schemas import (EquipmentCreate, 
+                     EquipmentUpdate, 
+                     EquipmentRead,
+                     TypeClothingEquipmentRead, 
+                     TypeArmyEquipmentRead, 
+                     TypeOtherEquipmentRead)
 from services import equipment_service
 
 router = APIRouter(prefix="/equipments", tags=["Equipments"], dependencies=[Depends(HTTPBearer())])
@@ -105,3 +110,97 @@ async def delete(*,
     """
     Authorize.jwt_required()
     equipment_service.remove(db, id)
+
+
+@router.get("/type/clothing/", dependencies=[Depends(HTTPBearer())],
+            response_model=List[TypeClothingEquipmentRead],
+            summary="Get all Clothing Equipments")
+async def get_all_clothing(*,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends(),
+    skip: int = 0,
+    limit: int = 10
+):
+    """
+        Get all Clothing Equipments
+
+        - **skip**: int - The number of equipments to skip before returning the results. This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of equipments to return in the response. This parameter is optional and defaults to 10.
+    """
+    Authorize.jwt_required()
+    return equipment_service.get_all_clothing_equipments(db, skip, limit)
+
+
+@router.get("/type/army/", dependencies=[Depends(HTTPBearer())],
+            response_model=List[TypeArmyEquipmentRead],
+            summary="Get all Army Equipments")
+async def get_all_army(*,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends(),
+    skip: int = 0,
+    limit: int = 10
+):
+    """
+        Get all Army Equipments
+
+        - **skip**: int - The number of equipments to skip before returning the results. This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of equipments to return in the response. This parameter is optional and defaults to 10.
+    """
+    Authorize.jwt_required()
+    return equipment_service.get_all_army_equipments(db, skip, limit)
+
+
+@router.get("/type/other/", dependencies=[Depends(HTTPBearer())],
+            response_model=List[TypeOtherEquipmentRead],
+            summary="Get all Other Equipments")
+async def get_all_other(*,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends(),
+    skip: int = 0,
+    limit: int = 10
+):
+    """
+        Get all Other Equipments
+
+        - **skip**: int - The number of equipments to skip before returning the results. This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of equipments to return in the response. This parameter is optional and defaults to 10.
+    """
+    Authorize.jwt_required()
+    return equipment_service.get_all_other_equipments(db, skip, limit)
+
+
+@router.get("/types/", dependencies=[Depends(HTTPBearer())],
+            response_model=List[str],
+            summary="Get all Types of Equipments")
+async def get_all_types(*,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends(),
+    skip: int = 0,
+    limit: int = 10
+):
+    """
+        Get all Types of Equipments
+
+        - **skip**: int - The number of equipments to skip before returning the results. This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of equipments to return in the response. This parameter is optional and defaults to 10.
+    """
+    Authorize.jwt_required()
+    return ["other_equipment", "clothing_equipment", "army_equipment"]
+
+@router.get("available/{user_id}/", dependencies=[Depends(HTTPBearer())], 
+            summary="Get all available Equipments for user")
+async def get_all_available(*,
+    db: Session = Depends(get_db),
+    user_id: uuid.UUID,
+    Authorize: AuthJWT = Depends(),
+    skip: int = 0,
+    limit: int = 10
+):
+    """
+        Get all available Equipments for user
+
+        - **skip**: int - The number of equipments to skip before returning the results. This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of equipments to return in the response. This parameter is optional and defaults to 10.
+    """
+    Authorize.jwt_required()
+    return equipment_service.get_all_available_equipments(db, user_id, skip, limit)

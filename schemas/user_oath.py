@@ -27,4 +27,4 @@ class UserOathUpdate(UserOath):
 
 class UserOathRead(UserOath):
     id: uuid.UUID
-    military_unit = Optional[MilitaryUnitRead]
+    military_unit: Optional[MilitaryUnitRead]
