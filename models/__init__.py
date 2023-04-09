@@ -21,7 +21,7 @@ from .coolness import Coolness, SpecialityEnum
 from .military_unit import MilitaryUnit
 from .user_oath import UserOath
 from .user_stat import UserStat
-from .position import Position
+from .position import Position, PositionNameEnum
 from .personnal_reserve import PersonnalReserve, ReserveEnum
 from .medical import *
 from .profile import Profile

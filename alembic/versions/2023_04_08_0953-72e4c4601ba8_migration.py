@@ -1,4 +1,4 @@
-"""
+"""migration
 
 Revision ID: 72e4c4601ba8
 Revises: e1ce15c46c46

@@ -4,10 +4,11 @@ from fastapi import APIRouter, Depends, status
 from fastapi.security import HTTPBearer
 from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 
 from core import get_db
-from schemas import CandidateStageInfoCreate, CandidateStageInfoRead, CandidateStageInfoUpdate
+from schemas import (CandidateStageInfoCreate, CandidateStageInfoRead, CandidateStageInfoUpdate,
+                     CandidateStageInfoSendToApproval)
 from services import candidate_stage_info_service
 
 router = APIRouter(prefix="/candidate_stage_info", tags=["CandidateStageInfo"], dependencies=[Depends(HTTPBearer())])
@@ -91,6 +92,27 @@ async def create(
     return candidate_stage_info_service.create(db, body)
 
 
+@router.put("/{id}/send", dependencies=[Depends(HTTPBearer())],
+            summary="Send CandidateStageInfo send to Approval",
+            status_code=status.HTTP_202_ACCEPTED,
+            response_model=CandidateStageInfoRead)
+async def send_to_approval(
+        db: Session = Depends(get_db),
+        Authorize: AuthJWT = Depends(),
+        id: uuid.UUID = None,
+        body: CandidateStageInfoSendToApproval = None
+):
+    """
+        Send CandidateStageInfo send to Approval
+
+        - **id**: UUID - required.
+        - **staff_unit_coordinate_id**: uuid - optional and should exists in database
+    """
+    Authorize.jwt_required()
+    role = Authorize.get_raw_jwt()['role']
+    return candidate_stage_info_service.send_to_approval(db=db, id=id, body=body, staff_unit_id=role)
+
+
 @router.put("/{id}/sign", dependencies=[Depends(HTTPBearer())],
             summary="Sign a CandidateStageInfo",
             status_code=status.HTTP_202_ACCEPTED,
@@ -144,8 +166,6 @@ async def update(
         - **id**: UUID - required and should exist in the database.
         - **candidate_id**: UUID - optional and should exist in the database.
         - **candidate_stage_type_id**: UUID - optional and should exist in the database.
-        - **staff_unit_coordinate_id**: UUID - optional and should exist in the database.
-        - **is_waits**: bool - optional.
         - **status**: str - optional.
     """
     Authorize.jwt_required()
