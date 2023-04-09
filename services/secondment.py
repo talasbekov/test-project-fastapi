@@ -23,6 +23,10 @@ class SecondmentService(ServiceBase[Secondment, SecondmentCreate, SecondmentUpda
     def get_by_option(self, db: Session, skip: int, limit: int):
         pass
 
+    def get_object(self, db: Session, value: str):
+        if is_valid_uuid(value):
+            return db.query(StaffDivision).filter(StaffDivision.id == value).first()
+        return db.query(self.model).filter(self.model.name == value).first()
 
 
 secondment_service = SecondmentService(Secondment)

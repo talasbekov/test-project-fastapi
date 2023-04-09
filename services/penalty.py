@@ -17,6 +17,9 @@ class PenaltyService(ServiceBase[Penalty, PenaltyCreate, PenaltyUpdate]):
     
     def get_by_option(self, db: Session, skip: int, limit: int):
         return [i for i in db.query(PenaltyType).offset(skip).limit(limit).all()]
+    
+    def get_object(self, db: Session, id: str):
+        return db.query(PenaltyType).filter(PenaltyType.id == id).first()
 
 
 penalty_service = PenaltyService(Penalty)
