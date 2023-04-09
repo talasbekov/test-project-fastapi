@@ -1,3 +1,4 @@
+"""
 
 Revision ID: 72e4c4601ba8
 Revises: e1ce15c46c46
@@ -132,7 +133,6 @@ def create_candidate_stage_info(candidate_id,
             'id': get_uuid(),
             'staff_unit_coordinate_id': staff_unit_coordinate_id,
             'candidate_stage_type_id': candidate_stage_type_id,
-            'is_waits': True,
             'candidate_id': candidate_id,
         }]
     )
