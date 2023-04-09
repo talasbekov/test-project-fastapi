@@ -20,7 +20,8 @@ async def get_all(
         db: Session = Depends(get_db),
         skip: int = 0,
         limit: int = 100,
-        Authorize: AuthJWT = Depends()
+        Authorize: AuthJWT = Depends(),
+        filter: str = None
 ):
     """
         Get all CandidateStageInfo.
@@ -30,7 +31,7 @@ async def get_all(
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
-    return candidate_stage_info_service.get_all_by_staff_unit_id(db, skip, limit, role)
+    return candidate_stage_info_service.get_all_by_staff_unit_id(db, filter, skip, limit, role)
 
 
 @router.get("/{id}", dependencies=[Depends(HTTPBearer())],
@@ -139,9 +140,9 @@ async def update(
         Update a CandidateStageInfo.
 
         - **id**: UUID - required and should exist in the database.
-        - **candidate_id**: UUID - required and should exist in the database.
-        - **candidate_stage_type_id**: UUID - required and should exist in the database.
-        - **staff_unit_coordinate_id**: UUID - required and should exist in the database.
+        - **candidate_id**: UUID - optional and should exist in the database.
+        - **candidate_stage_type_id**: UUID - optional and should exist in the database.
+        - **staff_unit_coordinate_id**: UUID - optional and should exist in the database.
         - **is_waits**: bool - optional.
         - **status**: str - optional.
     """

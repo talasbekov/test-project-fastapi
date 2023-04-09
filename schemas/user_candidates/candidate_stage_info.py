@@ -24,6 +24,8 @@ class CandidateStageInfoCreate(CandidateStageInfoBase):
 
 
 class CandidateStageInfoUpdate(CandidateStageInfoBase):
+    candidate_id: Optional[uuid.UUID]
+    candidate_stage_type_id: Optional[uuid.UUID]
     status: Optional[str]
 
 
@@ -38,6 +40,3 @@ class CandidateStageInfoRead(CandidateStageInfoBase):
     date_sign: Optional[datetime.date]
     created_at: Optional[datetime.datetime]
     updated_at: Optional[datetime.datetime]
-
-
- 
