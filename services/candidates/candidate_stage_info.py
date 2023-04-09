@@ -153,10 +153,10 @@ class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageIn
         ).first()
 
         position = None
-
+        print(candidate_stage_type.name)
         if hasattr(candidate_stage_type, 'name'):
             if candidate_stage_type.name == 'Результаты полиграфологического исследования':
-                position = self._get_role_by_name(db, PositionNameEnum.POLYGRAPH_EXAMINER.value)
+                position = self._get_role_by_name(db, PositionNameEnum.POLYGRAPH_EXAMINER.value) 
             if candidate_stage_type.name == 'Результаты физической подготовки':
                 position = self._get_role_by_name(db, PositionNameEnum.INSTRUCTOR.value)
 
@@ -168,6 +168,9 @@ class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageIn
         staff_unit = staff_unit_service.get_all_by_position(db, position.id)
 
         candidate_stage_info.staff_unit_coordinate_id = staff_unit.id
+
+        db.add(candidate_stage_info)
+        db.flush()
 
         return candidate_stage_info
 
