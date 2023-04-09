@@ -49,9 +49,11 @@ class CandidateStageInfoReadAnswer(BaseModel):
     date_sign: Optional[datetime.date]
     created_at: Optional[datetime.datetime]
     updated_at: Optional[datetime.datetime]
+    access: Optional[bool]
     is_waits: Optional[bool]
     candidate_stage_type_id: Optional[uuid.UUID]
-    staff_unit_coordinate_id: Optional[uuid.UUID]   
+    staff_unit_coordinate_id: Optional[uuid.UUID]
+       
 
     class Config:
         orm_mode = True
