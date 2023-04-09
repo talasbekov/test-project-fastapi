@@ -19,10 +19,12 @@ from exceptions import NotFoundException
 from services import ServiceBase
 from exceptions import SgoErpException
 
+
 class CandidateStageAnswerService(ServiceBase[CandidateStageAnswer, CandidateStageAnswerCreate, CandidateStageAnswerUpdate]):
 
     def get_multiple(self, db: Session, skip: int = 0, limit: int = 100):
-        candidates = super().get_multi(db, skip, limit)
+        candidates = db.query(self.model).order_by(self.model.id.asc()).offset(skip).limit(limit).all()
+
         candidates = [CandidateStageAnswerRead.from_orm(candidate).dict() for candidate in candidates]
 
         return candidates

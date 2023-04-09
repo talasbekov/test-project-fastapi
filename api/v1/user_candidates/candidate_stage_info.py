@@ -29,7 +29,8 @@ async def get_all(
         - **limit**: int - The maximum number of CandidateStageInfo to return in the response. This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    return candidate_stage_info_service.get_multi(db, skip, limit)
+    role = Authorize.get_raw_jwt()['role']
+    return candidate_stage_info_service.get_all_by_staff_unit_id(db, skip, limit, role)
 
 
 @router.get("/{id}", dependencies=[Depends(HTTPBearer())],
@@ -49,30 +50,15 @@ async def get_by_id(
     return candidate_stage_info_service.get_by_id(db, id)
 
 
-@router.get("/all/{staff_unit_id}", dependencies=[Depends(HTTPBearer())],
-            response_model=List[CandidateStageInfoRead],
-            summary="Get all CandidateStageInfo by staff_unit_id")
-async def get_all_by_staff_unit_id(
-        db: Session = Depends(get_db),
-        Authorize: AuthJWT = Depends(),
-        staff_unit_id: uuid.UUID = None
-):
-    """
-        Get all CandidateStageInfo by staff_unit_id.
-
-        - **staff_unit_id**: UUID - required and should exist in the database.
-    """
-    Authorize.jwt_required()
-    return candidate_stage_info_service.get_all_by_staff_unit_id(db, staff_unit_id)
-
-
 @router.get("/all/candidate/{candidate_id}", dependencies=[Depends(HTTPBearer())],
             response_model=List[CandidateStageInfoRead],
             summary="Get all CandidateStageInfo by candidate_id")
 async def get_all_by_candidate_id(
         db: Session = Depends(get_db),
+        candidate_id: uuid.UUID = None,
+        skip: int = 0,
+        limit: int = 100,
         Authorize: AuthJWT = Depends(),
-        candidate_id: uuid.UUID = None
 ):
     """
         Get all CandidateStageInfo by candidate_id.
@@ -80,7 +66,7 @@ async def get_all_by_candidate_id(
         - **candidate_id**: UUID - required and should exist in the database.
     """
     Authorize.jwt_required()
-    return candidate_stage_info_service.get_all_by_candidate_id(db, candidate_id)
+    return candidate_stage_info_service.get_all_by_candidate_id(db, skip, limit, candidate_id)
 
 
 @router.post("", dependencies=[Depends(HTTPBearer())],
