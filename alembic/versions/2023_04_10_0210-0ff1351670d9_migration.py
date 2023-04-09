@@ -400,35 +400,35 @@ def upgrade() -> None:
         },
         {
             'id': position18_id,
-            'name': 'PERSONNEL_HEAD',
+            'name': 'Начальник кадров',
             'max_rank_id': rank10_id
         }, {
             'id': position19_id,
-            'name': 'DEPUTY_PERSONNEL_HEAD',
+            'name': 'Заместители начальника кадров',
             'max_rank_id': rank10_id
         }, {
             'id': position20_id,
-            'name': 'CANDIDATE_MANAGEMENT_HEAD',
+            'name': 'Начальник управления кандидатами',
             'max_rank_id': rank10_id
         }, {
             'id': position21_id,
-            'name': 'POLITICS_GOVERNMENT_SERVANT',
+            'name': 'Политический гос. служащий',
             'max_rank_id': rank16_id
         }, {
             'id': position22_id,
-            'name': 'PSYCHOLOGIST',
+            'name': 'Психолог',
             'max_rank_id': None
         }, {
             'id': position23_id,
-            'name': 'REPRESENTATIVE_OF_SECURITY_DEPARTMENT',
+            'name': 'Представитель Управление собственной безопасности',
             'max_rank_id': None
         }, {
             'id': position24_id,
-            'name': 'POLYGRAPH_EXAMINER',
+            'name': 'Полиграфолог',
             'max_rank_id': None
         }, {
             'id': position25_id,
-            'name': 'INSTRUCTOR',
+            'name': 'Инструктор',
             'max_rank_id': None
         }
         
