@@ -22,23 +22,59 @@ class ProfileService(ServiceBase[Profile, ProfileCreate, ProfileUpdate]):
                 detail=f"Profile with user_id: {id} is not found!")
         return profile
 
-    def generate_profile_doc(self, db: Session, user_id: str):
-        profile = self.get_by_user_id(db, user_id)
+    # def generate_profile_doc(self, db: Session, user_id: str):
+    #     profile = self.get_by_user_id(db, user_id)
+    #     education = max(profile.educational_profile.education,
+    #                     key=lambda obj: obj.end_date)
+    #     institutions = (
+    #         education.institution.name for education in profile.educational_profile.education if not education.is_military_school)
+    #     military_institutions = (
+    #         education.institution.name for education in profile.educational_profile.education if education.is_military_school)
+    #     academic_degrees = (AcademicDegreeRead.from_orm(academic_degree).dict()
+    #                         for academic_degree in profile.educational_profile.academic_degree)
+    #     abroad_travels = (AbroadTravelRead.from_orm(abroad_travel).dict()
+    #                       for abroad_travel in profile.additional_profile.abroad_travels)
+    #     language_proficiencies = (LanguageProficiencyRead.from_orm(language_proficiency).dict()
+    #                               for language_proficiency in profile.educational_profile.language_proficiency)
+    #     sport_degrees = (SportDegreeRead.from_orm(sport_degree).dict()
+    #                      for sport_degree in profile.personal_profile.sport_degrees)
 
-        # data = {
-        #     "last_name": profile.user.last_name,
-        #     "first_name": profile.user.first_name,
-        #     "father_name": profile.user.father_name,
-        #     "iin": "",
-        #     "id_number": profile.user.id_number,
-        #     "rank": profile.user.rank,
-        #     "by_order": "",
-        #     "date_birth": profile.user.
-        # }
+    #     docx_context_data = {
+    #         "last_name": profile.user.last_name,
+    #         "first_name": profile.user.first_name,
+    #         "father_name": profile.user.father_name,
+    #         "iin": "",
+    #         "id_number": profile.user.id_number,
+    #         "rank": profile.user.rank.name,
+    #         "by_order": "",  # TODO: СЛУЖБА И РЕКВИЗИТЫ
+    #         "date_birth": "profile.user.birth_date",
+    #         "place_birth": profile.personal_profile.biographic_info.place_birth,
+    #         "nationality": profile.personal_profile.biographic_info.nationality,
+    #         "institution_degree_type_name": education.degree.name,
+    #         "institutions": list(institutions),
+    #         "military_institutions": list(military_institutions),
+    #         "academic_degrees": [],
+    #         "abroad_travels": list(abroad_travels),
+    #         "language_proficiencies": list(language_proficiencies),
+    #         "sport_degrees": list(sport_degrees),
+    #         "categories": list(profile.personal_profile.driving_license.category),
+    #         "blood_group": profile.medical_profile.general_user_informations[0].blood_group.value
+    #     }
 
-        print(profile.user.last_name)
+    #     template_path = configs.TEMPLATE_FILE_PATH+"Послужной список.docx"
+    #     generated_file_name = "Послужной список резалт.docx"
+    #     generated_file_path = configs.GENERATED_FILE_PATH+"/"+generated_file_name
 
-        return
+    #     template_file = DocxTemplate(template_path)
+    #     template_file.render(docx_context_data)
+    #     template_file.save(generated_file_path)
+
+    #     print(docx_context_data)
+
+    #     return {
+    #         "file_location": generated_file_path,
+    #         "file_name": generated_file_name
+    #     }
 
 
 profile_service = ProfileService(Profile)

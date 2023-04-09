@@ -120,14 +120,6 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
 
         return infos
 
-    def get_initialized_by_user_id_subquery(self, db: Session, user_id: str) -> Subquery:
-        infos = db.query(HrDocumentInfo).join(HrDocumentStep).join(DocumentStaffFunction).filter(
-            HrDocumentInfo.assigned_to_id == user_id,
-            DocumentStaffFunction.priority == 1
-        ).distinct(HrDocumentInfo.hr_document_id).subquery()
-
-        return infos
-
     def _get_history_by_document_id(self, db: Session, document_id: str) -> List[HrDocumentInfo]:
         infos = db.query(HrDocumentInfo).filter(
             HrDocumentInfo.hr_document_id == document_id

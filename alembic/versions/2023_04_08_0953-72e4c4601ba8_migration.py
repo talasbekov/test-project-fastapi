@@ -1025,6 +1025,8 @@ def upgrade() -> None:
         False,
         '1.2.100K')
 
+    op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(staff_unit8_id, group3_id))
+
     op.bulk_insert(
         Base.metadata.tables['staff_unit_functions'],
         [{
