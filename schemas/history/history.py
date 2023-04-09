@@ -100,6 +100,7 @@ class BadgeServiceDetailRead(BaseModel):
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     name: Optional[str]
+    url: Optional[str]
 
     class Config:
         orm_mode = True
@@ -113,6 +114,7 @@ class BadgeServiceDetailRead(BaseModel):
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
             name=orm_obj.badge.type.name,
+            url=orm_obj.badge.type.url
         )
 
 class RankServiceDetailRead(BaseModel):
