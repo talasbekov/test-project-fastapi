@@ -3,10 +3,10 @@ from typing import Optional
 
 from pydantic import BaseModel
 from datetime import datetime
-
+from enum import Enum
 
 class PrivelegeEmergency(BaseModel):
-    form: Optional[str]
+    form: Optional[Enum]
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     user_id: Optional[uuid.UUID]

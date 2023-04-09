@@ -47,7 +47,8 @@ from schemas import (
     ServiceIDRead,
     HistoryRead,
     HistoryServiceDetailRead,
-    HistoryPersonalRead
+    HistoryPersonalRead,
+    ServiceIdInfoRead
 )
 
 from services import (privelege_emergency_service, coolness_service, badge_service,
@@ -171,13 +172,12 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         if service_id is None:
             return None
         
-        service_id_read = ServiceIDRead(
+        service_id_read = ServiceIdInfoRead(
             id=service_id.id,
             date_to=service_id.date_to,
+            token_status=service_id.token_status,
             id_status=service_id.id_status,
             number=service_id.number,
-            token_status=service_id.token_status,
-            user_id=service_id.user_id
         )
         return service_id_read
         
@@ -199,6 +199,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                 date_to=privelege_emergency.date_to,
                 form=privelege_emergency.form,
                 id=privelege_emergency.id,
+                user_id=privelege_emergency.user_id,
             )
         
         coolness = coolness_service.get_by_user_id(db, user_id)
@@ -207,11 +208,13 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         else:
                 
             coolness_read = CoolnessRead(
-                date_from=coolness.date_from,
-                date_to=coolness.date_to,
-                speciality=coolness.speciality,
+                type_id=coolness.type_id,
+                date_to=coolness.history.date_to,
+                name=coolness.type.name,
                 id=coolness.id,
+                user_id=coolness.user_id,
             )
+        
         black_beret = badge_service.get_black_beret_by_user_id(db, user_id)
         is_badge_black = False
         if black_beret:
@@ -226,6 +229,10 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                 date_from=personnal_reseive.date_from,
                 date_to=personnal_reseive.date_to,
                 id=personnal_reseive.id,
+                reserve=personnal_reseive.reserve,
+                user_id=personnal_reseive.user_id,
+                document_link=personnal_reseive.document_link,
+                document_number=personnal_reseive.document_number
             )
         
         general_information_read = GeneralInformationRead(
@@ -234,8 +241,8 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             personnel_reserve=personnal_reseive_read,
             coolness=coolness_read,
             is_badge_black=is_badge_black,
-            researcher='',
-            recommendation=''
+            researcher='И. И. Иванов',
+            recommendation='Б. А. Жунусов'
         )
         
 

@@ -217,7 +217,8 @@ class ContractHistory(History):
 class CoolnessHistory(History):
 
     coolness_id = Column(UUID(as_uuid=True), ForeignKey("coolnesses.id"), nullable=True)
-    coolness = relationship("Coolness")
+    coolness = relationship("Coolness", back_populates="history", uselist=False)
+
 
     @classmethod
     def create_history(cls, db: Session, user_id: uuid.UUID, id: uuid.UUID, finish_last):

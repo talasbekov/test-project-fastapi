@@ -3,10 +3,10 @@ from typing import Optional
 
 from pydantic import BaseModel
 from datetime import datetime
-
+from enum import Enum
 
 class PersonnalReserveBase(BaseModel):
-    reserve: Optional[str]
+    reserve: Optional[Enum]
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     user_id: Optional[uuid.UUID]
@@ -16,7 +16,7 @@ class PersonnalReserveBase(BaseModel):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
-
+ 
 
 class PersonnalReserveCreate(PersonnalReserveBase):
     pass
@@ -29,5 +29,5 @@ class PersonnalReserveUpdate(PersonnalReserveBase):
 class PersonnalReserveRead(PersonnalReserveBase):
 
     id: Optional[uuid.UUID] 
-
+ 
      

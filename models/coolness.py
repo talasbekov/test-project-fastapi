@@ -19,7 +19,6 @@ class CoolnessType(NamedModel):
 
     coolnesses = relationship("Coolness", back_populates="type")
 
-
 class Coolness(Model):
 
     __tablename__ = "coolnesses"
@@ -28,3 +27,5 @@ class Coolness(Model):
 
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     user = relationship("User", back_populates="coolnesses")
+
+    history = relationship("CoolnessHistory", back_populates="coolness", uselist=False)
