@@ -34,6 +34,7 @@ class CandidateStageInfoSendToApproval(BaseModel):
 
 class CandidateStageInfoRead(CandidateStageInfoBase):
     id: Optional[uuid.UUID]
+    access: Optional[bool]
     status: Optional[str]
     candidate_id: Optional[uuid.UUID]
     candidate: Optional[CandidateRead]

@@ -68,7 +68,8 @@ async def get_all_by_candidate_id(
         - **candidate_id**: UUID - required and should exist in the database.
     """
     Authorize.jwt_required()
-    return candidate_stage_info_service.get_all_by_candidate_id(db, skip, limit, candidate_id)
+    role = Authorize.get_raw_jwt()['role']
+    return candidate_stage_info_service.get_all_by_candidate_id(db, skip, limit, candidate_id, role)
 
 
 @router.post("", dependencies=[Depends(HTTPBearer())],
