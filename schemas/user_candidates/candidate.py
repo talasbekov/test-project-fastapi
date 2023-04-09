@@ -5,7 +5,6 @@ from typing import Optional, List
 from pydantic import BaseModel, validator
 
 from models import CandidateStatusEnum
-from .candidate_stage_info import CandidateStageInfoRead
 from .candidate_essay_type import CandidateEssayTypeRead
 
 
@@ -80,4 +79,3 @@ class CandidateRead(CandidateBase):
     staff_unit_curator: Optional[StaffUnitCandidateRead]
     staff_unit_id: Optional[uuid.UUID]
     staff_unit: Optional[StaffUnitCandidateRead]
-    candidate_stage_infos: Optional[List[CandidateStageInfoRead]]

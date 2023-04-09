@@ -91,10 +91,10 @@ async def create(
     return candidate_stage_info_service.create(db, body)
 
 
-@router.patch("/{id}/sign", dependencies=[Depends(HTTPBearer())],
-              summary="Sign a CandidateStageInfo",
-              status_code=status.HTTP_202_ACCEPTED,
-              response_model=CandidateStageInfoRead)
+@router.put("/{id}/sign", dependencies=[Depends(HTTPBearer())],
+            summary="Sign a CandidateStageInfo",
+            status_code=status.HTTP_202_ACCEPTED,
+            response_model=CandidateStageInfoRead)
 async def sign_candidate(
         db: Session = Depends(get_db),
         Authorize: AuthJWT = Depends(),
@@ -106,13 +106,14 @@ async def sign_candidate(
         - **id**: UUID - required.
     """
     Authorize.jwt_required()
-    return candidate_stage_info_service.sign_candidate(db, id)
+    role = Authorize.get_raw_jwt()['role']
+    return candidate_stage_info_service.sign_candidate(db, id, role)
 
 
-@router.patch("/{id}/reject", dependencies=[Depends(HTTPBearer())],
-              summary="Sign a CandidateStageInfo",
-              status_code=status.HTTP_202_ACCEPTED,
-              response_model=CandidateStageInfoRead)
+@router.put("/{id}/reject", dependencies=[Depends(HTTPBearer())],
+            summary="Reject a CandidateStageInfo",
+            status_code=status.HTTP_202_ACCEPTED,
+            response_model=CandidateStageInfoRead)
 async def reject_candidate(
         db: Session = Depends(get_db),
         Authorize: AuthJWT = Depends(),
@@ -124,7 +125,8 @@ async def reject_candidate(
         - **id**: UUID - required and should exist in the database.
     """
     Authorize.jwt_required()
-    return candidate_stage_info_service.reject_candidate(db, id)
+    role = Authorize.get_raw_jwt()['role']
+    return candidate_stage_info_service.reject_candidate(db, id, role)
 
 
 @router.put("/{id}", dependencies=[Depends(HTTPBearer())],
