@@ -47,6 +47,7 @@ class CandidateUpdate(CandidateBase):
     staff_unit_id: Optional[uuid.UUID]
     status: Optional[str]
     debarment_reason: Optional[str]
+    is_physical_passed: Optional[bool]
 
     @validator('debarment_reason', pre=True)
     def validate_debarment_reason(cls, value, values):
@@ -67,6 +68,8 @@ class CandidateRead(CandidateBase):
     created_at: Optional[datetime.datetime]
     updated_at: Optional[datetime.datetime]
     status: Optional[str]
+    is_physical_passed: Optional[bool]
+    attempt_number: Optional[int]
     debarment_reason: Optional[str]
     progress: Optional[int]
     current_stage: Optional[str]
