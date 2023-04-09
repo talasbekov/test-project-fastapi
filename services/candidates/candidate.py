@@ -4,11 +4,13 @@ from sqlalchemy.orm import Session
 from exceptions import NotFoundException
 from models import (Candidate, CandidateStageInfo, StaffUnit, User,
                     CandidateStatusEnum, Position, CandidateStageType,
-                    PositionNameEnum, CandidateStageInfoStatusEnum)
-from schemas import CandidateCreate, CandidateUpdate, CandidateRead, CandidateStageInfoCreate
+                    PositionNameEnum, CandidateStageInfoStatusEnum, CandidateStageQuestion)
+from schemas import CandidateCreate, CandidateUpdate, CandidateRead, CandidateStageInfoCreate, \
+    CandidateStageAnswerCreate
 from services import ServiceBase, staff_unit_service, user_service
 from .candidate_essay_type import candidate_essay_type_service
 from .candidate_stage_info import candidate_stage_info_service
+from .candidate_stage_answer import candidate_stage_answer_service
 
 
 class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate]):
@@ -85,7 +87,7 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
                 candidate_id=candidate.id,
                 stage_type_id=stage_type.id,
                 staff_unit_coordinate_id=None,
-                status=CandidateStageInfoStatusEnum.PENDING.value
+                status=CandidateStageInfoStatusEnum.NOT_STARTED.value
             )
             candidate_stage_info_service.create(db, candidate_stage_info)
 
