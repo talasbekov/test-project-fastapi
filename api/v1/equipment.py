@@ -12,7 +12,8 @@ from schemas import (EquipmentCreate,
                      EquipmentRead,
                      TypeClothingEquipmentRead, 
                      TypeArmyEquipmentRead, 
-                     TypeOtherEquipmentRead)
+                     TypeOtherEquipmentRead,
+                     EquipmentCreate)
 from services import equipment_service
 
 router = APIRouter(prefix="/equipments", tags=["Equipments"], dependencies=[Depends(HTTPBearer())])
@@ -39,7 +40,7 @@ async def get_all(*,
 
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
-             response_model=EquipmentRead,
+             response_model=EquipmentCreate,
              summary="Create Equipment")
 async def create(*,
     db: Session = Depends(get_db),

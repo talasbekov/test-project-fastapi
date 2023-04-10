@@ -500,6 +500,9 @@ def upgrade() -> None:
     )
     op.create_table('equipments',
     sa.Column('type_of_equipment', sa.String(), nullable=True),
+    sa.Column('date_from', sa.TIMESTAMP(), nullable=True),
+    sa.Column('document_link', sa.String(), nullable=True),
+    sa.Column('document_number', sa.String(), nullable=True),
     sa.Column('user_id', sa.UUID(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),

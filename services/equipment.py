@@ -12,8 +12,7 @@ from schemas import (EquipmentCreate,
                      TypeClothingEquipmentRead, 
                      TypeArmyEquipmentRead, 
                      TypeOtherEquipmentRead)
-from .base import ServiceBase
-
+from .base import ServiceBase 
 
 class EquipmentService(ServiceBase[Equipment, EquipmentCreate, EquipmentUpdate]):
     def get_by_id(self, db: Session, id: str):
@@ -43,5 +42,6 @@ class EquipmentService(ServiceBase[Equipment, EquipmentCreate, EquipmentUpdate])
                 TypeClothingEquipmentModel.id == history.c.type_of_clothing_equipment_model_id
             )
         ).offset(skip).limit(limit).all()
-    
+
+
 equipment_service = EquipmentService(Equipment)

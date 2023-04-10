@@ -5,7 +5,8 @@ from .equipment import (EquipmentCreate,
                         EquipmentUpdate,
                         TypeClothingEquipmentRead, 
                         TypeArmyEquipmentRead, 
-                        TypeOtherEquipmentRead)
+                        TypeOtherEquipmentRead
+                    )
 
 from .event import EventCreate, EventRead, EventUpdate
 from .hr_document_template import (HrDocumentTemplateCreate,

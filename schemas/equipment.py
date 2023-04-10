@@ -1,6 +1,6 @@
 import uuid
 from typing import Optional, List
-
+from datetime import datetime
 from pydantic import BaseModel
 
 
@@ -11,6 +11,9 @@ class EquipmentBase(BaseModel):
     count_of_ammo: Optional[int]
     type_of_clothing_equipment_model_id: Optional[uuid.UUID]
     type_of_other_equipment_model_id: Optional[uuid.UUID]
+    document_link: Optional[str]
+    document_number: Optional[str]
+    date_from: Optional[datetime]
     
     class Config:
         orm_mode = True
@@ -18,6 +21,8 @@ class EquipmentBase(BaseModel):
 
 class EquipmentCreate(EquipmentBase):
     pass
+
+ 
 
 class EquipmentUpdate(EquipmentBase):
     pass
