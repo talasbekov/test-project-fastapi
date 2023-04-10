@@ -2625,10 +2625,10 @@ def upgrade() -> None:
             'name_change_id': None,  # Add the missing parameter here
             'attestation_id': None,  # Add the missing parameter here
             'service_characteristic_id': None,  # Add the missing parameter here
-            'characteristic_initiator': None,
+            'characteristic_initiator': 'А.А.Алексеев',  # МЕНЯТЬ НА characteristic_initiator
             'status_id': None,  # Add the missing parameter here
             'coolness_id': None,  # Add the missing parameter here
-            'contract_id': contract_id,  # МЕНЯТЬ НА contract_id
+            'contract_id': None,  # МЕНЯТЬ НА contract_id
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
             'experience_years': 5,
             'coefficient' : None,
