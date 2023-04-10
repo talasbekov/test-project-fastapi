@@ -1,9 +1,10 @@
 import uuid
+from datetime import datetime
 
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
-from models import Badge, BadgeType, User
+from models import Badge, BadgeType, User, BadgeHistory
 from schemas import BadgeCreate, BadgeUpdate, BadgeRead, BadgeTypeRead
 from .base import ServiceBase
 
@@ -45,6 +46,10 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
         db.flush()
 
         return badge
+    
+    def stop_relation(self, db: Session, user_id: str, badge_id: uuid.UUID):
+        db.query(BadgeHistory).filter(BadgeHistory.badge_id == badge_id).update({BadgeHistory.date_to: datetime.now()})
+        
 
     def get_multiple(self, db: Session, skip: int, limit: int):
         return db.query(BadgeType).offset(skip).limit(limit).all()

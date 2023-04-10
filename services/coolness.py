@@ -1,9 +1,10 @@
 import uuid
+from datetime import datetime
 
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
-from models import Coolness, CoolnessType, User
+from models import Coolness, CoolnessType, User, CoolnessHistory
 from schemas import CoolnessCreate, CoolnessRead, CoolnessUpdate, CoolnessTypeRead
 from .base import ServiceBase
 
@@ -35,6 +36,10 @@ class CoolnessService(ServiceBase[Coolness, CoolnessCreate, CoolnessUpdate]):
 
     def get_object(self, db: Session, id: str):
         return db.query(CoolnessType).filter(CoolnessType.id == id).first()
+
+    def stop_relation(self, db: Session, user_id: uuid.UUID, id: uuid.UUID):
+        db.query(CoolnessHistory).filter(CoolnessHistory.coolness_id == id).update({'date_to': datetime.now()})
+
 
 
 coolness_service = CoolnessService(Coolness)

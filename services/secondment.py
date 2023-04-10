@@ -1,9 +1,10 @@
 import uuid
+from datetime import datetime
 
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException, NotSupportedException
-from models import Secondment, StaffDivision
+from models import Secondment, StaffDivision, SecondmentHistory
 from schemas import SecondmentRead, SecondmentCreate, SecondmentUpdate
 from .base import ServiceBase
 from services import staff_division_service
@@ -27,6 +28,9 @@ class SecondmentService(ServiceBase[Secondment, SecondmentCreate, SecondmentUpda
         if is_valid_uuid(value):
             return db.query(StaffDivision).filter(StaffDivision.id == value).first()
         return db.query(self.model).filter(self.model.name == value).first()
+    
+    def stop_relation(self, db: Session, user_id: uuid.UUID, id: uuid.UUID):
+        db.query(SecondmentHistory).filter(SecondmentHistory.secondment_id == id).update({SecondmentHistory.date_to: datetime.now()})
 
 
 secondment_service = SecondmentService(Secondment)

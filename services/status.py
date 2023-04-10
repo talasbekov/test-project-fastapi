@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime
 
 from sqlalchemy.orm import Session
 
@@ -25,6 +26,15 @@ class StatusService(ServiceBase[Status, StatusCreate, StatusUpdate]):
             return [StatusTypeRead.from_orm(status).dict() for status in db.query(StatusType).offset(skip).limit(limit).all()]
         else:
             return [StatusRead.from_orm(status).dict() for status in user.statuses]
+        
+    def stop_relation(self, db: Session, user_id: uuid.UUID, status_id: uuid.UUID):
+        history = db.query(StatusHistory).filter(StatusHistory.status_id == status_id).first()
+        if history is None:
+            raise NotFoundException(detail=f"Status with id: {status_id} is not found!")
+        history.date_to = datetime.now()
+        db.add(history)
+        db.flush()
+        return history
 
 
 status_service = StatusService(Status)
