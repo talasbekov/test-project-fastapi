@@ -22,6 +22,8 @@ from .history_personal import (
 
 
 class HistoryBase(BaseModel):
+    document_link: Optional[str]
+    document_number: Optional[str]
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     position_id: Optional[uuid.UUID]

@@ -261,10 +261,15 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
 
 
     def get_all_personal(self, db: Session, user_id: uuid.UUID, skip: int = 0, limit: int = 100):
-        histories = db.query(self.model).filter(
-            self.model.user_id == user_id
-            ).order_by(self.model.date_from.desc()).offset(skip).limit(limit).all()
-        
+        histories = (
+            db.query(self.model)
+            .filter(self.model.user_id == user_id)
+            .order_by(self.model.date_from.desc(), self.model.id.asc())  # add secondary sort order
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
+        print(histories[0].id)
         lis_of_histories = []
         for history in histories:
             type_cls = self.get_type_by_user_id(db, user_id, history.type)
