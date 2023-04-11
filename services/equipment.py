@@ -12,7 +12,15 @@ from schemas import (EquipmentCreate,
                      TypeClothingEquipmentRead, 
                      TypeArmyEquipmentRead, 
                      TypeOtherEquipmentRead)
-from .base import ServiceBase 
+from .base import ServiceBase
+
+equipment = {
+    "army_equipment": TypeArmyEquipment,
+    "clothing_equipment": TypeClothingEquipment,
+    "other_equipment": TypeOtherEquipment
+}
+
+
 
 class EquipmentService(ServiceBase[Equipment, EquipmentCreate, EquipmentUpdate]):
     def get_by_id(self, db: Session, id: str):
@@ -21,6 +29,13 @@ class EquipmentService(ServiceBase[Equipment, EquipmentCreate, EquipmentUpdate])
             raise NotFoundException(detail="Equipment is not found!")
         return equipment
 
+    def create(self, db: Session, body: EquipmentCreate):
+        cls = equipment[body.type_of_equipment]
+        equipment = cls(**body.dict())
+        db.add(equipment)
+        db.flush()
+        return equipment
+    
     def get_all_army_equipments(self, db: Session, skip: int = 0, limit: int = 10):
         return [TypeArmyEquipmentRead.from_orm(army_equipment) for army_equipment in db.query(TypeArmyEquipment).offset(skip).limit(limit).all()]
     
