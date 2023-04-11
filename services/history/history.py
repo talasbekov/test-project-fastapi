@@ -114,6 +114,10 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         cls = options.get(obj_in.type) 
         if cls is None:
             raise NotSupportedException(detail=f'Type: {obj_in.type} is not supported!')
+        if hasattr(cls, "badge_id"):
+            badge = badge_service.get_by_id(db, obj_in.badge_id)
+            if badge is None:
+                raise NotFoundException(detail=f'Badge with id: {obj_in.badge_id} not found!')
         obj_db = cls(**obj_in.dict(exclude_none=True))
         db.add(obj_db)
         db.flush()
