@@ -99,6 +99,7 @@ class OtherEquipment(Equipment):
     
     type_of_other_equipment_model_id = Column(UUID(as_uuid=True), ForeignKey("type_other_equipment_models.id"), nullable=True)
     type_of_other_equipment_model = relationship("TypeOtherEquipmentModel", back_populates="other_equipments", uselist=False)
+    inventory_number_of_other_equipment = Column(String, nullable=True)
 
     __mapper_args__ = {
         "polymorphic_identity": "other_equipment",
