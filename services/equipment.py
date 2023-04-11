@@ -31,7 +31,7 @@ class EquipmentService(ServiceBase[Equipment, EquipmentCreate, EquipmentUpdate])
 
     def create(self, db: Session, body: EquipmentCreate):
         cls = equipment[body.type_of_equipment]
-        equipment = cls(**body.dict())
+        equipment = cls(**body.dict(exclude_none=True))
         db.add(equipment)
         db.flush()
         return equipment
