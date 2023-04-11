@@ -61,9 +61,16 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
         return badge
     
     def create_badge(self, db: Session, body: BadgeCreate):
-        badge = BadgeType(
-            name=body.name,
-            url=body.url
+        badge = db.query(Badge).filter(Badge.user_id == body.user_id).first()
+        if badge:
+            raise NotFoundException(detail=f"Бейдж уже существует у пользователя с id: {body.user_id}!")
+
+        badge_type = db.query(BadgeType).filter(BadgeType.id == body.type_id).first()
+        if badge_type is None:
+            raise NotFoundException(detail=f"Badge type with id: {body.type_id} is not found!")
+        badge = Badge(
+            user_id=body.user_id,
+            type_id=badge_type.id
         )
         db.add(badge)
         db.flush()
