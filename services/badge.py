@@ -62,7 +62,6 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
     
     def create_badge(self, db: Session, body: BadgeCreate):
         badge = db.query(Badge).filter(Badge.user_id == body.user_id).first()
-        
         badge_type = db.query(BadgeType).filter(BadgeType.id == body.type_id).first()
         if badge_type is None:
             raise NotFoundException(detail=f"Badge type with id: {body.type_id} is not found!")
