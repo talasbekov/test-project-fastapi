@@ -14,6 +14,7 @@ class EquipmentBase(BaseModel):
     document_link: Optional[str]
     document_number: Optional[str]
     date_from: Optional[datetime]
+    user_id: Optional[uuid.UUID]
     
     class Config:
         orm_mode = True
