@@ -314,6 +314,10 @@ class EquipmentRead(BaseModel):
     count_of_ammo: Optional[int]
     type_of_clothing_equipment_model_name: Optional[str]
     type_of_other_equipment_model_name: Optional[str]
+    document_link: Optional[str]
+    document_number: Optional[str]
+    date_from: Optional[datetime]
+    date_to: Optional[datetime]
 
     class Config:
         orm_mode = True
