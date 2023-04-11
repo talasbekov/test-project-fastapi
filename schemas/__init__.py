@@ -23,7 +23,8 @@ from .staff_function_type import (DocumentStaffFunctionTypeCreate, DocumentStaff
                                   ServiceStaffFunctionTypeRead, ServiceStaffFunctionTypeUpdate)
 from .staff_function import (DocumentStaffFunctionCreate, DocumentStaffFunctionRead, DocumentStaffFunctionUpdate,
                              ServiceStaffFunctionCreate, ServiceStaffFunctionRead, ServiceStaffFunctionUpdate,
-                             StaffUnitFunctions, StaffFunctionRead, DocumentStaffFunctionAdd)
+                             StaffUnitFunctions, StaffFunctionRead, DocumentStaffFunctionAdd,
+                             DocumentStaffFunctionConstructorAdd)
 from .staff_division import (StaffDivisionCreate, StaffDivisionRead,
                              StaffDivisionUpdate, StaffDivisionUpdateParentGroup,
                              StaffDivisionOptionRead, StaffUnitDivisionRead)
