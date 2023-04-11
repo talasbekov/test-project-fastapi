@@ -37,6 +37,10 @@ class DocumentStaffFunctionAdd(DocumentStaffFunctionBase):
 class DocumentStaffFunctionConstructorAdd(DocumentStaffFunctionAdd):
     staff_unit_id: uuid.UUID
 
+class DocumentStaffFunctionConstructorAdd(DocumentStaffFunctionAdd):
+    staff_unit_id: uuid.UUID
+
+
 class ServiceStaffFunctionCreate(ServiceStaffFunctionBase):
     pass
 
