@@ -1,6 +1,6 @@
 from .base import Model, NamedModel, NestedModel, NamedNestedModel
 from .badge import Badge, BadgeType
-from .equipment import (Equipment, TypeClothingEquipment, TypeArmyEquipment, TypeOtherEquipment, ClothingEquipment,
+from .equipment import (Equipment, TypeClothingEquipment, TypeArmyEquipment, TypeOtherEquipment, ClothingEquipment, ArmyEquipment, OtherEquipment,
                     TypeClothingEquipmentModel)
 from .event import Event
 from .hr_document_status import HrDocumentStatus
