@@ -54,6 +54,7 @@ class TypeArmyEquipmentRead(BaseModel):
 
 class TypeClothingEquipmentModel(BaseModel):
     name: Optional[str]
+    id: Optional[uuid.UUID]
     
     class Config:
         orm_mode = True
