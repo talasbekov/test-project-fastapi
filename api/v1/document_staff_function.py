@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from core import get_db
 from schemas import (DocumentStaffFunctionAdd, DocumentStaffFunctionRead,
-                     DocumentStaffFunctionUpdate)
+                     DocumentStaffFunctionUpdate, DocumentStaffFunctionConstructorAdd)
 from services import document_staff_function_service
 
 router = APIRouter(prefix="/document_staff_function", tags=["DocumentStaffFunction"], dependencies=[Depends(HTTPBearer())])
@@ -107,3 +107,13 @@ async def create_function(*,
 ):
     Authorize.jwt_required()
     return document_staff_function_service.create_function(db, body)
+
+
+@router.post("/constructor/", status_code=status.HTTP_201_CREATED)
+async def create_function_for_constructor(*,
+    db: Session = Depends(get_db),
+    body: DocumentStaffFunctionConstructorAdd,
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    return document_staff_function_service.create_function_for_constructor(db, body)

@@ -462,7 +462,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 return [responses.get(option).from_orm(i) for i in service.get_parents(db, skip, limit)]
             else:
                 return [responses.get(option).from_orm(i) for i in service.get_by_id(db, id).children]
-        return [service.get_by_option(db, type, id, skip, limit)]
+        return service.get_by_option(db, type, id, skip, limit)
 
     def _validate_document(self, db: Session, body: HrDocumentInit, role: str, step: HrDocumentStep):
 

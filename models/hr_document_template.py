@@ -7,11 +7,11 @@ from sqlalchemy.orm import relationship
 from models import NamedModel
 
 
-class SubjectType(str, enum.Enum):
-    CANDIDATE = "Кандидат"
-    EMPLOYEE = "Сотрудник"
-    PERSONNEL = "Персонал"
-    STAFF = "Персонал(не сотрудник)"
+class SubjectType(enum.IntEnum):
+    CANDIDATE = 1
+    EMPLOYEE = 2
+    PERSONNEL = 3
+    STAFF = 4
 
 
 class HrDocumentTemplate(NamedModel):
