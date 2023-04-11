@@ -31,10 +31,10 @@ class EquipmentService(ServiceBase[Equipment, EquipmentCreate, EquipmentUpdate])
 
     def create(self, db: Session, body: EquipmentCreate):
         cls = equipment[body.type_of_equipment]
-        equipment = cls(**body.dict(exclude_none=True))
-        db.add(equipment)
+        equipment1 = cls(**body.dict(exclude_none=True))
+        db.add(equipment1)
         db.flush()
-        return equipment
+        return equipment1
     
     def get_all_army_equipments(self, db: Session, skip: int = 0, limit: int = 10):
         return [TypeArmyEquipmentRead.from_orm(army_equipment) for army_equipment in db.query(TypeArmyEquipment).offset(skip).limit(limit).all()]
