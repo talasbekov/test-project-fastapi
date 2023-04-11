@@ -290,21 +290,26 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             db, document_info_initiator, current_user, None, True
         )
 
+        users_document = [
+            user_service.get_by_id(db, user_id) for user_id in body.user_ids
+        ]
+        document.users = users_document
+
+        if len(all_steps) == 0:
+            self._finish_document(db, document, document.users)
+
         for step, user_id in zip(all_steps, users):
             hr_document_info_service.create_info_for_step(
                 db, document.id, step.id, user_id, None, None, None
             )
 
-        users_document = [
-            user_service.get_by_id(db, user_id) for user_id in body.user_ids
-        ]
-
-        document.last_step_id = all_steps[0].id
-        document.users = users_document
+        if len(all_steps) == 0:
+            document.last_step_id = None
+        else:
+            document.last_step_id = all_steps[0].id
 
         db.add(document)
         db.flush()
-
         return document
 
     def sign(
@@ -485,7 +490,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         all_steps.remove(step)
 
-        if len(all_steps) < 2:
+        if len(all_steps) < 2 and len(all_steps) != 0:
             raise BadRequestException(detail="Документ должен иметь хотя бы 2 шага!")
 
         if len(users) != len(all_steps):
@@ -493,7 +498,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 detail="Количество пользователей не соответствует количеству шагов!"
             )
 
-    def  _finish_document(self, db: Session, document: HrDocument, users: List[User]):
+    def _finish_document(self, db: Session, document: HrDocument, users: List[User]):
         completed_status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.COMPLETED.value)
         document.status_id = completed_status.id
 
