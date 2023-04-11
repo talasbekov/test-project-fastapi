@@ -12,8 +12,7 @@ from .history_personal import (
     WorkExperienceRead,
     EmergencyServiceRead,
     AttestationReadHistory,
-    NameChangeReadHistory,
-    ServiceCharacteristicRead,
+    NameChangeReadHistory, 
     StatusReadHistory,
     CoolnessReadHistory,
     SecondmentReadHistory,
@@ -74,7 +73,7 @@ class HistoryPersonalRead(BaseModel):
     secondment: Optional['SecondmentReadHistory']
     name_change: Optional['NameChangeReadHistory']
     attestation: Optional['AttestationReadHistory']
-    service_characteristic: Optional['ServiceCharacteristicRead']
+    service_characteristic: Optional[dict]
     status: Optional['StatusReadHistory']
     coolness: Optional['CoolnessReadHistory']
     contract: Optional['ContractReadHistory']
@@ -86,7 +85,10 @@ class HistoryPersonalRead(BaseModel):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
+     
 
+
+     
 
 class AttendanceRead(BaseModel):
     physical_training: Optional[int]

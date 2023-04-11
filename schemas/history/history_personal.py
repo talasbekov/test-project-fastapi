@@ -85,20 +85,6 @@ class NameChangeReadHistory(BaseModel):
         return cls(
             name=name,
         )
-    
-
-class ServiceCharacteristicRead(BaseModel):
-    name: Optional[str]
-
-    class Config:
-        orm_mode = True
-        arbitrary_types_allowed = True
-
-    @classmethod
-    def from_orm(cls, orm_obj):
-        return cls(
-            name=orm_obj.characteristic_initiator,
-        )
 
 
 class StatusReadHistory(BaseModel):

@@ -1,4 +1,4 @@
-from sqlalchemy import BigInteger, Column, String, UUID, ForeignKey
+from sqlalchemy import BigInteger, Column, String, UUID, ForeignKey, TIMESTAMP
 from sqlalchemy.orm import relationship
 
 from models import Model, NamedModel
@@ -9,6 +9,9 @@ class Equipment(Model):
 
     __tablename__ = "equipments"
     
+    date_from = Column(TIMESTAMP, nullable=True)
+    document_number = Column(String, nullable=True)
+    document_link = Column(String, nullable=True)
     
     type_of_equipment = Column(String, nullable=True)
 
