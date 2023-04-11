@@ -6,7 +6,10 @@ from models import (Equipment,
                     TypeArmyEquipment, 
                     TypeOtherEquipment,
                     ClothingEquipment,
-                    TypeClothingEquipmentModel,)
+                    TypeClothingEquipmentModel,
+                    ArmyEquipment,
+                    ClothingEquipment,
+                    OtherEquipment)
 from schemas import (EquipmentCreate, 
                      EquipmentUpdate,
                      TypeClothingEquipmentRead, 
@@ -15,9 +18,9 @@ from schemas import (EquipmentCreate,
 from .base import ServiceBase
 
 equipment = {
-    "army_equipment": TypeArmyEquipment,
-    "clothing_equipment": TypeClothingEquipment,
-    "other_equipment": TypeOtherEquipment
+    "army_equipment": ArmyEquipment,
+    "clothing_equipment": ClothingEquipment,
+    "other_equipment": OtherEquipment
 }
 
 
