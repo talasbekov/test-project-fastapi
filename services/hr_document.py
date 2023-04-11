@@ -19,12 +19,15 @@ from models import (HrDocument, HrDocumentStatusEnum,
                     HrDocumentStatus, StaffDivisionEnum, HrDocumentTemplate,HrDocumentInfo)
 from schemas import (BadgeRead, HrDocumentCreate, HrDocumentInit,
                      HrDocumentRead, HrDocumentSign, HrDocumentUpdate,
-                     RankRead, StaffDivisionOptionRead, StaffUnitRead, DraftHrDocumentCreate, DraftHrDocumentInit)
+                     RankRead, StaffDivisionOptionRead, StaffUnitRead,
+                     DraftHrDocumentCreate, DraftHrDocumentInit)
 from services import (badge_service, document_staff_function_service,
                       hr_document_info_service, hr_document_step_service,
                       hr_document_template_service, rank_service,
                       staff_division_service, staff_unit_service, user_service,
-                      jurisdiction_service, hr_document_status_service)
+                      jurisdiction_service, hr_document_status_service, history_service,
+                      status_service, secondment_service, coolness_service, penalty_service,
+                      contract_service)
 from .base import ServiceBase
 
 options = {
@@ -33,6 +36,11 @@ options = {
     "staff_division": staff_division_service,
     "rank": rank_service,
     "badges": badge_service,
+    'statuses': status_service,
+    'secondments': secondment_service,
+    'coolnesses': coolness_service,
+    'penalties': penalty_service,
+    'contracts': contract_service,
 }
 
 responses = {
@@ -435,7 +443,14 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         )
 
     def get_all_by_option(
-            self, db: Session, option: str, data_taken: str, id: uuid.UUID
+        self,
+        db: Session,
+        option: str,
+        data_taken: str,
+        id: uuid.UUID,
+        type: str,
+        skip: int,
+        limit: int
     ):
         service = options.get(option)
         if service is None:
@@ -444,10 +459,10 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             )
         if data_taken is not None and data_taken == "matreshka":
             if id is None:
-                return [responses.get(option).from_orm(i) for i in service.get_parents(db)]
+                return [responses.get(option).from_orm(i) for i in service.get_parents(db, skip, limit)]
             else:
                 return [responses.get(option).from_orm(i) for i in service.get_by_id(db, id).children]
-        return [responses.get(option).from_orm(i) for i in service.get_multi(db)]
+        return [service.get_by_option(db, type, id, skip, limit)]
 
     def _validate_document(self, db: Session, body: HrDocumentInit, role: str, step: HrDocumentStep):
 
@@ -478,7 +493,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 detail="Количество пользователей не соответствует количеству шагов!"
             )
 
-    def _finish_document(self, db: Session, document: HrDocument, users: List[User]):
+    def  _finish_document(self, db: Session, document: HrDocument, users: List[User]):
         completed_status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.COMPLETED.value)
         document.status_id = completed_status.id
 
@@ -499,7 +514,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
             for user in users:
                 if value["data_taken"] == "auto":
-                    self._set_attr(db, user, value["field_name"], value["value"])
+                    self._set_attr(db, user, value["field_name"], value["value"], value['type'])
 
                 else:
                     if key in document.properties:
@@ -509,13 +524,13 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                                 f"Нет ключа {val} в document.properties"
                             )
                         if not type(val) == dict:
-                            self._set_attr(db, user, value["field_name"], val)
+                            self._set_attr(db, user, value["field_name"], val, value['type'])
                         else:
                             if val["value"] == None:
                                 raise BadRequestException(
                                     f"Обьект {key} должен иметь value!"
                                 )
-                            self._set_attr(db, user, value["field_name"], val["value"])
+                            self._set_attr(db, user, value["field_name"], val["value"], value['type'])
 
         document.signed_at = datetime.now()
         document.reg_number = (
@@ -532,17 +547,31 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         return document
 
-    def _set_attr(self, db: Session, user: User, key: str, value):
+    def _set_attr(self, db: Session, user: User, key: str, value, type: str):
         attr = getattr(user, key)
 
         if isinstance(attr, Base):
             res = self._get_service(key).get_by_id(db, value)
             setattr(user, key, res)
+            history_service.create_history(db, user.id, res)
 
         elif isinstance(attr, list):
-            res = self._get_service(key).get_by_id(db, value)
-            attr.append(res)
-            setattr(user, key, attr)
+            if type == 'write':
+                if getattr(self._get_service(key), 'create_relation') is None:
+                    raise InvalidOperationException(
+                        f"New state is encountered! Cannot change {key}!"
+                    )
+                res = self._get_service(key).create_relation(db, user.id, value)
+                attr.append(res)
+                setattr(user, key, attr)
+                history_service.create_history(db, user.id, res)
+            else:
+                res = self._get_service(key).get_by_id(db, value)
+                if getattr(self._get_service(key), 'stop_relation') is None:
+                    raise InvalidOperationException(
+                        f"New state is encountered! Cannot change {key}!"
+                    )
+                self._get_service(key).stop_relation(db, user.id, value)
 
         else:
             setattr(user, key, value)
@@ -586,10 +615,15 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
             if value["data_taken"] == "auto":
                 attr = getattr(user, value["field_name"])
-                if isinstance(attr, Base) or isinstance(attr, list):
+                if isinstance(attr, Base):
                     new_val[value["field_name"]] = self._get_service(
                         value["field_name"]
                     ).get(db, value["value"])
+                elif isinstance(attr, list):
+                    print(value["value"])
+                    new_val[value["field_name"]] = self._get_service(
+                        value["field_name"]
+                    ).get_object(db, value["value"])
                 else:
                     new_val[value["field_name"]] = value["value"]
 

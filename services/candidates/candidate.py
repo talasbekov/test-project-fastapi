@@ -19,7 +19,6 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
         if self._check_by_role(db, role_id):
             if filter is not None:
                 filter = filter.lower()
-                print(filter)
                 candidates = db.query(self.model). \
                     join(StaffUnit, self.model.staff_unit_id == StaffUnit.id). \
                     join(User, User.staff_unit_id == StaffUnit.id). \
@@ -85,7 +84,7 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
         for stage_type in stage_types:
             candidate_stage_info = CandidateStageInfoCreate(
                 candidate_id=candidate.id,
-                stage_type_id=stage_type.id,
+                candidate_stage_type_id=stage_type.id,
                 staff_unit_coordinate_id=None,
                 status=CandidateStageInfoStatusEnum.NOT_STARTED.value
             )
@@ -146,7 +145,7 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
 
         for i in available_all:
             available_all_roles.append(self._get_role_by_name(db, i))
-
+        
         for i in available_all_roles:
             if staff_unit.position_id == i:
                 return True
@@ -169,7 +168,6 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
 
         if filter is not None:
             filter = filter.lower()
-            print(filter)
             return db.query(self.model). \
                 join(StaffUnit, self.model.staff_unit_id == StaffUnit.id). \
                 join(User, User.staff_unit_id == StaffUnit.id). \
@@ -235,6 +233,5 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
         candidate_obj = super().get_by_id(db, candidate['id'])
         if candidate_obj.candidate_stage_answers:
             candidate['last_edit_date'] = candidate_obj.candidate_stage_answers[0].created_at
-
 
 candidate_service = CandidateService(Candidate)  # type: ignore

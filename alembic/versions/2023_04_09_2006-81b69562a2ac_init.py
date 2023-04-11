@@ -1,8 +1,8 @@
 """init
 
-Revision ID: 1ed0c27c469a
+Revision ID: 81b69562a2ac
 Revises: 
-Create Date: 2023-04-04 10:56:22.835400
+Create Date: 2023-04-09 20:06:15.748767
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '1ed0c27c469a'
+revision = '81b69562a2ac'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -32,7 +32,7 @@ def upgrade() -> None:
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('badges',
+    op.create_table('badge_types',
     sa.Column('url', sa.String(), nullable=True),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
@@ -57,7 +57,20 @@ def upgrade() -> None:
     op.create_table('candidate_stage_types',
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('is_curator_review_required', sa.Boolean(), nullable=True),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('contract_types',
+    sa.Column('name', sa.String(), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('coolness_types',
+    sa.Column('name', sa.String(), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.PrimaryKeyConstraint('id')
@@ -78,14 +91,6 @@ def upgrade() -> None:
     )
     op.create_table('document_function_types',
     sa.Column('can_cancel', sa.Boolean(), nullable=False),
-    sa.Column('name', sa.String(), nullable=False),
-    sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('equipments',
-    sa.Column('quantity', sa.BigInteger(), nullable=True),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
@@ -117,6 +122,7 @@ def upgrade() -> None:
     sa.Column('path', sa.String(length=255), nullable=True),
     sa.Column('subject_type', sa.Enum('CANDIDATE', 'EMPLOYEE', 'PERSONNEL', 'STAFF', name='subjecttype'), nullable=True),
     sa.Column('properties', postgresql.JSON(none_as_null=True, astext_type=sa.Text()), nullable=True),
+    sa.Column('description', sa.String(length=255), nullable=True),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
@@ -158,6 +164,20 @@ def upgrade() -> None:
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('military_units',
+    sa.Column('name', sa.String(), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('penalty_types',
+    sa.Column('name', sa.String(), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('property_types',
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
@@ -173,6 +193,15 @@ def upgrade() -> None:
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('positions',
+    sa.Column('name', sa.String(), nullable=True),
+    sa.Column('max_rank_id', sa.UUID(), nullable=True),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['max_rank_id'], ['ranks.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('sciences',
@@ -203,19 +232,6 @@ def upgrade() -> None:
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('positions',
-    sa.Column('max_rank_id', sa.UUID(), nullable=True),
-    sa.Column('name', sa.Enum('CONSCRIPT_SOLDIER', 'SECURITY_OFFICER_1_LEVEL', 'SECURITY_OFFICER_2_LEVEL',
-                              'SECURITY_OFFICER_3_LEVEL', 'PERSONNEL_HEAD', 'DEPUTY_PERSONNEL_HEAD',
-                              'CANDIDATE_MANAGEMENT_HEAD', 'POLITICS_GOVERNMENT_SERVANT', 'PSYCHOLOGIST',
-                              'REPRESENTATIVE_OF_SECURITY_DEPARTMENT', 'POLYGRAPH_EXAMINER', 'SECUTIRY_OFFICER',
-                              'INSTRUCTOR', name='PositionNameEnum'), nullable=False),
-    sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.ForeignKeyConstraint(['max_rank_id'], ['ranks.id'], ),
-    sa.PrimaryKeyConstraint('id')
-    )
     op.create_table('staff_divisions',
     sa.Column('parent_group_id', sa.UUID(), nullable=True),
     sa.Column('description', sa.TEXT(), nullable=True),
@@ -238,7 +254,35 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['staff_division_id'], ['staff_divisions.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.execute("ALTER TABLE staff_divisions ADD FOREIGN KEY (leader_id) REFERENCES staff_units(id);")
+    op.create_foreign_key("staff_division_leader_id_fkey", "staff_divisions", "staff_units", ["leader_id"], ["id"])
+    op.create_table('status_types',
+    sa.Column('name', sa.String(), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('type_army_equipments',
+    sa.Column('name', sa.String(), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('type_clothing_equipments',
+    sa.Column('name', sa.String(), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('type_other_equipments',
+    sa.Column('name', sa.String(), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('archive_document_function_types',
     sa.Column('can_cancel', sa.Boolean(), nullable=False),
     sa.Column('origin_id', sa.UUID(), nullable=True),
@@ -270,19 +314,19 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('candidates',
+    sa.Column('status', sa.Enum('ACTIVE', 'DRAFT', name='candidatestatusenum'), server_default='ACTIVE', nullable=True),
+    sa.Column('debarment_reason', sa.String(), nullable=True),
+    sa.Column('is_physical_passed', sa.Boolean(), nullable=True),
+    sa.Column('attempt_number', sa.Integer(), server_default='0', nullable=True),
     sa.Column('staff_unit_curator_id', sa.UUID(), nullable=True),
     sa.Column('staff_unit_id', sa.UUID(), nullable=True),
     sa.Column('essay_id', sa.UUID(), nullable=True),
-    sa.Column('is_physical_passed', sa.Boolean(), nullable=True),
-    sa.Column('attempt_number', sa.Integer(), nullable=True, server_default='0'),
     sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('status', sa.Enum('ACTIVE', 'DRAFT', name='CandidateStatusEnum'), nullable=False, server_default='ACTIVE'),
-    sa.Column('debarment_reason', sa.String, nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['essay_id'], ['candidate_essay_types.id'], ),
     sa.ForeignKeyConstraint(['staff_unit_curator_id'], ['staff_units.id'], ),
     sa.ForeignKeyConstraint(['staff_unit_id'], ['staff_units.id'], ),
-    sa.ForeignKeyConstraint(['essay_id'], ['candidate_essay_types.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('staff_functions',
@@ -301,6 +345,33 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['type_id'], ['service_function_types.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('type_army_equipment_models',
+    sa.Column('type_of_army_equipment_id', sa.UUID(), nullable=True),
+    sa.Column('name', sa.String(), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['type_of_army_equipment_id'], ['type_army_equipments.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('type_clothing_equipment_models',
+    sa.Column('type_of_clothing_equipment_id', sa.UUID(), nullable=True),
+    sa.Column('name', sa.String(), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['type_of_clothing_equipment_id'], ['type_clothing_equipments.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('type_other_equipment_models',
+    sa.Column('type_of_other_equipment_id', sa.UUID(), nullable=True),
+    sa.Column('name', sa.String(), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['type_of_other_equipment_id'], ['type_other_equipments.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('users',
     sa.Column('email', sa.String(length=150), nullable=True),
     sa.Column('password', sa.String(length=255), nullable=False),
@@ -316,8 +387,6 @@ def upgrade() -> None:
     sa.Column('staff_unit_id', sa.UUID(), nullable=False),
     sa.Column('actual_staff_unit_id', sa.UUID(), nullable=False),
     sa.Column('supervised_by', sa.UUID(), nullable=True),
-    sa.Column('status', sa.String(length=255), nullable=True),
-    sa.Column('status_till', sa.TIMESTAMP(timezone=True), nullable=True),
     sa.Column('description', sa.TEXT(), nullable=True),
     sa.Column('cabinet', sa.String(length=255), nullable=True),
     sa.Column('service_phone_number', sa.String(length=32), nullable=True),
@@ -353,6 +422,24 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['origin_id'], ['staff_functions.id'], ),
     sa.ForeignKeyConstraint(['role_id'], ['archive_document_function_types.id'], ),
     sa.ForeignKeyConstraint(['type_id'], ['archive_service_function_types.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('attestations',
+    sa.Column('user_id', sa.UUID(), nullable=True),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('badges',
+    sa.Column('user_id', sa.UUID(), nullable=True),
+    sa.Column('type_id', sa.UUID(), nullable=True),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['type_id'], ['badge_types.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('candidate_stage_answers',
@@ -391,6 +478,46 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['staff_unit_coordinate_id'], ['staff_units.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('contracts',
+    sa.Column('type_id', sa.UUID(), nullable=True),
+    sa.Column('user_id', sa.UUID(), nullable=True),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['type_id'], ['contract_types.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('coolnesses',
+    sa.Column('type_id', sa.UUID(), nullable=True),
+    sa.Column('user_id', sa.UUID(), nullable=True),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['type_id'], ['coolness_types.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('equipments',
+    sa.Column('type_of_equipment', sa.String(), nullable=True),
+    sa.Column('date_from', sa.TIMESTAMP(), nullable=True),
+    sa.Column('document_link', sa.String(), nullable=True),
+    sa.Column('document_number', sa.String(), nullable=True),
+    sa.Column('user_id', sa.UUID(), nullable=True),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('type_of_army_equipment_model_id', sa.UUID(), nullable=True),
+    sa.Column('inventory_number', sa.String(), nullable=True),
+    sa.Column('count_of_ammo', sa.BigInteger(), nullable=True),
+    sa.Column('type_of_clothing_equipment_model_id', sa.UUID(), nullable=True),
+    sa.Column('type_of_other_equipment_model_id', sa.UUID(), nullable=True),
+    sa.ForeignKeyConstraint(['type_of_army_equipment_model_id'], ['type_army_equipment_models.id'], ),
+    sa.ForeignKeyConstraint(['type_of_clothing_equipment_model_id'], ['type_clothing_equipment_models.id'], ),
+    sa.ForeignKeyConstraint(['type_of_other_equipment_model_id'], ['type_other_equipment_models.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('events',
     sa.Column('user_id', sa.UUID(), nullable=True),
     sa.Column('description', sa.TEXT(), nullable=True),
@@ -413,8 +540,76 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['staff_function_id'], ['staff_functions.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('name_changes',
+    sa.Column('name_before', sa.String(), nullable=True),
+    sa.Column('name_after', sa.String(), nullable=True),
+    sa.Column('name_type', sa.String(), nullable=True),
+    sa.Column('user_id', sa.UUID(), nullable=True),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('penalties',
+    sa.Column('type_id', sa.UUID(), nullable=True),
+    sa.Column('user_id', sa.UUID(), nullable=True),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['type_id'], ['penalty_types.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('personnal_reserves',
+    sa.Column('reserve', sa.Enum('enlisted', 'reserve', name='reserveenum'), nullable=True),
+    sa.Column('date_from', sa.TIMESTAMP(timezone=True), nullable=True),
+    sa.Column('date_to', sa.TIMESTAMP(timezone=True), nullable=True),
+    sa.Column('user_id', sa.UUID(), nullable=True),
+    sa.Column('document_link', sa.String(), nullable=True),
+    sa.Column('document_number', sa.String(), nullable=True),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('privelege_emergencies',
+    sa.Column('form', sa.Enum('form1', 'form2', 'form3', name='formenum'), nullable=True),
+    sa.Column('date_from', sa.TIMESTAMP(timezone=True), nullable=True),
+    sa.Column('date_to', sa.TIMESTAMP(timezone=True), nullable=True),
+    sa.Column('user_id', sa.UUID(), nullable=True),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('profiles',
     sa.Column('user_id', sa.UUID(), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('secondments',
+    sa.Column('staff_division_id', sa.UUID(), nullable=True),
+    sa.Column('user_id', sa.UUID(), nullable=True),
+    sa.Column('name', sa.String(), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['staff_division_id'], ['staff_divisions.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('service_ids',
+    sa.Column('number', sa.String(), nullable=True),
+    sa.Column('date_to', sa.TIMESTAMP(timezone=True), nullable=True),
+    sa.Column('token_status', sa.Enum('RECEIVED', 'LOST', 'NOT_RECEIVED', name='serviceidstatus'), nullable=True),
+    sa.Column('id_status', sa.Enum('RECEIVED', 'LOST', 'NOT_RECEIVED', name='serviceidstatus'), nullable=True),
+    sa.Column('user_id', sa.UUID(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
@@ -438,6 +633,27 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['staff_unit_id'], ['staff_units.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('staff_unit_id', 'staff_function_id')
     )
+    op.create_table('statuses',
+    sa.Column('type_id', sa.UUID(), nullable=True),
+    sa.Column('user_id', sa.UUID(), nullable=True),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['type_id'], ['status_types.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('user_oaths',
+    sa.Column('date', sa.TIMESTAMP(timezone=True), nullable=True),
+    sa.Column('user_id', sa.UUID(), nullable=True),
+    sa.Column('military_unit_id', sa.UUID(), nullable=True),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['military_unit_id'], ['military_units.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('user_stats',
     sa.Column('user_id', sa.UUID(), nullable=True),
     sa.Column('physical_training', sa.Integer(), nullable=True),
@@ -451,12 +667,6 @@ def upgrade() -> None:
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('users_badges',
-    sa.Column('user_id', sa.UUID(), nullable=True),
-    sa.Column('badge_id', sa.UUID(), nullable=True),
-    sa.ForeignKeyConstraint(['badge_id'], ['badges.id'], ),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], )
     )
     op.create_table('additional_profiles',
     sa.Column('profile_id', sa.UUID(), nullable=True),
@@ -494,6 +704,48 @@ def upgrade() -> None:
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['profile_id'], ['profiles.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('histories',
+    sa.Column('date_from', sa.TIMESTAMP(timezone=True), nullable=True),
+    sa.Column('date_to', sa.TIMESTAMP(timezone=True), nullable=True),
+    sa.Column('user_id', sa.UUID(), nullable=True),
+    sa.Column('document_link', sa.TEXT(), nullable=True),
+    sa.Column('document_number', sa.String(), nullable=True),
+    sa.Column('type', sa.String(), nullable=True),
+    sa.Column('name', sa.String(), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('position_id', sa.UUID(), nullable=True),
+    sa.Column('rank_id', sa.UUID(), nullable=True),
+    sa.Column('badge_id', sa.UUID(), nullable=True),
+    sa.Column('penalty_id', sa.UUID(), nullable=True),
+    sa.Column('coefficient', sa.Double(), nullable=True),
+    sa.Column('percentage', sa.Integer(), nullable=True),
+    sa.Column('staff_division_id', sa.UUID(), nullable=True),
+    sa.Column('experience_years', sa.Integer(), nullable=True),
+    sa.Column('contract_id', sa.UUID(), nullable=True),
+    sa.Column('coolness_id', sa.UUID(), nullable=True),
+    sa.Column('name_of_organization', sa.String(), nullable=True),
+    sa.Column('secondment_id', sa.UUID(), nullable=True),
+    sa.Column('name_change_id', sa.UUID(), nullable=True),
+    sa.Column('attestation_id', sa.UUID(), nullable=True),
+    sa.Column('attestation_status', sa.String(), nullable=True),
+    sa.Column('characteristic_initiator', sa.String(), nullable=True),
+    sa.Column('status_id', sa.UUID(), nullable=True),
+    sa.ForeignKeyConstraint(['attestation_id'], ['attestations.id'], ),
+    sa.ForeignKeyConstraint(['badge_id'], ['badges.id'], ),
+    sa.ForeignKeyConstraint(['contract_id'], ['contracts.id'], ),
+    sa.ForeignKeyConstraint(['coolness_id'], ['coolnesses.id'], ),
+    sa.ForeignKeyConstraint(['name_change_id'], ['name_changes.id'], ),
+    sa.ForeignKeyConstraint(['penalty_id'], ['penalties.id'], ),
+    sa.ForeignKeyConstraint(['position_id'], ['positions.id'], ),
+    sa.ForeignKeyConstraint(['rank_id'], ['ranks.id'], ),
+    sa.ForeignKeyConstraint(['secondment_id'], ['secondments.id'], ),
+    sa.ForeignKeyConstraint(['staff_division_id'], ['staff_divisions.id'], ),
+    sa.ForeignKeyConstraint(['status_id'], ['statuses.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('hr_documents',
@@ -906,7 +1158,7 @@ def upgrade() -> None:
     sa.Column('initiator', sa.String(), nullable=True),
     sa.Column('start_date', postgresql.TIMESTAMP(timezone=True), nullable=True),
     sa.Column('end_date', postgresql.TIMESTAMP(timezone=True), nullable=True),
-    sa.Column('document_link', sa.TEXT, nullable=True),
+    sa.Column('document_link', sa.TEXT(), nullable=True),
     sa.Column('profile_id', sa.UUID(), nullable=True),
     sa.Column('liberation_id', sa.UUID(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
@@ -919,9 +1171,9 @@ def upgrade() -> None:
     op.create_table('user_vehicles',
     sa.Column('date_from', postgresql.TIMESTAMP(timezone=True), nullable=False),
     sa.Column('number', sa.String(length=255), nullable=False),
+    sa.Column('document_link', sa.TEXT(), nullable=True),
     sa.Column('profile_id', sa.UUID(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
-    sa.Column('document_link', sa.TEXT(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
@@ -995,27 +1247,47 @@ def downgrade() -> None:
     op.drop_table('personal_profiles')
     op.drop_table('medical_profiles')
     op.drop_table('hr_documents')
+    op.drop_table('histories')
     op.drop_table('family_profiles')
     op.drop_table('educational_profiles')
     op.drop_table('archive_staff_divisions')
     op.drop_table('additional_profiles')
-    op.drop_table('users_badges')
     op.drop_table('user_stats')
+    op.drop_table('user_oaths')
+    op.drop_table('statuses')
     op.drop_table('staff_unit_functions')
     op.drop_table('staff_lists')
+    op.drop_table('service_ids')
+    op.drop_table('secondments')
     op.drop_table('profiles')
+    op.drop_table('privelege_emergencies')
+    op.drop_table('personnal_reserves')
+    op.drop_table('penalties')
+    op.drop_table('name_changes')
     op.drop_table('hr_document_steps')
     op.drop_table('events')
+    op.drop_table('equipments')
+    op.drop_table('coolnesses')
+    op.drop_table('contracts')
     op.drop_table('candidate_stage_infos')
     op.drop_table('candidate_stage_answers')
+    op.drop_table('badges')
+    op.drop_table('attestations')
     op.drop_table('archive_staff_functions')
     op.drop_table('users')
+    op.drop_table('type_other_equipment_models')
+    op.drop_table('type_clothing_equipment_models')
+    op.drop_table('type_army_equipment_models')
     op.drop_table('staff_functions')
     op.drop_table('positions')
     op.drop_table('candidates')
     op.drop_table('candidate_stage_questions')
     op.drop_table('archive_service_function_types')
     op.drop_table('archive_document_function_types')
+    op.drop_table('type_other_equipments')
+    op.drop_table('type_clothing_equipments')
+    op.drop_table('type_army_equipments')
+    op.drop_table('status_types')
     op.drop_table('staff_units')
     op.drop_table('staff_divisions')
     op.drop_table('sport_types')
@@ -1024,6 +1296,8 @@ def downgrade() -> None:
     op.drop_table('sciences')
     op.drop_table('ranks')
     op.drop_table('property_types')
+    op.drop_table('penalty_types')
+    op.drop_table('military_units')
     op.drop_table('liberations')
     op.drop_table('languages')
     op.drop_table('jurisdictions')
@@ -1033,14 +1307,15 @@ def downgrade() -> None:
     op.drop_table('hr_document_statuses')
     op.drop_table('family_statuses')
     op.drop_table('family_relations')
-    op.drop_table('equipments')
     op.drop_table('document_function_types')
     op.drop_table('course_providers')
     op.drop_table('countries')
+    op.drop_table('coolness_types')
+    op.drop_table('contract_types')
     op.drop_table('candidate_stage_types')
     op.drop_table('candidate_essay_types')
     op.drop_table('candidate_categories')
-    op.drop_table('badges')
+    op.drop_table('badge_types')
     op.drop_table('academic_title_degrees')
     op.drop_table('academic_degree_degrees')
     # ### end Alembic commands ###

@@ -8,7 +8,6 @@ from .candidate_stage_info import (CandidateStageInfoRead, CandidateStageInfoCre
                                    CandidateStageInfoSendToApproval)
 from .candidate_stage_question import (CandidateStageQuestionRead, CandidateStageQuestionCreate, CandidateStageQuestionUpdate,
                                        CandidateStageQuestionReadIn, CandidateStageQuestionType)
-
 from .candidate_stage_answer import (
     CandidateStageAnswerRead,
     CandidateStageAnswerCreate,

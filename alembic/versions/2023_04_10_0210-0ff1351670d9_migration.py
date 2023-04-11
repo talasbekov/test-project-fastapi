@@ -1,8 +1,8 @@
 """migration
 
-Revision ID: b829f910efe2
-Revises: 1ed0c27c469a
-Create Date: 2023-04-04 10:57:42.845460
+Revision ID: 0ff1351670d9
+Revises: 81b69562a2ac
+Create Date: 2023-04-10 02:10:00.528430
 
 """
 import uuid
@@ -10,14 +10,17 @@ import uuid
 from alembic import op
 from core import Base
 
+
 # revision identifiers, used by Alembic.
-revision = 'b829f910efe2'
-down_revision = '1ed0c27c469a'
+revision = '0ff1351670d9'
+down_revision = '81b69562a2ac'
 branch_labels = None
 depends_on = None
 
+
 def get_uuid():
     return str(uuid.uuid4())
+
 
 # Personal
 sport_type1_id = get_uuid()
@@ -153,14 +156,28 @@ options = {
 }
 
 
+def create_candidate_stage_info(candidate_id,
+                                staff_unit_coordinate_id,
+                                candidate_stage_type_id):
+    op.bulk_insert(
+        Base.metadata.tables['candidate_stage_infos'],
+        [{
+            'id': get_uuid(),
+            'staff_unit_coordinate_id': staff_unit_coordinate_id,
+            'candidate_stage_type_id': candidate_stage_type_id,
+            'candidate_id': candidate_id,
+        }]
+    )
+
+
 def upgrade() -> None:
 
-    badge1_id = get_uuid()
+    badgetype1_id = get_uuid()
 
     op.bulk_insert(
-        Base.metadata.tables['badges'],
+        Base.metadata.tables['badge_types'],
         [{
-            "id": badge1_id,
+            "id": badgetype1_id,
             "name": "Черный Берет",
             "url": "http://192.168.0.169:8083/static/black_beret.jpg"
         }]
@@ -188,81 +205,97 @@ def upgrade() -> None:
         [{
             'id': rank1_id,
             'name': 'Рядовой',
+            'order': 1,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A0%D1%8F%D0%B4%D0%BE%D0%B2%D0%BE%D0%B9_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': None
         }, {
             'id': rank2_id,
             'name': 'Младший сержант',
+            'order': 2,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9C%D0%BB%D0%B0%D0%B4%D1%88%D0%B8%D0%B9%20%D1%81%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9C%D0%BB%D0%B0%D0%B4%D1%88%D0%B8%D0%B9%20%D1%81%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82.png"
         }, {
             'id': rank3_id,
             'name': 'Сержант',
+            'order': 3,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82.png"
         }, {
             'id': rank14_id,
             'name': 'Сержант 1-го класса',
+            'order': 4,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82%201-%D0%B3%D0%BE%20%D0%BA%D0%BB%D0%B0%D1%81%D1%81%D0%B0_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': None
         }, {
             'id': rank15_id,
             'name': 'Сержант 2-го класса',
+            'order': 5,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82%202-%D0%B3%D0%BE%20%D0%BA%D0%BB%D0%B0%D1%81%D1%81%D0%B0_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': None
         }, {
             'id': rank16_id,
             'name': 'Сержант 3-го класса',
+            'order': 6,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82%203-%D0%B3%D0%BE%20%D0%BA%D0%BB%D0%B0%D1%81%D1%81%D0%B0_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': None
         }, {
             'id': rank4_id,
             'name': 'Старший сержант',
+            'order': 7,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D1%82%D0%B0%D1%80%D1%88%D0%B8%D0%B9%20%D1%81%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D1%82%D0%B0%D1%80%D1%88%D0%B8%D0%B9%20%D1%81%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82.png"
         }, {
             'id': rank5_id,
             'name': 'Лейтенант',
+            'order': 8,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9B%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9B%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82.png"
         }, {
             'id': rank6_id,
             'name': 'Старший лейтенант',
+            'order': 9,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D1%82%D0%B0%D1%80%D1%88%D0%B8%D0%B9%20%D0%BB%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D1%82%D0%B0%D1%80%D1%88%D0%B8%D0%B9%20%D0%BB%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82.png"
         }, {
             'id': rank7_id,
             'name': 'Капитан',
+            'order': 10,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9A%D0%B0%D0%BF%D0%B8%D1%82%D0%B0%D0%BD_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9A%D0%B0%D0%BF%D0%B8%D1%82%D0%B0%D0%BD.png"
         }, {
             'id': rank8_id,
             'name': 'Майор',
+            'order': 11,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9C%D0%B0%D0%B9%D0%BE%D1%80_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9C%D0%B0%D0%B9%D0%BE%D1%80.png"
         }, {
             'id': rank9_id,
             'name': 'Подполковник',
+            'order': 12,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9F%D0%BE%D0%B4%D0%BF%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9F%D0%BE%D0%B4%D0%BF%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA.png"
         }, {
             'id': rank10_id,
             'name': 'Полковник',
+            'order': 13,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9F%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9F%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA.png"
         }, {
             'id': rank11_id,
             'name': 'Генерал-майор',
+            'order': 14,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BC%D0%B0%D0%B9%D0%BE%D1%80.png",
             'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BC%D0%B0%D0%B9%D0%BE%D1%80.png"
         }, {
             'id': rank12_id,
             'name': 'Генерал-лейтенант',
+            'order': 15,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BB%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82.png",
             'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BB%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82.png"
         }, {
             'id': rank13_id,
             'name': 'Генерал-полковник',
+            'order': 16,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BF%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA.png",
             'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BF%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA.png"
         }]
@@ -298,108 +331,108 @@ def upgrade() -> None:
         Base.metadata.tables['positions'],
         [{
             'id': position1_id,
-            'name': 'CONSCRIPT_SOLDIER',
+            'name': 'Военно-служащий срочной службы',
             'max_rank_id': rank1_id
         }, {
             'id': position2_id,
-            'name': 'SECURITY_OFFICER_3_LEVEL',
+            'name': 'Сотрудник охраны 3-категории',
             'max_rank_id': rank2_id
         }, {
             'id': position3_id,
-            'name': 'SECURITY_OFFICER_2_LEVEL',
+            'name': 'Сотрудник охраны 2-категории',
             'max_rank_id': rank3_id
         }, {
             'id': position4_id,
-            'name': 'SECURITY_OFFICER_1_LEVEL',
+            'name': 'Сотрудник охраны 1-категории',
             'max_rank_id': rank4_id
-        },
-        {
+        }, {
             'id': position5_id,
-            'name': 'SECUTIRY_OFFICER',
+            'name': 'Офицер охраны',
             'max_rank_id': rank7_id
+        }, {
+            'id': position6_id,
+            'name': 'Старший офицер охраны',
+            'max_rank_id': rank8_id
+        }, {
+            'id': position7_id,
+            'name': 'Старший офицер',
+            'max_rank_id': rank8_id
+        }, {
+            'id': position8_id,
+            'name': 'Инспектор',
+            'max_rank_id': rank9_id
+        }, {
+            'id': position9_id,
+            'name': 'Старший инспектор',
+            'max_rank_id': rank9_id
+        }, {
+            'id': position10_id,
+            'name': 'Начальник отдела',
+            'max_rank_id': rank9_id
+        }, {
+            'id': position11_id,
+            'name': 'Заместитель начальника управление - Начальник отдела',
+            'max_rank_id': rank9_id
+        }, {
+            'id': position12_id,
+            'name': 'Главный инспектор',
+            'max_rank_id': rank10_id
+        }, {
+            'id': position13_id,
+            'name': 'Начальник управления',
+            'max_rank_id': rank10_id
+        }, {
+            'id': position14_id,
+            'name': 'Заместитель начальника департамента',
+            'max_rank_id': rank10_id
+        }, {
+            'id': position15_id,
+            'name': 'Начальник департамента',
+            'max_rank_id': rank10_id
+        }, {
+            'id': position16_id,
+            'name': 'Заместитель начальника Службы',
+            'max_rank_id': rank12_id
+        }, {
+            'id': position17_id,
+            'name': 'Начальник Службы',
+            'max_rank_id': rank13_id
         },
-        # {
-        #     'id': position6_id,
-        #     'name': 'Старший офицер охраны',
-        #     'max_rank_id': rank8_id
-        # }, {
-        #     'id': position7_id,
-        #     'name': 'Старший офицер',
-        #     'max_rank_id': rank8_id
-        # }, {
-        #     'id': position8_id,
-        #     'name': 'Инспектор',
-        #     'max_rank_id': rank9_id
-        # }, {
-        #     'id': position9_id,
-        #     'name': 'Старший инспектор',
-        #     'max_rank_id': rank9_id
-        # }, {
-        #     'id': position10_id,
-        #     'name': 'Начальник отдела',
-        #     'max_rank_id': rank9_id
-        # }, {
-        #     'id': position11_id,
-        #     'name': 'Заместитель начальника управление - Начальник отдела',
-        #     'max_rank_id': rank9_id
-        # }, {
-        #     'id': position12_id,
-        #     'name': 'Главный инспектор',
-        #     'max_rank_id': rank10_id
-        # }, {
-        #     'id': position13_id,
-        #     'name': 'Начальник управления',
-        #     'max_rank_id': rank10_id
-        # }, {
-        #     'id': position14_id,
-        #     'name': 'Заместитель начальника департамента',
-        #     'max_rank_id': rank10_id
-        # }, {
-        #     'id': position15_id,
-        #     'name': 'Начальник департамента',
-        #     'max_rank_id': rank10_id
-        # }, {
-        #     'id': position16_id,
-        #     'name': 'Заместитель начальника Службы',
-        #     'max_rank_id': rank12_id
-        # }, {
-        #     'id': position17_id,
-        #     'name': 'Начальник Службы',
-        #     'max_rank_id': rank13_id
-        # },
         {
             'id': position18_id,
-            'name': 'PERSONNEL_HEAD',
+            'name': 'Начальник кадров',
             'max_rank_id': rank10_id
         }, {
             'id': position19_id,
-            'name': 'DEPUTY_PERSONNEL_HEAD',
+            'name': 'Заместители начальника кадров',
             'max_rank_id': rank10_id
         }, {
             'id': position20_id,
-            'name': 'CANDIDATE_MANAGEMENT_HEAD',
+            'name': 'Начальник управления кандидатами',
             'max_rank_id': rank10_id
         }, {
             'id': position21_id,
-            'name': 'POLITICS_GOVERNMENT_SERVANT',
+            'name': 'Политический гос. служащий',
             'max_rank_id': rank16_id
         }, {
             'id': position22_id,
-            'name': 'PSYCHOLOGIST',
+            'name': 'Психолог',
             'max_rank_id': None
         }, {
             'id': position23_id,
-            'name': 'REPRESENTATIVE_OF_SECURITY_DEPARTMENT',
+            'name': 'Представитель Управление собственной безопасности',
             'max_rank_id': None
         }, {
             'id': position24_id,
-            'name': 'POLYGRAPH_EXAMINER',
+            'name': 'Полиграфолог',
             'max_rank_id': None
         }, {
             'id': position25_id,
-            'name': 'INSTRUCTOR',
+            'name': 'Инструктор',
             'max_rank_id': None
-        }]
+        }
+        
+        ]
     )
 
     hr_document_status_id = get_uuid()
@@ -493,7 +526,6 @@ def upgrade() -> None:
         }]
     )
 
-
     staff_function1_id = get_uuid()
     staff_function2_id = get_uuid()
     staff_function3_id = get_uuid()
@@ -511,105 +543,105 @@ def upgrade() -> None:
         Base.metadata.tables['staff_functions'],
         [{
             'id': staff_function1_id,
-            'hours_per_week' : 3,
+            'hours_per_week': 3,
             'discriminator': 'document_staff_function',
-            'name' : 'Инициатор приказа о назначении',
+            'name': 'Инициатор приказа о назначении',
             'jurisdiction_id': jurisdiction_id,
             'priority': 1,
             'role_id': doc_type5_id
         },
-        {
+            {
             'id': staff_function2_id,
-            'hours_per_week' : 3,
+            'hours_per_week': 3,
             'discriminator': 'document_staff_function',
-            'name' : 'Эксперт приказа о назначении',
+            'name': 'Эксперт приказа о назначении',
             'jurisdiction_id': jurisdiction_id,
             'priority': 2,
             'role_id': doc_type2_id
         },
-        {
+            {
             'id': staff_function3_id,
-            'hours_per_week' : 3,
+            'hours_per_week': 3,
             'discriminator': 'document_staff_function',
-            'name' : 'Утверждающий приказа о назначении',
+            'name': 'Утверждающий приказа о назначении',
             'jurisdiction_id': jurisdiction_id,
             'priority': 100,
             'role_id': doc_type3_id
         },
-        {
+            {
             'id': staff_function4_id,
-            'hours_per_week' : 3,
+            'hours_per_week': 3,
             'discriminator': 'document_staff_function',
-            'name' : 'Инициатор приказа о присвоения звания',
+            'name': 'Инициатор приказа о присвоения звания',
             'jurisdiction_id': jurisdiction_id,
             'priority': 1,
             'role_id': doc_type5_id
         },
-        {
+            {
             'id': staff_function5_id,
-            'hours_per_week' : 3,
+            'hours_per_week': 3,
             'discriminator': 'document_staff_function',
-            'name' : 'Эксперт приказа о присвоения звания',
+            'name': 'Эксперт приказа о присвоения звания',
             'jurisdiction_id': jurisdiction_id,
             'priority': 2,
             'role_id': doc_type2_id
         },
-        {
+            {
             'id': staff_function6_id,
-            'hours_per_week' : 3,
+            'hours_per_week': 3,
             'discriminator': 'document_staff_function',
-            'name' : 'Утверждающий приказа о присвоения звания',
+            'name': 'Утверждающий приказа о присвоения звания',
             'jurisdiction_id': jurisdiction_id,
             'priority': 100,
             'role_id': doc_type3_id
         },
-        {
+            {
             'id': staff_function7_id,
-            'hours_per_week' : 3,
+            'hours_per_week': 3,
             'discriminator': 'document_staff_function',
-            'name' : 'Инициатор приказа о присвоения черного берета',
+            'name': 'Инициатор приказа о присвоения черного берета',
             'jurisdiction_id': jurisdiction_id,
             'priority': 1,
             'role_id': doc_type5_id
         },
-        {
+            {
             'id': staff_function8_id,
-            'hours_per_week' : 3,
+            'hours_per_week': 3,
             'discriminator': 'document_staff_function',
-            'name' : 'Эксперт приказа о присвоения черного берета',
+            'name': 'Эксперт приказа о присвоения черного берета',
             'jurisdiction_id': jurisdiction_id,
             'priority': 2,
             'role_id': doc_type2_id
         },
-        {
+            {
             'id': staff_function9_id,
-            'hours_per_week' : 3,
+            'hours_per_week': 3,
             'discriminator': 'document_staff_function',
-            'name' : 'Утверждающий приказа о присвоения черного берета',
+            'name': 'Утверждающий приказа о присвоения черного берета',
             'jurisdiction_id': jurisdiction_id,
             'priority': 100,
             'role_id': doc_type3_id
         }, {
             'id': staff_function10_id,
-            'hours_per_week' : 3,
+            'hours_per_week': 3,
             'discriminator': 'document_staff_function',
-            'name' : 'Согласующий приказа о присвоения звания',
+            'name': 'Согласующий приказа о присвоения звания',
             'jurisdiction_id': jurisdiction_id,
             'priority': 3,
             'role_id': doc_type1_id
         }, {
             'id': staff_function11_id,
-            'hours_per_week' : 3,
+            'hours_per_week': 3,
             'discriminator': 'document_staff_function',
-            'name' : 'Согласующий приказа о присвоения черного берета',
+            'name': 'Согласующий приказа о присвоения черного берета',
             'jurisdiction_id': jurisdiction_id,
             'priority': 3,
             'role_id': doc_type1_id
         }, {
             'id': staff_function12_id,
-            'hours_per_week' : 3,
+            'hours_per_week': 3,
             'discriminator': 'document_staff_function',
-            'name' : 'Согласующий приказа о назначении',
+            'name': 'Согласующий приказа о назначении',
             'jurisdiction_id': jurisdiction_id,
             'priority': 3,
             'role_id': doc_type1_id
@@ -758,29 +790,6 @@ def upgrade() -> None:
         }]
     )
 
-    staff_unit1_id = get_uuid()
-    staff_unit2_id = get_uuid()
-    staff_unit3_id = get_uuid()
-    staff_unit4_id = get_uuid()
-    staff_unit5_id = get_uuid()
-    staff_unit6_id = get_uuid()
-    staff_unit7_id = get_uuid()
-    staff_unit8_id = get_uuid()
-    staff_unit9_id = get_uuid()
-    staff_unit10_id = get_uuid()
-    staff_unit11_id = get_uuid()
-    staff_unit12_id = get_uuid()
-    staff_unit13_id = get_uuid()
-    staff_unit14_id = get_uuid()
-    staff_unit15_id = get_uuid()
-    staff_unit16_id = get_uuid()
-    staff_unit17_id = get_uuid()
-    staff_unit18_id = get_uuid()
-    staff_unit19_id = get_uuid()
-    staff_unit20_id = get_uuid()
-    staff_unit21_id = get_uuid()
-    staff_unit22_id = get_uuid()
-
     group1_id = get_uuid()
     group2_id = get_uuid()
     group3_id = get_uuid()
@@ -795,7 +804,7 @@ def upgrade() -> None:
             'parent_group_id': None,
             'id': group1_id,
             'name': "Департамент 1",
-            'is_combat_unit': True,
+            'is_combat_unit': True
         }, {
             'parent_group_id': group1_id,
             'id': group2_id,
@@ -828,6 +837,30 @@ def upgrade() -> None:
             'is_combat_unit': False
         }]
     )
+
+    staff_unit1_id = get_uuid()
+    staff_unit2_id = get_uuid()
+    staff_unit3_id = get_uuid()
+    staff_unit4_id = get_uuid()
+    staff_unit5_id = get_uuid()
+    staff_unit6_id = get_uuid()
+    staff_unit7_id = get_uuid()
+    staff_unit8_id = get_uuid()
+    staff_unit9_id = get_uuid()
+    staff_unit10_id = get_uuid()
+    staff_unit11_id = get_uuid()
+    staff_unit12_id = get_uuid()
+    staff_unit13_id = get_uuid()
+    staff_unit14_id = get_uuid()
+    staff_unit15_id = get_uuid()
+    staff_unit16_id = get_uuid()
+    staff_unit17_id = get_uuid()
+    staff_unit18_id = get_uuid()
+    staff_unit19_id = get_uuid()
+    staff_unit20_id = get_uuid()
+    staff_unit21_id = get_uuid()
+    staff_unit22_id = get_uuid()
+
 
     op.bulk_insert(
         Base.metadata.tables['staff_units'],
@@ -1231,12 +1264,7 @@ def upgrade() -> None:
         False,
         '1.2.100K')
 
-    # Update staff_division set leader_id = staff_unit10_id where id = staff_division1_id
-    op.execute(
-        "UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(
-            staff_unit10_id, group1_id
-        )
-    )
+    op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(staff_unit8_id, group3_id))
 
     op.bulk_insert(
         Base.metadata.tables['staff_unit_functions'],
@@ -1441,7 +1469,7 @@ def upgrade() -> None:
                     "type": "write",
                     "data_taken": "auto",
                     "field_name": "badges",
-                    "value": badge1_id
+                    "value": badgetype1_id
                 }
             },
             'id': template3_id
@@ -1526,6 +1554,1091 @@ def upgrade() -> None:
         }]
     )
 
+    candidate_id = get_uuid()
+    candidate2_id = get_uuid()
+    candidate3_id = get_uuid()
+    candidate4_id = get_uuid()
+    candidate5_id = get_uuid()
+    candidate6_id = get_uuid()
+    candidate7_id = get_uuid()
+    candidate8_id = get_uuid()
+    candidate9_id = get_uuid()
+    candidate10_id = get_uuid()
+    candidate11_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['candidates'],
+        [{
+            'id': candidate_id,
+            'staff_unit_id': staff_unit1_id,
+            'staff_unit_curator_id': staff_unit11_id,
+            'status': 'ACTIVE',
+            'debarment_reason': None
+        }, {
+            'id': candidate2_id,
+            'staff_unit_id': staff_unit2_id,
+            'staff_unit_curator_id': staff_unit11_id,
+            'status': 'ACTIVE',
+            'debarment_reason': None
+        }, {
+            'id': candidate3_id,
+            'staff_unit_id': staff_unit3_id,
+            'staff_unit_curator_id': staff_unit11_id,
+            'status': 'ACTIVE',
+            'debarment_reason': None
+        }, {
+            'id': candidate4_id,
+            'staff_unit_id': staff_unit5_id,
+            'staff_unit_curator_id': staff_unit11_id,
+            'status': 'ACTIVE',
+            'debarment_reason': None
+        }, {
+            'id': candidate5_id,
+            'staff_unit_id': staff_unit7_id,
+            'staff_unit_curator_id': staff_unit11_id,
+            'status': 'ACTIVE',
+            'debarment_reason': None
+        }, {
+            'id': candidate6_id,
+            'staff_unit_id': staff_unit8_id,
+            'staff_unit_curator_id': staff_unit11_id,
+            'status': 'ACTIVE',
+            'debarment_reason': None
+        }, {
+            'id': candidate7_id,
+            'staff_unit_id': staff_unit9_id,
+            'staff_unit_curator_id': staff_unit11_id,
+            'status': 'DRAFT',
+            'debarment_reason': 'Недостаточный уровень квалификации: кандидат не соответствует необходимым требованиям по опыту и навыкам для данной вакансии'
+        }, {
+            'id': candidate8_id,
+            'staff_unit_id': staff_unit1_id,
+            'staff_unit_curator_id': staff_unit10_id,
+            'status': 'ACTIVE',
+            'debarment_reason': None
+        }, {
+            'id': candidate9_id,
+            'staff_unit_id': staff_unit1_id,
+            'staff_unit_curator_id': staff_unit10_id,
+            'status': 'ACTIVE',
+            'debarment_reason': None
+        }, {
+            'id': candidate10_id,
+            'staff_unit_id': staff_unit1_id,
+            'staff_unit_curator_id': staff_unit10_id,
+            'status': 'DRAFT',
+            'debarment_reason': 'Недостаточное количество опыта: кандидат не имеет достаточного опыта работы в данной области или на аналогичной должности'
+        }, {
+            'id': candidate11_id,
+            'staff_unit_id': staff_unit1_id,
+            'staff_unit_curator_id': staff_unit10_id,
+            'status': 'DRAFT',
+            'debarment_reason': 'Нарушение правил: кандидат нарушил правила собеседования или требования к вакансии.'
+        }]
+    )
+
+    penalty_type_id = get_uuid()
+    penalty_type2_id = get_uuid()
+    penalty_type3_id = get_uuid()
+    penalty_type4_id = get_uuid()
+    penalty_type5_id = get_uuid()
+    penalty_type6_id = get_uuid()
+    penalty_type7_id = get_uuid()
+    penalty_type8_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['penalty_types'],
+        [{
+            'id': penalty_type_id,
+            'name': 'Замечание',
+        },
+            {
+            'id': penalty_type2_id,
+            'name': 'Выговор',
+        },
+            {
+            'id': penalty_type3_id,
+            'name': 'Строгий выговор',
+        },
+            {
+            'id': penalty_type4_id,
+            'name': 'Предупреждение о неполном служебном соответствии',
+        },
+            {
+            'id': penalty_type5_id,
+            'name': 'Увольнение со службы по отрицательным мотивам',
+        },
+            {
+            'id': penalty_type6_id,
+            'name': 'Снижение воинского звания',
+        },
+            {
+            'id': penalty_type7_id,
+            'name': 'Неполное служебное соответствие',
+
+        },
+            {
+            'id': penalty_type8_id,
+            'name': 'Письменное предупреждение',
+        }]
+    )
+
+    penalty_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['penalties'],
+        [{
+            'id': penalty_id,
+            'type_id': penalty_type_id,
+            'user_id': user1_id,
+        }]
+    )
+
+    
+    import datetime
+
+
+    badge_id = get_uuid()
+    op.bulk_insert(
+        Base.metadata.tables['badges'],
+        [{
+            'id': badge_id,
+            'user_id': user1_id,
+            'type_id': badgetype1_id
+        }])
+    
+    type_army_equipment_id = get_uuid()
+    type_army_equipment2_id = get_uuid()
+    type_army_equipment3_id = get_uuid()
+    
+    op.bulk_insert(
+        Base.metadata.tables['type_army_equipments'],
+        [{
+            'id': type_army_equipment_id,
+            'name': 'Автомат',
+        },
+            {
+            'id': type_army_equipment2_id,
+            'name': 'РПГ',
+        },
+            {
+            'id': type_army_equipment3_id,
+            'name': 'Артиллерия',
+        }
+        ])
+            
+            
+
+    type_army_equipment_model_id = get_uuid()
+    type_army_equipment_model2_id = get_uuid()
+    type_army_equipment_model3_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['type_army_equipment_models'],
+        [{
+            'id': type_army_equipment_model_id,
+            'name': 'Автомат винтовка',
+            'type_of_army_equipment_id': type_army_equipment_id
+        },
+            {
+            'id': type_army_equipment_model2_id,
+            'name': 'Автомат пулемет',
+            'type_of_army_equipment_id': type_army_equipment_id
+        },
+            {
+            'id': type_army_equipment_model3_id,
+            'name': 'Автомат пулемет',
+            'type_of_army_equipment_id': type_army_equipment_id
+        }] 
+    )  
+
+    type_of_clothing_equipment_id = get_uuid()
+    type_of_clothing_equipment2_id = get_uuid()
+    type_of_clothing_equipment3_id = get_uuid()
+    type_of_clothing_equipment4_id = get_uuid()
+    type_of_clothing_equipment5_id = get_uuid()
+    type_of_clothing_equipment6_id = get_uuid()
+    type_of_clothing_equipment7_id = get_uuid()
+    type_of_clothing_equipment8_id = get_uuid()
+
+
+    op.bulk_insert(
+        Base.metadata.tables['type_clothing_equipments'],
+        [{
+            'id': type_of_clothing_equipment_id,
+            'name': 'Шапка',
+        },
+            {
+            'id': type_of_clothing_equipment2_id,
+            'name': 'Куртка',
+        },
+            {
+            'id': type_of_clothing_equipment3_id,
+            'name': 'Футболка',
+        },
+            {
+            'id': type_of_clothing_equipment4_id,
+            'name': 'Кофта',
+        },
+            {
+            'id': type_of_clothing_equipment5_id,
+            'name': 'Штаны',
+            },
+            {
+            'id': type_of_clothing_equipment6_id,
+            'name': 'Термобелье',
+            },
+            {
+            'id': type_of_clothing_equipment7_id,
+            'name': 'Ботинки',
+            },
+            {
+            'id': type_of_clothing_equipment8_id,
+            'name': 'Носки',
+            }])
+
+    type_of_clothing_equipment_model_id = get_uuid()
+    type_of_clothing_equipment_model2_id = get_uuid()
+    type_of_clothing_equipment_model3_id = get_uuid()
+    type_of_clothing_equipment_model4_id = get_uuid()
+    type_of_clothing_equipment_model5_id = get_uuid()
+    type_of_clothing_equipment_model6_id = get_uuid()
+    type_of_clothing_equipment_model7_id = get_uuid()
+    type_of_clothing_equipment_model8_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['type_clothing_equipment_models'],
+        [{
+            'id': type_of_clothing_equipment_model_id,
+            'name': 'Шапка военная',
+            'type_of_clothing_equipment_id': type_of_clothing_equipment_id
+        },
+            {
+            'id': type_of_clothing_equipment_model2_id,
+            'name': 'Куртка военная',
+            'type_of_clothing_equipment_id': type_of_clothing_equipment2_id
+        },
+            {
+            'id': type_of_clothing_equipment_model3_id,
+            'name': 'Футболка военная',
+            'type_of_clothing_equipment_id': type_of_clothing_equipment3_id
+        },
+            {
+            'id': type_of_clothing_equipment_model4_id,
+            'name': 'Кофта военная',
+            'type_of_clothing_equipment_id': type_of_clothing_equipment4_id
+        },
+            {
+            'id': type_of_clothing_equipment_model5_id,
+            'name': 'Штаны военные',
+            'type_of_clothing_equipment_id': type_of_clothing_equipment5_id
+        },
+            {
+            'id': type_of_clothing_equipment_model6_id,
+            'name': 'Термобелье военное',
+            'type_of_clothing_equipment_id': type_of_clothing_equipment6_id
+        },
+            {
+            'id': type_of_clothing_equipment_model7_id,
+            'name': 'Ботинки военные',
+            'type_of_clothing_equipment_id': type_of_clothing_equipment7_id
+        },
+            {
+            'id': type_of_clothing_equipment_model8_id,
+            'name': 'Носки военные',
+            'type_of_clothing_equipment_id': type_of_clothing_equipment8_id
+        }])
+    
+
+    type_other_equipment_id = get_uuid()
+    
+    op.bulk_insert(
+        Base.metadata.tables['type_other_equipments'],
+        [{
+            'id': type_other_equipment_id,
+            'name': 'Техника',
+        }]
+    )
+
+    type_other_equipment_model_id = get_uuid()
+    type_other_equipment_model2_id = get_uuid()
+    type_other_equipment_model3_id = get_uuid()
+    type_other_equipment_model4_id = get_uuid()
+    type_other_equipment_model5_id = get_uuid()
+    type_other_equipment_model6_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['type_other_equipment_models'],
+        [{
+            'id': type_other_equipment_model_id,
+            'name': 'Принтер',
+            'type_of_other_equipment_id': type_other_equipment_id
+        },
+            {
+            'id': type_other_equipment_model2_id,
+            'name': 'Радиостанция',
+            'type_of_other_equipment_id': type_other_equipment_id
+        },
+            {
+            'id': type_other_equipment_model3_id,
+            'name': 'Персональный компьютер',
+            'type_of_other_equipment_id': type_other_equipment_id
+        },
+            {
+            'id': type_other_equipment_model4_id,
+            'name': 'Телефон',
+            'type_of_other_equipment_id': type_other_equipment_id
+        },
+            {
+            'id': type_other_equipment_model5_id,
+            'name': 'Ноутбук',
+            'type_of_other_equipment_id': type_other_equipment_id
+        },
+            {
+            'id': type_other_equipment_model6_id,
+            'name': 'Копировальный аппарат',
+            'type_of_other_equipment_id': type_other_equipment_id
+        }])
+    
+
+
+
+    army_equipment_id = get_uuid()
+    clothing_equipment_id = get_uuid()
+    other_equipment_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['equipments'],
+        [{
+            'id': army_equipment_id,
+            'type_of_army_equipment_model_id': type_army_equipment_model_id,
+            'count_of_ammo': 100,
+            'inventory_number': '123456789',
+            'user_id': user1_id,
+            'type_of_equipment': 'army_equipment',
+            'type_of_clothing_equipment_model_id': None,
+            'type_of_other_equipment_model_id': None,
+        },
+         {
+            'id': clothing_equipment_id,
+            'type_of_clothing_equipment_model_id': type_of_clothing_equipment_model_id,
+            'user_id': user1_id,
+            'type_of_equipment': 'clothing_equipment',
+            'count_of_ammo': None,
+            'inventory_number': None,
+            'type_of_army_equipment_model_id': None,
+            'type_of_other_equipment_model_id': None,
+         },
+         {
+            'id': other_equipment_id,
+            'type_of_other_equipment_model_id': type_other_equipment_model_id,
+            'user_id': user1_id,
+            'type_of_equipment': 'other_equipment',
+            'count_of_ammo': None,
+            'inventory_number': None,
+            'type_of_army_equipment_model_id': None,
+            'type_of_clothing_equipment_model_id': None,
+         }
+        ])
+    
+
+    secondment_id = get_uuid()
+    secondment2_id = get_uuid()
+    secondment3_id = get_uuid()
+
+
+    op.bulk_insert(
+        Base.metadata.tables['secondments'],
+        [{
+            'id': secondment_id,
+            'staff_division_id': group1_id,
+            'user_id': user1_id,
+            'name': 'Перевод в другую группу'
+        },
+            {
+            'id': secondment2_id,
+            'staff_division_id': group2_id,
+            'user_id': user1_id,
+            'name': 'Перевод в другую группу'
+        },
+            {
+            'id': secondment3_id,
+            'staff_division_id': group3_id,
+            'user_id': user1_id,
+            'name': 'Перевод в другую группу'
+        }]
+    )
+
+
+    name_change_id = get_uuid()
+    name_change2_id = get_uuid()
+    name_change3_id = get_uuid()
+
+
+    op.bulk_insert(
+        Base.metadata.tables['name_changes'],
+        [{
+            'id': name_change_id,
+            'name_before': 'Иван',
+            'name_after': 'Петр',
+            'name_type': 'name'
+        },
+            {
+            'id': name_change2_id,
+            'name_before': 'Петр',
+            'name_after': 'Самат',
+            'name_type': 'name'
+            },
+            {
+            'id': name_change3_id,
+            'name_before': 'Иванов',
+            'name_after': 'Петров',
+            'name_type': 'surname'
+            }]
+    )    
+
+    attestation_id = get_uuid()
+    attestation2_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['attestations'],
+        [{
+            'id': attestation_id,
+            'user_id': user1_id,
+        }]
+    )
+    
+    status_type = get_uuid()
+    
+    op.bulk_insert(
+        Base.metadata.tables['status_types'],
+        [{
+            'id': status_type,
+            'name': 'Статус 1'
+        }]
+    )
+
+    status_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['statuses'],
+        [{
+            'id': status_id,
+            'user_id': user1_id,
+            'type_id': status_type,
+        }]
+    )
+
+    coolness_type_id = get_uuid()
+    coolness_type2_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['coolness_types'],
+        [{
+            'id': coolness_type_id,
+            'name': 'Специалист 1 класса',
+        },
+            {
+            'id': coolness_type2_id,
+            'name': 'Специалист 2 класса',
+        },
+        ]
+    )
+
+    coolness_id = get_uuid()
+    coolness2_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['coolnesses'],
+        [{
+            'id': coolness_id,
+            'type_id': coolness_type_id,
+            'user_id': user1_id,
+        },
+            {
+            'id': coolness2_id,
+            'type_id': coolness_type2_id,
+            'user_id': user1_id,
+        },
+        ]
+    )
+
+    contract_type_id = get_uuid()
+    contract_type2_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['contract_types'],
+        [{
+            'id': contract_type_id,
+            'name': 'Тип 1',
+        },
+            {
+            'id': contract_type2_id,
+            'name': 'Тип 2',
+        },
+        ]
+    )
+
+    contract_id = get_uuid()
+    contract2_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['contracts'],
+        [{
+            'id': contract_id,
+            'type_id': contract_type_id,
+            'user_id': user1_id,
+        },
+            {
+            'id': contract2_id,
+            'type_id': contract_type2_id,
+            'user_id': user1_id,
+        },
+        ]
+    )
+    history_id = get_uuid()
+    history2_id = get_uuid()
+    history3_id = get_uuid() 
+    history6_id = get_uuid()
+    history7_id = get_uuid()
+    history8_id = get_uuid() 
+    history10_id = get_uuid()
+    history11_id = get_uuid()
+    history12_id = get_uuid()
+    history13_id = get_uuid()
+    history14_id = get_uuid()
+    history15_id = get_uuid()
+    history16_id = get_uuid()
+    history17_id = get_uuid()
+    
+    type_of_histories = [
+        "staff_unit_history",
+        "rank_history",
+        "penalty_history",
+        "emergency_service_history",
+        "work_experience_history",
+        "secondment_history",
+        "name_change_history",
+        "attestation",
+        "service_characteristic_history",
+        "status_history",
+        "coolness_history",
+        "contract_history",
+        "badge_history"
+    ]
+
+    military_unit_id = get_uuid()
+    military_unit2_id = get_uuid()
+    military_unit3_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['military_units'],
+        [{
+            'id': military_unit_id,
+            'name': 'Военная часть 1',
+        },
+            {
+            'id': military_unit2_id,
+            'name': 'Военная часть 2',
+        },
+            {
+            'id': military_unit3_id,
+            'name': 'Военная часть 3',
+        },
+        ]
+    )
+    oauth_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['user_oaths'],
+        [{
+            'id': oauth_id,
+            'date': datetime.datetime.now(),
+            'user_id': user1_id,
+            'military_unit_id': military_unit_id,
+        }])
+    
+    privelege_emergency_service_id = get_uuid()
+    privelege_emergency_service2_id = get_uuid()
+
+    from models import FormEnum
+
+    op.bulk_insert(
+        Base.metadata.tables['privelege_emergencies'],
+        [{
+            'id': privelege_emergency_service_id,
+            'form': 'form1',
+            'date_from': datetime.datetime.now(),
+            'date_to': datetime.datetime.now() + datetime.timedelta(days=1),
+            'user_id': user1_id,
+        } 
+        ]
+    )
+
+    personnel_reserve_id = get_uuid()
+
+
+    op.bulk_insert(
+        Base.metadata.tables['personnal_reserves'],
+        [{
+            'id': personnel_reserve_id,
+            'reserve': 'enlisted',
+            'date_from': datetime.datetime.now() - datetime.timedelta(days=365),
+            'date_to': datetime.datetime.now() + datetime.timedelta(days=365),
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 59124',
+        },
+        ]
+    )
+     
+    service_id_info_id = get_uuid()
+    service_id_info2_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['service_ids'],
+        [{
+            'id': service_id_info_id,
+            'number': '№ 59124',
+            'date_to': datetime.datetime.now() + datetime.timedelta(days=365),
+            'token_status': 'RECEIVED',
+            'id_status': 'RECEIVED',
+            'user_id': user1_id,
+        },
+        ])
+
+
+
+
+
+    op.bulk_insert(
+        Base.metadata.tables['histories'],
+        [
+        {
+            'id': history17_id, # TODO: change the id
+            'date_from': datetime.datetime(2012, 3, 1),
+            'date_to': datetime.datetime(2014, 3, 31),
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 12421',
+            'type': 'badge_history',
+            'penalty_id': None,
+            'name': '3 history',
+            'position_id': None,  # Add the missing parameter here
+            'rank_id': None,  # Add the missing parameter here
+            'emergency_service_id': None,  # Add the missing parameter here
+            'work_experience_id': None,  # Add the missing parameter here
+            'secondment_id': None,  # Add the missing parameter here
+            'name_change_id': None,  # МЕНЯТЬ НА name_change_id
+            'attestation_id': None,  # Add the missing parameter here
+            'service_characteristic_id': None,  # Add the missing parameter here
+            'status_id': None,  # Add the missing parameter here
+            'coolness_id': None,  # Add the missing parameter here
+            'contract_id': None,  # Add the missing parameter here
+            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+            'experience_years': None,  # Add the missing parameter here
+            'characteristic_initiator': None,  # Add the missing parameter here
+            'coefficient' : None,
+            'percentage' : None,
+            'staff_division_id' : None,
+            'badge_id' : badge_id,
+            'name_of_organization': None,
+         },
+        {
+            'id': history_id,
+            'date_from': str(datetime.datetime(2019, 1, 1)),
+            'date_to': str(datetime.datetime(2019, 1, 31)),
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 59124',
+            'type': type_of_histories[0],
+            'name': '1 history',
+            'position_id': position1_id,
+            'rank_id': None,  # Add the missing parameter here
+            'penalty_id': None,  # Add the missing parameter here
+            'emergency_service_id': None,  # Add the missing parameter here
+            'work_experience_id': None,  # Add the missing parameter here
+            'secondment_id': None,  # Add the missing parameter here
+            'name_change_id': None,  # Add the missing parameter here
+            'attestation_id': None,  # Add the missing parameter here
+            'service_characteristic_id': None,  # Add the missing parameter here
+            'status_id': None,  # Add the missing parameter here
+            'coolness_id': None,  # Add the missing parameter here
+            'contract_id': None,  # Add the missing parameter here
+            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+            'experience_years': None,  # Add the missing parameter here
+            'characteristic_initiator': None,  # Add the missing parameter here
+            'coefficient' : None,
+            'percentage' : None,
+            'staff_division_id' : None,
+            'name_of_organization': None,
+            'badge_id' : None,
+        },
+        {
+            'id': history14_id,
+            'date_from': str(datetime.datetime(2019, 2, 1)),
+            'date_to': str(datetime.datetime(2019, 2, 28)),
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 59124',
+            'type': type_of_histories[3],
+            'rank_id': None,  # Add the missing parameter here
+            'name': '2 history',
+            'position_id': None,  # Add the missing parameter here
+            'penalty_id': None,  # Add the missing parameter here
+            'emergency_service_id': None,  # Add the missing parameter here
+            'work_experience_id': None,  # Add the missing parameter here
+            'secondment_id': None,  # Add the missing parameter here
+            'name_change_id': None,  # Add the missing parameter here
+            'attestation_id': None,  # Add the missing parameter here
+            'service_characteristic_id': None,  # Add the missing parameter here
+            'status_id': None,  # Add the missing parameter here
+            'coolness_id': None,  # Add the missing parameter here
+            'contract_id': None,  # Add the missing parameter here
+            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+            'experience_years': None,  # Add the missing parameter here
+            'characteristic_initiator': None,  # Add the missing parameter here
+            'coefficient' : 1.5,
+            'percentage' : 10,
+            'staff_division_id' : group1_id,
+            'name_of_organization': None,
+            'badge_id' : None,
+        },
+            {
+            'id': history2_id,
+            'date_from': str(datetime.datetime(2019, 2, 1)),
+            'date_to': str(datetime.datetime(2019, 2, 28)),
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 59124',
+            'type': type_of_histories[1],
+            'rank_id': rank1_id,
+            'name': '2 history',
+            'position_id': None,  # Add the missing parameter here
+            'penalty_id': None,  # Add the missing parameter here
+            'emergency_service_id': None,  # Add the missing parameter here
+            'work_experience_id': None,  # Add the missing parameter here
+            'secondment_id': None,  # Add the missing parameter here
+            'name_change_id': None,  # Add the missing parameter here
+            'attestation_id': None,  # Add the missing parameter here
+            'service_characteristic_id': None,  # Add the missing parameter here
+            'status_id': None,  # Add the missing parameter here
+            'coolness_id': None,  # Add the missing parameter here
+            'contract_id': None,  # Add the missing parameter here
+            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+            'experience_years': None,  # Add the missing parameter here
+            'characteristic_initiator': None,  # Add the missing parameter here
+            'coefficient' : None,
+            'percentage' : None,
+            'staff_division_id' : None,
+            'name_of_organization': None,
+            'badge_id' : None,
+        },
+            {
+            'id': history3_id,
+            'date_from': datetime.datetime(2019, 3, 1),
+            'date_to': datetime.datetime(2019, 3, 31),
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 59124',
+            'type': type_of_histories[2],
+            'penalty_id': penalty_id,
+            'name': '3 history',
+            'position_id': None,  # Add the missing parameter here
+            'rank_id': None,  # Add the missing parameter here
+            'emergency_service_id': None,  # Add the missing parameter here
+            'work_experience_id': None,  # Add the missing parameter here
+            'secondment_id': None,  # Add the missing parameter here
+            'name_change_id': None,  # Add the missing parameter here
+            'attestation_id': None,  # Add the missing parameter here
+            'service_characteristic_id': None,  # Add the missing parameter here
+            'status_id': None,  # Add the missing parameter here
+            'coolness_id': None,  # Add the missing parameter here
+            'contract_id': None,  # Add the missing parameter here
+            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+            'experience_years': None,  # Add the missing parameter here
+            'characteristic_initiator': None,  # Add the missing parameter here
+            'coefficient' : None,
+            'percentage' : None,
+            'staff_division_id' : None,
+            'name_of_organization': None,
+            'badge_id' : None,
+        },
+             
+            {
+            'id': history6_id,
+            'date_from': datetime.datetime(2020, 3, 1),
+            'date_to': datetime.datetime(2021, 3, 31),
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 12421',
+            'type': type_of_histories[5],
+            'penalty_id': None,
+            'name': '3 history',
+            'position_id': None,  # Add the missing parameter here
+            'rank_id': None,  # Add the missing parameter here
+            'emergency_service_id': None,  # Add the missing parameter here
+            'work_experience_id': None,  # Add the missing parameter here
+            'secondment_id': secondment_id,  # МЕНЯТЬ НА secondment_id
+            'name_change_id': None,  # Add the missing parameter here
+            'attestation_id': None,  # Add the missing parameter here
+            'service_characteristic_id': None,  # Add the missing parameter here
+            'status_id': None,  # Add the missing parameter here
+            'coolness_id': None,  # Add the missing parameter here
+            'contract_id': None,  # Add the missing parameter here
+            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+            'experience_years': None,  # Add the missing parameter here
+            'characteristic_initiator': None,  # Add the missing parameter here
+            'coefficient' : None,
+            'percentage' : None,
+            'staff_division_id' : None,
+            'name_of_organization': None,
+            'badge_id': None
+        },
+            {
+            'id': history7_id,
+            'date_from': datetime.datetime(2012, 3, 1),
+            'date_to': None,
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 12421',
+            'type': type_of_histories[6],
+            'penalty_id': None,
+            'name': '3 history',
+            'position_id': None,  # Add the missing parameter here
+            'rank_id': None,  # Add the missing parameter here
+            'emergency_service_id': None,  # Add the missing parameter here
+            'work_experience_id': None,  # Add the missing parameter here
+            'secondment_id': None,  # Add the missing parameter here
+            'name_change_id': name_change_id,  # МЕНЯТЬ НА name_change_id
+            'attestation_id': None,  # Add the missing parameter here
+            'service_characteristic_id': None,  # Add the missing parameter here
+            'status_id': None,  # Add the missing parameter here
+            'coolness_id': None,  # Add the missing parameter here
+            'contract_id': None,  # Add the missing parameter here
+            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+            'experience_years': None,  # Add the missing parameter here
+            'characteristic_initiator': None,  # Add the missing parameter here
+            'coefficient' : None,
+            'percentage' : None,
+            'staff_division_id' : None,
+            'name_of_organization': None,
+            'badge_id': None
+        },
+         {
+            'id': history15_id, # TODO: change the id
+            'date_from': datetime.datetime(2012, 3, 1),
+            'date_to': datetime.datetime(2014, 3, 31),
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 12421',
+            'type': 'work_experience_history',
+            'penalty_id': None,
+            'name': '3 history',
+            'position_id': None,  # Add the missing parameter here
+            'rank_id': None,  # Add the missing parameter here
+            'emergency_service_id': None,  # Add the missing parameter here
+            'work_experience_id': None,  # Add the missing parameter here
+            'secondment_id': None,  # Add the missing parameter here
+            'name_change_id': None,  # МЕНЯТЬ НА name_change_id
+            'attestation_id': None,  # Add the missing parameter here
+            'service_characteristic_id': None,  # Add the missing parameter here
+            'status_id': None,  # Add the missing parameter here
+            'coolness_id': None,  # Add the missing parameter here
+            'contract_id': None,  # Add the missing parameter here
+            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+            'experience_years': None,  # Add the missing parameter here
+            'characteristic_initiator': None,  # Add the missing parameter here
+            'coefficient' : None,
+            'percentage' : None,
+            'staff_division_id' : None,
+            'name_of_organization': 'Cleverest Technologies',
+            'badge_id': None
+         },
+        {
+            'id': history16_id,
+            'date_from': datetime.datetime(2015, 5, 5),
+            'date_to': None,
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 12421',
+            'type': type_of_histories[6],
+            'penalty_id': None,
+            'name': '3 history',
+            'position_id': None,  # Add the missing parameter here
+            'rank_id': None,  # Add the missing parameter here
+            'emergency_service_id': None,  # Add the missing parameter here
+            'work_experience_id': None,  # Add the missing parameter here
+            'secondment_id': None,  # Add the missing parameter here
+            'name_change_id': name_change2_id,  # МЕНЯТЬ НА name_change_id
+            'attestation_id': None,  # Add the missing parameter here
+            'service_characteristic_id': None,  # Add the missing parameter here
+            'status_id': None,  # Add the missing parameter here
+            'coolness_id': None,  # Add the missing parameter here
+            'contract_id': None,  # Add the missing parameter here
+            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+            'experience_years': None,  # Add the missing parameter here
+            'characteristic_initiator': None,  # Add the missing parameter here
+            'coefficient' : None,
+            'percentage' : None,
+            'staff_division_id' : None,
+            'name_of_organization': None,
+            'badge_id': None
+        },
+            {
+            'id': history8_id,
+            'date_from': datetime.datetime(2012, 3, 1),
+            'date_to': datetime.datetime(2021, 3, 31),
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 12421',
+            'type': type_of_histories[7],
+            'attestation_status': 'Подтверждено',  # МЕНЯТЬ НА attestation_status
+            'penalty_id': None,
+            'name': '3 history',
+            'position_id': None,  # Add the missing parameter here
+            'rank_id': None,  # Add the missing parameter here
+            'emergency_service_id': None,  # Add the missing parameter here
+            'work_experience_id': None,  # Add the missing parameter here
+            'secondment_id': None,  # Add the missing parameter here
+            'name_change_id': None,  # Add the missing parameter here
+            'attestation_id': attestation_id,  # МЕНЯТЬ НА attestation_id
+            'service_characteristic_id': None,  # Add the missing parameter here
+            'status_id': None,  # Add the missing parameter here
+            'coolness_id': None,  # Add the missing parameter here
+            'contract_id': None,  # Add the missing parameter here
+            'experience_years': None,  # Add the missing parameter here
+            'characteristic_initiator': None,  # Add the missing parameter here
+            'coefficient' : None,
+            'percentage' : None,
+            'staff_division_id' : None,
+            'name_of_organization': None,
+            'badge_id': None
+
+        },
+           
+            {
+            'id': history10_id,
+            'date_from': datetime.datetime(2020, 3, 1),
+            'date_to': datetime.datetime(2021, 3, 31),
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 12421',
+            'type': type_of_histories[9],
+            'penalty_id': None,
+            'name': '3 history',
+            'position_id': None,  # Add the missing parameter here
+            'rank_id': None,  # Add the missing parameter here
+            'emergency_service_id': None,  # Add the missing parameter here
+            'work_experience_id': None,  # Add the missing parameter here
+            'secondment_id': None,  # Add the missing parameter here
+            'name_change_id': None,  # Add the missing parameter here
+            'attestation_id': None,  # Add the missing parameter here
+            'service_characteristic_id': None,  # Add the missing parameter here
+            'status_id': status_id,  # МЕНЯТЬ НА status_id
+            'coolness_id': None,  # Add the missing parameter here
+            'contract_id': None,  # Add the missing parameter here
+            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+            'experience_years': None,  # Add the missing parameter here
+            'characteristic_initiator': None,  # Add the missing parameter here
+            'coefficient' : None,
+            'percentage' : None,
+            'staff_division_id' : None,
+            'name_of_organization': None,
+            'badge_id': None
+        },
+            {
+            'id': history11_id,
+            'date_from': datetime.datetime(2020, 3, 1),
+            'date_to': datetime.datetime(2021, 3, 31),
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 12421',
+            'type': type_of_histories[10],
+            'penalty_id': None,
+            'name': '3 history',
+            'position_id': None,  # Add the missing parameter here
+            'rank_id': None,  # Add the missing parameter here
+            'emergency_service_id': None,  # Add the missing parameter here
+            'work_experience_id': None,  # Add the missing parameter here
+            'secondment_id': None,  # Add the missing parameter here
+            'name_change_id': None,  # Add the missing parameter here
+            'attestation_id': None,  # Add the missing parameter here
+            'service_characteristic_id': None,  # Add the missing parameter here
+            'status_id': None,  # Add the missing parameter here
+            'coolness_id': coolness_id,  # МЕНЯТЬ НА coolness_id
+            'contract_id': None,  # Add the missing parameter here
+            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+            'experience_years': None,  # Add the missing parameter here
+            'characteristic_initiator': None,  # Add the missing parameter here
+            'coefficient' : None,
+            'percentage' : None,
+            'staff_division_id' : None,
+            'name_of_organization': None,
+            'badge_id': None
+        },
+            {
+            'id': history12_id,
+            'date_from': datetime.datetime(2020, 3, 1),
+            'date_to': datetime.datetime(2021, 3, 31),
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 12421',
+            'type': type_of_histories[11],
+            'penalty_id': None,
+            'name': '3 history',
+            'position_id': None,  # Add the missing parameter here
+            'rank_id': None,  # Add the missing parameter here
+            'emergency_service_id': None,  # Add the missing parameter here
+            'work_experience_id': None,  # Add the missing parameter here
+            'secondment_id': None,  # Add the missing parameter here
+            'name_change_id': None,  # Add the missing parameter here
+            'attestation_id': None,  # Add the missing parameter here
+            'service_characteristic_id': None,  # Add the missing parameter here
+            'status_id': None,  # Add the missing parameter here
+            'coolness_id': None,  # Add the missing parameter here
+            'contract_id': contract_id,  # МЕНЯТЬ НА contract_id
+            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+            'experience_years': 5,
+            'characteristic_initiator' : None, # МЕНЯТЬ НА characteristic_initiator
+            'coefficient' : None,
+            'percentage' : None,
+            'staff_division_id' : None,
+            'name_of_organization': None,
+            'badge_id': None
+        },
+         {
+            'id': history13_id,
+            'date_from': datetime.datetime(2020, 3, 1),
+            'date_to': datetime.datetime(2021, 3, 31),
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 12421',
+            'type': type_of_histories[8],
+            'penalty_id': None,
+            'name': '3 history',
+            'position_id': None,  # Add the missing parameter here
+            'rank_id': None,  # Add the missing parameter here
+            'emergency_service_id': None,  # Add the missing parameter here
+            'work_experience_id': None,  # Add the missing parameter here
+            'secondment_id': None,  # Add the missing parameter here
+            'name_change_id': None,  # Add the missing parameter here
+            'attestation_id': None,  # Add the missing parameter here
+            'service_characteristic_id': None,  # Add the missing parameter here
+            'characteristic_initiator': 'А.А.Алексеев',  # МЕНЯТЬ НА characteristic_initiator
+            'status_id': None,  # Add the missing parameter here
+            'coolness_id': None,  # Add the missing parameter here
+            'contract_id': None,  # МЕНЯТЬ НА contract_id
+            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+            'experience_years': 5,
+            'coefficient' : None,
+            'percentage' : None,
+            'staff_division_id' : None,
+            'name_of_organization': None,
+            'badge_id': None
+        }
+        ])
+
     candidate_category1_id = get_uuid()
     candidate_category2_id = get_uuid()
     candidate_category3_id = get_uuid()
@@ -1571,6 +2684,8 @@ def upgrade() -> None:
             'name': 'Водители воинской службы СОО СГО РК'
         }, ]
     )
+
+    
 
     candidate_stage_types1_id = get_uuid()
     candidate_stage_types2_id = get_uuid()
@@ -1685,7 +2800,6 @@ def upgrade() -> None:
     candidate_stage_question26_id = get_uuid()
     candidate_stage_question27_id = get_uuid()
     candidate_stage_question28_id = get_uuid()
-
 
     op.bulk_insert(
         Base.metadata.tables['candidate_stage_questions'],
@@ -1834,504 +2948,619 @@ def upgrade() -> None:
         }]
     )
 
-    candidate_id = get_uuid()
-    candidate2_id = get_uuid()
-    candidate3_id = get_uuid()
-    candidate4_id = get_uuid()
-    candidate5_id = get_uuid()
-    candidate6_id = get_uuid()
-    candidate7_id = get_uuid()
-    candidate8_id = get_uuid()
-    candidate9_id = get_uuid()
-    candidate10_id = get_uuid()
-    candidate11_id = get_uuid()
-
-    op.bulk_insert(
-        Base.metadata.tables['candidates'],
-        [{
-            'id': candidate_id,
-            'staff_unit_id': staff_unit1_id,
-            'staff_unit_curator_id': staff_unit11_id,
-            'status': 'ACTIVE',
-            'debarment_reason': None
-        }, {
-            'id': candidate2_id,
-            'staff_unit_id': staff_unit2_id,
-            'staff_unit_curator_id': staff_unit11_id,
-            'status': 'ACTIVE',
-            'debarment_reason': None
-        }, {
-            'id': candidate3_id,
-            'staff_unit_id': staff_unit3_id,
-            'staff_unit_curator_id': staff_unit11_id,
-            'status': 'ACTIVE',
-            'debarment_reason': None
-        }, {
-            'id': candidate4_id,
-            'staff_unit_id': staff_unit5_id,
-            'staff_unit_curator_id': staff_unit11_id,
-            'status': 'ACTIVE',
-            'debarment_reason': None
-        }, {
-            'id': candidate5_id,
-            'staff_unit_id': staff_unit7_id,
-            'staff_unit_curator_id': staff_unit11_id,
-            'status': 'ACTIVE',
-            'debarment_reason': None
-        }, {
-            'id': candidate6_id,
-            'staff_unit_id': staff_unit8_id,
-            'staff_unit_curator_id': staff_unit11_id,
-            'status': 'ACTIVE',
-            'debarment_reason': None
-        }, {
-            'id': candidate7_id,
-            'staff_unit_id': staff_unit9_id,
-            'staff_unit_curator_id': staff_unit11_id,
-            'status': 'DRAFT',
-            'debarment_reason': 'Недостаточный уровень квалификации: кандидат не соответствует необходимым требованиям по опыту и навыкам для данной вакансии'
-        }, {
-            'id': candidate8_id,
-            'staff_unit_id': staff_unit1_id,
-            'staff_unit_curator_id': staff_unit10_id,
-            'status': 'ACTIVE',
-            'debarment_reason': None
-        }, {
-            'id': candidate9_id,
-            'staff_unit_id': staff_unit1_id,
-            'staff_unit_curator_id': staff_unit10_id,
-            'status': 'ACTIVE',
-            'debarment_reason': None
-        }, {
-            'id': candidate10_id,
-            'staff_unit_id': staff_unit1_id,
-            'staff_unit_curator_id': staff_unit10_id,
-            'status': 'DRAFT',
-            'debarment_reason': 'Недостаточное количество опыта: кандидат не имеет достаточного опыта работы в данной области или на аналогичной должности'
-        }, {
-            'id': candidate11_id,
-            'staff_unit_id': staff_unit1_id,
-            'staff_unit_curator_id': staff_unit10_id,
-            'status': 'DRAFT',
-            'debarment_reason': 'Нарушение правил: кандидат нарушил правила собеседования или требования к вакансии.'
-        }]
-    )
-
     create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
                                 candidate_stage_types1_id)
     create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
                                 candidate_stage_types2_id)
     create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
                                 candidate_stage_types3_id)
     create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
                                 candidate_stage_types4_id)
     create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
                                 candidate_stage_types5_id)
     create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
                                 candidate_stage_types6_id)
     create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
                                 candidate_stage_types7_id)
     create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
                                 candidate_stage_types8_id)
     create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
                                 candidate_stage_types9_id)
     create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
                                 candidate_stage_types10_id)
     create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
                                 candidate_stage_types11_id)
     create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
                                 candidate_stage_types12_id)
     create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
                                 candidate_stage_types13_id)
     create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
                                 candidate_stage_types14_id)
     create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
                                 candidate_stage_types15_id)
     create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
                                 candidate_stage_types16_id)
     create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
                                 candidate_stage_types17_id)
     create_candidate_stage_info(candidate_id,
+                                staff_unit11_id,
                                 candidate_stage_types18_id)
 
     # candidate2_id
     create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
                                 candidate_stage_types1_id)
     create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
                                 candidate_stage_types2_id)
     create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
                                 candidate_stage_types3_id)
     create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
                                 candidate_stage_types4_id)
     create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
                                 candidate_stage_types5_id)
     create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
                                 candidate_stage_types6_id)
     create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
                                 candidate_stage_types7_id)
     create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
                                 candidate_stage_types8_id)
     create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
                                 candidate_stage_types9_id)
     create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
                                 candidate_stage_types10_id)
     create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
                                 candidate_stage_types11_id)
     create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
                                 candidate_stage_types12_id)
     create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
                                 candidate_stage_types13_id)
     create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
                                 candidate_stage_types14_id)
     create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
                                 candidate_stage_types15_id)
     create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
                                 candidate_stage_types16_id)
     create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
                                 candidate_stage_types17_id)
     create_candidate_stage_info(candidate2_id,
+                                staff_unit11_id,
                                 candidate_stage_types18_id)
 
     # candidate3_id
     create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
                                 candidate_stage_types1_id)
     create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
                                 candidate_stage_types2_id)
     create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
                                 candidate_stage_types3_id)
     create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
                                 candidate_stage_types4_id)
     create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
                                 candidate_stage_types5_id)
     create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
                                 candidate_stage_types6_id)
     create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
                                 candidate_stage_types7_id)
     create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
                                 candidate_stage_types8_id)
     create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
                                 candidate_stage_types9_id)
     create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
                                 candidate_stage_types10_id)
     create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
                                 candidate_stage_types11_id)
     create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
                                 candidate_stage_types12_id)
     create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
                                 candidate_stage_types13_id)
     create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
                                 candidate_stage_types14_id)
     create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
                                 candidate_stage_types15_id)
     create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
                                 candidate_stage_types16_id)
     create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
                                 candidate_stage_types17_id)
     create_candidate_stage_info(candidate3_id,
+                                staff_unit11_id,
                                 candidate_stage_types18_id)
 
     # candidate4_id
     create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
                                 candidate_stage_types1_id)
     create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
                                 candidate_stage_types2_id)
     create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
                                 candidate_stage_types3_id)
     create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
                                 candidate_stage_types4_id)
     create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
                                 candidate_stage_types5_id)
     create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
                                 candidate_stage_types6_id)
     create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
                                 candidate_stage_types7_id)
     create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
                                 candidate_stage_types8_id)
     create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
                                 candidate_stage_types9_id)
     create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
                                 candidate_stage_types10_id)
     create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
                                 candidate_stage_types11_id)
     create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
                                 candidate_stage_types12_id)
     create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
                                 candidate_stage_types13_id)
     create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
                                 candidate_stage_types14_id)
     create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
                                 candidate_stage_types15_id)
     create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
                                 candidate_stage_types16_id)
     create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
                                 candidate_stage_types17_id)
     create_candidate_stage_info(candidate4_id,
+                                staff_unit11_id,
                                 candidate_stage_types18_id)
 
     # candidate5_id
     create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
                                 candidate_stage_types1_id)
     create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
                                 candidate_stage_types2_id)
     create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
                                 candidate_stage_types3_id)
     create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
                                 candidate_stage_types4_id)
     create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
                                 candidate_stage_types5_id)
     create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
                                 candidate_stage_types6_id)
     create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
                                 candidate_stage_types7_id)
     create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
                                 candidate_stage_types8_id)
     create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
                                 candidate_stage_types9_id)
     create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
                                 candidate_stage_types10_id)
     create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
                                 candidate_stage_types11_id)
     create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
                                 candidate_stage_types12_id)
     create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
                                 candidate_stage_types13_id)
     create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
                                 candidate_stage_types14_id)
     create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
                                 candidate_stage_types15_id)
     create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
                                 candidate_stage_types16_id)
     create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
                                 candidate_stage_types17_id)
     create_candidate_stage_info(candidate5_id,
+                                staff_unit11_id,
                                 candidate_stage_types18_id)
 
     # candidate6_id
     create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
                                 candidate_stage_types1_id)
     create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
                                 candidate_stage_types2_id)
     create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
                                 candidate_stage_types3_id)
     create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
                                 candidate_stage_types4_id)
     create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
                                 candidate_stage_types5_id)
     create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
                                 candidate_stage_types6_id)
     create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
                                 candidate_stage_types7_id)
     create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
                                 candidate_stage_types8_id)
     create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
                                 candidate_stage_types9_id)
     create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
                                 candidate_stage_types10_id)
     create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
                                 candidate_stage_types11_id)
     create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
                                 candidate_stage_types12_id)
     create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
                                 candidate_stage_types13_id)
     create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
                                 candidate_stage_types14_id)
     create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
                                 candidate_stage_types15_id)
     create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
                                 candidate_stage_types16_id)
     create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
                                 candidate_stage_types17_id)
     create_candidate_stage_info(candidate6_id,
+                                staff_unit11_id,
                                 candidate_stage_types18_id)
 
     # candidate7_id
     create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
                                 candidate_stage_types1_id)
     create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
                                 candidate_stage_types2_id)
     create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
                                 candidate_stage_types3_id)
     create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
                                 candidate_stage_types4_id)
     create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
                                 candidate_stage_types5_id)
     create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
                                 candidate_stage_types6_id)
     create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
                                 candidate_stage_types7_id)
     create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
                                 candidate_stage_types8_id)
     create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
                                 candidate_stage_types9_id)
     create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
                                 candidate_stage_types10_id)
     create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
                                 candidate_stage_types11_id)
     create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
                                 candidate_stage_types12_id)
     create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
                                 candidate_stage_types13_id)
     create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
                                 candidate_stage_types14_id)
     create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
                                 candidate_stage_types15_id)
     create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
                                 candidate_stage_types16_id)
     create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
                                 candidate_stage_types17_id)
     create_candidate_stage_info(candidate7_id,
+                                staff_unit11_id,
                                 candidate_stage_types18_id)
 
     # candidate8_id
     create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
                                 candidate_stage_types1_id)
     create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
                                 candidate_stage_types2_id)
     create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
                                 candidate_stage_types3_id)
     create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
                                 candidate_stage_types4_id)
     create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
                                 candidate_stage_types5_id)
     create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
                                 candidate_stage_types6_id)
     create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
                                 candidate_stage_types7_id)
     create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
                                 candidate_stage_types8_id)
     create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
                                 candidate_stage_types9_id)
     create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
                                 candidate_stage_types10_id)
     create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
                                 candidate_stage_types11_id)
     create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
                                 candidate_stage_types12_id)
     create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
                                 candidate_stage_types13_id)
     create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
                                 candidate_stage_types14_id)
     create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
                                 candidate_stage_types15_id)
     create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
                                 candidate_stage_types16_id)
     create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
                                 candidate_stage_types17_id)
     create_candidate_stage_info(candidate8_id,
+                                staff_unit10_id,
                                 candidate_stage_types18_id)
 
     # candidate9_id
     create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
                                 candidate_stage_types1_id)
     create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
                                 candidate_stage_types2_id)
     create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
                                 candidate_stage_types3_id)
     create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
                                 candidate_stage_types4_id)
     create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
                                 candidate_stage_types5_id)
     create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
                                 candidate_stage_types6_id)
     create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
                                 candidate_stage_types7_id)
     create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
                                 candidate_stage_types8_id)
     create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
                                 candidate_stage_types9_id)
     create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
                                 candidate_stage_types10_id)
     create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
                                 candidate_stage_types11_id)
     create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
                                 candidate_stage_types12_id)
     create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
                                 candidate_stage_types13_id)
     create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
                                 candidate_stage_types14_id)
     create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
                                 candidate_stage_types15_id)
     create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
                                 candidate_stage_types16_id)
     create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
                                 candidate_stage_types17_id)
     create_candidate_stage_info(candidate9_id,
+                                staff_unit10_id,
                                 candidate_stage_types18_id)
 
     # candidate10_id
     create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
                                 candidate_stage_types1_id)
     create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
                                 candidate_stage_types2_id)
     create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
                                 candidate_stage_types3_id)
     create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
                                 candidate_stage_types4_id)
     create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
                                 candidate_stage_types5_id)
     create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
                                 candidate_stage_types6_id)
     create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
                                 candidate_stage_types7_id)
     create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
                                 candidate_stage_types8_id)
     create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
                                 candidate_stage_types9_id)
     create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
                                 candidate_stage_types10_id)
     create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
                                 candidate_stage_types11_id)
     create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
                                 candidate_stage_types12_id)
     create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
                                 candidate_stage_types13_id)
     create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
                                 candidate_stage_types14_id)
     create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
                                 candidate_stage_types15_id)
     create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
                                 candidate_stage_types16_id)
     create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
                                 candidate_stage_types17_id)
     create_candidate_stage_info(candidate10_id,
+                                staff_unit10_id,
                                 candidate_stage_types18_id)
 
     # candidate11_id
     create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
                                 candidate_stage_types1_id)
     create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
                                 candidate_stage_types2_id)
     create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
                                 candidate_stage_types3_id)
     create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
                                 candidate_stage_types4_id)
     create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
                                 candidate_stage_types5_id)
     create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
                                 candidate_stage_types6_id)
     create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
                                 candidate_stage_types7_id)
     create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
                                 candidate_stage_types8_id)
     create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
                                 candidate_stage_types9_id)
     create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
                                 candidate_stage_types10_id)
     create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
                                 candidate_stage_types11_id)
     create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
                                 candidate_stage_types12_id)
     create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
                                 candidate_stage_types13_id)
     create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
                                 candidate_stage_types14_id)
     create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
                                 candidate_stage_types15_id)
     create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
                                 candidate_stage_types16_id)
     create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
                                 candidate_stage_types17_id)
     create_candidate_stage_info(candidate11_id,
+                                staff_unit10_id,
                                 candidate_stage_types18_id)
 
     candidate_stage_answer1_id = get_uuid()
@@ -2435,7 +3664,6 @@ def upgrade() -> None:
     candidate_essay_type13_id = get_uuid()
     candidate_essay_type14_id = get_uuid()
 
-
     op.bulk_insert(
         Base.metadata.tables['candidate_essay_types'],
         [{
@@ -2483,15 +3711,15 @@ def upgrade() -> None:
         }]
     )
 
+    candidate_stage_info_id = get_uuid()
 
-def create_candidate_stage_info(candidate_id,
-                                candidate_stage_type_id):
     op.bulk_insert(
         Base.metadata.tables['candidate_stage_infos'],
         [{
-            'id': get_uuid(),
-            'candidate_stage_type_id': candidate_stage_type_id,
-            'candidate_id': candidate_id,
+            'id': candidate_stage_info_id,
+            'staff_unit_coordinate_id': staff_unit1_id,
+            'candidate_stage_type_id': candidate_stage_types1_id,
+            'is_waits': True
         }]
     )
 
@@ -2543,12 +3771,9 @@ def create_user(id,
             'service_phone_number': "679-258",
             'personal_id': number,
             'is_military': is_military,
-            'cabinet': cabinet,
-            'date_birth': '1990-01-23',
-            'iin': '123456789012',
+            'cabinet': cabinet
         }]
     )
-
 
     profile_id = get_uuid()
 
@@ -2617,7 +3842,6 @@ def create_user(id,
     academic_degree2_id = get_uuid()
     academic_degree3_id = get_uuid()
 
-
     op.bulk_insert(
         Base.metadata.tables['academic_degrees'],
         [{
@@ -2640,7 +3864,6 @@ def create_user(id,
             'assignment_date': "2022-10-08"
         }]
     )
-
 
     language_proficiency1_id = get_uuid()
     language_proficiency2_id = get_uuid()
@@ -2837,6 +4060,7 @@ def create_user(id,
         [{
             'id': biographic_info_id,
             'place_birth': "г. Астана",
+            'date_birth': '1990-01-23',
             'gender': True,
             'citizenship': "Казахстан",
             'nationality': 'Казах',
@@ -2944,7 +4168,7 @@ def create_user(id,
     op.bulk_insert(
         Base.metadata.tables['general_user_informations'],
         [{
-            'id':general_user_information_id,
+            'id': general_user_information_id,
             'height': 189,
             'blood_type': "AB (IV) Rh+",
             'age_group': 3,
@@ -3008,7 +4232,6 @@ def create_user(id,
     hospital_datas_id = get_uuid()
     hospital_datas1_id = get_uuid()
 
-
     op.bulk_insert(
         Base.metadata.tables['hospital_datas'],
         [{
@@ -3069,7 +4292,7 @@ def create_user(id,
             'date_from': "2022-05-10",
             'date_to': "2022-05-11",
             'reason': "Служебная командировка",
-            'document_link':"document_link",
+            'document_link': "document_link",
             'profile_id': additional_profile_id
 
         }]
@@ -3089,16 +4312,16 @@ def create_user(id,
     special_checks_id = get_uuid()
 
     op.bulk_insert(
-            Base.metadata.tables['special_checks'],
-            [{
-                'id': special_checks_id,
-                'number': "4584908",
-                'issued_by': "Иманов А.Е.",
-                'date_of_issue': "2022-01-15",
-                'document_link': "document_link",
-                "profile_id": additional_profile_id
+        Base.metadata.tables['special_checks'],
+        [{
+            'id': special_checks_id,
+            'number': "4584908",
+            'issued_by': "Иманов А.Е.",
+            'date_of_issue': "2022-01-15",
+            'document_link': "document_link",
+            "profile_id": additional_profile_id
 
-            }]
+        }]
     )
 
     psychological_checks_id = get_uuid()
@@ -3130,7 +4353,6 @@ def create_user(id,
 
     families_profile_id = get_uuid()
 
-
     op.bulk_insert(
         Base.metadata.tables['families'],
         [{
@@ -3159,7 +4381,6 @@ def create_user(id,
             'profile_id': family_profile_id
         }]
     )
-
 
 
 def downgrade() -> None:

@@ -4,10 +4,14 @@ services:
 
   postgres:
     image: postgres:15.1-alpine
-    container_name: postgresql-test
+    container_name: postgresql-dev
     healthcheck:
-      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'"]
-      interval: 10s
+      test:
+        [
+          "CMD-SHELL",
+          "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'"
+        ]
+      interval: 5s
       timeout: 3s
       retries: 3
     restart: always
@@ -19,23 +23,23 @@ services:
       - ./.data:/var/lib/postgresql/data
     networks:
       - backend-dev
-  
+
   sgo-erp:
     platform: linux/amd64
-    command: bash -c "alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8002 --log-config log.ini"
+    command: bash -c "alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8101 --log-config log.ini"
     build: .
-    container_name: sgo-erp-test
+    container_name: sgo-erp-dev
     restart: always
     ports:
-        - "8002:8002"
+      - "8002:8002"
     volumes:
       - .:/app
     networks:
-        - backend-dev
+      - backend-dev
     depends_on:
-        postgres:
-          condition: service_healthy
+      postgres:
+        condition: service_healthy
 
 networks:
-    backend-dev:
-        driver: bridge
+  backend-dev:
+    driver: bridge

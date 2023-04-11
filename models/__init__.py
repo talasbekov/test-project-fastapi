@@ -1,6 +1,7 @@
 from .base import Model, NamedModel, NestedModel, NamedNestedModel
-from .badge import Badge
-from .equipment import Equipment
+from .badge import Badge, BadgeType
+from .equipment import (Equipment, TypeClothingEquipment, TypeArmyEquipment, TypeOtherEquipment, ClothingEquipment,
+                    TypeClothingEquipmentModel)
 from .event import Event
 from .hr_document_status import HrDocumentStatus
 from .hr_document import HrDocument, HrDocumentStatusEnum
@@ -15,9 +16,14 @@ from .staff_function import (DocumentFunctionType, DocumentStaffFunction,
                              JurisdictionEnum)
 from .staff_list import StaffList
 from .staff_unit import StaffUnit
-
+from .service_id import ServiceID, ServiceIDStatus
+from .privelege_emergency import PrivilegeEmergency, FormEnum
+from .coolness import Coolness, SpecialtyEnum
+from .military_unit import MilitaryUnit
+from .user_oath import UserOath
 from .user_stat import UserStat
 from .position import Position, PositionNameEnum
+from .personnal_reserve import PersonalReserve, ReserveEnum
 from .medical import *
 from .profile import Profile
 from .personal import *
@@ -26,5 +32,11 @@ from .education import *
 from .family import *
 from .archive import *
 from .user_candidates import *
+from .penalty import Penalty, PenaltyType
+from .contract import Contract, ContractType
+from .secondment import Secondment
+from .attestation import Attestation
+from .status import Status, StatusType
+from .coolness import Coolness, CoolnessType
 from .history import *
 from .user import User

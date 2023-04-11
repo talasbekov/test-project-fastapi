@@ -6,6 +6,7 @@ from pydantic import BaseModel, AnyUrl
 
 class RankBase(BaseModel):
     name: str
+    order: int
     military_url: AnyUrl
     employee_url: AnyUrl
 
@@ -21,6 +22,7 @@ class RankUpdate(RankBase):
 class RankRead(RankBase):
     id: Optional[uuid.UUID]
     name: Optional[str]
+    order: Optional[int]
     military_url: Optional[str]
     employee_url: Optional[str]
 

@@ -29,7 +29,13 @@ from .family import family_router
 from .staff_list import router as staff_list_router
 from .archive import *
 from .user_candidates import *
-from .history import history_router, history_name_change_router
+from .history import *
+from .service_id import router as service_id_router
+from .privelege_emergency import router as privelege_emergency_router
+from .personnal_reserve import router as personnal_reserve_router
+from .coolness import router as coolness_router
+from .user_oath import router as user_oauth_router
+from .military_unit import router as military_unit_router
 
 router = APIRouter(prefix="/v1")
 
@@ -51,6 +57,12 @@ router.include_router(equipment_router)
 router.include_router(badge_router)
 router.include_router(rank_router)
 router.include_router(jurisdiction_router)
+
+
+router.include_router(privelege_emergency_router)
+router.include_router(coolness_router)
+router.include_router(personnal_reserve_router)
+
 
 router.include_router(router_education)
 router.include_router(router_medical)
@@ -75,4 +87,7 @@ router.include_router(candidate_essay_type_router)
 router.include_router(candidate_category_router)
 router.include_router(candidate_stage_answer_router)
 router.include_router(history_router)
+router.include_router(service_id_router)
 router.include_router(history_name_change_router)
+router.include_router(user_oauth_router)
+router.include_router(military_unit_router)

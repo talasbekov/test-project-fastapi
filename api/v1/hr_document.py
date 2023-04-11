@@ -19,9 +19,9 @@ router = APIRouter(prefix="/hr-documents", tags=["HrDocuments"], dependencies=[D
 async def get_not_signed(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
+    filter: str = None,
     skip: int = 0,
     limit: int = 10,
-    filter: str = None
 ):
     """
         Get all not signed HrDocuments
@@ -40,9 +40,9 @@ async def get_not_signed(*,
 async def get_initialized(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
+    filter: str = None,
     skip: int = 0,
     limit: int = 10,
-    filter: str = None
 ):
     """
         Get all initialized HrDocuments
@@ -256,6 +256,9 @@ async def get_data_by_option(*,
     option: str,
     data_taken: Optional[str] = None,
     id: Optional[uuid.UUID] = None,
+    type: str = "write",
+    skip: int = 0,
+    limit: int = 10,
     Authorize: AuthJWT = Depends()
 ):
     """
@@ -270,5 +273,5 @@ async def get_data_by_option(*,
         * badges
     """
     Authorize.jwt_required()
-    res = hr_document_service.get_all_by_option(db, option, data_taken, id)
+    res = hr_document_service.get_all_by_option(db, option, data_taken, id, type, skip, limit)
     return res

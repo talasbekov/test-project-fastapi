@@ -33,21 +33,23 @@ async def get_all(*,
     return profile_service.get_multi(db, skip, limit)
 
 
-@router.get("/profile_document",
-            dependencies=[Depends(HTTPBearer())],
-            summary="Get Profile Document by user_id")
-async def get_document_by_id(*,
-                             db: Session = Depends(get_db),
-                             user_id: uuid.UUID,
-                             Authorize: AuthJWT = Depends()
-                             ):
-    """
-        Get profile document by user_id
+# @router.get("/personal_document",
+#             dependencies=[Depends(HTTPBearer())],
+#             summary="Get Profile Document by user_id")
+# async def get_document_by_user(*,
+#                                db: Session = Depends(get_db),
+#                                user_id: uuid.UUID,
+#                                Authorize: AuthJWT = Depends()
+#                                ):
+#     """
+#         Get profile document by user_id
 
-        - **id**: UUID - required.
-    """
-    Authorize.jwt_required()
-    return
+#         - **id**: UUID - required.
+#     """
+#     Authorize.jwt_required()
+#     generated_file_data = profile_service.generate_profile_doc(db, user_id)
+
+#     return FileResponse(path=generated_file_data["file_location"], media_type='application/octet-stream', filename=generated_file_data["file_name"])
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,

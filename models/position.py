@@ -1,10 +1,10 @@
 import enum
 
-from sqlalchemy import Column, ForeignKey, Enum
+from sqlalchemy import Column, ForeignKey, Enum, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from models import Model
+from models import NamedModel
 
 
 class PositionNameEnum(str, enum.Enum):
@@ -23,11 +23,10 @@ class PositionNameEnum(str, enum.Enum):
     INSTRUCTOR = 'Инструктор'
 
 
-class Position(Model):
+class Position(NamedModel):
 
     __tablename__ = "positions"
 
-    name = Column(Enum(PositionNameEnum))
     max_rank_id = Column(UUID(as_uuid=True), ForeignKey("ranks.id"),
                          nullable=True)
     
