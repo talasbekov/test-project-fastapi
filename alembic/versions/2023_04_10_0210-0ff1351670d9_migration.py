@@ -1906,7 +1906,7 @@ def upgrade() -> None:
     army_equipment_id = get_uuid()
     clothing_equipment_id = get_uuid()
     other_equipment_id = get_uuid()
-
+    
     op.bulk_insert(
         Base.metadata.tables['equipments'],
         [{
@@ -1918,6 +1918,10 @@ def upgrade() -> None:
             'type_of_equipment': 'army_equipment',
             'type_of_clothing_equipment_model_id': None,
             'type_of_other_equipment_model_id': None,
+            'document_link': 'https://www.google.com/',
+            'document_number': '123456789',
+            'date_from': '2023-04-11T19:43:02.556000',
+            'date_to': None,
         },
          {
             'id': clothing_equipment_id,
@@ -1928,6 +1932,10 @@ def upgrade() -> None:
             'inventory_number': None,
             'type_of_army_equipment_model_id': None,
             'type_of_other_equipment_model_id': None,
+            'document_link': 'https://www.google.com/',
+            'document_number': '123456789',
+            'date_from': '2023-04-11T19:43:02.556000',
+            'date_to': None,
          },
          {
             'id': other_equipment_id,
@@ -1938,6 +1946,10 @@ def upgrade() -> None:
             'inventory_number': None,
             'type_of_army_equipment_model_id': None,
             'type_of_clothing_equipment_model_id': None,
+            'document_link': 'https://www.google.com/',
+            'document_number': '123456789',
+            'date_from': '2023-04-11T19:43:02.556000',
+            'date_to': None,
          }
         ])
     
