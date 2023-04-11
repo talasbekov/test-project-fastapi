@@ -330,6 +330,11 @@ class EquipmentRead(BaseModel):
             "user_id",
             "inventory_number",
             "count_of_ammo",
+            "document_link",
+            "document_number",
+            "date_from",
+            "date_to",
+            
         ]
         related_models = {
             "type_of_army_equipment_model": "type_of_army_equipment_model_name",
