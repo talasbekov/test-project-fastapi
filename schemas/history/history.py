@@ -205,6 +205,7 @@ class AttestationRead(BaseModel):
     
      
 class CharacteristicRead(BaseModel):
+    id: uuid.UUID
     date_from : Optional[datetime]
     date_to : Optional[datetime]
     document_link : Optional[str]
