@@ -86,6 +86,7 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
                 candidate_id=candidate.id,
                 candidate_stage_type_id=stage_type.id,
                 staff_unit_coordinate_id=None,
+                is_waits=False,
                 status=CandidateStageInfoStatusEnum.NOT_STARTED.value
             )
             candidate_stage_info_service.create(db, candidate_stage_info)
