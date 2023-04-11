@@ -272,8 +272,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             .offset(skip)
             .limit(limit)
             .all()
-        )
-        print(histories[0].id)
+        ) 
         lis_of_histories = []
         for history in histories:
             type_cls = self.get_type_by_user_id(db, user_id, history.type)
