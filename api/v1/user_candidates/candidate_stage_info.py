@@ -152,7 +152,7 @@ async def reject_candidate(
     return candidate_stage_info_service.reject_candidate_info(db, id, role)
 
 
-@router.put("/{id}", dependencies=[Depends(HTTPBearer())],
+@router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=CandidateStageInfoRead,
             summary="Update a CandidateStageInfo")
 async def update(
