@@ -192,7 +192,9 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         if oauth_user is None or oauth_user.military_unit is None:
             user_oath_read = None
         else:
-            user_oath_read = OathRead(date=oauth_user.date, military_name=oauth_user.military_unit.name, military_id=oauth_user.military_unit_id)
+            user_oath_read = OathRead(
+                id=oauth_user.id,
+                date=oauth_user.date, military_name=oauth_user.military_unit.name, military_id=oauth_user.military_unit_id)
         
         privelege_emergency = privelege_emergency_service.get_by_user_id(db, user_id)
         if privelege_emergency is None:

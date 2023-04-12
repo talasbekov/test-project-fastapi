@@ -6,7 +6,7 @@ import uuid
 from schemas import PrivelegeEmergencyRead, PersonnalReserveRead, CoolnessRead
 
 class OathRead(BaseModel):
-    id: uuid.UUID
+    id: Optional[uuid.UUID]
     date: Optional[datetime]
     military_id: Optional[uuid.UUID]
     military_name: Optional[str]
