@@ -134,6 +134,24 @@ async def update_essay(
     return candidate_service.update_essay(db=db, id=id, essay_id=body.essay_id)
 
 
+@router.post("/{id}/finish/", dependencies=[Depends(HTTPBearer())],
+            summary="Finish studying the candidate")
+async def finish_candidate(
+        db: Session = Depends(get_db),
+        Authorize: AuthJWT = Depends(),
+        id: uuid.UUID = None,
+):
+    """
+        Finish studying the candidate.
+
+        - **id**: UUID - required and should exist in the database.
+        - **essay_id**: UUID - required and should exist in the database.
+    """
+    Authorize.jwt_required()
+    role = Authorize.get_raw_jwt()['role']
+    return candidate_service.finish_candidate(db, id, role)
+
+
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
                summary="Delete a Candidate")

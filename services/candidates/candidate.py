@@ -1,16 +1,14 @@
 from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
 
-from exceptions import NotFoundException
+from exceptions import NotFoundException, ForbiddenException, BadRequestException
 from models import (Candidate, CandidateStageInfo, StaffUnit, User,
                     CandidateStatusEnum, Position, CandidateStageType,
-                    PositionNameEnum, CandidateStageInfoStatusEnum, CandidateStageQuestion)
-from schemas import CandidateCreate, CandidateUpdate, CandidateRead, CandidateStageInfoCreate, \
-    CandidateStageAnswerCreate
+                    PositionNameEnum, CandidateStageInfoStatusEnum)
+from schemas import CandidateCreate, CandidateUpdate, CandidateRead, CandidateStageInfoCreate, UserCreate
 from services import ServiceBase, staff_unit_service, user_service
 from .candidate_essay_type import candidate_essay_type_service
 from .candidate_stage_info import candidate_stage_info_service
-from .candidate_stage_answer import candidate_stage_answer_service
 
 
 class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate]):
@@ -120,6 +118,28 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
         db.flush()
 
         return candidate
+
+    def finish_candidate(self, db: Session, candidate_id: str, role: str):
+        candidate = db.query(Candidate).filter(Candidate.id == candidate_id).first()
+
+        current_user_staff_unit = staff_unit_service.get_by_id(db, role)
+
+        if candidate.staff_unit_curator_id != current_user_staff_unit.id:
+            raise ForbiddenException(
+                detail=f"Вы не являетесь куратором кандидата: {candidate.id}"
+            )
+
+        stage_infos = db.query(CandidateStageInfo).filter(
+            CandidateStageInfo.candidate_id == candidate.id
+        ).all()
+
+        for stage_info in stage_infos:
+            if stage_info.status != CandidateStageInfoStatusEnum.APPROVED.value:
+                raise BadRequestException(
+                    detail=f"Кандидат: {candidate.id} не имеет право завершить изучение."
+                )
+
+        return "Кандидат: {candidate.id} завершил изучение!"
 
     def update_essay(self, db: Session, id: str, essay_id: str):
         candidate = self.get_by_id(db, id)
