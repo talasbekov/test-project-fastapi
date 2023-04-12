@@ -86,6 +86,20 @@ class NameChangeReadHistory(BaseModel):
             name=name,
         )
 
+class BadgePersonalReadHistory(BaseModel):
+    name: Optional[str]
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
+
+    @classmethod
+    def from_orm(cls, orm_obj):
+        return cls(
+            name=orm_obj.type.name,
+        )
+
+
 
 class StatusReadHistory(BaseModel):
     name: Optional[str]
@@ -93,6 +107,12 @@ class StatusReadHistory(BaseModel):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
+
+    @classmethod
+    def from_orm(cls, orm_obj):
+        return cls(
+            name=orm_obj.type.name,
+        )
 
 
 class CoolnessReadHistory(BaseModel):

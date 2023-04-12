@@ -17,8 +17,8 @@ from .history_personal import (
     CoolnessReadHistory,
     SecondmentReadHistory,
     ContractReadHistory,
+    BadgePersonalReadHistory
 )
-
 
 class HistoryBase(BaseModel):
     document_link: Optional[str]
@@ -83,8 +83,9 @@ class HistoryPersonalRead(BaseModel):
     document_number: Optional[str]
     name_of_organization: Optional[str]
     user_id: uuid.UUID
+    badge: Optional['BadgeServiceDetailRead']
     type: str
-    coefficent: Optional[Decimal]
+    badge: Optional['BadgePersonalReadHistory']
 
 
     class Config:
@@ -99,9 +100,9 @@ class HistoryPersonalRead(BaseModel):
             return None
     
     @property
-    def emergency_service(self) -> Optional[dict]:
-        if self.coefficent is not None:
-            return {"name": self.coefficent + " " + self.percentage}
+    def emergency_service(self) -> Optional[dict]: 
+        if self.coefficient is not None:
+            return {"name": f"Коэффициент: {self.coefficient}, Процент: {self.percentage}%"}
         else:
             return None
 
@@ -133,6 +134,7 @@ class HistoryPersonalRead(BaseModel):
             "type": self.type,
             "service_characteristic": self.service_characteristic,
             "work_experience": self.work_experience,
+            "badge": self.badge,
         }
 
 class AttendanceRead(BaseModel):
@@ -158,7 +160,7 @@ class BadgeServiceDetailRead(BaseModel):
         arbitrary_types_allowed = True
 
     @classmethod
-    def from_orm(cls, orm_obj):
+    def from_orm(cls, orm_obj): 
         return cls(
             document_link=orm_obj.document_link,
             document_number=orm_obj.document_number,
