@@ -271,6 +271,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         db_obj = db.query(diff).filter(diff.id == id).first()
         if db_obj is None:
             raise NotFoundException(detail=f'Object with id: {id} is not found!')
+        user_service.get_by_id(db, object.user_id)
         db_obj = diff(**object.dict(exclude_none=True))
         db.add(db_obj)
         db.flush()
