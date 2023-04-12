@@ -9,6 +9,7 @@ from sqlalchemy.orm import relationship, Session
 from exceptions import NotSupportedException, NotFoundException
 from models import (
     NamedModel,
+    Model,
     StaffUnit,
     Rank,
     Penalty,
@@ -54,7 +55,7 @@ class HistoryEnum(BaseEnum):
     Must have implemented method:
         - **create_history** - method for creating history object from contstructor
 """
-class History(NamedModel):
+class History(Model):
 
     __tablename__ = "histories"
 
