@@ -64,6 +64,7 @@ class HistoryRead(HistoryBase):
 class HistoryPersonalRead(BaseModel):
     id: uuid.UUID
     date_from: Optional[datetime]
+    characteristic_initiator: Optional[str]
     date_to: Optional[datetime] 
     position: Optional[PositionRead]
     rank: Optional['RankRead']
@@ -73,7 +74,6 @@ class HistoryPersonalRead(BaseModel):
     secondment: Optional['SecondmentReadHistory']
     name_change: Optional['NameChangeReadHistory']
     attestation: Optional['AttestationReadHistory']
-    service_characteristic: Optional[dict]
     status: Optional['StatusReadHistory']
     coolness: Optional['CoolnessReadHistory']
     contract: Optional['ContractReadHistory']
@@ -85,10 +85,19 @@ class HistoryPersonalRead(BaseModel):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
-     
 
+    @property
+    def service_characteristic(self) -> Optional[dict]:
+        if self.characteristic_initiator is not None:
+            return {"name": self.characteristic_initiator}
+        else:
+            return None
 
-     
+    def to_dict(self) -> dict:
+        serialized_data = self.dict()
+        print(self.service_characteristic)
+        serialized_data["service_characteristic"] = self.service_characteristic
+        return serialized_data
 
 class AttendanceRead(BaseModel):
     physical_training: Optional[int]
@@ -305,19 +314,10 @@ class SecondmentRead(BaseModel):
             document_link=orm_obj.document_link,
         )
 
-
-class EquipmentRead(BaseModel):
+class TypeOfArmyEquipmentModelRead(BaseModel):
+    id: uuid.UUID
+    name: Optional[str]
     type_of_equipment: Optional[str]
-    user_id: Optional[uuid.UUID]
-    type_of_army_equipment_model_name: Optional[str]
-    inventory_number: Optional[str]
-    count_of_ammo: Optional[int]
-    type_of_clothing_equipment_model_name: Optional[str]
-    type_of_other_equipment_model_name: Optional[str]
-    document_link: Optional[str]
-    document_number: Optional[str]
-    date_from: Optional[datetime]
-    date_to: Optional[datetime]
 
     class Config:
         orm_mode = True
@@ -325,38 +325,72 @@ class EquipmentRead(BaseModel):
 
     @classmethod
     def from_orm(cls, orm_obj):
-        attributes = [
-            "type_of_equipment",
-            "user_id",
-            "inventory_number",
-            "count_of_ammo",
-            "document_link",
-            "document_number",
-            "date_from",
-            "date_to",
-            
-        ]
-        related_models = {
-            "type_of_army_equipment_model": "type_of_army_equipment_model_name",
-            "type_of_clothing_equipment_model": "type_of_clothing_equipment_model_name",
-            "type_of_other_equipment_model": "type_of_other_equipment_model_name",
-        }
+        return cls(
+            id=orm_obj.id,
+            name=orm_obj.name,
+            type_of_equipment=orm_obj.type_of_army_equipment.name,
+        )
 
-        related_attributes = {}
-        for attr, related_attr in related_models.items():
-            try:
-                related_attributes[related_attr] = getattr(orm_obj, attr).name
-            except AttributeError:
-                related_attributes[related_attr] = None
 
-        attributes_dict = {
-            attr: getattr(orm_obj, attr)
-            for attr in attributes
-            if hasattr(orm_obj, attr)
-        }
-        attributes_dict.update(related_attributes)
+class TypeOfClothingEquipmentModelRead(BaseModel):
+    id: uuid.UUID
+    name: Optional[str]
+    type_of_equipment: Optional[str]
 
-        return cls(**attributes_dict)
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
+
+    @classmethod
+    def from_orm(cls, orm_obj):
+        return cls(
+            id=orm_obj.id,
+            name=orm_obj.name,
+            type_of_equipment=orm_obj.type_of_clothing_equipment.name,
+        )
+
+class TypeOfOtherEquipmentModelRead(BaseModel):
+    id: uuid.UUID
+    name: Optional[str]
+    type_of_equipment: Optional[str]
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
+
+    @classmethod
+    def from_orm(cls, orm_obj):
+        return cls(
+            id=orm_obj.id,
+            name=orm_obj.name,
+            type_of_equipment=orm_obj.type_of_other_equipment.name,
+        )
+
+
+class EquipmentRead(BaseModel):
+    id: uuid.UUID
+    type_of_equipment: Optional[str]
+    user_id: Optional[uuid.UUID] 
+    type_of_army_equipment_model_id: Optional[uuid.UUID]
+    inventory_number: Optional[str]
+    inventory_number_of_other_equipment: Optional[str]
+    count_of_ammo: Optional[int] 
+    type_of_clothing_equipment_model_id: Optional[uuid.UUID] 
+    type_of_other_equipment_model_id: Optional[uuid.UUID]
+    document_link: Optional[str]
+    document_number: Optional[str]
+    date_from: Optional[datetime]
+    date_to: Optional[datetime]
+    type_of_army_equipment_model: Optional[TypeOfArmyEquipmentModelRead]
+    type_of_clothing_equipment_model: Optional[TypeOfClothingEquipmentModelRead]
+    type_of_other_equipment_model: Optional[TypeOfOtherEquipmentModelRead]
+
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
+
+     
  
 class HistoryServiceDetailRead(BaseModel):
  

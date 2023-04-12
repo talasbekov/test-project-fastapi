@@ -27,10 +27,10 @@ equipment = {
 
 class EquipmentService(ServiceBase[Equipment, EquipmentCreate, EquipmentUpdate]):
     def get_by_id(self, db: Session, id: str):
-        equipment = super().get(db, id)
-        if equipment is None:
-            raise NotFoundException(detail="Equipment is not found!")
-        return equipment
+        equipment_obj = db.query(Equipment).filter(Equipment.id == id).first()
+        equipment_type = equipment_obj.type_of_equipment
+        cls = equipment[equipment_type]
+        return db.query(cls).filter(cls.id == id).first()
 
     def create(self, db: Session, body: EquipmentCreate):
         cls = equipment[body.type_of_equipment]
@@ -61,6 +61,24 @@ class EquipmentService(ServiceBase[Equipment, EquipmentCreate, EquipmentUpdate])
                 TypeClothingEquipmentModel.id == history.c.type_of_clothing_equipment_model_id
             )
         ).offset(skip).limit(limit).all()
+
+    def create(self, db: Session, body: EquipmentCreate):
+        cls = equipment[body.type_of_equipment]
+        equipment1 = cls(**body.dict(exclude_none=True))
+        db.add(equipment1)
+        db.flush()
+        return equipment1
+    
+    def update(self, db: Session, id: str, body: EquipmentUpdate):
+        equipment = self.get_by_id(db, id)
+        if not equipment:
+            raise NotFoundException("Equipment not found")
+        for key, value in body.dict(exclude_none=True).items():
+            setattr(equipment, key, value)
+        db.add(equipment)
+        db.flush()
+        return equipment
+
 
 
 equipment_service = EquipmentService(Equipment)

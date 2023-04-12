@@ -92,8 +92,8 @@ async def update(*,
     Authorize.jwt_required()
     return equipment_service.update(
         db=db,
-        db_obj=equipment_service.get_by_id(db, id),
-        obj_in=body)
+        id=id,
+        body=body)
 
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,

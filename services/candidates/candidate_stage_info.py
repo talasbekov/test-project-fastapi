@@ -1,9 +1,8 @@
 import uuid
 from datetime import datetime
-from typing import List
 
-from sqlalchemy.orm import Session
 from sqlalchemy import func, or_
+from sqlalchemy.orm import Session
 
 from exceptions import ForbiddenException, BadRequestException
 from models import (CandidateStageInfo, Candidate, StaffUnit, User,
@@ -82,7 +81,7 @@ class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageIn
         if body.staff_unit_coordinate_id is not None:
             candidate_stage_info.staff_unit_coordinate_id = body.staff_unit_coordinate_id
         else:
-            candidate_stage_info = self._send_to_multiple_approval(db, candidate_stage_info)
+            candidate_stage_info = self._send_to_multiple_approval(db, candidate_stage_info, candidate)
 
         candidate_stage_info.is_waits = True
 
@@ -91,10 +90,21 @@ class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageIn
 
         return candidate_stage_info
 
-    def sign_candidate(self, db: Session, id: uuid.UUID, staff_unit_id: str):
+    def sign_candidate_info(self, db: Session, id: uuid.UUID, role: str):
         candidate_stage_info: CandidateStageInfo = super().get_by_id(db, id)
 
-        self._validate_access(db, candidate_stage_info, staff_unit_id)
+        self._validate_access_to_candidate_info(db, candidate_stage_info, role)
+
+        candidate_stage_type = candidate_stage_type_service.get_by_id(db, candidate_stage_info.candidate_stage_type_id)
+
+        if candidate_stage_type.name == "Результаты физической подготовки":
+            candidate = db.query(Candidate).filter(
+                Candidate.id == candidate_stage_info.candidate_id
+            ).first()
+
+            candidate.is_physical_passed = True
+
+            db.add(candidate)
 
         candidate_stage_info.status = CandidateStageInfoStatusEnum.APPROVED.value
         candidate_stage_info.is_waits = False
@@ -105,10 +115,25 @@ class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageIn
 
         return candidate_stage_info
 
-    def reject_candidate(self, db: Session, id: uuid.UUID, staff_unit_id: str):
+    def reject_candidate_info(self, db: Session, id: uuid.UUID, role: str):
         candidate_stage_info: CandidateStageInfo = super().get_by_id(db, id)
 
-        self._validate_access(db, candidate_stage_info, staff_unit_id)
+        self._validate_access_to_candidate_info(db, candidate_stage_info, role)
+
+        candidate_stage_type = candidate_stage_type_service.get_by_id(db, candidate_stage_info.candidate_stage_type_id)
+
+        if candidate_stage_type.name == "Результаты физической подготовки":
+            candidate = db.query(Candidate).filter(
+                Candidate.id == candidate_stage_info.candidate_id
+            ).first()
+
+            if candidate.attempt_number == 2:
+                candidate.is_physical_passed = False
+            else:
+                candidate.is_physical_passed = None
+                candidate.attempt_number += 1
+
+            db.add(candidate)
 
         candidate_stage_info.status = CandidateStageInfoStatusEnum.DECLINED.value
         candidate_stage_info.is_waits = False
@@ -119,8 +144,8 @@ class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageIn
 
         return candidate_stage_info
 
-    def _validate_access(self, db: Session, candidate_stage_info: CandidateStageInfo, staff_unit_id: str):
-        current_user_staff_unit = staff_unit_service.get_by_id(db, staff_unit_id)
+    def _validate_access_to_candidate_info(self, db: Session, candidate_stage_info: CandidateStageInfo, role: str):
+        current_user_staff_unit = staff_unit_service.get_by_id(db, role)
 
         if not candidate_stage_info.is_waits or current_user_staff_unit.id != candidate_stage_info.staff_unit_coordinate_id:
             raise ForbiddenException(
@@ -147,18 +172,22 @@ class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageIn
         else:
             return None
 
-    def _send_to_multiple_approval(self, db: Session, candidate_stage_info: CandidateStageInfo) -> CandidateStageInfo:
+    def _send_to_multiple_approval(self, db: Session, candidate_stage_info: CandidateStageInfo, candidate) -> CandidateStageInfo:
         candidate_stage_type = db.query(CandidateStageType).filter(
             CandidateStageType.id == candidate_stage_info.candidate_stage_type_id
         ).first()
 
         position = None
-        print(candidate_stage_type.name)
-        if hasattr(candidate_stage_type, 'name'):
-            if candidate_stage_type.name == 'Результаты полиграфологического исследования':
-                position = self._get_role_by_name(db, PositionNameEnum.POLYGRAPH_EXAMINER.value) 
-            if candidate_stage_type.name == 'Результаты физической подготовки':
-                position = self._get_role_by_name(db, PositionNameEnum.INSTRUCTOR.value)
+
+        if candidate_stage_type.name == 'Результаты полиграфологического исследования':
+            position = self._get_role_by_name(db, PositionNameEnum.POLYGRAPH_EXAMINER.value)
+        if candidate_stage_type.name == 'Результаты физической подготовки':
+            position = self._get_role_by_name(db, PositionNameEnum.INSTRUCTOR.value)
+
+            if candidate.attempt_number >= 2:
+                raise BadRequestException(
+                    detail=f"Кандидат имеет только два шанса для прохождения физической подготовки!"
+                )
 
         if position is None:
             raise BadRequestException(

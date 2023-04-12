@@ -130,7 +130,7 @@ async def sign_candidate(
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
-    return candidate_stage_info_service.sign_candidate(db, id, role)
+    return candidate_stage_info_service.sign_candidate_info(db, id, role)
 
 
 @router.put("/{id}/reject", dependencies=[Depends(HTTPBearer())],
@@ -149,7 +149,7 @@ async def reject_candidate(
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
-    return candidate_stage_info_service.reject_candidate(db, id, role)
+    return candidate_stage_info_service.reject_candidate_info(db, id, role)
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
