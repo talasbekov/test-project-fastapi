@@ -47,7 +47,6 @@ async def get_all_enums(*,
 
 
 @router.get("/personal/{user_id}", dependencies=[Depends(HTTPBearer())],
-            response_model=List[HistoryPersonalRead],
             summary="Get all Histories by user id")
 async def get_all_personal(*,
     db: Session = Depends(get_db),
@@ -156,7 +155,7 @@ async def update(*,
     """
     Authorize.jwt_required()
     history = history_service.get_by_id(db, id)
-    return history_service.update(db, history, body)
+    return history_service.update(db, db_obj=history, obj_in=body)
 
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
