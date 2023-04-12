@@ -15,11 +15,6 @@ from .candidate_stage_type import candidate_stage_type_service
 
 class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageInfoCreate, CandidateStageInfoUpdate]):
 
-    def get_multi(
-            self, db: Session, skip: int = 0, limit: int = 100
-    ):
-        return db.query(self.model).order_by(self.model.id.asc()).offset(skip).limit(limit).all()
-
     def get_all_by_staff_unit_id(self, db: Session, filter: str, skip: int, limit: int, staff_unit_id: str):
 
         if filter is not None:
