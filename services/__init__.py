@@ -20,7 +20,7 @@ from .rank import rank_service
 from .user_stat import user_stat_service
 
 from .staff_division import staff_division_service
-
+from .recommender_user import recommender_user_service
 from .hr_document_template import hr_document_template_service
 from .personnal_reserve import personnal_reserve_service
 from .user import user_service

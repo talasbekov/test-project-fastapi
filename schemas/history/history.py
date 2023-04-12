@@ -258,7 +258,7 @@ class AttestationRead(BaseModel):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
-    
+
      
 class CharacteristicRead(BaseModel):
     id: uuid.UUID
@@ -267,11 +267,23 @@ class CharacteristicRead(BaseModel):
     document_link : Optional[str]
     document_number : Optional[str]
     characteristic_initiator_id : Optional[uuid.UUID]
-
+    characteristic_initiator : Optional[str]
 
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
+    
+    @classmethod
+    def from_orm(cls, orm_obj):
+        return cls(
+            id=orm_obj.id,
+            date_from=orm_obj.date_from,
+            date_to=orm_obj.date_to,
+            document_link=orm_obj.document_link,
+            document_number=orm_obj.document_number,
+            characteristic_initiator_id=orm_obj.characteristic_initiator_id,
+            characteristic_initiator=orm_obj.characteristic_initiator.last_name + " " + orm_obj.characteristic_initiator.last_name[0] + "." + orm_obj.characteristic_initiator.father_name[0] + ".",
+        )
 
 class HolidayRead(BaseModel):
     date_from: Optional[datetime]

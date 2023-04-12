@@ -145,7 +145,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         secondments = db.query(SecondmentHistory).filter(SecondmentHistory.user_id == user_id).all()
         equipments = user.equipments
         service_id_info =self.get_service_id_by_user_id(db, user_id)
-        print([equipment.document_link for equipment in equipments])
+        
         attendance = AttendanceRead(
             physical_training=100,
             tactical_training=100,
