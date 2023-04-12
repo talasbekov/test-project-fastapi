@@ -5,7 +5,6 @@ from decimal import Decimal
 import uuid
 from .general_information import GeneralInformationRead
 from schemas import PositionRead, RankRead
-from services import user_service
 from enum import Enum
 
 from .history_personal import (
@@ -18,8 +17,8 @@ from .history_personal import (
     CoolnessReadHistory,
     SecondmentReadHistory,
     ContractReadHistory,
-    BadgePersonalReadHistory
 )
+
 
 class HistoryBase(BaseModel):
     document_link: Optional[str]
@@ -34,12 +33,12 @@ class HistoryBase(BaseModel):
     secondment_id: Optional[uuid.UUID]
     name_change_id: Optional[uuid.UUID]
     attestation_id: Optional[uuid.UUID]
-    service_characteristic_id: Optional[uuid.UUID]
+    characteristic_initiator_id: Optional[uuid.UUID]
     status_id: Optional[uuid.UUID]
     coolness_id: Optional[uuid.UUID]
-    contract_id: Optional[uuid.UUID]
-    characteristic_initiator_id: Optional[uuid.UUID]
-    badge_id: Optional[uuid.UUID] 
+    contract_id: Optional[uuid.UUID] 
+    badge_id: Optional[uuid.UUID]
+    name: Optional[str]
     user_id: uuid.UUID
     type: str
 
@@ -59,14 +58,6 @@ class HistoryUpdate(HistoryBase):
 class HistoryRead(HistoryBase):
     id: uuid.UUID
 
-class CharacteristicInitiator(BaseModel):
-    id: uuid.UUID
-    first_name: str
-    last_name: str
-
-    class Config:
-        orm_mode = True
-        arbitrary_types_allowed = True
  
 
 class HistoryPersonalRead(BaseModel):
@@ -74,8 +65,7 @@ class HistoryPersonalRead(BaseModel):
     date_from: Optional[datetime]
     coefficient: Optional[Decimal]
     percentage: Optional[Decimal]
-    characteristic_initiator_id: Optional[uuid.UUID]
-    characteristic_initiator: Optional[CharacteristicInitiator]
+    characteristic_initiator: Optional[str]
     date_to: Optional[datetime] 
     position: Optional[PositionRead]
     rank: Optional['RankRead']
@@ -92,9 +82,8 @@ class HistoryPersonalRead(BaseModel):
     document_number: Optional[str]
     name_of_organization: Optional[str]
     user_id: uuid.UUID
-    badge: Optional['BadgeServiceDetailRead']
     type: str
-    badge: Optional['BadgePersonalReadHistory']
+    coefficent: Optional[Decimal]
 
 
     class Config:
@@ -103,19 +92,15 @@ class HistoryPersonalRead(BaseModel):
 
     @property
     def service_characteristic(self) -> Optional[dict]:
-        
-        if self.characteristic_initiator_id is not None:
-            print(self.characteristic_initiator_id)
-            user = user_service.get_user_by_id(self.characteristic_initiator_id)
-        
-            return {"name": f"{user.last_name} {user.first_name[0]}.{user.father_name[0]}."}
+        if self.characteristic_initiator is not None:
+            return {"name": self.characteristic_initiator}
         else:
             return None
     
     @property
-    def emergency_service(self) -> Optional[dict]: 
-        if self.coefficient is not None:
-            return {"name": f"Коэффициент: {self.coefficient}, Процент: {self.percentage}%"}
+    def emergency_service(self) -> Optional[dict]:
+        if self.coefficent is not None:
+            return {"name": self.coefficent + " " + self.percentage}
         else:
             return None
 
@@ -147,7 +132,6 @@ class HistoryPersonalRead(BaseModel):
             "type": self.type,
             "service_characteristic": self.service_characteristic,
             "work_experience": self.work_experience,
-            "badge": self.badge,
         }
 
 class AttendanceRead(BaseModel):
@@ -173,7 +157,7 @@ class BadgeServiceDetailRead(BaseModel):
         arbitrary_types_allowed = True
 
     @classmethod
-    def from_orm(cls, orm_obj): 
+    def from_orm(cls, orm_obj):
         return cls(
             document_link=orm_obj.document_link,
             document_number=orm_obj.document_number,
@@ -262,32 +246,40 @@ class AttestationRead(BaseModel):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
+    
 
-     
+ 
+
 class CharacteristicRead(BaseModel):
     id: uuid.UUID
     date_from : Optional[datetime]
     date_to : Optional[datetime]
     document_link : Optional[str]
     document_number : Optional[str]
-    characteristic_initiator_id : Optional[uuid.UUID]
     characteristic_initiator : Optional[str]
+    characteristic_initiator_id : Optional[uuid.UUID]
 
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
-    
+
     @classmethod
     def from_orm(cls, orm_obj):
+        crc_init = orm_obj.characteristic_initiator
+        if crc_init:
+            full_name = f"{crc_init.last_name} {crc_init.first_name[0]}.{crc_init.father_name[0]}."
+        else:
+            full_name = None
         return cls(
             id=orm_obj.id,
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
             document_link=orm_obj.document_link,
             document_number=orm_obj.document_number,
+            characteristic_initiator=full_name,
             characteristic_initiator_id=orm_obj.characteristic_initiator_id,
-            characteristic_initiator=orm_obj.characteristic_initiator.last_name + " " + orm_obj.characteristic_initiator.last_name[0] + "." + orm_obj.characteristic_initiator.father_name[0] + ".",
         )
+
 
 class HolidayRead(BaseModel):
     date_from: Optional[datetime]
