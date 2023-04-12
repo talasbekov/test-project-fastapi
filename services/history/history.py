@@ -265,7 +265,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         cls.create_history(db, user_id, object.id, finish_last)
 
     def update(self, db: Session, id: uuid.UUID, object: HistoryUpdate): 
-        diff = classes.get(object.type)
+        diff = options.get(object.type)
         if diff is None:
             raise NotSupportedException(detail=f'Type: {diff} is not supported!')
         db_obj = db.query(diff).filter(diff.id == id).first()
