@@ -6,7 +6,9 @@ import uuid
 from schemas import PrivelegeEmergencyRead, PersonnalReserveRead, CoolnessRead
 
 class OathRead(BaseModel):
+    id: uuid.UUID
     date: Optional[datetime]
+    military_id: Optional[uuid.UUID]
     military_name: Optional[str]
 
     class Config:
@@ -16,7 +18,9 @@ class OathRead(BaseModel):
     @classmethod
     def from_orm(cls, orm_obj):
         return cls(
+            id=orm_obj.id,
             date=orm_obj.date,
+            military_id=orm_obj.military_unit_id,
             military_name=orm_obj.military_unit.name,
         )
 

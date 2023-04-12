@@ -192,7 +192,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         if oauth_user is None or oauth_user.military_unit is None:
             user_oath_read = None
         else:
-            user_oath_read = OathRead(date=oauth_user.date, military_name=oauth_user.military_unit.name)
+            user_oath_read = OathRead(date=oauth_user.date, military_name=oauth_user.military_unit.name, military_id=oauth_user.military_unit_id)
         
         privelege_emergency = privelege_emergency_service.get_by_user_id(db, user_id)
         if privelege_emergency is None:
@@ -277,7 +277,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         for history in histories:
             type_cls = self.get_type_by_user_id(db, user_id, history.type)
             obj = db.query(type_cls).filter(type_cls.id == history.id).first()
-            lis_of_histories.append(HistoryPersonalRead.from_orm(obj)) 
+            lis_of_histories.append(HistoryPersonalRead.from_orm(obj).to_dict())
         return lis_of_histories
     
     
