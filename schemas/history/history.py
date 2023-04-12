@@ -64,6 +64,8 @@ class HistoryRead(HistoryBase):
 class HistoryPersonalRead(BaseModel):
     id: uuid.UUID
     date_from: Optional[datetime]
+    coefficient: Optional[Decimal]
+    percentage: Optional[Decimal]
     characteristic_initiator: Optional[str]
     date_to: Optional[datetime] 
     position: Optional[PositionRead]
@@ -79,8 +81,11 @@ class HistoryPersonalRead(BaseModel):
     contract: Optional['ContractReadHistory']
     document_link: Optional[str]
     document_number: Optional[str]
+    name_of_organization: Optional[str]
     user_id: uuid.UUID
     type: str
+    coefficent: Optional[Decimal]
+
 
     class Config:
         orm_mode = True
@@ -92,12 +97,43 @@ class HistoryPersonalRead(BaseModel):
             return {"name": self.characteristic_initiator}
         else:
             return None
+    
+    @property
+    def emergency_service(self) -> Optional[dict]:
+        if self.coefficent is not None:
+            return {"name": self.coefficent + " " + self.percentage}
+        else:
+            return None
+
+    @property
+    def work_experience(self) -> Optional[dict]:
+        if self.name_of_organization is not None:
+            return {"name" : self.name_of_organization}
+        else:
+            return None
 
     def to_dict(self) -> dict:
-        serialized_data = self.dict()
-        print(self.service_characteristic)
-        serialized_data["service_characteristic"] = self.service_characteristic
-        return serialized_data
+        return {
+            "id": self.id,
+            "date_from": self.date_from,
+            "date_to": self.date_to,
+            "position": self.position,
+            "rank": self.rank,
+            "penalty": self.penalty,
+            "emergency_service": self.emergency_service, 
+            "secondment": self.secondment,
+            "name_change": self.name_change,
+            "attestation": self.attestation,
+            "status": self.status,
+            "coolness": self.coolness,
+            "contract": self.contract,
+            "document_link": self.document_link,
+            "document_number": self.document_number, 
+            "user_id": self.user_id,
+            "type": self.type,
+            "service_characteristic": self.service_characteristic,
+            "work_experience": self.work_experience,
+        }
 
 class AttendanceRead(BaseModel):
     physical_training: Optional[int]
