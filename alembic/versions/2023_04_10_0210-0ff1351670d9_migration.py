@@ -2249,7 +2249,7 @@ def upgrade() -> None:
             'contract_id': None,  # Add the missing parameter here
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
             'experience_years': None,  # Add the missing parameter here
-            'characteristic_initiator': None,  # Add the missing parameter here
+            'characteristic_initiator_id': None,  # Add the missing parameter here
             'coefficient' : None,
             'percentage' : None,
             'staff_division_id' : None,
@@ -2279,7 +2279,7 @@ def upgrade() -> None:
             'contract_id': None,  # Add the missing parameter here
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
             'experience_years': None,  # Add the missing parameter here
-            'characteristic_initiator': None,  # Add the missing parameter here
+            'characteristic_initiator_id': None,  # Add the missing parameter here
             'coefficient' : None,
             'percentage' : None,
             'staff_division_id' : None,
@@ -2309,7 +2309,7 @@ def upgrade() -> None:
             'contract_id': None,  # Add the missing parameter here
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
             'experience_years': None,  # Add the missing parameter here
-            'characteristic_initiator': None,  # Add the missing parameter here
+            'characteristic_initiator_id': None,  # Add the missing parameter here
             'coefficient' : 1.5,
             'percentage' : 10,
             'staff_division_id' : group1_id,
@@ -2339,7 +2339,7 @@ def upgrade() -> None:
             'contract_id': None,  # Add the missing parameter here
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
             'experience_years': None,  # Add the missing parameter here
-            'characteristic_initiator': None,  # Add the missing parameter here
+            'characteristic_initiator_id': None,  # Add the missing parameter here
             'coefficient' : None,
             'percentage' : None,
             'staff_division_id' : None,
@@ -2369,7 +2369,7 @@ def upgrade() -> None:
             'contract_id': None,  # Add the missing parameter here
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
             'experience_years': None,  # Add the missing parameter here
-            'characteristic_initiator': None,  # Add the missing parameter here
+            'characteristic_initiator_id': None,  # Add the missing parameter here
             'coefficient' : None,
             'percentage' : None,
             'staff_division_id' : None,
@@ -2400,7 +2400,7 @@ def upgrade() -> None:
             'contract_id': None,  # Add the missing parameter here
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
             'experience_years': None,  # Add the missing parameter here
-            'characteristic_initiator': None,  # Add the missing parameter here
+            'characteristic_initiator_id': None,  # Add the missing parameter here
             'coefficient' : None,
             'percentage' : None,
             'staff_division_id' : None,
@@ -2430,7 +2430,7 @@ def upgrade() -> None:
             'contract_id': None,  # Add the missing parameter here
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
             'experience_years': None,  # Add the missing parameter here
-            'characteristic_initiator': None,  # Add the missing parameter here
+            'characteristic_initiator_id': None,  # Add the missing parameter here
             'coefficient' : None,
             'percentage' : None,
             'staff_division_id' : None,
@@ -2460,7 +2460,7 @@ def upgrade() -> None:
             'contract_id': None,  # Add the missing parameter here
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
             'experience_years': None,  # Add the missing parameter here
-            'characteristic_initiator': None,  # Add the missing parameter here
+            'characteristic_initiator_id': None,  # Add the missing parameter here
             'coefficient' : None,
             'percentage' : None,
             'staff_division_id' : None,
@@ -2490,7 +2490,7 @@ def upgrade() -> None:
             'contract_id': None,  # Add the missing parameter here
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
             'experience_years': None,  # Add the missing parameter here
-            'characteristic_initiator': None,  # Add the missing parameter here
+            'characteristic_initiator_id': None,  # Add the missing parameter here
             'coefficient' : None,
             'percentage' : None,
             'staff_division_id' : None,
@@ -2520,7 +2520,7 @@ def upgrade() -> None:
             'coolness_id': None,  # Add the missing parameter here
             'contract_id': None,  # Add the missing parameter here
             'experience_years': None,  # Add the missing parameter here
-            'characteristic_initiator': None,  # Add the missing parameter here
+            'characteristic_initiator_id': None,  # Add the missing parameter here
             'coefficient' : None,
             'percentage' : None,
             'staff_division_id' : None,
@@ -2552,7 +2552,7 @@ def upgrade() -> None:
             'contract_id': None,  # Add the missing parameter here
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
             'experience_years': None,  # Add the missing parameter here
-            'characteristic_initiator': None,  # Add the missing parameter here
+            'characteristic_initiator_id': None,  # Add the missing parameter here
             'coefficient' : None,
             'percentage' : None,
             'staff_division_id' : None,
@@ -2582,7 +2582,7 @@ def upgrade() -> None:
             'contract_id': None,  # Add the missing parameter here
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
             'experience_years': None,  # Add the missing parameter here
-            'characteristic_initiator': None,  # Add the missing parameter here
+            'characteristic_initiator_id': None,  # Add the missing parameter here
             'coefficient' : None,
             'percentage' : None,
             'staff_division_id' : None,
@@ -2612,7 +2612,7 @@ def upgrade() -> None:
             'contract_id': contract_id,  # МЕНЯТЬ НА contract_id
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
             'experience_years': 5,
-            'characteristic_initiator' : None, # МЕНЯТЬ НА characteristic_initiator
+            'characteristic_initiator_id' : None, # МЕНЯТЬ НА characteristic_initiator_id
             'coefficient' : None,
             'percentage' : None,
             'staff_division_id' : None,
@@ -2637,7 +2637,7 @@ def upgrade() -> None:
             'name_change_id': None,  # Add the missing parameter here
             'attestation_id': None,  # Add the missing parameter here
             'service_characteristic_id': None,  # Add the missing parameter here
-            'characteristic_initiator': 'А.А.Алексеев',  # МЕНЯТЬ НА characteristic_initiator
+            'characteristic_initiator_id': user2_id,  # МЕНЯТЬ НА characteristic_initiator_id
             'status_id': None,  # Add the missing parameter here
             'coolness_id': None,  # Add the missing parameter here
             'contract_id': None,  # МЕНЯТЬ НА contract_id

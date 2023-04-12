@@ -318,8 +318,9 @@ class AttestationHistory(History):
 
 class ServiceCharacteristicHistory(History):
 
-    characteristic_initiator = Column(String, nullable=True)
-
+    characteristic_initiator_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
+    characteristic_initiator = relationship("User", foreign_keys=[characteristic_initiator_id])
+    
     __mapper_args__ = {
         "polymorphic_identity": "service_characteristic_history",
     }

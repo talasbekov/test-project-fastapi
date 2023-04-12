@@ -37,7 +37,7 @@ class HistoryBase(BaseModel):
     status_id: Optional[uuid.UUID]
     coolness_id: Optional[uuid.UUID]
     contract_id: Optional[uuid.UUID]
-    characteristic_initiator: Optional[str]
+    characteristic_initiator_id: Optional[uuid.UUID]
     badge_id: Optional[uuid.UUID]
     name: Optional[str]
     user_id: uuid.UUID
@@ -59,6 +59,14 @@ class HistoryUpdate(HistoryBase):
 class HistoryRead(HistoryBase):
     id: uuid.UUID
 
+class CharacteristicInitiator(BaseModel):
+    id: uuid.UUID
+    first_name: str
+    last_name: str
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
  
 
 class HistoryPersonalRead(BaseModel):
@@ -66,7 +74,8 @@ class HistoryPersonalRead(BaseModel):
     date_from: Optional[datetime]
     coefficient: Optional[Decimal]
     percentage: Optional[Decimal]
-    characteristic_initiator: Optional[str]
+    characteristic_initiator_id: Optional[uuid.UUID]
+    characteristic_initiator: Optional[CharacteristicInitiator]
     date_to: Optional[datetime] 
     position: Optional[PositionRead]
     rank: Optional['RankRead']
@@ -94,8 +103,8 @@ class HistoryPersonalRead(BaseModel):
 
     @property
     def service_characteristic(self) -> Optional[dict]:
-        if self.characteristic_initiator is not None:
-            return {"name": self.characteristic_initiator}
+        if self.characteristic_initiator_id is not None:
+            return {"name": self.characteristic_initiator.first_name + " " + self.characteristic_initiator.last_name}
         else:
             return None
     
@@ -257,7 +266,7 @@ class CharacteristicRead(BaseModel):
     date_to : Optional[datetime]
     document_link : Optional[str]
     document_number : Optional[str]
-    characteristic_initiator : Optional[str]
+    characteristic_initiator_id : Optional[uuid.UUID]
 
 
     class Config:

@@ -84,7 +84,8 @@ class TypeOtherEquipmentModel(BaseModel):
 class TypeOtherEquipmentRead(BaseModel):
     id: Optional[uuid.UUID]
     type_of_other_equipment_models: Optional[List[TypeOtherEquipmentModel]]
-    name: Optional[str] 
+    name: Optional[str]
+    inventory_number_of_other_equipment: Optional[str]
 
     class Config:
         orm_mode = True

@@ -733,7 +733,8 @@ def upgrade() -> None:
     sa.Column('name_change_id', sa.UUID(), nullable=True),
     sa.Column('attestation_id', sa.UUID(), nullable=True),
     sa.Column('attestation_status', sa.String(), nullable=True),
-    sa.Column('characteristic_initiator', sa.String(), nullable=True),
+    # foreign key of user characteristic_initiator_id
+    sa.Column('characteristic_initiator_id', sa.UUID(), nullable=True),
     sa.Column('status_id', sa.UUID(), nullable=True),
     sa.ForeignKeyConstraint(['attestation_id'], ['attestations.id'], ),
     sa.ForeignKeyConstraint(['badge_id'], ['badges.id'], ),
@@ -747,6 +748,7 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['staff_division_id'], ['staff_divisions.id'], ),
     sa.ForeignKeyConstraint(['status_id'], ['statuses.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['characteristic_initiator_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('hr_documents',
