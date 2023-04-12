@@ -154,8 +154,7 @@ async def update(*,
         - **quantity**: required
     """
     Authorize.jwt_required()
-    history = history_service.get_by_id(db, id)
-    return history_service.update(db, db_obj=history, obj_in=body)
+    return history_service.update(db, id, body)
 
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
