@@ -107,7 +107,7 @@ class StaffUnitHistory(History):
 class RankHistory(History):
 
     rank_id = Column(UUID(as_uuid=True), ForeignKey("ranks.id"), nullable=True)
-    rank = relationship("Rank")
+    rank = relationship("Rank", foreign_keys=[rank_id])
 
     @classmethod
     def create_history(cls, db: Session, user_id: uuid.UUID, id: uuid.UUID, finish_last):

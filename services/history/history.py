@@ -118,6 +118,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             badge = badge_service.get_by_id(db, obj_in.badge_id)
             if badge is None:
                 raise NotFoundException(detail=f'Badge with id: {obj_in.badge_id} not found!')
+        print(obj_in.dict(exclude_none=True))
         obj_db = cls(**obj_in.dict(exclude_none=True))
         db.add(obj_db)
         db.flush()

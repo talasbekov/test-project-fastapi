@@ -88,7 +88,7 @@ class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageIn
     def sign_candidate_info(self, db: Session, id: uuid.UUID, role: str):
         candidate_stage_info: CandidateStageInfo = super().get_by_id(db, id)
 
-        self._validate_access_to_candidate_info(db, candidate_stage_info, role)
+        # self._validate_access_to_candidate_info(db, candidate_stage_info, role)
 
         candidate_stage_type = candidate_stage_type_service.get_by_id(db, candidate_stage_info.candidate_stage_type_id)
 
@@ -113,7 +113,7 @@ class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageIn
     def reject_candidate_info(self, db: Session, id: uuid.UUID, role: str):
         candidate_stage_info: CandidateStageInfo = super().get_by_id(db, id)
 
-        self._validate_access_to_candidate_info(db, candidate_stage_info, role)
+        # self._validate_access_to_candidate_info(db, candidate_stage_info, role)
 
         candidate_stage_type = candidate_stage_type_service.get_by_id(db, candidate_stage_info.candidate_stage_type_id)
 
