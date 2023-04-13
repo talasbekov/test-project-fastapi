@@ -4,8 +4,7 @@ from typing import Optional, List, Union
 from decimal import Decimal
 import uuid
 from .general_information import GeneralInformationRead
-from schemas import PositionRead, RankRead
-from services import user_service
+from schemas import PositionRead, RankRead 
 from enum import Enum
 
 from .history_personal import (
@@ -100,17 +99,7 @@ class HistoryPersonalRead(BaseModel):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
-
-    @property
-    def service_characteristic(self) -> Optional[dict]:
-        
-        if self.characteristic_initiator_id is not None:
-            print(self.characteristic_initiator_id)
-            user = user_service.get_user_by_id(self.characteristic_initiator_id)
-        
-            return {"name": f"{user.last_name} {user.first_name[0]}.{user.father_name[0]}."}
-        else:
-            return None
+ 
     
     @property
     def emergency_service(self) -> Optional[dict]: 
