@@ -29,7 +29,6 @@ class HistoryBase(BaseModel):
     rank_id: Optional[uuid.UUID]
     penalty_id: Optional[uuid.UUID]
     emergency_service_id: Optional[uuid.UUID]
-    work_experience_id: Optional[uuid.UUID]
     secondment_id: Optional[uuid.UUID]
     name_change_id: Optional[uuid.UUID]
     attestation_id: Optional[uuid.UUID]
@@ -40,7 +39,12 @@ class HistoryBase(BaseModel):
     badge_id: Optional[uuid.UUID]
     name: Optional[str]
     user_id: uuid.UUID
+    is_credited: Optional[bool]
+    document_style: Optional[str]
+    date_credited: Optional[datetime]
+    name_of_organization: Optional[str]
     type: str
+    position_work_experience: Optional[str]
 
 
     class Config:
@@ -332,10 +336,32 @@ class ExperienceRead(BaseModel):
     document_link : Optional[str]
     document_number : Optional[str]
     name_of_organization : Optional[str]
+    is_credited : Optional[bool]
+    document_style : Optional[str]
+    date_credited : Optional[datetime]
+    position_work_experience : Optional[str]
 
+    
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
+
+
+    @classmethod
+    def from_orm(cls, orm_obj):
+        print(orm_obj.name_of_organization)
+        return cls(
+            date_from=orm_obj.date_from,
+            date_to=orm_obj.date_to,
+            document_link=orm_obj.document_link,
+            document_number=orm_obj.document_number,
+            name_of_organization=orm_obj.name_of_organization,
+            is_credited=orm_obj.is_credited,
+            document_style=orm_obj.document_style,
+            date_credited=orm_obj.date_credited,
+            position_work_experience=orm_obj.position_work_experience,
+            
+        )
 
 
 class ServiceIdInfoRead(BaseModel):

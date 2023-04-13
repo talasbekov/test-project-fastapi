@@ -46,4 +46,3 @@ from .staff_list import staff_list_service
 
 from .history import *
 from .candidates import *
-from .render import render_service

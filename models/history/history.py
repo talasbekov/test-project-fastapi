@@ -2,7 +2,7 @@ import datetime
 import uuid
 from enum import Enum as BaseEnum
 
-from sqlalchemy import TIMESTAMP, Column, ForeignKey, String, Double, Integer
+from sqlalchemy import TIMESTAMP, Column, ForeignKey, String, Double, Integer, Boolean
 from sqlalchemy.dialects.postgresql import TEXT, UUID
 from sqlalchemy.orm import relationship, Session
 
@@ -248,11 +248,14 @@ class CoolnessHistory(History):
 class WorkExperienceHistory(History):
 
     name_of_organization = Column(String, nullable=True)
+    is_credited = Column(Boolean, nullable=True)
+    document_style = Column(String, nullable=True)
+    date_credited = Column(TIMESTAMP, nullable=True)
+    position_work_experience = Column(String, nullable=True)
 
     __mapper_args__ = {
         "polymorphic_identity": "work_experience_history",
     }
-
 
 class SecondmentHistory(History):
 
