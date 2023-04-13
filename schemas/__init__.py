@@ -48,6 +48,7 @@ from .staff_list import (StaffListCreate, StaffListRead, StaffListUpdate, StaffL
 from .service_id import (ServiceIDCreate, ServiceIDRead, ServiceIDUpdate)
 from .military_unit import (MilitaryUnitCreate, MilitaryUnitRead, MilitaryUnitUpdate)
 from .user_oath import (UserOathCreate, UserOathRead, UserOathUpdate)
+from .recommender_user import (RecommenderUserCreate, RecommenderUserRead, RecommenderUserUpdate)
 from .additional import *
 from .education import *
 from .personal import *

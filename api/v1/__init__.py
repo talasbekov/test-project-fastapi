@@ -37,6 +37,7 @@ from .personnal_reserve import router as personnal_reserve_router
 from .coolness import router as coolness_router
 from .user_oath import router as user_oauth_router
 from .military_unit import router as military_unit_router
+from .recommender_user import router as recommender_user_router
 
 router = APIRouter(prefix="/v1")
 
@@ -93,3 +94,4 @@ router.include_router(service_id_router)
 router.include_router(history_name_change_router)
 router.include_router(user_oauth_router)
 router.include_router(military_unit_router)
+router.include_router(recommender_user_router)

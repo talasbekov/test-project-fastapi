@@ -1,6 +1,6 @@
 from .base import Model, NamedModel, NestedModel, NamedNestedModel
 from .badge import Badge, BadgeType
-from .equipment import (Equipment, TypeClothingEquipment, TypeArmyEquipment, TypeOtherEquipment, ClothingEquipment,
+from .equipment import (Equipment, TypeClothingEquipment, TypeArmyEquipment, TypeOtherEquipment, ClothingEquipment, ArmyEquipment, OtherEquipment,
                     TypeClothingEquipmentModel)
 from .event import Event
 from .hr_document_status import HrDocumentStatus
@@ -18,6 +18,7 @@ from .staff_list import StaffList
 from .staff_unit import StaffUnit
 from .service_id import ServiceID, ServiceIDStatus
 from .privelege_emergency import PrivilegeEmergency, FormEnum
+from .recommender_user import RecommenderUser
 from .coolness import Coolness, SpecialtyEnum
 from .military_unit import MilitaryUnit
 from .user_oath import UserOath

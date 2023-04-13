@@ -1,4 +1,4 @@
-from sqlalchemy import BigInteger, Column, String, UUID, ForeignKey
+from sqlalchemy import BigInteger, Column, String, UUID, ForeignKey, TIMESTAMP
 from sqlalchemy.orm import relationship
 
 from models import Model, NamedModel
@@ -9,6 +9,9 @@ class Equipment(Model):
 
     __tablename__ = "equipments"
     
+    date_from = Column(TIMESTAMP, nullable=True)
+    document_number = Column(String, nullable=True)
+    document_link = Column(String, nullable=True)
     
     type_of_equipment = Column(String, nullable=True)
 
@@ -96,6 +99,7 @@ class OtherEquipment(Equipment):
     
     type_of_other_equipment_model_id = Column(UUID(as_uuid=True), ForeignKey("type_other_equipment_models.id"), nullable=True)
     type_of_other_equipment_model = relationship("TypeOtherEquipmentModel", back_populates="other_equipments", uselist=False)
+    inventory_number_of_other_equipment = Column(String, nullable=True)
 
     __mapper_args__ = {
         "polymorphic_identity": "other_equipment",

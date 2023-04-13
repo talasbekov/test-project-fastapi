@@ -27,4 +27,6 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         db.commit()
         return db_obj
 
+    
+
 history_service = HistoryService(History)
