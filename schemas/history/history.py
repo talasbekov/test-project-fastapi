@@ -12,8 +12,7 @@ from .history_personal import (
     WorkExperienceRead,
     EmergencyServiceRead,
     AttestationReadHistory,
-    NameChangeReadHistory,
-    ServiceCharacteristicRead,
+    NameChangeReadHistory, 
     StatusReadHistory,
     CoolnessReadHistory,
     SecondmentReadHistory,
@@ -34,11 +33,10 @@ class HistoryBase(BaseModel):
     secondment_id: Optional[uuid.UUID]
     name_change_id: Optional[uuid.UUID]
     attestation_id: Optional[uuid.UUID]
-    service_characteristic_id: Optional[uuid.UUID]
+    characteristic_initiator_id: Optional[uuid.UUID]
     status_id: Optional[uuid.UUID]
     coolness_id: Optional[uuid.UUID]
-    contract_id: Optional[uuid.UUID]
-    characteristic_initiator: Optional[str]
+    contract_id: Optional[uuid.UUID] 
     badge_id: Optional[uuid.UUID]
     name: Optional[str]
     user_id: uuid.UUID
@@ -65,6 +63,9 @@ class HistoryRead(HistoryBase):
 class HistoryPersonalRead(BaseModel):
     id: uuid.UUID
     date_from: Optional[datetime]
+    coefficient: Optional[Decimal]
+    percentage: Optional[Decimal]
+    characteristic_initiator: Optional[str]
     date_to: Optional[datetime] 
     position: Optional[PositionRead]
     rank: Optional['RankRead']
@@ -74,19 +75,64 @@ class HistoryPersonalRead(BaseModel):
     secondment: Optional['SecondmentReadHistory']
     name_change: Optional['NameChangeReadHistory']
     attestation: Optional['AttestationReadHistory']
-    service_characteristic: Optional['ServiceCharacteristicRead']
     status: Optional['StatusReadHistory']
     coolness: Optional['CoolnessReadHistory']
     contract: Optional['ContractReadHistory']
     document_link: Optional[str]
     document_number: Optional[str]
+    name_of_organization: Optional[str]
     user_id: uuid.UUID
     type: str
+    coefficent: Optional[Decimal]
+
 
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
 
+    @property
+    def service_characteristic(self) -> Optional[dict]:
+        if self.characteristic_initiator is not None:
+            return {"name": self.characteristic_initiator}
+        else:
+            return None
+    
+    @property
+    def emergency_service(self) -> Optional[dict]:
+        if self.coefficent is not None:
+            return {"name": self.coefficent + " " + self.percentage}
+        else:
+            return None
+
+    @property
+    def work_experience(self) -> Optional[dict]:
+        if self.name_of_organization is not None:
+            return {"name" : self.name_of_organization}
+        else:
+            return None
+
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "date_from": self.date_from,
+            "date_to": self.date_to,
+            "position": self.position,
+            "rank": self.rank,
+            "penalty": self.penalty,
+            "emergency_service": self.emergency_service, 
+            "secondment": self.secondment,
+            "name_change": self.name_change,
+            "attestation": self.attestation,
+            "status": self.status,
+            "coolness": self.coolness,
+            "contract": self.contract,
+            "document_link": self.document_link,
+            "document_number": self.document_number, 
+            "user_id": self.user_id,
+            "type": self.type,
+            "service_characteristic": self.service_characteristic,
+            "work_experience": self.work_experience,
+        }
 
 class AttendanceRead(BaseModel):
     physical_training: Optional[int]
@@ -201,18 +247,39 @@ class AttestationRead(BaseModel):
         orm_mode = True
         arbitrary_types_allowed = True
     
-     
+
+ 
+
 class CharacteristicRead(BaseModel):
+    id: uuid.UUID
     date_from : Optional[datetime]
     date_to : Optional[datetime]
     document_link : Optional[str]
     document_number : Optional[str]
     characteristic_initiator : Optional[str]
-
+    characteristic_initiator_id : Optional[uuid.UUID]
 
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
+
+    @classmethod
+    def from_orm(cls, orm_obj):
+        crc_init = orm_obj.characteristic_initiator
+        if crc_init:
+            full_name = f"{crc_init.last_name} {crc_init.first_name[0]}.{crc_init.father_name[0]}."
+        else:
+            full_name = None
+        return cls(
+            id=orm_obj.id,
+            date_from=orm_obj.date_from,
+            date_to=orm_obj.date_to,
+            document_link=orm_obj.document_link,
+            document_number=orm_obj.document_number,
+            characteristic_initiator=full_name,
+            characteristic_initiator_id=orm_obj.characteristic_initiator_id,
+        )
+
 
 class HolidayRead(BaseModel):
     date_from: Optional[datetime]
@@ -302,15 +369,10 @@ class SecondmentRead(BaseModel):
             document_link=orm_obj.document_link,
         )
 
-
-class EquipmentRead(BaseModel):
+class TypeOfArmyEquipmentModelRead(BaseModel):
+    id: uuid.UUID
+    name: Optional[str]
     type_of_equipment: Optional[str]
-    user_id: Optional[uuid.UUID]
-    type_of_army_equipment_model_name: Optional[str]
-    inventory_number: Optional[str]
-    count_of_ammo: Optional[int]
-    type_of_clothing_equipment_model_name: Optional[str]
-    type_of_other_equipment_model_name: Optional[str]
 
     class Config:
         orm_mode = True
@@ -318,33 +380,72 @@ class EquipmentRead(BaseModel):
 
     @classmethod
     def from_orm(cls, orm_obj):
-        attributes = [
-            "type_of_equipment",
-            "user_id",
-            "inventory_number",
-            "count_of_ammo",
-        ]
-        related_models = {
-            "type_of_army_equipment_model": "type_of_army_equipment_model_name",
-            "type_of_clothing_equipment_model": "type_of_clothing_equipment_model_name",
-            "type_of_other_equipment_model": "type_of_other_equipment_model_name",
-        }
+        return cls(
+            id=orm_obj.id,
+            name=orm_obj.name,
+            type_of_equipment=orm_obj.type_of_army_equipment.name,
+        )
 
-        related_attributes = {}
-        for attr, related_attr in related_models.items():
-            try:
-                related_attributes[related_attr] = getattr(orm_obj, attr).name
-            except AttributeError:
-                related_attributes[related_attr] = None
 
-        attributes_dict = {
-            attr: getattr(orm_obj, attr)
-            for attr in attributes
-            if hasattr(orm_obj, attr)
-        }
-        attributes_dict.update(related_attributes)
+class TypeOfClothingEquipmentModelRead(BaseModel):
+    id: uuid.UUID
+    name: Optional[str]
+    type_of_equipment: Optional[str]
 
-        return cls(**attributes_dict)
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
+
+    @classmethod
+    def from_orm(cls, orm_obj):
+        return cls(
+            id=orm_obj.id,
+            name=orm_obj.name,
+            type_of_equipment=orm_obj.type_of_clothing_equipment.name,
+        )
+
+class TypeOfOtherEquipmentModelRead(BaseModel):
+    id: uuid.UUID
+    name: Optional[str]
+    type_of_equipment: Optional[str]
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
+
+    @classmethod
+    def from_orm(cls, orm_obj):
+        return cls(
+            id=orm_obj.id,
+            name=orm_obj.name,
+            type_of_equipment=orm_obj.type_of_other_equipment.name,
+        )
+
+
+class EquipmentRead(BaseModel):
+    id: uuid.UUID
+    type_of_equipment: Optional[str]
+    user_id: Optional[uuid.UUID] 
+    type_of_army_equipment_model_id: Optional[uuid.UUID]
+    inventory_number: Optional[str]
+    inventory_number_of_other_equipment: Optional[str]
+    count_of_ammo: Optional[int] 
+    type_of_clothing_equipment_model_id: Optional[uuid.UUID] 
+    type_of_other_equipment_model_id: Optional[uuid.UUID]
+    document_link: Optional[str]
+    document_number: Optional[str]
+    date_from: Optional[datetime]
+    date_to: Optional[datetime]
+    type_of_army_equipment_model: Optional[TypeOfArmyEquipmentModelRead]
+    type_of_clothing_equipment_model: Optional[TypeOfClothingEquipmentModelRead]
+    type_of_other_equipment_model: Optional[TypeOfOtherEquipmentModelRead]
+
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
+
+     
  
 class HistoryServiceDetailRead(BaseModel):
  

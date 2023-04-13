@@ -60,4 +60,3 @@ class User(Model):
     privelege_emergencies = relationship("PrivilegeEmergency", back_populates="user", cascade="all,delete")
     contracts = relationship("Contract", back_populates="user", cascade="all,delete")
     equipments = relationship("Equipment", back_populates="user", cascade="all,delete")
-    

@@ -25,7 +25,7 @@ class CandidateStageInfo(Model):
     candidate_stage_type = relationship("CandidateStageType", back_populates="candidate_stage_infos")
     
     staff_unit_coordinate_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"), nullable=True)
-    is_waits = Column(Boolean, nullable=True, default=False)
+    is_waits = Column(Boolean, nullable=True, default=True)
 
     candidate = relationship("Candidate", back_populates="candidate_stage_infos")
     staff_unit_coordinate = relationship("StaffUnit", cascade="all, delete")

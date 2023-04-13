@@ -501,6 +501,7 @@ def upgrade() -> None:
     op.create_table('equipments',
     sa.Column('type_of_equipment', sa.String(), nullable=True),
     sa.Column('date_from', sa.TIMESTAMP(), nullable=True),
+    sa.Column('inventory_number_of_other_equipment', sa.String(), nullable=True),
     sa.Column('document_link', sa.String(), nullable=True),
     sa.Column('document_number', sa.String(), nullable=True),
     sa.Column('user_id', sa.UUID(), nullable=True),
@@ -712,8 +713,7 @@ def upgrade() -> None:
     sa.Column('user_id', sa.UUID(), nullable=True),
     sa.Column('document_link', sa.TEXT(), nullable=True),
     sa.Column('document_number', sa.String(), nullable=True),
-    sa.Column('type', sa.String(), nullable=True),
-    sa.Column('name', sa.String(), nullable=False),
+    sa.Column('type', sa.String(), nullable=True), 
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
@@ -732,7 +732,8 @@ def upgrade() -> None:
     sa.Column('name_change_id', sa.UUID(), nullable=True),
     sa.Column('attestation_id', sa.UUID(), nullable=True),
     sa.Column('attestation_status', sa.String(), nullable=True),
-    sa.Column('characteristic_initiator', sa.String(), nullable=True),
+    # foreign key of user characteristic_initiator_id
+    sa.Column('characteristic_initiator_id', sa.UUID(), nullable=True),
     sa.Column('status_id', sa.UUID(), nullable=True),
     sa.ForeignKeyConstraint(['attestation_id'], ['attestations.id'], ),
     sa.ForeignKeyConstraint(['badge_id'], ['badges.id'], ),
@@ -746,6 +747,7 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['staff_division_id'], ['staff_divisions.id'], ),
     sa.ForeignKeyConstraint(['status_id'], ['statuses.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['characteristic_initiator_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('hr_documents',
@@ -1206,6 +1208,15 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['liberation_id'], ['liberations.id'], ),
     sa.ForeignKeyConstraint(['user_liberation_id'], ['user_liberations.id'], )
     )
+    op.create_table('recommender_users',
+    sa.Column('document_link', sa.TEXT(), nullable=True),
+    sa.Column('user_id', sa.UUID(), nullable=True),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
     # ### end Alembic commands ###
 
 
@@ -1318,4 +1329,5 @@ def downgrade() -> None:
     op.drop_table('badge_types')
     op.drop_table('academic_title_degrees')
     op.drop_table('academic_degree_degrees')
+    op.drop_table('recommender_users')
     # ### end Alembic commands ###

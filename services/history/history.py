@@ -114,6 +114,10 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         cls = options.get(obj_in.type) 
         if cls is None:
             raise NotSupportedException(detail=f'Type: {obj_in.type} is not supported!')
+        if hasattr(cls, "badge_id"):
+            badge = badge_service.get_by_id(db, obj_in.badge_id)
+            if badge is None:
+                raise NotFoundException(detail=f'Badge with id: {obj_in.badge_id} not found!')
         obj_db = cls(**obj_in.dict(exclude_none=True))
         db.add(obj_db)
         db.flush()
@@ -141,7 +145,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         secondments = db.query(SecondmentHistory).filter(SecondmentHistory.user_id == user_id).all()
         equipments = user.equipments
         service_id_info =self.get_service_id_by_user_id(db, user_id)
-
+        
         attendance = AttendanceRead(
             physical_training=100,
             tactical_training=100,
@@ -188,7 +192,9 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         if oauth_user is None or oauth_user.military_unit is None:
             user_oath_read = None
         else:
-            user_oath_read = OathRead(date=oauth_user.date, military_name=oauth_user.military_unit.name)
+            user_oath_read = OathRead(
+                id=oauth_user.id,
+                date=oauth_user.date, military_name=oauth_user.military_unit.name, military_id=oauth_user.military_unit_id)
         
         privelege_emergency = privelege_emergency_service.get_by_user_id(db, user_id)
         if privelege_emergency is None:
@@ -258,6 +264,15 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             raise NotSupportedException(detail=f'In options: {diff} is not present!')
         cls.create_history(db, user_id, object.id, finish_last)
 
+    def update(self, db: Session, id: uuid.UUID, object: HistoryUpdate): 
+        history = self.get_by_id(db, id)
+        if history is None:
+            raise NotFoundException(detail=f'History with id: {id} is not found!')
+        for key, value in object.dict(exclude_unset=True).items():
+            setattr(history, key, value)
+        db.add(history)
+        db.flush()
+        return history
 
 
     def get_all_personal(self, db: Session, user_id: uuid.UUID, skip: int = 0, limit: int = 100):
@@ -268,13 +283,12 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             .offset(skip)
             .limit(limit)
             .all()
-        )
-        print(histories[0].id)
+        ) 
         lis_of_histories = []
         for history in histories:
             type_cls = self.get_type_by_user_id(db, user_id, history.type)
             obj = db.query(type_cls).filter(type_cls.id == history.id).first()
-            lis_of_histories.append(HistoryPersonalRead.from_orm(obj)) 
+            lis_of_histories.append(HistoryPersonalRead.from_orm(obj).to_dict())
         return lis_of_histories
     
     

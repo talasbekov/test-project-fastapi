@@ -1906,7 +1906,7 @@ def upgrade() -> None:
     army_equipment_id = get_uuid()
     clothing_equipment_id = get_uuid()
     other_equipment_id = get_uuid()
-
+    
     op.bulk_insert(
         Base.metadata.tables['equipments'],
         [{
@@ -1918,6 +1918,10 @@ def upgrade() -> None:
             'type_of_equipment': 'army_equipment',
             'type_of_clothing_equipment_model_id': None,
             'type_of_other_equipment_model_id': None,
+            'document_link': 'https://www.google.com/',
+            'document_number': '123456789',
+            'date_from': '2023-04-11T19:43:02.556000',
+            'date_to': None,
         },
          {
             'id': clothing_equipment_id,
@@ -1928,6 +1932,10 @@ def upgrade() -> None:
             'inventory_number': None,
             'type_of_army_equipment_model_id': None,
             'type_of_other_equipment_model_id': None,
+            'document_link': 'https://www.google.com/',
+            'document_number': '123456789',
+            'date_from': '2023-04-11T19:43:02.556000',
+            'date_to': None,
          },
          {
             'id': other_equipment_id,
@@ -1938,6 +1946,10 @@ def upgrade() -> None:
             'inventory_number': None,
             'type_of_army_equipment_model_id': None,
             'type_of_clothing_equipment_model_id': None,
+            'document_link': 'https://www.google.com/',
+            'document_number': '123456789',
+            'date_from': '2023-04-11T19:43:02.556000',
+            'date_to': None,
          }
         ])
     
@@ -2237,7 +2249,7 @@ def upgrade() -> None:
             'contract_id': None,  # Add the missing parameter here
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
             'experience_years': None,  # Add the missing parameter here
-            'characteristic_initiator': None,  # Add the missing parameter here
+            'characteristic_initiator_id': None,  # Add the missing parameter here
             'coefficient' : None,
             'percentage' : None,
             'staff_division_id' : None,
@@ -2267,7 +2279,7 @@ def upgrade() -> None:
             'contract_id': None,  # Add the missing parameter here
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
             'experience_years': None,  # Add the missing parameter here
-            'characteristic_initiator': None,  # Add the missing parameter here
+            'characteristic_initiator_id': None,  # Add the missing parameter here
             'coefficient' : None,
             'percentage' : None,
             'staff_division_id' : None,
@@ -2297,7 +2309,7 @@ def upgrade() -> None:
             'contract_id': None,  # Add the missing parameter here
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
             'experience_years': None,  # Add the missing parameter here
-            'characteristic_initiator': None,  # Add the missing parameter here
+            'characteristic_initiator_id': None,  # Add the missing parameter here
             'coefficient' : 1.5,
             'percentage' : 10,
             'staff_division_id' : group1_id,
@@ -2327,7 +2339,7 @@ def upgrade() -> None:
             'contract_id': None,  # Add the missing parameter here
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
             'experience_years': None,  # Add the missing parameter here
-            'characteristic_initiator': None,  # Add the missing parameter here
+            'characteristic_initiator_id': None,  # Add the missing parameter here
             'coefficient' : None,
             'percentage' : None,
             'staff_division_id' : None,
@@ -2357,7 +2369,7 @@ def upgrade() -> None:
             'contract_id': None,  # Add the missing parameter here
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
             'experience_years': None,  # Add the missing parameter here
-            'characteristic_initiator': None,  # Add the missing parameter here
+            'characteristic_initiator_id': None,  # Add the missing parameter here
             'coefficient' : None,
             'percentage' : None,
             'staff_division_id' : None,
@@ -2388,7 +2400,7 @@ def upgrade() -> None:
             'contract_id': None,  # Add the missing parameter here
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
             'experience_years': None,  # Add the missing parameter here
-            'characteristic_initiator': None,  # Add the missing parameter here
+            'characteristic_initiator_id': None,  # Add the missing parameter here
             'coefficient' : None,
             'percentage' : None,
             'staff_division_id' : None,
@@ -2418,7 +2430,7 @@ def upgrade() -> None:
             'contract_id': None,  # Add the missing parameter here
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
             'experience_years': None,  # Add the missing parameter here
-            'characteristic_initiator': None,  # Add the missing parameter here
+            'characteristic_initiator_id': None,  # Add the missing parameter here
             'coefficient' : None,
             'percentage' : None,
             'staff_division_id' : None,
@@ -2448,7 +2460,7 @@ def upgrade() -> None:
             'contract_id': None,  # Add the missing parameter here
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
             'experience_years': None,  # Add the missing parameter here
-            'characteristic_initiator': None,  # Add the missing parameter here
+            'characteristic_initiator_id': None,  # Add the missing parameter here
             'coefficient' : None,
             'percentage' : None,
             'staff_division_id' : None,
@@ -2478,7 +2490,7 @@ def upgrade() -> None:
             'contract_id': None,  # Add the missing parameter here
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
             'experience_years': None,  # Add the missing parameter here
-            'characteristic_initiator': None,  # Add the missing parameter here
+            'characteristic_initiator_id': None,  # Add the missing parameter here
             'coefficient' : None,
             'percentage' : None,
             'staff_division_id' : None,
@@ -2508,7 +2520,7 @@ def upgrade() -> None:
             'coolness_id': None,  # Add the missing parameter here
             'contract_id': None,  # Add the missing parameter here
             'experience_years': None,  # Add the missing parameter here
-            'characteristic_initiator': None,  # Add the missing parameter here
+            'characteristic_initiator_id': None,  # Add the missing parameter here
             'coefficient' : None,
             'percentage' : None,
             'staff_division_id' : None,
@@ -2540,7 +2552,7 @@ def upgrade() -> None:
             'contract_id': None,  # Add the missing parameter here
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
             'experience_years': None,  # Add the missing parameter here
-            'characteristic_initiator': None,  # Add the missing parameter here
+            'characteristic_initiator_id': None,  # Add the missing parameter here
             'coefficient' : None,
             'percentage' : None,
             'staff_division_id' : None,
@@ -2570,7 +2582,7 @@ def upgrade() -> None:
             'contract_id': None,  # Add the missing parameter here
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
             'experience_years': None,  # Add the missing parameter here
-            'characteristic_initiator': None,  # Add the missing parameter here
+            'characteristic_initiator_id': None,  # Add the missing parameter here
             'coefficient' : None,
             'percentage' : None,
             'staff_division_id' : None,
@@ -2600,7 +2612,7 @@ def upgrade() -> None:
             'contract_id': contract_id,  # МЕНЯТЬ НА contract_id
             'attestation_status': None,  # МЕНЯТЬ НА attestation_status
             'experience_years': 5,
-            'characteristic_initiator' : None, # МЕНЯТЬ НА characteristic_initiator
+            'characteristic_initiator_id' : None, # МЕНЯТЬ НА characteristic_initiator_id
             'coefficient' : None,
             'percentage' : None,
             'staff_division_id' : None,
@@ -2625,7 +2637,7 @@ def upgrade() -> None:
             'name_change_id': None,  # Add the missing parameter here
             'attestation_id': None,  # Add the missing parameter here
             'service_characteristic_id': None,  # Add the missing parameter here
-            'characteristic_initiator': 'А.А.Алексеев',  # МЕНЯТЬ НА characteristic_initiator
+            'characteristic_initiator_id': user2_id,  # МЕНЯТЬ НА characteristic_initiator_id
             'status_id': None,  # Add the missing parameter here
             'coolness_id': None,  # Add the missing parameter here
             'contract_id': None,  # МЕНЯТЬ НА contract_id
@@ -3562,92 +3574,6 @@ def upgrade() -> None:
     create_candidate_stage_info(candidate11_id,
                                 staff_unit10_id,
                                 candidate_stage_types18_id)
-
-    candidate_stage_answer1_id = get_uuid()
-    candidate_stage_answer2_id = get_uuid()
-    candidate_stage_answer3_id = get_uuid()
-    candidate_stage_answer4_id = get_uuid()
-    candidate_stage_answer5_id = get_uuid()
-    candidate_stage_answer6_id = get_uuid()
-    candidate_stage_answer7_id = get_uuid()
-    candidate_stage_answer8_id = get_uuid()
-    candidate_stage_answer9_id = get_uuid()
-    candidate_stage_answer10_id = get_uuid()
-    candidate_stage_answer11_id = get_uuid()
-
-    document_link = 'http://192.168.0.169:8083/static/Ответ_по_умолчанию_для_запроса_с_внешних_ресурсов%20(1).docx'
-
-    op.bulk_insert(
-        Base.metadata.tables['candidate_stage_answers'],
-        [{
-            'id': candidate_stage_answer1_id,
-            'candidate_stage_question_id': candidate_stage_question1_id,
-            'candidate_id': candidate_id,
-            'document_link': document_link,
-            'type': 'Document'
-        }, {
-            'id': candidate_stage_answer2_id,
-            'candidate_stage_question_id': candidate_stage_question1_id,
-            'candidate_id': candidate2_id,
-            'document_link': document_link,
-            'type': 'Document'
-        }, {
-            'id': candidate_stage_answer3_id,
-            'candidate_stage_question_id': candidate_stage_question1_id,
-            'candidate_id': candidate3_id,
-            'document_link': document_link,
-            'type': 'Document'
-        }, {
-            'id': candidate_stage_answer4_id,
-            'candidate_stage_question_id': candidate_stage_question1_id,
-            'candidate_id': candidate4_id,
-            'document_link': document_link,
-            'type': 'Document'
-        }, {
-            'id': candidate_stage_answer5_id,
-            'candidate_stage_question_id': candidate_stage_question1_id,
-            'candidate_id': candidate5_id,
-            'document_link': document_link,
-            'type': 'Document'
-        }, {
-            'id': candidate_stage_answer6_id,
-            'candidate_stage_question_id': candidate_stage_question1_id,
-            'candidate_id': candidate6_id,
-            'document_link': document_link,
-            'type': 'Document'
-        }, {
-            'id': candidate_stage_answer7_id,
-            'candidate_stage_question_id': candidate_stage_question1_id,
-            'candidate_id': candidate7_id,
-            'document_link': document_link,
-            'type': 'Document'
-        }, {
-            'id': candidate_stage_answer8_id,
-            'candidate_stage_question_id': candidate_stage_question1_id,
-            'candidate_id': candidate8_id,
-            'document_link': document_link,
-            'type': 'Document'
-        }, {
-            'id': candidate_stage_answer9_id,
-            'candidate_stage_question_id': candidate_stage_question1_id,
-            'candidate_id': candidate9_id,
-            'document_link': document_link,
-            'type': 'Document'
-        }, {
-            'id': candidate_stage_answer10_id,
-            'candidate_stage_question_id': candidate_stage_question1_id,
-            'candidate_id': candidate10_id,
-            'document_link': document_link,
-            'type': 'Document'
-        }, {
-            'id': candidate_stage_answer11_id,
-            'candidate_stage_question_id': candidate_stage_question1_id,
-            'candidate_id': candidate11_id,
-            'document_link': document_link,
-            'type': 'Document'
-        }]
-    )
-
 
     candidate_essay_type1_id = get_uuid()
     candidate_essay_type2_id = get_uuid()

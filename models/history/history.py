@@ -9,6 +9,7 @@ from sqlalchemy.orm import relationship, Session
 from exceptions import NotSupportedException, NotFoundException
 from models import (
     NamedModel,
+    Model,
     StaffUnit,
     Rank,
     Penalty,
@@ -54,7 +55,7 @@ class HistoryEnum(BaseEnum):
     Must have implemented method:
         - **create_history** - method for creating history object from contstructor
 """
-class History(NamedModel):
+class History(Model):
 
     __tablename__ = "histories"
 
@@ -318,8 +319,9 @@ class AttestationHistory(History):
 
 class ServiceCharacteristicHistory(History):
 
-    characteristic_initiator = Column(String, nullable=True)
-
+    characteristic_initiator_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
+    characteristic_initiator = relationship("User", foreign_keys=[characteristic_initiator_id])
+    
     __mapper_args__ = {
         "polymorphic_identity": "service_characteristic_history",
     }

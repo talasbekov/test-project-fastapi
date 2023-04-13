@@ -33,7 +33,7 @@ async def get_all(*,
 
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
-             response_model=BadgeTypeRead,
+             response_model=BadgeRead,
              summary="Create")
 async def create(*,
     db: Session = Depends(get_db),

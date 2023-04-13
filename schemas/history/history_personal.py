@@ -85,9 +85,8 @@ class NameChangeReadHistory(BaseModel):
         return cls(
             name=name,
         )
-    
 
-class ServiceCharacteristicRead(BaseModel):
+class BadgePersonalReadHistory(BaseModel):
     name: Optional[str]
 
     class Config:
@@ -97,8 +96,9 @@ class ServiceCharacteristicRead(BaseModel):
     @classmethod
     def from_orm(cls, orm_obj):
         return cls(
-            name=orm_obj.characteristic_initiator,
+            name=orm_obj.type.name,
         )
+
 
 
 class StatusReadHistory(BaseModel):
@@ -107,6 +107,12 @@ class StatusReadHistory(BaseModel):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
+
+    @classmethod
+    def from_orm(cls, orm_obj):
+        return cls(
+            name=orm_obj.type.name,
+        )
 
 
 class CoolnessReadHistory(BaseModel):
