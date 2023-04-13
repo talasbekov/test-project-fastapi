@@ -9,6 +9,8 @@ from schemas.personal import (BiographicInfoRead, DrivingLicenseRead,
                               SportAchievementRead, SportDegreeRead,
                               TaxDeclarationRead, UserFinancialInfoRead)
 
+from schemas import ProfileRead
+
 
 # base
 class PersonalProfileBase(BaseModel):
@@ -31,6 +33,8 @@ class PersonalProfileRead(PersonalProfileBase):
     profile_id: Optional[uuid.UUID]
     created_at: Optional[datetime.date]
     updated_at: Optional[datetime.date]
+    profile_id: Optional[uuid.UUID]
+    profile: Optional[ProfileRead]
 
     identification_card: Optional[IdentificationCardRead]
     biographic_info: Optional[BiographicInfoRead]
