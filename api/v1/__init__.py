@@ -3,7 +3,7 @@ from fastapi import APIRouter
 from .education import router_education
 
 from .hr_document import router as hr_document_router
-from .cloud_converter import router as cloud_converter_router
+from .render import router as render_router
 from .document_staff_function_type import router as document_staff_function_type_router
 from .document_staff_function import router as document_staff_function_router
 from .service_staff_function_type import router as service_staff_function_type_router
@@ -41,7 +41,7 @@ from .military_unit import router as military_unit_router
 router = APIRouter(prefix="/v1")
 
 router.include_router(auth_router)
-router.include_router(cloud_converter_router)
+router.include_router(render_router)
 router.include_router(user_router)
 router.include_router(hr_document_status_router)
 router.include_router(hr_document_router)
