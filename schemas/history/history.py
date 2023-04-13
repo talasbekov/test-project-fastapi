@@ -356,6 +356,11 @@ class ExperienceRead(BaseModel):
             document_link=orm_obj.document_link,
             document_number=orm_obj.document_number,
             name_of_organization=orm_obj.name_of_organization,
+            is_credited=orm_obj.is_credited,
+            document_style=orm_obj.document_style,
+            date_credited=orm_obj.date_credited,
+            position_work_experience=orm_obj.position_work_experience,
+            
         )
 
 
