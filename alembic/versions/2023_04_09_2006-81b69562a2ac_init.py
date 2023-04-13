@@ -64,6 +64,8 @@ def upgrade() -> None:
     op.create_table('contract_types',
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('is_finite', sa.Boolean(), nullable=False),
+    sa.Column('years', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.PrimaryKeyConstraint('id')
@@ -71,6 +73,7 @@ def upgrade() -> None:
     op.create_table('coolness_types',
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('order',  sa.Integer(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.PrimaryKeyConstraint('id')
@@ -123,6 +126,7 @@ def upgrade() -> None:
     sa.Column('subject_type', sa.Enum('CANDIDATE', 'EMPLOYEE', 'PERSONNEL', 'STAFF', name='subjecttype'), nullable=True),
     sa.Column('properties', postgresql.JSON(none_as_null=True, astext_type=sa.Text()), nullable=True),
     sa.Column('description', sa.String(length=255), nullable=True),
+    sa.Column('actions', postgresql.JSON(none_as_null=True, astext_type=sa.Text()), nullable=True),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),

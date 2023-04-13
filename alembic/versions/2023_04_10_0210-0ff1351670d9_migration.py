@@ -1373,9 +1373,18 @@ def upgrade() -> None:
                     "data_taken": "manual"
                 }
             },
+            'actions': [
+                {
+                    'position_change': {
+                        'staff_unit': {
+                            'tagname': 'new_position'
+                        }
+                    }
+                }
+            ],
             'id': template1_id
         }, {
-            'name': 'Приказ о присвоения звания',
+            'name': 'Приказ о повышении звания',
             'path': 'http://192.168.0.169:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7_%D0%BE_%D0%BF%D1%80%D0%B8%D1%81%D0%B2%D0%BE%D0%B5%D0%BD%D0%B8%D0%B8_%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F_%D0%BF%D0%BE%D0%B2%D1%8B%D1%88%D0%B5%D0%BD%D0%B8%D0%B5.docx',
             'subject_type': "EMPLOYEE",
             'properties': {
@@ -1409,13 +1418,35 @@ def upgrade() -> None:
                     "type": "read",
                     "data_taken": "auto"
                 },
-                "new_position": {
+                "new_rank": {
                     "alias_name": "Новая позиция субъекта",
                     "type": "write",
                     "data_taken": "dropdown",
                     "field_name": "rank"
                 }
             },
+            'actions': [
+                {
+                    'increase_rank': {
+                        'rank': {
+                            'tagname': "new_rank"
+                        }
+                    }
+                },
+                {
+                    'temporary_status_change': {
+                        'status': {
+                            'tagname': "status"
+                        },
+                        'date_from': {
+                            'tagname': "date_from"
+                        },
+                        'date_to': {
+                            'tagname': "date_to"
+                        }
+                    }
+                }
+            ],
             'id': template2_id
         }, {
             'name': 'Приказ о присвоения черного берета',
@@ -1466,10 +1497,14 @@ def upgrade() -> None:
                     "alias_name": "Черный берет",
                     "type": "write",
                     "data_taken": "auto",
-                    "field_name": "badges",
-                    "value": badgetype1_id
+                    "field_name": "badges"
                 }
             },
+            'actions': [
+                {
+                    'add_black_beret': {}
+                }
+            ],
             'id': template3_id
         }]
     )
@@ -2047,10 +2082,12 @@ def upgrade() -> None:
         [{
             'id': coolness_type_id,
             'name': 'Специалист 1 класса',
+            'order': 1
         },
             {
             'id': coolness_type2_id,
             'name': 'Специалист 2 класса',
+            'order': 2
         },
         ]
     )
@@ -2081,10 +2118,14 @@ def upgrade() -> None:
         [{
             'id': contract_type_id,
             'name': 'Тип 1',
+            'years': 2,
+            'is_finite': True
         },
             {
             'id': contract_type2_id,
             'name': 'Тип 2',
+            'years': -1,
+            'is_finite': False
         },
         ]
     )
