@@ -1,7 +1,6 @@
-import docx2txt
-import html2text
-import io
 import aiohttp
+import io
+import mammoth
 
 from fastapi import APIRouter, Depends, Form
 from fastapi.security import HTTPBearer
@@ -19,11 +18,10 @@ async def download_file(url: str):
             else:
                 raise Exception(f"Error downloading file: {resp.status}")
 
-
 def convert_docx_to_html(docx_content: bytes) -> str:
     with io.BytesIO(docx_content) as f:
-        text = docx2txt.process(f)
-        html = html2text.html2text(text)
+        result = mammoth.convert_to_html(f)
+        html = result.value
         return html
 
 
