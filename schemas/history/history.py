@@ -45,7 +45,7 @@ class HistoryBase(BaseModel):
     name_of_organization: Optional[str]
     type: str
     position_work_experience: Optional[str]
-
+    emergency_rank_id: Optional[uuid.UUID]
 
     class Config:
         orm_mode = True
@@ -313,6 +313,7 @@ class EmergencyContactRead(BaseModel):
     coefficient: Optional[Decimal] # КОЭФФИЦИЕНТ  
     percentage: Optional[int] # ПРОЦЕНТ
     staff_division: Optional[str]
+    emergency_position_id: Optional[uuid.UUID]
 
     class Config:
         orm_mode = True
@@ -331,6 +332,7 @@ class EmergencyContactRead(BaseModel):
     
 
 class ExperienceRead(BaseModel):
+    id: Optional[uuid.UUID]
     date_from : Optional[datetime]
     date_to : Optional[datetime]
     document_link : Optional[str]
@@ -351,6 +353,7 @@ class ExperienceRead(BaseModel):
     def from_orm(cls, orm_obj):
         print(orm_obj.name_of_organization)
         return cls(
+            id=orm_obj.id,
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
             document_link=orm_obj.document_link,

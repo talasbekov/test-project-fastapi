@@ -2255,7 +2255,8 @@ def upgrade() -> None:
             'name_of_organization': None,
             'is_credited': None,
             'document_style': None,
-            'date_credited': None
+            'date_credited': None,
+            'emergency_rank_id': None,
          },
         {
             'id': history_id,
@@ -2277,18 +2278,19 @@ def upgrade() -> None:
             'service_characteristic_id': None,  # Add the missing parameter here
             'status_id': None,  # Add the missing parameter here
             'coolness_id': None,  # Add the missing parameter here
-            'contract_id': None,  # Add the missing parameter here
-            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
-            'experience_years': None,  # Add the missing parameter here
-            'characteristic_initiator_id': None,  # Add the missing parameter here
+            'contract_id': None,  # Atype_of_histories[3]_id': None,  # Add the missing parameter here
             'coefficient' : None,
+            'experience_years': None,
+            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+            'characteristic_initiator_id': None,  # Add the missing parameter here
             'percentage' : None,
             'staff_division_id' : None,
             'name_of_organization': None,
             'badge_id' : None,
             'is_credited': None,
             'document_style': None,
-            'date_credited': None
+            'date_credited': None,
+            'emergency_rank_id': None,
         },
         {
             'id': history14_id,
@@ -2348,7 +2350,8 @@ def upgrade() -> None:
             'badge_id' : None,
             'is_credited': None,
             'document_style': None,
-            'date_credited': None
+            'date_credited': None,
+            'emergency_rank_id': rank1_id
         },
             {
             'id': history3_id,
@@ -2381,7 +2384,8 @@ def upgrade() -> None:
             'badge_id' : None,
             'is_credited': None,
             'document_style': None,
-            'date_credited': None
+            'date_credited': None,
+            'emergency_rank_id': None
         },
              
             {
@@ -2415,7 +2419,8 @@ def upgrade() -> None:
             'badge_id': None,
             'is_credited': None,
             'document_style': None,
-            'date_credited': None
+            'date_credited': None,
+            'emergency_rank_id': None
         },
             {
             'id': history7_id,
@@ -2448,7 +2453,8 @@ def upgrade() -> None:
             'badge_id': None,
             'is_credited': None,
             'document_style': None,
-            'date_credited': None
+            'date_credited': None,
+            'emergency_rank_id': None
         },
          {
             'id': history15_id, # TODO: change the id
@@ -2481,7 +2487,8 @@ def upgrade() -> None:
             'badge_id': None,
             'is_credited': True,
             'document_style': 'Первый',
-            'date_credited': datetime.datetime(2014, 3, 31)
+            'date_credited': datetime.datetime(2014, 3, 31),
+            'emergency_rank_id': None
          },
         {
             'id': history16_id,
@@ -2514,7 +2521,8 @@ def upgrade() -> None:
             'badge_id': None,
             'is_credited': None,
             'document_style': None,
-            'date_credited': None
+            'date_credited': None,
+            'emergency_rank_id': None
         },
             {
             'id': history8_id,
@@ -2547,7 +2555,8 @@ def upgrade() -> None:
             'badge_id': None,
             'is_credited': None,
             'document_style': None,
-            'date_credited': None
+            'date_credited': None,
+            'emergency_rank_id': None
         },
            
             {
@@ -2581,7 +2590,8 @@ def upgrade() -> None:
             'badge_id': None,
             'is_credited': None,
             'document_style': None,
-            'date_credited': None
+            'date_credited': None,
+            'emergency_rank_id': None
         },
             {
             'id': history11_id,
@@ -2614,7 +2624,8 @@ def upgrade() -> None:
             'badge_id': None,
             'is_credited': None,
             'document_style': None,
-            'date_credited': None
+            'date_credited': None,
+            'emergency_rank_id': None
         },
             {
             'id': history12_id,
@@ -2647,7 +2658,8 @@ def upgrade() -> None:
             'badge_id': None,
             'is_credited': None,
             'document_style': None,
-            'date_credited': None
+            'date_credited': None,
+            'emergency_rank_id': None
         },
          {
             'id': history13_id,
@@ -2680,7 +2692,8 @@ def upgrade() -> None:
             'badge_id': None,
             'is_credited': None,
             'document_style': None,
-            'date_credited': None
+            'date_credited': None,
+            'emergency_rank_id': None
         }
         ])
 
@@ -2717,10 +2730,10 @@ def upgrade() -> None:
             'name': 'Оперативно-техническая и информационно-аналитическая воинская служба СОО СГО РК'
         }, {
             'id': candidate_category7_id,
-            'name': 'Инжерено-техническая, медицинская, административная и хозяйственная служба СГО РК'
+            'name': 'Инженерно-техническая, медицинская, административная и хозяйственная служба СГО РК'
         }, {
             'id': candidate_category8_id,
-            'name': 'Инжерено-техническая, медицинская, административная и хозяйственная воинская служба СОО СГО РК'
+            'name': 'Инженерно-техническая, медицинская, административная и хозяйственная воинская служба СОО СГО РК'
         }, {
             'id': candidate_category9_id,
             'name': 'Водители службы СГО РК'

@@ -27,6 +27,7 @@ from models import (
     Badge
 )
 from utils import is_valid_uuid
+from docx import Document
 
 class HistoryEnum(BaseEnum):
 
@@ -65,6 +66,8 @@ class History(Model):
     document_link = Column(TEXT, nullable=True)
     document_number = Column(String, nullable=True)
     type = Column(String, nullable=True)
+    document_style = Column(String, nullable=True)
+    date_credited = Column(TIMESTAMP, nullable=True)
 
     @classmethod
     def create_history(self, **kwargs):
@@ -79,7 +82,7 @@ class History(Model):
 class StaffUnitHistory(History):
 
     position_id = Column(UUID(as_uuid=True), ForeignKey("positions.id"), nullable=True)
-    position = relationship("Position")
+    position = relationship("Position", foreign_keys=[position_id])
 
     @classmethod
     def create_history(self, db: Session, user_id: uuid.UUID, id: uuid.UUID, finish_last):
@@ -179,10 +182,13 @@ class EmergencyServiceHistory(History):
 
     coefficient = Column(Double, nullable=True)
     percentage = Column(Integer, nullable=True)
+    
+    emergency_rank_id = Column(UUID(as_uuid=True), ForeignKey("ranks.id"), nullable=True)
+    emergency_rank = relationship("Rank", foreign_keys=[emergency_rank_id])
 
     staff_division_id = Column(UUID(as_uuid=True), ForeignKey("staff_divisions.id"), nullable=True)
-    staff_division = relationship("StaffDivision")
-    
+    staff_division = relationship("StaffDivision", foreign_keys=[staff_division_id])
+
     __mapper_args__ = {
         'polymorphic_identity': 'emergency_service_history'
     }
@@ -249,8 +255,7 @@ class WorkExperienceHistory(History):
 
     name_of_organization = Column(String, nullable=True)
     is_credited = Column(Boolean, nullable=True)
-    document_style = Column(String, nullable=True)
-    date_credited = Column(TIMESTAMP, nullable=True)
+     
     position_work_experience = Column(String, nullable=True)
 
     __mapper_args__ = {
@@ -317,7 +322,8 @@ class AttestationHistory(History):
 
     __mapper_args__ = {
         "polymorphic_identity": "attestation",
-    }
+    } 
+ 
 
 
 class ServiceCharacteristicHistory(History):
