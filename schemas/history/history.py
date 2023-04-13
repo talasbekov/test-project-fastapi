@@ -29,7 +29,6 @@ class HistoryBase(BaseModel):
     rank_id: Optional[uuid.UUID]
     penalty_id: Optional[uuid.UUID]
     emergency_service_id: Optional[uuid.UUID]
-    work_experience_id: Optional[uuid.UUID]
     secondment_id: Optional[uuid.UUID]
     name_change_id: Optional[uuid.UUID]
     attestation_id: Optional[uuid.UUID]
@@ -40,6 +39,9 @@ class HistoryBase(BaseModel):
     badge_id: Optional[uuid.UUID]
     name: Optional[str]
     user_id: uuid.UUID
+    is_credited: Optional[bool]
+    document_style: Optional[str]
+    date_credited: Optional[datetime]
     type: str
 
 

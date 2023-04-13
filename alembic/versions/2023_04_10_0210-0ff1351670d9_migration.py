@@ -2255,6 +2255,9 @@ def upgrade() -> None:
             'staff_division_id' : None,
             'badge_id' : badge_id,
             'name_of_organization': None,
+            'is_credited': None,
+            'document_style': None,
+            'date_credited': None
          },
         {
             'id': history_id,
@@ -2285,6 +2288,9 @@ def upgrade() -> None:
             'staff_division_id' : None,
             'name_of_organization': None,
             'badge_id' : None,
+            'is_credited': None,
+            'document_style': None,
+            'date_credited': None
         },
         {
             'id': history14_id,
@@ -2313,10 +2319,7 @@ def upgrade() -> None:
             'coefficient' : 1.5,
             'percentage' : 10,
             'staff_division_id' : group1_id,
-            'name_of_organization': None,
-            'badge_id' : None,
-        },
-            {
+            'nabadge_id': None,
             'id': history2_id,
             'date_from': str(datetime.datetime(2019, 2, 1)),
             'date_to': str(datetime.datetime(2019, 2, 28)),
@@ -2345,6 +2348,9 @@ def upgrade() -> None:
             'staff_division_id' : None,
             'name_of_organization': None,
             'badge_id' : None,
+            'is_credited': None,
+            'document_style': None,
+            'date_credited': None
         },
             {
             'id': history3_id,
@@ -2375,6 +2381,9 @@ def upgrade() -> None:
             'staff_division_id' : None,
             'name_of_organization': None,
             'badge_id' : None,
+            'is_credited': None,
+            'document_style': None,
+            'date_credited': None
         },
              
             {
@@ -2405,7 +2414,10 @@ def upgrade() -> None:
             'percentage' : None,
             'staff_division_id' : None,
             'name_of_organization': None,
-            'badge_id': None
+            'badge_id': None,
+            'is_credited': None,
+            'document_style': None,
+            'date_credited': None
         },
             {
             'id': history7_id,
@@ -2435,7 +2447,10 @@ def upgrade() -> None:
             'percentage' : None,
             'staff_division_id' : None,
             'name_of_organization': None,
-            'badge_id': None
+            'badge_id': None,
+            'is_credited': None,
+            'document_style': None,
+            'date_credited': None
         },
          {
             'id': history15_id, # TODO: change the id
@@ -2465,7 +2480,10 @@ def upgrade() -> None:
             'percentage' : None,
             'staff_division_id' : None,
             'name_of_organization': 'Cleverest Technologies',
-            'badge_id': None
+            'badge_id': None,
+            'is_credited': True,
+            'document_style': 'Первый',
+            'date_credited': datetime.datetime(2014, 3, 31)
          },
         {
             'id': history16_id,
@@ -2495,7 +2513,10 @@ def upgrade() -> None:
             'percentage' : None,
             'staff_division_id' : None,
             'name_of_organization': None,
-            'badge_id': None
+            'badge_id': None,
+            'is_credited': None,
+            'document_style': None,
+            'date_credited': None
         },
             {
             'id': history8_id,
@@ -2525,8 +2546,10 @@ def upgrade() -> None:
             'percentage' : None,
             'staff_division_id' : None,
             'name_of_organization': None,
-            'badge_id': None
-
+            'badge_id': None,
+            'is_credited': None,
+            'document_style': None,
+            'date_credited': None
         },
            
             {
@@ -2557,7 +2580,10 @@ def upgrade() -> None:
             'percentage' : None,
             'staff_division_id' : None,
             'name_of_organization': None,
-            'badge_id': None
+            'badge_id': None,
+            'is_credited': None,
+            'document_style': None,
+            'date_credited': None
         },
             {
             'id': history11_id,
@@ -2587,7 +2613,10 @@ def upgrade() -> None:
             'percentage' : None,
             'staff_division_id' : None,
             'name_of_organization': None,
-            'badge_id': None
+            'badge_id': None,
+            'is_credited': None,
+            'document_style': None,
+            'date_credited': None
         },
             {
             'id': history12_id,
@@ -2617,7 +2646,10 @@ def upgrade() -> None:
             'percentage' : None,
             'staff_division_id' : None,
             'name_of_organization': None,
-            'badge_id': None
+            'badge_id': None,
+            'is_credited': None,
+            'document_style': None,
+            'date_credited': None
         },
          {
             'id': history13_id,
@@ -2647,7 +2679,10 @@ def upgrade() -> None:
             'percentage' : None,
             'staff_division_id' : None,
             'name_of_organization': None,
-            'badge_id': None
+            'badge_id': None,
+            'is_credited': None,
+            'document_style': None,
+            'date_credited': None
         }
         ])
 
