@@ -1,4 +1,3 @@
-from .profile import ProfileCreate, ProfileUpdate, ProfileRead
 from .badge import *
 from .equipment import (EquipmentCreate, 
                         EquipmentRead, 
@@ -32,6 +31,7 @@ from .staff_unit import StaffUnitCreate, StaffUnitRead, StaffUnitUpdate, UserSta
 from .hr_document_step import (HrDocumentStepCreate, HrDocumentStepRead,
                                HrDocumentStepUpdate)
 from .user import UserCreate, UserRead, UserUpdate, UserGroupUpdate
+from .profile import ProfileCreate, ProfileUpdate, ProfileRead
 from .hr_document_status import HrDocumentStatusRead, HrDocumentStatusCreate, HrDocumentStatusUpdate
 from .hr_document import (HrDocumentCreate, HrDocumentInit, HrDocumentRead,
                           HrDocumentSign, HrDocumentUpdate, DraftHrDocumentCreate,

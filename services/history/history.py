@@ -265,17 +265,14 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         cls.create_history(db, user_id, object.id, finish_last)
 
     def update(self, db: Session, id: uuid.UUID, object: HistoryUpdate): 
-        diff = options.get(object.type)
-        if diff is None:
-            raise NotSupportedException(detail=f'Type: {diff} is not supported!')
-        db_obj = db.query(diff).filter(diff.id == id).first()
-        if db_obj is None:
-            raise NotFoundException(detail=f'Object with id: {id} is not found!')
-        user_service.get_by_id(db, object.user_id)
-        db_obj = diff(**object.dict(exclude_none=True))
-        db.add(db_obj)
+        history = self.get_by_id(db, id)
+        if history is None:
+            raise NotFoundException(detail=f'History with id: {id} is not found!')
+        for key, value in object.dict(exclude_unset=True).items():
+            setattr(history, key, value)
+        db.add(history)
         db.flush()
-        return db_obj
+        return history
 
 
     def get_all_personal(self, db: Session, user_id: uuid.UUID, skip: int = 0, limit: int = 100):

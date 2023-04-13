@@ -16,7 +16,7 @@ router = APIRouter(prefix="/candidate_stage_info", tags=["CandidateStageInfo"], 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[CandidateStageInfoRead],
-            summary="Get all CandidateStageInfo")
+            summary="Get all Incoming CandidateStageInfo")
 async def get_all(
         db: Session = Depends(get_db),
         skip: int = 0,
@@ -25,7 +25,7 @@ async def get_all(
         filter: str = None
 ):
     """
-        Get all CandidateStageInfo.
+        Get all Incoming CandidateStageInfo.
 
         - **skip**: int - The number of CandidateStageInfo to skip before returning the results. This parameter is optional and defaults to 0.
         - **limit**: int - The maximum number of CandidateStageInfo to return in the response. This parameter is optional and defaults to 100.
@@ -173,20 +173,3 @@ async def update(
     return candidate_stage_info_service.update(db,
                                                db_obj=candidate_stage_info_service.get_by_id(db, id),
                                                obj_in=body)
-
-
-@router.delete("/{id}", dependencies=[Depends(HTTPBearer())],
-               status_code=status.HTTP_204_NO_CONTENT,
-               summary="Delete a CandidateStageInfo")
-async def delete(
-        db: Session = Depends(get_db),
-        Authorize: AuthJWT = Depends(),
-        id: uuid.UUID = None
-):
-    """
-        Delete a CandidateStageInfo.
-
-        - **id**: UUID - required and should exist in the database.
-    """
-    Authorize.jwt_required()
-    candidate_stage_info_service.remove(db, id)
