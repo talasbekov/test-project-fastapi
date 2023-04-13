@@ -265,6 +265,29 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             raise NotSupportedException(detail=f'In options: {diff} is not present!')
         cls.create_history(db, user_id, object.id, finish_last)
 
+    def create_timeline_history(
+        self,
+        db: Session,
+        user_id: uuid.UUID,
+        object,
+        date_from: datetime,
+        date_to: datetime,
+    ):
+        print(type(object))
+        diff = classes.get(type(object))
+        if diff is None:
+            raise NotSupportedException(detail=f"Type: {diff} is not supported!")
+        cls = options.get(diff)
+        if cls is None:
+            raise NotSupportedException(detail=f"In options: {diff} is not present!")
+        if getattr(cls, "create_timeline_history", None) is None:
+            raise NotSupportedException(
+                detail=f"Class: {cls.__name__} does not support date_from, date_to format!"
+            )
+        cls.create_timeline_history(
+            db, user_id, object.id, finish_last, date_from, date_to
+        )
+
     def update(self, db: Session, id: uuid.UUID, object: HistoryUpdate): 
         history = self.get_by_id(db, id)
         if history is None:

@@ -32,6 +32,13 @@ class PenaltyService(ServiceBase[Penalty, PenaltyCreate, PenaltyUpdate]):
     def stop_relation(self, db: Session, user_id: uuid.UUID, id: uuid.UUID):
         db.query(PenaltyHistory).filter(PenaltyHistory.penalty_id == id).update({'date_to': datetime.now()})
 
+    def exists_relation(self, db: Session, user_id: str, badge_type_id: uuid.UUID):
+        return (
+            db.query(Penalty)
+            .filter(Penalty.user_id == user_id)
+            .filter(Penalty.type_id == badge_type_id)
+            .first()
+        ) is not None
 
 
 penalty_service = PenaltyService(Penalty)

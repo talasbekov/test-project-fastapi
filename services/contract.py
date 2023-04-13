@@ -30,5 +30,13 @@ class ContractService(ServiceBase[Contract, ContractCreate, ContractUpdate]):
     def stop_relation(self, db: Session, user_id: uuid.UUID, id: uuid.UUID):
         db.query(ContractHistory).filter(ContractHistory.contract_id == id).update({'date_to': datetime.now()})
 
+    def exists_relation(self, db: Session, user_id: str, contract_type_id: uuid.UUID):
+        return (
+            db.query(Contract)
+            .filter(Contract.user_id == user_id)
+            .filter(Contract.type_id == contract_type_id)
+            .first()
+        ) is not None
+
 
 contract_service = ContractService(Contract)

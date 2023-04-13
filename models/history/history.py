@@ -2,6 +2,8 @@ import datetime
 import uuid
 from enum import Enum as BaseEnum
 
+from typing import Union
+
 from sqlalchemy import TIMESTAMP, Column, ForeignKey, String, Double, Integer, Boolean
 from sqlalchemy.dialects.postgresql import TEXT, UUID
 from sqlalchemy.orm import relationship, Session
@@ -85,7 +87,9 @@ class StaffUnitHistory(History):
     position = relationship("Position", foreign_keys=[position_id])
 
     @classmethod
-    def create_history(self, db: Session, user_id: uuid.UUID, id: uuid.UUID, finish_last):
+    def create_history(
+        cls, db: Session, user_id: uuid.UUID, id: uuid.UUID, finish_last
+    ):
         staff_unit = db.query(StaffUnit).filter(StaffUnit.id == id).first()
         if staff_unit is None:
             raise NotFoundException(detail="Staff unit not found")
@@ -98,6 +102,7 @@ class StaffUnitHistory(History):
                 name='',
             )
         )
+        db.flush()
 
     __mapper_args__ = {
         "polymorphic_identity": "staff_unit_history",
@@ -147,6 +152,7 @@ class BadgeHistory(History):
                 name="",
                 )
             )
+        db.flush()
 
     __mapper_args__ = {
         "polymorphic_identity": "badge_history",
@@ -172,6 +178,25 @@ class PenaltyHistory(History):
                 name=penalty.name,
             )
         )
+        db.flush()
+
+    @classmethod
+    def create_timeline_history(
+        cls, db: Session, user_id: uuid.UUID, id: uuid.UUID, finish_last, date_from, date_to
+    ):
+        penalty = db.query(Penalty).filter(Penalty.id == id).first()
+        if penalty is None:
+            raise NotFoundException(detail="Penalty not found")
+        db.add(
+            PenaltyHistory(
+                date_from=date_from,
+                date_to=date_to,
+                user_id=user_id,
+                penalty_id=id,
+                name=penalty.name,
+            )
+        )
+        db.flush()
 
     __mapper_args__ = {
         "polymorphic_identity": "penalty_history",
@@ -216,6 +241,27 @@ class ContractHistory(History):
                 experience_years=contract.experience_years,
             )
         )
+        db.flush()
+
+    @classmethod
+    def create_timeline_history(
+        cls, db: Session, user_id: uuid.UUID, id: uuid.UUID, finish_last, date_from, date_to
+    ):
+        contract = db.query(Contract).filter(Contract.id == id).first()
+        if contract is None:
+            raise NotFoundException(detail="Contract not found")
+        finish_last(db, user_id, cls.__mapper_args__["polymorphic_identity"])
+        db.add(
+            ContractHistory(
+                date_from=date_from,
+                date_to=date_to,
+                user_id=user_id,
+                contract_id=id,
+                name=contract.name,
+                experience_years=contract.experience_years,
+            )
+        )
+        db.flush()
 
     __mapper_args__ = {
         "polymorphic_identity": "contract_history",
@@ -240,6 +286,7 @@ class CoolnessHistory(History):
                 name='',
             )
         )
+        db.flush()
 
     # coefficient = Column(Double, nullable=True)
     # percentage = Column(Integer, nullable=True)
@@ -275,6 +322,24 @@ class SecondmentHistory(History):
         db.add(SecondmentHistory(
                 date_from=datetime.datetime.now(),
                 date_to=None,
+                user_id=user_id,
+                secondment_id=id,
+                name="",
+            )
+        )
+        db.flush()
+
+    @classmethod
+    def create_timeline_history(
+        cls, db: Session, user_id: uuid.UUID, id: uuid.UUID, finish_last, date_from, date_to
+    ):
+        secondment = db.query(Secondment).filter(Secondment.id == id).first()
+        if secondment is None:
+            raise NotFoundException(detail="Secondment not found")
+        db.add(
+            SecondmentHistory(
+                date_from=date_from,
+                date_to=date_to,
                 user_id=user_id,
                 secondment_id=id,
                 name="",
@@ -342,13 +407,46 @@ class StatusHistory(History):
     status = relationship("Status")
 
     @classmethod
-    def create_history(cls, db: Session, user_id: uuid.UUID, id: uuid.UUID, finish_last):
+    def create_history(cls, db: Session, user_id: uuid.UUID, id: Union[uuid.UUID, str], finish_last):
+        if isinstance(id, uuid.UUID):
+            status = db.query(Status).filter(Status.id == id).first()
+            if status is None:
+                raise NotFoundException(detail="Status not found")
+            db.add(StatusHistory(
+                    date_from=datetime.datetime.now(),
+                    date_to=None,
+                    user_id=user_id,
+                    status_id=id,
+                    name="",
+                )
+            )
+        else:
+            db.add(StatusHistory(
+                date_from=datetime.datetime.now(),
+                date_to=None,
+                user_id=user_id,
+                status_id=None,
+                name=id
+            ))
+        db.flush()
+
+    @classmethod
+    def create_timeline_history(
+        cls,
+        db: Session,
+        user_id: uuid.UUID,
+        id: uuid.UUID,
+        finish_last,
+        date_from,
+        date_to,
+    ):
         status = db.query(Status).filter(Status.id == id).first()
         if status is None:
             raise NotFoundException(detail="Status not found")
-        db.add(StatusHistory(
-                date_from=datetime.datetime.now(),
-                date_to=None,
+        db.add(
+            StatusHistory(
+                date_from=date_from,
+                date_to=date_to,
                 user_id=user_id,
                 status_id=id,
                 name="",

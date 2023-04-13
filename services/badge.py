@@ -47,6 +47,14 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
 
         return badge
     
+    def exists_relation(self, db: Session, user_id: str, badge_type_id: uuid.UUID):
+        return (
+            db.query(Badge)
+            .filter(Badge.user_id == user_id)
+            .filter(Badge.type_id == badge_type_id)
+            .first()
+        ) is not None
+
     def stop_relation(self, db: Session, user_id: str, badge_id: uuid.UUID):
         db.query(BadgeHistory).filter(BadgeHistory.badge_id == badge_id).update({BadgeHistory.date_to: datetime.now()})
         
