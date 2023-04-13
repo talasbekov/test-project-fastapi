@@ -714,6 +714,7 @@ def upgrade() -> None:
     sa.Column('document_link', sa.TEXT(), nullable=True),
     sa.Column('document_number', sa.String(), nullable=True),
     sa.Column('type', sa.String(), nullable=True), 
+    sa.Column('position_work_experience', sa.String(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('is_credited', sa.Boolean(), nullable=True),
     sa.Column('document_style', sa.String(), nullable=True),

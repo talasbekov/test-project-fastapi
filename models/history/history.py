@@ -251,7 +251,8 @@ class WorkExperienceHistory(History):
     is_credited = Column(Boolean, nullable=True)
     document_style = Column(String, nullable=True)
     date_credited = Column(TIMESTAMP, nullable=True)
-    
+    position_work_experience = Column(String, nullable=True)
+
     __mapper_args__ = {
         "polymorphic_identity": "work_experience_history",
     }
