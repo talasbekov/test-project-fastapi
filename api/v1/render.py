@@ -27,3 +27,12 @@ async def convert(*,
 ):
     Authorize.jwt_required()
     return render_service.generate(db, candidate_id=body.candidate_id, template_id=body.hr_document_template_id)
+
+@router.post("/render/finish-candidate", dependencies=[Depends(HTTPBearer())])
+async def rdner_finish_candidate(*,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends(),
+    body: ConvertCandidateTemplate
+):
+    Authorize.jwt_required()
+    return render_service.generate_finish_candidate(db, candidate_id=body.candidate_id, template_id=body.hr_document_template_id)
