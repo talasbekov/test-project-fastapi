@@ -1422,6 +1422,7 @@ def upgrade() -> None:
     template3_id = get_uuid()
     template4_id = get_uuid()
     template5_id = get_uuid()
+    template6_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['hr_document_templates'],
@@ -1643,7 +1644,9 @@ def upgrade() -> None:
             'id': template3_id
         }, {
             "name": "Запрос на наличие сведений для указанных граждан о причастности к религиозному экстремизму",
+            "nameKZ": "Көрсетілген азаматтар үшін діни экстремизмге қатысы бар екендігі туралы мәліметтердің болуына сұрау салу",
             "path": "http://192.168.0.169:8083/static/%D0%BA%D0%B0%D0%BD%D0%B4%D0%B8%D0%B4%D0%B0%D1%82%D1%8B1.docx",
+            "pathKZ": "http://192.168.0.169:8083/static/%D0%BA%D0%B0%D0%BD%D0%B4%D0%B8%D0%B4%D0%B0%D1%82%D1%8B1.docx",
             "subject_type": 1,
             "properties": {
                 "recipient.organization_name": {
@@ -1756,12 +1759,16 @@ def upgrade() -> None:
                     "type": "read",
                     "data_taken": "auto"
                 }
-            },
+            },'actions': {'args': [
+            
+            ]},
             'id': template4_id
         }, 
         {
             "name": "Заключение спец. проверки",
+            "nameKZ": "Арнайы қорытынды тексерулер",
             "path": "http://193.106.99.68:2287/static/pre-finalv2.docx",
+            "pathKZ": "http://193.106.99.68:2287/static/pre-finalv2.docx",
             "subject_type": 1,
             "properties": {
                 "curator.rank.name": {
@@ -1929,8 +1936,28 @@ def upgrade() -> None:
                     "type": "read",
                     "data_taken": "auto"
                 }
-            }
-            ,'id': template5_id
+            },'actions': {'args': [
+            
+            ]},
+            'id': template5_id
+        },
+        {
+            "name": "Заключение на зачисление",
+            "nameKZ": "Қабылдау қорытындысы",
+            "path": "http://192.168.0.169:8083/static/finish_candidate.docx",
+            "pathKZ": "http://192.168.0.169:8083/static/finish_candidate.docx",
+            "subject_type": 1,
+            "properties": {
+                "example": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }
+            },
+            'actions': {'args': [
+            
+            ]},
+            'id': template6_id
         }]
     )
 
