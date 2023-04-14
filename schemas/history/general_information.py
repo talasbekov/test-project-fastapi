@@ -33,3 +33,5 @@ class GeneralInformationRead(BaseModel):
     is_badge_black: Optional[bool]
     researcher: Optional[str]
     recommendation: Optional[str]
+    recommendation_document_link: Optional[str]
+    recommender_id: Optional[uuid.UUID]

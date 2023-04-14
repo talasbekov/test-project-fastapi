@@ -137,6 +137,7 @@ def upgrade() -> None:
     )
     op.create_table('hr_document_templates',
     sa.Column('path', sa.String(length=255), nullable=True),
+    sa.Column('pathKZ', sa.String(length=255), nullable=True),
     sa.Column('subject_type', sa.Enum('CANDIDATE', 'EMPLOYEE', 'PERSONNEL', 'STAFF', name='subjecttype'), nullable=True),
     sa.Column('properties', postgresql.JSON(none_as_null=True, astext_type=sa.Text()), nullable=True),
     sa.Column('description', sa.String(length=255), nullable=True),
@@ -643,10 +644,12 @@ def upgrade() -> None:
     op.create_table('recommender_users',
     sa.Column('document_link', sa.TEXT(), nullable=True),
     sa.Column('user_id', sa.UUID(), nullable=True),
+    sa.Column('user_by_id', sa.UUID(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['user_by_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('secondments',

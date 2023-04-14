@@ -246,7 +246,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             )
         recommender = recommender_user_service.get_by_user_id(db, user_id)
         if recommender:
-            recommender_user = recommender.user.last_name + ' ' + recommender.user.first_name[0] + '.' + recommender.user.father_name[0] + '.'
+            recommender_user = recommender.user_by.last_name + ' ' + recommender.user_by.first_name[0] + '.' + recommender.user_by.father_name[0] + '.'
         else:
             recommender_user = None
 
@@ -258,8 +258,10 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             is_badge_black=is_badge_black,
             researcher=user.last_name + ' ' + user.first_name[0] + '.' + user.father_name[0] + '.',
             recommendation=recommender_user,
+            recommender_id=recommender.user_by_id if recommender else None,
+            recommendation_document_link=recommender.document_link if recommender else None,
         )
-        
+
 
         return general_information_read
 

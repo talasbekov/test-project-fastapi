@@ -19,6 +19,7 @@ class HrDocumentTemplate(NamedModel):
     __tablename__ = "hr_document_templates"
 
     path = Column(String(255))
+    pathKZ = Column(String(255))
     subject_type = Column(Enum(SubjectType))
     properties = Column(JSON(none_as_null=True))
     description = Column(String(255))
