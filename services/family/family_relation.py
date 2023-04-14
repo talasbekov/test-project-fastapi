@@ -13,6 +13,12 @@ class FamilyRelationService(ServiceBase[FamilyRelation, FamilyRelationCreate, Fa
         if not family_relation:
             raise NotFoundException("FamilyRelation with id: {id} not found!")
         return family_relation
+    
+    def get_by_name(self, db: Session, name: str):
+        family_relation = db.query(FamilyRelation).filter(FamilyRelation.name == name).first()
+        if not family_relation:
+            raise NotFoundException("FamilyRelation with name: {name} not found!")
+        return family_relation
 
 
 family_relation_service = FamilyRelationService(FamilyRelation)

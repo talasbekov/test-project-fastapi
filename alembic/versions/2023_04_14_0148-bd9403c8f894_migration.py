@@ -1420,6 +1420,9 @@ def upgrade() -> None:
     template1_id = get_uuid()
     template2_id = get_uuid()
     template3_id = get_uuid()
+    template4_id = get_uuid()
+    template5_id = get_uuid()
+    template6_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['hr_document_templates'],
@@ -1639,6 +1642,322 @@ def upgrade() -> None:
                 }
             ]},
             'id': template3_id
+        }, {
+            "name": "Запрос на наличие сведений для указанных граждан о причастности к религиозному экстремизму",
+            "nameKZ": "Көрсетілген азаматтар үшін діни экстремизмге қатысы бар екендігі туралы мәліметтердің болуына сұрау салу",
+            "path": "http://192.168.0.169:8083/static/%D0%BA%D0%B0%D0%BD%D0%B4%D0%B8%D0%B4%D0%B0%D1%82%D1%8B1.docx",
+            "pathKZ": "http://192.168.0.169:8083/static/%D0%BA%D0%B0%D0%BD%D0%B4%D0%B8%D0%B4%D0%B0%D1%82%D1%8B1.docx",
+            "subject_type": 1,
+            "properties": {
+                "recipient.organization_name": {
+                    "alias_name": "Наименование ссылаемой организации",
+                    "type": "read",
+                    "data_taken": "manual"
+                },
+                "recipient.position": {
+                    "alias_name": "Позиция ссылаемого челевека",
+                    "type": "read",
+                    "data_taken": "manual"
+                },
+                "recipient.rank": {
+                    "alias_name": "Звание ссылаемого челевека",
+                    "type": "read",
+                    "data_taken": "manual"
+                },
+                "recipient.name": {
+                    "alias_name": "Имя ссылаемого челевека",
+                    "type": "read",
+                    "data_taken": "manual"
+                },
+                "recipient.father_name": {
+                    "alias_name": "Отчество ссылаемого челевека",
+                    "type": "read",
+                    "data_taken": "manual"
+                },
+                "recipient.surname": {
+                    "alias_name": "Фамилия ссылаемого челевека",
+                    "type": "read",
+                    "data_taken": "manual"
+                },
+                "recipient.city": {
+                    "alias_name": "Город ссылаемой организации",
+                    "type": "read",
+                    "data_taken": "manual"
+                },
+                "candidate.surname": {
+                    "alias_name": "Фамилия кандидата",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "candidate.name": {
+                    "alias_name": "Имя кандидата",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "candidate.father_name": {
+                    "alias_name": "Отчество кандидата",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "candidate.IIN": {
+                    "alias_name": "ИИН кандидата",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "candidate.birth_date": {
+                    "alias_name": "Дата рождения кандидата",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "candidate.birth_place": {
+                    "alias_name": "Место рождения кандидата",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "candidate.nationality": {
+                    "alias_name": "Национальность кандидата",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "candidate.residence_address": {
+                    "alias_name": "Место жительство кандидата",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "check_information": {
+                    "alias_name": "Запрошенная информация для проверки",
+                    "type": "read",
+                    "data_taken": "manual"
+                },
+                "approving.position": {
+                    "alias_name": "Позиция куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "approving.rank": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "approving.surname": {
+                    "alias_name": "Фамилия куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "approving.name": {
+                    "alias_name": "Имя куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "approving.father_name": {
+                    "alias_name": "Отчество куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "date_of_signature": {
+                    "alias_name": "Дата подписания",
+                    "type": "read",
+                    "data_taken": "auto"
+                }
+            },'actions': {'args': [
+            
+            ]},
+            'id': template4_id
+        }, 
+        {
+            "name": "Заключение спец. проверки",
+            "nameKZ": "Арнайы қорытынды тексерулер",
+            "path": "http://193.106.99.68:2287/static/pre-finalv2.docx",
+            "pathKZ": "http://193.106.99.68:2287/static/pre-finalv2.docx",
+            "subject_type": 1,
+            "properties": {
+                "curator.rank.name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "curator.first_name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
+                "curator.father_name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
+                "curator.last_name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
+                "year": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
+                "day": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "month": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
+                "candidate.rank.name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
+                "candidate.first_name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
+                "candidate.father_name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
+                "candidate.last_name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "candidate.date_birth": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
+                "candidate.profile.personal_profile.biographic_info.place_birth": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "candidate.profile.personal_profile.biographic_info.nationality": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "candidate.address": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "father.first_name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
+                "father.father_name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
+                "father.last_name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "father.iin": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "father.date_birth": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "father.place_birth": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "father.workplace": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "father.address": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "curator.staff_unit.position.name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
+                "curator.staff_unit.staff_division.name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "mother.first_name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
+                "mother.father_name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
+                "mother.last_name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "mother.iin": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "mother.date_birth": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "mother.place_birth": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "mother.workplace": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "mother.address": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }
+            },'actions': {'args': [
+            
+            ]},
+            'id': template5_id
+        },
+        {
+            "name": "Заключение на зачисление",
+            "nameKZ": "Қабылдау қорытындысы",
+            "path": "http://192.168.0.169:8083/static/finish_candidate.docx",
+            "pathKZ": "http://192.168.0.169:8083/static/finish_candidate.docx",
+            "subject_type": 1,
+            "properties": {
+                "example": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }
+            },
+            'actions': {'args': [
+            
+            ]},
+            'id': template6_id
         }]
     )
 
