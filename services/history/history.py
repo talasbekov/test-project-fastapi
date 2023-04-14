@@ -75,12 +75,8 @@ options = {
     'rank_history': RankHistory,
     'penalty_history': PenaltyHistory,
     'contract_history': ContractHistory,
-    'emergency_service_history': EmergencyServiceHistory,
-    'work_experience_history': WorkExperienceHistory,
     'secondment_history': SecondmentHistory,
-    'name_change_history': NameChangeHistory,
     'attestation': AttestationHistory,
-    'service_characteristic_history': ServiceCharacteristicHistory,
     'status_history': StatusHistory,
     'coolness_history': CoolnessHistory, 
     'badge_history': BadgeHistory,
@@ -107,11 +103,13 @@ def finish_last(db: Session, user_id: str, type: str):
 
 
 class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
+
     def get_by_type(self, db: Session, type: str):
         return db.query(self.model).filter(self.model.type == type).first()
 
     def get_all_by_type(self, db: Session, type: str):
         return db.query(self.model).filter(self.model.type == type).all()
+
     def create(self, db: Session, obj_in: HistoryCreate):
         cls = options.get(obj_in.type) 
         if cls is None:
@@ -271,7 +269,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         cls = options.get(diff)
         if cls is None:
             raise NotSupportedException(detail=f'In options: {diff} is not present!')
-        cls.create_history(db, user_id, object.id, finish_last)
+        return cls.create_history(db, user_id, object.id, finish_last)
 
     def create_timeline_history(
         self,
@@ -292,7 +290,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             raise NotSupportedException(
                 detail=f"Class: {cls.__name__} does not support date_from, date_to format!"
             )
-        cls.create_timeline_history(
+        return cls.create_timeline_history(
             db, user_id, object.id, finish_last, date_from, date_to
         )
 

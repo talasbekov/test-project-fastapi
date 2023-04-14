@@ -16,7 +16,7 @@ from exceptions import (BadRequestException, ForbiddenException,
                         InvalidOperationException, NotFoundException)
 from models import (HrDocument, HrDocumentStatusEnum,
                     HrDocumentStep, StaffUnit, User, DocumentStaffFunction, StaffDivision, JurisdictionEnum,
-                    HrDocumentStatus, StaffDivisionEnum, HrDocumentTemplate,HrDocumentInfo)
+                    HrDocumentStatus, StaffDivisionEnum, HrDocumentTemplate,HrDocumentInfo, LanguageEnum)
 from schemas import (BadgeRead, HrDocumentCreate, HrDocumentInit,
                      HrDocumentRead, HrDocumentSign, HrDocumentUpdate,
                      RankRead, StaffDivisionOptionRead, StaffUnitRead,
@@ -429,18 +429,23 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         return document
 
-    def generate(self, db: Session, id: str):
+    def generate(self, db: Session, id: str, language: LanguageEnum):
         document = self.get_by_id(db, id)
         document_template = hr_document_template_service.get_by_id(
             db, document.hr_document_template_id
         )
 
+        path = document_template.path if language == LanguageEnum.ru else document_template.pathKZ
+        
+        if path is None:
+            raise BadRequestException(detail=f'Приказа нет на русском языке!')
+
         with tempfile.NamedTemporaryFile(delete=False) as temp:
-            arr = document_template.path.rsplit(".")
+            arr = path.rsplit(".")
             extension = arr[len(arr) - 1]
             temp_file_path = temp.name + "." + extension
 
-            urllib.request.urlretrieve(document_template.path, temp_file_path)
+            urllib.request.urlretrieve(path, temp_file_path)
 
         template = DocxTemplate(temp_file_path)
 
@@ -448,7 +453,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         for i in list(document.properties):
             if isinstance(document.properties[i], dict):
-                context[i] = document.properties[i]["name"]
+                context[i] = document.properties[i]["name"] if language == LanguageEnum.ru else document.properties[i]["nameKZ"]
             else:
                 context[i] = document.properties[i]
         if document.reg_number is not None:
@@ -524,46 +529,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         completed_status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.COMPLETED.value)
         document.status_id = completed_status.id
 
-        fields = user_service.get_fields()
-
         props = document.document_template.properties
 
-        # for key in list(props):
-        #     value = props[key]
-        #
-        #     if value["type"] == "read":
-        #         continue
-        #
-        #     if value["field_name"] not in fields:
-        #         raise InvalidOperationException(
-        #             f'Operation on {value["field_name"]} is not supported yet!'
-        #         )
-        #
-        #     for user in users:
-        #         if value["data_taken"] == "auto":
-        #             self._set_attr(db, user, value["field_name"], value["value"], value['type'])
-        #
-        #         else:
-        #             if key in document.properties:
-        #                 val = document.properties.get(key)
-        #                 if val is None:
-        #                     raise BadRequestException(
-        #                         f"Нет ключа {val} в document.properties"
-        #                     )
-        #                 if not type(val) == dict:
-        #                     self._set_attr(db, user, value["field_name"], val, value['type'])
-        #                 else:
-        #                     if val["value"] == None:
-        #                         raise BadRequestException(
-        #                             f"Обьект {key} должен иметь value!"
-        #                         )
-        #                     self._set_attr(
-        #                         db,
-        #                         user,
-        #                         value["field_name"],
-        #                         val["value"],
-        #                         value["type"],
-        #                     )
         template = document.document_template
 
         properties: dict = document.properties
@@ -578,7 +545,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                         f"Action {action_name} is not supported!"
                     )
 
-                handlers[action_name].handle_action(db, user, action, props, properties)
+                handlers[action_name].handle_action(db, user, action, props, properties, document)
 
         document.signed_at = datetime.now()
         document.reg_number = (
@@ -594,40 +561,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         db.flush()
 
         return document
-
-    def _set_attr(self, db: Session, user: User, key: str, value, type: str):
-        attr = getattr(user, key)
-
-        if isinstance(attr, Base):
-            res = self._get_service(key).get_by_id(db, value)
-            setattr(user, key, res)
-            history_service.create_history(db, user.id, res)
-
-        elif isinstance(attr, list):
-            if type == 'write':
-                if getattr(self._get_service(key), 'create_relation') is None:
-                    raise InvalidOperationException(
-                        f"New state is encountered! Cannot change {key}!"
-                    )
-                res = self._get_service(key).create_relation(db, user.id, value)
-                attr.append(res)
-                setattr(user, key, attr)
-                history_service.create_history(db, user.id, res)
-            else:
-                res = self._get_service(key).get_by_id(db, value)
-                if getattr(self._get_service(key), 'stop_relation') is None:
-                    raise InvalidOperationException(
-                        f"New state is encountered! Cannot change {key}!"
-                    )
-                self._get_service(key).stop_relation(db, user.id, value)
-
-        else:
-            setattr(user, key, value)
-
-        db.add(user)
-        db.flush()
-
-        return user
 
     def _get_service(self, key):
         service = options.get(key)

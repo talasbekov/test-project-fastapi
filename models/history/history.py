@@ -56,7 +56,7 @@ class HistoryEnum(BaseEnum):
     about user's rank changes, staff unit changes, etc.
 
     Must have implemented method:
-        - **create_history** - method for creating history object from contstructor
+        - **create_history** - method for creating history object from constructor
 """
 class History(Model):
 
@@ -66,6 +66,7 @@ class History(Model):
     date_to = Column(TIMESTAMP(timezone=True), nullable=True)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     document_link = Column(TEXT, nullable=True)
+    cancel_document_link = Column(TEXT, nullable=True)
     document_number = Column(String, nullable=True)
     type = Column(String, nullable=True)
     document_style = Column(String, nullable=True)
@@ -94,14 +95,18 @@ class StaffUnitHistory(History):
         if staff_unit is None:
             raise NotFoundException(detail="Staff unit not found")
         finish_last(db, user_id, cls.__mapper_args__["polymorphic_identity"])
-        db.add(StaffUnitHistory(
-                date_from=datetime.datetime.now(),
-                date_to=None,
-                user_id=user_id,
-                position_id=staff_unit.position_id,
-            )
+        obj = StaffUnitHistory(
+            date_from=datetime.datetime.now(),
+            date_to=None,
+            user_id=user_id,
+            position_id=staff_unit.position_id,
         )
+
+        db.add(obj)
         db.flush()
+        db.refresh(obj)
+
+        return obj
 
     __mapper_args__ = {
         "polymorphic_identity": "staff_unit_history",
@@ -121,13 +126,16 @@ class RankHistory(History):
         if rank is None:
             raise NotFoundException(detail="Rank not found")
         finish_last(db, user_id, cls.__mapper_args__["polymorphic_identity"])
-        db.add(RankHistory(
-                date_from=datetime.datetime.now(),
-                date_to=None,
-                user_id=user_id,
-                rank_id=id,
-            )
+        obj = RankHistory(
+            date_from=datetime.datetime.now(),
+            date_to=None,
+            user_id=user_id,
+            rank_id=id,
         )
+        db.add(obj)
+        db.flush()
+        db.refresh(obj)
+        return obj
 
     __mapper_args__ = {
         "polymorphic_identity": "rank_history",
@@ -144,14 +152,18 @@ class BadgeHistory(History):
         if badge is None:
             raise NotFoundException(detail="Badge not found")
         finish_last(db, user_id, cls.__mapper_args__["polymorphic_identity"])
-        db.add(BadgeHistory(
-                date_from=datetime.datetime.now(),
-                date_to=None,
-                user_id=user_id,
-                badge_id=id,
-                )
-            )
+        obj = BadgeHistory(
+            date_from=datetime.datetime.now(),
+            date_to=None,
+            user_id=user_id,
+            badge_id=id,
+        )
+
+        db.add(obj)
         db.flush()
+        db.refresh(obj)
+
+        return obj
 
     __mapper_args__ = {
         "polymorphic_identity": "badge_history",
@@ -169,14 +181,17 @@ class PenaltyHistory(History):
         if penalty is None:
             raise NotFoundException(detail="Penalty not found")
         finish_last(db, user_id, cls.__mapper_args__["polymorphic_identity"])
-        db.add(PenaltyHistory(
-                date_from=datetime.datetime.now(),
-                date_to=None,
-                user_id=user_id,
-                penalty_id=id,
-            )
+        obj = PenaltyHistory(
+            date_from=datetime.datetime.now(),
+            date_to=None,
+            user_id=user_id,
+            penalty_id=id,
         )
+        db.add(obj)
         db.flush()
+        db.refresh(obj)
+
+        return obj
 
     @classmethod
     def create_timeline_history(
@@ -229,15 +244,18 @@ class ContractHistory(History):
         if contract is None:
             raise NotFoundException(detail="Contract not found")
         finish_last(db, user_id, cls.__mapper_args__["polymorphic_identity"])
-        db.add(ContractHistory(
-                date_from=datetime.datetime.now(),
-                date_to=None,
-                user_id=user_id,
-                contract_id=id,
-                experience_years=contract.experience_years,
-            )
+        obj = ContractHistory(
+            date_from=datetime.datetime.now(),
+            date_to=None,
+            user_id=user_id,
+            contract_id=id,
+            experience_years=contract.experience_years,
         )
+        db.add(obj)
         db.flush()
+        db.refresh(obj)
+
+        return obj
 
     @classmethod
     def create_timeline_history(
@@ -247,16 +265,17 @@ class ContractHistory(History):
         if contract is None:
             raise NotFoundException(detail="Contract not found")
         finish_last(db, user_id, cls.__mapper_args__["polymorphic_identity"])
-        db.add(
-            ContractHistory(
-                date_from=date_from,
-                date_to=date_to,
-                user_id=user_id,
-                contract_id=id,
-                experience_years=contract.experience_years,
-            )
+        obj = ContractHistory(
+            date_from=date_from,
+            date_to=date_to,
+            user_id=user_id,
+            contract_id=id,
+            experience_years=contract.experience_years,
         )
+        db.add(obj)
         db.flush()
+        db.refresh(obj)
+        return obj
 
     __mapper_args__ = {
         "polymorphic_identity": "contract_history",
@@ -273,14 +292,17 @@ class CoolnessHistory(History):
         if db.query(Coolness).filter(Coolness.id == id).first() is None:
             raise NotFoundException(detail="Coolness not found")
         finish_last(db, user_id, cls.__mapper_args__["polymorphic_identity"])
-        db.add(CoolnessHistory(
-                date_from=datetime.datetime.now(),
-                date_to=None,
-                user_id=user_id,
-                coolness_id=id,
-            )
+        obj = CoolnessHistory(
+            date_from=datetime.datetime.now(),
+            date_to=None,
+            user_id=user_id,
+            coolness_id=id,
         )
+        db.add(obj)
         db.flush()
+        db.refresh(obj)
+
+        return obj
 
     # coefficient = Column(Double, nullable=True)
     # percentage = Column(Integer, nullable=True)
@@ -313,14 +335,17 @@ class SecondmentHistory(History):
         secondment = db.query(Secondment).filter(Secondment.id == id).first()
         if secondment is None:
             raise NotFoundException(detail="Secondment not found")
-        db.add(SecondmentHistory(
-                date_from=datetime.datetime.now(),
-                date_to=None,
-                user_id=user_id,
-                secondment_id=id,
-            )
+        obj = SecondmentHistory(
+            date_from=datetime.datetime.now(),
+            date_to=None,
+            user_id=user_id,
+            secondment_id=id,
         )
+        db.add(obj)
         db.flush()
+        db.refresh(obj)
+
+        return obj
 
     @classmethod
     def create_timeline_history(
@@ -367,14 +392,17 @@ class AttestationHistory(History):
         attestation = db.query(Attestation).filter(Attestation.id == id).first()
         if attestation is None:
             raise NotFoundException(detail="Attestation not found")
-        db.add(AttestationHistory(
-                date_from=datetime.datetime.now(),
-                date_to=None,
-                user_id=user_id,
-                attestation_id=id,
-            )
+        obj = AttestationHistory(
+            date_from=datetime.datetime.now(),
+            date_to=None,
+            user_id=user_id,
+            attestation_id=id,
         )
+        db.add(obj)
         db.flush()
+        db.refresh(obj)
+
+        return obj
 
     __mapper_args__ = {
         "polymorphic_identity": "attestation",
@@ -403,21 +431,25 @@ class StatusHistory(History):
             status = db.query(Status).filter(Status.id == id).first()
             if status is None:
                 raise NotFoundException(detail="Status not found")
-            db.add(StatusHistory(
-                    date_from=datetime.datetime.now(),
-                    date_to=None,
-                    user_id=user_id,
-                    status_id=id,
-                )
+            obj = StatusHistory(
+                date_from=datetime.datetime.now(),
+                date_to=None,
+                user_id=user_id,
+                status_id=id,
             )
+            db.add(obj)
         else:
-            db.add(StatusHistory(
+            obj = StatusHistory(
                 date_from=datetime.datetime.now(),
                 date_to=None,
                 user_id=user_id,
                 status_id=None,
-            ))
+            )
+            db.add(obj)
         db.flush()
+        db.refresh(obj)
+
+        return obj
 
     @classmethod
     def create_timeline_history(

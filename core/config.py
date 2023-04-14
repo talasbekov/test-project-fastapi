@@ -21,6 +21,8 @@ class Settings(BaseSettings):
 
     DEBUG: bool = False
     SENTRY_DSN: str = None
+    
+    GENERATE_IP: str = None
 
     class Config:
         env_file = ".env"

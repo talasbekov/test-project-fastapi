@@ -773,6 +773,7 @@ def upgrade() -> None:
     sa.Column('date_to', sa.TIMESTAMP(timezone=True), nullable=True),
     sa.Column('user_id', sa.UUID(), nullable=True),
     sa.Column('document_link', sa.TEXT(), nullable=True),
+    sa.Column('cancel_document_link', sa.TEXT(), nullable=True),
     sa.Column('document_number', sa.String(), nullable=True),
     sa.Column('type', sa.String(), nullable=True),
     sa.Column('document_style', sa.String(), nullable=True),
@@ -826,6 +827,7 @@ def upgrade() -> None:
     sa.Column('initialized_by_id', sa.UUID(), nullable=True),
     sa.Column('status_id', sa.UUID(), nullable=True),
     sa.Column('last_step_id', sa.UUID(), nullable=True),
+    sa.Column('old_history_id', sa.UUID(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
@@ -833,6 +835,7 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['initialized_by_id'], ['users.id'], ),
     sa.ForeignKeyConstraint(['last_step_id'], ['hr_document_steps.id'], ),
     sa.ForeignKeyConstraint(['status_id'], ['hr_document_statuses.id'], ),
+    sa.ForeignKeyConstraint(['old_history_id'], ['histories.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('reg_number')
     )

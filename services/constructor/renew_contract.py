@@ -2,11 +2,13 @@ import datetime
 
 from sqlalchemy.orm import Session
 
-from models import User, ContractType, ContractHistory
+from core import configs
+from models import User, ContractType, ContractHistory, HrDocument
 from .base import BaseHandler
 from services import contract_service, history_service
 from exceptions import ForbiddenException
 from utils import convert_str_to_datetime
+
 
 def get_last_by_user_id(db: Session, user_id: str):
     res = (
@@ -22,16 +24,21 @@ class RenewContractHandler(BaseHandler):
     __handler__ = "renew_contract"
 
     def handle_action(
-        self, db: Session, user: User, action: dict, template_props: dict, props: dict
+        self,
+        db: Session,
+        user: User,
+        action: dict,
+        template_props: dict,
+        props: dict,
+        document: HrDocument,
     ):
         tagname = action["contract"]["tagname"]
         if not contract_service.exists_relation(db, user.id, props[tagname]["value"]):
             raise ForbiddenException(
                 f"This user: {user.first_name}, {user.last_name}, doesn't have any contract"
             )
-        contract_type = (
-            db.query(ContractType)
-            .filter(ContractType.id == props[tagname]["value"])
+        contract_type = db.query(ContractType).filter(
+            ContractType.id == props[tagname]["value"]
         )
 
         last_contract = get_last_by_user_id(db, user.id)
@@ -45,11 +52,16 @@ class RenewContractHandler(BaseHandler):
             date_from = datetime.datetime.now()
             date_to = date_from.replace(date_from.year + contract_type.years)
 
-            history_service.create_timeline_history(db, user.id, res, date_from, date_to)
+            history = history_service.create_timeline_history(
+                db, user.id, res, date_from, date_to
+            )
         else:
-            history_service.create_history(db, user.id, res)
+            history = history_service.create_history(db, user.id, res)
+        history.document_link = configs.GENERATE_IP + document.id
 
         db.add(user)
+        db.add(document)
+        db.add(history)
         db.flush()
 
         return user

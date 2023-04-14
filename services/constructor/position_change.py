@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 
-from models import User
+from core import configs
+from models import User, HrDocument
 from .base import BaseHandler
 from services import staff_unit_service, history_service, user_service
 from exceptions import ForbiddenException
@@ -11,7 +12,13 @@ class PositionChangeHandler(BaseHandler):
     __handler__ = "s"
 
     def handle_action(
-        self, db: Session, user: User, action: dict, template_props: dict, props: dict
+        self,
+        db: Session,
+        user: User,
+        action: dict,
+        template_props: dict,
+        props: dict,
+        document: HrDocument,
     ):
         status = action["staff_unit"]["tagname"]
 
@@ -20,9 +27,15 @@ class PositionChangeHandler(BaseHandler):
                 f"This position is already assigned to this user: {user.first_name}, {user.last_name}"
             )
         res = staff_unit_service.create_relation(db, user, props[status]["value"])
-        history_service.create_history(db, user.id, res)
+        history = history_service.create_history(db, user.id, res)
+
+        history.document_link = configs.GENERATE_IP + document.id
+        document.old_history_id = history.id
 
         db.add(user)
+        db.add(history)
+        db.add(document)
+
         db.flush()
 
         return user

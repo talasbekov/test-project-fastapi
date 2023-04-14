@@ -25,6 +25,7 @@ from .history_personal import (
 
 class HistoryBase(BaseModel):
     document_link: Optional[str]
+    cancel_document_link: Optional[str]
     document_number: Optional[str]
     date_from: Optional[datetime]
     date_to: Optional[datetime]
@@ -154,6 +155,7 @@ class AttendanceRead(Model):
 
 class BadgeServiceDetailRead(ReadNamedModel):
     document_link: Optional[str]
+    cancel_document_link: Optional[str]
     document_number: Optional[str]
     date_from: Optional[datetime]
     date_to: Optional[datetime]
@@ -168,6 +170,7 @@ class BadgeServiceDetailRead(ReadNamedModel):
         return cls(
             document_link=orm_obj.document_link,
             document_number=orm_obj.document_number,
+            cancel_document_link=orm_obj.cancel_document_link,
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
             name=orm_obj.badge.type.name,
@@ -207,6 +210,7 @@ class PenaltyRead(Model):
     status: Optional[str]
     document_link: Optional[str]
     document_number: Optional[str]
+    cancel_document_link: Optional[str]
     date_from: Optional[datetime]
     date_to: Optional[datetime]
 
@@ -221,6 +225,7 @@ class PenaltyRead(Model):
         return cls( 
             status=orm_obj.penalty.type.name,
             document_link=orm_obj.document_link,
+            cancel_document_link=orm_obj.cancel_document_link,
             document_number=orm_obj.document_number,
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
@@ -230,6 +235,7 @@ class ContractRead(ReadNamedModel):
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     document_link: Optional[str]
+    cancel_document_link: Optional[str]
     document_number: Optional[str]
     experience_years: Optional[int]
 
@@ -243,6 +249,7 @@ class ContractRead(ReadNamedModel):
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
             document_link=orm_obj.document_link,
+            cancel_document_link=orm_obj.cancel_document_link,
             document_number=orm_obj.document_number,
             experience_years=orm_obj.experience_years,
             name=orm_obj.contract.type.name,
@@ -254,6 +261,7 @@ class AttestationRead(Model):
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     document_link: Optional[str]
+    cancel_document_link: Optional[str]
     document_number: Optional[str]
     attestation_status: Optional[str]
 
@@ -268,6 +276,7 @@ class CharacteristicRead(ReadModel):
     date_from : Optional[datetime]
     date_to : Optional[datetime]
     document_link : Optional[str]
+    cancel_document_link: Optional[str]
     document_number : Optional[str]
     characteristic_initiator : Optional[str]
     characteristic_initiator_id : Optional[uuid.UUID]
@@ -288,6 +297,7 @@ class CharacteristicRead(ReadModel):
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
             document_link=orm_obj.document_link,
+            cancel_document_link=orm_obj.cancel_document_link,
             document_number=orm_obj.document_number,
             characteristic_initiator=full_name,
             characteristic_initiator_id=orm_obj.characteristic_initiator_id,
@@ -298,6 +308,7 @@ class HolidayRead(Model):
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     document_link: Optional[str]
+    cancel_document_link: Optional[str]
     document_number: Optional[str]
     status: Optional[str]
 
@@ -311,6 +322,7 @@ class HolidayRead(Model):
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
             document_link=orm_obj.document_link,
+            cancel_document_link=orm_obj.cancel_document_link,
             document_number=orm_obj.document_number,
             status=orm_obj.status.type.name,
         )
