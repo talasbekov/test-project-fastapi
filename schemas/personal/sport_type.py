@@ -2,10 +2,10 @@ import uuid
 from typing import Optional
 
 from pydantic import BaseModel
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 
-class SportTypeBase(BaseModel):
-    name: str
+class SportTypeBase(NamedModel):
 
     class Config:
         orm_mode = True
@@ -20,6 +20,5 @@ class SportTypeUpdate(SportTypeBase):
     pass
 
 
-class SportTypeRead(SportTypeBase):
-    id: Optional[uuid.UUID]
-    name: Optional[str]
+class SportTypeRead(SportTypeBase, ReadNamedModel):
+    pass

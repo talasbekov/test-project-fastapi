@@ -1,12 +1,13 @@
-
-from pydantic import BaseModel
-from datetime import datetime
-from typing import Optional
 import uuid
-from schemas import PrivelegeEmergencyRead, PersonnalReserveRead, CoolnessRead
+from datetime import datetime
 
-class OathRead(BaseModel):
-    id: Optional[uuid.UUID]
+from typing import Optional
+from pydantic import BaseModel
+
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
+from schemas import PrivelegeEmergencyRead, PersonnalReserveRead, CoolnessRead, RecommenderUserRead
+
+class OathRead(ReadModel):
     date: Optional[datetime]
     military_id: Optional[uuid.UUID]
     military_name: Optional[str]
@@ -24,6 +25,7 @@ class OathRead(BaseModel):
             military_name=orm_obj.military_unit.name,
         )
 
+
 class GeneralInformationRead(BaseModel):
     oath: Optional[OathRead]
     privilege_emergency_secrets: Optional[PrivelegeEmergencyRead]
@@ -31,4 +33,4 @@ class GeneralInformationRead(BaseModel):
     coolness: Optional[CoolnessRead]
     is_badge_black: Optional[bool]
     researcher: Optional[str]
-    recommendation: Optional[str]
+    recommender: Optional[RecommenderUserRead]

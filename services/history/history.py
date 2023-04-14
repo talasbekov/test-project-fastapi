@@ -32,6 +32,7 @@ from models import (
     Coolness,
     PersonalReserve,
     PrivilegeEmergency,
+    User
 )
 from schemas import HistoryCreate, HistoryUpdate
 from services import ServiceBase
@@ -52,7 +53,8 @@ from schemas import (
 )
 
 from services import (privelege_emergency_service, coolness_service, badge_service,
-                      personnal_reserve_service, service_id_service, user_service)
+                      personnal_reserve_service, service_id_service, user_service,
+                      recommender_user_service)
 
 
 classes = {
@@ -118,9 +120,11 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             badge = badge_service.get_by_id(db, obj_in.badge_id)
             if badge is None:
                 raise NotFoundException(detail=f'Badge with id: {obj_in.badge_id} not found!')
+        print(obj_in.dict(exclude_none=True))
         obj_db = cls(**obj_in.dict(exclude_none=True))
         db.add(obj_db)
         db.flush()
+        db.refresh(obj_db)
         return obj_db
     
     def get_type_by_user_id(self, db: Session, user_id: str, type: str):
@@ -132,7 +136,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
     def get_all_by_user_id(self, db: Session, user_id: str):
         print(1)
         user = user_service.get_by_id(db, user_id)
-        general_information = self.get_general_information_by_user_id(db, user_id)        
+        general_information = self.get_general_information_by_user_id(db, user_id, user)        
         badges = db.query(BadgeHistory).filter(BadgeHistory.user_id == user_id).all()
         ranks = db.query(RankHistory).filter(RankHistory.user_id == user_id).all()
         penalties = db.query(PenaltyHistory).filter(PenaltyHistory.user_id == user_id).all()
@@ -187,7 +191,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         
 
     
-    def get_general_information_by_user_id(self, db: Session, user_id: str):
+    def get_general_information_by_user_id(self, db: Session, user_id: str, user: User):
         oauth_user = db.query(UserOath).filter(UserOath.user_id == user_id).first()
         if oauth_user is None or oauth_user.military_unit is None:
             user_oath_read = None
@@ -240,17 +244,22 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                 document_link=personnal_reseive.document_link,
                 document_number=personnal_reseive.document_number
             )
-        
+        recommender = recommender_user_service.get_by_user_id(db, user_id)
+        if recommender:
+            recommender_user = recommender.user_by.last_name + ' ' + recommender.user_by.first_name[0] + '.' + recommender.user_by.father_name[0] + '.'
+        else:
+            recommender_user = None
+
         general_information_read = GeneralInformationRead(
             oath=user_oath_read,
             privilege_emergency_secrets=privelege_emergency_read,
             personnel_reserve=personnal_reseive_read,
             coolness=coolness_read,
             is_badge_black=is_badge_black,
-            researcher='И. И. Иванов',
-            recommendation='Б. А. Жунусов'
+            researcher=user.last_name + ' ' + user.first_name[0] + '.' + user.father_name[0] + '.',
+            recommender=recommender
         )
-        
+
 
         return general_information_read
 
@@ -263,6 +272,29 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         if cls is None:
             raise NotSupportedException(detail=f'In options: {diff} is not present!')
         cls.create_history(db, user_id, object.id, finish_last)
+
+    def create_timeline_history(
+        self,
+        db: Session,
+        user_id: uuid.UUID,
+        object,
+        date_from: datetime,
+        date_to: datetime,
+    ):
+        print(type(object))
+        diff = classes.get(type(object))
+        if diff is None:
+            raise NotSupportedException(detail=f"Type: {diff} is not supported!")
+        cls = options.get(diff)
+        if cls is None:
+            raise NotSupportedException(detail=f"In options: {diff} is not present!")
+        if getattr(cls, "create_timeline_history", None) is None:
+            raise NotSupportedException(
+                detail=f"Class: {cls.__name__} does not support date_from, date_to format!"
+            )
+        cls.create_timeline_history(
+            db, user_id, object.id, finish_last, date_from, date_to
+        )
 
     def update(self, db: Session, id: uuid.UUID, object: HistoryUpdate): 
         history = self.get_by_id(db, id)

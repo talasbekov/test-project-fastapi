@@ -2,11 +2,11 @@ import uuid
 from typing import Optional
 
 from pydantic import BaseModel
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 
-class PropertyTypeBase(BaseModel):
-    name: str
-    
+class PropertyTypeBase(NamedModel):
+
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
@@ -20,6 +20,5 @@ class PropertyTypeUpdate(PropertyTypeBase):
     pass
 
 
-class PropertyTypeRead(PropertyTypeBase):
-    id: Optional[uuid.UUID]
-    name: Optional[str]
+class PropertyTypeRead(PropertyTypeBase, ReadNamedModel):
+    pass

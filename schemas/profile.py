@@ -4,10 +4,11 @@ from typing import Optional
 from pydantic import BaseModel
 
 from schemas import UserRead
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 
-class ProfileBase(BaseModel):
-    pass
+class ProfileBase(Model):
+    user_id: uuid.UUID
 
 
 class ProfileCreate(ProfileBase):
@@ -18,8 +19,7 @@ class ProfileUpdate(ProfileBase):
     pass
 
 
-class ProfileRead(ProfileBase):
-    id: Optional[uuid.UUID]
+class ProfileRead(ProfileBase, ReadModel):
     user_id: Optional[uuid.UUID]
     user: Optional[UserRead]
 

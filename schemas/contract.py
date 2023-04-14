@@ -4,9 +4,10 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
-class ContractTypeBase(BaseModel):
-    name: str
+
+class ContractTypeBase(NamedModel):
 
     class Config:
         orm_mode = True
@@ -21,8 +22,8 @@ class ContractTypeUpdate(ContractTypeBase):
     pass
 
 
-class ContractTypeRead(ContractTypeBase):
-    name: str
+class ContractTypeRead(ContractTypeBase, ReadNamedModel):
+    pass
 
 
 class ContractBase(BaseModel):

@@ -7,10 +7,12 @@ from pydantic import BaseModel, EmailStr
 from schemas import (BadgeRead, PositionRead,
                      RankRead, StaffUnitDivisionRead,
                      StaffFunctionRead)
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 
-class StaffUnitBase(BaseModel):
-    pass
+class StaffUnitBase(Model):
+    position_id: uuid.UUID
+    staff_division_id: uuid.UUID
 
 
 class StaffUnitCreate(StaffUnitBase):
@@ -21,8 +23,7 @@ class StaffUnitUpdate(StaffUnitBase):
     pass
 
 
-class UserRead(BaseModel):
-    id: Optional[uuid.UUID]
+class UserRead(ReadModel):
     badges: Optional[List[BadgeRead]]
     rank: Optional[RankRead]
     email: Optional[EmailStr]
@@ -40,8 +41,7 @@ class UserRead(BaseModel):
         orm_mode = True
 
 
-class StaffUnitRead(StaffUnitBase):
-    id: Optional[uuid.UUID]
+class StaffUnitRead(StaffUnitBase, ReadModel):
     staff_division_id: Optional[uuid.UUID]
     staff_division: Optional[StaffUnitDivisionRead]
     staff_functions: Optional[List[StaffFunctionRead]]
@@ -55,8 +55,7 @@ class StaffUnitRead(StaffUnitBase):
         arbitrary_types_allowed = True
 
 
-class UserStaffUnitRead(StaffUnitBase):
-    id: Optional[uuid.UUID]
+class UserStaffUnitRead(StaffUnitBase, ReadModel):
     staff_division_id: Optional[uuid.UUID]
     staff_division: Optional[StaffUnitDivisionRead]
     staff_functions: Optional[List[StaffFunctionRead]]

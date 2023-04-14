@@ -36,5 +36,13 @@ class StatusService(ServiceBase[Status, StatusCreate, StatusUpdate]):
         db.flush()
         return history
 
+    def exists_relation(self, db: Session, user_id: str, badge_type_id: uuid.UUID):
+        return (
+            db.query(Status)
+            .filter(Status.user_id == user_id)
+            .filter(Status.type_id == badge_type_id)
+            .first()
+        ) is not None
+
 
 status_service = StatusService(Status)

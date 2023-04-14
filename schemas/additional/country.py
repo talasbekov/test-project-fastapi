@@ -3,9 +3,10 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
-class CountryBase(BaseModel):
-    name: str
+
+class CountryBase(NamedModel):
 
     class Config:
         orm_mode = True
@@ -20,6 +21,5 @@ class CountryUpdate(CountryBase):
     pass
 
 
-class CountryRead(CountryBase):
-    id: Optional[uuid.UUID]
-    name: Optional[str]
+class CountryRead(CountryBase, ReadNamedModel):
+    pass

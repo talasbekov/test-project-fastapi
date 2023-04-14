@@ -5,9 +5,10 @@ from typing import Optional
 from pydantic import BaseModel
 
 from schemas import HrDocumentRead, HrDocumentStepRead, UserRead
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 
-class HrDocumentInfoBase(BaseModel):
+class HrDocumentInfoBase(Model):
     hr_document_step_id: uuid.UUID
     signed_by_id: Optional[uuid.UUID]
     assigned_to_id: Optional[uuid.UUID]
@@ -20,6 +21,7 @@ class HrDocumentInfoBase(BaseModel):
         orm_mode = True
         arbitrary_types_allowed = True
 
+
 class HrDocumentInfoCreate(HrDocumentInfoBase):
     pass
 
@@ -28,8 +30,7 @@ class HrDocumentInfoUpdate(HrDocumentInfoBase):
     pass
 
 
-class HrDocumentInfoRead(HrDocumentInfoBase):
-    id: Optional[uuid.UUID]
+class HrDocumentInfoRead(HrDocumentInfoBase, ReadModel):
     hr_document_step_id: Optional[uuid.UUID]
     hr_document_step: Optional[HrDocumentStepRead]
     comment: Optional[str]

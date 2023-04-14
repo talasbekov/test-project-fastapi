@@ -4,9 +4,10 @@ from typing import Optional
 
 from pydantic import AnyUrl, BaseModel
 
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
-class DispensaryRegistrationBase(BaseModel):
-    name: str
+
+class DispensaryRegistrationBase(NamedModel):
     initiator: str
     start_date: datetime.datetime
     end_date: datetime.datetime
@@ -22,11 +23,8 @@ class DispensaryRegistrationUpdate(DispensaryRegistrationBase):
     pass
 
 
-class DispensaryRegistrationRead(DispensaryRegistrationBase):
-    id: Optional[uuid.UUID]
-
+class DispensaryRegistrationRead(DispensaryRegistrationBase, ReadNamedModel):
     document_link: Optional[str]
-    name: Optional[str]
     initiator: Optional[str]
     start_date: Optional[datetime.datetime]
     end_date: Optional[datetime.datetime]

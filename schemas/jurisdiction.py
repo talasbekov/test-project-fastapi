@@ -1,11 +1,11 @@
 import uuid
 from typing import Optional
 
-from pydantic import BaseModel
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 
-class JurisdictionBase(BaseModel):
-    name: str
+class JurisdictionBase(NamedModel):
+    pass
 
 
 class JurisdictionCreate(JurisdictionBase):
@@ -16,9 +16,7 @@ class JurisdictionUpdate(JurisdictionBase):
     pass
 
 
-class JurisdictionRead(JurisdictionBase):
-    id: Optional[uuid.UUID]
-    name: Optional[str]
+class JurisdictionRead(JurisdictionBase, ReadNamedModel):
 
     class Config:
         orm_mode = True

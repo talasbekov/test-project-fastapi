@@ -1,11 +1,14 @@
 import uuid
 from typing import Optional
 from datetime import datetime
-from pydantic import BaseModel
-from models import ServiceIDStatus
 
-class ServiceIDBase(BaseModel):
-    
+from pydantic import BaseModel
+
+from models import ServiceIDStatus
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
+
+
+class ServiceIDBase(Model):
     number: Optional[str]
     date_to: Optional[datetime]
     token_status: Optional[ServiceIDStatus]
@@ -25,5 +28,5 @@ class ServiceIDUpdate(ServiceIDBase):
     pass
 
 
-class ServiceIDRead(ServiceIDBase):
-    id: uuid.UUID
+class ServiceIDRead(ServiceIDBase, ReadModel):
+    pass

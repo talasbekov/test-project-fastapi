@@ -9,7 +9,7 @@ from typing import List
 from docxtpl import DocxTemplate
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
-from sqlalchemy import func, or_, select
+from sqlalchemy import func, or_
 
 from core import Base
 from exceptions import (BadRequestException, ForbiddenException,
@@ -49,6 +49,28 @@ responses = {
     "staff_division": StaffDivisionOptionRead,
     "rank": RankRead,
     "badges": BadgeRead,
+}
+
+from .constructor import *
+
+handlers = {
+    "add_badge": add_badge_handler,
+    "delete_badge": delete_badge_handler,
+    "increase_rank": increase_rank_handler,
+    "add_black_beret": add_black_beret_handler,
+    "decrease_rank": decrease_rank_handler,
+    "renew_contract": renew_contract_handler,
+    "stop_status": stop_status_handler,
+    "temporary_status_change": temporary_status_change_handler,
+    "status_change": status_change_handler,
+    "add_penalty": add_penalty_handler,
+    "delete_penalty": delete_penalty_handler,
+    "delete_black_beret": delete_black_beret_handler,
+    "add_coolness": add_coolness_handler,
+    "decrease_coolness": decrease_coolness_handler,
+    "delete_coolness": delete_coolness_handler,
+    "add_secondment": add_secondment_handler,
+    "position_change": position_change_handler,
 }
 
 
@@ -506,36 +528,57 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         props = document.document_template.properties
 
-        for key in list(props):
-            value = props[key]
+        # for key in list(props):
+        #     value = props[key]
+        #
+        #     if value["type"] == "read":
+        #         continue
+        #
+        #     if value["field_name"] not in fields:
+        #         raise InvalidOperationException(
+        #             f'Operation on {value["field_name"]} is not supported yet!'
+        #         )
+        #
+        #     for user in users:
+        #         if value["data_taken"] == "auto":
+        #             self._set_attr(db, user, value["field_name"], value["value"], value['type'])
+        #
+        #         else:
+        #             if key in document.properties:
+        #                 val = document.properties.get(key)
+        #                 if val is None:
+        #                     raise BadRequestException(
+        #                         f"Нет ключа {val} в document.properties"
+        #                     )
+        #                 if not type(val) == dict:
+        #                     self._set_attr(db, user, value["field_name"], val, value['type'])
+        #                 else:
+        #                     if val["value"] == None:
+        #                         raise BadRequestException(
+        #                             f"Обьект {key} должен иметь value!"
+        #                         )
+        #                     self._set_attr(
+        #                         db,
+        #                         user,
+        #                         value["field_name"],
+        #                         val["value"],
+        #                         value["type"],
+        #                     )
+        template = document.document_template
 
-            if value["type"] == "read":
-                continue
+        properties: dict = document.properties
 
-            if value["field_name"] not in fields:
-                raise InvalidOperationException(
-                    f'Operation on {value["field_name"]} is not supported yet!'
-                )
+        for user in users:
+            for i in template.actions['args']:
+                action_name = list(i)[0]
+                action = i[action_name]
 
-            for user in users:
-                if value["data_taken"] == "auto":
-                    self._set_attr(db, user, value["field_name"], value["value"], value['type'])
+                if handlers.get(action_name) is None:
+                    raise InvalidOperationException(
+                        f"Action {action_name} is not supported!"
+                    )
 
-                else:
-                    if key in document.properties:
-                        val = document.properties.get(key)
-                        if val is None:
-                            raise BadRequestException(
-                                f"Нет ключа {val} в document.properties"
-                            )
-                        if not type(val) == dict:
-                            self._set_attr(db, user, value["field_name"], val, value['type'])
-                        else:
-                            if val["value"] == None:
-                                raise BadRequestException(
-                                    f"Обьект {key} должен иметь value!"
-                                )
-                            self._set_attr(db, user, value["field_name"], val["value"], value['type'])
+                handlers[action_name].handle_action(db, user, action, props, properties)
 
         document.signed_at = datetime.now()
         document.reg_number = (
@@ -642,17 +685,19 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 if not type(val) == dict:
                     attr = getattr(user, value["field_name"])
                     if isinstance(attr, Base or isinstance(attr, list)):
-                        new_val[value["field_name"]] = responses.get(value['field_name']).from_orm(self._get_service(
+                        new_val[value["field_name"]] = responses.get(
                             value["field_name"]
-                        ).get(db, val))
+                        ).from_orm(self._get_service(value["field_name"]).get(db, val))
                     else:
                         new_val[value["field_name"]] = val
                 else:
                     if val["value"] == None:
                         raise BadRequestException(f"Обьект {key} должен иметь value!")
-                    new_val[value["field_name"]] = responses.get(value['field_name']).from_orm(self._get_service(
+                    new_val[value["field_name"]] = responses.get(
                         value["field_name"]
-                    ).get(db, val["value"]))
+                    ).from_orm(
+                        self._get_service(value["field_name"]).get(db, val["value"])
+                    )
 
         response.new_value = new_val
 

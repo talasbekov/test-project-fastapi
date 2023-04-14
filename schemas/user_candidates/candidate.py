@@ -59,7 +59,9 @@ class CandidateUpdate(CandidateBase):
 
 
 class CandidateEssayUpdate(BaseModel):
-    essay_id: uuid.UUID
+    essay_id: Optional[uuid.UUID]
+    name: Optional[str]
+    nameKZ: Optional[str]
 
 
 class CandidateRead(CandidateBase):

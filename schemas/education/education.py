@@ -7,8 +7,10 @@ from pydantic import AnyUrl, BaseModel
 from .institution import InstitutionRead
 from .institution_degree_type import InstitutionDegreeTypeRead
  
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
-class EducationBase(BaseModel):
+
+class EducationBase(Model):
     profile_id: Optional[uuid.UUID]
     institution_id: Optional[uuid.UUID]
     degree_id: Optional[uuid.UUID]

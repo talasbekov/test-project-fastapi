@@ -3,9 +3,10 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
-class LanguageBase(BaseModel):
-    name: str
+
+class LanguageBase(NamedModel):
 
     class Config:
         orm_mode = True
@@ -20,6 +21,5 @@ class LanguageUpdate(LanguageBase):
     pass
 
 
-class LanguageRead(LanguageBase):
-    id: Optional[uuid.UUID]
-    name: Optional[str]
+class LanguageRead(LanguageBase, ReadNamedModel):
+    pass

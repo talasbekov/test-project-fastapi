@@ -5,7 +5,7 @@ from exceptions import NotFoundException, ForbiddenException, BadRequestExceptio
 from models import (Candidate, CandidateStageInfo, StaffUnit, User,
                     CandidateStatusEnum, Position, CandidateStageType,
                     PositionNameEnum, CandidateStageInfoStatusEnum)
-from schemas import CandidateCreate, CandidateUpdate, CandidateRead, CandidateStageInfoCreate, UserCreate
+from schemas import CandidateCreate, CandidateUpdate, CandidateRead, CandidateStageInfoCreate, UserCreate, CandidateEssayUpdate, CandidateEssayTypeCreate
 from services import ServiceBase, staff_unit_service, user_service
 from .candidate_essay_type import candidate_essay_type_service
 from .candidate_stage_info import candidate_stage_info_service
@@ -142,10 +142,20 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
 
         return "Кандидат: {candidate.id} завершил изучение!"
 
-    def update_essay(self, db: Session, id: str, essay_id: str):
-        candidate = self.get_by_id(db, id)
-        essay = candidate_essay_type_service.get_by_id(db, essay_id)
-        candidate.essay_id = essay_id
+    def update_essay(self, db: Session, id: str, body: CandidateEssayUpdate):
+        candidate = db.query(self.model).filter(self.model.id == id).first()
+
+        if body.essay_id is not None:
+            essay = candidate_essay_type_service.get_by_id(db, body.essay_id)
+        else:
+            essay = candidate_essay_type_service.create(db, CandidateEssayTypeCreate(
+                name=body.name,
+                nameKZ=body.nameKZ
+            ))
+
+            db.add(essay)
+
+        candidate.essay_id = essay.id
 
         db.add(candidate)
         db.flush()
