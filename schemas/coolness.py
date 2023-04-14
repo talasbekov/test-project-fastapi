@@ -4,9 +4,10 @@ from typing import Optional, Union
 from pydantic import BaseModel
 from datetime import datetime
 
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
-class CoolnessTypeBase(BaseModel):
-    name: str
+
+class CoolnessTypeBase(NamedModel):
 
     class Config:
         orm_mode = True
@@ -21,15 +22,13 @@ class CoolnessTypeUpdate(CoolnessTypeBase):
     pass
 
 
-class CoolnessTypeRead(CoolnessTypeBase):
-    id: uuid.UUID
-    name: str
+class CoolnessTypeRead(CoolnessTypeBase, ReadNamedModel):
+    pass
 
 
-class CoolnessBase(BaseModel):
+class CoolnessBase(Model):
     type_id: Optional[uuid.UUID]
     user_id: Optional[uuid.UUID]
-    name: Optional[str]
     
     class Config:
         orm_mode = True
@@ -44,7 +43,5 @@ class CoolnessUpdate(CoolnessBase):
     pass
 
 
-class CoolnessRead(CoolnessBase):
-    
-    id: Optional[uuid.UUID]
+class CoolnessRead(CoolnessBase, ReadModel):
     type: Optional[CoolnessTypeRead]

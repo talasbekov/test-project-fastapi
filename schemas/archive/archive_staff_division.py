@@ -4,6 +4,7 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 
+
 class ArchiveStaffDivisionBase(BaseModel):
     parent_group_id: Optional[uuid.UUID]
     name: str

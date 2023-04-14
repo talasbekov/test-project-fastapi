@@ -4,10 +4,12 @@ from typing import Optional
 
 from pydantic import AnyUrl, BaseModel
 
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
+
 from .country import CountryRead
 
 
-class AbroadTravelBase(BaseModel):
+class AbroadTravelBase(Model):
     vehicle_type: str
     destination_country_id: uuid.UUID
     date_from: datetime
@@ -29,8 +31,6 @@ class AbroadTravelUpdate(AbroadTravelBase):
     pass
 
 
-class AbroadTravelRead(AbroadTravelBase):
-    id: Optional[uuid.UUID]
-
+class AbroadTravelRead(AbroadTravelBase, ReadModel):
     document_link: Optional[str]
     destination_country: Optional[CountryRead]

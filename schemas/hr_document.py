@@ -5,9 +5,10 @@ from typing import Any, Dict, List, Optional, Union
 from pydantic import BaseModel, validator
 
 from schemas import HrDocumentTemplateRead, UserRead, HrDocumentStatusRead, HrDocumentStepRead
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 
-class HrDocumentBase(BaseModel):
+class HrDocumentBase(Model):
     hr_document_template_id: uuid.UUID
     due_date: datetime
     properties: Dict[str, Any]
@@ -32,7 +33,7 @@ class DraftHrDocumentCreate(HrDocumentBase):
     user_ids: List[uuid.UUID]
 
 
-class DraftHrDocumentInit(BaseModel):
+class DraftHrDocumentInit(Model):
     document_step_users_ids: dict
 
     @validator('document_step_users_ids')
@@ -65,7 +66,7 @@ class HrDocumentInit(DraftHrDocumentCreate, DraftHrDocumentInit):
     pass
     
 
-class HrDocumentSign(BaseModel):
+class HrDocumentSign(Model):
     comment: Optional[str]
     is_signed: bool
 
@@ -78,8 +79,7 @@ class HrDocumentUpdate(HrDocumentBase):
     status_id: uuid.UUID
 
 
-class HrDocumentRead(HrDocumentBase):
-    id: Optional[uuid.UUID]
+class HrDocumentRead(HrDocumentBase, ReadModel):
     properties: Optional[dict]
     document_template: Optional[HrDocumentTemplateRead]
     hr_document_template_id: Optional[uuid.UUID]

@@ -4,9 +4,11 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
-class CandidateCategoryBase(BaseModel):
-    name: str
+
+class CandidateCategoryBase(NamedModel):
+    pass
 
 
 class CandidateCategoryCreate(CandidateCategoryBase):
@@ -17,11 +19,7 @@ class CandidateCategoryUpdate(CandidateCategoryBase):
     pass
 
 
-class CandidateCategoryRead(CandidateCategoryBase):
-    id: Optional[uuid.UUID]
-    name: Optional[str]
-    created_at: Optional[datetime.datetime]
-    updated_at: Optional[datetime.datetime]
+class CandidateCategoryRead(CandidateCategoryBase, ReadNamedModel):
 
     class Config:
         orm_mode = True

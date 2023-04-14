@@ -1,14 +1,17 @@
-from pydantic import BaseModel
-from datetime import datetime
-from typing import Optional
 import uuid
+from typing import Optional
+from datetime import datetime
 
-class HistoryNameChangeBase(BaseModel):
+from pydantic import BaseModel
+
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
+
+
+class HistoryNameChangeBase(Model):
     name_before: Optional[str]
     name_after: Optional[str]
     name_type: str
-    
-    
+
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
@@ -21,5 +24,5 @@ class HistoryNameChangeUpdate(HistoryNameChangeBase):
     pass
 
 
-class HistoryNameChangeRead(HistoryNameChangeBase):
-    id: uuid.UUID
+class HistoryNameChangeRead(HistoryNameChangeBase, ReadModel):
+    pass

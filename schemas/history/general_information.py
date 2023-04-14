@@ -1,12 +1,13 @@
-
-from pydantic import BaseModel
-from datetime import datetime
-from typing import Optional
 import uuid
+from datetime import datetime
+
+from typing import Optional
+from pydantic import BaseModel
+
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 from schemas import PrivelegeEmergencyRead, PersonnalReserveRead, CoolnessRead
 
-class OathRead(BaseModel):
-    id: Optional[uuid.UUID]
+class OathRead(ReadModel):
     date: Optional[datetime]
     military_id: Optional[uuid.UUID]
     military_name: Optional[str]

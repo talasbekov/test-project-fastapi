@@ -2,10 +2,11 @@ import uuid
 from typing import Optional
 
 from pydantic import BaseModel
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 
-class HrDocumentStatusBase(BaseModel):
-    name: str
+class HrDocumentStatusBase(NamedModel):
+    pass
 
 
 class HrDocumentStatusCreate(HrDocumentStatusBase):
@@ -16,9 +17,7 @@ class HrDocumentStatusUpdate(HrDocumentStatusBase):
     pass
 
 
-class HrDocumentStatusRead(HrDocumentStatusBase):
-    id: Optional[uuid.UUID]
-    name: Optional[str]
+class HrDocumentStatusRead(HrDocumentStatusBase, ReadNamedModel):
 
     class Config:
         orm_mode = True

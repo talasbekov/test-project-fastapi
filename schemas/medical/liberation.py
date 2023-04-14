@@ -3,9 +3,11 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
-class LiberationBase(BaseModel):
-    name: str
+
+class LiberationBase(NamedModel):
+    pass
 
 
 class LiberationCreate(LiberationBase):
@@ -16,9 +18,7 @@ class LiberationUpdate(LiberationBase):
     pass
 
 
-class LiberationRead(LiberationBase):
-    id: Optional[uuid.UUID]
-    name: Optional[str]
+class LiberationRead(LiberationBase, ReadNamedModel):
 
     class Config:
         orm_mode = True

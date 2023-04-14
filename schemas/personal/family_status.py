@@ -3,9 +3,11 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
-class FamilyStatusBase(BaseModel):
-    name: str
+
+class FamilyStatusBase(NamedModel):
+    pass
 
 
 class FamilyStatusCreate(FamilyStatusBase):
@@ -16,9 +18,7 @@ class FamilyStatusUpdate(FamilyStatusBase):
     pass
 
 
-class FamilyStatusRead(FamilyStatusBase):
-    id: Optional[uuid.UUID]
-    name: Optional[str]
+class FamilyStatusRead(FamilyStatusBase, ReadNamedModel):
 
     class Config:
         orm_mode = True

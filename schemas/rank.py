@@ -1,11 +1,13 @@
 import uuid
 from typing import Optional
 
-from pydantic import BaseModel, AnyUrl
+from pydantic import AnyUrl
+
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 
-class RankBase(BaseModel):
-    name: str
+
+class RankBase(NamedModel):
     order: int
     military_url: AnyUrl
     employee_url: AnyUrl
@@ -19,9 +21,7 @@ class RankUpdate(RankBase):
     pass
 
 
-class RankRead(RankBase):
-    id: Optional[uuid.UUID]
-    name: Optional[str]
+class RankRead(RankBase, ReadNamedModel):
     order: Optional[int]
     military_url: Optional[str]
     employee_url: Optional[str]

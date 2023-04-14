@@ -3,9 +3,11 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
-class FamilyRelationBase(BaseModel):
-    name: str
+
+class FamilyRelationBase(NamedModel):
+    pass
 
 
 class FamilyRelationCreate(FamilyRelationBase):
@@ -16,9 +18,7 @@ class FamilyRelationUpdate(FamilyRelationBase):
     pass
 
 
-class FamilyRelationRead(FamilyRelationBase):
-    id: Optional[uuid.UUID]
-    name: Optional[str]
+class FamilyRelationRead(FamilyRelationBase, ReadNamedModel):
 
     class Config:
         orm_mode = True

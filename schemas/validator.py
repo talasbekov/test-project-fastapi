@@ -31,10 +31,6 @@ def hr_document_templates_properties_validator(v: dict):
             field_name = value.get('field_name')
             if field_name is None:
                 raise ValueError(prefix_msg + 'field_name should not be None')
-            if data_taken == "auto":
-                val = value.get('value')
-                if val is None:
-                    raise ValueError(prefix_msg + "value should be present")
     return v
 
 def hr_document_properties_validator(v: dict):

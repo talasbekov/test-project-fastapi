@@ -3,9 +3,10 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
-class CandidateEssayTypeBase(BaseModel):
-    name: str
+
+class CandidateEssayTypeBase(NamedModel):
 
     class Config:
         orm_mode = True
@@ -20,7 +21,7 @@ class CandidateEssayTypeUpdate(CandidateEssayTypeBase):
     pass
 
 
-class CandidateEssayTypeSetToCandidate(BaseModel):
+class CandidateEssayTypeSetToCandidate(NamedModel):
     """
         This class is used for set essay_id to candidate
 
@@ -28,11 +29,7 @@ class CandidateEssayTypeSetToCandidate(BaseModel):
         If candidate creates a new essay you can set name of the new essay
     """
     id: Optional[uuid.UUID]
-    name: Optional[str]
 
 
-class CandidateEssayTypeRead(CandidateEssayTypeBase):
-    id: Optional[uuid.UUID]
-    name: Optional[str]
-    created_at: Optional[datetime.datetime]
-    updated_at: Optional[datetime.datetime]
+class CandidateEssayTypeRead(CandidateEssayTypeBase, NamedModel):
+    pass

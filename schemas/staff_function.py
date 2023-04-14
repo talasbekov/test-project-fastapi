@@ -1,14 +1,12 @@
 import uuid
 from typing import List, Optional
 
-from pydantic import BaseModel
-
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 from schemas import (DocumentStaffFunctionTypeRead,
                      ServiceStaffFunctionTypeRead, JurisdictionRead)
 
 
-class StaffFunctionBase(BaseModel):
-    name: str
+class StaffFunctionBase(NamedModel):
     hours_per_week: int
 
 
@@ -57,14 +55,12 @@ class DocumentStaffFunctionUpdate(DocumentStaffFunctionBase):
     pass
 
 
-class StaffUnitFunctions(BaseModel):
+class StaffUnitFunctions(Model):
     staff_unit_id: uuid.UUID
     staff_function_ids: List[uuid.UUID]
 
 
-class StaffFunctionRead(StaffFunctionBase):
-    id: Optional[uuid.UUID]
-    name: Optional[str]
+class StaffFunctionRead(StaffFunctionBase, ReadNamedModel):
     hours_per_week: Optional[int]
 
     class Config:
@@ -72,18 +68,14 @@ class StaffFunctionRead(StaffFunctionBase):
         arbitrary_types_allowed = True
 
 
-class DocumentStaffFunctionTemplate(BaseModel):
-
-    id: Optional[uuid.UUID]
-    name: Optional[str]
+class DocumentStaffFunctionTemplate(NamedModel):
 
     class Config:
         orm_mode = True
 
 
-class DocumentStaffFunctionStep(BaseModel):
+class DocumentStaffFunctionStep(ReadModel):
 
-    id: Optional[uuid.UUID]
     hr_document_template: Optional[DocumentStaffFunctionTemplate]
 
     class Config:

@@ -3,9 +3,10 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
-class InstitutionBase(BaseModel):
-    name: str
+
+class InstitutionBase(NamedModel):
 
     class Config:
         orm_mode = True
@@ -20,6 +21,5 @@ class InstitutionUpdate(InstitutionBase):
     pass
 
 
-class InstitutionRead(InstitutionBase):
-    id: Optional[uuid.UUID]
-    name: str
+class InstitutionRead(InstitutionBase, ReadNamedModel):
+    pass

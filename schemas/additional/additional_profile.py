@@ -7,9 +7,10 @@ from schemas.additional import (AbroadTravelRead, PolygraphCheckRead,
                                 PsychologicalCheckRead, SpecialCheckRead,
                                 ViolationRead, ServiceHousingRead, VehicleRead,
                                 PropertiesRead)
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 
-class AdditionalProfileBase(BaseModel):
+class AdditionalProfileBase(Model):
     profile_id: uuid.UUID
 
     class Config:
@@ -25,8 +26,7 @@ class AdditionalProfileUpdate(AdditionalProfileBase):
     pass
 
 
-class AdditionalProfileRead(AdditionalProfileBase):
-    id: uuid.UUID
+class AdditionalProfileRead(AdditionalProfileBase, ReadModel):
     profile_id: uuid.UUID
     polygraph_checks: Optional[List[PolygraphCheckRead]]
     violations: Optional[List[ViolationRead]]

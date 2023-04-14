@@ -1,12 +1,15 @@
-from pydantic import BaseModel
+import uuid
+from enum import Enum
+from decimal import Decimal
 from datetime import datetime
 from typing import Optional, List, Union
-from decimal import Decimal
-import uuid
-from .general_information import GeneralInformationRead
-from schemas import PositionRead, RankRead
-from enum import Enum
 
+from pydantic import BaseModel
+
+from schemas import PositionRead, RankRead
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
+
+from .general_information import GeneralInformationRead
 from .history_personal import (
     PenaltyReadHistory,
     WorkExperienceRead,
@@ -37,7 +40,6 @@ class HistoryBase(BaseModel):
     coolness_id: Optional[uuid.UUID]
     contract_id: Optional[uuid.UUID] 
     badge_id: Optional[uuid.UUID]
-    name: Optional[str]
     user_id: uuid.UUID
     is_credited: Optional[bool]
     document_style: Optional[str]
@@ -46,6 +48,9 @@ class HistoryBase(BaseModel):
     type: str
     position_work_experience: Optional[str]
     emergency_rank_id: Optional[uuid.UUID]
+    staff_division_id: Optional[uuid.UUID]
+    coefficient: Optional[Decimal]
+    percentage: Optional[int]
 
     class Config:
         orm_mode = True
@@ -59,13 +64,11 @@ class HistoryUpdate(HistoryBase):
     pass
 
 
-class HistoryRead(HistoryBase):
-    id: uuid.UUID
-
+class HistoryRead(HistoryBase, ReadNamedModel):
+    pass
  
 
-class HistoryPersonalRead(BaseModel):
-    id: uuid.UUID
+class HistoryPersonalRead(ReadModel):
     date_from: Optional[datetime]
     coefficient: Optional[Decimal]
     percentage: Optional[Decimal]
@@ -100,7 +103,7 @@ class HistoryPersonalRead(BaseModel):
             return {"name": self.characteristic_initiator}
         else:
             return None
-    
+
     @property
     def emergency_service(self) -> Optional[dict]:
         if self.coefficent is not None:
@@ -138,7 +141,7 @@ class HistoryPersonalRead(BaseModel):
             "work_experience": self.work_experience,
         }
 
-class AttendanceRead(BaseModel):
+class AttendanceRead(Model):
     physical_training: Optional[int]
     tactical_training: Optional[int]
     shooting_training: Optional[int]
@@ -148,12 +151,11 @@ class AttendanceRead(BaseModel):
         arbitrary_types_allowed = True
 
 
-class BadgeServiceDetailRead(BaseModel):
+class BadgeServiceDetailRead(ReadNamedModel):
     document_link: Optional[str]
     document_number: Optional[str]
     date_from: Optional[datetime]
     date_to: Optional[datetime]
-    name: Optional[str]
     url: Optional[str]
 
     class Config:
@@ -171,8 +173,7 @@ class BadgeServiceDetailRead(BaseModel):
             url=orm_obj.badge.type.url
         )
 
-class RankServiceDetailRead(BaseModel):
-    name: Optional[str]
+class RankServiceDetailRead(ReadNamedModel):
     document_link: Optional[str]
     document_number: Optional[str]
     date_from: Optional[datetime]
@@ -193,7 +194,7 @@ class RankServiceDetailRead(BaseModel):
             date_to=orm_obj.date_to,
         )
 
-class PenaltyRead(BaseModel): 
+class PenaltyRead(Model):
     status: Optional[str]
     document_link: Optional[str]
     document_number: Optional[str]
@@ -216,13 +217,12 @@ class PenaltyRead(BaseModel):
             date_to=orm_obj.date_to,
         )
 
-class ContractRead(BaseModel):
+class ContractRead(ReadNamedModel):
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     document_link: Optional[str]
     document_number: Optional[str]
     experience_years: Optional[int]
-    name: Optional[str]
 
     class Config:
         orm_mode = True
@@ -240,7 +240,7 @@ class ContractRead(BaseModel):
         )
 
 
-class AttestationRead(BaseModel):
+class AttestationRead(Model):
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     document_link: Optional[str]
@@ -254,8 +254,7 @@ class AttestationRead(BaseModel):
 
  
 
-class CharacteristicRead(BaseModel):
-    id: uuid.UUID
+class CharacteristicRead(ReadModel):
     date_from : Optional[datetime]
     date_to : Optional[datetime]
     document_link : Optional[str]
@@ -285,7 +284,7 @@ class CharacteristicRead(BaseModel):
         )
 
 
-class HolidayRead(BaseModel):
+class HolidayRead(Model):
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     document_link: Optional[str]
@@ -306,33 +305,42 @@ class HolidayRead(BaseModel):
             status=orm_obj.status.type.name,
         )
 
-class EmergencyContactRead(BaseModel):
+class EmergencyContactRead(ReadModel):
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     length_of_service: Optional[int] # ВЫСЛУГА ЛЕТ
     coefficient: Optional[Decimal] # КОЭФФИЦИЕНТ  
     percentage: Optional[int] # ПРОЦЕНТ
     staff_division: Optional[str]
-    emergency_position_id: Optional[uuid.UUID]
+    emergency_rank_id: Optional[uuid.UUID]
+    document_link: Optional[str]
+    document_number: Optional[str]
+    staff_division_id: Optional[uuid.UUID]
+    document_style: Optional[str]
 
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
     
     @classmethod
-    def from_orm(cls, orm_obj):
+    def from_orm(cls, orm_obj): 
         return cls(
+            id=orm_obj.id,
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
             length_of_service=0,
             coefficient=orm_obj.coefficient,
             percentage=orm_obj.percentage,
             staff_division=orm_obj.staff_division.name,
+            emergency_rank_id=orm_obj.emergency_rank_id,
+            document_link=orm_obj.document_link,
+            document_number=orm_obj.document_number,
+            staff_division_id=orm_obj.staff_division_id,
+            document_style=orm_obj.document_style,
         )
     
 
-class ExperienceRead(BaseModel):
-    id: Optional[uuid.UUID]
+class ExperienceRead(ReadModel):
     date_from : Optional[datetime]
     date_to : Optional[datetime]
     document_link : Optional[str]
@@ -367,8 +375,7 @@ class ExperienceRead(BaseModel):
         )
 
 
-class ServiceIdInfoRead(BaseModel):
-    id: uuid.UUID
+class ServiceIdInfoRead(ReadModel):
     number: Optional[str]
     date_to: Optional[datetime]
     token_status: Optional[Enum]
@@ -379,7 +386,7 @@ class ServiceIdInfoRead(BaseModel):
         arbitrary_types_allowed = True
 
 
-class SecondmentRead(BaseModel):
+class SecondmentRead(Model):
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     staff_division: Optional[str]
@@ -398,9 +405,7 @@ class SecondmentRead(BaseModel):
             document_link=orm_obj.document_link,
         )
 
-class TypeOfArmyEquipmentModelRead(BaseModel):
-    id: uuid.UUID
-    name: Optional[str]
+class TypeOfArmyEquipmentModelRead(ReadNamedModel):
     type_of_equipment: Optional[str]
 
     class Config:
@@ -416,9 +421,7 @@ class TypeOfArmyEquipmentModelRead(BaseModel):
         )
 
 
-class TypeOfClothingEquipmentModelRead(BaseModel):
-    id: uuid.UUID
-    name: Optional[str]
+class TypeOfClothingEquipmentModelRead(ReadNamedModel):
     type_of_equipment: Optional[str]
 
     class Config:
@@ -433,9 +436,7 @@ class TypeOfClothingEquipmentModelRead(BaseModel):
             type_of_equipment=orm_obj.type_of_clothing_equipment.name,
         )
 
-class TypeOfOtherEquipmentModelRead(BaseModel):
-    id: uuid.UUID
-    name: Optional[str]
+class TypeOfOtherEquipmentModelRead(ReadNamedModel):
     type_of_equipment: Optional[str]
 
     class Config:
@@ -451,8 +452,7 @@ class TypeOfOtherEquipmentModelRead(BaseModel):
         )
 
 
-class EquipmentRead(BaseModel):
-    id: uuid.UUID
+class EquipmentRead(ReadModel):
     type_of_equipment: Optional[str]
     user_id: Optional[uuid.UUID] 
     type_of_army_equipment_model_id: Optional[uuid.UUID]
@@ -476,7 +476,7 @@ class EquipmentRead(BaseModel):
 
      
  
-class HistoryServiceDetailRead(BaseModel):
+class HistoryServiceDetailRead(Model):
  
     general_information: Optional[GeneralInformationRead]
     attendance: Optional[AttendanceRead]

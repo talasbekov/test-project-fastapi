@@ -1,10 +1,11 @@
 import uuid
 from typing import Optional, List
 from datetime import datetime
-from pydantic import BaseModel
+
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 
-class EquipmentBase(BaseModel):
+class EquipmentBase(Model):
     type_of_equipment: str
     type_of_army_equipment_model_id: Optional[uuid.UUID]
     inventory_number: Optional[str]
@@ -30,61 +31,50 @@ class EquipmentUpdate(EquipmentBase):
     pass
 
 
-class EquipmentRead(EquipmentBase):
-    id: Optional[uuid.UUID] 
+class EquipmentRead(EquipmentBase, ReadModel):
+    pass
  
 
-class TypeArmyEquipmentModel(BaseModel):
-    name: Optional[str]
-    id: Optional[uuid.UUID]
-    
+class TypeArmyEquipmentModel(ReadNamedModel):
+
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
 
 
-class TypeArmyEquipmentRead(BaseModel):
-    id: Optional[uuid.UUID]
+class TypeArmyEquipmentRead(ReadNamedModel):
     type_of_army_equipment_models: Optional[List[TypeArmyEquipmentModel]] 
-    name: Optional[str]
 
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
 
 
-class TypeClothingEquipmentModel(BaseModel):
-    name: Optional[str]
-    id: Optional[uuid.UUID]
-    
+class TypeClothingEquipmentModel(ReadNamedModel):
+
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
 
 
-class TypeClothingEquipmentRead(BaseModel):
-    id: Optional[uuid.UUID]
+class TypeClothingEquipmentRead(ReadNamedModel):
+
     type_of_clothing_equipment_models: Optional[List[TypeClothingEquipmentModel]]
-    name: Optional[str] 
 
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
 
 
-class TypeOtherEquipmentModel(BaseModel):
-    name: Optional[str]
-    id: Optional[uuid.UUID]
+class TypeOtherEquipmentModel(ReadNamedModel):
     
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
 
 
-class TypeOtherEquipmentRead(BaseModel):
-    id: Optional[uuid.UUID]
+class TypeOtherEquipmentRead(ReadNamedModel):
     type_of_other_equipment_models: Optional[List[TypeOtherEquipmentModel]]
-    name: Optional[str]
     inventory_number_of_other_equipment: Optional[str]
 
     class Config:

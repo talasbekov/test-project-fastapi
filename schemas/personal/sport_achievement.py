@@ -5,10 +5,10 @@ from typing import Optional
 from pydantic import AnyUrl, BaseModel
 
 from .sport_type import SportTypeRead
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 
-class SportAchievementBase(BaseModel):
-    name: str
+class SportAchievementBase(NamedModel):
     assignment_date: datetime.date
     sport_type_id: uuid.UUID
     document_link: AnyUrl
@@ -28,9 +28,7 @@ class SportAchievementUpdate(SportAchievementBase):
     pass
 
 
-class SportAchievementRead(SportAchievementBase):
-    id: Optional[uuid.UUID]
-    name: Optional[str]
+class SportAchievementRead(SportAchievementBase, ReadNamedModel):
     assignment_date: Optional[datetime.date]
     sport_type_id: Optional[uuid.UUID]
     sport_type: Optional[SportTypeRead]

@@ -13,7 +13,7 @@ class PenaltyType(NamedModel):
     penalties = relationship("Penalty", back_populates="type")
 
 
-class Penalty(NamedModel):
+class Penalty(Model):
 
     __tablename__ = "penalties"
 

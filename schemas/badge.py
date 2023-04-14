@@ -1,11 +1,9 @@
 import uuid
 from typing import Optional
 
-from pydantic import BaseModel
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
-
-class BadgeTypeBase(BaseModel):
-    name: str
+class BadgeTypeBase(NamedModel):
     url: str
 
     class Config:
@@ -21,13 +19,11 @@ class BadgeTypeUpdate(BadgeTypeBase):
     pass
 
 
-class BadgeTypeRead(BadgeTypeBase):
-    id: uuid.UUID
-    name: str
+class BadgeTypeRead(BadgeTypeBase, ReadNamedModel):
     url: str
 
 
-class BadgeBase(BaseModel):
+class BadgeBase(Model):
     user_id: uuid.UUID
     type_id: uuid.UUID
 
@@ -40,8 +36,7 @@ class BadgeUpdate(BadgeBase):
     pass
 
 
-class BadgeRead(BadgeBase):
-    id: Optional[uuid.UUID]
+class BadgeRead(BadgeBase, ReadModel):
     type: Optional[BadgeTypeRead]
 
     class Config:

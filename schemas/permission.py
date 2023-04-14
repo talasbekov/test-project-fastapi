@@ -1,11 +1,11 @@
 import uuid
 from typing import List, Optional
 
-from pydantic import BaseModel
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 
-class PermissionBase(BaseModel):
-    name: str
+class PermissionBase(NamedModel):
+    pass
 
 
 class PermissionCreate(PermissionBase):
@@ -16,14 +16,12 @@ class PermissionUpdate(PermissionBase):
     pass
 
 
-class UserPermission(BaseModel):
+class UserPermission(ReadNamedModel):
     user_id: uuid.UUID
     permission_ids: List[uuid.UUID]
 
 
-class PermissionRead(PermissionBase):
-    id: Optional[uuid.UUID]
-    name: Optional[str]
+class PermissionRead(PermissionBase, ReadNamedModel):
 
     class Config:
         orm_mode = True
