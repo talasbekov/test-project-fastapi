@@ -174,6 +174,7 @@ class BadgeServiceDetailRead(ReadNamedModel):
         )
 
 class RankServiceDetailRead(ReadNamedModel):
+    rank_assigned_by: Optional[str]
     document_link: Optional[str]
     document_number: Optional[str]
     date_from: Optional[datetime]

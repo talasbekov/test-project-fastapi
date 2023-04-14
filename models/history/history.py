@@ -113,6 +113,8 @@ class RankHistory(History):
 
     rank_id = Column(UUID(as_uuid=True), ForeignKey("ranks.id"), nullable=True)
     rank = relationship("Rank", foreign_keys=[rank_id])
+    
+    rank_assigned_by = Column(String, nullable=True)
 
     @classmethod
     def create_history(cls, db: Session, user_id: uuid.UUID, id: uuid.UUID, finish_last):
@@ -127,7 +129,7 @@ class RankHistory(History):
                 rank_id=id,
                 name=rank.name,
             )
-            )
+        )
 
     __mapper_args__ = {
         "polymorphic_identity": "rank_history",

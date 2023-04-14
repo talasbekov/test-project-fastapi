@@ -722,6 +722,7 @@ def upgrade() -> None:
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('is_credited', sa.Boolean(), nullable=True),
     sa.Column('document_style', sa.String(), nullable=True),
+    sa.Column('rank_assigned_by', sa.String(), nullable=True),
     sa.Column('date_credited', sa.TIMESTAMP(timezone=True), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
