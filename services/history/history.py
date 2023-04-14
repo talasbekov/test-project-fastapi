@@ -322,7 +322,6 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             obj = db.query(type_cls).filter(type_cls.id == history.id).first()
             lis_of_histories.append(HistoryPersonalRead.from_orm(obj).to_dict())
         return lis_of_histories
-    
-    
+
 
 history_service = HistoryService(History)

@@ -1,4 +1,5 @@
 import time
+import socket
 
 from fastapi import Depends, FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -15,6 +16,9 @@ import sentry_sdk
 
 from api import router
 from core import configs, get_db
+
+
+socket.setdefaulttimeout(15)
 
 app = FastAPI(
     title=configs.PROJECT_NAME,

@@ -1645,8 +1645,8 @@ def upgrade() -> None:
         }, {
             "name": "Запрос на наличие сведений для указанных граждан о причастности к религиозному экстремизму",
             "nameKZ": "Көрсетілген азаматтар үшін діни экстремизмге қатысы бар екендігі туралы мәліметтердің болуына сұрау салу",
-            "path": "http://192.168.0.169:8083/static/%D0%BA%D0%B0%D0%BD%D0%B4%D0%B8%D0%B4%D0%B0%D1%82%D1%8B1.docx",
-            "pathKZ": "http://192.168.0.169:8083/static/%D0%BA%D0%B0%D0%BD%D0%B4%D0%B8%D0%B4%D0%B0%D1%82%D1%8B1.docx",
+            "path": "http://193.106.99.68:2287/static/%D0%BA%D0%B0%D0%BD%D0%B4%D0%B8%D0%B4%D0%B0%D1%82%D1%8B1.docx",
+            "pathKZ": "http://193.106.99.68:2287/static/%D0%BA%D0%B0%D0%BD%D0%B4%D0%B8%D0%B4%D0%B0%D1%82%D1%8B1.docx",
             "subject_type": 1,
             "properties": {
                 "recipient.organization_name": {

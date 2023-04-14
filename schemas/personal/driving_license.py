@@ -5,6 +5,10 @@ from typing import List, Optional
 from pydantic import BaseModel, AnyUrl
 
 
+class DrivingLicenseLinkUpdate(BaseModel):
+    document_link: Optional[AnyUrl]
+
+
 class DrivingLicenseBase(BaseModel):
     document_number: str
     category: List[str]

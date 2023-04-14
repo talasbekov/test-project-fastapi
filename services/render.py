@@ -13,6 +13,7 @@ from services import (hr_document_template_service, candidate_service, staff_uni
 from models import (User, Profile, CandidateStageInfo, CandidateStageAnswer,
                     CandidateStageAnswerDefault, CandidateStageAnswerText, CandidateStageType,
                     CandidateStageQuestion)
+from exceptions import NotFoundException
 
 
 class RenderService:
@@ -47,7 +48,10 @@ class RenderService:
             extension = arr[len(arr) - 1]
             temp_file_path = temp.name + "." + extension
 
-            urllib.request.urlretrieve(document_template.path, temp_file_path)
+            try:
+                urllib.request.urlretrieve(document_template.path, temp_file_path)
+            except Exception:
+                raise NotFoundException(detail="Файл не найден!")
 
         template = DocxTemplate(temp_file_path)
 
@@ -81,7 +85,7 @@ class RenderService:
         return FileResponse(
             path=file_name,
             media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            filename=document_template.name + extension,
+            filename=document_template.name + "." + extension,
         )
     
     def generate_finish_candidate(self, db: Session, candidate_id: str, template_id: str):
@@ -137,13 +141,17 @@ class RenderService:
             CandidateStageAnswerText.candidate_id == candidate_id, 
             CandidateStageAnswerText.candidate_stage_question_id == essay_stage_question.id   
         ).first()
+        
+        print(1)
 
         with tempfile.NamedTemporaryFile(delete=False) as temp:
             arr = document_template.path.rsplit(".")
             extension = arr[len(arr) - 1]
             temp_file_path = temp.name + "." + extension
-
-            urllib.request.urlretrieve(document_template.path, temp_file_path)
+            try:
+                urllib.request.urlretrieve(document_template.path, temp_file_path)
+            except Exception:
+                raise NotFoundException(detail="Файл не найден!")
 
         template = DocxTemplate(temp_file_path)
 

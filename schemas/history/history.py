@@ -6,7 +6,7 @@ from typing import Optional, List, Union
 
 from pydantic import BaseModel
 
-from schemas import PositionRead, RankRead
+from schemas import PositionRead, RankRead, UserRead
 from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 from .general_information import GeneralInformationRead
@@ -73,7 +73,7 @@ class HistoryPersonalRead(ReadModel):
     date_from: Optional[datetime]
     coefficient: Optional[Decimal]
     percentage: Optional[Decimal]
-    characteristic_initiator: Optional[str]
+    characteristic_initiator: Optional[UserRead]
     date_to: Optional[datetime] 
     position: Optional[PositionRead]
     rank: Optional['RankRead']
@@ -101,7 +101,7 @@ class HistoryPersonalRead(ReadModel):
     @property
     def service_characteristic(self) -> Optional[dict]:
         if self.characteristic_initiator is not None:
-            return {"name": self.characteristic_initiator}
+            return {"name": self.characteristic_initiator.last_name + ' ' + self.characteristic_initiator.first_name}
         else:
             return None
 
