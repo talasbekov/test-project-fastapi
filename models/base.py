@@ -38,6 +38,7 @@ class NamedModel(Model):
     __abstract__ = True
 
     name = Column(String, nullable=False)
+    nameKZ = Column(String, nullable=True)
 
 
 """

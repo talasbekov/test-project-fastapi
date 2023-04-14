@@ -36,6 +36,7 @@ class HistoryBase(BaseModel):
     name_change_id: Optional[uuid.UUID]
     attestation_id: Optional[uuid.UUID]
     characteristic_initiator_id: Optional[uuid.UUID]
+    rank_assigned_by: Optional[str]
     status_id: Optional[uuid.UUID]
     coolness_id: Optional[uuid.UUID]
     contract_id: Optional[uuid.UUID] 
@@ -170,6 +171,7 @@ class BadgeServiceDetailRead(ReadNamedModel):
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
             name=orm_obj.badge.type.name,
+            nameKZ=orm_obj.badge.type.nameKZ,
             url=orm_obj.badge.type.url
         )
 
@@ -179,7 +181,8 @@ class RankServiceDetailRead(ReadNamedModel):
     document_number: Optional[str]
     date_from: Optional[datetime]
     date_to: Optional[datetime]
-    
+    document_style: Optional[str]
+    rank_id: Optional[uuid.UUID]
 
     class Config:
         orm_mode = True
@@ -188,9 +191,14 @@ class RankServiceDetailRead(ReadNamedModel):
     @classmethod
     def from_orm(cls, orm_obj):
         return cls(
+            id= orm_obj.id,
             name=orm_obj.rank.name,
+            nameKZ=orm_obj.rank.nameKZ,
+            rank_id=orm_obj.rank.id,
             document_link=orm_obj.document_link,
+            rank_assigned_by=orm_obj.rank_assigned_by,
             document_number=orm_obj.document_number,
+            document_style=orm_obj.document_style,
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
         )
@@ -238,6 +246,7 @@ class ContractRead(ReadNamedModel):
             document_number=orm_obj.document_number,
             experience_years=orm_obj.experience_years,
             name=orm_obj.contract.type.name,
+            nameKZ=orm_obj.contract.type.nameKZ,
         )
 
 
@@ -418,6 +427,7 @@ class TypeOfArmyEquipmentModelRead(ReadNamedModel):
         return cls(
             id=orm_obj.id,
             name=orm_obj.name,
+            nameKZ=orm_obj.nameKZ,
             type_of_equipment=orm_obj.type_of_army_equipment.name,
         )
 
@@ -434,6 +444,7 @@ class TypeOfClothingEquipmentModelRead(ReadNamedModel):
         return cls(
             id=orm_obj.id,
             name=orm_obj.name,
+            nameKZ=orm_obj.nameKZ,
             type_of_equipment=orm_obj.type_of_clothing_equipment.name,
         )
 
@@ -449,6 +460,7 @@ class TypeOfOtherEquipmentModelRead(ReadNamedModel):
         return cls(
             id=orm_obj.id,
             name=orm_obj.name,
+            nameKZ=orm_obj.nameKZ,
             type_of_equipment=orm_obj.type_of_other_equipment.name,
         )
 

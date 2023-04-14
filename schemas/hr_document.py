@@ -24,9 +24,10 @@ class HrDocumentBase(Model):
             value = v[key]
             if isinstance(value, dict):
                 val_keys = list(value)
-                if 'name' not in val_keys or 'value' not in val_keys:
-                    raise ValueError(f'name or value should be in {key}!')
+                if 'name' not in val_keys or 'nameKZ' not in val_keys:
+                    raise ValueError(f'name or nameKZ should be in {key}!')
         return v
+
 
 
 class DraftHrDocumentCreate(HrDocumentBase):
@@ -60,7 +61,7 @@ class DraftHrDocumentInit(Model):
         sorted(v, key=lambda x: keys.index(x))
         
         return v
-    
+
 
 class HrDocumentInit(DraftHrDocumentCreate, DraftHrDocumentInit):
     pass

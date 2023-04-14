@@ -124,6 +124,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         obj_db = cls(**obj_in.dict(exclude_none=True))
         db.add(obj_db)
         db.flush()
+        db.refresh(obj_db)
         return obj_db
     
     def get_type_by_user_id(self, db: Session, user_id: str, type: str):
