@@ -191,7 +191,7 @@ class RenderService:
         return FileResponse(
             path=file_name,
             media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            filename=document_template.name + extension,
+            filename=document_template.name + "." + extension,
         )
 
 

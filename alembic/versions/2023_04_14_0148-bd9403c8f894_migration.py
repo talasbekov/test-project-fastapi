@@ -1944,8 +1944,8 @@ def upgrade() -> None:
         {
             "name": "Заключение на зачисление",
             "nameKZ": "Қабылдау қорытындысы",
-            "path": "http://192.168.0.169:8083/static/finish_candidate.docx",
-            "pathKZ": "http://192.168.0.169:8083/static/finish_candidate.docx",
+            "path": "http://193.106.99.68:2287/static/finish_candidate.docx",
+            "pathKZ": "http://193.106.99.68:2287/static/finish_candidate.docx",
             "subject_type": 1,
             "properties": {
                 "example": {
