@@ -5,7 +5,7 @@ from typing import Optional
 from pydantic import BaseModel
 
 from schemas import Model, NamedModel, ReadModel, ReadNamedModel
-from schemas import PrivelegeEmergencyRead, PersonnalReserveRead, CoolnessRead
+from schemas import PrivelegeEmergencyRead, PersonnalReserveRead, CoolnessRead, RecommenderUserRead
 
 class OathRead(ReadModel):
     date: Optional[datetime]
@@ -25,6 +25,7 @@ class OathRead(ReadModel):
             military_name=orm_obj.military_unit.name,
         )
 
+
 class GeneralInformationRead(BaseModel):
     oath: Optional[OathRead]
     privilege_emergency_secrets: Optional[PrivelegeEmergencyRead]
@@ -32,6 +33,4 @@ class GeneralInformationRead(BaseModel):
     coolness: Optional[CoolnessRead]
     is_badge_black: Optional[bool]
     researcher: Optional[str]
-    recommendation: Optional[str]
-    recommendation_document_link: Optional[str]
-    recommender_id: Optional[uuid.UUID]
+    recommender: Optional[RecommenderUserRead]

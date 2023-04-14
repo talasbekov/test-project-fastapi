@@ -257,9 +257,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             coolness=coolness_read,
             is_badge_black=is_badge_black,
             researcher=user.last_name + ' ' + user.first_name[0] + '.' + user.father_name[0] + '.',
-            recommendation=recommender_user,
-            recommender_id=recommender.user_by_id if recommender else None,
-            recommendation_document_link=recommender.document_link if recommender else None,
+            recommender=recommender
         )
 
 
