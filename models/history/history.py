@@ -99,7 +99,6 @@ class StaffUnitHistory(History):
                 date_to=None,
                 user_id=user_id,
                 position_id=staff_unit.position_id,
-                name='',
             )
         )
         db.flush()
@@ -127,7 +126,6 @@ class RankHistory(History):
                 date_to=None,
                 user_id=user_id,
                 rank_id=id,
-                name=rank.name,
             )
         )
 
@@ -151,7 +149,6 @@ class BadgeHistory(History):
                 date_to=None,
                 user_id=user_id,
                 badge_id=id,
-                name="",
                 )
             )
         db.flush()
@@ -177,7 +174,6 @@ class PenaltyHistory(History):
                 date_to=None,
                 user_id=user_id,
                 penalty_id=id,
-                name=penalty.name,
             )
         )
         db.flush()
@@ -195,7 +191,6 @@ class PenaltyHistory(History):
                 date_to=date_to,
                 user_id=user_id,
                 penalty_id=id,
-                name=penalty.name,
             )
         )
         db.flush()
@@ -239,7 +234,6 @@ class ContractHistory(History):
                 date_to=None,
                 user_id=user_id,
                 contract_id=id,
-                name=contract.name,
                 experience_years=contract.experience_years,
             )
         )
@@ -259,7 +253,6 @@ class ContractHistory(History):
                 date_to=date_to,
                 user_id=user_id,
                 contract_id=id,
-                name=contract.name,
                 experience_years=contract.experience_years,
             )
         )
@@ -285,7 +278,6 @@ class CoolnessHistory(History):
                 date_to=None,
                 user_id=user_id,
                 coolness_id=id,
-                name='',
             )
         )
         db.flush()
@@ -326,7 +318,6 @@ class SecondmentHistory(History):
                 date_to=None,
                 user_id=user_id,
                 secondment_id=id,
-                name="",
             )
         )
         db.flush()
@@ -344,7 +335,6 @@ class SecondmentHistory(History):
                 date_to=date_to,
                 user_id=user_id,
                 secondment_id=id,
-                name="",
             )
         )
         db.flush()
@@ -382,7 +372,6 @@ class AttestationHistory(History):
                 date_to=None,
                 user_id=user_id,
                 attestation_id=id,
-                name="",
             )
         )
         db.flush()
@@ -419,7 +408,6 @@ class StatusHistory(History):
                     date_to=None,
                     user_id=user_id,
                     status_id=id,
-                    name="",
                 )
             )
         else:
@@ -428,7 +416,6 @@ class StatusHistory(History):
                 date_to=None,
                 user_id=user_id,
                 status_id=None,
-                name=id
             ))
         db.flush()
 
@@ -451,7 +438,6 @@ class StatusHistory(History):
                 date_to=date_to,
                 user_id=user_id,
                 status_id=id,
-                name="",
             )
         )
         db.flush()

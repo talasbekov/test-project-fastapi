@@ -1,5 +1,5 @@
 import uuid
-from typing import Dict, Optional, Union
+from typing import Dict, Optional, Union, List
 
 from pydantic import validator
 
@@ -13,6 +13,7 @@ class HrDocumentTemplateBase(NamedModel):
     pathKZ: str
     subject_type: SubjectType
     properties: Dict[str, dict]
+    actions: Dict[str, list]
 
     _check_properties = validator('properties', allow_reuse=True)(hr_document_templates_properties_validator)
 
@@ -30,6 +31,7 @@ class HrDocumentTemplateRead(HrDocumentTemplateBase, ReadNamedModel):
     pathKZ: Optional[str]
     subject_type: Optional[SubjectType]
     properties: Optional[Union[dict, None]]
+    actions: Optional[Union[dict, None]]
 
     class Config:
         orm_mode = True

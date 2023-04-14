@@ -528,48 +528,48 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         props = document.document_template.properties
 
-        for key in list(props):
-            value = props[key]
-
-            if value["type"] == "read":
-                continue
-
-            if value["field_name"] not in fields:
-                raise InvalidOperationException(
-                    f'Operation on {value["field_name"]} is not supported yet!'
-                )
-
-            for user in users:
-                if value["data_taken"] == "auto":
-                    self._set_attr(db, user, value["field_name"], value["value"], value['type'])
-
-                else:
-                    if key in document.properties:
-                        val = document.properties.get(key)
-                        if val is None:
-                            raise BadRequestException(
-                                f"Нет ключа {val} в document.properties"
-                            )
-                        if not type(val) == dict:
-                            self._set_attr(db, user, value["field_name"], val, value['type'])
-                        else:
-                            if val["value"] == None:
-                                raise BadRequestException(
-                                    f"Обьект {key} должен иметь value!"
-                                )
-                            self._set_attr(
-                                db,
-                                user,
-                                value["field_name"],
-                                val["value"],
-                                value["type"],
-                            )
+        # for key in list(props):
+        #     value = props[key]
+        #
+        #     if value["type"] == "read":
+        #         continue
+        #
+        #     if value["field_name"] not in fields:
+        #         raise InvalidOperationException(
+        #             f'Operation on {value["field_name"]} is not supported yet!'
+        #         )
+        #
+        #     for user in users:
+        #         if value["data_taken"] == "auto":
+        #             self._set_attr(db, user, value["field_name"], value["value"], value['type'])
+        #
+        #         else:
+        #             if key in document.properties:
+        #                 val = document.properties.get(key)
+        #                 if val is None:
+        #                     raise BadRequestException(
+        #                         f"Нет ключа {val} в document.properties"
+        #                     )
+        #                 if not type(val) == dict:
+        #                     self._set_attr(db, user, value["field_name"], val, value['type'])
+        #                 else:
+        #                     if val["value"] == None:
+        #                         raise BadRequestException(
+        #                             f"Обьект {key} должен иметь value!"
+        #                         )
+        #                     self._set_attr(
+        #                         db,
+        #                         user,
+        #                         value["field_name"],
+        #                         val["value"],
+        #                         value["type"],
+        #                     )
         template = document.document_template
 
         properties: dict = document.properties
 
         for user in users:
-            for i in template.actions:
+            for i in template.actions['args']:
                 action_name = list(i)[0]
                 action = i[action_name]
 

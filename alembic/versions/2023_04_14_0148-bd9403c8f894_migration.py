@@ -1498,6 +1498,15 @@ def upgrade() -> None:
                     "data_taken": "manual"
                 }
             },
+            'actions': {'args': [
+                {
+                    'position_change': {
+                        'staff_unit': {
+                            'tagname': 'new_position'
+                        }
+                    }
+                }
+            ]},
             'id': template1_id
         }, {
             'name': 'Приказ о присвоения звания',
@@ -1550,6 +1559,15 @@ def upgrade() -> None:
                     "field_name": "rank"
                 }
             },
+            'actions': {'args': [
+                {
+                    'increase_rank': {
+                        'rank': {
+                            'tagname': "new_rank"
+                        }
+                    }
+                }
+            ]},
             'id': template2_id
         }, {
             'name': 'Приказ о присвоения черного берета',
@@ -1615,6 +1633,11 @@ def upgrade() -> None:
                     "value": badgetype1_id
                 }
             },
+            'actions': {'args': [
+                {
+                    'add_black_beret': {}
+                }
+            ]},
             'id': template3_id
         }]
     )

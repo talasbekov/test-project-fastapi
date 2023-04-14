@@ -12,9 +12,13 @@ class IncreaseRankHandler(BaseHandler):
     def handle_action(
         self, db: Session, user: User, action: dict, template_props: dict, props: dict
     ):
+        print(user.rank_id)
+        print(user.first_name)
         tagname = action["rank"]["tagname"]
         rank = rank_service.get_by_id(db, props[tagname]["value"])
-        if user.rank.order >= rank.order:
+        user_rank = rank_service.get_by_id(db, user.rank_id)
+
+        if user_rank.order >= rank.order:
             raise ForbiddenException(detail=f"You can not increase rank to {rank.name}")
         user.rank = rank
         history_service.create_history(db, user.id, rank)
