@@ -20,7 +20,9 @@ from models import (HrDocument, HrDocumentStatusEnum,
 from schemas import (BadgeRead, HrDocumentCreate, HrDocumentInit,
                      HrDocumentRead, HrDocumentSign, HrDocumentUpdate,
                      RankRead, StaffDivisionOptionRead, StaffUnitRead,
-                     DraftHrDocumentCreate, DraftHrDocumentInit)
+                     DraftHrDocumentCreate, DraftHrDocumentInit, BadgeTypeRead,
+                     StatusTypeRead, CoolnessTypeRead, PenaltyTypeRead,
+                     ContractTypeRead)
 from services import (badge_service, document_staff_function_service,
                       hr_document_info_service, hr_document_step_service,
                       hr_document_template_service, rank_service,
@@ -48,7 +50,12 @@ responses = {
     "actual_staff_unit": StaffUnitRead,
     "staff_division": StaffDivisionOptionRead,
     "rank": RankRead,
-    "badges": BadgeRead,
+    "badges": BadgeTypeRead,
+    'statuses': StatusTypeRead,
+    'secondments': StaffDivisionOptionRead,
+    'coolnesses': CoolnessTypeRead,
+    'penalties': PenaltyTypeRead,
+    'contracts': ContractTypeRead,
 }
 
 from .constructor import *
@@ -436,7 +443,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         )
 
         path = document_template.path if language == LanguageEnum.ru else document_template.pathKZ
-        
+
         if path is None:
             raise BadRequestException(detail=f'Приказа нет на русском языке!')
 
@@ -516,9 +523,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
     def _validate_document_for_steps(self, step: HrDocumentStep, all_steps: list, users: list):
 
         all_steps.remove(step)
-
-        if len(all_steps) < 2 and len(all_steps) != 0:
-            raise BadRequestException(detail="Документ должен иметь хотя бы 2 шага!")
 
         if len(users) != len(all_steps):
             raise BadRequestException(
@@ -629,7 +633,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                     new_val[value["field_name"]] = responses.get(
                         value["field_name"]
                     ).from_orm(
-                        self._get_service(value["field_name"]).get(db, val["value"])
+                        self._get_service(value["field_name"]).get_object(db, val["value"])
                     )
 
         response.new_value = new_val
