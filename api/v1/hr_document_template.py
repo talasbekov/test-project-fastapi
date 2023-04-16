@@ -80,7 +80,7 @@ async def get_by_id(*,
             summary="Get HrDocumentTemplate by step id")
 async def get_steps_by_document_template_id(*,
     db: Session = Depends(get_db),
-    document_template_id: uuid.UUID,
+    id: uuid.UUID,
     Authorize: AuthJWT = Depends()
 ):
     """
@@ -89,7 +89,7 @@ async def get_steps_by_document_template_id(*,
         - **id**: UUID - required.
     """
     Authorize.jwt_required()
-    return hr_document_template_service.get_steps_by_document_template_id(db, document_template_id)
+    return hr_document_template_service.get_steps_by_document_template_id(db, id)
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],

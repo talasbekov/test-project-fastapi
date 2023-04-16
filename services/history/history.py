@@ -75,10 +75,14 @@ options = {
     'rank_history': RankHistory,
     'penalty_history': PenaltyHistory,
     'contract_history': ContractHistory,
+    'emergency_service_history': EmergencyServiceHistory,
+    'work_experience_history': WorkExperienceHistory,
     'secondment_history': SecondmentHistory,
     'attestation': AttestationHistory,
+    'name_change_history': NameChangeHistory,
     'status_history': StatusHistory,
-    'coolness_history': CoolnessHistory, 
+    'coolness_history': CoolnessHistory,
+    'service_characteristic_history': ServiceCharacteristicHistory,
     'badge_history': BadgeHistory,
 }
 

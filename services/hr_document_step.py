@@ -21,7 +21,7 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
 
     def get_initial_step_for_template(self, db: Session, template_id: str):
 
-        step = db.query(HrDocumentStep).filter(
+        step = db.query(HrDocumentStep).join(HrDocumentStep.staff_function).filter(
             HrDocumentStep.hr_document_template_id == template_id,
             DocumentStaffFunction.priority > 0
         ).order_by(DocumentStaffFunction.priority.asc()).first()

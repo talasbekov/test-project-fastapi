@@ -3,6 +3,9 @@ import urllib.parse
 import urllib.request
 import datetime
 
+from docx import Document
+from docx.shared import Inches
+from bs4 import BeautifulSoup
 from docxtpl import DocxTemplate
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
@@ -78,7 +81,7 @@ class RenderService:
         template.render(context)
 
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-            file_name = temp_file.name + extension
+            file_name = temp_file.name + "." + extension
 
             template.save(file_name)
 
@@ -110,6 +113,21 @@ class RenderService:
         document_template = hr_document_template_service.get_by_id(
             db, template_id
         )
+        
+        # with tempfile.NamedTemporaryFile(delete=False) as temp:
+        #     arr = document_template.path.rsplit(".")
+        #     extension = arr[len(arr) - 1]
+        #     temp_file_path = temp.name + "." + extension
+        #     try:
+        #         urllib.request.urlretrieve(document_template.path, temp_file_path)
+        #     except Exception:
+        #         raise NotFoundException(detail="Файл не найден!")
+        
+        # return FileResponse(
+        #     path=temp_file_path,
+        #     media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        #     filename=document_template.name + "." + extension,
+        # )
 
         first_stage_type = db.query(CandidateStageType).filter(CandidateStageType.name == 'Первичная беседа').first()
 
@@ -184,7 +202,7 @@ class RenderService:
         template.render(context)
 
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-            file_name = temp_file.name + extension
+            file_name = temp_file.name
 
             template.save(file_name)
 
@@ -193,6 +211,29 @@ class RenderService:
             media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             filename=document_template.name + "." + extension,
         )
+    
+    def convert_html_to_docx(self, html: str):
+        soup = BeautifulSoup(html, "html.parser")
+        
+        document = Document()
+
+        for tag in soup.recursiveChildGenerator():
+            if tag.name == 'p':
+                document.add_paragraph(tag.text)
+            elif tag.name == 'img':
+                document.add_picture(tag['src'], width=Inches(2))
+
+        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+            file_name = temp_file.name
+
+            document.save(file_name)
+
+        return FileResponse(
+            path=file_name,
+            media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            filename="test.docx",
+        )
+        
 
 
 render_service = RenderService()

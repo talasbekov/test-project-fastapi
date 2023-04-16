@@ -36,3 +36,16 @@ async def rdner_finish_candidate(*,
 ):
     Authorize.jwt_required()
     return render_service.generate_finish_candidate(db, candidate_id=body.candidate_id, template_id=body.hr_document_template_id)
+
+
+class HTML(BaseModel):
+    html: str
+
+@router.post('/convert', dependencies=[Depends(HTTPBearer())])
+async def convert(*,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends(),
+    body: HTML
+):
+    Authorize.jwt_required()
+    return render_service.convert_html_to_docx(body.html)

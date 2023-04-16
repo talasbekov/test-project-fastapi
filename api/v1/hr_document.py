@@ -237,7 +237,6 @@ async def get_by_id(*,
 async def generate(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
-    language: Optional[LanguageEnum] = LanguageEnum.kz,
     Authorize: AuthJWT = Depends()
 ):
     """
@@ -248,7 +247,7 @@ async def generate(*,
         - **id**: UUID - required.
     """
     Authorize.jwt_required()
-    return hr_document_service.generate(db, id, language)
+    return hr_document_service.generate(db, id, LanguageEnum.kz)
 
 
 @router.get('/options', status_code=status.HTTP_200_OK,
