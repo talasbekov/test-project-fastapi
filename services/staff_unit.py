@@ -47,6 +47,9 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
         db.add(staff_unit)
         db.flush()
 
+    def get_object(self, db: Session, id: str):
+        return self.get(db, id)
+
     def add_document_staff_function(self, db: Session, body: StaffUnitFunctions):
         staff_unit = self.get_by_id(db, body.staff_unit_id)
 
@@ -94,4 +97,6 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
             .filter(StaffUnit.id == staff_unit_id)
             .first()
         ) is not None
+
+
 staff_unit_service = StaffUnitService(StaffUnit)

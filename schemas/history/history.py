@@ -6,7 +6,18 @@ from typing import Optional, List, Union
 
 from pydantic import BaseModel
 
-from schemas import PositionRead, RankRead, UserRead
+from schemas import (
+    PositionRead,
+    RankRead,
+    UserRead,
+    PenaltyRead,
+    SecondmentRead,
+    StatusRead,
+    CoolnessRead,
+    ContractRead,
+    BadgeRead,
+    StaffDivisionRead,
+)
 from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 from .general_information import GeneralInformationRead
@@ -67,7 +78,15 @@ class HistoryUpdate(HistoryBase):
 
 
 class HistoryRead(HistoryBase, ReadNamedModel):
-    pass
+    rank: Optional[RankRead]
+    position: Optional[PositionRead]
+    penalty: Optional[PenaltyRead]
+    secondment: Optional[SecondmentRead]
+    status: Optional[StatusRead]
+    coolness: Optional[CoolnessRead]
+    contract: Optional[ContractRead]
+    badge: Optional[BadgeRead]
+    staff_division: Optional[StaffDivisionRead]
  
 
 class HistoryPersonalRead(ReadModel):

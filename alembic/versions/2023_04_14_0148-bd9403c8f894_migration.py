@@ -1554,7 +1554,7 @@ def upgrade() -> None:
                     "type": "read",
                     "data_taken": "auto"
                 },
-                "new_position": {
+                "new_rank": {
                     "alias_name": "Новая звание субъекта",
                     'alias_nameKZ': 'Жаңа атақ',
                     "type": "write",

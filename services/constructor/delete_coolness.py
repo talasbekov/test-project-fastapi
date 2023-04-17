@@ -26,7 +26,7 @@ class DeleteCoolnessHandler(BaseHandler):
             )
         res = coolness_service.stop_relation(db, user.id, props[tagname]["value"])
 
-        res.document_link = configs.GENERATE_IP + document.id
+        res.document_link = configs.GENERATE_IP + str(document.id)
         document.old_history_id = res.id
 
 

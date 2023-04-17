@@ -20,6 +20,7 @@ class IncreaseRankHandler(BaseHandler):
         document: HrDocument,
     ):
         tagname = action["rank"]["tagname"]
+        print(props)
         rank = rank_service.get_by_id(db, props[tagname]["value"])
         user_rank = rank_service.get_by_id(db, user.rank_id)
 
@@ -28,7 +29,7 @@ class IncreaseRankHandler(BaseHandler):
         user.rank = rank
         res = history_service.create_history(db, user.id, rank)
         document.old_history_id = res.id
-        res.document_link = configs.GENERATE_IP + document.id
+        res.document_link = configs.GENERATE_IP + str(document.id)
         db.add(user)
         db.add(res)
         db.flush()

@@ -29,7 +29,7 @@ class PositionChangeHandler(BaseHandler):
         res = staff_unit_service.create_relation(db, user, props[status]["value"])
         history = history_service.create_history(db, user.id, res)
 
-        history.document_link = configs.GENERATE_IP + document.id
+        history.document_link = configs.GENERATE_IP + str(document.id)
         document.old_history_id = history.id
 
         db.add(user)

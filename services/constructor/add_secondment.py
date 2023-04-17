@@ -29,7 +29,7 @@ class AddSecondmentHandler(BaseHandler):
             db, user.id, res, date_from, date_to
         )
 
-        history.document_link = configs.GENERATE_IP + document.id
+        history.document_link = configs.GENERATE_IP + str(document.id)
         document.old_history_id = history.id
 
         db.add(user)

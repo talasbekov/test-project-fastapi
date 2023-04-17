@@ -57,7 +57,7 @@ class RenewContractHandler(BaseHandler):
             )
         else:
             history = history_service.create_history(db, user.id, res)
-        history.document_link = configs.GENERATE_IP + document.id
+        history.document_link = configs.GENERATE_IP + str(document.id)
 
         db.add(user)
         db.add(document)

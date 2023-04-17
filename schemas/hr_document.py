@@ -96,6 +96,7 @@ class HrDocumentRead(HrDocumentBase, ReadModel):
     updated_at: Optional[datetime]
     last_step: Optional[HrDocumentStepRead]
     new_value: Optional[dict]
+    old_history_id: Optional[uuid.UUID]
 
     class Config:
         orm_mode = True

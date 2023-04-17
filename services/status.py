@@ -16,9 +16,9 @@ class StatusService(ServiceBase[Status, StatusCreate, StatusUpdate]):
         return status
     
     def get_object(self, db: Session, id: str):
-        return db.query(self.model).filter(StatusType.id == id).first()
+        return db.query(StatusType).filter(StatusType.id == id).first()
     
-    def get_by_option(self, db: Session, option: str, type: str, id: uuid.UUID, skip: int, limit: int):
+    def get_by_option(self, db: Session, type: str, id: uuid.UUID, skip: int, limit: int):
         user = db.query(User).filter(User.id == id).first()
         if user is None:
             raise NotFoundException(detail=f"User with id: {id} is not found!")
@@ -26,7 +26,7 @@ class StatusService(ServiceBase[Status, StatusCreate, StatusUpdate]):
             return [StatusTypeRead.from_orm(status).dict() for status in db.query(StatusType).offset(skip).limit(limit).all()]
         else:
             return [StatusRead.from_orm(status).dict() for status in user.statuses]
-        
+
     def stop_relation(self, db: Session, user_id: uuid.UUID, status_id: uuid.UUID):
         history = db.query(StatusHistory).filter(StatusHistory.status_id == status_id).first()
         if history is None:

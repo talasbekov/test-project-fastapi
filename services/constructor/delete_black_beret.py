@@ -25,7 +25,7 @@ class DeleteBlackBeretHandler(BaseHandler):
                 f"Black Beret is not assigned to this user: {user.first_name}, {user.last_name}"
             )
         res = badge_service.stop_relation(db, user.id, props[tagname]["value"])
-        res.cancel_document_link = configs.GENERATE_IP + document.id
+        res.cancel_document_link = configs.GENERATE_IP + str(document.id)
 
         db.add(res)
         db.add(document)

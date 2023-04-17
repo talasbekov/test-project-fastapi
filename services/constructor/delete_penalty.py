@@ -26,7 +26,7 @@ class DeletePenaltyHandler(BaseHandler):
             )
         history = penalty_service.stop_relation(db, user.id, props[tagname]["value"])
 
-        history.document_link = configs.GENERATE_IP + document.id
+        history.document_link = configs.GENERATE_IP + str(document.id)
         document.old_history_id = history.id
 
         db.add(user)

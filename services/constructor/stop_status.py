@@ -20,7 +20,7 @@ class StopStatusHandler(BaseHandler):
     ):
         status = action["status"]["tagname"]
         res = status_service.stop_relation(db, user.id, props[status]["value"])
-        res.cancel_document_link = configs.GENERATE_IP + document.id
+        res.cancel_document_link = configs.GENERATE_IP + str(document.id)
 
 
 handler = StopStatusHandler()

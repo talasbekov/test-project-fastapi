@@ -27,7 +27,7 @@ class AddBlackBeretHandler(BaseHandler):
         res = badge_service.create_relation(db, user.id, badge_type.id)
         history = history_service.create_history(db, user.id, res)
         document.old_history_id = history.id
-        history.document_link = configs.GENERATE_IP + document.id
+        history.document_link = configs.GENERATE_IP + str(document.id)
         db.add(user)
         db.add(document)
         db.add(history)

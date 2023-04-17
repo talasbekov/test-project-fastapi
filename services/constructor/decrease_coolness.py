@@ -49,7 +49,7 @@ class DecreaseCoolnessHandler(BaseHandler):
         user.coolnesses.append(coolness)
         history = history_service.create_history(db, user.id, coolness)
 
-        history.document_link = configs.GENERATE_IP + document.id
+        history.document_link = configs.GENERATE_IP + str(document.id)
         document.old_history_id = history.id
 
         db.add(user)
