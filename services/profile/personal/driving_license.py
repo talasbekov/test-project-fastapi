@@ -1,3 +1,5 @@
+import uuid
+
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
@@ -14,7 +16,7 @@ class DrivingLicenseService(ServiceBase[DrivingLicense, DrivingLicenseCreate, Dr
             raise NotFoundException(detail=f"DrivingLicense with id: {id} is not found!")
         return driving_licence
     
-    def update_document_link(self, db: Session, id: str, body: DrivingLicenseLinkUpdate):
+    def update_document_link(self, db: Session, id: uuid.UUID, body: DrivingLicenseLinkUpdate):
         license = self.get_by_id(db, id)
         license.document_link = body.document_link
         db.add(license)
