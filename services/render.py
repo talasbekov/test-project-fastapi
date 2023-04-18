@@ -3,7 +3,10 @@ import urllib.parse
 import urllib.request
 import datetime
 
+import docx
+import docx2python
 from docx import Document
+import lxml.etree as etree
 from docx.shared import Inches
 from bs4 import BeautifulSoup
 from docxtpl import DocxTemplate
@@ -235,9 +238,89 @@ class RenderService:
         )
 
     def convert_docx_to_xml_to_html(self):
-        
-        pass
-        
+        doc_result = docx2python.docx2python('finish.docx')
+        xml = doc_result.to_xml()
+
+        # Parse the XML file
+        root = etree.fromstring(xml)
+
+        # Add the namespace for WordprocessingML
+        etree.register_namespace('w', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main')
+
+        # Add the namespace for Office Art
+        etree.register_namespace('a', 'http://schemas.openxmlformats.org/drawingml/2006/main')
+
+        # Add the namespace for DrawingML
+        etree.register_namespace('wp', 'http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing')
+
+        # Create an XSLT stylesheet to transform the XML to HTML
+        xslt = etree.XML('''<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing">
+        <xsl:output method="html"/>
+
+        <!-- Map Word styles to HTML styles -->
+        <xsl:template match="w:p">
+            <p>
+            <xsl:apply-templates/>
+            </p>
+        </xsl:template>
+
+        <xsl:template match="w:r">
+            <span>
+            <xsl:apply-templates/>
+            </span>
+        </xsl:template>
+
+        <xsl:template match="w:t">
+            <xsl:value-of select="."/>
+        </xsl:template>
+
+        <xsl:template match="w:pStyle">
+            <xsl:attribute name="class">
+            <xsl:value-of select="."/>
+            </xsl:attribute>
+        </xsl:template>
+
+        <xsl:template match="w:rPr/w:b">
+            <xsl:attribute name="style">
+            <xsl:text>font-weight:bold;</xsl:text>
+            </xsl:attribute>
+        </xsl:template>
+
+        <xsl:template match="w:rPr/w:i">
+            <xsl:attribute name="style">
+            <xsl:text>font-style:italic;</xsl:text>
+            </xsl:attribute>
+        </xsl:template>
+
+        <xsl:template match="w:rPr/w:u">
+            <xsl:attribute name="style">
+            <xsl:text>text-decoration:underline;</xsl:text>
+            </xsl:attribute>
+        </xsl:template>
+
+        <xsl:template match="w:pPr/w:jc">
+            <xsl:attribute name="style">
+            <xsl:text>text-align:</xsl:text>
+            <xsl:value-of select="@w:val"/>
+            <xsl:text>;</xsl:text>
+            </xsl:attribute>
+        </xsl:template>
+
+        </xsl:stylesheet>''')
+
+        # Transform the XML to HTML using the XSLT stylesheet
+        transform = etree.XSLT(xslt)
+        result = transform(root)
+
+        # Save the resulting HTML to a file
+        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+            file_name = temp_file.name + ".html"
+            with open(file_name, 'wb') as f:
+                f.write(result)
+
+        return FileResponse(
+            path=file_name,
+        )
 
 
 render_service = RenderService()

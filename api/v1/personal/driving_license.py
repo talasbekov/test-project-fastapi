@@ -113,6 +113,7 @@ async def delete(*,
 
 
 @router.put('/{id}/document_link/', dependencies=[Depends(HTTPBearer())],
+            status_code=status.HTTP_202_ACCEPTED,
             summary='Update DrivingLicense document_link')
 async def update_document_link(*,
     db: Session = Depends(get_db),
@@ -127,4 +128,4 @@ async def update_document_link(*,
         - **document_link**: str (url)
     """
     Authorize.jwt_required()
-    return driving_license_service.update_document_link(db, id, body)
+    driving_license_service.update_document_link(db, id, body)

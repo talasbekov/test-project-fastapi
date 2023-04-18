@@ -15,7 +15,9 @@ class DrivingLicenseService(ServiceBase[DrivingLicense, DrivingLicenseCreate, Dr
         return driving_licence
     
     def update_document_link(self, db: Session, id: str, body: DrivingLicenseLinkUpdate):
-        db.query(self.model).filter(self.model.id == id).update({self.model.document_link: body.document_link})
+        license = self.get_by_id(db, id)
+        license.document_link = body.document_link
+        db.add(license)
         db.flush()
 
 

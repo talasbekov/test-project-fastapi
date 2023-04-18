@@ -49,3 +49,11 @@ async def convert(*,
 ):
     Authorize.jwt_required()
     return render_service.convert_html_to_docx(body.html)
+
+
+@router.post('/convert_docx_to_html', dependencies=[Depends(HTTPBearer())])
+async def convert_docx_to_html(*,
+    Authorize: AuthJWT = Depends(),
+):
+    Authorize.jwt_required()
+    return render_service.convert_docx_to_xml_to_html()
