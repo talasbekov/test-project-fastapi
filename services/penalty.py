@@ -44,11 +44,11 @@ class PenaltyService(ServiceBase[Penalty, PenaltyCreate, PenaltyUpdate]):
         db.flush()
         return penalty
 
-    def exists_relation(self, db: Session, user_id: str, badge_type_id: uuid.UUID):
+    def exists_relation(self, db: Session, user_id: str, id: uuid.UUID):
         return (
             db.query(Penalty)
             .filter(Penalty.user_id == user_id)
-            .filter(Penalty.type_id == badge_type_id)
+            .filter(Penalty.id == id)
             .first()
         ) is not None
 

@@ -2,6 +2,7 @@ import types
 from typing import List
 
 from sqlalchemy.orm import Session
+from sqlalchemy import func, or_
 
 from exceptions import NotFoundException
 from models import StaffDivision, User, StaffUnit, Jurisdiction, JurisdictionEnum, DocumentStaffFunction, \
@@ -22,6 +23,25 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             raise NotFoundException(detail="User is not found!")
 
         return user
+
+    def get_all(self, db: Session, filter: str, skip: int, limit: int) -> List[User]:
+        if filter is not None:
+            key_words = filter.lower().split()
+            users = (
+                db.query(self.model)
+                .filter((or_(*[func.lower(self.model.first_name).contains(name) for name in key_words])) |
+                        (or_(*[func.lower(self.model.last_name).contains(name) for name in key_words])) |
+                        (or_(*[func.lower(self.model.father_name).contains(name) for name in key_words]))
+                        )
+                .order_by(self.model.created_at.asc())
+                .offset(skip)
+                .limit(limit)
+                .all()
+                )
+        else:
+            users = super().get_multi(db, skip, limit)
+
+        return users
 
     def get_by_email(self, db: Session, email: str):
 

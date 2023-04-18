@@ -12,6 +12,10 @@ class SpecialtyEnum(EnumBase):
     specialty2 = "Специалист 2 класса - наставник (мастер)"
     specialty3 = "Специалист 3 класса - наставник (мастер)"
 
+class CoolnessStatusEnum(EnumBase):
+    granted = "Выдан"
+    confirmed = "Подтвержден"
+    removed = "Изъят"
 
 class CoolnessType(NamedModel):
 

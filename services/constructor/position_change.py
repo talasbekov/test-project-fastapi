@@ -9,7 +9,7 @@ from utils import convert_str_to_datetime
 
 
 class PositionChangeHandler(BaseHandler):
-    __handler__ = "s"
+    __handler__ = "position_change"
 
     def handle_action(
         self,

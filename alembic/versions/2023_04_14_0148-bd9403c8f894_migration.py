@@ -1066,7 +1066,8 @@ def upgrade() -> None:
         "http://192.168.0.169:8083/static/Dima.png",
         position4_id,
         True,
-        "1.2.218K")
+        "1.2.218K",
+        True)
     create_user(
         user1_id,
         "Адилет",
@@ -1083,7 +1084,8 @@ def upgrade() -> None:
         "http://192.168.0.169:8083/static/Erzhan.png",
         position1_id,
         True,
-        '1.2.213K')
+        '1.2.213K',
+        True)
     create_user(
         user2_id,
         "Ахат",
@@ -1100,7 +1102,8 @@ def upgrade() -> None:
         "http://192.168.0.169:8083/static/Erzhan.png",
         position1_id,
         False,
-        '1.2.213K')
+        '1.2.213K',
+        True)
     create_user(
         user3_id,
         "Асет",
@@ -1117,7 +1120,8 @@ def upgrade() -> None:
         "http://192.168.0.169:8083/static/Almaz.png",
         position1_id,
         True,
-        '1.2.214K')
+        '1.2.214K',
+        True)
     create_user(
         user4_id,
         "Жасулан",
@@ -1134,7 +1138,8 @@ def upgrade() -> None:
         "http://192.168.0.169:8083/static/Adil.png",
         position2_id,
         False,
-        "1.2.214K")
+        "1.2.214K",
+        True)
     create_user(
         user5_id,
         "Ануар",
@@ -1151,7 +1156,8 @@ def upgrade() -> None:
         "http://192.168.0.169:8083/static/Almaz.png",
         position1_id,
         True,
-        "1.2.215K")
+        "1.2.215K",
+        True)
     create_user(
         user6_id,
         "Бексундет",
@@ -1168,7 +1174,8 @@ def upgrade() -> None:
         "http://192.168.0.169:8083/static/Ernazar.png",
         position2_id,
         False,
-        '1.2.215K')
+        '1.2.215K',
+        True)
     create_user(
         user7_id,
         "Ерден",
@@ -1185,7 +1192,8 @@ def upgrade() -> None:
         "http://192.168.0.169:8083/static/Nurlan.png",
         position1_id,
         True,
-        '1.2.215K')
+        '1.2.215K',
+        True)
     create_user(
         user8_id,
         "Еркин",
@@ -1202,7 +1210,8 @@ def upgrade() -> None:
         "http://192.168.0.169:8083/static/Erdaulet.png",
         position1_id,
         False,
-        "1.2.216K")
+        "1.2.216K",
+        True)
     create_user(
         user9_id,
         "Арман",
@@ -1219,7 +1228,8 @@ def upgrade() -> None:
         "http://192.168.0.169:8083/static/Erdaulet.png",
         position3_id,
         True,
-        "1.2.217K")
+        "1.2.217K",
+        True)
     create_user(
         user11_id,
         "Елена",
@@ -1236,7 +1246,8 @@ def upgrade() -> None:
         "http://192.168.0.169:8083/static/Erdaulet.png",
         position22_id,
         True,
-        "1.2.217K")
+        "1.2.217K",
+        True)
     create_user(
         user12_id,
         "Айдар",
@@ -1253,7 +1264,8 @@ def upgrade() -> None:
         "http://192.168.0.169:8083/static/Erdaulet.png",
         position23_id,
         True,
-        "1.2.217K")
+        "1.2.217K",
+        True)
     create_user(
         user13_id,
         "Куат",
@@ -1270,7 +1282,8 @@ def upgrade() -> None:
         "http://192.168.0.169:8083/static/Erdaulet.png",
         position24_id,
         True,
-        "1.2.217K")
+        "1.2.217K",
+        True)
     create_user(
         user14_id,
         "Даулет",
@@ -1287,7 +1300,8 @@ def upgrade() -> None:
         "http://192.168.0.169:8083/static/Erdaulet.png",
         position21_id,
         True,
-        "1.2.217K")
+        "1.2.217K",
+        True)
     create_user(
         user15_id,
         "Ақжол",
@@ -1304,7 +1318,8 @@ def upgrade() -> None:
         "http://192.168.0.169:8083/static/Erdaulet.png",
         position20_id,
         True,
-        "1.2.217K")
+        "1.2.217K",
+        True)
     create_user(
         user16_id,
         "Қайрат",
@@ -1321,7 +1336,8 @@ def upgrade() -> None:
         "http://192.168.0.169:8083/static/Erdaulet.png",
         position19_id,
         True,
-        "1.2.217K")
+        "1.2.217K",
+        True)
     create_user(
         user17_id,
         "Санжар",
@@ -1338,7 +1354,8 @@ def upgrade() -> None:
         "http://192.168.0.169:8083/static/Erdaulet.png",
         position18_id,
         True,
-        "1.2.217K")
+        "1.2.217K",
+        True)
     create_user(
         user18_id,
         "Көктем",
@@ -1355,7 +1372,8 @@ def upgrade() -> None:
         "http://192.168.0.169:8083/static/Erdaulet.png",
         position25_id,
         True,
-        "1.2.217K")
+        "1.2.217K",
+        False)
     create_user(
         str(uuid.uuid4()),
         "Админ",
@@ -1372,7 +1390,8 @@ def upgrade() -> None:
         "http://192.168.0.169:8083/static/Erdaulet.png",
         position4_id,
         False,
-        '1.2.100K')
+        '1.2.100K',
+        True)
 
     op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(staff_unit8_id, group3_id))
 
@@ -4090,7 +4109,8 @@ def create_user(id,
                 icon,
                 position_id,
                 is_military,
-                cabinet):
+                cabinet,
+                is_active):
     op.bulk_insert(
         Base.metadata.tables['staff_units'],
         [{
@@ -4123,7 +4143,8 @@ def create_user(id,
             'service_phone_number': "679-258",
             'personal_id': number,
             'is_military': is_military,
-            'cabinet': cabinet
+            'cabinet': cabinet,
+            'is_active': is_active,
         }]
     )
 

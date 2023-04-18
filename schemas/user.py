@@ -29,6 +29,7 @@ class UserBase(Model):
     personal_id: Optional[str]
     date_birth: Optional[datetime.date]
     iin: Optional[str]
+    is_active: Optional[bool]
 
 
 class UserCreate(UserBase):
