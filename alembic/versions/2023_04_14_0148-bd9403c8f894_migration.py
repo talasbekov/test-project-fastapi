@@ -1448,8 +1448,8 @@ def upgrade() -> None:
         [{
             'name': 'Приказ о назначении',
             'nameKZ': 'Тағайындау бұйрығы',
-            'path': 'http://192.168.0.169:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7%20%D0%BE%20%D0%BD%D0%B0%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%B8%D0%B8.docx',
-            'pathKZ': 'http://192.168.0.169:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7%20%D0%BE%20%D0%BD%D0%B0%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%B8%D0%B8.docx',
+            'path': 'http://193.106.99.68:2287/static/Приказ%20о%20назначении.html',
+            'pathKZ': 'http://193.106.99.68:2287/static/Приказ%20о%20назначении.html',
             'subject_type': "EMPLOYEE",
             'properties': {
                 "signed_at": {
@@ -1534,7 +1534,7 @@ def upgrade() -> None:
             'name': 'Приказ о присвоения звания',
             'nameKZ': 'Атақ беру бұйрығы',
             'path': None,
-            'pathKZ': 'http://192.168.0.169:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7_%D0%BE_%D0%BF%D1%80%D0%B8%D1%81%D0%B2%D0%BE%D0%B5%D0%BD%D0%B8%D0%B8_%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F_%D0%BF%D0%BE%D0%B2%D1%8B%D1%88%D0%B5%D0%BD%D0%B8%D0%B5.docx',
+            'pathKZ': 'http://193.106.99.68:2287/static/Приказ_о_присвоении_звания_повышение.html',
             'subject_type': "EMPLOYEE",
             'properties': {
                 "signed_at": {
@@ -1595,7 +1595,7 @@ def upgrade() -> None:
             'name': 'Приказ о присвоения черного берета',
             'nameKZ': 'Қара берет беру бұйрығы',
             'path': None,
-            'pathKZ': 'http://192.168.0.169:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7_%D0%BE_%D0%BF%D1%80%D0%B8%D1%81%D0%B2%D0%BE%D0%B5%D0%BD%D0%B8%D0%B8_%D0%A7%D0%B5%D1%80%D0%BD%D0%BE%D0%B3%D0%BE_%D0%B1%D0%B5%D1%80%D0%B5%D1%82%D0%B0.docx',
+            'pathKZ': 'http://193.106.99.68:2287/static/Приказ_о_присвоении_Черного_берета.html',
             'subject_type': "EMPLOYEE",
             'properties': {
                 "signed_at": {
@@ -1664,8 +1664,8 @@ def upgrade() -> None:
         }, {
             "name": "Запрос на наличие сведений для указанных граждан о причастности к религиозному экстремизму",
             "nameKZ": "Көрсетілген азаматтар үшін діни экстремизмге қатысы бар екендігі туралы мәліметтердің болуына сұрау салу",
-            "path": "http://193.106.99.68:2287/static/%D0%BA%D0%B0%D0%BD%D0%B4%D0%B8%D0%B4%D0%B0%D1%82%D1%8B1.docx",
-            "pathKZ": "http://193.106.99.68:2287/static/%D0%BA%D0%B0%D0%BD%D0%B4%D0%B8%D0%B4%D0%B0%D1%82%D1%8B1.docx",
+            "path": "http://193.106.99.68:2287/static/кандидаты1.html",
+            "pathKZ": "http://193.106.99.68:2287/static/кандидаты1.html",
             "subject_type": 1,
             "properties": {
                 "recipient.organization_name": {
@@ -1786,8 +1786,8 @@ def upgrade() -> None:
         {
             "name": "Заключение спец. проверки",
             "nameKZ": "Арнайы қорытынды тексерулер",
-            "path": "http://193.106.99.68:2287/static/pre-finalv2.docx",
-            "pathKZ": "http://193.106.99.68:2287/static/pre-finalv2.docx",
+            "path": "http://193.106.99.68:2287/static/pre-finalv2.html",
+            "pathKZ": "http://193.106.99.68:2287/static/pre-finalv2.html",
             "subject_type": 1,
             "properties": {
                 "curator.rank.name": {
@@ -1963,8 +1963,8 @@ def upgrade() -> None:
         {
             "name": "Заключение на зачисление",
             "nameKZ": "Қабылдау қорытындысы",
-            "path": "http://193.106.99.68:2287/static/finish_candidate.docx",
-            "pathKZ": "http://193.106.99.68:2287/static/finish_candidate.docx",
+            "path": "http://193.106.99.68:2287/static/finish_candidate.html",
+            "pathKZ": "http://193.106.99.68:2287/static/finish_candidate.html",
             "subject_type": 1,
             "properties": {
                 "example": {
