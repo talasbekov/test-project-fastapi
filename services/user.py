@@ -43,6 +43,16 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
         return users
 
+    def get_all_active(self, db: Session, filter: str, skip: int, limit: int) -> List[User]:
+        users = self._get_users_by_filter_is_active(db, filter, skip, limit, True)
+
+        return users
+
+    def get_all_archived(self, db: Session, filter: str, skip: int, limit: int) -> List[User]:
+        users = self._get_users_by_filter_is_active(db, filter, skip, limit, False)
+
+        return users
+
     def get_by_email(self, db: Session, email: str):
 
         user = db.query(self.model).filter(User.email == email).first()
@@ -218,5 +228,32 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
         return users
 
+    def _get_users_by_filter_is_active(self, db: Session, filter: str, skip: int, limit: int, is_active: bool)\
+            -> List[User]:
+        if filter is not None:
+            key_words = filter.lower().split()
+            users = (
+                db.query(self.model)
+                .filter((or_(*[func.lower(self.model.first_name).contains(name) for name in key_words])) |
+                        (or_(*[func.lower(self.model.last_name).contains(name) for name in key_words])) |
+                        (or_(*[func.lower(self.model.father_name).contains(name) for name in key_words]))
+                        )
+                .filter(self.model.is_active.is_(is_active))
+                .order_by(self.model.created_at.asc())
+                .offset(skip)
+                .limit(limit)
+                .all()
+                )
+        else:
+            users = (
+                db.query(self.model)
+                .filter(self.model.is_active.is_(is_active))
+                .order_by(self.model.created_at.asc())
+                .offset(skip)
+                .limit(limit)
+                .all()
+            )
+
+        return users
 
 user_service = UserService(User)
