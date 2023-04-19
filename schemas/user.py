@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel, EmailStr
 
-from schemas import (BadgeRead, RankRead, UserStaffUnitRead)
+from schemas import (BadgeRead, RankRead, UserStaffUnitRead, StatusRead)
 from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 
@@ -20,7 +20,6 @@ class UserBase(Model):
     id_number: Optional[str]
     phone_number: Optional[str]
     address: Optional[str]
-    status: Optional[str]
     status_till: Optional[datetime.datetime]
     cabinet: Optional[str]
     service_phone_number: Optional[str]
@@ -29,6 +28,7 @@ class UserBase(Model):
     personal_id: Optional[str]
     date_birth: Optional[datetime.date]
     iin: Optional[str]
+    statuses: Optional[List[StatusRead]]
     is_active: Optional[bool]
 
 
@@ -57,7 +57,7 @@ class UserRead(UserBase, ReadModel):
     staff_unit_id: Optional[uuid.UUID]
     call_sign: Optional[str]
     id_number: Optional[str]
-    status: Optional[str]
+    status: Optional[StatusRead]
     status_till: Optional[datetime.datetime]
     personal_id: Optional[str]
     badges: Optional[List[BadgeRead]]

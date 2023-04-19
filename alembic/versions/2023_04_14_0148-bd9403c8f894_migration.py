@@ -2561,25 +2561,140 @@ def upgrade() -> None:
     )
     
     status_type = get_uuid()
+    status_type2 = get_uuid()
+    status_type3 = get_uuid()
     
     op.bulk_insert(
         Base.metadata.tables['status_types'],
         [{
             'id': status_type,
-            'name': 'Статус 1',
-            'nameKZ': 'Статус 1'
-        }]
+            'name': 'На работе',
+            'nameKZ': 'Жумыста'
+        },
+        {
+            'id': status_type2,
+            'name': 'В отпуске',
+            'nameKZ': 'Отпускта'
+        },
+        {
+            'id': status_type3,
+            'name': 'В запасе',
+            'nameKZ': 'Запаста'
+        }
+        ]
     )
 
     status_id = get_uuid()
-
+    status2_id = get_uuid()
+    status3_id = get_uuid()
+    status4_id = get_uuid()
+    status5_id = get_uuid()
+    status6_id = get_uuid()
+    status7_id = get_uuid()
+    status8_id = get_uuid()
+    status9_id = get_uuid()
+    status10_id = get_uuid()
+    status11_id = get_uuid()
+    status12_id = get_uuid()
+    status13_id = get_uuid()
+    status14_id = get_uuid()
+    status15_id = get_uuid()
+    status16_id = get_uuid()
+    status17_id = get_uuid()
+    status18_id = get_uuid()
     op.bulk_insert(
         Base.metadata.tables['statuses'],
         [{
             'id': status_id,
             'user_id': user1_id,
             'type_id': status_type,
-        }]
+        },
+        {
+            'id': status2_id,
+            'user_id': user2_id,
+            'type_id': status_type2,
+        },
+        {
+            'id': status3_id,
+            'user_id': user3_id,
+            'type_id': status_type3,
+        },
+        {
+            'id': status4_id,
+            'user_id': user4_id,
+            'type_id': status_type,
+        },
+        {
+            'id': status5_id,
+            'user_id': user5_id,
+            'type_id': status_type,
+        },
+        {
+            'id': status6_id,
+            'user_id': user6_id,
+            'type_id': status_type,
+        },
+        {
+            'id': status7_id,
+            'user_id': user7_id,
+            'type_id': status_type,
+        },
+        {
+            'id': status8_id,
+            'user_id': user8_id,
+            'type_id': status_type,
+        },
+        {
+            'id': status9_id,
+            'user_id': user9_id,
+            'type_id': status_type,
+        },
+        {
+            'id': status10_id,
+            'user_id': user10_id,
+            'type_id': status_type,
+        },
+        {
+            'id': status11_id,
+            'user_id': user11_id,
+            'type_id': status_type,
+        },
+        {
+            'id': status12_id,
+            'user_id': user12_id,
+            'type_id': status_type,
+        },
+        {
+            'id': status13_id,
+            'user_id': user13_id,
+            'type_id': status_type,
+        },
+        {
+            'id': status14_id,
+            'user_id': user14_id,
+            'type_id': status_type,
+        },
+        {
+            'id': status15_id,
+            'user_id': user15_id,
+            'type_id': status_type,
+        },
+        {
+            'id': status16_id,
+            'user_id': user16_id,
+            'type_id': status_type,
+        },
+        {
+            'id': status17_id,
+            'user_id': user17_id,
+            'type_id': status_type,
+        },
+                    {
+            'id': status18_id,
+            'user_id': user18_id,
+            'type_id': status_type,
+        }
+        ]
     )
 
     coolness_type_id = get_uuid()

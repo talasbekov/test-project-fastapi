@@ -31,6 +31,7 @@ from .staff_division import (StaffDivisionCreate, StaffDivisionRead,
 from .staff_unit import StaffUnitCreate, StaffUnitRead, StaffUnitUpdate, UserStaffUnitRead
 from .hr_document_step import (HrDocumentStepCreate, HrDocumentStepRead,
                                HrDocumentStepUpdate)
+from .status import *
 from .user import UserCreate, UserRead, UserUpdate, UserGroupUpdate
 from .profile import ProfileCreate, ProfileUpdate, ProfileRead
 from .hr_document_status import HrDocumentStatusRead, HrDocumentStatusCreate, HrDocumentStatusUpdate
@@ -56,7 +57,6 @@ from .medical import *
 from .family import *
 from .archive import *
 from .user_candidates import *
-from .status import *
 from .penalty import *
 from .contract import *
 from .secondment import *
