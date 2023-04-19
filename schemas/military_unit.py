@@ -2,10 +2,10 @@ import uuid
 from typing import Optional
 
 from pydantic import BaseModel
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 
-class MilitaryUnitBase(BaseModel):
-    name: str
+class MilitaryUnitBase(NamedModel):
 
     class Config:
         orm_mode = True
@@ -20,6 +20,5 @@ class MilitaryUnitUpdate(MilitaryUnitBase):
     pass
 
 
-class MilitaryUnitRead(MilitaryUnitBase):
-    id: Optional[uuid.UUID]
-    name: Optional[str]
+class MilitaryUnitRead(MilitaryUnitBase, ReadNamedModel):
+    pass

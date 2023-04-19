@@ -4,9 +4,10 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
-class StatusTypeBase(BaseModel):
-    name: str
+
+class StatusTypeBase(NamedModel):
 
     class Config:
         orm_mode = True
@@ -20,9 +21,8 @@ class StatusTypeUpdate(StatusTypeBase):
     pass
 
 
-class StatusTypeRead(StatusTypeBase):
-    id: uuid.UUID
-    name: str
+class StatusTypeRead(StatusTypeBase, ReadNamedModel):
+    pass
 
 
 class StatusBase(BaseModel):
@@ -44,5 +44,4 @@ class StatusUpdate(StatusBase):
 
 class StatusRead(StatusBase):
     id: uuid.UUID
-    
     type: Optional[StatusTypeRead]

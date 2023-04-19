@@ -3,9 +3,11 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
-class AcademicTitleDegreeBase(BaseModel):
-    name: str
+
+class AcademicTitleDegreeBase(NamedModel):
+    pass
 
 
 class AcademicTitleDegreeCreate(AcademicTitleDegreeBase):
@@ -16,9 +18,7 @@ class AcademicTitleDegreeUpdate(AcademicTitleDegreeBase):
     pass
 
 
-class AcademicTitleDegreeRead(AcademicTitleDegreeBase):
-    id: Optional[uuid.UUID]
-    name: str
+class AcademicTitleDegreeRead(AcademicTitleDegreeBase, ReadNamedModel):
 
     class Config:
         orm_mode = True

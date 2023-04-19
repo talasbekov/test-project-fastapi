@@ -7,7 +7,7 @@ from .hr_document_status import HrDocumentStatus
 from .hr_document import HrDocument, HrDocumentStatusEnum
 from .hr_document_info import HrDocumentInfo
 from .hr_document_step import HrDocumentStep
-from .hr_document_template import HrDocumentTemplate, SubjectType
+from .hr_document_template import HrDocumentTemplate, SubjectType, LanguageEnum
 from .rank import Rank
 from .staff_division import StaffDivision, StaffDivisionEnum
 from .jurisdiction import Jurisdiction

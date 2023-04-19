@@ -2,11 +2,11 @@ import uuid
 from typing import Optional
 
 from pydantic import BaseModel
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 
-class AcademicDegreeDegreeBase(BaseModel):
-    name: str
-    
+class AcademicDegreeDegreeBase(NamedModel):
+
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
@@ -20,6 +20,5 @@ class AcademicDegreeDegreeUpdate(AcademicDegreeDegreeBase):
     pass
 
 
-class AcademicDegreeDegreeRead(AcademicDegreeDegreeBase):
-    id: Optional[uuid.UUID]
-    name: Optional[str]
+class AcademicDegreeDegreeRead(AcademicDegreeDegreeBase, ReadNamedModel):
+    pass

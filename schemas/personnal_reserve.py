@@ -5,7 +5,10 @@ from pydantic import BaseModel
 from datetime import datetime
 from enum import Enum
 
-class PersonnalReserveBase(BaseModel):
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
+
+
+class PersonnalReserveBase(Model):
     reserve: Optional[Enum]
     date_from: Optional[datetime]
     date_to: Optional[datetime]
@@ -26,8 +29,5 @@ class PersonnalReserveUpdate(PersonnalReserveBase):
     pass
 
 
-class PersonnalReserveRead(PersonnalReserveBase):
-
-    id: Optional[uuid.UUID] 
- 
-     
+class PersonnalReserveRead(PersonnalReserveBase, ReadModel):
+    pass

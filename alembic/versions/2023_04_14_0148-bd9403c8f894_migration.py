@@ -1,10 +1,11 @@
 """migration
 
-Revision ID: 0ff1351670d9
-Revises: 81b69562a2ac
-Create Date: 2023-04-10 02:10:00.528430
+Revision ID: bd9403c8f894
+Revises: 461e308e6b57
+Create Date: 2023-04-14 01:48:31.033124
 
 """
+import datetime
 import uuid
 
 from alembic import op
@@ -12,8 +13,8 @@ from core import Base
 
 
 # revision identifiers, used by Alembic.
-revision = '0ff1351670d9'
-down_revision = '81b69562a2ac'
+revision = 'bd9403c8f894'
+down_revision = '461e308e6b57'
 branch_labels = None
 depends_on = None
 
@@ -157,13 +158,11 @@ options = {
 
 
 def create_candidate_stage_info(candidate_id,
-                                staff_unit_coordinate_id,
                                 candidate_stage_type_id):
     op.bulk_insert(
         Base.metadata.tables['candidate_stage_infos'],
         [{
             'id': get_uuid(),
-            'staff_unit_coordinate_id': staff_unit_coordinate_id,
             'candidate_stage_type_id': candidate_stage_type_id,
             'candidate_id': candidate_id,
         }]
@@ -179,6 +178,7 @@ def upgrade() -> None:
         [{
             "id": badgetype1_id,
             "name": "Черный Берет",
+            "nameKZ": "Қара Берет",
             "url": "http://192.168.0.169:8083/static/black_beret.jpg"
         }]
     )
@@ -205,96 +205,112 @@ def upgrade() -> None:
         [{
             'id': rank1_id,
             'name': 'Рядовой',
+            'nameKZ': 'Қатардағы жауынгер',
             'order': 1,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A0%D1%8F%D0%B4%D0%BE%D0%B2%D0%BE%D0%B9_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': None
         }, {
             'id': rank2_id,
             'name': 'Младший сержант',
+            'nameKZ': "Кіші сержант",
             'order': 2,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9C%D0%BB%D0%B0%D0%B4%D1%88%D0%B8%D0%B9%20%D1%81%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9C%D0%BB%D0%B0%D0%B4%D1%88%D0%B8%D0%B9%20%D1%81%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82.png"
         }, {
             'id': rank3_id,
             'name': 'Сержант',
+            'nameKZ': 'Сержант',
             'order': 3,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82.png"
         }, {
             'id': rank14_id,
             'name': 'Сержант 1-го класса',
+            'nameKZ': '1-сыныпты сержант',
             'order': 4,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82%201-%D0%B3%D0%BE%20%D0%BA%D0%BB%D0%B0%D1%81%D1%81%D0%B0_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': None
         }, {
             'id': rank15_id,
             'name': 'Сержант 2-го класса',
+            'nameKZ': '2-сыныпты сержант',
             'order': 5,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82%202-%D0%B3%D0%BE%20%D0%BA%D0%BB%D0%B0%D1%81%D1%81%D0%B0_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': None
         }, {
             'id': rank16_id,
             'name': 'Сержант 3-го класса',
+            'nameKZ': '3-сыныпты сержант',
             'order': 6,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82%203-%D0%B3%D0%BE%20%D0%BA%D0%BB%D0%B0%D1%81%D1%81%D0%B0_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': None
         }, {
             'id': rank4_id,
             'name': 'Старший сержант',
+            'nameKZ': 'Аға сержант',
             'order': 7,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D1%82%D0%B0%D1%80%D1%88%D0%B8%D0%B9%20%D1%81%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D1%82%D0%B0%D1%80%D1%88%D0%B8%D0%B9%20%D1%81%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82.png"
         }, {
             'id': rank5_id,
             'name': 'Лейтенант',
+            'nameKZ': 'Лейтенант',
             'order': 8,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9B%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9B%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82.png"
         }, {
             'id': rank6_id,
             'name': 'Старший лейтенант',
+            'nameKZ': 'Аға лейтенант',
             'order': 9,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D1%82%D0%B0%D1%80%D1%88%D0%B8%D0%B9%20%D0%BB%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D1%82%D0%B0%D1%80%D1%88%D0%B8%D0%B9%20%D0%BB%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82.png"
         }, {
             'id': rank7_id,
             'name': 'Капитан',
+            'nameKZ': 'Капитан',
             'order': 10,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9A%D0%B0%D0%BF%D0%B8%D1%82%D0%B0%D0%BD_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9A%D0%B0%D0%BF%D0%B8%D1%82%D0%B0%D0%BD.png"
         }, {
             'id': rank8_id,
             'name': 'Майор',
+            'nameKZ': 'Майор',
             'order': 11,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9C%D0%B0%D0%B9%D0%BE%D1%80_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9C%D0%B0%D0%B9%D0%BE%D1%80.png"
         }, {
             'id': rank9_id,
             'name': 'Подполковник',
+            'nameKZ': 'Подполковник',
             'order': 12,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9F%D0%BE%D0%B4%D0%BF%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9F%D0%BE%D0%B4%D0%BF%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA.png"
         }, {
             'id': rank10_id,
             'name': 'Полковник',
+            'nameKZ': 'Полковник',
             'order': 13,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9F%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9F%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA.png"
         }, {
             'id': rank11_id,
             'name': 'Генерал-майор',
+            'nameKZ': 'Генерал-майор',
             'order': 14,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BC%D0%B0%D0%B9%D0%BE%D1%80.png",
             'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BC%D0%B0%D0%B9%D0%BE%D1%80.png"
         }, {
             'id': rank12_id,
             'name': 'Генерал-лейтенант',
+            'nameKZ': 'Генерал-лейтенант',
             'order': 15,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BB%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82.png",
             'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BB%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82.png"
         }, {
             'id': rank13_id,
             'name': 'Генерал-полковник',
+            'nameKZ': 'Генерал-полковник',
             'order': 16,
             'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BF%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA.png",
             'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BF%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA.png"
@@ -332,107 +348,130 @@ def upgrade() -> None:
         [{
             'id': position1_id,
             'name': 'Военно-служащий срочной службы',
+            'nameKZ': 'Мерзімді қызмет әскери қызметшісі',
             'max_rank_id': rank1_id
         }, {
             'id': position2_id,
             'name': 'Сотрудник охраны 3-категории',
+            'nameKZ': '3-санатты күзет қызметкері',
             'max_rank_id': rank2_id
         }, {
             'id': position3_id,
             'name': 'Сотрудник охраны 2-категории',
+            'nameKZ': '2-санатты күзет қызметкері',
             'max_rank_id': rank3_id
         }, {
             'id': position4_id,
             'name': 'Сотрудник охраны 1-категории',
+            'nameKZ': '1-санатты күзет қызметкері',
             'max_rank_id': rank4_id
         }, {
             'id': position5_id,
             'name': 'Офицер охраны',
+            'nameKZ': 'Күзет офицері',
             'max_rank_id': rank7_id
         }, {
             'id': position6_id,
             'name': 'Старший офицер охраны',
+            'nameKZ': 'Аға күзет офицері',
             'max_rank_id': rank8_id
         }, {
             'id': position7_id,
             'name': 'Старший офицер',
+            'nameKZ': 'Аға офицері',
             'max_rank_id': rank8_id
         }, {
             'id': position8_id,
             'name': 'Инспектор',
+            'nameKZ': 'Инспектор',
             'max_rank_id': rank9_id
         }, {
             'id': position9_id,
             'name': 'Старший инспектор',
+            'nameKZ': 'Аға инспектор',
             'max_rank_id': rank9_id
         }, {
             'id': position10_id,
             'name': 'Начальник отдела',
+            'nameKZ': 'Бөлім бастығы',
             'max_rank_id': rank9_id
         }, {
             'id': position11_id,
             'name': 'Заместитель начальника управление - Начальник отдела',
+            'nameKZ': 'Басқарма басытығының орынбасары - Бөлім бастығы',
             'max_rank_id': rank9_id
         }, {
             'id': position12_id,
             'name': 'Главный инспектор',
+            'nameKZ': 'Бас инспектор',
             'max_rank_id': rank10_id
         }, {
             'id': position13_id,
             'name': 'Начальник управления',
+            'nameKZ': 'Басқарма бастығы',
             'max_rank_id': rank10_id
         }, {
             'id': position14_id,
             'name': 'Заместитель начальника департамента',
+            'nameKZ': 'Департамент бастығының орынбасары',
             'max_rank_id': rank10_id
         }, {
             'id': position15_id,
             'name': 'Начальник департамента',
+            'nameKZ': 'Департамент бастығы',
             'max_rank_id': rank10_id
         }, {
             'id': position16_id,
             'name': 'Заместитель начальника Службы',
+            'nameKZ': 'Қызмет бастығының орынбасары',
             'max_rank_id': rank12_id
         }, {
             'id': position17_id,
             'name': 'Начальник Службы',
+            'nameKZ': 'Қызмет бастығы',
             'max_rank_id': rank13_id
         },
         {
             'id': position18_id,
             'name': 'Начальник кадров',
+            'nameKZ': 'Кадрлар басқармасының бастығы',
             'max_rank_id': rank10_id
         }, {
             'id': position19_id,
             'name': 'Заместители начальника кадров',
+            'nameKZ': 'Кадр бастығының орынбасары',
             'max_rank_id': rank10_id
         }, {
             'id': position20_id,
             'name': 'Начальник управления кандидатами',
+            'nameKZ': 'Кандидаттар басқармасының бастығы',
             'max_rank_id': rank10_id
         }, {
             'id': position21_id,
             'name': 'Политический гос. служащий',
+            'nameKZ': 'Саяси мемлекеттік қызметші',
             'max_rank_id': rank16_id
         }, {
             'id': position22_id,
             'name': 'Психолог',
+            'nameKZ': 'Психолог',
             'max_rank_id': None
         }, {
             'id': position23_id,
             'name': 'Представитель Управление собственной безопасности',
+            'nameKZ': 'Өкіл жеке қауіпсіздік басқармасы',
             'max_rank_id': None
         }, {
             'id': position24_id,
             'name': 'Полиграфолог',
+            'nameKZ': 'Полиграфолог',
             'max_rank_id': None
         }, {
             'id': position25_id,
             'name': 'Инструктор',
+            'nameKZ': 'Инструктор',
             'max_rank_id': None
-        }
-        
-        ]
+        }]
     )
 
     hr_document_status_id = get_uuid()
@@ -447,21 +486,27 @@ def upgrade() -> None:
         [{
             'id': hr_document_status_id,
             'name': "Иницилизирован",
+            'nameKZ': "Басталды",
         }, {
             'id': hr_document_status2_id,
             'name': "В процессе",
+            'nameKZ': 'Үдерісте',
         }, {
             'id': hr_document_status3_id,
             'name': "Завершен",
+            'nameKZ': 'Аяқталды',
         }, {
             'id': hr_document_status4_id,
             'name': "Отменен",
+            'nameKZ': 'Күші жойылды'
         }, {
             'id': hr_document_status5_id,
             'name': "На доработке",
+            'nameKZ': 'Қайта қаралуда'
         }, {
             'id': hr_document_status6_id,
             'name': "Черновик",
+            'nameKZ': 'Бастаулық'
         }]
     )
 
@@ -476,22 +521,27 @@ def upgrade() -> None:
         [{
             'id': doc_type1_id,
             'name': "Согласующий",
+            'nameKZ': "Келісуші",
             'can_cancel': True
         }, {
             'id': doc_type2_id,
             'name': "Эксперт",
+            'nameKZ': "Сарапшы",
             'can_cancel': False
         }, {
             'id': doc_type3_id,
             'name': "Утверждающий",
+            'nameKZ': 'Бекітуші',
             'can_cancel': True
         }, {
             'id': doc_type4_id,
             'name': "Уведомляемый",
+            'nameKZ': 'Хабарландырушы',
             'can_cancel': False
         }, {
             'id': doc_type5_id,
             'name': "Инициатор",
+            'nameKZ': 'Бастаушы',
             'can_cancel': True
         }]
     )
@@ -507,22 +557,28 @@ def upgrade() -> None:
         Base.metadata.tables['jurisdictions'],
         [{
             'id': jurisdiction_id,
-            'name': "Вся служба"
+            'name': "Вся служба",
+            'nameKZ': 'Барлық қызмет'
         }, {
             'id': jurisdiction2_id,
-            'name': "Личный Состав"
+            'name': "Личный Состав",
+            'nameKZ': 'Жеке құрамы'
         }, {
             'id': jurisdiction3_id,
-            'name': "Боевое Подразделение"
+            'name': "Боевое Подразделение",
+            'nameKZ': 'Жауынгерлік Бөлімшесі'
         }, {
             'id': jurisdiction4_id,
-            'name': "Штабное Подразделение"
+            'name': "Штабное Подразделение",
+            'nameKZ': 'Штаб Бөлімшесі'
         }, {
             'id': jurisdiction5_id,
-            'name': "Кандидаты"
+            'name': "Кандидаты",
+            'nameKZ': 'Үміткерлер'
         }, {
             'id': jurisdiction6_id,
-            'name': "Курьируемые сотрудники"
+            'name': "Курьируемые сотрудники",
+            'nameKZ': 'Жетекшілік ететін қызметкерлер'
         }]
     )
 
@@ -546,6 +602,7 @@ def upgrade() -> None:
             'hours_per_week': 3,
             'discriminator': 'document_staff_function',
             'name': 'Инициатор приказа о назначении',
+            'nameKZ': 'Тағайындау бұйрығының бастаушысы',
             'jurisdiction_id': jurisdiction_id,
             'priority': 1,
             'role_id': doc_type5_id
@@ -555,6 +612,7 @@ def upgrade() -> None:
             'hours_per_week': 3,
             'discriminator': 'document_staff_function',
             'name': 'Эксперт приказа о назначении',
+            'nameKZ': 'Тағайындау бұйрығының сарапшысы',
             'jurisdiction_id': jurisdiction_id,
             'priority': 2,
             'role_id': doc_type2_id
@@ -564,6 +622,7 @@ def upgrade() -> None:
             'hours_per_week': 3,
             'discriminator': 'document_staff_function',
             'name': 'Утверждающий приказа о назначении',
+            'nameKZ': 'Тағайындау бұйрығының бекітушісі',
             'jurisdiction_id': jurisdiction_id,
             'priority': 100,
             'role_id': doc_type3_id
@@ -573,6 +632,7 @@ def upgrade() -> None:
             'hours_per_week': 3,
             'discriminator': 'document_staff_function',
             'name': 'Инициатор приказа о присвоения звания',
+            'nameKZ': 'Атақ беру бұйрығының бастаушысы',
             'jurisdiction_id': jurisdiction_id,
             'priority': 1,
             'role_id': doc_type5_id
@@ -582,6 +642,7 @@ def upgrade() -> None:
             'hours_per_week': 3,
             'discriminator': 'document_staff_function',
             'name': 'Эксперт приказа о присвоения звания',
+            'nameKZ': 'Атақ беру бұйрығының сарапшысы',
             'jurisdiction_id': jurisdiction_id,
             'priority': 2,
             'role_id': doc_type2_id
@@ -591,6 +652,7 @@ def upgrade() -> None:
             'hours_per_week': 3,
             'discriminator': 'document_staff_function',
             'name': 'Утверждающий приказа о присвоения звания',
+            'nameKZ': 'Атақ беру бұйрығының бекітушісі',
             'jurisdiction_id': jurisdiction_id,
             'priority': 100,
             'role_id': doc_type3_id
@@ -600,6 +662,7 @@ def upgrade() -> None:
             'hours_per_week': 3,
             'discriminator': 'document_staff_function',
             'name': 'Инициатор приказа о присвоения черного берета',
+            'nameKZ': 'Қара берет беру бұйрығының бастаушысы',
             'jurisdiction_id': jurisdiction_id,
             'priority': 1,
             'role_id': doc_type5_id
@@ -609,6 +672,7 @@ def upgrade() -> None:
             'hours_per_week': 3,
             'discriminator': 'document_staff_function',
             'name': 'Эксперт приказа о присвоения черного берета',
+            'nameKZ': 'Қара берет беру бұйрығының сарапшысы',
             'jurisdiction_id': jurisdiction_id,
             'priority': 2,
             'role_id': doc_type2_id
@@ -618,6 +682,7 @@ def upgrade() -> None:
             'hours_per_week': 3,
             'discriminator': 'document_staff_function',
             'name': 'Утверждающий приказа о присвоения черного берета',
+            'nameKZ': 'Қара берет беру бұйрығының бекітушісі',
             'jurisdiction_id': jurisdiction_id,
             'priority': 100,
             'role_id': doc_type3_id
@@ -626,6 +691,7 @@ def upgrade() -> None:
             'hours_per_week': 3,
             'discriminator': 'document_staff_function',
             'name': 'Согласующий приказа о присвоения звания',
+            'nameKZ': 'Атақ беру бұйрығының келісушісі',
             'jurisdiction_id': jurisdiction_id,
             'priority': 3,
             'role_id': doc_type1_id
@@ -634,6 +700,7 @@ def upgrade() -> None:
             'hours_per_week': 3,
             'discriminator': 'document_staff_function',
             'name': 'Согласующий приказа о присвоения черного берета',
+            'nameKZ': 'Қара берет беру бұйрығының келісушісі',
             'jurisdiction_id': jurisdiction_id,
             'priority': 3,
             'role_id': doc_type1_id
@@ -642,6 +709,7 @@ def upgrade() -> None:
             'hours_per_week': 3,
             'discriminator': 'document_staff_function',
             'name': 'Согласующий приказа о назначении',
+            'nameKZ': 'Тағайындау бұйрығының келісушісі',
             'jurisdiction_id': jurisdiction_id,
             'priority': 3,
             'role_id': doc_type1_id
@@ -654,13 +722,16 @@ def upgrade() -> None:
         Base.metadata.tables['sport_types'],
         [{
             'id': sport_type1_id,
-            'name': "Бокс"
+            'name': "Бокс",
+            'nameKZ': "Бокс"
         }, {
             'id': sport_type2_id,
-            'name': "Карате"
+            'name': "Карате",
+            'nameKZ': "Карате"
         }, {
             'id': sport_type3_id,
-            'name': "Джиу-Джитсу"
+            'name': "Джиу-Джитсу",
+            'nameKZ': "Джиу-Джитсу"
         }]
     )
 
@@ -670,10 +741,12 @@ def upgrade() -> None:
         Base.metadata.tables['academic_degree_degrees'],
         [{
             'id': academic_degree_degree1_id,
-            'name': "Доктор Наук (PhD)"
+            'name': "Доктор Наук (PhD)",
+            'nameKZ': 'Ғылым Докторы (PhD)'
         }, {
             'id': academic_degree_degree2_id,
-            'name': "Кандидат Доктора Наук"
+            'name': "Кандидат Доктора Наук",
+            'nameKZ': 'Ғылым кандидаты Наук'
         }]
     )
 
@@ -681,10 +754,12 @@ def upgrade() -> None:
         Base.metadata.tables['academic_title_degrees'],
         [{
             'id': academic_title_degree1_id,
-            'name': "Профессор"
+            'name': "Профессор",
+            'nameKZ': 'Профессор'
         }, {
             'id': academic_title_degree2_id,
-            'name': "Доцент"
+            'name': "Доцент",
+            'nameKZ': 'Доцент'
         }]
     )
 
@@ -692,13 +767,16 @@ def upgrade() -> None:
         Base.metadata.tables['course_providers'],
         [{
             'id': course_provider1_id,
-            'name': "StepUp academy"
+            'name': "StepUp academy",
+            'nameKZ': 'StepUp academy'
         }, {
             'id': course_provider2_id,
-            'name': "Udemy.com"
+            'name': "Udemy.com",
+            'nameKZ': 'Udemy.com'
         }, {
             'id': course_provider3_id,
-            'name': "Coursera.com"
+            'name': "Coursera.com",
+            'nameKZ': 'Coursera.com'
         }]
     )
 
@@ -706,13 +784,16 @@ def upgrade() -> None:
         Base.metadata.tables['institution_degree_types'],
         [{
             'id': institution_degree_type1_id,
-            'name': "Среднее"
+            'name': "Среднее",
+            'nameKZ': 'Орта'
         }, {
             'id': institution_degree_type2_id,
-            'name': "Бакалавриат"
+            'name': "Бакалавриат",
+            'nameKZ': 'Бакалавриат'
         }, {
             'id': institution_degree_type3_id,
-            'name': "Магистратура"
+            'name': "Магистратура",
+            'nameKZ': 'Магистратура'
         }]
     )
 
@@ -720,10 +801,12 @@ def upgrade() -> None:
         Base.metadata.tables['sciences'],
         [{
             'id': science1_id,
-            'name': "Психологическая Наука"
+            'name': "Психологическая Наука",
+            'nameKZ': 'Психологиялық Ғылым',
         }, {
             'id': science2_id,
-            'name': "Военная Наука"
+            'name': "Военная Наука",
+            'nameKZ': 'Әскери Ғылым',
         }]
     )
 
@@ -731,13 +814,16 @@ def upgrade() -> None:
         Base.metadata.tables['specialties'],
         [{
             'id': specialty1_id,
-            'name': "Нейронные связи"
+            'name': "Нейронные связи",
+            'nameKZ': 'Нейрондық байланыстар'
         }, {
             'id': specialty2_id,
-            'name': "Квантовая физика"
+            'name': "Квантовая физика",
+            'nameKZ': 'Кванттық физика'
         }, {
             'id': specialty3_id,
-            'name': "Биохимия"
+            'name': "Биохимия",
+            'nameKZ': 'Биохимия'
         }]
     )
 
@@ -745,13 +831,16 @@ def upgrade() -> None:
         Base.metadata.tables['languages'],
         [{
             'id': language1_id,
-            'name': "Казахский язык"
+            'name': "Казахский язык",
+            'nameKZ': 'Қазақ тілі',
         }, {
             'id': language2_id,
-            'name': "Английский язык"
+            'name': "Английский язык",
+            'nameKZ': 'Ағылшын тілі',
         }, {
             'id': language3_id,
-            'name': "Русский язык"
+            'name': "Русский язык",
+            'nameKZ': 'Орыс тілі',
         }]
     )
 
@@ -759,10 +848,12 @@ def upgrade() -> None:
         Base.metadata.tables['institutions'],
         [{
             'id': institution1_id,
-            'name': 'Лицей "Бiлiм-Инновация"'
+            'name': 'Лицей "Бiлiм-Инновация',
+            'nameKZ': 'Бiлiм-Инновация лицей'
         }, {
             'id': institution2_id,
-            'name': "Astana IT University"
+            'name': "Astana IT University",
+            'nameKZ': 'Astana IT University'
         }]
     )
 
@@ -772,7 +863,8 @@ def upgrade() -> None:
         Base.metadata.tables['countries'],
         [{
             'id': country_id,
-            'name': "Турция"
+            'name': "Турция",
+            'nameKZ': "Түркия"
         }]
     )
 
@@ -780,13 +872,16 @@ def upgrade() -> None:
         Base.metadata.tables['property_types'],
         [{
             'id': property_type1_id,
-            'name': "Двухэтажный дом"
+            'name': "Двухэтажный дом",
+            'nameKZ': "Екі қабатты үй"
         }, {
             'id': property_type2_id,
-            'name': "1-комнтаная квартира"
+            'name': "1-комнтаная квартира",
+            'nameKZ': '1 бөлмелі пәтер'
         }, {
             'id': property_type3_id,
-            'name': "2-комнатная квартира"
+            'name': "2-комнатная квартира",
+            'nameKZ': '2 бөлмелі пәтер'
         }]
     )
 
@@ -804,36 +899,43 @@ def upgrade() -> None:
             'parent_group_id': None,
             'id': group1_id,
             'name': "Департамент 1",
+            'nameKZ': "Департамент 1",
             'is_combat_unit': True
         }, {
             'parent_group_id': group1_id,
             'id': group2_id,
             'name': "Управление 1",
+            'nameKZ': 'Управление 1',
             'is_combat_unit': False
         }, {
             'parent_group_id': group1_id,
             'id': group3_id,
             'name': "Управление 2",
+            'nameKZ': 'Управление 2',
             'is_combat_unit': True
         }, {
             'parent_group_id': group1_id,
             'id': group4_id,
             'name': "Управление 3",
+            'nameKZ': 'Управление 3',
             'is_combat_unit': False
         }, {
             'parent_group_id': group1_id,
             'id': group5_id,
             'name': "Управление 4",
+            'nameKZ': 'Управление 4',
             'is_combat_unit': True
         }, {
             'parent_group_id': None,
             'id': group6_id,
             'name': "Особая группа",
+            'nameKZ': 'Арнайы группа',
             'is_combat_unit': False
         }, {
             'parent_group_id': group6_id,
             'id': group7_id,
             'name': "Кандидаты",
+            'nameKZ': 'Кандидаттар',
             'is_combat_unit': False
         }]
     )
@@ -887,15 +989,19 @@ def upgrade() -> None:
         [{
             'id': family_status_id,
             'name': "Женат / Замужем",
+            'nameKZ': 'Үйленген / Тұрмысқа шыққан'
         }, {
             'id': family_status2_id,
             'name': "Не женат / Не замужем",
+            'nameKZ': 'Үйленбеген / Тұрмысқа құрмаған'
         }, {
             'id': family_status3_id,
             'name': "Разведен-а",
+            'nameKZ': 'Ажырасқан'
         }, {
             'id': family_status4_id,
             'name': "Вдовец / Вдова",
+            'nameKZ': 'Жесір / Жесір'
         }]
     )
 
@@ -903,10 +1009,12 @@ def upgrade() -> None:
         Base.metadata.tables['family_relations'],
         [{
             'id': family_relation_id,
-            'name': 'Отец'
+            'name': 'Отец',
+            'nameKZ': 'Әкесі'
         }, {
             'id': family_relation2_id,
-            'name': 'Мать'
+            'name': 'Мать',
+            'nameKZ': 'Анасы'
         }]
     )
 
@@ -914,10 +1022,12 @@ def upgrade() -> None:
         Base.metadata.tables['liberations'],
         [{
             'id': liberation_id,
-            'name': 'Физические нагрузки'
+            'name': 'Физические нагрузки',
+            'nameKZ': 'Дене белсенділігі'
         }, {
             'id': liberation2_id,
-            'name': 'Дежурство'
+            'name': 'Дежурство',
+            'nameKZ': 'Кезекшілік'
         }]
     )
 
@@ -956,7 +1066,8 @@ def upgrade() -> None:
         "http://192.168.0.169:8083/static/Dima.png",
         position4_id,
         True,
-        "1.2.218K")
+        "1.2.218K",
+        True)
     create_user(
         user1_id,
         "Адилет",
@@ -973,7 +1084,8 @@ def upgrade() -> None:
         "http://192.168.0.169:8083/static/Erzhan.png",
         position1_id,
         True,
-        '1.2.213K')
+        '1.2.213K',
+        True)
     create_user(
         user2_id,
         "Ахат",
@@ -990,7 +1102,8 @@ def upgrade() -> None:
         "http://192.168.0.169:8083/static/Erzhan.png",
         position1_id,
         False,
-        '1.2.213K')
+        '1.2.213K',
+        True)
     create_user(
         user3_id,
         "Асет",
@@ -1007,7 +1120,8 @@ def upgrade() -> None:
         "http://192.168.0.169:8083/static/Almaz.png",
         position1_id,
         True,
-        '1.2.214K')
+        '1.2.214K',
+        True)
     create_user(
         user4_id,
         "Жасулан",
@@ -1024,7 +1138,8 @@ def upgrade() -> None:
         "http://192.168.0.169:8083/static/Adil.png",
         position2_id,
         False,
-        "1.2.214K")
+        "1.2.214K",
+        True)
     create_user(
         user5_id,
         "Ануар",
@@ -1041,7 +1156,8 @@ def upgrade() -> None:
         "http://192.168.0.169:8083/static/Almaz.png",
         position1_id,
         True,
-        "1.2.215K")
+        "1.2.215K",
+        True)
     create_user(
         user6_id,
         "Бексундет",
@@ -1058,7 +1174,8 @@ def upgrade() -> None:
         "http://192.168.0.169:8083/static/Ernazar.png",
         position2_id,
         False,
-        '1.2.215K')
+        '1.2.215K',
+        True)
     create_user(
         user7_id,
         "Ерден",
@@ -1075,7 +1192,8 @@ def upgrade() -> None:
         "http://192.168.0.169:8083/static/Nurlan.png",
         position1_id,
         True,
-        '1.2.215K')
+        '1.2.215K',
+        True)
     create_user(
         user8_id,
         "Еркин",
@@ -1092,7 +1210,8 @@ def upgrade() -> None:
         "http://192.168.0.169:8083/static/Erdaulet.png",
         position1_id,
         False,
-        "1.2.216K")
+        "1.2.216K",
+        True)
     create_user(
         user9_id,
         "Арман",
@@ -1109,7 +1228,8 @@ def upgrade() -> None:
         "http://192.168.0.169:8083/static/Erdaulet.png",
         position3_id,
         True,
-        "1.2.217K")
+        "1.2.217K",
+        True)
     create_user(
         user11_id,
         "Елена",
@@ -1126,7 +1246,8 @@ def upgrade() -> None:
         "http://192.168.0.169:8083/static/Erdaulet.png",
         position22_id,
         True,
-        "1.2.217K")
+        "1.2.217K",
+        True)
     create_user(
         user12_id,
         "Айдар",
@@ -1138,12 +1259,13 @@ def upgrade() -> None:
         "Альфа 12",
         '12',
         staff_unit16_id,
-        None,
+        rank5_id,
         staff_unit16_id,
         "http://192.168.0.169:8083/static/Erdaulet.png",
         position23_id,
         True,
-        "1.2.217K")
+        "1.2.217K",
+        True)
     create_user(
         user13_id,
         "Куат",
@@ -1155,12 +1277,13 @@ def upgrade() -> None:
         "Альфа 13",
         '13',
         staff_unit17_id,
-        None,
+        rank5_id,
         staff_unit17_id,
         "http://192.168.0.169:8083/static/Erdaulet.png",
         position24_id,
         True,
-        "1.2.217K")
+        "1.2.217K",
+        True)
     create_user(
         user14_id,
         "Даулет",
@@ -1172,12 +1295,13 @@ def upgrade() -> None:
         "Альфа 14",
         '14',
         staff_unit18_id,
-        None,
+        rank5_id,
         staff_unit18_id,
         "http://192.168.0.169:8083/static/Erdaulet.png",
         position21_id,
         True,
-        "1.2.217K")
+        "1.2.217K",
+        True)
     create_user(
         user15_id,
         "Ақжол",
@@ -1189,12 +1313,13 @@ def upgrade() -> None:
         "Альфа 15",
         '15',
         staff_unit19_id,
-        None,
+        rank5_id,
         staff_unit19_id,
         "http://192.168.0.169:8083/static/Erdaulet.png",
         position20_id,
         True,
-        "1.2.217K")
+        "1.2.217K",
+        True)
     create_user(
         user16_id,
         "Қайрат",
@@ -1206,12 +1331,13 @@ def upgrade() -> None:
         "Альфа 16",
         '16',
         staff_unit20_id,
-        None,
+        rank5_id,
         staff_unit20_id,
         "http://192.168.0.169:8083/static/Erdaulet.png",
         position19_id,
         True,
-        "1.2.217K")
+        "1.2.217K",
+        True)
     create_user(
         user17_id,
         "Санжар",
@@ -1223,12 +1349,13 @@ def upgrade() -> None:
         "Альфа 17",
         '17',
         staff_unit21_id,
-        None,
+        rank5_id,
         staff_unit21_id,
         "http://192.168.0.169:8083/static/Erdaulet.png",
         position18_id,
         True,
-        "1.2.217K")
+        "1.2.217K",
+        True)
     create_user(
         user18_id,
         "Көктем",
@@ -1240,12 +1367,13 @@ def upgrade() -> None:
         "Альфа 18",
         '18',
         staff_unit22_id,
-        None,
+        rank5_id,
         staff_unit22_id,
         "http://192.168.0.169:8083/static/Erdaulet.png",
         position25_id,
         True,
-        "1.2.217K")
+        "1.2.217K",
+        False)
     create_user(
         str(uuid.uuid4()),
         "Админ",
@@ -1262,7 +1390,8 @@ def upgrade() -> None:
         "http://192.168.0.169:8083/static/Erdaulet.png",
         position4_id,
         False,
-        '1.2.100K')
+        '1.2.100K',
+        True)
 
     op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(staff_unit8_id, group3_id))
 
@@ -1310,169 +1439,544 @@ def upgrade() -> None:
     template1_id = get_uuid()
     template2_id = get_uuid()
     template3_id = get_uuid()
+    template4_id = get_uuid()
+    template5_id = get_uuid()
+    template6_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['hr_document_templates'],
         [{
             'name': 'Приказ о назначении',
-            'path': 'http://192.168.0.169:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7%20%D0%BE%20%D0%BD%D0%B0%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%B8%D0%B8.docx',
+            'nameKZ': 'Тағайындау бұйрығы',
+            'path': 'http://193.106.99.68:2287/static/Приказ%20о%20назначении.html',
+            'pathKZ': 'http://193.106.99.68:2287/static/Приказ%20о%20назначении.html',
             'subject_type': "EMPLOYEE",
             'properties': {
                 "signed_at": {
                     "alias_name": "Дата подписания",
+                    'alias_nameKZ': 'Қол жеткізу күні',
                     "type": "read",
                     "data_taken": "auto"
                 },
                 "reg_number": {
                     "alias_name": "Регистрационный номер",
+                    'alias_nameKZ': 'Регистрациялық нөмір',
                     "type": "read",
                     "data_taken": "auto"
                 },
                 "rank": {
                     "alias_name": "Звание субъекта",
+                    'alias_nameKZ': 'Атауы',
                     "type": "read",
                     "data_taken": "auto"
                 },
                 "last_name": {
                     "alias_name": "Фамилия субъекта",
+                    'alias_nameKZ': 'Тегі',
                     "type": "read",
                     "data_taken": "auto"
                 },
                 "first_name": {
                     "alias_name": "Имя субъекта",
+                    'alias_nameKZ': 'Аты',
                     "type": "read",
                     "data_taken": "auto"
                 },
                 "father_name": {
                     "alias_name": "Отчество субъекта",
+                    'alias_nameKZ': 'Әкесінің аты',
                     "type": "read",
                     "data_taken": "auto"
                 },
                 "id_number": {
                     "alias_name": "Идентификационный номер субъекта",
+                    'alias_nameKZ': 'Субъектінің сәйкестендіру нөмірі',
                     "type": "read",
                     "data_taken": "auto"
                 },
                 "new_position": {
                     "alias_name": "Новая позиция субъекта",
+                    'alias_nameKZ': 'Жаңа позиция',
                     "type": "write",
                     "data_taken": "dropdown",
                     "field_name": "staff_unit"
                 },
                 "department_name": {
                     "alias_name": "Департамент субъекта",
+                    'alias_nameKZ': 'Департаменті',
                     "type": "read",
                     "data_taken": "auto"
                 },
                 "reason": {
                     "alias_name": "Причина",
+                    'alias_nameKZ': 'Себебі',
                     "type": "read",
                     "data_taken": "manual"
                 },
                 "number": {
                     "alias_name": "Процент",
+                    'alias_nameKZ': 'Пайыз',
                     "type": "read",
                     "data_taken": "manual"
                 }
             },
+            'actions': {'args': [
+                {
+                    'position_change': {
+                        'staff_unit': {
+                            'tagname': 'new_position'
+                        }
+                    }
+                }
+            ]},
             'id': template1_id
         }, {
             'name': 'Приказ о присвоения звания',
-            'path': 'http://192.168.0.169:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7_%D0%BE_%D0%BF%D1%80%D0%B8%D1%81%D0%B2%D0%BE%D0%B5%D0%BD%D0%B8%D0%B8_%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F_%D0%BF%D0%BE%D0%B2%D1%8B%D1%88%D0%B5%D0%BD%D0%B8%D0%B5.docx',
+            'nameKZ': 'Атақ беру бұйрығы',
+            'path': None,
+            'pathKZ': 'http://193.106.99.68:2287/static/Приказ_о_присвоении_звания_повышение.html',
             'subject_type': "EMPLOYEE",
             'properties': {
                 "signed_at": {
                     "alias_name": "Дата подписания",
+                    'alias_nameKZ': 'Қол жеткізу күні',
                     "type": "read",
                     "data_taken": "auto"
                 },
                 "reg_number": {
                     "alias_name": "Регистрационный номер",
+                    'alias_nameKZ': 'Регистрациялық нөмір',
                     "type": "read",
                     "data_taken": "auto"
                 },
                 "last_name": {
                     "alias_name": "Фамилия субъекта",
+                    'alias_nameKZ': 'Тегі',
                     "type": "read",
                     "data_taken": "auto"
                 },
                 "first_name": {
                     "alias_name": "Имя субъекта",
+                    'alias_nameKZ': 'Аты',
                     "type": "read",
                     "data_taken": "auto"
                 },
                 "father_name": {
                     "alias_name": "Отчество субъекта",
+                    'alias_nameKZ': 'Әкесінің аты',
                     "type": "read",
                     "data_taken": "auto"
                 },
                 "id_number": {
                     "alias_name": "Идентификационный номер субъекта",
+                    'alias_nameKZ': 'Субъектінің сәйкестендіру нөмірі',
                     "type": "read",
                     "data_taken": "auto"
                 },
-                "new_position": {
-                    "alias_name": "Новая позиция субъекта",
+                "new_rank": {
+                    "alias_name": "Новая звание субъекта",
+                    'alias_nameKZ': 'Жаңа атақ',
                     "type": "write",
                     "data_taken": "dropdown",
                     "field_name": "rank"
                 }
             },
+            'actions': {'args': [
+                {
+                    'increase_rank': {
+                        'rank': {
+                            'tagname': "new_rank"
+                        }
+                    }
+                }
+            ]},
             'id': template2_id
         }, {
             'name': 'Приказ о присвоения черного берета',
-            'path': 'http://192.168.0.169:8083/static/%D0%9F%D1%80%D0%B8%D0%BA%D0%B0%D0%B7_%D0%BE_%D0%BF%D1%80%D0%B8%D1%81%D0%B2%D0%BE%D0%B5%D0%BD%D0%B8%D0%B8_%D0%A7%D0%B5%D1%80%D0%BD%D0%BE%D0%B3%D0%BE_%D0%B1%D0%B5%D1%80%D0%B5%D1%82%D0%B0.docx',
+            'nameKZ': 'Қара берет беру бұйрығы',
+            'path': None,
+            'pathKZ': 'http://193.106.99.68:2287/static/Приказ_о_присвоении_Черного_берета.html',
             'subject_type': "EMPLOYEE",
             'properties': {
                 "signed_at": {
                     "alias_name": "Дата подписания",
+                    'alias_nameKZ': 'Қол жеткізу күні',
                     "type": "read",
                     "data_taken": "auto"
                 },
                 "reg_number": {
                     "alias_name": "Регистрационный номер",
+                    'alias_nameKZ': 'Регистрациялық нөмір',
                     "type": "read",
                     "data_taken": "auto"
                 },
                 "last_name": {
                     "alias_name": "Фамилия субъекта",
+                    'alias_nameKZ': 'Тегі',
                     "type": "read",
                     "data_taken": "auto"
                 },
                 "first_name": {
                     "alias_name": "Имя субъекта",
+                    'alias_nameKZ': 'Аты',
                     "type": "read",
                     "data_taken": "auto"
                 },
                 "father_name": {
                     "alias_name": "Отчество субъекта",
+                    'alias_nameKZ': 'Әкесінің аты',
                     "type": "read",
                     "data_taken": "auto"
                 },
                 "id_number": {
                     "alias_name": "Идентификационный номер субъекта",
+                    'alias_nameKZ': 'Субъектінің сәйкестендіру нөмірі',
                     "type": "read",
                     "data_taken": "auto"
                 },
                 "position": {
                     "alias_name": "Позиция субъекта",
+                    'alias_nameKZ': 'Субъекттің позициясы',
                     "type": "read",
                     "data_taken": "auto"
                 },
                 "department_name": {
                     "alias_name": "Департамент субъекта",
+                    'alias_nameKZ': 'Субъекттің департаменті',
                     "type": "read",
                     "data_taken": "auto"
                 },
                 "badge": {
                     "alias_name": "Черный берет",
+                    'alias_nameKZ': 'Қара берет',
                     "type": "write",
                     "data_taken": "auto",
                     "field_name": "badges",
                     "value": badgetype1_id
                 }
             },
+            'actions': {'args': [
+                {
+                    'add_black_beret': {}
+                }
+            ]},
             'id': template3_id
+        }, {
+            "name": "Запрос на наличие сведений для указанных граждан о причастности к религиозному экстремизму",
+            "nameKZ": "Көрсетілген азаматтар үшін діни экстремизмге қатысы бар екендігі туралы мәліметтердің болуына сұрау салу",
+            "path": "http://193.106.99.68:2287/static/кандидаты1.html",
+            "pathKZ": "http://193.106.99.68:2287/static/кандидаты1.html",
+            "subject_type": 1,
+            "properties": {
+                "recipient.organization_name": {
+                    "alias_name": "Наименование ссылаемой организации",
+                    "type": "read",
+                    "data_taken": "manual"
+                },
+                "recipient.position": {
+                    "alias_name": "Позиция ссылаемого челевека",
+                    "type": "read",
+                    "data_taken": "manual"
+                },
+                "recipient.rank": {
+                    "alias_name": "Звание ссылаемого челевека",
+                    "type": "read",
+                    "data_taken": "manual"
+                },
+                "recipient.name": {
+                    "alias_name": "Имя ссылаемого челевека",
+                    "type": "read",
+                    "data_taken": "manual"
+                },
+                "recipient.father_name": {
+                    "alias_name": "Отчество ссылаемого челевека",
+                    "type": "read",
+                    "data_taken": "manual"
+                },
+                "recipient.surname": {
+                    "alias_name": "Фамилия ссылаемого челевека",
+                    "type": "read",
+                    "data_taken": "manual"
+                },
+                "recipient.city": {
+                    "alias_name": "Город ссылаемой организации",
+                    "type": "read",
+                    "data_taken": "manual"
+                },
+                "candidate.surname": {
+                    "alias_name": "Фамилия кандидата",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "candidate.name": {
+                    "alias_name": "Имя кандидата",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "candidate.father_name": {
+                    "alias_name": "Отчество кандидата",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "candidate.IIN": {
+                    "alias_name": "ИИН кандидата",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "candidate.birth_date": {
+                    "alias_name": "Дата рождения кандидата",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "candidate.birth_place": {
+                    "alias_name": "Место рождения кандидата",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "candidate.nationality": {
+                    "alias_name": "Национальность кандидата",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "candidate.residence_address": {
+                    "alias_name": "Место жительство кандидата",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "check_information": {
+                    "alias_name": "Запрошенная информация для проверки",
+                    "type": "read",
+                    "data_taken": "manual"
+                },
+                "approving.position": {
+                    "alias_name": "Позиция куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "approving.rank": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "approving.surname": {
+                    "alias_name": "Фамилия куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "approving.name": {
+                    "alias_name": "Имя куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "approving.father_name": {
+                    "alias_name": "Отчество куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "date_of_signature": {
+                    "alias_name": "Дата подписания",
+                    "type": "read",
+                    "data_taken": "auto"
+                }
+            },'actions': {'args': [
+            
+            ]},
+            'id': template4_id
+        }, 
+        {
+            "name": "Заключение спец. проверки",
+            "nameKZ": "Арнайы қорытынды тексерулер",
+            "path": "http://193.106.99.68:2287/static/pre-finalv2.html",
+            "pathKZ": "http://193.106.99.68:2287/static/pre-finalv2.html",
+            "subject_type": 1,
+            "properties": {
+                "curator.rank.name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "curator.first_name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
+                "curator.father_name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
+                "curator.last_name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
+                "year": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
+                "day": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "month": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
+                "candidate.rank.name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
+                "candidate.first_name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
+                "candidate.father_name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
+                "candidate.last_name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "candidate.date_birth": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
+                "candidate.profile.personal_profile.biographic_info.place_birth": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "candidate.profile.personal_profile.biographic_info.nationality": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "candidate.address": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "father.first_name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
+                "father.father_name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
+                "father.last_name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "father.iin": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "father.date_birth": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "father.place_birth": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "father.workplace": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "father.address": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "curator.staff_unit.position.name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
+                "curator.staff_unit.staff_division.name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "mother.first_name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
+                "mother.father_name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }, 
+                "mother.last_name": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "mother.iin": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "mother.date_birth": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "mother.place_birth": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "mother.workplace": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                },
+                "mother.address": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }
+            },'actions': {'args': [
+            
+            ]},
+            'id': template5_id
+        },
+        {
+            "name": "Заключение на зачисление",
+            "nameKZ": "Қабылдау қорытындысы",
+            "path": "http://193.106.99.68:2287/static/finish_candidate.html",
+            "pathKZ": "http://193.106.99.68:2287/static/finish_candidate.html",
+            "subject_type": 1,
+            "properties": {
+                "example": {
+                    "alias_name": "Звание куратора",
+                    "type": "read",
+                    "data_taken": "auto"
+                }
+            },
+            'actions': {'args': [
+            
+            ]},
+            'id': template6_id
         }]
     )
 
@@ -1651,35 +2155,43 @@ def upgrade() -> None:
         [{
             'id': penalty_type_id,
             'name': 'Замечание',
+            'nameKZ': 'Ескерту',
         },
             {
             'id': penalty_type2_id,
             'name': 'Выговор',
+            'nameKZ': 'Сөгіс'
         },
             {
             'id': penalty_type3_id,
             'name': 'Строгий выговор',
+            'nameKZ': 'Қатаң сөгіс'
         },
             {
             'id': penalty_type4_id,
             'name': 'Предупреждение о неполном служебном соответствии',
+            'nameKZ': 'Толық қызметтік сәйкестікті қателіктен басқа құлақтандыру'
         },
             {
             'id': penalty_type5_id,
             'name': 'Увольнение со службы по отрицательным мотивам',
+            'nameKZ': 'Теріс себептермен қызметтен босату'
         },
             {
             'id': penalty_type6_id,
             'name': 'Снижение воинского звания',
+            'nameKZ': 'Әскери атағын төмендету'
         },
             {
             'id': penalty_type7_id,
             'name': 'Неполное служебное соответствие',
+            'nameKZ': 'Толық емес қызметтік сәйкестік'
 
         },
             {
             'id': penalty_type8_id,
             'name': 'Письменное предупреждение',
+            'nameKZ': 'Жазбаша ескерту'
         }]
     )
 
@@ -1693,10 +2205,6 @@ def upgrade() -> None:
             'user_id': user1_id,
         }]
     )
-
-    
-    import datetime
-
 
     badge_id = get_uuid()
     op.bulk_insert(
@@ -1716,14 +2224,17 @@ def upgrade() -> None:
         [{
             'id': type_army_equipment_id,
             'name': 'Автомат',
+            'nameKZ': 'Автомат',
         },
             {
             'id': type_army_equipment2_id,
             'name': 'РПГ',
+            'nameKZ': 'РПГ',
         },
             {
             'id': type_army_equipment3_id,
             'name': 'Артиллерия',
+            'nameKZ': 'Артиллерия',
         }
         ])
             
@@ -1738,16 +2249,19 @@ def upgrade() -> None:
         [{
             'id': type_army_equipment_model_id,
             'name': 'Автомат винтовка',
+            'nameKZ': 'Автомат мылтық',
             'type_of_army_equipment_id': type_army_equipment_id
         },
             {
             'id': type_army_equipment_model2_id,
             'name': 'Автомат пулемет',
+            'nameKZ': "Автомат пулемет",
             'type_of_army_equipment_id': type_army_equipment_id
         },
             {
             'id': type_army_equipment_model3_id,
             'name': 'Автомат пулемет',
+            'nameKZ': "Автомат пулемет",
             'type_of_army_equipment_id': type_army_equipment_id
         }] 
     )  
@@ -1767,35 +2281,43 @@ def upgrade() -> None:
         [{
             'id': type_of_clothing_equipment_id,
             'name': 'Шапка',
+            'nameKZ': 'Бас киім'
         },
-            {
+        {
             'id': type_of_clothing_equipment2_id,
             'name': 'Куртка',
+            'nameKZ': 'Пиджак'
         },
-            {
+        {
             'id': type_of_clothing_equipment3_id,
             'name': 'Футболка',
+            'nameKZ': 'Футболка'
         },
-            {
+        {
             'id': type_of_clothing_equipment4_id,
             'name': 'Кофта',
+            'nameKZ': 'Жейде'
         },
-            {
+        {
             'id': type_of_clothing_equipment5_id,
             'name': 'Штаны',
-            },
-            {
+            'nameKZ': 'Шалбар'
+        },
+        {
             'id': type_of_clothing_equipment6_id,
             'name': 'Термобелье',
-            },
-            {
+            'nameKZ': 'Термиялық іш киім',
+        },
+        {
             'id': type_of_clothing_equipment7_id,
             'name': 'Ботинки',
-            },
-            {
+            'nameKZ': 'Етік',
+        },
+        {
             'id': type_of_clothing_equipment8_id,
             'name': 'Носки',
-            }])
+            'nameKZ': 'Шұлық'
+        }])
 
     type_of_clothing_equipment_model_id = get_uuid()
     type_of_clothing_equipment_model2_id = get_uuid()
@@ -1811,41 +2333,49 @@ def upgrade() -> None:
         [{
             'id': type_of_clothing_equipment_model_id,
             'name': 'Шапка военная',
+            'nameKZ': 'Әскери бас киім',
             'type_of_clothing_equipment_id': type_of_clothing_equipment_id
         },
             {
             'id': type_of_clothing_equipment_model2_id,
             'name': 'Куртка военная',
+            'nameKZ': 'Әскери куртка',
             'type_of_clothing_equipment_id': type_of_clothing_equipment2_id
         },
             {
             'id': type_of_clothing_equipment_model3_id,
             'name': 'Футболка военная',
+            'nameKZ': 'Әскери футболка',
             'type_of_clothing_equipment_id': type_of_clothing_equipment3_id
         },
             {
             'id': type_of_clothing_equipment_model4_id,
             'name': 'Кофта военная',
+            'nameKZ': 'Әскери жейде',
             'type_of_clothing_equipment_id': type_of_clothing_equipment4_id
         },
             {
             'id': type_of_clothing_equipment_model5_id,
             'name': 'Штаны военные',
+            'nameKZ': 'Әскери шалбар',
             'type_of_clothing_equipment_id': type_of_clothing_equipment5_id
         },
             {
             'id': type_of_clothing_equipment_model6_id,
             'name': 'Термобелье военное',
+            'nameKZ': 'Әскери термиялық іш киім',
             'type_of_clothing_equipment_id': type_of_clothing_equipment6_id
         },
             {
             'id': type_of_clothing_equipment_model7_id,
             'name': 'Ботинки военные',
+            'nameKZ': 'Әскери етік',
             'type_of_clothing_equipment_id': type_of_clothing_equipment7_id
         },
             {
             'id': type_of_clothing_equipment_model8_id,
             'name': 'Носки военные',
+            'nameKZ': 'Әскери шұлық',
             'type_of_clothing_equipment_id': type_of_clothing_equipment8_id
         }])
     
@@ -1857,6 +2387,7 @@ def upgrade() -> None:
         [{
             'id': type_other_equipment_id,
             'name': 'Техника',
+            'nameKZ': 'Техника'
         }]
     )
 
@@ -1872,31 +2403,37 @@ def upgrade() -> None:
         [{
             'id': type_other_equipment_model_id,
             'name': 'Принтер',
+            'nameKZ': 'Принтер',
             'type_of_other_equipment_id': type_other_equipment_id
         },
             {
             'id': type_other_equipment_model2_id,
             'name': 'Радиостанция',
+            'nameKZ': 'Радиостанция',
             'type_of_other_equipment_id': type_other_equipment_id
         },
             {
             'id': type_other_equipment_model3_id,
             'name': 'Персональный компьютер',
+            'nameKZ': 'Дербес компьютер',
             'type_of_other_equipment_id': type_other_equipment_id
         },
             {
             'id': type_other_equipment_model4_id,
             'name': 'Телефон',
+            'nameKZ': 'Телефон',
             'type_of_other_equipment_id': type_other_equipment_id
         },
             {
             'id': type_other_equipment_model5_id,
             'name': 'Ноутбук',
+            'nameKZ': 'Ноутбук',
             'type_of_other_equipment_id': type_other_equipment_id
         },
             {
             'id': type_other_equipment_model6_id,
             'name': 'Копировальный аппарат',
+            'nameKZ': 'Көшіру машинасы',
             'type_of_other_equipment_id': type_other_equipment_id
         }])
     
@@ -1965,19 +2502,22 @@ def upgrade() -> None:
             'id': secondment_id,
             'staff_division_id': group1_id,
             'user_id': user1_id,
-            'name': 'Перевод в другую группу'
+            'name': 'Перевод в другую группу',
+            'nameKZ': 'Басқа топқа өткізу'
         },
             {
             'id': secondment2_id,
             'staff_division_id': group2_id,
             'user_id': user1_id,
-            'name': 'Перевод в другую группу'
+            'name': 'Перевод в другую группу',
+            'nameKZ': 'Басқа топқа өткізу'
         },
             {
             'id': secondment3_id,
             'staff_division_id': group3_id,
             'user_id': user1_id,
-            'name': 'Перевод в другую группу'
+            'name': 'Перевод в другую группу',
+            'nameKZ': 'Басқа топқа өткізу'
         }]
     )
 
@@ -2026,7 +2566,8 @@ def upgrade() -> None:
         Base.metadata.tables['status_types'],
         [{
             'id': status_type,
-            'name': 'Статус 1'
+            'name': 'Статус 1',
+            'nameKZ': 'Статус 1'
         }]
     )
 
@@ -2049,10 +2590,14 @@ def upgrade() -> None:
         [{
             'id': coolness_type_id,
             'name': 'Специалист 1 класса',
+            'nameKZ': '1-сынып маманы',
+            'order': 1
         },
             {
             'id': coolness_type2_id,
             'name': 'Специалист 2 класса',
+            'nameKZ': '2-сынып маманы',
+            'order': 2
         },
         ]
     )
@@ -2083,12 +2628,17 @@ def upgrade() -> None:
         [{
             'id': contract_type_id,
             'name': 'Тип 1',
+            'nameKZ': 'Тип 1',
+            'years': 2,
+            'is_finite': True
         },
             {
             'id': contract_type2_id,
             'name': 'Тип 2',
-        },
-        ]
+            'nameKZ': 'Тип 2',
+            'years': -1,
+            'is_finite': False
+        }]
     )
 
     contract_id = get_uuid()
@@ -2148,14 +2698,17 @@ def upgrade() -> None:
         [{
             'id': military_unit_id,
             'name': 'Военная часть 1',
+            'nameKZ': 'Әскери бөлім 1',
         },
             {
             'id': military_unit2_id,
             'name': 'Военная часть 2',
+            'nameKZ': 'Әскери бөлім 2',
         },
             {
             'id': military_unit3_id,
             'name': 'Военная часть 3',
+            'nameKZ': 'Әскери бөлім 3',
         },
         ]
     )
@@ -2255,6 +2808,10 @@ def upgrade() -> None:
             'staff_division_id' : None,
             'badge_id' : badge_id,
             'name_of_organization': None,
+            'is_credited': None,
+            'document_style': None,
+            'date_credited': None,
+            'emergency_rank_id': None,
          },
         {
             'id': history_id,
@@ -2276,15 +2833,19 @@ def upgrade() -> None:
             'service_characteristic_id': None,  # Add the missing parameter here
             'status_id': None,  # Add the missing parameter here
             'coolness_id': None,  # Add the missing parameter here
-            'contract_id': None,  # Add the missing parameter here
-            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
-            'experience_years': None,  # Add the missing parameter here
-            'characteristic_initiator_id': None,  # Add the missing parameter here
+            'contract_id': None,  # Atype_of_histories[3]_id': None,  # Add the missing parameter here
             'coefficient' : None,
+            'experience_years': None,
+            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+            'characteristic_initiator_id': None,  # Add the missing parameter here
             'percentage' : None,
             'staff_division_id' : None,
             'name_of_organization': None,
             'badge_id' : None,
+            'is_credited': None,
+            'document_style': None,
+            'date_credited': None,
+            'emergency_rank_id': None,
         },
         {
             'id': history14_id,
@@ -2313,10 +2874,7 @@ def upgrade() -> None:
             'coefficient' : 1.5,
             'percentage' : 10,
             'staff_division_id' : group1_id,
-            'name_of_organization': None,
-            'badge_id' : None,
-        },
-            {
+            'nabadge_id': None,
             'id': history2_id,
             'date_from': str(datetime.datetime(2019, 2, 1)),
             'date_to': str(datetime.datetime(2019, 2, 28)),
@@ -2325,6 +2883,7 @@ def upgrade() -> None:
             'document_number': '№ 59124',
             'type': type_of_histories[1],
             'rank_id': rank1_id,
+            'rank_assigned_by': "Кусманов А.С.",
             'name': '2 history',
             'position_id': None,  # Add the missing parameter here
             'penalty_id': None,  # Add the missing parameter here
@@ -2345,6 +2904,10 @@ def upgrade() -> None:
             'staff_division_id' : None,
             'name_of_organization': None,
             'badge_id' : None,
+            'is_credited': None,
+            'document_style': None,
+            'date_credited': None,
+            'emergency_rank_id': rank1_id
         },
             {
             'id': history3_id,
@@ -2375,6 +2938,10 @@ def upgrade() -> None:
             'staff_division_id' : None,
             'name_of_organization': None,
             'badge_id' : None,
+            'is_credited': None,
+            'document_style': None,
+            'date_credited': None,
+            'emergency_rank_id': None
         },
              
             {
@@ -2405,7 +2972,11 @@ def upgrade() -> None:
             'percentage' : None,
             'staff_division_id' : None,
             'name_of_organization': None,
-            'badge_id': None
+            'badge_id': None,
+            'is_credited': None,
+            'document_style': None,
+            'date_credited': None,
+            'emergency_rank_id': None
         },
             {
             'id': history7_id,
@@ -2435,7 +3006,11 @@ def upgrade() -> None:
             'percentage' : None,
             'staff_division_id' : None,
             'name_of_organization': None,
-            'badge_id': None
+            'badge_id': None,
+            'is_credited': None,
+            'document_style': None,
+            'date_credited': None,
+            'emergency_rank_id': None
         },
          {
             'id': history15_id, # TODO: change the id
@@ -2465,7 +3040,11 @@ def upgrade() -> None:
             'percentage' : None,
             'staff_division_id' : None,
             'name_of_organization': 'Cleverest Technologies',
-            'badge_id': None
+            'badge_id': None,
+            'is_credited': True,
+            'document_style': 'Первый',
+            'date_credited': datetime.datetime(2014, 3, 31),
+            'emergency_rank_id': None
          },
         {
             'id': history16_id,
@@ -2495,7 +3074,11 @@ def upgrade() -> None:
             'percentage' : None,
             'staff_division_id' : None,
             'name_of_organization': None,
-            'badge_id': None
+            'badge_id': None,
+            'is_credited': None,
+            'document_style': None,
+            'date_credited': None,
+            'emergency_rank_id': None
         },
             {
             'id': history8_id,
@@ -2525,8 +3108,11 @@ def upgrade() -> None:
             'percentage' : None,
             'staff_division_id' : None,
             'name_of_organization': None,
-            'badge_id': None
-
+            'badge_id': None,
+            'is_credited': None,
+            'document_style': None,
+            'date_credited': None,
+            'emergency_rank_id': None
         },
            
             {
@@ -2557,7 +3143,11 @@ def upgrade() -> None:
             'percentage' : None,
             'staff_division_id' : None,
             'name_of_organization': None,
-            'badge_id': None
+            'badge_id': None,
+            'is_credited': None,
+            'document_style': None,
+            'date_credited': None,
+            'emergency_rank_id': None
         },
             {
             'id': history11_id,
@@ -2587,7 +3177,11 @@ def upgrade() -> None:
             'percentage' : None,
             'staff_division_id' : None,
             'name_of_organization': None,
-            'badge_id': None
+            'badge_id': None,
+            'is_credited': None,
+            'document_style': None,
+            'date_credited': None,
+            'emergency_rank_id': None
         },
             {
             'id': history12_id,
@@ -2617,7 +3211,11 @@ def upgrade() -> None:
             'percentage' : None,
             'staff_division_id' : None,
             'name_of_organization': None,
-            'badge_id': None
+            'badge_id': None,
+            'is_credited': None,
+            'document_style': None,
+            'date_credited': None,
+            'emergency_rank_id': None
         },
          {
             'id': history13_id,
@@ -2647,7 +3245,11 @@ def upgrade() -> None:
             'percentage' : None,
             'staff_division_id' : None,
             'name_of_organization': None,
-            'badge_id': None
+            'badge_id': None,
+            'is_credited': None,
+            'document_style': None,
+            'date_credited': None,
+            'emergency_rank_id': None
         }
         ])
 
@@ -2666,34 +3268,44 @@ def upgrade() -> None:
         Base.metadata.tables['candidate_categories'],
         [{
             'id': candidate_category1_id,
-            'name': 'Оперативная служба СГО РК'
+            'name': 'Оперативная служба СГО РК',
+            'nameKZ': 'ҚР МКҚ жедел қызметі'
         }, {
             'id': candidate_category2_id,
-            'name': 'Оперативная воинская служба СОО СГО РК'
+            'name': 'Оперативная воинская служба СОН СГО РК',
+            'nameKZ': 'ҚР МКҚ АМК жедел әскери қызметі'
         }, {
             'id': candidate_category3_id,
-            'name': 'Оперативно-постовая служба СГО РК'
+            'name': 'Оперативно-постовая служба СГО РК',
+            'nameKZ': 'ҚР МКҚ жедел жұмыс жоспары қызметі'
         }, {
             'id': candidate_category4_id,
-            'name': 'Оперативно-постовая воинская служба СОО СГО РК'
+            'name': 'Оперативно-постовая воинская служба СОН СГО РК',
+            'nameKZ': 'ҚР МКҚ АМК жедел жұмыс жоспары әскери қызметі'
         }, {
             'id': candidate_category5_id,
-            'name': 'Оперативно-техническая и информационно-аналитическая служба СГО РК '
+            'name': 'Оперативно-техническая и информационно-аналитическая служба СГО РК ',
+            'nameKZ': 'ҚР МКҚ жедел техникалық және ақпараттық қызметі'
         }, {
             'id': candidate_category6_id,
-            'name': 'Оперативно-техническая и информационно-аналитическая воинская служба СОО СГО РК'
+            'name': 'Оперативно-техническая и информационно-аналитическая воинская служба СОН СГО РК',
+            'nameKZ': 'ҚР МКҚ АМК жедел техникалық және ақпараттық әскери қызметі'
         }, {
             'id': candidate_category7_id,
-            'name': 'Инжерено-техническая, медицинская, административная и хозяйственная служба СГО РК'
+            'name': 'Инженерно-техническая, медицинская, административная и хозяйственная служба СГО РК',
+            'nameKZ': 'ҚР МКҚ жедел инженерлік-техникалық, өнеркәсіп, әкімшілік және құрылымдық қызметі'
         }, {
             'id': candidate_category8_id,
-            'name': 'Инжерено-техническая, медицинская, административная и хозяйственная воинская служба СОО СГО РК'
+            'name': 'Инженерно-техническая, медицинская, административная и хозяйственная воинская служба СОН СГО РК',
+            'nameKZ': 'ҚР МКҚ АМК жедел инженерлік-техникалық, өнеркәсіп, әкімшілік және құрылымдық әскери қызметі'
         }, {
             'id': candidate_category9_id,
-            'name': 'Водители службы СГО РК'
+            'name': 'Водители службы СГО РК',
+            'nameKZ': 'ҚР МКҚ жедел шоферлері'
         }, {
             'id': candidate_category10_id,
-            'name': 'Водители воинской службы СОО СГО РК'
+            'name': 'Водители воинской службы СОН СГО РК',
+            'nameKZ': 'ҚР МКҚ АМК жедел шоферлері'
         }, ]
     )
 
@@ -2722,64 +3334,82 @@ def upgrade() -> None:
         Base.metadata.tables['candidate_stage_types'],
         [{
             'id': candidate_stage_types1_id,
-            'name': 'Запросы с внешних источников (др. гос органы)'
+            'name': 'Запросы с внешних источников (др. гос органы)',
+            'nameKZ': 'Сыртқы көздерден сұраулар (басқа мемлекеттік органдар)'
         }, {
             'id': candidate_stage_types2_id,
-            'name': 'Первичная беседа'
+            'name': 'Первичная беседа',
+            'nameKZ': 'Бастапқы әңгіме'
         }, {
             'id': candidate_stage_types3_id,
-            'name': 'Рецензия на эссе'
+            'name': 'Рецензия на эссе',
+            'nameKZ': 'Эссеге шолу',
         }, {
             'id': candidate_stage_types4_id,
-            'name': 'Дополнительная беседа (не обязательно)'
+            'name': 'Дополнительная беседа (не обязательно)',
+            'nameKZ': 'Қосымша әңгіме (міндетті емес)',
         }, {
             'id': candidate_stage_types5_id,
-            'name': 'Военно-врачебная комиссия'
+            'name': 'Военно-врачебная комиссия',
+            'nameKZ': 'Әскери-дәрігерлік комиссия'
         }, {
             'id': candidate_stage_types6_id,
             'name': 'Беседа с психологом',
+            'nameKZ': 'Психологпен әңгіме',
             'is_curator_review_required': True
         }, {
             'id': candidate_stage_types7_id,
-            'name': 'Результаты тестирования на знание законодательства РК'
+            'name': 'Результаты тестирования на знание законодательства РК',
+            'nameKZ': 'ҚР заңнамасының тестілеу нәтижелері'
         }, {
             'id': candidate_stage_types8_id,
-            'name': 'Беседа о религии'
+            'name': 'Беседа о религии',
+            'nameKZ': 'Дін туралы әңгіме',
         }, {
             'id': candidate_stage_types9_id,
-            'name': 'Беседа с родителями'
+            'name': 'Беседа с родителями',
+            'nameKZ': 'Ата-аналармен әңгіме',
         }, {
             'id': candidate_stage_types10_id,
             'name': 'Справка по результатам оперативного задания (не обязательно)',
+            'nameKZ': 'Жедел тапсырманың нәтижелері бойынша анықтама (міндетті емес)',
             'is_curator_review_required': True
         }, {
             'id': candidate_stage_types11_id,
             'name': 'Беседа о проф. пригодности',
+            'nameKZ': 'Кәсіби жарамдылық туралы әңгіме',
             'is_curator_review_required': True
         }, {
             'id': candidate_stage_types12_id,
             'name': 'Беседа с представителем УСБ',
+            'nameKZ': 'ЖҚБ өкілімен әңгіме',
             'is_curator_review_required': True
         }, {
             'id': candidate_stage_types13_id,
             'name': 'Беседа с руководителем структурного подразделения',
+            'nameKZ': 'Структуралық бөлімдің басқарушысымен әңгіме',
             'is_curator_review_required': True
         }, {
             'id': candidate_stage_types14_id,
             'name': 'Беседа с руководством департамента кадров',
+            'nameKZ': 'Кадрлар департаментінің басшылығымен әңгімелесу',
             'is_curator_review_required': True
         }, {
             'id': candidate_stage_types15_id,
-            'name': 'Результаты полиграфологического исследования'
+            'name': 'Результаты полиграфологического исследования',
+            'nameKZ': 'Полиграфологиялық зерттеу нәтижелері',
         }, {
             'id': candidate_stage_types16_id,
-            'name': 'Результаты физической подготовки'
+            'name': 'Результаты физической подготовки',
+            'nameKZ': 'Дене шынықтыру нәтижелері',
         }, {
             'id': candidate_stage_types17_id,
-            'name': 'Заключение по спец. проверке'
+            'name': 'Заключение по спец. проверке',
+            'nameKZ': 'Арнайы тексеру бойынша қорытынды',
         }, {
             'id': candidate_stage_types18_id,
             'name': 'Заключение о зачислении',
+            'nameKZ': 'Қабылдау қорытынды',
             'is_curator_review_required': True
         }]
     )
@@ -2961,618 +3591,418 @@ def upgrade() -> None:
     )
 
     create_candidate_stage_info(candidate_id,
-                                staff_unit11_id,
                                 candidate_stage_types1_id)
     create_candidate_stage_info(candidate_id,
-                                staff_unit11_id,
                                 candidate_stage_types2_id)
     create_candidate_stage_info(candidate_id,
-                                staff_unit11_id,
                                 candidate_stage_types3_id)
     create_candidate_stage_info(candidate_id,
-                                staff_unit11_id,
                                 candidate_stage_types4_id)
     create_candidate_stage_info(candidate_id,
-                                staff_unit11_id,
                                 candidate_stage_types5_id)
     create_candidate_stage_info(candidate_id,
-                                staff_unit11_id,
                                 candidate_stage_types6_id)
     create_candidate_stage_info(candidate_id,
-                                staff_unit11_id,
                                 candidate_stage_types7_id)
     create_candidate_stage_info(candidate_id,
-                                staff_unit11_id,
                                 candidate_stage_types8_id)
     create_candidate_stage_info(candidate_id,
-                                staff_unit11_id,
                                 candidate_stage_types9_id)
     create_candidate_stage_info(candidate_id,
-                                staff_unit11_id,
                                 candidate_stage_types10_id)
     create_candidate_stage_info(candidate_id,
-                                staff_unit11_id,
                                 candidate_stage_types11_id)
     create_candidate_stage_info(candidate_id,
-                                staff_unit11_id,
                                 candidate_stage_types12_id)
     create_candidate_stage_info(candidate_id,
-                                staff_unit11_id,
                                 candidate_stage_types13_id)
     create_candidate_stage_info(candidate_id,
-                                staff_unit11_id,
                                 candidate_stage_types14_id)
     create_candidate_stage_info(candidate_id,
-                                staff_unit11_id,
                                 candidate_stage_types15_id)
     create_candidate_stage_info(candidate_id,
-                                staff_unit11_id,
                                 candidate_stage_types16_id)
     create_candidate_stage_info(candidate_id,
-                                staff_unit11_id,
                                 candidate_stage_types17_id)
     create_candidate_stage_info(candidate_id,
-                                staff_unit11_id,
                                 candidate_stage_types18_id)
 
     # candidate2_id
     create_candidate_stage_info(candidate2_id,
-                                staff_unit11_id,
                                 candidate_stage_types1_id)
     create_candidate_stage_info(candidate2_id,
-                                staff_unit11_id,
                                 candidate_stage_types2_id)
     create_candidate_stage_info(candidate2_id,
-                                staff_unit11_id,
                                 candidate_stage_types3_id)
     create_candidate_stage_info(candidate2_id,
-                                staff_unit11_id,
                                 candidate_stage_types4_id)
     create_candidate_stage_info(candidate2_id,
-                                staff_unit11_id,
                                 candidate_stage_types5_id)
     create_candidate_stage_info(candidate2_id,
-                                staff_unit11_id,
                                 candidate_stage_types6_id)
     create_candidate_stage_info(candidate2_id,
-                                staff_unit11_id,
                                 candidate_stage_types7_id)
     create_candidate_stage_info(candidate2_id,
-                                staff_unit11_id,
                                 candidate_stage_types8_id)
     create_candidate_stage_info(candidate2_id,
-                                staff_unit11_id,
                                 candidate_stage_types9_id)
     create_candidate_stage_info(candidate2_id,
-                                staff_unit11_id,
                                 candidate_stage_types10_id)
     create_candidate_stage_info(candidate2_id,
-                                staff_unit11_id,
                                 candidate_stage_types11_id)
     create_candidate_stage_info(candidate2_id,
-                                staff_unit11_id,
                                 candidate_stage_types12_id)
     create_candidate_stage_info(candidate2_id,
-                                staff_unit11_id,
                                 candidate_stage_types13_id)
     create_candidate_stage_info(candidate2_id,
-                                staff_unit11_id,
                                 candidate_stage_types14_id)
     create_candidate_stage_info(candidate2_id,
-                                staff_unit11_id,
                                 candidate_stage_types15_id)
     create_candidate_stage_info(candidate2_id,
-                                staff_unit11_id,
                                 candidate_stage_types16_id)
     create_candidate_stage_info(candidate2_id,
-                                staff_unit11_id,
                                 candidate_stage_types17_id)
     create_candidate_stage_info(candidate2_id,
-                                staff_unit11_id,
                                 candidate_stage_types18_id)
 
     # candidate3_id
     create_candidate_stage_info(candidate3_id,
-                                staff_unit11_id,
                                 candidate_stage_types1_id)
     create_candidate_stage_info(candidate3_id,
-                                staff_unit11_id,
                                 candidate_stage_types2_id)
     create_candidate_stage_info(candidate3_id,
-                                staff_unit11_id,
                                 candidate_stage_types3_id)
     create_candidate_stage_info(candidate3_id,
-                                staff_unit11_id,
                                 candidate_stage_types4_id)
     create_candidate_stage_info(candidate3_id,
-                                staff_unit11_id,
                                 candidate_stage_types5_id)
     create_candidate_stage_info(candidate3_id,
-                                staff_unit11_id,
                                 candidate_stage_types6_id)
     create_candidate_stage_info(candidate3_id,
-                                staff_unit11_id,
                                 candidate_stage_types7_id)
     create_candidate_stage_info(candidate3_id,
-                                staff_unit11_id,
                                 candidate_stage_types8_id)
     create_candidate_stage_info(candidate3_id,
-                                staff_unit11_id,
                                 candidate_stage_types9_id)
     create_candidate_stage_info(candidate3_id,
-                                staff_unit11_id,
                                 candidate_stage_types10_id)
     create_candidate_stage_info(candidate3_id,
-                                staff_unit11_id,
                                 candidate_stage_types11_id)
     create_candidate_stage_info(candidate3_id,
-                                staff_unit11_id,
                                 candidate_stage_types12_id)
     create_candidate_stage_info(candidate3_id,
-                                staff_unit11_id,
                                 candidate_stage_types13_id)
     create_candidate_stage_info(candidate3_id,
-                                staff_unit11_id,
                                 candidate_stage_types14_id)
     create_candidate_stage_info(candidate3_id,
-                                staff_unit11_id,
                                 candidate_stage_types15_id)
     create_candidate_stage_info(candidate3_id,
-                                staff_unit11_id,
                                 candidate_stage_types16_id)
     create_candidate_stage_info(candidate3_id,
-                                staff_unit11_id,
                                 candidate_stage_types17_id)
     create_candidate_stage_info(candidate3_id,
-                                staff_unit11_id,
                                 candidate_stage_types18_id)
 
     # candidate4_id
     create_candidate_stage_info(candidate4_id,
-                                staff_unit11_id,
                                 candidate_stage_types1_id)
     create_candidate_stage_info(candidate4_id,
-                                staff_unit11_id,
                                 candidate_stage_types2_id)
     create_candidate_stage_info(candidate4_id,
-                                staff_unit11_id,
                                 candidate_stage_types3_id)
     create_candidate_stage_info(candidate4_id,
-                                staff_unit11_id,
                                 candidate_stage_types4_id)
     create_candidate_stage_info(candidate4_id,
-                                staff_unit11_id,
                                 candidate_stage_types5_id)
     create_candidate_stage_info(candidate4_id,
-                                staff_unit11_id,
                                 candidate_stage_types6_id)
     create_candidate_stage_info(candidate4_id,
-                                staff_unit11_id,
                                 candidate_stage_types7_id)
     create_candidate_stage_info(candidate4_id,
-                                staff_unit11_id,
                                 candidate_stage_types8_id)
     create_candidate_stage_info(candidate4_id,
-                                staff_unit11_id,
                                 candidate_stage_types9_id)
     create_candidate_stage_info(candidate4_id,
-                                staff_unit11_id,
                                 candidate_stage_types10_id)
     create_candidate_stage_info(candidate4_id,
-                                staff_unit11_id,
                                 candidate_stage_types11_id)
     create_candidate_stage_info(candidate4_id,
-                                staff_unit11_id,
                                 candidate_stage_types12_id)
     create_candidate_stage_info(candidate4_id,
-                                staff_unit11_id,
                                 candidate_stage_types13_id)
     create_candidate_stage_info(candidate4_id,
-                                staff_unit11_id,
                                 candidate_stage_types14_id)
     create_candidate_stage_info(candidate4_id,
-                                staff_unit11_id,
                                 candidate_stage_types15_id)
     create_candidate_stage_info(candidate4_id,
-                                staff_unit11_id,
                                 candidate_stage_types16_id)
     create_candidate_stage_info(candidate4_id,
-                                staff_unit11_id,
                                 candidate_stage_types17_id)
     create_candidate_stage_info(candidate4_id,
-                                staff_unit11_id,
                                 candidate_stage_types18_id)
 
     # candidate5_id
     create_candidate_stage_info(candidate5_id,
-                                staff_unit11_id,
                                 candidate_stage_types1_id)
     create_candidate_stage_info(candidate5_id,
-                                staff_unit11_id,
                                 candidate_stage_types2_id)
     create_candidate_stage_info(candidate5_id,
-                                staff_unit11_id,
                                 candidate_stage_types3_id)
     create_candidate_stage_info(candidate5_id,
-                                staff_unit11_id,
                                 candidate_stage_types4_id)
     create_candidate_stage_info(candidate5_id,
-                                staff_unit11_id,
                                 candidate_stage_types5_id)
     create_candidate_stage_info(candidate5_id,
-                                staff_unit11_id,
                                 candidate_stage_types6_id)
     create_candidate_stage_info(candidate5_id,
-                                staff_unit11_id,
                                 candidate_stage_types7_id)
     create_candidate_stage_info(candidate5_id,
-                                staff_unit11_id,
                                 candidate_stage_types8_id)
     create_candidate_stage_info(candidate5_id,
-                                staff_unit11_id,
                                 candidate_stage_types9_id)
     create_candidate_stage_info(candidate5_id,
-                                staff_unit11_id,
                                 candidate_stage_types10_id)
     create_candidate_stage_info(candidate5_id,
-                                staff_unit11_id,
                                 candidate_stage_types11_id)
     create_candidate_stage_info(candidate5_id,
-                                staff_unit11_id,
                                 candidate_stage_types12_id)
     create_candidate_stage_info(candidate5_id,
-                                staff_unit11_id,
                                 candidate_stage_types13_id)
     create_candidate_stage_info(candidate5_id,
-                                staff_unit11_id,
                                 candidate_stage_types14_id)
     create_candidate_stage_info(candidate5_id,
-                                staff_unit11_id,
                                 candidate_stage_types15_id)
     create_candidate_stage_info(candidate5_id,
-                                staff_unit11_id,
                                 candidate_stage_types16_id)
     create_candidate_stage_info(candidate5_id,
-                                staff_unit11_id,
                                 candidate_stage_types17_id)
     create_candidate_stage_info(candidate5_id,
-                                staff_unit11_id,
                                 candidate_stage_types18_id)
 
     # candidate6_id
     create_candidate_stage_info(candidate6_id,
-                                staff_unit11_id,
                                 candidate_stage_types1_id)
     create_candidate_stage_info(candidate6_id,
-                                staff_unit11_id,
                                 candidate_stage_types2_id)
     create_candidate_stage_info(candidate6_id,
-                                staff_unit11_id,
                                 candidate_stage_types3_id)
     create_candidate_stage_info(candidate6_id,
-                                staff_unit11_id,
                                 candidate_stage_types4_id)
     create_candidate_stage_info(candidate6_id,
-                                staff_unit11_id,
                                 candidate_stage_types5_id)
     create_candidate_stage_info(candidate6_id,
-                                staff_unit11_id,
                                 candidate_stage_types6_id)
     create_candidate_stage_info(candidate6_id,
-                                staff_unit11_id,
                                 candidate_stage_types7_id)
     create_candidate_stage_info(candidate6_id,
-                                staff_unit11_id,
                                 candidate_stage_types8_id)
     create_candidate_stage_info(candidate6_id,
-                                staff_unit11_id,
                                 candidate_stage_types9_id)
     create_candidate_stage_info(candidate6_id,
-                                staff_unit11_id,
                                 candidate_stage_types10_id)
     create_candidate_stage_info(candidate6_id,
-                                staff_unit11_id,
                                 candidate_stage_types11_id)
     create_candidate_stage_info(candidate6_id,
-                                staff_unit11_id,
                                 candidate_stage_types12_id)
     create_candidate_stage_info(candidate6_id,
-                                staff_unit11_id,
                                 candidate_stage_types13_id)
     create_candidate_stage_info(candidate6_id,
-                                staff_unit11_id,
                                 candidate_stage_types14_id)
     create_candidate_stage_info(candidate6_id,
-                                staff_unit11_id,
                                 candidate_stage_types15_id)
     create_candidate_stage_info(candidate6_id,
-                                staff_unit11_id,
                                 candidate_stage_types16_id)
     create_candidate_stage_info(candidate6_id,
-                                staff_unit11_id,
                                 candidate_stage_types17_id)
     create_candidate_stage_info(candidate6_id,
-                                staff_unit11_id,
                                 candidate_stage_types18_id)
 
     # candidate7_id
     create_candidate_stage_info(candidate7_id,
-                                staff_unit11_id,
                                 candidate_stage_types1_id)
     create_candidate_stage_info(candidate7_id,
-                                staff_unit11_id,
                                 candidate_stage_types2_id)
     create_candidate_stage_info(candidate7_id,
-                                staff_unit11_id,
                                 candidate_stage_types3_id)
     create_candidate_stage_info(candidate7_id,
-                                staff_unit11_id,
                                 candidate_stage_types4_id)
     create_candidate_stage_info(candidate7_id,
-                                staff_unit11_id,
                                 candidate_stage_types5_id)
     create_candidate_stage_info(candidate7_id,
-                                staff_unit11_id,
                                 candidate_stage_types6_id)
     create_candidate_stage_info(candidate7_id,
-                                staff_unit11_id,
                                 candidate_stage_types7_id)
     create_candidate_stage_info(candidate7_id,
-                                staff_unit11_id,
-                                candidate_stage_types8_id)
+                                    candidate_stage_types8_id)
     create_candidate_stage_info(candidate7_id,
-                                staff_unit11_id,
-                                candidate_stage_types9_id)
+                                    candidate_stage_types9_id)
     create_candidate_stage_info(candidate7_id,
-                                staff_unit11_id,
-                                candidate_stage_types10_id)
+                                    candidate_stage_types10_id)
     create_candidate_stage_info(candidate7_id,
-                                staff_unit11_id,
-                                candidate_stage_types11_id)
+                                    candidate_stage_types11_id)
     create_candidate_stage_info(candidate7_id,
-                                staff_unit11_id,
-                                candidate_stage_types12_id)
+                                    candidate_stage_types12_id)
     create_candidate_stage_info(candidate7_id,
-                                staff_unit11_id,
-                                candidate_stage_types13_id)
+                                    candidate_stage_types13_id)
     create_candidate_stage_info(candidate7_id,
-                                staff_unit11_id,
-                                candidate_stage_types14_id)
+                                    candidate_stage_types14_id)
     create_candidate_stage_info(candidate7_id,
-                                staff_unit11_id,
-                                candidate_stage_types15_id)
+                                    candidate_stage_types15_id)
     create_candidate_stage_info(candidate7_id,
-                                staff_unit11_id,
-                                candidate_stage_types16_id)
+                                    candidate_stage_types16_id)
     create_candidate_stage_info(candidate7_id,
-                                staff_unit11_id,
-                                candidate_stage_types17_id)
+                                    candidate_stage_types17_id)
     create_candidate_stage_info(candidate7_id,
-                                staff_unit11_id,
-                                candidate_stage_types18_id)
+                                    candidate_stage_types18_id)
 
     # candidate8_id
     create_candidate_stage_info(candidate8_id,
-                                staff_unit10_id,
-                                candidate_stage_types1_id)
+                                    candidate_stage_types1_id)
     create_candidate_stage_info(candidate8_id,
-                                staff_unit10_id,
-                                candidate_stage_types2_id)
+                                    candidate_stage_types2_id)
     create_candidate_stage_info(candidate8_id,
-                                staff_unit10_id,
-                                candidate_stage_types3_id)
+                                    candidate_stage_types3_id)
     create_candidate_stage_info(candidate8_id,
-                                staff_unit10_id,
-                                candidate_stage_types4_id)
+                                    candidate_stage_types4_id)
     create_candidate_stage_info(candidate8_id,
-                                staff_unit10_id,
-                                candidate_stage_types5_id)
+                                    candidate_stage_types5_id)
     create_candidate_stage_info(candidate8_id,
-                                staff_unit10_id,
-                                candidate_stage_types6_id)
+                                    candidate_stage_types6_id)
     create_candidate_stage_info(candidate8_id,
-                                staff_unit10_id,
-                                candidate_stage_types7_id)
+                                    candidate_stage_types7_id)
     create_candidate_stage_info(candidate8_id,
-                                staff_unit10_id,
-                                candidate_stage_types8_id)
+                                    candidate_stage_types8_id)
     create_candidate_stage_info(candidate8_id,
-                                staff_unit10_id,
                                 candidate_stage_types9_id)
     create_candidate_stage_info(candidate8_id,
-                                staff_unit10_id,
                                 candidate_stage_types10_id)
     create_candidate_stage_info(candidate8_id,
-                                staff_unit10_id,
                                 candidate_stage_types11_id)
     create_candidate_stage_info(candidate8_id,
-                                staff_unit10_id,
                                 candidate_stage_types12_id)
     create_candidate_stage_info(candidate8_id,
-                                staff_unit10_id,
                                 candidate_stage_types13_id)
     create_candidate_stage_info(candidate8_id,
-                                staff_unit10_id,
                                 candidate_stage_types14_id)
     create_candidate_stage_info(candidate8_id,
-                                staff_unit10_id,
                                 candidate_stage_types15_id)
     create_candidate_stage_info(candidate8_id,
-                                staff_unit10_id,
                                 candidate_stage_types16_id)
     create_candidate_stage_info(candidate8_id,
-                                staff_unit10_id,
                                 candidate_stage_types17_id)
     create_candidate_stage_info(candidate8_id,
-                                staff_unit10_id,
                                 candidate_stage_types18_id)
 
     # candidate9_id
     create_candidate_stage_info(candidate9_id,
-                                staff_unit10_id,
                                 candidate_stage_types1_id)
     create_candidate_stage_info(candidate9_id,
-                                staff_unit10_id,
                                 candidate_stage_types2_id)
     create_candidate_stage_info(candidate9_id,
-                                staff_unit10_id,
                                 candidate_stage_types3_id)
     create_candidate_stage_info(candidate9_id,
-                                staff_unit10_id,
                                 candidate_stage_types4_id)
     create_candidate_stage_info(candidate9_id,
-                                staff_unit10_id,
                                 candidate_stage_types5_id)
     create_candidate_stage_info(candidate9_id,
-                                staff_unit10_id,
                                 candidate_stage_types6_id)
     create_candidate_stage_info(candidate9_id,
-                                staff_unit10_id,
                                 candidate_stage_types7_id)
     create_candidate_stage_info(candidate9_id,
-                                staff_unit10_id,
                                 candidate_stage_types8_id)
     create_candidate_stage_info(candidate9_id,
-                                staff_unit10_id,
                                 candidate_stage_types9_id)
     create_candidate_stage_info(candidate9_id,
-                                staff_unit10_id,
                                 candidate_stage_types10_id)
     create_candidate_stage_info(candidate9_id,
-                                staff_unit10_id,
                                 candidate_stage_types11_id)
     create_candidate_stage_info(candidate9_id,
-                                staff_unit10_id,
                                 candidate_stage_types12_id)
     create_candidate_stage_info(candidate9_id,
-                                staff_unit10_id,
                                 candidate_stage_types13_id)
     create_candidate_stage_info(candidate9_id,
-                                staff_unit10_id,
                                 candidate_stage_types14_id)
     create_candidate_stage_info(candidate9_id,
-                                staff_unit10_id,
                                 candidate_stage_types15_id)
     create_candidate_stage_info(candidate9_id,
-                                staff_unit10_id,
                                 candidate_stage_types16_id)
     create_candidate_stage_info(candidate9_id,
-                                staff_unit10_id,
                                 candidate_stage_types17_id)
     create_candidate_stage_info(candidate9_id,
-                                staff_unit10_id,
                                 candidate_stage_types18_id)
 
     # candidate10_id
     create_candidate_stage_info(candidate10_id,
-                                staff_unit10_id,
                                 candidate_stage_types1_id)
     create_candidate_stage_info(candidate10_id,
-                                staff_unit10_id,
                                 candidate_stage_types2_id)
     create_candidate_stage_info(candidate10_id,
-                                staff_unit10_id,
                                 candidate_stage_types3_id)
     create_candidate_stage_info(candidate10_id,
-                                staff_unit10_id,
                                 candidate_stage_types4_id)
     create_candidate_stage_info(candidate10_id,
-                                staff_unit10_id,
                                 candidate_stage_types5_id)
     create_candidate_stage_info(candidate10_id,
-                                staff_unit10_id,
                                 candidate_stage_types6_id)
     create_candidate_stage_info(candidate10_id,
-                                staff_unit10_id,
                                 candidate_stage_types7_id)
     create_candidate_stage_info(candidate10_id,
-                                staff_unit10_id,
                                 candidate_stage_types8_id)
     create_candidate_stage_info(candidate10_id,
-                                staff_unit10_id,
                                 candidate_stage_types9_id)
     create_candidate_stage_info(candidate10_id,
-                                staff_unit10_id,
                                 candidate_stage_types10_id)
     create_candidate_stage_info(candidate10_id,
-                                staff_unit10_id,
                                 candidate_stage_types11_id)
     create_candidate_stage_info(candidate10_id,
-                                staff_unit10_id,
                                 candidate_stage_types12_id)
     create_candidate_stage_info(candidate10_id,
-                                staff_unit10_id,
                                 candidate_stage_types13_id)
     create_candidate_stage_info(candidate10_id,
-                                staff_unit10_id,
                                 candidate_stage_types14_id)
     create_candidate_stage_info(candidate10_id,
-                                staff_unit10_id,
                                 candidate_stage_types15_id)
     create_candidate_stage_info(candidate10_id,
-                                staff_unit10_id,
                                 candidate_stage_types16_id)
     create_candidate_stage_info(candidate10_id,
-                                staff_unit10_id,
                                 candidate_stage_types17_id)
     create_candidate_stage_info(candidate10_id,
-                                staff_unit10_id,
                                 candidate_stage_types18_id)
 
     # candidate11_id
     create_candidate_stage_info(candidate11_id,
-                                staff_unit10_id,
                                 candidate_stage_types1_id)
     create_candidate_stage_info(candidate11_id,
-                                staff_unit10_id,
                                 candidate_stage_types2_id)
     create_candidate_stage_info(candidate11_id,
-                                staff_unit10_id,
                                 candidate_stage_types3_id)
     create_candidate_stage_info(candidate11_id,
-                                staff_unit10_id,
                                 candidate_stage_types4_id)
     create_candidate_stage_info(candidate11_id,
-                                staff_unit10_id,
                                 candidate_stage_types5_id)
     create_candidate_stage_info(candidate11_id,
-                                staff_unit10_id,
                                 candidate_stage_types6_id)
     create_candidate_stage_info(candidate11_id,
-                                staff_unit10_id,
                                 candidate_stage_types7_id)
     create_candidate_stage_info(candidate11_id,
-                                staff_unit10_id,
                                 candidate_stage_types8_id)
     create_candidate_stage_info(candidate11_id,
-                                staff_unit10_id,
                                 candidate_stage_types9_id)
     create_candidate_stage_info(candidate11_id,
-                                staff_unit10_id,
                                 candidate_stage_types10_id)
     create_candidate_stage_info(candidate11_id,
-                                staff_unit10_id,
                                 candidate_stage_types11_id)
     create_candidate_stage_info(candidate11_id,
-                                staff_unit10_id,
-                                candidate_stage_types12_id)
-    create_candidate_stage_info(candidate11_id,
-                                staff_unit10_id,
                                 candidate_stage_types13_id)
     create_candidate_stage_info(candidate11_id,
-                                staff_unit10_id,
                                 candidate_stage_types14_id)
     create_candidate_stage_info(candidate11_id,
-                                staff_unit10_id,
                                 candidate_stage_types15_id)
     create_candidate_stage_info(candidate11_id,
-                                staff_unit10_id,
                                 candidate_stage_types16_id)
     create_candidate_stage_info(candidate11_id,
-                                staff_unit10_id,
                                 candidate_stage_types17_id)
     create_candidate_stage_info(candidate11_id,
-                                staff_unit10_id,
                                 candidate_stage_types18_id)
 
     candidate_essay_type1_id = get_uuid()
@@ -3594,46 +4024,60 @@ def upgrade() -> None:
         Base.metadata.tables['candidate_essay_types'],
         [{
             'id': candidate_essay_type1_id,
-            'name': 'Будущее Казахстана - мое будущее'
+            'name': 'Будущее Казахстана - мое будущее',
+            'nameKZ': 'Қазақстанның болашағы-менің болашағым',
         }, {
             'id': candidate_essay_type2_id,
-            'name': '«Я патриот! А это значит ...»'
+            'name': '«Я патриот! А это значит ...»',
+            'nameKZ': 'Мен патриотпын! Бұл дегеніміз ...»'
         }, {
             'id': candidate_essay_type3_id,
-            'name': 'Мое образование - мой капитал'
+            'name': 'Мое образование - мой капитал',
+            'nameKZ': 'Менің білімім - менің капиталым'
         }, {
             'id': candidate_essay_type4_id,
-            'name': 'Социальные сети: плюсы и минусы'
+            'name': 'Социальные сети: плюсы и минусы',
+            'nameKZ': 'Әлеуметтік медиа: оң және теріс жақтары'
         }, {
             'id': candidate_essay_type5_id,
-            'name': 'Армия в моей жизни.'
+            'name': 'Армия в моей жизни.',
+            'nameKZ': 'Менің өмірімдегі Армия.'
         }, {
             'id': candidate_essay_type6_id,
-            'name': 'Будущее Казахстана.'
+            'name': 'Будущее Казахстана.',
+            'nameKZ': 'Қазақстанның болашағы.'
         }, {
             'id': candidate_essay_type7_id,
-            'name': 'В чем смысл жизни?'
+            'name': 'В чем смысл жизни?',
+            'nameKZ': 'Өмірдің мәні неде?'
         }, {
             'id': candidate_essay_type8_id,
-            'name': 'Верность долгу, и измена Родине'
+            'name': 'Верность долгу, и измена Родине',
+            'nameKZ': 'Борышқа адалдық және Отанға опасыздық'
         }, {
             'id': candidate_essay_type9_id,
-            'name': 'Где начинается Родина'
+            'name': 'Где начинается Родина',
+            'nameKZ': 'Отан қайдан басталады'
         }, {
             'id': candidate_essay_type10_id,
-            'name': 'Как вы понимаете значение слова подвиг'
+            'name': 'Как вы понимаете значение слова подвиг',
+            'nameKZ': 'Виг сөзінің мағынасын қалай түсінесіз',
         }, {
             'id': candidate_essay_type11_id,
-            'name': 'Почему я хочу служить в СГО РК'
+            'name': 'Почему я хочу служить в СГО РК',
+            'nameKZ': "Неге мен ҚР МКҚ-да қызмет еткім келеді"
         }, {
             'id': candidate_essay_type12_id,
-            'name': 'Кто для меня Президент'
+            'name': 'Кто для меня Президент',
+            'nameKZ': 'Мен үшін Президент кім'
         }, {
             'id': candidate_essay_type13_id,
-            'name': 'Что я могу сделать для Родины'
+            'name': 'Что я могу сделать для Родины',
+            'nameKZ': 'Отан үшін не істей аламын'
         }, {
             'id': candidate_essay_type14_id,
-            'name': 'Герои нашего времени'
+            'name': 'Герои нашего времени',
+            'nameKZ': 'Біздің заманымыздың батырлары'
         }]
     )
 
@@ -3665,7 +4109,8 @@ def create_user(id,
                 icon,
                 position_id,
                 is_military,
-                cabinet):
+                cabinet,
+                is_active):
     op.bulk_insert(
         Base.metadata.tables['staff_units'],
         [{
@@ -3686,6 +4131,7 @@ def create_user(id,
             'last_name': surname,
             'father_name': father_name,
             'staff_unit_id': staff_unit_id,
+            'date_birth': '1990-01-23',
             'supervised_by': supervised_by,
             'call_sign': call_sign,
             'id_number': number,
@@ -3697,7 +4143,8 @@ def create_user(id,
             'service_phone_number': "679-258",
             'personal_id': number,
             'is_military': is_military,
-            'cabinet': cabinet
+            'cabinet': cabinet,
+            'is_active': is_active,
         }]
     )
 
@@ -3848,6 +4295,7 @@ def create_user(id,
         [{
             'id': course1_id,
             'name': "Backend курс",
+            'nameKZ': 'Backend курс',
             'profile_id': educational_profile_id,
             'course_provider_id': course_provider1_id,
             'specialty_id': specialty1_id,
@@ -3859,6 +4307,7 @@ def create_user(id,
         }, {
             'id': course2_id,
             'name': "Курсы по подготовке к стрельбе",
+            'nameKZ': 'Атуға дайындық курстары',
             'profile_id': educational_profile_id,
             'course_provider_id': course_provider2_id,
             'specialty_id': specialty2_id,
@@ -3870,6 +4319,7 @@ def create_user(id,
         }, {
             'id': course3_id,
             'name': "Front-End курс",
+            'nameKZ': 'Front-End курс',
             'profile_id': educational_profile_id,
             'course_provider_id': course_provider3_id,
             'specialty_id': specialty3_id,
@@ -3916,6 +4366,7 @@ def create_user(id,
             'id': sport_degree1_id,
             'profile_id': personal_profile_id,
             'name': "Мастер спорта по боксу",
+            'nameKZ': 'Бокстан спорт шебері',
             'assignment_date': '2022-10-09',
             'document_link': 'document_link1',
             'sport_type_id': sport_type1_id
@@ -3923,6 +4374,7 @@ def create_user(id,
             'id': sport_degree2_id,
             'profile_id': personal_profile_id,
             'name': "Мастер спорта по карате",
+            'nameKZ': 'Каратэден спорт шебері',
             'assignment_date': '2022-10-10',
             'document_link': 'document_link2',
             'sport_type_id': sport_type2_id
@@ -3930,6 +4382,7 @@ def create_user(id,
             'id': sport_degree3_id,
             'profile_id': personal_profile_id,
             'name': "Кандидат мастер спорта по джиу-джитсу",
+            'nameKZ': 'Джиу-джитсудан спорт шеберілігінен үміткер',
             'assignment_date': '2022-10-11',
             'document_link': 'document_link3',
             'sport_type_id': sport_type3_id
@@ -3946,6 +4399,7 @@ def create_user(id,
             'id': sport_achievement1_id,
             'profile_id': personal_profile_id,
             'name': "III место на Токийском съезде джиу-джитсу",
+            'nameKZ': 'Токио джиу-джитсу конгресінде III орын',
             'assignment_date': '2022-10-09',
             'document_link': 'document_link1',
             'sport_type_id': sport_type3_id
@@ -3953,6 +4407,7 @@ def create_user(id,
             'id': sport_achievement2_id,
             'profile_id': personal_profile_id,
             'name': "I место в Чемпионате Мира по боксу",
+            'nameKZ': 'Бокстан Әлем чемпионатында I орын',
             'assignment_date': '2022-10-10',
             'document_link': 'document_link2',
             'sport_type_id': sport_type1_id
@@ -3960,6 +4415,7 @@ def create_user(id,
             'id': sport_achievement3_id,
             'profile_id': personal_profile_id,
             'name': "II место в Чемпионате города Астаны по карате",
+            'nameKZ': 'II место в Чемпионате города Астаны по карате',
             'assignment_date': '2022-10-11',
             'document_link': 'document_link3',
             'sport_type_id': sport_type2_id
@@ -3986,7 +4442,6 @@ def create_user(id,
         [{
             'id': biographic_info_id,
             'place_birth': "г. Астана",
-            'date_birth': '1990-01-23',
             'gender': True,
             'citizenship': "Казахстан",
             'nationality': 'Казах',
@@ -4126,6 +4581,7 @@ def create_user(id,
         [{
             'id': dispensary_registrations_id,
             'name': "Астма",
+            'nameKZ': 'Демікпе',
             'initiator': 'Республиканская больница',
             'start_date': "2022-09-12",
             'profile_id': medical_profile_id,
@@ -4133,6 +4589,7 @@ def create_user(id,
         }, {
             'id': dispensary_registrations1_id,
             'name': "Сахарный Диабет",
+            'nameKZ': "Қант Диабеті",
             'initiator': 'Клиника "Нурсултан"',
             'start_date': "2022-12-15",
             'profile_id': medical_profile_id,
@@ -4186,6 +4643,7 @@ def create_user(id,
         [{
             'id': violations_id,
             'name': "Мелкое хулиганство",
+            'nameKZ': "Кішігірім тәртіп бұзушылық",
             'date': "2022-09-12",
             'issued_by': "Районный суд Сарыаркинского района г.Астана",
             'article_number': "122.12(УК РК)",
@@ -4229,7 +4687,7 @@ def create_user(id,
         [{
             'id': get_uuid(),
             'type_id': property_type2_id,
-            'address': "Dostyk 5",
+            'address': "ул. Достық 5",
             'issue_date': "2022-09-12",
             'profile_id': additional_profile_id
         }]

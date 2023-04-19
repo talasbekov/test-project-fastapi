@@ -5,9 +5,10 @@ from typing import Optional
 from pydantic import BaseModel
 
 from schemas import MilitaryUnitRead
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 
-class UserOath(BaseModel):
+class UserOath(Model):
     date: Optional[datetime]
     user_id: uuid.UUID
     military_unit_id: uuid.UUID
@@ -25,6 +26,5 @@ class UserOathUpdate(UserOath):
     pass
 
 
-class UserOathRead(UserOath):
-    id: uuid.UUID
+class UserOathRead(UserOath, ReadModel):
     military_unit: Optional[MilitaryUnitRead]

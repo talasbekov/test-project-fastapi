@@ -1,14 +1,12 @@
 import uuid
 from typing import Optional
 
-from pydantic import BaseModel
-
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 from schemas import RankRead
 
 
-class PositionBase(BaseModel):
+class PositionBase(NamedModel):
 
-    name: str
     max_rank_id: uuid.UUID
 
 
@@ -20,10 +18,8 @@ class PositionUpdate(PositionBase):
     pass
 
 
-class PositionRead(PositionBase):
+class PositionRead(PositionBase, ReadNamedModel):
 
-    id: Optional[uuid.UUID]
-    name: Optional[str]
     max_rank_id: Optional[uuid.UUID]
     rank: Optional[RankRead]
 

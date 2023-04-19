@@ -1,11 +1,13 @@
 import uuid
 from typing import Optional
 
-from pydantic import BaseModel, AnyUrl
+from pydantic import BaseModel
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 
-class RecommenderUserBase(BaseModel):
+class RecommenderUserBase(Model):
     document_link: Optional[str]
+    user_by_id: uuid.UUID
     user_id: uuid.UUID
 
     class Config:
@@ -20,5 +22,5 @@ class RecommenderUserUpdate(RecommenderUserBase):
     pass
 
 
-class RecommenderUserRead(RecommenderUserBase):
-    id: Optional[uuid.UUID]
+class RecommenderUserRead(RecommenderUserBase, ReadModel):
+    pass

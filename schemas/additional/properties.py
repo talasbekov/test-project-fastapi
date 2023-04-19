@@ -4,10 +4,11 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 from .property_type import PropertyTypeRead
 
 
-class PropertiesBase(BaseModel):
+class PropertiesBase(Model):
     type_id: uuid.UUID
     purchase_date: datetime.datetime
     address: str
@@ -26,7 +27,5 @@ class PropertiesUpdate(PropertiesBase):
     pass
 
 
-class PropertiesRead(PropertiesBase):
-    id: Optional[uuid.UUID]
-
+class PropertiesRead(PropertiesBase, ReadModel):
     type: Optional[PropertyTypeRead]

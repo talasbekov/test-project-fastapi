@@ -3,7 +3,7 @@ from typing import Optional, List
 
 from pydantic import BaseModel
 from .candidate_stage_answer import CandidateStageAnswerRead
- 
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 
 class CandidateStageQuestionBase(BaseModel):
@@ -59,13 +59,10 @@ class CandidateStageInfoReadAnswer(BaseModel):
         arbitrary_types_allowed = True
 
 
-class CandidateStageQuestionType(BaseModel):
-    id: Optional[uuid.UUID]
+class CandidateStageQuestionType(ReadNamedModel):
     questions: Optional[List[CandidateStageQuestionReadIn]]
-    name: Optional[str]
     candidate_stage_info: Optional[CandidateStageInfoReadAnswer]
 
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
-

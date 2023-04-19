@@ -4,10 +4,10 @@ from typing import Optional, List
 from pydantic import BaseModel
 
 from .candidate_stage_question import CandidateStageQuestionRead
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 
-class CandidateStageTypeBase(BaseModel):
-    name: str
+class CandidateStageTypeBase(NamedModel):
 
     class Config:
         orm_mode = True
@@ -22,9 +22,5 @@ class CandidateStageTypeUpdate(CandidateStageTypeBase):
     pass
 
 
-class CandidateStageTypeRead(CandidateStageTypeBase):
-    id: Optional[uuid.UUID]
+class CandidateStageTypeRead(CandidateStageTypeBase, ReadNamedModel):
     candidate_stage_questions: Optional[List[CandidateStageQuestionRead]]
-    name: Optional[str]
-    created_at: Optional[datetime.datetime]
-    updated_at: Optional[datetime.datetime]

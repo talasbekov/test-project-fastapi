@@ -7,6 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
+from models import LanguageEnum
 from schemas import (HrDocumentInit, HrDocumentRead,
                      HrDocumentSign, HrDocumentUpdate, DraftHrDocumentCreate, DraftHrDocumentInit)
 from services import hr_document_service
@@ -246,7 +247,7 @@ async def generate(*,
         - **id**: UUID - required.
     """
     Authorize.jwt_required()
-    return hr_document_service.generate(db, id)
+    return hr_document_service.generate(db, id, LanguageEnum.kz)
 
 
 @router.get('/options', status_code=status.HTTP_200_OK,

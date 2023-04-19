@@ -3,9 +3,10 @@ from datetime import datetime
 from typing import Optional
 
 from pydantic import AnyUrl, BaseModel
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 
-class SpecialCheckBase(BaseModel):
+class SpecialCheckBase(Model):
     number: str
     issued_by: str
     date_of_issue: datetime
@@ -24,7 +25,5 @@ class SpecialCheckUpdate(SpecialCheckBase):
     id: uuid.UUID
 
 
-class SpecialCheckRead(SpecialCheckBase):
-    id: uuid.UUID
-
+class SpecialCheckRead(SpecialCheckBase, ReadModel):
     document_link: Optional[str]

@@ -4,11 +4,12 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
-class VehicleBase(BaseModel):
+
+class VehicleBase(NamedModel):
     number: str
     date_from: datetime
-    name: str
     profile_id: uuid.UUID
     document_link: Optional[str]
 
@@ -25,5 +26,5 @@ class VehicleUpdate(VehicleBase):
     pass
 
 
-class VehicleRead(VehicleBase):
-    id: uuid.UUID
+class VehicleRead(VehicleBase, ReadNamedModel):
+    pass

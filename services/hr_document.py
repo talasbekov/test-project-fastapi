@@ -9,18 +9,20 @@ from typing import List
 from docxtpl import DocxTemplate
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
-from sqlalchemy import func, or_, select
+from sqlalchemy import func, or_
 
 from core import Base
 from exceptions import (BadRequestException, ForbiddenException,
                         InvalidOperationException, NotFoundException)
 from models import (HrDocument, HrDocumentStatusEnum,
                     HrDocumentStep, StaffUnit, User, DocumentStaffFunction, StaffDivision, JurisdictionEnum,
-                    HrDocumentStatus, StaffDivisionEnum, HrDocumentTemplate,HrDocumentInfo)
+                    HrDocumentStatus, StaffDivisionEnum, HrDocumentTemplate,HrDocumentInfo, LanguageEnum)
 from schemas import (BadgeRead, HrDocumentCreate, HrDocumentInit,
                      HrDocumentRead, HrDocumentSign, HrDocumentUpdate,
                      RankRead, StaffDivisionOptionRead, StaffUnitRead,
-                     DraftHrDocumentCreate, DraftHrDocumentInit)
+                     DraftHrDocumentCreate, DraftHrDocumentInit, BadgeTypeRead,
+                     StatusTypeRead, CoolnessTypeRead, PenaltyTypeRead,
+                     ContractTypeRead)
 from services import (badge_service, document_staff_function_service,
                       hr_document_info_service, hr_document_step_service,
                       hr_document_template_service, rank_service,
@@ -48,7 +50,34 @@ responses = {
     "actual_staff_unit": StaffUnitRead,
     "staff_division": StaffDivisionOptionRead,
     "rank": RankRead,
-    "badges": BadgeRead,
+    "badges": BadgeTypeRead,
+    'statuses': StatusTypeRead,
+    'secondments': StaffDivisionOptionRead,
+    'coolnesses': CoolnessTypeRead,
+    'penalties': PenaltyTypeRead,
+    'contracts': ContractTypeRead,
+}
+
+from .constructor import *
+
+handlers = {
+    "add_badge": add_badge_handler,
+    "delete_badge": delete_badge_handler,
+    "increase_rank": increase_rank_handler,
+    "add_black_beret": add_black_beret_handler,
+    "decrease_rank": decrease_rank_handler,
+    "renew_contract": renew_contract_handler,
+    "stop_status": stop_status_handler,
+    "temporary_status_change": temporary_status_change_handler,
+    "status_change": status_change_handler,
+    "add_penalty": add_penalty_handler,
+    "delete_penalty": delete_penalty_handler,
+    "delete_black_beret": delete_black_beret_handler,
+    "add_coolness": add_coolness_handler,
+    "decrease_coolness": decrease_coolness_handler,
+    "delete_coolness": delete_coolness_handler,
+    "add_secondment": add_secondment_handler,
+    "position_change": position_change_handler,
 }
 
 
@@ -407,18 +436,23 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         return document
 
-    def generate(self, db: Session, id: str):
+    def generate(self, db: Session, id: str, language: LanguageEnum):
         document = self.get_by_id(db, id)
         document_template = hr_document_template_service.get_by_id(
             db, document.hr_document_template_id
         )
 
+        path = document_template.path if language == LanguageEnum.ru else document_template.pathKZ
+
+        if path is None:
+            raise BadRequestException(detail=f'Приказа нет на русском языке!')
+
         with tempfile.NamedTemporaryFile(delete=False) as temp:
-            arr = document_template.path.rsplit(".")
+            arr = path.rsplit(".")
             extension = arr[len(arr) - 1]
             temp_file_path = temp.name + "." + extension
 
-            urllib.request.urlretrieve(document_template.path, temp_file_path)
+            urllib.request.urlretrieve(path, temp_file_path)
 
         template = DocxTemplate(temp_file_path)
 
@@ -426,7 +460,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         for i in list(document.properties):
             if isinstance(document.properties[i], dict):
-                context[i] = document.properties[i]["name"]
+                context[i] = document.properties[i]["name"] if language == LanguageEnum.ru else document.properties[i]["nameKZ"]
             else:
                 context[i] = document.properties[i]
         if document.reg_number is not None:
@@ -490,9 +524,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         all_steps.remove(step)
 
-        if len(all_steps) < 2 and len(all_steps) != 0:
-            raise BadRequestException(detail="Документ должен иметь хотя бы 2 шага!")
-
         if len(users) != len(all_steps):
             raise BadRequestException(
                 detail="Количество пользователей не соответствует количеству шагов!"
@@ -502,40 +533,23 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         completed_status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.COMPLETED.value)
         document.status_id = completed_status.id
 
-        fields = user_service.get_fields()
-
         props = document.document_template.properties
 
-        for key in list(props):
-            value = props[key]
+        template = document.document_template
 
-            if value["type"] == "read":
-                continue
+        properties: dict = document.properties
 
-            if value["field_name"] not in fields:
-                raise InvalidOperationException(
-                    f'Operation on {value["field_name"]} is not supported yet!'
-                )
+        for user in users:
+            for i in template.actions['args']:
+                action_name = list(i)[0]
+                action = i[action_name]
 
-            for user in users:
-                if value["data_taken"] == "auto":
-                    self._set_attr(db, user, value["field_name"], value["value"], value['type'])
+                if handlers.get(action_name) is None:
+                    raise InvalidOperationException(
+                        f"Action {action_name} is not supported!"
+                    )
 
-                else:
-                    if key in document.properties:
-                        val = document.properties.get(key)
-                        if val is None:
-                            raise BadRequestException(
-                                f"Нет ключа {val} в document.properties"
-                            )
-                        if not type(val) == dict:
-                            self._set_attr(db, user, value["field_name"], val, value['type'])
-                        else:
-                            if val["value"] == None:
-                                raise BadRequestException(
-                                    f"Обьект {key} должен иметь value!"
-                                )
-                            self._set_attr(db, user, value["field_name"], val["value"], value['type'])
+                handlers[action_name].handle_action(db, user, action, props, properties, document)
 
         document.signed_at = datetime.now()
         document.reg_number = (
@@ -551,40 +565,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         db.flush()
 
         return document
-
-    def _set_attr(self, db: Session, user: User, key: str, value, type: str):
-        attr = getattr(user, key)
-
-        if isinstance(attr, Base):
-            res = self._get_service(key).get_by_id(db, value)
-            setattr(user, key, res)
-            history_service.create_history(db, user.id, res)
-
-        elif isinstance(attr, list):
-            if type == 'write':
-                if getattr(self._get_service(key), 'create_relation') is None:
-                    raise InvalidOperationException(
-                        f"New state is encountered! Cannot change {key}!"
-                    )
-                res = self._get_service(key).create_relation(db, user.id, value)
-                attr.append(res)
-                setattr(user, key, attr)
-                history_service.create_history(db, user.id, res)
-            else:
-                res = self._get_service(key).get_by_id(db, value)
-                if getattr(self._get_service(key), 'stop_relation') is None:
-                    raise InvalidOperationException(
-                        f"New state is encountered! Cannot change {key}!"
-                    )
-                self._get_service(key).stop_relation(db, user.id, value)
-
-        else:
-            setattr(user, key, value)
-
-        db.add(user)
-        db.flush()
-
-        return user
 
     def _get_service(self, key):
         service = options.get(key)
@@ -642,17 +622,18 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 if not type(val) == dict:
                     attr = getattr(user, value["field_name"])
                     if isinstance(attr, Base or isinstance(attr, list)):
-                        new_val[value["field_name"]] = responses.get(value['field_name']).from_orm(self._get_service(
+                        new_val[value["field_name"]] = responses.get(
                             value["field_name"]
-                        ).get(db, val))
+                        ).from_orm(self._get_service(value["field_name"]).get(db, val))
                     else:
                         new_val[value["field_name"]] = val
                 else:
                     if val["value"] == None:
                         raise BadRequestException(f"Обьект {key} должен иметь value!")
-                    new_val[value["field_name"]] = responses.get(value['field_name']).from_orm(self._get_service(
+                    obj = self._get_service(value["field_name"]).get_object(db, val["value"])
+                    new_val[value["field_name"]] = responses.get(
                         value["field_name"]
-                    ).get(db, val["value"]))
+                    ).from_orm(obj)
 
         response.new_value = new_val
 

@@ -3,8 +3,8 @@ import uuid
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
-from models import StaffUnit, Position
-from schemas import StaffUnitCreate, StaffUnitUpdate, StaffUnitFunctions
+from models import StaffUnit, Position, User
+from schemas import StaffUnitCreate, StaffUnitUpdate, StaffUnitFunctions, StaffUnitRead
 from services import service_staff_function_service, document_staff_function_service
 from .base import ServiceBase
 
@@ -47,6 +47,9 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
         db.add(staff_unit)
         db.flush()
 
+    def get_object(self, db: Session, id: str):
+        return self.get(db, id)
+
     def add_document_staff_function(self, db: Session, body: StaffUnitFunctions):
         staff_unit = self.get_by_id(db, body.staff_unit_id)
 
@@ -78,6 +81,22 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
 
     def get_by_option(self, db: Session, type: str, id: uuid.UUID, skip: int, limit: int):
         return [StaffUnitRead.from_orm(item).dict() for item in super().get_multi(db, skip, limit)]
+
+    def create_relation(self, db:Session, user: User, staff_unit_id: uuid.UUID):
+        staff_unit = self.get_by_id(db, staff_unit_id)
+
+        staff_unit.users.append(user)
+        db.add(staff_unit)
+        db.flush()
+        return staff_unit
+    def exists_relation(self, db: Session, user_id: str, staff_unit_id: uuid.UUID):
+        return (
+            db.query(StaffUnit)
+            .join(StaffUnit.actual_users)
+            .filter(User.id == user_id)
+            .filter(StaffUnit.id == staff_unit_id)
+            .first()
+        ) is not None
 
 
 staff_unit_service = StaffUnitService(StaffUnit)

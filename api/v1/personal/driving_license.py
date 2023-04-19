@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from core import get_db
 from schemas import (DrivingLicenseCreate, DrivingLicenseRead,
-                     DrivingLicenseUpdate)
+                     DrivingLicenseUpdate, DrivingLicenseLinkUpdate)
 from services import driving_license_service
 
 router = APIRouter(prefix="/driving_license", tags=["DrivingLicense"], dependencies=[Depends(HTTPBearer())])
@@ -110,3 +110,22 @@ async def delete(*,
     """
     Authorize.jwt_required()
     driving_license_service.remove(db, id)
+
+
+@router.put('/{id}/document_link/', dependencies=[Depends(HTTPBearer())],
+            status_code=status.HTTP_202_ACCEPTED,
+            summary='Update DrivingLicense document_link')
+async def update_document_link(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    body: DrivingLicenseLinkUpdate,
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Update DrivingLicense document_link
+
+        - **id**: UUID - the ID of DrivingLicense to update. This is required.
+        - **document_link**: str (url)
+    """
+    Authorize.jwt_required()
+    driving_license_service.update_document_link(db, id, body)

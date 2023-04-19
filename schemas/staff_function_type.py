@@ -1,12 +1,11 @@
 import uuid
 from typing import Optional
 
-from pydantic import BaseModel
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 
-class StaffFunctionTypeBase(BaseModel):
-    name: str
-
+class StaffFunctionTypeBase(NamedModel):
+    pass
 
 class DocumentStaffFunctionTypeBase(StaffFunctionTypeBase):
     can_cancel: bool
@@ -32,9 +31,7 @@ class ServiceStaffFunctionTypeUpdate(ServiceStaffFunctionTypeBase):
     pass
 
 
-class StaffFunctionTypeRead(StaffFunctionTypeBase):
-    id: Optional[uuid.UUID]
-    name: Optional[str]
+class StaffFunctionTypeRead(StaffFunctionTypeBase, ReadNamedModel):
 
     class Config:
         orm_mode=True

@@ -131,7 +131,7 @@ async def update_essay(
         - **essay_id**: UUID - required and should exist in the database.
     """
     Authorize.jwt_required()
-    return candidate_service.update_essay(db=db, id=id, essay_id=body.essay_id)
+    return candidate_service.update_essay(db=db, id=id, body=body)
 
 
 @router.post("/{id}/finish/", dependencies=[Depends(HTTPBearer())],

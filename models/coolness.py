@@ -1,5 +1,5 @@
 
-from sqlalchemy import Column, ForeignKey, String, TIMESTAMP, Enum
+from sqlalchemy import Column, ForeignKey,Integer, String, TIMESTAMP, Enum
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -12,10 +12,15 @@ class SpecialtyEnum(EnumBase):
     specialty2 = "Специалист 2 класса - наставник (мастер)"
     specialty3 = "Специалист 3 класса - наставник (мастер)"
 
+class CoolnessStatusEnum(EnumBase):
+    granted = "Выдан"
+    confirmed = "Подтвержден"
+    removed = "Изъят"
 
 class CoolnessType(NamedModel):
 
     __tablename__ = "coolness_types"
+    order = Column(Integer, nullable=False)
 
     coolnesses = relationship("Coolness", back_populates="type")
 

@@ -2,7 +2,7 @@ from .family_status import FamilyStatusCreate, FamilyStatusRead, FamilyStatusUpd
 from .biographic_info import (BiographicInfoCreate, BiographicInfoRead,
                               BiographicInfoUpdate)
 from .driving_license import (DrivingLicenseCreate, DrivingLicenseRead,
-                              DrivingLicenseUpdate)
+                              DrivingLicenseUpdate, DrivingLicenseLinkUpdate)
 from .identification_card import (IdentificationCardCreate,
                                   IdentificationCardRead,
                                   IdentificationCardUpdate)

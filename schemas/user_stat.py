@@ -3,8 +3,10 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
-class UserStatBase(BaseModel):
+
+class UserStatBase(Model):
     user_id: uuid.UUID
     physical_training: int
     fire_training: int
@@ -22,8 +24,7 @@ class UserStatUpdate(UserStatBase):
     pass
 
 
-class UserStatRead(UserStatBase):
-    id: Optional[uuid.UUID]
+class UserStatRead(UserStatBase, ReadModel):
     user_id: Optional[uuid.UUID]
     physical_training: Optional[int]
     fire_training: Optional[int]

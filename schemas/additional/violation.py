@@ -4,9 +4,10 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
-class ViolationBase(BaseModel):
-    name: str
+
+class ViolationBase(NamedModel):
     date: datetime
     issued_by: str
     article_number: str
@@ -26,5 +27,5 @@ class ViolationUpdate(ViolationBase):
     pass
 
 
-class ViolationRead(ViolationBase):
-    id: uuid.UUID
+class ViolationRead(ViolationBase, ReadNamedModel):
+    pass

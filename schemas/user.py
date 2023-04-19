@@ -5,9 +5,10 @@ from typing import List, Optional
 from pydantic import BaseModel, EmailStr
 
 from schemas import (BadgeRead, RankRead, UserStaffUnitRead)
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 
-class UserBase(BaseModel):
+class UserBase(Model):
     email: Optional[EmailStr]
     first_name: Optional[str]
     last_name: Optional[str]
@@ -28,6 +29,7 @@ class UserBase(BaseModel):
     personal_id: Optional[str]
     date_birth: Optional[datetime.date]
     iin: Optional[str]
+    is_active: Optional[bool]
 
 
 class UserCreate(UserBase):
@@ -38,13 +40,12 @@ class UserUpdate(UserBase):
     pass
 
 
-class UserGroupUpdate(BaseModel):
+class UserGroupUpdate(Model):
     user_id: uuid.UUID
     group_id: uuid.UUID
 
 
-class UserRead(UserBase):
-    id: Optional[uuid.UUID]
+class UserRead(UserBase, ReadModel):
     badges: Optional[List[BadgeRead]]
     is_military: Optional[bool]
     staff_unit: Optional[UserStaffUnitRead]

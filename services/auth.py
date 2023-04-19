@@ -54,7 +54,8 @@ class AuthService():
             call_sign=form.call_sign,
             id_number=form.id_number,
             address=form.address,
-            birthday=form.birthday
+            birthday=form.birthday,
+            is_active=True
         )
 
         return user_service.create(db, user_obj_in)

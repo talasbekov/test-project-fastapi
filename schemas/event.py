@@ -2,12 +2,11 @@ import uuid
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 
-class EventBase(BaseModel):
+class EventBase(NamedModel):
     user_id: uuid.UUID
-    name: str
     date_since: datetime
     date_to: datetime
 
@@ -20,10 +19,8 @@ class EventUpdate(EventBase):
     pass
 
 
-class EventRead(EventBase):
-    id: Optional[uuid.UUID]
+class EventRead(EventBase, ReadNamedModel):
     user_id: Optional[uuid.UUID]
-    name: Optional[str]
     date_since: Optional[datetime]
     date_to: Optional[datetime]
 

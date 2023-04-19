@@ -15,7 +15,7 @@ class StaffUnit(Model):
         UUID(as_uuid=True), ForeignKey("staff_divisions.id"), nullable=False
     )   
 
-    position = relationship("Position", cascade="all,delete")
+    position = relationship("Position", cascade="all,delete", foreign_keys=[position_id])
     staff_division = relationship(
         "StaffDivision", back_populates="staff_units", foreign_keys=[staff_division_id]
     )

@@ -3,10 +3,11 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 from schemas import (DocumentStaffFunctionRead, JurisdictionRead)
 
 
-class HrDocumentStepBase(BaseModel):
+class HrDocumentStepBase(Model):
     hr_document_template_id: uuid.UUID
     staff_function_id: uuid.UUID
 
@@ -19,8 +20,7 @@ class HrDocumentStepUpdate(HrDocumentStepBase):
     pass
 
 
-class HrDocumentStepRead(HrDocumentStepBase):
-    id: Optional[uuid.UUID]
+class HrDocumentStepRead(HrDocumentStepBase, ReadModel):
     hr_document_template_id: Optional[uuid.UUID]
     staff_function_id: Optional[uuid.UUID]
     staff_function: Optional[DocumentStaffFunctionRead]

@@ -13,6 +13,12 @@ class FamilyProfileService(ServiceBase[FamilyProfile, FamilyProfileCreate, Famil
         if not family_profile:
             raise NotFoundException("Family profile with id: {id} not found!")
         return family_profile
+    
+    def get_by_profile_id(self, db: Session, profile_id: str):
+        family_profile = db.query(FamilyProfile).filter(FamilyProfile.profile_id == profile_id).first()
+        if not family_profile:
+            raise NotFoundException("Family profile with id: {profile_id} not found!")
+        return family_profile
 
 
 family_profile_service = FamilyProfileService(FamilyProfile)

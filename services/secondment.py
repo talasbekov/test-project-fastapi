@@ -28,7 +28,7 @@ class SecondmentService(ServiceBase[Secondment, SecondmentCreate, SecondmentUpda
         if is_valid_uuid(value):
             return db.query(StaffDivision).filter(StaffDivision.id == value).first()
         return db.query(self.model).filter(self.model.name == value).first()
-    
+
     def stop_relation(self, db: Session, user_id: uuid.UUID, id: uuid.UUID):
         db.query(SecondmentHistory).filter(SecondmentHistory.secondment_id == id).update({SecondmentHistory.date_to: datetime.now()})
 

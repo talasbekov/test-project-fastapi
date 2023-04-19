@@ -11,7 +11,7 @@ from .history import (
     HistoryServiceDetailRead,
     AttendanceRead,
     HistoryPersonalRead,
-    ServiceIdInfoRead
+    ServiceIdInfoRead,
 )
 from .history_name_change import (
     HistoryNameChangeBase,

@@ -4,8 +4,10 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
-class SecondmentBase(BaseModel):
+
+class SecondmentBase(NamedModel):
     name: Optional[str]
     user_id: uuid.UUID
     staff_division_id: Optional[uuid.UUID]
@@ -23,5 +25,5 @@ class SecondmentUpdate(SecondmentBase):
     pass
 
 
-class SecondmentRead(SecondmentBase):
-    id: uuid.UUID
+class SecondmentRead(SecondmentBase, ReadNamedModel):
+    pass

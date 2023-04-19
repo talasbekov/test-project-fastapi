@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from exceptions.client import NotFoundException
 from models import DocumentStaffFunction, HrDocumentStep, User, StaffUnit
 from schemas import (DocumentStaffFunctionAdd, DocumentStaffFunctionCreate,
-                     DocumentStaffFunctionUpdate)
+                     DocumentStaffFunctionUpdate, DocumentStaffFunctionConstructorAdd)
 from .base import ServiceBase
 
 
@@ -66,12 +66,24 @@ class DocumentStaffFunctionService(ServiceBase[DocumentStaffFunction, DocumentSt
             created_at=datetime.datetime.now()
         )
 
-        db.add(new_step)
         db.add(create_function)
+        db.add(new_step)
         db.flush()
         db.refresh(create_function)
         return create_function
-    
+
+
+    def create_function_for_constructor(self, db: Session, body: DocumentStaffFunctionConstructorAdd):
+        res = self.create_function(db, DocumentStaffFunctionAdd(**body.dict()))
+        staff_unit = db.query(StaffUnit).filter(StaffUnit.id == body.staff_unit_id).first()
+        if staff_unit is None:
+            raise NotFoundException(detail=f"StaffUnit with id: {body.staff_unit_id} is not found!")
+        print(staff_unit.id)
+        print(res)
+        staff_unit.staff_functions.append(res)
+        db.add(staff_unit)
+        db.flush()
+        return res
 
 
 document_staff_function_service = DocumentStaffFunctionService(DocumentStaffFunction)

@@ -1,3 +1,4 @@
+import datetime
 import uuid
 import re
 
@@ -22,3 +23,6 @@ def is_valid_uuid(uuid_str):
     except ValueError:
         return False
     return str(uuid_obj) == uuid_str
+
+def convert_str_to_datetime(date: str):
+    return datetime.datetime.strptime(date, "%Y-%m-%d")

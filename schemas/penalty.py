@@ -4,9 +4,10 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
-class PenaltyTypeBase(BaseModel):
-    name: str
+
+class PenaltyTypeBase(NamedModel):
 
     class Config:
         orm_mode = True
@@ -21,8 +22,8 @@ class PenaltyTypeUpdate(PenaltyTypeBase):
     pass
 
 
-class PenaltyTypeRead(PenaltyTypeBase):
-    name: str
+class PenaltyTypeRead(PenaltyTypeBase, ReadNamedModel):
+    pass
 
 
 class PenaltyBase(BaseModel):

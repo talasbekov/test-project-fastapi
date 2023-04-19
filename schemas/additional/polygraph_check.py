@@ -4,8 +4,10 @@ from typing import Optional
 
 from pydantic import AnyUrl, BaseModel
 
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
-class PolygraphCheckBase(BaseModel):
+
+class PolygraphCheckBase(Model):
     number: str
     issued_by: str
     date_of_issue: datetime
@@ -24,8 +26,6 @@ class PolygraphCheckCreate(PolygraphCheckBase):
 class PolygraphCheckUpdate(PolygraphCheckBase):
     pass
 
-class PolygraphCheckRead(PolygraphCheckBase):
+class PolygraphCheckRead(PolygraphCheckBase, ReadModel):
     profile_id: uuid.UUID
-    id: uuid.UUID
-
     document_link: Optional[str]

@@ -29,7 +29,9 @@ class HrDocument(Model):
 
     initialized_by_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
     status_id = Column(UUID(as_uuid=True), ForeignKey("hr_document_statuses.id"))
+
     last_step_id = Column(UUID(as_uuid=True), ForeignKey("hr_document_steps.id"))
+    old_history_id = Column(UUID(as_uuid=True), ForeignKey("histories.id"))
 
     document_template = relationship("HrDocumentTemplate", back_populates="documents")
     equipments = relationship("Equipment", secondary=hr_document_equipments,
@@ -40,6 +42,7 @@ class HrDocument(Model):
         back_populates="hr_documents"
     )
     last_step = relationship("HrDocumentStep")
-    status = relationship("HrDocumentStatus", cascade="all, delete")
-    initialized_by = relationship("User", cascade="all, delete")
+    status = relationship("HrDocumentStatus")
+    initialized_by = relationship("User")
     hr_document_infos = relationship("HrDocumentInfo", back_populates="hr_document", cascade="all,delete")
+    old_history = relationship("History", foreign_keys=[old_history_id])

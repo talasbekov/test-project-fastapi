@@ -109,7 +109,8 @@ async def create_function(*,
     return document_staff_function_service.create_function(db, body)
 
 
-@router.post("/constructor/", status_code=status.HTTP_201_CREATED)
+@router.post("/constructor/", status_code=status.HTTP_201_CREATED,
+             response_model=DocumentStaffFunctionRead)
 async def create_function_for_constructor(*,
     db: Session = Depends(get_db),
     body: DocumentStaffFunctionConstructorAdd,
