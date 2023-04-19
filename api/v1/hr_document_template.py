@@ -20,6 +20,7 @@ async def get_all(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
     skip: int = 0,
+    name: str = None,
     limit: int = 10
 ):
     """
@@ -29,7 +30,7 @@ async def get_all(*,
         - **limit**: int - The maximum number of HrDocumentTemplate to return in the response. This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
-    return hr_document_template_service.get_multi(db, skip, limit)
+    return hr_document_template_service.get_all_by_name(db, name, skip, limit)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,

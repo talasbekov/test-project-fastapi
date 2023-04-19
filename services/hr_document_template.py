@@ -41,6 +41,10 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
             steps[str(function.priority)] = str(user.id)
         print(steps)
         return steps
- 
+
+    def get_all_by_name(self, db: Session, name: str, skip: int, limit: int):
+        return db.query(HrDocumentTemplate).filter(
+            HrDocumentTemplate.name.ilike(f'%{name}%')
+        ).offset(skip).limit(limit).all()
 
 hr_document_template_service = HrDocumentTemplateService(HrDocumentTemplate)
