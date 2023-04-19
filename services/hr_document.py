@@ -1,3 +1,4 @@
+import pdfkit
 import random
 import tempfile
 import urllib.parse
@@ -11,7 +12,7 @@ from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import func, or_
 
-from core import Base
+from core import Base, jinja_env
 from exceptions import (BadRequestException, ForbiddenException,
                         InvalidOperationException, NotFoundException)
 from models import (HrDocument, HrDocumentStatusEnum,
@@ -454,7 +455,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
             urllib.request.urlretrieve(path, temp_file_path)
 
-        template = DocxTemplate(temp_file_path)
+        template = jinja_env.get_template(temp_file_path.replace('/tmp/', ''))
 
         context = {}
 
@@ -468,17 +469,15 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         if document.signed_at is not None:
             context["signed_at"] = document.signed_at.strftime("%Y-%m-%d")
 
-        template.render(context)
+        ans = template.render(context)
 
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-            file_name = temp_file.name + extension
-
-            template.save(file_name)
+            file_name = temp_file.name + ".pdf"
+            pdfkit.from_string(ans, file_name, options={"encoding": "UTF-8"})
 
         return FileResponse(
             path=file_name,
-            media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            filename=document_template.name + extension,
+            filename=document_template.name + ".pdf",
         )
 
     def get_all_by_option(

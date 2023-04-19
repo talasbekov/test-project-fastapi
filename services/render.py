@@ -3,7 +3,6 @@ import urllib.parse
 import urllib.request
 import datetime
 
-import docx
 import docx2python
 from docx import Document
 import lxml.etree as etree
@@ -13,6 +12,8 @@ from docxtpl import DocxTemplate
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
+
+from core import jinja_env
 from services import (hr_document_template_service, candidate_service, staff_unit_service,
                       profile_service, family_profile_service, family_relation_service,
                       family_service)
@@ -52,14 +53,14 @@ class RenderService:
         with tempfile.NamedTemporaryFile(delete=False) as temp:
             arr = document_template.path.rsplit(".")
             extension = arr[len(arr) - 1]
-            temp_file_path = temp.name + "." + extension
+            temp_file_path: str = temp.name + "." + extension
 
             try:
                 urllib.request.urlretrieve(document_template.path, temp_file_path)
             except Exception:
                 raise NotFoundException(detail="Файл не найден!")
 
-        template = DocxTemplate(temp_file_path)
+        template = jinja_env.get_template(temp_file_path.replace('/tmp/', ''))
 
         now = datetime.datetime.now()
 
@@ -81,16 +82,15 @@ class RenderService:
             'mother': mother
         }
 
-        template.render(context)
+        ans = template.render(context)
 
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
             file_name = temp_file.name + "." + extension
-
-            template.save(file_name)
+            with open(file_name, "w") as f:
+                f.write(ans)
 
         return FileResponse(
             path=file_name,
-            media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             filename=document_template.name + "." + extension,
         )
     
@@ -174,7 +174,7 @@ class RenderService:
             except Exception:
                 raise NotFoundException(detail="Файл не найден!")
 
-        template = DocxTemplate(temp_file_path)
+        template = jinja_env.get_template(temp_file_path.replace('/tmp/', ''))
 
         if autobiography_answer is not None:
             autobiography_text = autobiography_answer.answer_str
@@ -202,19 +202,18 @@ class RenderService:
             'essay': essay_answer_text
         }
 
-        template.render(context)
+        ans = template.render(context)
 
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-            file_name = temp_file.name
-
-            template.save(file_name)
+            file_name = temp_file.name + "." + extension
+            with open(file_name, "w") as f:
+                f.write(ans)
 
         return FileResponse(
             path=file_name,
-            media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             filename=document_template.name + "." + extension,
         )
-    
+
     def convert_html_to_docx(self, html: str):
         soup = BeautifulSoup(html, "html.parser")
         
