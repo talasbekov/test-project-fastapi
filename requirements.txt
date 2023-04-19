@@ -53,3 +53,4 @@ uvicorn==0.20.0
 fastapi-debug-toolbar==0.3.2
 beautifulsoup4==4.12.2
 docx2python==2.6.0
+pdfkit==1.0.0

@@ -46,9 +46,6 @@ app.add_middleware(DebugToolbarMiddleware,
 
 app.include_router(router)
 
-templates = Jinja2Templates(directory="templates")
-
-
 if configs.DEBUG:
     sentry_sdk.init(dsn=configs.SENTRY_DSN,
                     traces_sample_rate=1.0)

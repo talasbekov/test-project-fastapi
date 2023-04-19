@@ -8,7 +8,7 @@ RUN pip install pipenv
 WORKDIR /app
 
 # Install wget
-RUN apt-get update && apt-get install libssl-dev -y
+RUN apt-get update && apt-get install libssl-dev wkhtmltopdf -y
 
 # Copy Pipfile and Pipfile.lock
 COPY requirements.txt .
