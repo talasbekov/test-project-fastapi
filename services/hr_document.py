@@ -12,7 +12,7 @@ from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import func, or_
 
-from core import Base, jinja_env
+from core import Base, jinja_env, download_file_to_tempfile, wkhtmltopdf_path
 from exceptions import (BadRequestException, ForbiddenException,
                         InvalidOperationException, NotFoundException)
 from models import (HrDocument, HrDocumentStatusEnum,
@@ -448,12 +448,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         if path is None:
             raise BadRequestException(detail=f'Приказа нет на русском языке!')
 
-        with tempfile.NamedTemporaryFile(delete=False) as temp:
-            arr = path.rsplit(".")
-            extension = arr[len(arr) - 1]
-            temp_file_path = temp.name + "." + extension
-
-            urllib.request.urlretrieve(path, temp_file_path)
+        temp_file_path = download_file_to_tempfile(path)
 
         template = jinja_env.get_template(temp_file_path.replace('/tmp/', ''))
 
@@ -473,7 +468,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
             file_name = temp_file.name + ".pdf"
-            pdfkit.from_string(ans, file_name, options={"encoding": "UTF-8"})
+            pdfkit.from_string(ans, file_name, options=options, configuration=pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path))
 
         return FileResponse(
             path=file_name,
