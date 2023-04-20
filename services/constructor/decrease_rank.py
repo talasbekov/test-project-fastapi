@@ -24,8 +24,10 @@ class DecreaseRankHandler(BaseHandler):
         if user.rank.order <= rank.order:
             raise ForbiddenException(detail=f"You can not decrease rank to {rank.name}")
         user.rank = rank
+        history = rank_service.find_last_history(db, user.id)
         res = history_service.create_history(db, user.id, rank)
         res.document_link = configs.GENERATE_IP + str(document.id)
+        document.old_history = history
         db.add(user)
         db.add(document)
         db.add(res)

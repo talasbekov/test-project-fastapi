@@ -27,8 +27,9 @@ class IncreaseRankHandler(BaseHandler):
         if user_rank.order >= rank.order:
             raise ForbiddenException(detail=f"You can not increase rank to {rank.name}")
         user.rank = rank
+        history = rank_service.find_last_history(db, user.id)
         res = history_service.create_history(db, user.id, rank)
-        document.old_history_id = res.id
+        document.old_history = history
         res.document_link = configs.GENERATE_IP + str(document.id)
         db.add(user)
         db.add(res)
