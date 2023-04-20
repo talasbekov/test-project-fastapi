@@ -25,6 +25,12 @@ async def convert(*,
     Authorize: AuthJWT = Depends(),
     body: ConvertCandidateTemplate
 ):
+    """
+        Генерация документа "Заключение спец. проверки"
+
+        - **hr_document_template_id**: UUID - required
+        - **candidate_id**: UUID - required
+    """
     Authorize.jwt_required()
     return render_service.generate(db, candidate_id=body.candidate_id, template_id=body.hr_document_template_id)
 
@@ -34,6 +40,12 @@ async def rdner_finish_candidate(*,
     Authorize: AuthJWT = Depends(),
     body: ConvertCandidateTemplate
 ):
+    """
+        Генерация документа "Заключение на зачисление"
+
+        - **hr_document_template_id**: UUID - required
+        - **candidate_id**: UUID - required
+    """
     Authorize.jwt_required()
     return render_service.generate_finish_candidate(db, candidate_id=body.candidate_id, template_id=body.hr_document_template_id)
 
