@@ -13,24 +13,64 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func, or_
 
 from core import Base, jinja_env, download_file_to_tempfile, wkhtmltopdf_path
-from exceptions import (BadRequestException, ForbiddenException,
-                        InvalidOperationException, NotFoundException)
-from models import (HrDocument, HrDocumentStatusEnum,
-                    HrDocumentStep, StaffUnit, User, DocumentStaffFunction, StaffDivision, JurisdictionEnum,
-                    HrDocumentStatus, StaffDivisionEnum, HrDocumentTemplate,HrDocumentInfo, LanguageEnum)
-from schemas import (BadgeRead, HrDocumentCreate, HrDocumentInit,
-                     HrDocumentRead, HrDocumentSign, HrDocumentUpdate,
-                     RankRead, StaffDivisionOptionRead, StaffUnitRead,
-                     DraftHrDocumentCreate, DraftHrDocumentInit, BadgeTypeRead,
-                     StatusTypeRead, CoolnessTypeRead, PenaltyTypeRead,
-                     ContractTypeRead)
-from services import (badge_service, document_staff_function_service,
-                      hr_document_info_service, hr_document_step_service,
-                      hr_document_template_service, rank_service,
-                      staff_division_service, staff_unit_service, user_service,
-                      jurisdiction_service, hr_document_status_service, history_service,
-                      status_service, secondment_service, coolness_service, penalty_service,
-                      contract_service)
+from exceptions import (
+    BadRequestException,
+    ForbiddenException,
+    InvalidOperationException,
+    NotFoundException,
+)
+from models import (
+    HrDocument,
+    HrDocumentStatusEnum,
+    HrDocumentStep,
+    StaffUnit,
+    User,
+    DocumentStaffFunction,
+    StaffDivision,
+    JurisdictionEnum,
+    HrDocumentStatus,
+    StaffDivisionEnum,
+    HrDocumentTemplate,
+    HrDocumentInfo,
+    LanguageEnum,
+)
+from schemas import (
+    BadgeRead,
+    HrDocumentCreate,
+    HrDocumentInit,
+    HrDocumentRead,
+    HrDocumentSign,
+    HrDocumentUpdate,
+    RankRead,
+    StaffDivisionOptionRead,
+    StaffUnitRead,
+    DraftHrDocumentCreate,
+    DraftHrDocumentInit,
+    BadgeTypeRead,
+    StatusTypeRead,
+    CoolnessTypeRead,
+    PenaltyTypeRead,
+    ContractTypeRead,
+)
+from services import (
+    badge_service,
+    document_staff_function_service,
+    hr_document_info_service,
+    hr_document_step_service,
+    hr_document_template_service,
+    rank_service,
+    staff_division_service,
+    staff_unit_service,
+    user_service,
+    jurisdiction_service,
+    hr_document_status_service,
+    history_service,
+    status_service,
+    secondment_service,
+    coolness_service,
+    penalty_service,
+    contract_service,
+)
 from .base import ServiceBase
 
 options = {

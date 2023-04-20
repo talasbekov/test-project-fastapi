@@ -1,3 +1,4 @@
+from fastapi.logger import logger as log
 from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
 
@@ -16,15 +17,22 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
 
         if self._check_by_role(db, role_id):
             if filter is not None:
-                filter = filter.lower()
-                candidates = db.query(self.model). \
-                    join(StaffUnit, self.model.staff_unit_id == StaffUnit.id). \
-                    join(User, User.staff_unit_id == StaffUnit.id). \
-                    filter(self.model.status == CandidateStatusEnum.ACTIVE.value,
-                           or_(func.lower(User.first_name).contains(filter),
-                               func.lower(User.last_name).contains(filter),
-                               func.lower(User.father_name).contains(filter))
-                           ).order_by(self.model.id.asc()).offset(skip).limit(limit).all()
+                key_words = filter.lower().split()
+                log.info(key_words)
+                candidates = (
+                    db.query(self.model)
+                    .join(StaffUnit, self.model.staff_unit_id == StaffUnit.id)
+                    .join(User, User.staff_unit_id == StaffUnit.id)
+                    .filter(
+                        self.model.status == CandidateStatusEnum.ACTIVE.value,
+                        ((or_(*[func.lower(User.first_name).contains(name) for name in key_words])) |
+                        (or_(*[func.lower(User.last_name).contains(name) for name in key_words])) |
+                        (or_(*[func.lower(User.father_name).contains(name) for name in key_words])))
+                    )
+                    .order_by(self.model.id.asc())
+                    .offset(skip)
+                    .limit(limit)
+                    .all())
             else:
                 candidates = db.query(self.model).filter(
                     self.model.status == CandidateStatusEnum.ACTIVE.value
@@ -198,17 +206,23 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
         user = user_service.get_by_id(db, user_id)
 
         if filter is not None:
-            filter = filter.lower()
-            return db.query(self.model). \
-                join(StaffUnit, self.model.staff_unit_id == StaffUnit.id). \
-                join(User, User.staff_unit_id == StaffUnit.id). \
-                filter(
-                self.model.staff_unit_curator_id == user.actual_staff_unit_id,
-                self.model.status == CandidateStatusEnum.ACTIVE.value,
-                or_(func.lower(User.first_name).contains(filter),
-                    func.lower(User.last_name).contains(filter),
-                    func.lower(User.father_name).contains(filter))
-            ).order_by(self.model.id.asc()).offset(skip).limit(limit).all()
+            key_words = filter.lower().split()
+            return (
+                db.query(self.model)
+                .join(StaffUnit, self.model.staff_unit_id == StaffUnit.id)
+                .join(User, User.staff_unit_id == StaffUnit.id)
+                .filter(
+                    self.model.staff_unit_curator_id == user.actual_staff_unit_id,
+                    self.model.status == CandidateStatusEnum.ACTIVE.value,
+                    ((or_(*[func.lower(User.first_name).contains(name) for name in key_words])) |
+                    (or_(*[func.lower(User.last_name).contains(name) for name in key_words])) |
+                    (or_(*[func.lower(User.father_name).contains(name) for name in key_words])))
+                )
+                .order_by(self.model.id.asc())
+                .offset(skip)
+                .limit(limit)
+                .all()
+            )
         else:
             return db.query(self.model).filter(
                 self.model.staff_unit_curator_id == user.actual_staff_unit_id,
