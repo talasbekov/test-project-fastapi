@@ -30,7 +30,7 @@ from .history_personal import (
     WorkExperienceRead,
     EmergencyServiceRead,
     AttestationReadHistory,
-    NameChangeReadHistory, 
+    NameChangeReadHistory,
     StatusReadHistory,
     CoolnessReadHistory,
     SecondmentReadHistory,
@@ -55,7 +55,7 @@ class HistoryBase(BaseModel):
     rank_assigned_by: Optional[str]
     status_id: Optional[uuid.UUID]
     coolness_id: Optional[uuid.UUID]
-    contract_id: Optional[uuid.UUID] 
+    contract_id: Optional[uuid.UUID]
     badge_id: Optional[uuid.UUID]
     user_id: uuid.UUID
     is_credited: Optional[bool]
@@ -91,14 +91,14 @@ class HistoryRead(HistoryBase, ReadNamedModel):
     contract: Optional[ContractRead]
     badge: Optional[BadgeRead]
     staff_division: Optional[StaffDivisionRead]
- 
+
 
 class HistoryPersonalRead(ReadModel):
     date_from: Optional[datetime]
     coefficient: Optional[Decimal]
     percentage: Optional[Decimal]
     characteristic_initiator: Optional[UserRead]
-    date_to: Optional[datetime] 
+    date_to: Optional[datetime]
     position: Optional[PositionRead]
     rank: Optional['RankRead']
     penalty: Optional['PenaltyReadHistory']
@@ -152,7 +152,7 @@ class HistoryPersonalRead(ReadModel):
             "position": self.position,
             "rank": self.rank,
             "penalty": self.penalty,
-            "emergency_service": self.emergency_service, 
+            "emergency_service": self.emergency_service,
             "secondment": self.secondment,
             "name_change": self.name_change,
             "attestation": self.attestation,
@@ -160,7 +160,7 @@ class HistoryPersonalRead(ReadModel):
             "coolness": self.coolness,
             "contract": self.contract,
             "document_link": self.document_link,
-            "document_number": self.document_number, 
+            "document_number": self.document_number,
             "user_id": self.user_id,
             "type": self.type,
             "service_characteristic": self.service_characteristic,
@@ -246,7 +246,7 @@ class PenaltyRead(Model):
 
     @classmethod
     def from_orm(cls, orm_obj):
-        return cls( 
+        return cls(
             status=orm_obj.penalty.type.name,
             document_link=orm_obj.document_link,
             cancel_document_link=orm_obj.cancel_document_link,
@@ -292,9 +292,9 @@ class AttestationRead(Model):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
-    
 
- 
+
+
 
 class CharacteristicRead(ReadModel):
     date_from : Optional[datetime]
@@ -355,7 +355,7 @@ class EmergencyContactRead(ReadModel):
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     length_of_service: Optional[int] # ВЫСЛУГА ЛЕТ
-    coefficient: Optional[Decimal] # КОЭФФИЦИЕНТ  
+    coefficient: Optional[Decimal] # КОЭФФИЦИЕНТ
     percentage: Optional[int] # ПРОЦЕНТ
     staff_division: Optional[str]
     emergency_rank_id: Optional[uuid.UUID]
@@ -367,9 +367,9 @@ class EmergencyContactRead(ReadModel):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
-    
+
     @classmethod
-    def from_orm(cls, orm_obj): 
+    def from_orm(cls, orm_obj):
         return cls(
             id=orm_obj.id,
             date_from=orm_obj.date_from,
@@ -384,7 +384,7 @@ class EmergencyContactRead(ReadModel):
             staff_division_id=orm_obj.staff_division_id,
             document_style=orm_obj.document_style,
         )
-    
+
 
 class ExperienceRead(ReadModel):
     date_from : Optional[datetime]
@@ -397,7 +397,7 @@ class ExperienceRead(ReadModel):
     date_credited : Optional[datetime]
     position_work_experience : Optional[str]
 
-    
+
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
@@ -417,7 +417,7 @@ class ExperienceRead(ReadModel):
             document_style=orm_obj.document_style,
             date_credited=orm_obj.date_credited,
             position_work_experience=orm_obj.position_work_experience,
-            
+
         )
 
 
@@ -503,12 +503,12 @@ class TypeOfOtherEquipmentModelRead(ReadNamedModel):
 
 class EquipmentRead(ReadModel):
     type_of_equipment: Optional[str]
-    user_id: Optional[uuid.UUID] 
+    user_id: Optional[uuid.UUID]
     type_of_army_equipment_model_id: Optional[uuid.UUID]
     inventory_number: Optional[str]
     inventory_number_of_other_equipment: Optional[str]
-    count_of_ammo: Optional[int] 
-    type_of_clothing_equipment_model_id: Optional[uuid.UUID] 
+    count_of_ammo: Optional[int]
+    type_of_clothing_equipment_model_id: Optional[uuid.UUID]
     type_of_other_equipment_model_id: Optional[uuid.UUID]
     document_link: Optional[str]
     document_number: Optional[str]
@@ -523,10 +523,10 @@ class EquipmentRead(ReadModel):
         orm_mode = True
         arbitrary_types_allowed = True
 
-     
- 
+
+
 class HistoryServiceDetailRead(Model):
- 
+
     general_information: Optional[GeneralInformationRead]
     attendance: Optional[AttendanceRead]
     service_id_info: Optional[ServiceIdInfoRead]

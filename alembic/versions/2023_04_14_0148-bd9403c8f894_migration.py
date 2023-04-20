@@ -342,6 +342,12 @@ def upgrade() -> None:
     position23_id = get_uuid()  # УСБ
     position24_id = get_uuid()  # Полиграфолог
     position25_id = get_uuid()  # Инструктор
+    position26_id = get_uuid()  # Умер
+    position27_id = get_uuid()  # В отставке
+    position28_id = get_uuid()  # В запасе
+    position29_id = get_uuid()  # Исключен из списков личного состава
+    position30_id = get_uuid()  # Откомандирован в другой гос. орган
+    position31_id = get_uuid()  # Погиб
 
     op.bulk_insert(
         Base.metadata.tables['positions'],
@@ -470,6 +476,36 @@ def upgrade() -> None:
             'id': position25_id,
             'name': 'Инструктор',
             'nameKZ': 'Инструктор',
+            'max_rank_id': None
+        }, {
+            'id': position26_id,
+            'name': "Умер",
+            'nameKZ': 'Өлі',
+            'max_rank_id': None
+        }, {
+            'id': position27_id,
+            'name': "В отставке",
+            'nameKZ': 'Зейнеткер',
+            'max_rank_id': None
+        }, {
+            'id': position28_id,
+            'name': "В запасе",
+            'nameKZ': 'Резервте',
+            'max_rank_id': None
+        }, {
+            'id': position29_id,
+            'name': "Исключен из списков личного состава",
+            'nameKZ': 'Кадрлар тізімінен шығарылған',
+            'max_rank_id': None
+        }, {
+            'id': position30_id,
+            'name': "Откомандирован в другой гос. орган",
+            'nameKZ': 'Басқа мемлекеттік органға жіберілді',
+            'max_rank_id': None
+        }, {
+            'id': position31_id,
+            'name': "Погиб",
+            'nameKZ': 'Қайтыс болды',
             'max_rank_id': None
         }]
     )
@@ -892,6 +928,12 @@ def upgrade() -> None:
     group5_id = get_uuid()
     group6_id = get_uuid()
     group7_id = get_uuid()
+    group8_id = get_uuid()
+    group9_id = get_uuid()
+    group10_id = get_uuid()
+    group11_id = get_uuid()
+    group12_id = get_uuid()
+    group13_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['staff_divisions'],
@@ -937,7 +979,44 @@ def upgrade() -> None:
             'name': "Кандидаты",
             'nameKZ': 'Кандидаттар',
             'is_combat_unit': False
-        }]
+        }, {
+            'parent_group_id': group6_id,
+            'id': group8_id,
+            'name': "Умер",
+            'nameKZ': 'Өлі',
+            'is_combat_unit': False
+        }, {
+            'parent_group_id': group6_id,
+            'id': group9_id,
+            'name': "В отставке",
+            'nameKZ': 'Зейнеткер',
+            'is_combat_unit': False
+        }, {
+            'parent_group_id': group6_id,
+            'id': group10_id,
+            'name': "В запасе",
+            'nameKZ': 'Резервте',
+            'is_combat_unit': False
+        }, {
+            'parent_group_id': group6_id,
+            'id': group11_id,
+            'name': "Исключен из списков личного состава",
+            'nameKZ': 'Кадрлар тізімінен шығарылған',
+            'is_combat_unit': False
+        },  {
+            'parent_group_id': group6_id,
+            'id': group12_id,
+            'name': "Откомандирован в другой гос. орган",
+            'nameKZ': 'Басқа мемлекеттік органға жіберілді',
+            'is_combat_unit': False
+        },  {
+            'parent_group_id': group6_id,
+            'id': group13_id,
+            'name': "Погиб",
+            'nameKZ': 'Қайтыс болды',
+            'is_combat_unit': False
+        },
+        ]
     )
 
     staff_unit1_id = get_uuid()
@@ -2563,7 +2642,11 @@ def upgrade() -> None:
     status_type = get_uuid()
     status_type2 = get_uuid()
     status_type3 = get_uuid()
-    
+    status_type4 = get_uuid()
+    status_type5 = get_uuid()
+    status_type6 = get_uuid()
+    status_type7 = get_uuid()
+    status_type8 = get_uuid()
     op.bulk_insert(
         Base.metadata.tables['status_types'],
         [{
@@ -2578,8 +2661,33 @@ def upgrade() -> None:
         },
         {
             'id': status_type3,
-            'name': 'В запасе',
-            'nameKZ': 'Запаста'
+            'name': "Умер",
+            'nameKZ': 'Өлі'
+        },
+        {
+            'id': status_type4,
+            'name': "В отставке",
+            'nameKZ': 'Зейнеткер'
+        },
+        {
+            'id': status_type5,
+            'name': "В запасе",
+            'nameKZ': 'Резервте'
+        },
+        {
+            'id': status_type6,
+            'name': "Исключен из списков личного состава",
+            'nameKZ': 'Кадрлар тізімінен шығарылған'
+        },
+        {
+            'id': status_type7,
+            'name': "Откомандирован в другой гос. орган",
+            'nameKZ': 'Басқа мемлекеттік органға жіберілді'
+        },
+        {
+            'id': status_type8,
+            'name': "Погиб",
+            'nameKZ': 'Қайтыс болды'
         }
         ]
     )
@@ -2617,7 +2725,7 @@ def upgrade() -> None:
         {
             'id': status3_id,
             'user_id': user3_id,
-            'type_id': status_type3,
+            'type_id': status_type,
         },
         {
             'id': status4_id,
@@ -2689,10 +2797,10 @@ def upgrade() -> None:
             'user_id': user17_id,
             'type_id': status_type,
         },
-                    {
+        {
             'id': status18_id,
             'user_id': user18_id,
-            'type_id': status_type,
+            'type_id': status_type3,
         }
         ]
     )
@@ -4253,7 +4361,6 @@ def create_user(id,
             'phone_number': '+7 (777) 123-47-89',
             'rank_id': rank_id,
             'actual_staff_unit_id': actual_staff_unit_id,
-            'status': "На работе",
             'icon': icon,
             'service_phone_number': "679-258",
             'personal_id': number,

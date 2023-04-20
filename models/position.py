@@ -21,6 +21,12 @@ class PositionNameEnum(str, enum.Enum):
     REPRESENTATIVE_OF_SECURITY_DEPARTMENT = 'Представитель Управление собственной безопасности'
     POLYGRAPH_EXAMINER = 'Полиграфолог'
     INSTRUCTOR = 'Инструктор'
+    DEAD = "Умер"
+    RETIRED = "В отставке"
+    IN_RESERVE = "В запасе"
+    REMOVED_FROM_LIST = "Исключен из списков личного состава"
+    SECONDMENT_OTHER = "Откомандирован в другой гос. орган"
+    PERISHED = "Погиб"
 
 
 class Position(NamedModel):

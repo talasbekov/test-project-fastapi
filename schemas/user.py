@@ -57,7 +57,6 @@ class UserRead(UserBase, ReadModel):
     staff_unit_id: Optional[uuid.UUID]
     call_sign: Optional[str]
     id_number: Optional[str]
-    status: Optional[StatusRead]
     status_till: Optional[datetime.datetime]
     personal_id: Optional[str]
     badges: Optional[List[BadgeRead]]
