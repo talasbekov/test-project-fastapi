@@ -26,11 +26,12 @@ class PositionChangeHandler(BaseHandler):
             raise ForbiddenException(
                 f"This position is already assigned to this user: {user.first_name}, {user.last_name}"
             )
+        old_history = staff_unit_service.get_last_history(db, user.id)
         res = staff_unit_service.create_relation(db, user, props[status]["value"])
         history = history_service.create_history(db, user.id, res)
 
         history.document_link = configs.GENERATE_IP + str(document.id)
-        document.old_history_id = history.id
+        document.old_history_id = old_history.id
 
         db.add(user)
         db.add(history)

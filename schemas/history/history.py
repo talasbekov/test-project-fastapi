@@ -64,10 +64,11 @@ class HistoryBase(BaseModel):
     name_of_organization: Optional[str]
     type: str
     position_work_experience: Optional[str]
-    emergency_rank_id: Optional[uuid.UUID]
     staff_division_id: Optional[uuid.UUID]
     coefficient: Optional[Decimal]
     percentage: Optional[int]
+    staff_division_name: Optional[str]
+    staff_division_nameKZ: Optional[str]
 
     class Config:
         orm_mode = True

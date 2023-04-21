@@ -13,7 +13,7 @@ from .staff_division import StaffDivision, StaffDivisionEnum
 from .jurisdiction import Jurisdiction
 from .staff_function import (DocumentFunctionType, DocumentStaffFunction,
                              ServiceFunctionType, ServiceStaffFunction, StaffFunction,
-                             JurisdictionEnum)
+                             JurisdictionEnum, DocumentFunctionTypeEnum)
 from .staff_list import StaffList
 from .staff_unit import StaffUnit
 from .service_id import ServiceID, ServiceIDStatus

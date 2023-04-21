@@ -4,7 +4,7 @@ import uuid
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
-from models import StaffUnit, Position, User, StaffDivision
+from models import StaffUnit, Position, User, StaffDivision, EmergencyServiceHistory
 from schemas import StaffUnitCreate, StaffUnitUpdate, StaffUnitFunctions, StaffUnitRead
 from services import service_staff_function_service, document_staff_function_service, staff_division_service
 from .base import ServiceBase
@@ -85,7 +85,6 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
 
     def create_relation(self, db:Session, user: User, staff_unit_id: uuid.UUID):
         staff_unit = self.get_by_id(db, staff_unit_id)
-
         staff_unit.users.append(user)
         db.add(staff_unit)
         db.flush()
@@ -94,7 +93,7 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
     def exists_relation(self, db: Session, user_id: str, staff_unit_id: uuid.UUID):
         return (
             db.query(StaffUnit)
-            .join(StaffUnit.actual_users)
+            .join(StaffUnit.users)
             .filter(User.id == user_id)
             .filter(StaffUnit.id == staff_unit_id)
             .first()
@@ -108,12 +107,15 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
             return staff_unit
         else:
             position = db.query(Position).filter(Position.name == name).first()
-            staff_unit = self.create(db, StaffUnit(
-                                   position_id=position.id,
-                                   staff_division_id=staff_division.id,
-                                   created_at=datetime.datetime.now(),
-                                   updated_at=datetime.datetime.now())
-                                     )
+            staff_unit = self.create(
+                db,
+                StaffUnit(
+                    position_id=position.id,
+                    staff_division_id=staff_division.id,
+                    created_at=datetime.datetime.now(),
+                    updated_at=datetime.datetime.now(),
+                )
+            )
 
             staff_division.staff_units.append(staff_unit)
             db.add(staff_division)
@@ -121,12 +123,24 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
         return staff_unit
 
     def _get_free_by_staff_division_id(self, db: Session, staff_division_id: str):
-        return db.query(self.model)\
+        return (
+            db.query(self.model)
             .filter(
-            (self.model.staff_division_id == staff_division_id) &
-            (self.model.users == None)
-            )\
+                self.model.staff_division_id == staff_division_id,
+                self.model.users == None
+            )
+            .first())
+
+    def get_last_history(self, db: Session, user_id: uuid.UUID):
+        return (
+            db.query(EmergencyServiceHistory)
+            .filter(
+                EmergencyServiceHistory.user_id == user_id,
+                EmergencyServiceHistory.date_to == None
+            )
+            .order_by(EmergencyServiceHistory.date_from.desc())
             .first()
+        )
 
 
 staff_unit_service = StaffUnitService(StaffUnit)

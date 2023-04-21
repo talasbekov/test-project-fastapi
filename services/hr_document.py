@@ -33,6 +33,7 @@ from models import (
     HrDocumentTemplate,
     HrDocumentInfo,
     LanguageEnum,
+    DocumentFunctionTypeEnum,
 )
 from schemas import (
     BadgeRead,
@@ -432,6 +433,9 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 detail=f"Вы не можете подписать документ относящийся не к вашему департаменту!"
             )
 
+        if document_staff_function.role.name == DocumentFunctionTypeEnum.EXPERT.value:
+            body.is_signed = True
+
         hr_document_info_service.sign(db, info, user, body.comment, body.is_signed)
 
         if body.is_signed:
@@ -477,7 +481,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         return document
 
-    def generate(self, db: Session, id: str, language: LanguageEnum):
+    async def generate(self, db: Session, id: str, language: LanguageEnum):
         document = self.get_by_id(db, id)
         document_template = hr_document_template_service.get_by_id(
             db, document.hr_document_template_id
@@ -488,7 +492,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         if path is None:
             raise BadRequestException(detail=f'Приказа нет на русском языке!')
 
-        temp_file_path = download_file_to_tempfile(path)
+        temp_file_path = await download_file_to_tempfile(path)
 
         template = jinja_env.get_template(temp_file_path.replace('/tmp/', ''))
 

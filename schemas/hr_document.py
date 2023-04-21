@@ -53,6 +53,8 @@ class DraftHrDocumentInit(Model):
                 for user_id in value:
                     if not isinstance(user_id, uuid.UUID):
                         raise ValueError(f'document_step_users_ids should be uuid.UUID')
+            elif key == 1:
+                raise ValueError(f"Don't add initiator")
             else:
                 value_to_uuid = uuid.UUID(value)
                 if not isinstance(value_to_uuid, uuid.UUID):
