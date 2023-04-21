@@ -7,7 +7,6 @@ from exceptions import NotFoundException, NotSupportedException
 from models import (
     History,
     RankHistory,
-    StaffUnitHistory,
     PenaltyHistory,
     ContractHistory,
     EmergencyServiceHistory,
