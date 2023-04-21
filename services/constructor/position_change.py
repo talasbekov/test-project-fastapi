@@ -20,18 +20,20 @@ class PositionChangeHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        status = action["staff_unit"]["tagname"]
+        position = action["staff_unit"]["tagname"]
 
-        if staff_unit_service.exists_relation(db, user.id, props[status]["value"]):
+        if staff_unit_service.exists_relation(db, user.id, props[position]["value"]):
             raise ForbiddenException(
                 f"This position is already assigned to this user: {user.first_name}, {user.last_name}"
             )
         old_history = staff_unit_service.get_last_history(db, user.id)
-        res = staff_unit_service.create_relation(db, user, props[status]["value"])
+        if old_history is not None:
+            document.old_history_id = old_history.id
+
+        res = staff_unit_service.create_relation(db, user, props[position]["value"])
         history = history_service.create_history(db, user.id, res)
 
         history.document_link = configs.GENERATE_IP + str(document.id)
-        document.old_history_id = old_history.id
 
         db.add(user)
         db.add(history)

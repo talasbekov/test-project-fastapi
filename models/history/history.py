@@ -204,19 +204,28 @@ class EmergencyServiceHistory(History):
         if staff_unit is None:
             raise NotFoundException(detail="Staff unit not found")
         last_history: EmergencyServiceHistory = finish_last(db, user_id, self.__mapper_args__["polymorphic_identity"])
-        if last_history.staff_division is not None:
-            last_history.staff_division_name = last_history.staff_division.name
-            last_history.staff_division_nameKZ = last_history.staff_division.nameKZ
-        db.add(EmergencyServiceHistory(
+        if last_history is not None:
+            if last_history.staff_division is not None:
+                last_history.staff_division_name = last_history.staff_division.name
+                last_history.staff_division_nameKZ = last_history.staff_division.nameKZ
+
+            db.add(last_history)
+
+        obj = EmergencyServiceHistory(
                 coefficient=1.5,
                 percentage=0,
                 position_id=staff_unit.position_id,
                 staff_division_id=staff_unit.staff_division_id,
+                user_id=user_id,
+                date_from=datetime.datetime.now(),
             )
-        )
-        db.add(last_history)
+        db.add(obj)
         db.flush()
+        db.refresh(obj)
 
+        return obj
+
+    
     __mapper_args__ = {
         'polymorphic_identity': 'emergency_service_history'
     }
