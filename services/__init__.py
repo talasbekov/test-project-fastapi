@@ -24,7 +24,6 @@ from .recommender_user import recommender_user_service
 from .hr_document_template import hr_document_template_service
 from .personnal_reserve import personnal_reserve_service
 from .user import user_service
-from .auth import auth_service
 from .hr_document_info import hr_document_info_service
 from .hr_document_status import hr_document_status_service
 from .status import status_service
@@ -40,9 +39,11 @@ from .history import *
 from .hr_document import hr_document_service
 from .additional import *
 from .education import *
+from .medical import *
 from .family import *
 from .archive import *
 from .staff_list import staff_list_service
 
 from .candidates import *
 from .render import render_service
+from .auth import auth_service
