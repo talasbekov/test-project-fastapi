@@ -20,7 +20,6 @@ class UserBase(Model):
     id_number: Optional[str]
     phone_number: Optional[str]
     address: Optional[str]
-    status_till: Optional[datetime.datetime]
     cabinet: Optional[str]
     service_phone_number: Optional[str]
     supervised_by: Optional[uuid.UUID]
@@ -28,12 +27,11 @@ class UserBase(Model):
     personal_id: Optional[str]
     date_birth: Optional[datetime.date]
     iin: Optional[str]
-    statuses: Optional[List[StatusRead]]
     is_active: Optional[bool]
 
 
 class UserCreate(UserBase):
-    password: str
+    password: Optional[str]
 
 
 class UserUpdate(UserBase):
@@ -64,6 +62,8 @@ class UserRead(UserBase, ReadModel):
     actual_staff_unit: Optional[UserStaffUnitRead]
     date_birth: Optional[datetime.date]
     iin: Optional[str]
+    statuses: Optional[List[StatusRead]]
+    status_till: Optional[datetime.datetime]
 
     class Config:
         orm_mode = True
