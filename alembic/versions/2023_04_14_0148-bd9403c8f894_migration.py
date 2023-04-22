@@ -4369,6 +4369,9 @@ def create_user(id,
             'personal_id': number,
             'is_military': is_military,
             'cabinet': cabinet,
+            'address': "г. Астана, ул. Мангилик ел 54, кв. 15",
+            'date_birth': "1990-01-01",
+            'iin': "123456789012",
             'is_active': is_active,
         }]
     )
