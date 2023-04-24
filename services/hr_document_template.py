@@ -66,14 +66,20 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
 
     def duplicate(self, db: Session, id: str):
         template = self.get_by_id(db, id)
-        new_template = HrDocumentTemplate(
-            path=template.path,
-            pathKZ=template.pathKZ,
-            subject_type=template.subject_type,
-            properties=template.properties,
-            description=template.description,
-            actions=template.actions,
+        new_template =self.create(
+            db,
+            HrDocumentTemplateCreate(
+                name=template.name if template.name is None else template.name + " (Копия)",
+                nameKZ=template.nameKZ + " (Копия)",
+                path=template.path,
+                pathKZ=template.pathKZ,
+                subject_type=template.subject_type,
+                properties=template.properties,
+                description=template.description,
+                actions=template.actions,
+            )
         )
+        print(new_template.id)
         steps = hr_document_step_service.get_all_by_document_template_id(db, template.id)
         for step in steps:
             staff_function: DocumentStaffFunction = step.staff_function
@@ -81,7 +87,7 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
                 db,
                 DocumentStaffFunctionCreate(
                     name=staff_function.name + " (Копия)",
-                    nameKZ=staff_function.nameKZ  + " (Копия)",
+                    nameKZ=staff_function.nameKZ if staff_function.nameKZ is None else staff_function.nameKZ + " (Копия)",
                     hours_per_week=staff_function.hours_per_week,
                     priority=staff_function.priority,
                     role_id=staff_function.role_id,
