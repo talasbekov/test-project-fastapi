@@ -1,7 +1,6 @@
 from .history import (
     History,
     RankHistory,
-    StaffUnitHistory,
     PenaltyHistory,
     ContractHistory,
     EmergencyServiceHistory,

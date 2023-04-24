@@ -82,37 +82,6 @@ class History(Model):
     }
 
 
-class StaffUnitHistory(History):
-
-    position_id = Column(UUID(as_uuid=True), ForeignKey("positions.id"), nullable=True)
-    position = relationship("Position", foreign_keys=[position_id])
-
-    @classmethod
-    def create_history(
-        cls, db: Session, user_id: uuid.UUID, id: uuid.UUID, finish_last
-    ):
-        staff_unit = db.query(StaffUnit).filter(StaffUnit.id == id).first()
-        if staff_unit is None:
-            raise NotFoundException(detail="Staff unit not found")
-        finish_last(db, user_id, cls.__mapper_args__["polymorphic_identity"])
-        obj = StaffUnitHistory(
-            date_from=datetime.datetime.now(),
-            date_to=None,
-            user_id=user_id,
-            position_id=staff_unit.position_id,
-        )
-
-        db.add(obj)
-        db.flush()
-        db.refresh(obj)
-
-        return obj
-
-    __mapper_args__ = {
-        "polymorphic_identity": "staff_unit_history",
-    }
-
-
 class RankHistory(History):
 
     rank_id = Column(UUID(as_uuid=True), ForeignKey("ranks.id"), nullable=True)
@@ -220,12 +189,43 @@ class EmergencyServiceHistory(History):
     coefficient = Column(Double, nullable=True)
     percentage = Column(Integer, nullable=True)
     
-    emergency_rank_id = Column(UUID(as_uuid=True), ForeignKey("ranks.id"), nullable=True)
-    emergency_rank = relationship("Rank", foreign_keys=[emergency_rank_id])
+    position_id = Column(UUID(as_uuid=True), ForeignKey("positions.id"), nullable=True)
+    position = relationship("Position", foreign_keys=[position_id])
 
     staff_division_id = Column(UUID(as_uuid=True), ForeignKey("staff_divisions.id"), nullable=True)
     staff_division = relationship("StaffDivision", foreign_keys=[staff_division_id])
 
+    staff_division_name = Column(String, nullable=True)
+    staff_division_nameKZ = Column(String, nullable=True)
+
+    @classmethod
+    def create_history(self, db: Session, user_id: uuid.UUID, id: uuid.UUID, finish_last):
+        staff_unit = db.query(StaffUnit).filter(StaffUnit.id == id).first()
+        if staff_unit is None:
+            raise NotFoundException(detail="Staff unit not found")
+        last_history: EmergencyServiceHistory = finish_last(db, user_id, self.__mapper_args__["polymorphic_identity"])
+        if last_history is not None:
+            if last_history.staff_division is not None:
+                last_history.staff_division_name = last_history.staff_division.name
+                last_history.staff_division_nameKZ = last_history.staff_division.nameKZ
+
+            db.add(last_history)
+
+        obj = EmergencyServiceHistory(
+                coefficient=1.5,
+                percentage=0,
+                position_id=staff_unit.position_id,
+                staff_division_id=staff_unit.staff_division_id,
+                user_id=user_id,
+                date_from=datetime.datetime.now(),
+            )
+        db.add(obj)
+        db.flush()
+        db.refresh(obj)
+
+        return obj
+
+    
     __mapper_args__ = {
         'polymorphic_identity': 'emergency_service_history'
     }

@@ -1,3 +1,6 @@
+import random
+import string
+
 from datetime import timedelta
 
 from fastapi import HTTPException, status
@@ -7,9 +10,15 @@ from sqlalchemy.orm import Session
 
 from core import configs
 from exceptions import BadRequestException
-from models import User
-from schemas import LoginForm, RegistrationForm, UserCreate
-from services import staff_division_service, staff_unit_service, user_service
+from models import User, StaffDivisionEnum, StaffUnit
+from schemas import (LoginForm, RegistrationForm, UserCreate,
+                     ProfileCreate, EducationalProfileCreate, AdditionalProfileCreate,
+                     PersonalProfileCreate, MedicalProfileCreate, FamilyProfileCreate,
+                     CandidateRegistrationForm, StaffUnitCreate, CandidateCreate)
+from services import (staff_unit_service, user_service, profile_service,
+                      educational_profile_service, additional_profile_service, personal_profile_service,
+                      medical_profile_service, family_profile_service, staff_division_service,
+                      candidate_service)
 from utils import hash_password, is_valid_phone_number, verify_password
 
 
@@ -26,10 +35,9 @@ class AuthService():
         access_token, refresh_token = self._generate_tokens(Authorize, user)
 
         return {"access_token": access_token, "refresh_token": refresh_token}
-    
+
     def register(self, form: RegistrationForm, db: Session):
-        group_obj = staff_division_service.get_by_id(db, form.group_id)
-        position_obj = staff_unit_service.get_by_id(db, form.position_id)
+        position_obj = staff_unit_service.get_by_id(db, form.staff_unit_id)
 
         if user_service.get_by_email(db, EmailStr(form.email).lower()):
             raise BadRequestException(detail="User with this email already exists!")
@@ -46,20 +54,81 @@ class AuthService():
             email=EmailStr(form.email).lower(),
             first_name=form.first_name,
             last_name=form.last_name,
-            phone_number=form.phone_number,
-            password=hash_password(form.password),
             father_name=form.father_name,
-            position_id=position_obj.id,
-            group_id=group_obj.id,
+            staff_unit_id=form.staff_unit_id,
+            actual_staff_unit_id=form.actual_staff_unit_id,
+            icon=form.icon,
             call_sign=form.call_sign,
             id_number=form.id_number,
+            phone_number=form.phone_number,
             address=form.address,
-            birthday=form.birthday,
+            cabinet=form.cabinet,
+            service_phone_number=form.service_phone_number,
+            supervised_by=None,
+            is_military=form.is_military,
+            personal_id=form.personal_id,
+            date_birth=form.date_birth,
+            iin=form.iin,
+            password=hash_password(form.password),
             is_active=True
         )
 
-        return user_service.create(db, user_obj_in)
-    
+        user = user_service.create(db=db, obj_in=user_obj_in)
+
+        self._create_profiles(db, user.id)
+
+        return user
+
+    def register_candidate(self, form: CandidateRegistrationForm, db: Session, staff_unit_id: str):
+
+        current_user_staff_unit: StaffUnit = staff_unit_service.get_by_id(db, staff_unit_id)
+        current_user: User = current_user_staff_unit.actual_users[0]
+
+        special_candidate_group = staff_division_service.get_by_name(db, StaffDivisionEnum.CANDIDATES.value)
+
+        staff_unit = staff_unit_service.create(db, obj_in=StaffUnitCreate(
+            position_id=current_user_staff_unit.position_id,
+            staff_division_id=special_candidate_group.id
+        ))
+
+        random_string = ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
+        call_sign = current_user.call_sign + '_' + random_string  # concatenate random string to call_sign
+        id_number = current_user.id_number + '_' + random_string  # concatenate random string to id_number
+
+        user_obj_in = UserCreate(
+            email=None,
+            first_name="Турлыбек",
+            last_name="Турлыбеков",
+            father_name="Турлыбекович",
+            staff_unit_id=staff_unit.id,
+            actual_staff_unit_id=staff_unit.id,
+            icon=current_user.icon,
+            call_sign=call_sign,
+            id_number=id_number,
+            phone_number=current_user.phone_number,
+            address=current_user.address,
+            cabinet=None,
+            service_phone_number=None,
+            supervised_by=current_user.id,
+            is_military=None,
+            personal_id=None,
+            date_birth=current_user.date_birth,
+            iin=form.iin,
+            password=None,
+            is_active=True
+        )
+
+        user = user_service.create(db=db, obj_in=user_obj_in)
+
+        candidate_service.create(db, body=CandidateCreate(
+            staff_unit_curator_id=current_user_staff_unit.id,
+            staff_unit_id=staff_unit.id
+        ))
+
+        self._create_profiles(db, user.id)
+
+        return user
+
     def refresh_token(self, db: Session, Authorize: AuthJWT):
         if not Authorize.get_jwt_subject():
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
@@ -73,7 +142,6 @@ class AuthService():
 
         return {"access_token": access_token, "refresh_token": refresh_token}
 
-    
     def _generate_tokens(self, Authorize: AuthJWT, user: User):
 
         user_claims = {
@@ -91,6 +159,31 @@ class AuthService():
         )
 
         return access_token, refresh_token
+
+    def _create_profiles(self, db: Session, user_id: str):
+        profile = profile_service.create(db=db, obj_in=ProfileCreate(
+            user_id=user_id
+        ))
+
+        educational_profile_service.create(db=db, obj_in=EducationalProfileCreate(
+            profile_id=profile.id
+        ))
+
+        additional_profile_service.create(db=db, obj_in=AdditionalProfileCreate(
+            profile_id=profile.id
+        ))
+
+        personal_profile_service.create(db=db, obj_in=PersonalProfileCreate(
+            profile_id=profile.id
+        ))
+
+        medical_profile_service.create(db=db, obj_in=MedicalProfileCreate(
+            profile_id=profile.id
+        ))
+
+        family_profile_service.create(db=db, obj_in=FamilyProfileCreate(
+            profile_id=profile.id
+        ))
 
 
 auth_service = AuthService()

@@ -17,6 +17,14 @@ class JurisdictionEnum(str, enum.Enum):
     SUPERVISED_EMPLOYEES = "Курьируемые сотрудники"
 
 
+class DocumentFunctionTypeEnum(str, enum.Enum):
+    INITIATOR = "Инициатор"
+    EXPERT = "Эксперт"
+    APPROVER = "Утверждающий"
+    COORDINATOR = "Согласующий"
+    NOTIFIED = "Уведомляемый"
+
+
 class ServiceFunctionType(NamedModel):
 
     __tablename__ = "service_function_types"

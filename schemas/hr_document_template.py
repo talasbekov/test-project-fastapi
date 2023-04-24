@@ -23,7 +23,7 @@ class HrDocumentTemplateCreate(HrDocumentTemplateBase):
 
 
 class HrDocumentTemplateUpdate(HrDocumentTemplateBase):
-    pass
+    is_active: Optional[bool]
 
 
 class HrDocumentTemplateRead(HrDocumentTemplateBase, ReadNamedModel):
@@ -32,6 +32,7 @@ class HrDocumentTemplateRead(HrDocumentTemplateBase, ReadNamedModel):
     subject_type: Optional[SubjectType]
     properties: Optional[Union[dict, None]]
     actions: Optional[Union[dict, None]]
+    is_active: Optional[bool]
 
     class Config:
         orm_mode = True

@@ -33,6 +33,17 @@ async def get_all(*,
     return hr_document_template_service.get_all_by_name(db, name, skip, limit)
 
 
+@router.get('/archive')
+async def get_all_archived(*,
+    db: Session = Depends(get_db),
+    skip: int = 0,
+    limit: int = 10,
+    Authorize: AuthJWT = Depends(),
+):
+    Authorize.jwt_required()
+    return hr_document_template_service.get_all_archived(db, skip, limit)
+
+
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=HrDocumentTemplateRead,

@@ -145,6 +145,7 @@ def upgrade() -> None:
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('nameKZ', sa.String(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('is_active', sa.Boolean(), nullable=False, default=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.PrimaryKeyConstraint('id')
@@ -419,7 +420,7 @@ def upgrade() -> None:
     )
     op.create_table('users',
     sa.Column('email', sa.String(length=150), nullable=True),
-    sa.Column('password', sa.String(length=255), nullable=False),
+    sa.Column('password', sa.String(length=255), nullable=True),
     sa.Column('first_name', sa.String(length=150), nullable=True),
     sa.Column('last_name', sa.String(length=150), nullable=True),
     sa.Column('father_name', sa.String(length=150), nullable=True),
@@ -791,6 +792,8 @@ def upgrade() -> None:
     sa.Column('percentage', sa.Integer(), nullable=True),
     sa.Column('emergency_rank_id', sa.UUID(), nullable=True),
     sa.Column('staff_division_id', sa.UUID(), nullable=True),
+    sa.Column('staff_division_name', sa.String(), nullable=True),
+    sa.Column('staff_division_nameKZ', sa.String(), nullable=True),
     sa.Column('experience_years', sa.Integer(), nullable=True),
     sa.Column('contract_id', sa.UUID(), nullable=True),
     sa.Column('coolness_id', sa.UUID(), nullable=True),

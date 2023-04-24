@@ -11,7 +11,7 @@ class User(Model):
     __tablename__ = "users"
 
     email = Column(String(150), nullable=True, unique=True)
-    password = Column(String(255), nullable=False)
+    password = Column(String(255), nullable=True)
     first_name = Column(String(150), nullable=True)
     last_name = Column(String(150), nullable=True)
     father_name = Column(String(150), nullable=True)

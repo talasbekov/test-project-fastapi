@@ -44,7 +44,7 @@ from .privelege_emergency import (PrivelegeEmergencyCreate, PrivelegeEmergencyRe
 from .personnal_reserve import (PersonnalReserveCreate, PersonnalReserveRead, PersonnalReserveUpdate)
 from .coolness import *
 from .user_stat import UserStatCreate, UserStatRead, UserStatUpdate
-from .auth import LoginForm, RegistrationForm
+from .auth import LoginForm, RegistrationForm, CandidateRegistrationForm
 from .staff_list import (StaffListCreate, StaffListRead, StaffListUpdate, StaffListUserCreate)
 from .service_id import (ServiceIDCreate, ServiceIDRead, ServiceIDUpdate)
 from .military_unit import (MilitaryUnitCreate, MilitaryUnitRead, MilitaryUnitUpdate)

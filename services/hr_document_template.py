@@ -48,4 +48,15 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
                 HrDocumentTemplate.name.ilike(f'%{name}%')
             ).offset(skip).limit(limit).all()
         return super().get_multi(db, skip, limit)
+
+    def get_all_archived(self, db: Session, skip: int, limit: int):
+        return (
+            db.query(self.model)
+            .filter(self.model.is_active == False)
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
+
+
 hr_document_template_service = HrDocumentTemplateService(HrDocumentTemplate)

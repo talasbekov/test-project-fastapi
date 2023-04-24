@@ -156,6 +156,22 @@ options = {
     }
 }
 
+type_of_histories = [
+    "staff_unit_history",
+    "rank_history",
+    "penalty_history",
+    "emergency_service_history",
+    "work_experience_history",
+    "secondment_history",
+    "name_change_history",
+    "attestation",
+    "service_characteristic_history",
+    "status_history",
+    "coolness_history",
+    "contract_history",
+    "badge_history"
+]
+
 
 def create_candidate_stage_info(candidate_id,
                                 candidate_stage_type_id):
@@ -342,6 +358,12 @@ def upgrade() -> None:
     position23_id = get_uuid()  # УСБ
     position24_id = get_uuid()  # Полиграфолог
     position25_id = get_uuid()  # Инструктор
+    position26_id = get_uuid()  # Умер
+    position27_id = get_uuid()  # В отставке
+    position28_id = get_uuid()  # В запасе
+    position29_id = get_uuid()  # Исключен из списков личного состава
+    position30_id = get_uuid()  # Откомандирован в другой гос. орган
+    position31_id = get_uuid()  # Погиб
 
     op.bulk_insert(
         Base.metadata.tables['positions'],
@@ -470,6 +492,36 @@ def upgrade() -> None:
             'id': position25_id,
             'name': 'Инструктор',
             'nameKZ': 'Инструктор',
+            'max_rank_id': None
+        }, {
+            'id': position26_id,
+            'name': "Умер",
+            'nameKZ': 'Өлі',
+            'max_rank_id': None
+        }, {
+            'id': position27_id,
+            'name': "В отставке",
+            'nameKZ': 'Зейнеткер',
+            'max_rank_id': None
+        }, {
+            'id': position28_id,
+            'name': "В запасе",
+            'nameKZ': 'Резервте',
+            'max_rank_id': None
+        }, {
+            'id': position29_id,
+            'name': "Исключен из списков личного состава",
+            'nameKZ': 'Кадрлар тізімінен шығарылған',
+            'max_rank_id': None
+        }, {
+            'id': position30_id,
+            'name': "Откомандирован в другой гос. орган",
+            'nameKZ': 'Басқа мемлекеттік органға жіберілді',
+            'max_rank_id': None
+        }, {
+            'id': position31_id,
+            'name': "Погиб",
+            'nameKZ': 'Қайтыс болды',
             'max_rank_id': None
         }]
     )
@@ -892,6 +944,12 @@ def upgrade() -> None:
     group5_id = get_uuid()
     group6_id = get_uuid()
     group7_id = get_uuid()
+    group8_id = get_uuid()
+    group9_id = get_uuid()
+    group10_id = get_uuid()
+    group11_id = get_uuid()
+    group12_id = get_uuid()
+    group13_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['staff_divisions'],
@@ -937,7 +995,44 @@ def upgrade() -> None:
             'name': "Кандидаты",
             'nameKZ': 'Кандидаттар',
             'is_combat_unit': False
-        }]
+        }, {
+            'parent_group_id': group6_id,
+            'id': group8_id,
+            'name': "Умер",
+            'nameKZ': 'Өлі',
+            'is_combat_unit': False
+        }, {
+            'parent_group_id': group6_id,
+            'id': group9_id,
+            'name': "В отставке",
+            'nameKZ': 'Зейнеткер',
+            'is_combat_unit': False
+        }, {
+            'parent_group_id': group6_id,
+            'id': group10_id,
+            'name': "В запасе",
+            'nameKZ': 'Резервте',
+            'is_combat_unit': False
+        }, {
+            'parent_group_id': group6_id,
+            'id': group11_id,
+            'name': "Исключен из списков личного состава",
+            'nameKZ': 'Кадрлар тізімінен шығарылған',
+            'is_combat_unit': False
+        },  {
+            'parent_group_id': group6_id,
+            'id': group12_id,
+            'name': "Откомандирован в другой гос. орган",
+            'nameKZ': 'Басқа мемлекеттік органға жіберілді',
+            'is_combat_unit': False
+        },  {
+            'parent_group_id': group6_id,
+            'id': group13_id,
+            'name': "Погиб",
+            'nameKZ': 'Қайтыс болды',
+            'is_combat_unit': False
+        },
+        ]
     )
 
     staff_unit1_id = get_uuid()
@@ -2237,8 +2332,7 @@ def upgrade() -> None:
             'nameKZ': 'Артиллерия',
         }
         ])
-            
-            
+
 
     type_army_equipment_model_id = get_uuid()
     type_army_equipment_model2_id = get_uuid()
@@ -2563,7 +2657,12 @@ def upgrade() -> None:
     status_type = get_uuid()
     status_type2 = get_uuid()
     status_type3 = get_uuid()
-    
+    status_type4 = get_uuid()
+    status_type5 = get_uuid()
+    status_type6 = get_uuid()
+    status_type7 = get_uuid()
+    status_type8 = get_uuid()
+
     op.bulk_insert(
         Base.metadata.tables['status_types'],
         [{
@@ -2578,8 +2677,33 @@ def upgrade() -> None:
         },
         {
             'id': status_type3,
-            'name': 'В запасе',
-            'nameKZ': 'Запаста'
+            'name': "Умер",
+            'nameKZ': 'Өлі'
+        },
+        {
+            'id': status_type4,
+            'name': "В отставке",
+            'nameKZ': 'Зейнеткер'
+        },
+        {
+            'id': status_type5,
+            'name': "В запасе",
+            'nameKZ': 'Резервте'
+        },
+        {
+            'id': status_type6,
+            'name': "Исключен из списков личного состава",
+            'nameKZ': 'Кадрлар тізімінен шығарылған'
+        },
+        {
+            'id': status_type7,
+            'name': "Откомандирован в другой гос. орган",
+            'nameKZ': 'Басқа мемлекеттік органға жіберілді'
+        },
+        {
+            'id': status_type8,
+            'name': "Погиб",
+            'nameKZ': 'Қайтыс болды'
         }
         ]
     )
@@ -2602,6 +2726,7 @@ def upgrade() -> None:
     status16_id = get_uuid()
     status17_id = get_uuid()
     status18_id = get_uuid()
+
     op.bulk_insert(
         Base.metadata.tables['statuses'],
         [{
@@ -2617,7 +2742,7 @@ def upgrade() -> None:
         {
             'id': status3_id,
             'user_id': user3_id,
-            'type_id': status_type3,
+            'type_id': status_type,
         },
         {
             'id': status4_id,
@@ -2689,10 +2814,10 @@ def upgrade() -> None:
             'user_id': user17_id,
             'type_id': status_type,
         },
-                    {
+        {
             'id': status18_id,
             'user_id': user18_id,
-            'type_id': status_type,
+            'type_id': status_type3,
         }
         ]
     )
@@ -2773,6 +2898,7 @@ def upgrade() -> None:
         },
         ]
     )
+
     history_id = get_uuid()
     history2_id = get_uuid()
     history3_id = get_uuid() 
@@ -2787,22 +2913,6 @@ def upgrade() -> None:
     history15_id = get_uuid()
     history16_id = get_uuid()
     history17_id = get_uuid()
-    
-    type_of_histories = [
-        "staff_unit_history",
-        "rank_history",
-        "penalty_history",
-        "emergency_service_history",
-        "work_experience_history",
-        "secondment_history",
-        "name_change_history",
-        "attestation",
-        "service_characteristic_history",
-        "status_history",
-        "coolness_history",
-        "contract_history",
-        "badge_history"
-    ]
 
     military_unit_id = get_uuid()
     military_unit2_id = get_uuid()
@@ -2827,6 +2937,7 @@ def upgrade() -> None:
         },
         ]
     )
+
     oauth_id = get_uuid()
 
     op.bulk_insert(
@@ -2962,68 +3073,68 @@ def upgrade() -> None:
             'date_credited': None,
             'emergency_rank_id': None,
         },
-        {
-            'id': history14_id,
-            'date_from': str(datetime.datetime(2019, 2, 1)),
-            'date_to': str(datetime.datetime(2019, 2, 28)),
-            'user_id': user1_id,
-            'document_link': 'https://www.google.com',
-            'document_number': '№ 59124',
-            'type': type_of_histories[3],
-            'rank_id': None,  # Add the missing parameter here
-            'name': '2 history',
-            'position_id': None,  # Add the missing parameter here
-            'penalty_id': None,  # Add the missing parameter here
-            'emergency_service_id': None,  # Add the missing parameter here
-            'work_experience_id': None,  # Add the missing parameter here
-            'secondment_id': None,  # Add the missing parameter here
-            'name_change_id': None,  # Add the missing parameter here
-            'attestation_id': None,  # Add the missing parameter here
-            'service_characteristic_id': None,  # Add the missing parameter here
-            'status_id': None,  # Add the missing parameter here
-            'coolness_id': None,  # Add the missing parameter here
-            'contract_id': None,  # Add the missing parameter here
-            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
-            'experience_years': None,  # Add the missing parameter here
-            'characteristic_initiator_id': None,  # Add the missing parameter here
-            'coefficient' : 1.5,
-            'percentage' : 10,
-            'staff_division_id' : group1_id,
-            'nabadge_id': None,
-            'id': history2_id,
-            'date_from': str(datetime.datetime(2019, 2, 1)),
-            'date_to': str(datetime.datetime(2019, 2, 28)),
-            'user_id': user1_id,
-            'document_link': 'https://www.google.com',
-            'document_number': '№ 59124',
-            'type': type_of_histories[1],
-            'rank_id': rank1_id,
-            'rank_assigned_by': "Кусманов А.С.",
-            'name': '2 history',
-            'position_id': None,  # Add the missing parameter here
-            'penalty_id': None,  # Add the missing parameter here
-            'emergency_service_id': None,  # Add the missing parameter here
-            'work_experience_id': None,  # Add the missing parameter here
-            'secondment_id': None,  # Add the missing parameter here
-            'name_change_id': None,  # Add the missing parameter here
-            'attestation_id': None,  # Add the missing parameter here
-            'service_characteristic_id': None,  # Add the missing parameter here
-            'status_id': None,  # Add the missing parameter here
-            'coolness_id': None,  # Add the missing parameter here
-            'contract_id': None,  # Add the missing parameter here
-            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
-            'experience_years': None,  # Add the missing parameter here
-            'characteristic_initiator_id': None,  # Add the missing parameter here
-            'coefficient' : None,
-            'percentage' : None,
-            'staff_division_id' : None,
-            'name_of_organization': None,
-            'badge_id' : None,
-            'is_credited': None,
-            'document_style': None,
-            'date_credited': None,
-            'emergency_rank_id': rank1_id
-        },
+        # {
+        #     'id': history14_id,
+        #     'date_from': str(datetime.datetime(2019, 2, 1)),
+        #     'date_to': str(datetime.datetime(2019, 2, 28)),
+        #     'user_id': user1_id,
+        #     'document_link': 'https://www.google.com',
+        #     'document_number': '№ 59124',
+        #     'type': type_of_histories[3],
+        #     'rank_id': None,  # Add the missing parameter here
+        #     'name': '2 history',
+        #     'position_id': None,  # Add the missing parameter here
+        #     'penalty_id': None,  # Add the missing parameter here
+        #     'emergency_service_id': None,  # Add the missing parameter here
+        #     'work_experience_id': None,  # Add the missing parameter here
+        #     'secondment_id': None,  # Add the missing parameter here
+        #     'name_change_id': None,  # Add the missing parameter here
+        #     'attestation_id': None,  # Add the missing parameter here
+        #     'service_characteristic_id': None,  # Add the missing parameter here
+        #     'status_id': None,  # Add the missing parameter here
+        #     'coolness_id': None,  # Add the missing parameter here
+        #     'contract_id': None,  # Add the missing parameter here
+        #     'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+        #     'experience_years': None,  # Add the missing parameter here
+        #     'characteristic_initiator_id': None,  # Add the missing parameter here
+        #     'coefficient' : 1.5,
+        #     'percentage' : 10,
+        #     'staff_division_id' : group1_id,
+        #     'nabadge_id': None,
+        #     'id': history2_id,
+        #     'date_from': str(datetime.datetime(2019, 2, 1)),
+        #     'date_to': str(datetime.datetime(2019, 2, 28)),
+        #     'user_id': user1_id,
+        #     'document_link': 'https://www.google.com',
+        #     'document_number': '№ 59124',
+        #     'type': type_of_histories[1],
+        #     'rank_id': rank1_id,
+        #     'rank_assigned_by': "Кусманов А.С.",
+        #     'name': '2 history',
+        #     'position_id': None,  # Add the missing parameter here
+        #     'penalty_id': None,  # Add the missing parameter here
+        #     'emergency_service_id': None,  # Add the missing parameter here
+        #     'work_experience_id': None,  # Add the missing parameter here
+        #     'secondment_id': None,  # Add the missing parameter here
+        #     'name_change_id': None,  # Add the missing parameter here
+        #     'attestation_id': None,  # Add the missing parameter here
+        #     'service_characteristic_id': None,  # Add the missing parameter here
+        #     'status_id': None,  # Add the missing parameter here
+        #     'coolness_id': None,  # Add the missing parameter here
+        #     'contract_id': None,  # Add the missing parameter here
+        #     'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+        #     'experience_years': None,  # Add the missing parameter here
+        #     'characteristic_initiator_id': None,  # Add the missing parameter here
+        #     'coefficient' : None,
+        #     'percentage' : None,
+        #     'staff_division_id' : None,
+        #     'name_of_organization': None,
+        #     'badge_id' : None,
+        #     'is_credited': None,
+        #     'document_style': None,
+        #     'date_credited': None,
+        #     'emergency_rank_id': rank1_id
+        # },
             {
             'id': history3_id,
             'date_from': datetime.datetime(2019, 3, 1),
@@ -4253,14 +4364,57 @@ def create_user(id,
             'phone_number': '+7 (777) 123-47-89',
             'rank_id': rank_id,
             'actual_staff_unit_id': actual_staff_unit_id,
-            'status': "На работе",
             'icon': icon,
             'service_phone_number': "679-258",
             'personal_id': number,
             'is_military': is_military,
             'cabinet': cabinet,
+            'address': "г. Астана, ул. Мангилик ел 54, кв. 15",
+            'date_birth': "1990-01-01",
+            'iin': "123456789012",
             'is_active': is_active,
         }]
+    )
+
+    rank_history_id = get_uuid()
+    op.bulk_insert(
+        Base.metadata.tables['histories'],
+        [
+            {
+                'id': rank_history_id,
+                'date_from': str(datetime.datetime(2019, 2, 1)),
+                'date_to': None,
+                'user_id': id,
+                'document_link': 'https://www.google.com',
+                'document_number': '№ 59124',
+                'type': type_of_histories[1],
+                'rank_id': rank_id,
+                'rank_assigned_by': "Кусманов А.С.",
+                'position_id': None,  # Add the missing parameter here
+                'penalty_id': None,  # Add the missing parameter here
+                'emergency_service_id': None,  # Add the missing parameter here
+                'work_experience_id': None,  # Add the missing parameter here
+                'secondment_id': None,  # Add the missing parameter here
+                'name_change_id': None,  # Add the missing parameter here
+                'attestation_id': None,  # Add the missing parameter here
+                'service_characteristic_id': None,  # Add the missing parameter here
+                'status_id': None,  # Add the missing parameter here
+                'coolness_id': None,  # Add the missing parameter here
+                'contract_id': None,  # Add the missing parameter here
+                'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+                'experience_years': None,  # Add the missing parameter here
+                'characteristic_initiator_id': None,  # Add the missing parameter here
+                'coefficient' : None,
+                'percentage' : None,
+                'staff_division_id' : None,
+                'name_of_organization': None,
+                'badge_id' : None,
+                'is_credited': None,
+                'document_style': None,
+                'date_credited': None,
+                'emergency_rank_id': None
+            }
+        ]
     )
 
     profile_id = get_uuid()

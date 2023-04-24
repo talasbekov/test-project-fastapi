@@ -4,7 +4,7 @@ from sqlalchemy import Column, Enum, String
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.orm import relationship
 
-from models import NamedModel
+from models import NamedModel, isActiveModel
 
 
 class LanguageEnum(str, enum.Enum):
@@ -19,7 +19,7 @@ class SubjectType(enum.IntEnum):
     STAFF = 4
 
 
-class HrDocumentTemplate(NamedModel):
+class HrDocumentTemplate(NamedModel, isActiveModel):
     __tablename__ = "hr_document_templates"
 
     path = Column(String(255))

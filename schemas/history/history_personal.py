@@ -56,7 +56,7 @@ class AttestationReadHistory(BaseModel):
         arbitrary_types_allowed = True
 
     @classmethod
-    def from_orm(cls, orm_obj): 
+    def from_orm(cls, orm_obj):
         return cls(
             name=orm_obj.attestation_history.attestation_status,
         )

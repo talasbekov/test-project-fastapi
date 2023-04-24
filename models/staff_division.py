@@ -10,6 +10,12 @@ from models import NamedNestedModel
 class StaffDivisionEnum(str, enum.Enum):
     SPECIAL_GROUP = "Особая группа"
     CANDIDATES = "Кандидаты"
+    DEAD = "Умер"
+    RETIRED = "В отставке"
+    IN_RESERVE = "В запасе"
+    REMOVED_FROM_LIST = "Исключен из списков личного состава"
+    SECONDMENT_OTHER = "Откомандирован в другой гос. орган"
+    PERISHED = "Погиб"
 
 
 class StaffDivision(NamedNestedModel):

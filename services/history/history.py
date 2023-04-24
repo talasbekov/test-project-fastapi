@@ -7,7 +7,6 @@ from exceptions import NotFoundException, NotSupportedException
 from models import (
     History,
     RankHistory,
-    StaffUnitHistory,
     PenaltyHistory,
     ContractHistory,
     EmergencyServiceHistory,
@@ -58,7 +57,7 @@ from services import (privelege_emergency_service, coolness_service, badge_servi
 
 
 classes = {
-    StaffUnit: 'staff_unit_history',
+    StaffUnit: 'emergency_service_history',
     Rank: 'rank_history',
     Penalty: 'penalty_history',
     Contract: 'contract_history',
@@ -71,7 +70,6 @@ classes = {
 }
 
 options = {
-    'staff_unit_history': StaffUnitHistory,
     'rank_history': RankHistory,
     'penalty_history': PenaltyHistory,
     'contract_history': ContractHistory,
@@ -104,6 +102,7 @@ def finish_last(db: Session, user_id: str, type: str):
     last_history.date_to = datetime.now()
     db.add(last_history)
     db.flush()
+    return last_history
 
 
 class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
