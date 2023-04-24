@@ -1,6 +1,7 @@
 # Be careful of imports order is important!
 # Possible problems are circular imports, partial initialization of module
 from .base import ServiceBase
+from .position import position_service
 from .profile import *
 
 from .jurisdiction import jurisdiction_service

@@ -7,70 +7,46 @@ from models import (Candidate, CandidateStageInfo, StaffUnit, User,
                     CandidateStatusEnum, Position, CandidateStageType,
                     PositionNameEnum, CandidateStageInfoStatusEnum)
 from schemas import CandidateCreate, CandidateUpdate, CandidateRead, CandidateStageInfoCreate, UserCreate, CandidateEssayUpdate, CandidateEssayTypeCreate
-from services import ServiceBase, staff_unit_service, user_service
+from services import ServiceBase, staff_unit_service, user_service, position_service
 from .candidate_essay_type import candidate_essay_type_service
 from .candidate_stage_info import candidate_stage_info_service
 
 
 class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate]):
-    def get_multiple(self, db: Session, filter: str, user_id: str, role_id: str, skip: int = 0, limit: int = 100):
 
-        if self._check_by_role(db, role_id):
-            if filter is not None:
-                key_words = filter.lower().split()
-                log.info(key_words)
-                candidates = (
-                    db.query(self.model)
-                    .join(StaffUnit, self.model.staff_unit_id == StaffUnit.id)
-                    .join(User, User.staff_unit_id == StaffUnit.id)
-                    .filter(
-                        self.model.status == CandidateStatusEnum.ACTIVE.value,
-                        ((or_(*[func.lower(User.first_name).contains(name) for name in key_words])) |
-                        (or_(*[func.lower(User.last_name).contains(name) for name in key_words])) |
-                        (or_(*[func.lower(User.father_name).contains(name) for name in key_words])))
-                    )
-                    .order_by(self.model.id.asc())
-                    .offset(skip)
-                    .limit(limit)
-                    .all())
-            else:
-                candidates = db.query(self.model).filter(
-                    self.model.status == CandidateStatusEnum.ACTIVE.value
-                ).order_by(self.model.id.asc()).offset(skip).limit(limit).all()
-        else:
-            candidates = self._get_supervised_active_candidates(db, filter, user_id, skip, limit)
+    # This const variable stores the positions which have access to all candidates
+    ALL_CANDIDATE_VIEWERS = {
+        PositionNameEnum.PERSONNEL_HEAD.value,
+        PositionNameEnum.DEPUTY_PERSONNEL_HEAD.value,
+        PositionNameEnum.CANDIDATE_MANAGEMENT_HEAD.value,
+        PositionNameEnum.POLITICS_GOVERNMENT_SERVANT.value
+    }
 
-        candidates = [CandidateRead.from_orm(candidate).dict() for candidate in candidates]
-        for candidate in candidates:
-            self._validate_candidate(db, candidate)
-        return candidates
+    def get_multiple(self, db: Session,
+                     filter: str,
+                     user_id: str,
+                     role_id: str,
+                     skip: int = 0,
+                     limit: int = 100) -> CandidateRead:
 
-    def get_draft_candidates(self, db: Session, filter: str, user_id: str, role_id: str, skip: int = 0,
-                             limit: int = 100):
+        # If user hasn't permission to view all candidates, then return only supervised candidates
+        if not self._check_by_role(db, role_id):
+            return self._get_supervised_candidates(db, filter, user_id, skip, limit, CandidateStatusEnum.ACTIVE)
 
-        if self._check_by_role(db, role_id):
+        return self._get_candidates_by_status(db, filter, skip, limit, CandidateStatusEnum.ACTIVE)
 
-            if filter is not None:
-                candidates = db.query(self.model). \
-                    join(StaffUnit, self.model.staff_unit_id == StaffUnit.id). \
-                    join(User, User.staff_unit_id == StaffUnit.id). \
-                    filter(
-                    self.model.status == CandidateStatusEnum.DRAFT.value,
-                    or_(func.lower(User.first_name).contains(filter),
-                        func.lower(User.last_name).contains(filter),
-                        func.lower(User.father_name).contains(filter))
-                ).order_by(self.model.id.asc()).offset(skip).limit(limit).all()
-            else:
-                candidates = db.query(self.model).filter(
-                    self.model.status == CandidateStatusEnum.DRAFT.value,
-                ).order_by(self.model.id.asc()).offset(skip).limit(limit).all()
-        else:
-            candidates = self._get_supervised_draft_candidates(db, filter, user_id)
+    def get_draft_candidates(self, db: Session,
+                             filter: str,
+                             user_id: str,
+                             role_id: str,
+                             skip: int = 0,
+                             limit: int = 100) -> CandidateRead:
 
-        candidates = [CandidateRead.from_orm(candidate).dict() for candidate in candidates]
-        for candidate in candidates:
-            self._validate_candidate(db, candidate)
-        return candidates
+        # If user hasn't permission to view all candidates, then return only supervised draft candidates
+        if not self._check_by_role(db, role_id):
+            return self._get_supervised_candidates(db, filter, user_id, skip, limit, CandidateStatusEnum.DRAFT)
+
+        return self._get_candidates_by_status(db, filter, skip, limit, CandidateStatusEnum.DRAFT)
 
     def get_by_id(self, db: Session, id: str):
         candidate = super().get_by_id(db, id)
@@ -170,85 +146,13 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
 
         return candidate
 
+    # Check if user has permission to view all candidates
     def _check_by_role(self, db: Session, role_id: str) -> bool:
         staff_unit = staff_unit_service.get_by_id(db, role_id)
 
-        available_all = {
-            PositionNameEnum.PERSONNEL_HEAD.value,
-            PositionNameEnum.DEPUTY_PERSONNEL_HEAD.value,
-            PositionNameEnum.CANDIDATE_MANAGEMENT_HEAD.value,
-            PositionNameEnum.POLITICS_GOVERNMENT_SERVANT.value
-        }
+        available_all_roles = [position_service.get_by_name(db, name) for name in self.ALL_CANDIDATE_VIEWERS]
 
-        available_all_roles = []
-
-        for i in available_all:
-            available_all_roles.append(self._get_role_by_name(db, i))
-        
-        for i in available_all_roles:
-            if staff_unit.position_id == i:
-                return True
-
-        return False
-
-    def _get_role_by_name(self, db: Session, name: str):
-        role = db.query(Position).filter(
-            Position.name == name
-        ).first()
-
-        if role:
-            return role.id
-        else:
-            return None
-
-    def _get_supervised_active_candidates(self, db: Session, filter: str, user_id: str, skip: int = 0,
-                                          limit: int = 100):
-        user = user_service.get_by_id(db, user_id)
-
-        if filter is not None:
-            key_words = filter.lower().split()
-            return (
-                db.query(self.model)
-                .join(StaffUnit, self.model.staff_unit_id == StaffUnit.id)
-                .join(User, User.staff_unit_id == StaffUnit.id)
-                .filter(
-                    self.model.staff_unit_curator_id == user.actual_staff_unit_id,
-                    self.model.status == CandidateStatusEnum.ACTIVE.value,
-                    ((or_(*[func.lower(User.first_name).contains(name) for name in key_words])) |
-                    (or_(*[func.lower(User.last_name).contains(name) for name in key_words])) |
-                    (or_(*[func.lower(User.father_name).contains(name) for name in key_words])))
-                )
-                .order_by(self.model.id.asc())
-                .offset(skip)
-                .limit(limit)
-                .all()
-            )
-        else:
-            return db.query(self.model).filter(
-                self.model.staff_unit_curator_id == user.actual_staff_unit_id,
-                self.model.status == CandidateStatusEnum.ACTIVE.value
-            ).order_by(self.model.id.asc()).offset(skip).limit(limit).all()
-
-    def _get_supervised_draft_candidates(self, db: Session, filter: str, user_id: str, skip: int = 0, limit: int = 100):
-        user = user_service.get_by_id(db, user_id)
-
-        if filter is not None:
-            filter = filter.lower()
-            return db.query(self.model). \
-                join(StaffUnit, self.model.staff_unit_id == StaffUnit.id). \
-                join(User, User.staff_unit_id == StaffUnit.id). \
-                filter(
-                self.model.staff_unit_curator_id == user.actual_staff_unit_id,
-                self.model.status == CandidateStatusEnum.DRAFT.value,
-                or_(func.lower(User.first_name).contains(filter),
-                    func.lower(User.last_name).contains(filter),
-                    func.lower(User.father_name).contains(filter))
-            ).order_by(self.model.id.asc()).offset(skip).limit(limit).all()
-        else:
-            return db.query(self.model).filter(
-                self.model.staff_unit_curator_id == user.actual_staff_unit_id,
-                self.model.status == CandidateStatusEnum.DRAFT.value
-            ).order_by(self.model.id.asc()).offset(skip).limit(limit).all()
+        return any(staff_unit.position_id == i for i in available_all_roles)
 
     def _validate_candidate(self, db: Session, candidate):
         candidate_stage_info_count = db.query(CandidateStageType).count()
@@ -278,5 +182,81 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
         candidate_obj = super().get_by_id(db, candidate['id'])
         if candidate_obj.candidate_stage_answers:
             candidate['last_edit_date'] = candidate_obj.candidate_stage_answers[0].created_at
+
+    def _get_candidates_by_status(self, db: Session,
+                                  filter: str,
+                                  skip: int = 0,
+                                  limit: int = 100,
+                                  status: CandidateStatusEnum = None) -> CandidateRead:
+
+        if filter is not None:
+            return self._get_candidates_by_status_and_filter(db, filter, skip, limit, status)
+
+        return db.query(self.model).filter(
+            self.model.status == status.value
+        ).order_by(self.model.id.asc()).offset(skip).limit(limit).all()
+
+    def _get_candidates_by_status_and_filter(self, db: Session,
+                                             filter: str,
+                                             skip: int = 0,
+                                             limit: int = 100,
+                                             status: CandidateStatusEnum = None) -> CandidateRead:
+        key_words = filter.lower().split()
+
+        return (
+            db.query(self.model)
+            .join(StaffUnit, self.model.staff_unit_id == StaffUnit.id)
+            .join(User, User.staff_unit_id == StaffUnit.id)
+            .filter(
+                self.model.status == status.value,
+                ((or_(*[func.lower(User.first_name).contains(name) for name in key_words])) |
+                (or_(*[func.lower(User.last_name).contains(name) for name in key_words])) |
+                (or_(*[func.lower(User.father_name).contains(name) for name in key_words])))
+            )
+            .order_by(self.model.id.asc())
+            .offset(skip)
+            .limit(limit)
+            .all())
+
+    def _get_supervised_candidates(self, db: Session,
+                                   filter: str,
+                                   user_id: str,
+                                   skip: int = 0,
+                                   limit: int = 100,
+                                   status: CandidateStatusEnum = None) -> CandidateRead:
+        user = user_service.get_by_id(db, user_id)
+
+        if filter is not None:
+            return self._get_supervised_candidates_by_status_and_filter(db, filter, user, skip, limit, status)
+
+        return db.query(self.model).filter(
+            self.model.staff_unit_curator_id == user.actual_staff_unit_id,
+            self.model.status == status.value
+        ).order_by(self.model.id.asc()).offset(skip).limit(limit).all()
+
+    def _get_supervised_candidates_by_status_and_filter(self, db: Session,
+                                                        filter: str,
+                                                        user: User,
+                                                        skip: int = 0,
+                                                        limit: int = 100,
+                                                        status: CandidateStatusEnum = None) -> CandidateRead:
+        key_words = filter.lower().split()
+
+        return (
+            db.query(self.model)
+            .join(StaffUnit, self.model.staff_unit_id == StaffUnit.id)
+            .join(User, User.staff_unit_id == StaffUnit.id)
+            .filter(
+                self.model.staff_unit_curator_id == user.actual_staff_unit_id,
+                self.model.status == status.value,
+                ((or_(*[func.lower(User.first_name).contains(name) for name in key_words])) |
+                (or_(*[func.lower(User.last_name).contains(name) for name in key_words])) |
+                (or_(*[func.lower(User.father_name).contains(name) for name in key_words])))
+            )
+            .order_by(self.model.id.asc())
+            .offset(skip)
+            .limit(limit)
+            .all())
+
 
 candidate_service = CandidateService(Candidate)  # type: ignore
