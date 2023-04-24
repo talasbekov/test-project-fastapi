@@ -149,3 +149,13 @@ async def delete(*,
     """
     Authorize.jwt_required()
     hr_document_template_service.remove(db, id)
+
+
+@router.get('/duplicate/{id}', status_code=status.HTTP_201_CREATED)
+async def duplicate(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    hr_document_template_service.duplicate(db, id)

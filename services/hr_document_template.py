@@ -3,9 +3,15 @@ import uuid
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
-from models import HrDocumentTemplate, HrDocumentStep, DocumentStaffFunction, User
-from schemas import HrDocumentTemplateCreate, HrDocumentTemplateUpdate
+from models import HrDocumentTemplate, HrDocumentStep, DocumentStaffFunction, User, StaffUnit
+from schemas import (
+    HrDocumentTemplateCreate,
+    HrDocumentTemplateUpdate,
+    DocumentStaffFunctionCreate,
+    HrDocumentStepCreate,
+)
 from .base import ServiceBase
+from services import hr_document_step_service, document_staff_function_service
 
 """
 {
@@ -57,6 +63,42 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
             .limit(limit)
             .all()
         )
+
+    def duplicate(self, db: Session, id: str):
+        template = self.get_by_id(db, id)
+        new_template = HrDocumentTemplate(
+            path=template.path,
+            pathKZ=template.pathKZ,
+            subject_type=template.subject_type,
+            properties=template.properties,
+            description=template.description,
+            actions=template.actions,
+        )
+        steps = hr_document_step_service.get_all_by_document_template_id(db, template.id)
+        for step in steps:
+            staff_function: DocumentStaffFunction = step.staff_function
+            new_staff_function = document_staff_function_service.create(
+                db,
+                DocumentStaffFunctionCreate(
+                    name=staff_function.name,
+                    nameKZ=staff_function.nameKZ,
+                    hours_per_week=staff_function.hours_per_week,
+                    priority=staff_function.priority,
+                    role_id=staff_function.role_id,
+                    jurisdiction_id=staff_function.jurisdiction_id,
+                )
+            )
+            new_staff_function.staff_units = staff_function.staff_units
+            new_step = hr_document_step_service.create(
+                db,
+                HrDocumentStepCreate(
+                    hr_document_template_id=new_template.id,
+                    staff_function_id=new_staff_function.id,
+                )
+            )
+            db.add(new_staff_function)
+        db.add(new_template)
+        return new_template
 
 
 hr_document_template_service = HrDocumentTemplateService(HrDocumentTemplate)

@@ -57,3 +57,13 @@ async def convert_docx_to_html(*,
 ):
     Authorize.jwt_required()
     return render_service.convert_docx_to_xml_to_html()
+
+
+@router.post('/convert/pdf')
+async def convert_html_to_pdf(*,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends(),
+    body: HTML
+):
+    Authorize.jwt_required()
+    return render_service.convert_html_to_pdf(body.html)

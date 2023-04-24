@@ -3,6 +3,7 @@ import urllib.parse
 import urllib.request
 import datetime
 
+import pdfkit
 import docx2python
 from docx import Document
 import lxml.etree as etree
@@ -11,6 +12,8 @@ from bs4 import BeautifulSoup
 from docxtpl import DocxTemplate
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
+
+from core import wkhtmltopdf_path
 
 
 from core import jinja_env
@@ -319,6 +322,20 @@ class RenderService:
 
         return FileResponse(
             path=file_name,
+        )
+
+    def convert_html_to_pdf(self, html: str):
+        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+            file_name = temp_file.name + ".pdf"
+            options = {
+                'encoding': 'UTF-8',
+                'enable-local-file-access': True
+            }
+            pdfkit.from_string(html, file_name, options=options, configuration=pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path))
+
+        return FileResponse(
+            path=file_name,
+            filename='result.pdf',
         )
 
 
