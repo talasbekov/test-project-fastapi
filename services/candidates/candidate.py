@@ -204,15 +204,7 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
         key_words = filter.lower().split()
 
         return (
-            db.query(self.model)
-            .join(StaffUnit, self.model.staff_unit_id == StaffUnit.id)
-            .join(User, User.staff_unit_id == StaffUnit.id)
-            .filter(
-                self.model.status == status.value,
-                ((or_(*[func.lower(User.first_name).contains(name) for name in key_words])) |
-                (or_(*[func.lower(User.last_name).contains(name) for name in key_words])) |
-                (or_(*[func.lower(User.father_name).contains(name) for name in key_words])))
-            )
+            self.query_candidates(db, status, key_words)
             .order_by(self.model.id.asc())
             .offset(skip)
             .limit(limit)
@@ -243,20 +235,25 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
         key_words = filter.lower().split()
 
         return (
+            self.query_candidates(db, status, key_words)
+            .filter(user.actual_staff_unit_id == self.model.staff_unit_curator_id)
+            .order_by(self.model.id.asc())
+            .offset(skip)
+            .limit(limit)
+            .all())
+    
+    def query_candidates(self, db: Session, status: CandidateStatusEnum, key_words: list[str]):
+        return (
             db.query(self.model)
             .join(StaffUnit, self.model.staff_unit_id == StaffUnit.id)
             .join(User, User.staff_unit_id == StaffUnit.id)
             .filter(
-                self.model.staff_unit_curator_id == user.actual_staff_unit_id,
                 self.model.status == status.value,
                 ((or_(*[func.lower(User.first_name).contains(name) for name in key_words])) |
                 (or_(*[func.lower(User.last_name).contains(name) for name in key_words])) |
                 (or_(*[func.lower(User.father_name).contains(name) for name in key_words])))
             )
-            .order_by(self.model.id.asc())
-            .offset(skip)
-            .limit(limit)
-            .all())
+        )
 
 
 candidate_service = CandidateService(Candidate)  # type: ignore

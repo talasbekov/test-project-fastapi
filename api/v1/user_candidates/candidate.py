@@ -21,7 +21,7 @@ async def get_all(
         skip: int = 0,
         limit: int = 100,
         Authorize: AuthJWT = Depends(),
-        filter: str = None
+        filter: str = ""
 ):
     """
         Get all Candidates.
@@ -43,7 +43,7 @@ async def get_all_draft_candidates(
         skip: int = 0,
         limit: int = 100,
         Authorize: AuthJWT = Depends(),
-        filter: str = None
+        filter: str = ""
 ):
     """
         Get all Draft Candidates.
