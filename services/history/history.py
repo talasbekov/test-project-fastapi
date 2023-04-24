@@ -309,17 +309,27 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
 
 
     def get_all_personal(self, db: Session, user_id: uuid.UUID, date_from, skip: int = 0, limit: int = 100):
-        start_date = date_from.replace(day=1)
-        next_month = date_from.replace(day=28) + timedelta(days=4)
-        end_date = next_month - timedelta(days=next_month.day)
-        histories = (
-            db.query(self.model)
-            .filter(self.model.user_id == user_id, self.model.date_from >= start_date, self.model.date_from <= end_date)
-            .order_by(self.model.date_from.desc(), self.model.id.asc())  # add secondary sort order
-            .offset(skip)
-            .limit(limit)
-            .all()
-        ) 
+        if date_from is None:
+            histories = (
+                db.query(self.model)
+                .filter(self.model.user_id == user_id)
+                .order_by(self.model.date_from.desc(), self.model.id.asc())  # add secondary sort order
+                .offset(skip)
+                .limit(limit)
+                .all()
+            )
+        else:
+            start_date = date_from.replace(day=1)
+            next_month = date_from.replace(day=28) + timedelta(days=4)
+            end_date = next_month - timedelta(days=next_month.day)
+            histories = (
+                db.query(self.model)
+                .filter(self.model.user_id == user_id, self.model.date_from >= start_date, self.model.date_from <= end_date)
+                .order_by(self.model.date_from.desc(), self.model.id.asc())  # add secondary sort order
+                .offset(skip)
+                .limit(limit)
+                .all()
+            )
         lis_of_histories = []
         for history in histories:
             type_cls = self.get_type_by_user_id(db, user_id, history.type)

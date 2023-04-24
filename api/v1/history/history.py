@@ -53,7 +53,7 @@ async def get_all_personal(*,
     db: Session = Depends(get_db),
     user_id: uuid.UUID,
     Authorize: AuthJWT = Depends(),
-    date_from: datetime.date = datetime.date.today(),
+    date_from: datetime.date = None,
     skip: int = 0,
     limit: int = 10
 ):
