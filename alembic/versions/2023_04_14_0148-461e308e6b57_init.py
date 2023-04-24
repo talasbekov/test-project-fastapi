@@ -452,7 +452,6 @@ def upgrade() -> None:
     sa.UniqueConstraint('call_sign'),
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('id_number'),
-    sa.Column('is_active', sa.Boolean(), nullable=False)
     )
     op.create_table('archive_staff_functions',
     sa.Column('hours_per_week', sa.Integer(), nullable=True),
