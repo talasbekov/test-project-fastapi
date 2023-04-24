@@ -1,3 +1,4 @@
+import datetime
 import uuid
 from typing import List
 
@@ -52,6 +53,7 @@ async def get_all_personal(*,
     db: Session = Depends(get_db),
     user_id: uuid.UUID,
     Authorize: AuthJWT = Depends(),
+    date_from: datetime.date = datetime.date.today(),
     skip: int = 0,
     limit: int = 10
 ):
@@ -59,9 +61,10 @@ async def get_all_personal(*,
         Get all Histories by user id
 
         - **user_id**: UUID - required
+        - **date_from**: date - format (YYYY-MM). This parameter is optional.
     """
     Authorize.jwt_required()
-    return history_service.get_all_personal(db, user_id, skip, limit)
+    return history_service.get_all_personal(db, user_id, date_from, skip, limit)
 
 
 @router.get("/{user_id}", dependencies=[Depends(HTTPBearer())],

@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from sqlalchemy.orm import Session
 
@@ -308,10 +308,13 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         return history
 
 
-    def get_all_personal(self, db: Session, user_id: uuid.UUID, skip: int = 0, limit: int = 100):
+    def get_all_personal(self, db: Session, user_id: uuid.UUID, date_from, skip: int = 0, limit: int = 100):
+        start_date = date_from.replace(day=1)
+        next_month = date_from.replace(day=28) + timedelta(days=4)
+        end_date = next_month - timedelta(days=next_month.day)
         histories = (
             db.query(self.model)
-            .filter(self.model.user_id == user_id)
+            .filter(self.model.user_id == user_id, self.model.date_from >= start_date, self.model.date_from <= end_date)
             .order_by(self.model.date_from.desc(), self.model.id.asc())  # add secondary sort order
             .offset(skip)
             .limit(limit)
