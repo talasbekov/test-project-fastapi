@@ -80,8 +80,8 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
             new_staff_function = document_staff_function_service.create(
                 db,
                 DocumentStaffFunctionCreate(
-                    name=staff_function.name,
-                    nameKZ=staff_function.nameKZ,
+                    name=staff_function.name + " (Копия)",
+                    nameKZ=staff_function.nameKZ  + " (Копия)",
                     hours_per_week=staff_function.hours_per_week,
                     priority=staff_function.priority,
                     role_id=staff_function.role_id,
