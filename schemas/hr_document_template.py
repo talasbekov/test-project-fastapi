@@ -13,6 +13,7 @@ class HrDocumentTemplateBase(NamedModel):
     pathKZ: str
     subject_type: SubjectType
     properties: Dict[str, dict]
+    description: Optional[str]
     actions: Dict[str, list]
 
     _check_properties = validator('properties', allow_reuse=True)(hr_document_templates_properties_validator)

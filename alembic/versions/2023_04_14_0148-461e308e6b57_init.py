@@ -432,6 +432,7 @@ def upgrade() -> None:
     sa.Column('rank_id', sa.UUID(), nullable=True),
     sa.Column('staff_unit_id', sa.UUID(), nullable=False),
     sa.Column('actual_staff_unit_id', sa.UUID(), nullable=False),
+    sa.Column('is_active', sa.Boolean(), nullable=False),
     sa.Column('supervised_by', sa.UUID(), nullable=True),
     sa.Column('description', sa.TEXT(), nullable=True),
     sa.Column('cabinet', sa.String(length=255), nullable=True),

@@ -7,7 +7,8 @@ from sqlalchemy.orm import Session
 from exceptions.client import NotFoundException
 from models import DocumentStaffFunction, HrDocumentStep, User, StaffUnit
 from schemas import (DocumentStaffFunctionAdd, DocumentStaffFunctionCreate,
-                     DocumentStaffFunctionUpdate, DocumentStaffFunctionConstructorAdd)
+                     DocumentStaffFunctionUpdate, DocumentStaffFunctionConstructorAdd,
+                     DocumentStaffFunctionAppendToStaffUnit)
 from .base import ServiceBase
 
 
@@ -84,6 +85,18 @@ class DocumentStaffFunctionService(ServiceBase[DocumentStaffFunction, DocumentSt
         db.add(staff_unit)
         db.flush()
         return res
+
+    def get_staff_units_by_id(self, db: Session, id: uuid.UUID):
+        staff_function = self.get_by_id(db, id)
+        return [i.id for i in staff_function.staff_units]
+
+    def append_to_staff_unit(self, db: Session, body: DocumentStaffFunctionAppendToStaffUnit):
+        staff_function = self.get_by_id(db, body.staff_function_id)
+        staff_units = db.query(StaffUnit).filter(StaffUnit.id.in_(body.staff_unit_ids)).all()
+        for i in staff_units:
+            i.staff_functions.append(staff_function)
+            db.add(i)
+        db.flush()
 
 
 document_staff_function_service = DocumentStaffFunctionService(DocumentStaffFunction)

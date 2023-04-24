@@ -509,10 +509,15 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             context["signed_at"] = document.signed_at.strftime("%Y-%m-%d")
 
         ans = template.render(context)
+        
+        opts = {
+            'encoding': 'UTF-8',
+            'enable-local-file-access': True
+        }
 
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
             file_name = temp_file.name + ".pdf"
-            pdfkit.from_string(ans, file_name, options=options, configuration=pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path))
+            pdfkit.from_string(ans, file_name, options=opts, configuration=pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path))
 
         return FileResponse(
             path=file_name,

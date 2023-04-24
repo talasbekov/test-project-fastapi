@@ -8,7 +8,8 @@ from sqlalchemy.orm import Session
 
 from core import get_db
 from schemas import (DocumentStaffFunctionAdd, DocumentStaffFunctionRead,
-                     DocumentStaffFunctionUpdate, DocumentStaffFunctionConstructorAdd)
+                     DocumentStaffFunctionUpdate, DocumentStaffFunctionConstructorAdd,
+                     DocumentStaffFunctionAppendToStaffUnit)
 from services import document_staff_function_service
 
 router = APIRouter(prefix="/document_staff_function", tags=["DocumentStaffFunction"], dependencies=[Depends(HTTPBearer())])
@@ -118,3 +119,23 @@ async def create_function_for_constructor(*,
 ):
     Authorize.jwt_required()
     return document_staff_function_service.create_function_for_constructor(db, body)
+
+
+@router.get('/staff_unit/{id}')
+async def get_staff_units_by_id(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    return document_staff_function_service.get_staff_units_by_id(db, id)
+
+
+@router.post('/append_to_staff_unit/', status_code=status.HTTP_201_CREATED)
+async def append_to_staff_unit(*,
+    db: Session = Depends(get_db),
+    body: DocumentStaffFunctionAppendToStaffUnit,
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    return document_staff_function_service.append_to_staff_unit(db, body)
