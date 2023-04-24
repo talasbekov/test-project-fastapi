@@ -3,11 +3,12 @@ from typing import List
 
 from fastapi import APIRouter, Depends
 from fastapi.security import HTTPBearer
+from fastapi.encoders import jsonable_encoder
 from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import FamilyStatusRead
+from schemas import FamilyStatusRead, PersonalProfileRead
 from services import family_status_service
 
 router = APIRouter(prefix="/family_status", tags=["FamilyStatus"], dependencies=[Depends(HTTPBearer())])
@@ -47,3 +48,18 @@ async def get_by_id(*,
     """
     Authorize.jwt_required()
     return family_status_service.get_by_id(db, id)
+
+@router.get('/user/{user_id}', dependencies=[Depends(HTTPBearer())],
+            response_model=FamilyStatusRead)
+async def get_profile_by_id(*,
+    db: Session = Depends(get_db),
+    user_id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):   
+    Authorize.jwt_required()
+    data = family_status_service.get_by_user_id(db, user_id)
+    
+    try:
+        return data.biographic_info.family_status
+    except:
+        return None
