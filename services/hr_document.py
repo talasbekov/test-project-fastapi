@@ -10,7 +10,7 @@ from typing import List
 from docxtpl import DocxTemplate
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
-from sqlalchemy import func, or_
+from sqlalchemy import func, or_, and_
 
 from core import Base, jinja_env, download_file_to_tempfile, wkhtmltopdf_path
 from exceptions import (
@@ -132,33 +132,28 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
     def get_initialized_documents(self, db: Session, user_id: uuid.UUID, filter: str, skip: int, limit: int):
         user = user_service.get_by_id(db, user_id)
-        if filter is not None:
-            key_words = filter.lower().split()
-            documents = (
-                db.query(self.model)
-                .join(self.model.hr_document_infos)
-                .join(HrDocumentStep)
-                .join(DocumentStaffFunction)
-                .filter(
-                    HrDocumentInfo.assigned_to_id == user_id,
-                    DocumentStaffFunction.priority == 1
+        key_words = filter.lower().split()
+        documents = (
+            db.query(self.model)
+            .join(self.model.hr_document_infos)
+            .join(HrDocumentStep)
+            .join(DocumentStaffFunction)
+            .filter(
+                HrDocumentInfo.assigned_to_id == user_id,
+                DocumentStaffFunction.priority == 1
+                )
+            .join(self.model.users)
+            .join(self.model.document_template)
+            .filter((or_(*[func.lower(User.first_name).contains(name) for name in key_words])) |
+                    (or_(*[func.lower(User.last_name).contains(name) for name in key_words])) |
+                    (or_(*[func.lower(User.father_name).contains(name) for name in key_words])) |
+                    (or_(*[func.lower(HrDocumentTemplate.name).contains(name) for name in key_words]))
                     )
-                .join(self.model.users)
-                .join(self.model.document_template)
-                .filter((or_(*[func.lower(User.first_name).contains(name) for name in key_words])) |
-                        (or_(*[func.lower(User.last_name).contains(name) for name in key_words])) |
-                        (or_(*[func.lower(User.father_name).contains(name) for name in key_words]) |
-                         (or_(*[func.lower(HrDocumentTemplate.name).contains(name) for name in key_words])))
-                        )
-                .order_by(self.model.due_date.asc())
-                .offset(skip)
-                .limit(limit)
-                .all()
-            )
-        else:
-            documents = [i.hr_document for i in
-                         hr_document_info_service.get_initialized_by_user_id(db, user_id, skip, limit)]
-
+            .order_by(self.model.due_date.asc())
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
         return self._return_correctly(db, documents, user)
 
     def get_not_signed_documents(
@@ -171,39 +166,25 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         staff_function_ids = [i.id for i in staff_unit.staff_functions]
 
         draft_status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.DRAFT.value)
-
-        if filter is not None:
-            key_words = filter.lower().split()
-
-            documents = (
-                db.query(self.model)
-                .filter(self.model.status_id != draft_status.id)
-                .join(HrDocumentStep)
-                .join(self.model.users)
-                .filter(
-                    HrDocumentStep.staff_function_id.in_(staff_function_ids) & (
-                            (or_(*[func.lower(User.first_name).contains(name) for name in key_words])) |
-                            (or_(*[func.lower(User.last_name).contains(name) for name in key_words])) |
-                            (or_(*[func.lower(User.father_name).contains(name) for name in key_words])) |
-                            (or_(*[func.lower(HrDocumentTemplate.name).contains(name) for name in key_words]))
-                    )
+        key_words = filter.lower().split()
+        documents = (
+            db.query(self.model)
+            .filter(self.model.status_id != draft_status.id)
+            .join(HrDocumentStep)
+            .join(self.model.users)
+            .filter(
+                HrDocumentStep.staff_function_id.in_(staff_function_ids) & (
+                        (or_(*[func.lower(User.first_name).contains(name) for name in key_words])) |
+                        (or_(*[func.lower(User.last_name).contains(name) for name in key_words])) |
+                        (or_(*[func.lower(User.father_name).contains(name) for name in key_words])) |
+                        (or_(*[func.lower(HrDocumentTemplate.name).contains(name) for name in key_words]))
                 )
-                .order_by(self.model.due_date.asc())
-                .offset(skip)
-                .limit(limit)
-                .all()
             )
-        else:
-            documents = (
-                db.query(self.model)
-                .filter(self.model.status_id != draft_status.id)
-                .join(HrDocumentStep)
-                .filter(HrDocumentStep.staff_function_id.in_(staff_function_ids))
-                .order_by(self.model.due_date.asc())
-                .offset(skip)
-                .limit(limit)
-                .all()
-            )
+            .order_by(self.model.due_date.asc())
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
 
         return self._return_correctly(db, documents, user)
 
@@ -324,7 +305,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         users = [v for _, v in body.document_step_users_ids.items()]
 
-        self._validate_document(db, body=body, role=role, step=step)
+        self._validate_document(db, body=body, role=role, step=step, users=body.user_ids)
         self._validate_document_for_steps(step=step, all_steps=all_steps, users=users)
 
         current_user = user_service.get_by_id(db, user_id)
@@ -546,7 +527,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 return [responses.get(option).from_orm(i) for i in service.get_by_id(db, id).children]
         return service.get_by_option(db, type, id, skip, limit)
 
-    def _validate_document(self, db: Session, body: HrDocumentInit, role: str, step: HrDocumentStep):
+    def _validate_document(self, db: Session, body: HrDocumentInit, role: str, step: HrDocumentStep, users: List[uuid.UUID]):
 
         staff_unit: StaffUnit = staff_unit_service.get_by_id(db, role)
 
@@ -555,8 +536,15 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 detail=f"Вы не можете инициализировать этот документ!"
             )
 
-        document_staff_function: DocumentStaffFunction = document_staff_function_service.get_by_id(db,
-                                                                                                   step.staff_function_id)
+        forbidden_users = self._exists_user_document_in_progress(db, body.hr_document_template_id, users)
+
+        if forbidden_users:
+            user_info_list = list(map(lambda user: f"{user.first_name} {user.last_name} {user.father_name}", forbidden_users))
+            raise ForbiddenException(
+                detail=f"Вы не можете инициализировать этот документ, для пользователей:{user_info_list} так как они уже имеют аналогичный документ в процессе"
+            )
+
+        document_staff_function: DocumentStaffFunction = document_staff_function_service.get_by_id(db, step.staff_function_id)
 
         if not self._check_jurisdiction(db, staff_unit, document_staff_function, body.user_ids):
             raise ForbiddenException(
@@ -571,6 +559,21 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             raise BadRequestException(
                 detail="Количество пользователей не соответствует количеству шагов!"
             )
+
+    def _exists_user_document_in_progress(self, db: Session, hr_document_template_id: uuid.UUID, user_ids: List[uuid.UUID]):
+        forbidden_statuses = hr_document_status_service.get_by_names(db, ["Завершен", "Отменен"])
+        return(
+            db.query(User)
+            .distinct(User.id)
+            .join(HrDocument.users)
+            .join(HrDocumentInfo, HrDocument.id == HrDocumentInfo.hr_document_id)
+            .filter(HrDocument.hr_document_template_id == hr_document_template_id,
+                    User.id.in_(user_ids),
+                    HrDocumentInfo.signed_by_id.is_(None),
+                    and_(*[HrDocument.status_id != status.id for status in forbidden_statuses])
+                    )
+            .all()
+        )
 
     def _finish_document(self, db: Session, document: HrDocument, users: List[User]):
         completed_status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.COMPLETED.value)

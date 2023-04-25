@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from sqlalchemy.orm import Session
 
@@ -19,5 +19,7 @@ class HrDocumentStatusService(ServiceBase[HrDocumentStatus, HrDocumentStatusCrea
     def get_by_name(self, db: Session, name: str) -> Optional[HrDocumentStatus]:
         return db.query(self.model).filter(self.model.name == name).first()
 
+    def get_by_names(self, db: Session, names: List[str]) -> List[HrDocumentStatus]:
+        return db.query(self.model).filter(self.model.name.in_(names)).all()
 
 hr_document_status_service = HrDocumentStatusService(HrDocumentStatus)

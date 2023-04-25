@@ -20,7 +20,7 @@ router = APIRouter(prefix="/hr-documents", tags=["HrDocuments"], dependencies=[D
 async def get_not_signed(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
-    filter: str = None,
+    filter: str = "",
     skip: int = 0,
     limit: int = 10,
 ):
@@ -41,7 +41,7 @@ async def get_not_signed(*,
 async def get_initialized(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
-    filter: str = None,
+    filter: str = "",
     skip: int = 0,
     limit: int = 10,
 ):
