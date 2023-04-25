@@ -52,6 +52,7 @@ class UserRead(UserBase, ReadModel):
     email: Optional[EmailStr]
     first_name: Optional[str]
     last_name: Optional[str]
+    last_signed_at: Optional[datetime.datetime]
     staff_unit_id: Optional[uuid.UUID]
     call_sign: Optional[str]
     id_number: Optional[str]

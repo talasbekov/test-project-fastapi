@@ -442,6 +442,7 @@ def upgrade() -> None:
     sa.Column('iin', sa.String(length=255), nullable=True),
     sa.Column('date_birth', sa.TIMESTAMP(timezone=True), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('last_signed_at', sa.TIMESTAMP(timezone=True), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['actual_staff_unit_id'], ['staff_units.id'], ),

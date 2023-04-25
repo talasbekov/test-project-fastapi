@@ -22,6 +22,7 @@ class User(Model):
     address = Column(String(255))
     rank_id = Column(
         UUID(as_uuid=True), ForeignKey("ranks.id"), nullable=True)
+    last_signed_at = Column(TIMESTAMP(timezone=True), nullable=True)
     
     staff_unit_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"), nullable=False)
     actual_staff_unit_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"), nullable=False)
