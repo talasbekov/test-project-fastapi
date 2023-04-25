@@ -1,7 +1,7 @@
 import random
 import string
 
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from fastapi import HTTPException, status
 from fastapi_jwt_auth import AuthJWT
@@ -31,6 +31,8 @@ class AuthService():
             raise BadRequestException(detail="Incorrect email or password!")
         if not verify_password(form.password, user.password):
             raise BadRequestException(detail='Incorrect email or password')
+
+        self._set_last_signed_at(db, user)
         
         access_token, refresh_token = self._generate_tokens(Authorize, user)
 
@@ -184,6 +186,12 @@ class AuthService():
         family_profile_service.create(db=db, obj_in=FamilyProfileCreate(
             profile_id=profile.id
         ))
+
+    def _set_last_signed_at(self, db: Session, user: User):
+        user.last_signed_at = datetime.now()
+
+        db.add(user)
+        db.flush()
 
 
 auth_service = AuthService()
