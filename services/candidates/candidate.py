@@ -204,7 +204,7 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
         key_words = filter.lower().split()
 
         return (
-            self.query_candidates(db, status, key_words)
+            self._query_candidates(db, status, key_words)
             .order_by(self.model.id.asc())
             .offset(skip)
             .limit(limit)
@@ -235,14 +235,14 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
         key_words = filter.lower().split()
 
         return (
-            self.query_candidates(db, status, key_words)
+            self._query_candidates(db, status, key_words)
             .filter(user.actual_staff_unit_id == self.model.staff_unit_curator_id)
             .order_by(self.model.id.asc())
             .offset(skip)
             .limit(limit)
             .all())
     
-    def query_candidates(self, db: Session, status: CandidateStatusEnum, key_words: list[str]):
+    def _query_candidates(self, db: Session, status: CandidateStatusEnum, key_words: list[str]):
         return (
             db.query(self.model)
             .join(StaffUnit, self.model.staff_unit_id == StaffUnit.id)

@@ -9,36 +9,29 @@ from models import (CandidateStageInfo, Candidate, StaffUnit, User,
                     CandidateStageInfoStatusEnum, PositionNameEnum, Position, CandidateStageType)
 from schemas import (CandidateStageInfoRead, CandidateStageInfoCreate, CandidateStageInfoUpdate,
                      CandidateStageInfoSendToApproval)
-from services import ServiceBase, staff_unit_service
+from services import ServiceBase, staff_unit_service, position_service
 from .candidate_stage_type import candidate_stage_type_service
 
 
 class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageInfoCreate, CandidateStageInfoUpdate]):
 
-    def get_all_by_staff_unit_id(self, db: Session, filter: str, skip: int, limit: int, staff_unit_id: str):
+    def get_all_by_staff_unit_id(self, db: Session, filter: str, skip: int, limit: int, staff_unit_id: str) -> CandidateStageInfoRead:
 
-        if filter is not None:
-            filter = filter.lower()
-            candidates = db.query(CandidateStageInfo). \
-                join(Candidate, self.model.candidate_id == Candidate.id). \
-                join(StaffUnit, Candidate.staff_unit_id == StaffUnit.id). \
-                join(User, User.staff_unit_id == StaffUnit.id). \
-                filter(
-                CandidateStageInfo.staff_unit_coordinate_id == staff_unit_id,
-                CandidateStageInfo.is_waits == True,
-                or_(func.lower(User.first_name).contains(filter),
-                    func.lower(User.last_name).contains(filter),
-                    func.lower(User.father_name).contains(filter))
-            ).order_by(self.model.id.asc()).offset(skip).limit(limit).all()
-        else:
-            candidates = db.query(CandidateStageInfo).filter(
+        if filter is None:
+            return db.query(CandidateStageInfo).filter(
                 CandidateStageInfo.staff_unit_coordinate_id == staff_unit_id,
                 CandidateStageInfo.is_waits == True
             ).order_by(self.model.id.asc()).offset(skip).limit(limit).all()
 
-        candidates = [CandidateStageInfoRead.from_orm(candidate).dict() for candidate in candidates]
+        key_words = filter.lower().split()
 
-        return candidates
+        return (
+            self._query_candidate_stage_infos(db, staff_unit_id, key_words)
+            .order_by(self.model.id.asc())
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
 
     def get_all_by_candidate_id(self, db: Session, skip: int, limit: int, candidate_id: str, role: str):
         candidate_stage_infos = db.query(CandidateStageInfo).filter(
@@ -147,26 +140,6 @@ class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageIn
                 detail=f"У вас нет доступа к информации о стадии кандидата для CandidateStageInfo with id: {candidate_stage_info.id}!"
             )
 
-    def _get_role_by_name(self, db: Session, name: str) -> Position:
-        role = db.query(Position).filter(
-            Position.name == name
-        ).first()
-
-        if role:
-            return role
-        else:
-            return None
-
-    def _get_role_by_id(self, db: Session, id: str) -> Position:
-        role = db.query(Position).filter(
-            Position.id == id
-        ).first()
-
-        if role:
-            return role
-        else:
-            return None
-
     def _send_to_multiple_approval(self, db: Session, candidate_stage_info: CandidateStageInfo, candidate) -> CandidateStageInfo:
         candidate_stage_type = db.query(CandidateStageType).filter(
             CandidateStageType.id == candidate_stage_info.candidate_stage_type_id
@@ -175,9 +148,9 @@ class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageIn
         position = None
 
         if candidate_stage_type.name == 'Результаты полиграфологического исследования':
-            position = self._get_role_by_name(db, PositionNameEnum.POLYGRAPH_EXAMINER.value)
+            position = position_service.get_by_name(db, PositionNameEnum.POLYGRAPH_EXAMINER.value)
         if candidate_stage_type.name == 'Результаты физической подготовки':
-            position = self._get_role_by_name(db, PositionNameEnum.INSTRUCTOR.value)
+            position = position_service.get_by_name(db, PositionNameEnum.INSTRUCTOR.value)
 
             if candidate.attempt_number >= 2:
                 raise BadRequestException(
@@ -206,7 +179,7 @@ class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageIn
 
             return candidate_stage_info
 
-        position = self._get_role_by_id(db, current_user_staff_unit.position_id)
+        position = position_service.get_by_id(db, current_user_staff_unit.position_id)
 
         candidate_stage_type = candidate_stage_type_service.get_by_id(db, candidate_stage_info['candidate_stage_type_id'])
 
@@ -225,6 +198,21 @@ class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageIn
                 candidate_stage_info['access'] = True
             else:
                 candidate_stage_info['access'] = False
+
+    def _query_candidate_stage_infos(self, db: Session, staff_unit_id: str, key_words: list[str]):
+        return (
+            db.query(CandidateStageInfo)
+            .join(Candidate, self.model.candidate_id == Candidate.id)
+            .join(StaffUnit, Candidate.staff_unit_id == StaffUnit.id)
+            .join(User, User.staff_unit_id == StaffUnit.id)
+            .filter(
+                CandidateStageInfo.staff_unit_coordinate_id == staff_unit_id,
+                CandidateStageInfo.is_waits == True,
+                ((or_(*[func.lower(User.first_name).contains(name) for name in key_words])) |
+                 (or_(*[func.lower(User.last_name).contains(name) for name in key_words])) |
+                 (or_(*[func.lower(User.father_name).contains(name) for name in key_words])))
+            )
+        )
 
 
 candidate_stage_info_service = CandidateStageInfoService(CandidateStageInfo)  # type: ignore
