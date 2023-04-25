@@ -9,6 +9,7 @@ from services import auth_service
 
 router = APIRouter(prefix="/auth", tags=["Authorization"])
 
+
 @router.post("/login", summary="Login")
 async def login(form: LoginForm, db: Session = Depends(get_db), Authorize: AuthJWT = Depends()):
     """
