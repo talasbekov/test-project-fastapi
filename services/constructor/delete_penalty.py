@@ -34,5 +34,15 @@ class DeletePenaltyHandler(BaseHandler):
         db.add(document)
         db.flush()
 
+    def handle_validation(
+        self,
+        db: Session,
+        user: User,
+        action: dict,
+        template_props: dict,
+        props: dict,
+        document: HrDocument,
+    ):
+        pass
 
 handler = DeletePenaltyHandler()

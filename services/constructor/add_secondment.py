@@ -39,5 +39,15 @@ class AddSecondmentHandler(BaseHandler):
 
         return user
 
+    def handle_validation(
+        self,
+        db: Session,
+        user: User,
+        action: dict,
+        template_props: dict,
+        props: dict,
+        document: HrDocument,
+    ):
+        pass
 
 handler = AddSecondmentHandler()

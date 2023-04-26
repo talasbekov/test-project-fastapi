@@ -33,10 +33,7 @@ class RenewContractHandler(BaseHandler):
         document: HrDocument,
     ):
         tagname = action["contract"]["tagname"]
-        if not contract_service.exists_relation(db, user.id, props[tagname]["value"]):
-            raise ForbiddenException(
-                f"This user: {user.first_name}, {user.last_name}, doesn't have any contract"
-            )
+        self.handle_validation(db, user, action, template_props, props, document)
         contract_type = db.query(ContractType).filter(
             ContractType.id == props[tagname]["value"]
         )
@@ -65,6 +62,21 @@ class RenewContractHandler(BaseHandler):
         db.flush()
 
         return user
+    
+    def handle_validation(
+        self,
+        db: Session,
+        user: User,
+        action: dict,
+        template_props: dict,
+        props: dict,
+        document: HrDocument,
+    ):
+        tagname = action["contract"]["tagname"]
+        if not contract_service.exists_relation(db, user.id, props[tagname]["value"]):
+            raise ForbiddenException(
+                f"This user: {user.first_name}, {user.last_name}, doesn't have any contract"
+            )
 
 
 handler = RenewContractHandler()

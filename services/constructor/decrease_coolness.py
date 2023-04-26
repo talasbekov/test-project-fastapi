@@ -31,6 +31,32 @@ class DecreaseCoolnessHandler(BaseHandler):
     ):
         tagname = action["coolness"]["tagname"]
         coolness = coolness_service.get_by_id(db, props[tagname]["value"])
+
+        self.handle_validation(db, user, action, template_props, props, document)
+        user.coolnesses.append(coolness)
+        history = history_service.create_history(db, user.id, coolness)
+
+        history.document_link = configs.GENERATE_IP + str(document.id)
+        document.old_history_id = history.id
+
+        db.add(user)
+        db.add(history)
+        db.add(document)
+        db.flush()
+
+        return user
+    
+    def handle_validation(
+        self,
+        db: Session,
+        user: User,
+        action: dict,
+        template_props: dict,
+        props: dict,
+        document: HrDocument,
+    ):
+        tagname = action["coolness"]["tagname"]
+        coolness = coolness_service.get_by_id(db, props[tagname]["value"])
         coolness_type = coolness_service.get_object(db, coolness.type_id)
 
         history_last_coolness = get_last_by_user_id(db, user.id)
@@ -46,18 +72,6 @@ class DecreaseCoolnessHandler(BaseHandler):
             raise ForbiddenException(
                 detail=f"You can not decrease coolness to {coolness.name}"
             )
-        user.coolnesses.append(coolness)
-        history = history_service.create_history(db, user.id, coolness)
-
-        history.document_link = configs.GENERATE_IP + str(document.id)
-        document.old_history_id = history.id
-
-        db.add(user)
-        db.add(history)
-        db.add(document)
-        db.flush()
-
-        return user
 
 
 handler = DecreaseCoolnessHandler()

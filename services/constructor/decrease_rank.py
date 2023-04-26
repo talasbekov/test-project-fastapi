@@ -21,8 +21,7 @@ class DecreaseRankHandler(BaseHandler):
     ):
         tagname = action["rank"]["tagname"]
         rank = rank_service.get_by_id(db, props[tagname]["value"])
-        if user.rank.order <= rank.order:
-            raise ForbiddenException(detail=f"You can not decrease rank to {rank.name}")
+        self.handle_validation(db, user, action, template_props, props, document)
         user.rank = rank
         history = rank_service.find_last_history(db, user.id)
         res = history_service.create_history(db, user.id, rank)
@@ -34,6 +33,20 @@ class DecreaseRankHandler(BaseHandler):
         db.flush()
 
         return user
+    
+    def handle_validation(
+        self,
+        db: Session,
+        user: User,
+        action: dict,
+        template_props: dict,
+        props: dict,
+        document: HrDocument,
+    ):
+        tagname = action["rank"]["tagname"]
+        rank = rank_service.get_by_id(db, props[tagname]["value"])
+        if user.rank.order <= rank.order:
+            raise ForbiddenException(detail=f"You can not decrease rank to {rank.name}")
 
 
 handler = DecreaseRankHandler()

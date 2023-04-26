@@ -22,5 +22,15 @@ class StopStatusHandler(BaseHandler):
         res = status_service.stop_relation(db, user.id, props[status]["value"])
         res.cancel_document_link = configs.GENERATE_IP + str(document.id)
 
+    def handle_validation(
+        self,
+        db: Session,
+        user: User,
+        action: dict,
+        template_props: dict,
+        props: dict,
+        document: HrDocument,
+    ):
+        pass
 
 handler = StopStatusHandler()

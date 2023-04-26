@@ -22,10 +22,7 @@ class PositionChangeHandler(BaseHandler):
     ):
         position = action["staff_unit"]["tagname"]
 
-        if staff_unit_service.exists_relation(db, user.id, props[position]["value"]):
-            raise ForbiddenException(
-                f"This position is already assigned to this user: {user.first_name}, {user.last_name}"
-            )
+        self.handle_validation(db, user, action, template_props, props, document)
         old_history = staff_unit_service.get_last_history(db, user.id)
         if old_history is not None:
             document.old_history_id = old_history.id
@@ -43,5 +40,20 @@ class PositionChangeHandler(BaseHandler):
 
         return user
 
+    def handle_validation(
+        self,
+        db: Session,
+        user: User,
+        action: dict,
+        template_props: dict,
+        props: dict,
+        document: HrDocument,
+    ):
+        position = action["staff_unit"]["tagname"]
+
+        if staff_unit_service.exists_relation(db, user.id, props[position]["value"]):
+            raise ForbiddenException(
+                f"This position is already assigned to this user: {user.first_name}, {user.last_name}"
+            )
 
 handler = PositionChangeHandler()
