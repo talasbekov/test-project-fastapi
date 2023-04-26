@@ -195,11 +195,12 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         return self._return_correctly(db, documents, user)
 
     def get_draft_documents(self, db: Session, user_id: str, filter: str, skip: int = 0, limit: int = 100):
+        user = user_service.get_by_id(db, user_id)
         status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.DRAFT.value)
 
         key_words = filter.lower().split()
 
-        return (
+        documents = (
             db.query(self.model)
             .join(self.model.users)
             .filter(
@@ -217,6 +218,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             .limit(limit)
             .all()
         )
+        
+        return self._return_correctly(db, documents, user)
 
     def save_to_draft(self, db: Session, user_id: str, body: DraftHrDocumentCreate, role: str):
         template = hr_document_template_service.get_by_id(
