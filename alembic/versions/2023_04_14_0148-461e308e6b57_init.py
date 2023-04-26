@@ -135,23 +135,6 @@ def upgrade() -> None:
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('hr_document_templates',
-    sa.Column('path', sa.String(length=255), nullable=True),
-    sa.Column('pathKZ', sa.String(length=255), nullable=True),
-    sa.Column('subject_type', sa.Enum('CANDIDATE', 'EMPLOYEE', 'PERSONNEL', 'STAFF', name='subjecttype'), nullable=True),
-    sa.Column('properties', postgresql.JSON(none_as_null=True, astext_type=sa.Text()), nullable=True),
-    sa.Column('description', sa.TEXT(), nullable=True, default=''),
-    sa.Column('actions', postgresql.JSON(none_as_null=True, astext_type=sa.Text()), nullable=True),
-    sa.Column('name', sa.String(), nullable=False),
-    sa.Column('nameKZ', sa.String(), nullable=True),
-    sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('is_active', sa.Boolean(), nullable=False, default=True),
-    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('maintainer_id', sa.UUID(), nullable=True),
-    sa.ForeignKeyConstraint(['maintainer_id'], ['staff_units.id']),
-    sa.PrimaryKeyConstraint('id')
-    )
     op.create_table('institution_degree_types',
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('nameKZ', sa.String(), nullable=True),
@@ -292,6 +275,27 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['staff_division_id'], ['staff_divisions.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('hr_document_templates',
+                    sa.Column('path', sa.String(length=255), nullable=True),
+                    sa.Column('pathKZ', sa.String(length=255), nullable=True),
+                    sa.Column('subject_type',
+                              sa.Enum('CANDIDATE', 'EMPLOYEE', 'PERSONNEL', 'STAFF', name='subjecttype'),
+                              nullable=True),
+                    sa.Column('properties', postgresql.JSON(none_as_null=True, astext_type=sa.Text()), nullable=True),
+                    sa.Column('description', sa.TEXT(), nullable=True, default=''),
+                    sa.Column('actions', postgresql.JSON(none_as_null=True, astext_type=sa.Text()), nullable=True),
+                    sa.Column('name', sa.String(), nullable=False),
+                    sa.Column('nameKZ', sa.String(), nullable=True),
+                    sa.Column('id', sa.UUID(), nullable=False),
+                    sa.Column('is_active', sa.Boolean(), nullable=False, default=True),
+                    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+                              nullable=False),
+                    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
+                              nullable=False),
+                    sa.Column('maintainer_id', sa.UUID(), nullable=True),
+                    sa.ForeignKeyConstraint(['maintainer_id'], ['staff_units.id']),
+                    sa.PrimaryKeyConstraint('id')
+                    )
     op.create_foreign_key('staff_divisions_leader_id_fkey', 'staff_divisions', 'staff_units', ['leader_id'], ['id'])
     op.create_table('status_types',
     sa.Column('name', sa.String(), nullable=False),
