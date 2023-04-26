@@ -26,7 +26,6 @@ class ArchiveStaffUnitService(ServiceBase[ArchiveStaffUnit, ArchiveStaffUnitCrea
             if staff_function not in staff_unit.staff_functions:
                 staff_unit.staff_functions.append(staff_function)
 
-        print(staff_unit.staff_functions)
 
         db.add(staff_unit)
         db.flush()

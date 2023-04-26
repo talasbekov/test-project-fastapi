@@ -66,7 +66,6 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
                 User.staff_unit_id.in_(staff_units_ids)
             ).first()
             steps[str(function.priority)] = str(user.id)
-        print(steps)
         return steps
 
     def get_all_by_name(self, db: Session, name: str, skip: int, limit: int):
@@ -112,7 +111,6 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
                 actions=template.actions,
             )
         )
-        print(new_template.id)
         steps = hr_document_step_service.get_all_by_document_template_id(db, template.id)
         for step in steps:
             staff_function: DocumentStaffFunction = step.staff_function

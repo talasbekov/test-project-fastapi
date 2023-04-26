@@ -195,11 +195,12 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         return self._return_correctly(db, documents, user)
 
     def get_draft_documents(self, db: Session, user_id: str, filter: str, skip: int = 0, limit: int = 100):
+        user = user_service.get_by_id(db, user_id)
         status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.DRAFT.value)
 
         key_words = filter.lower().split()
 
-        return (
+        documents = (
             db.query(self.model)
             .join(self.model.users)
             .filter(
@@ -217,6 +218,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             .limit(limit)
             .all()
         )
+        
+        return self._return_correctly(db, documents, user)
 
     def save_to_draft(self, db: Session, user_id: str, body: DraftHrDocumentCreate, role: str):
         template = hr_document_template_service.get_by_id(
@@ -255,8 +258,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
     def initialize_draft_document(self, db: Session, body: DraftHrDocumentInit, document_id: str, user_id: str, role: str):
         document = hr_document_service.get_by_id(db, document_id)
-
-        print(document.hr_document_template_id)
 
         template = hr_document_template_service.get_by_id(
             db, document.hr_document_template_id
@@ -718,7 +719,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                         value["field_name"]
                     ).get(db, value["value"])
                 elif isinstance(attr, list):
-                    print(value["value"])
                     new_val[value["field_name"]] = self._get_service(
                         value["field_name"]
                     ).get_object(db, value["value"])
@@ -780,7 +780,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             if i.id not in s:
                 s.add(i.id)
                 subject = i.users[0]
-                # print(subject.id)
                 if self._check_for_department(db, user, subject):
                     l.append(self._to_response(db, i))
 

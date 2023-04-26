@@ -121,7 +121,6 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             badge = badge_service.get_by_id(db, obj_in.badge_id)
             if badge is None:
                 raise NotFoundException(detail=f'Badge with id: {obj_in.badge_id} not found!')
-        print(obj_in.dict(exclude_none=True))
         obj_db = cls(**obj_in.dict(exclude_none=True))
         db.add(obj_db)
         db.flush()
@@ -135,7 +134,6 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         return cls
 
     def get_all_by_user_id(self, db: Session, user_id: str):
-        print(1)
         user = user_service.get_by_id(db, user_id)
         general_information = self.get_general_information_by_user_id(db, user_id, user)        
         badges = db.query(BadgeHistory).filter(BadgeHistory.user_id == user_id).all()
@@ -231,19 +229,18 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         if black_beret:
             is_badge_black = True
 
-        personnal_reseive = personnal_reserve_service.get_by_user_id(db, user_id)
-        print(personnal_reseive)
-        if personnal_reseive is None:
-            personnal_reseive_read = None
+        personal_reserve = personnal_reserve_service.get_by_user_id(db, user_id)
+        if personal_reserve is None:
+            personal_reserve_read = None
         else:
-            personnal_reseive_read = PersonnalReserveRead(
-                date_from=personnal_reseive.date_from,
-                date_to=personnal_reseive.date_to,
-                id=personnal_reseive.id,
-                reserve=personnal_reseive.reserve,
-                user_id=personnal_reseive.user_id,
-                document_link=personnal_reseive.document_link,
-                document_number=personnal_reseive.document_number
+            personal_reserve_read = PersonnalReserveRead(
+                date_from=personal_reserve.date_from,
+                date_to=personal_reserve.date_to,
+                id=personal_reserve.id,
+                reserve=personal_reserve.reserve,
+                user_id=personal_reserve.user_id,
+                document_link=personal_reserve.document_link,
+                document_number=personal_reserve.document_number
             )
         recommender = recommender_user_service.get_by_user_id(db, user_id)
         if recommender:
@@ -254,7 +251,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         general_information_read = GeneralInformationRead(
             oath=user_oath_read,
             privilege_emergency_secrets=privelege_emergency_read,
-            personnel_reserve=personnal_reseive_read,
+            personnel_reserve=personal_reserve_read,
             coolness=coolness_read,
             is_badge_black=is_badge_black,
             researcher=user.last_name + ' ' + user.first_name[0] + '.' + user.father_name[0] + '.',
@@ -265,7 +262,6 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         return general_information_read
 
     def create_history(self, db: Session, user_id: uuid.UUID, object):
-        print(type(object))
         diff = classes.get(type(object))
         if diff is None:
             raise NotSupportedException(detail=f'Type: {diff} is not supported!')
@@ -282,7 +278,6 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         date_from: datetime,
         date_to: datetime,
     ):
-        print(type(object))
         diff = classes.get(type(object))
         if diff is None:
             raise NotSupportedException(detail=f"Type: {diff} is not supported!")

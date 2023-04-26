@@ -97,7 +97,6 @@ class StaffListService(ServiceBase[StaffList,StaffListCreate,StaffListUpdate]):
                             type = service['type'].get_by_origin_id(db, staff_function.id)
 
                             if type is None:
-                                print(service)
                                 type = service['type'].create_based_on_existing_archive_staff_function_type(
                                     db,
                                     service['origin'].get_by_id(db, getattr(staff_function, service['type_id']))

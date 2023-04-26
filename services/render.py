@@ -166,7 +166,6 @@ class RenderService:
             CandidateStageAnswerText.candidate_stage_question_id == essay_stage_question.id   
         ).first()
         
-        print(1)
 
         with tempfile.NamedTemporaryFile(delete=False) as temp:
             arr = document_template.path.rsplit(".")

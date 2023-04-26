@@ -2,7 +2,7 @@ import uuid
 from enum import Enum
 from decimal import Decimal
 from datetime import datetime
-from typing import Optional, List, Union 
+from typing import Optional, List, Union
 from decimal import Decimal
 import uuid
 from .general_information import GeneralInformationRead
@@ -124,26 +124,29 @@ class HistoryPersonalRead(ReadModel):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
- 
+
 
     @property
     def service_characteristic(self) -> Optional[dict]:
         if self.characteristic_initiator is not None:
-            return {"name": self.characteristic_initiator.last_name + ' ' + self.characteristic_initiator.first_name}
+            return {"name": self.characteristic_initiator.last_name + ' ' + self.characteristic_initiator.first_name,
+                    "nameKZ": self.characteristic_initiator.last_name + ' ' + self.characteristic_initiator.first_name}
         else:
             return None
- 
+
     @property
     def emergency_service(self) -> Optional[dict]:
         if self.coefficent is not None:
-            return {"name": self.coefficent + " " + self.percentage}
+            return {"name": self.coefficent + " " + self.percentage,
+                    "nameKZ": self.coefficent + " " + self.percentage}
         else:
             return None
 
     @property
     def work_experience(self) -> Optional[dict]:
         if self.name_of_organization is not None:
-            return {"name" : self.name_of_organization}
+            return {"name": self.name_of_organization,
+                    "nameKZ": self.name_of_organization}
         else:
             return None
 
@@ -232,6 +235,7 @@ class RankServiceDetailRead(ReadNamedModel):
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
         )
+
 
 class PenaltyRead(Model):
     status: Optional[str]

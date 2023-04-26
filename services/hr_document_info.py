@@ -19,7 +19,6 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
         hr_document_info = db.query(HrDocumentInfo).filter(
             HrDocumentInfo.id == id
         ).first()
-        print(hr_document_info)
 
         if hr_document_info is None:
             raise NotFoundException(detail=f"Document Info with id: {id} is not found!")

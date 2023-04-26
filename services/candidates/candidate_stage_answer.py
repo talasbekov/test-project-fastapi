@@ -83,7 +83,6 @@ class CandidateStageAnswerService(ServiceBase[CandidateStageAnswer, CandidateSta
                 if answer:
                     raise SgoErpException(detail=f"Answer with id {answer.id} already exists!", status_code=400) 
                 db_obj = self._create_candidate_stage_answer_string(answer_type, item)
-                print(db_obj)
                 if db_obj is None:
                     raise Exception(f"Invalid answer type {answer_type}!")
                 db.add(db_obj)
@@ -106,12 +105,20 @@ class CandidateStageAnswerService(ServiceBase[CandidateStageAnswer, CandidateSta
                 if item['type'] == 'Dropdown':
                     item['type'] = 'String' 
                 item_update = CandidateStageAnswerUpdate(**item)
-                print(item_update)
                 db_obj = super().update(db, db_obj=item_update_obj, obj_in=item_update)
                  
                 db_obj_list.append(db_obj)
-               
+
+        body_list = [body]
+
+        current_stage_info = self._set_pending_status_to_current_stage_info(db, candidate_id=body_list[-1].candidate_stage_answers[-1].candidate_id,
+                                                                            candidate_stage_question_id=body_list[-1].candidate_stage_answers[-1].candidate_stage_question_id)
+        if current_stage_info:
+            db.add(current_stage_info)
+            db.flush()
+
         return db_obj_list
+
     def _get_chosen_class(self, type):
         if type == CandidateStageQuestionTypeEnum.STRING_TYPE.value:
             return CandidateStageAnswerDefault
@@ -138,7 +145,6 @@ class CandidateStageAnswerService(ServiceBase[CandidateStageAnswer, CandidateSta
                 candidate_stage_question_id=body_data['candidate_stage_question_id'],
                 candidate_id=body_data['candidate_id']
             )
-            print(db_obj)
         elif answer_type == CandidateStageQuestionTypeEnum.CHOICE_TYPE.value:
             db_obj = CandidateStageAnswerChoice(
                 answer_bool=body_data['answer_bool'],

@@ -79,8 +79,7 @@ class DocumentStaffFunctionService(ServiceBase[DocumentStaffFunction, DocumentSt
         staff_unit = db.query(StaffUnit).filter(StaffUnit.id == body.staff_unit_id).first()
         if staff_unit is None:
             raise NotFoundException(detail=f"StaffUnit with id: {body.staff_unit_id} is not found!")
-        print(staff_unit.id)
-        print(res)
+
         staff_unit.staff_functions.append(res)
         db.add(staff_unit)
         db.flush()
