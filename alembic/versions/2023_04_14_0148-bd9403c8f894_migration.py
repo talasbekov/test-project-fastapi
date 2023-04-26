@@ -1545,6 +1545,7 @@ def upgrade() -> None:
             'nameKZ': 'Тағайындау бұйрығы',
             'path': 'http://193.106.99.68:2287/static/Приказ%20о%20назначении.html',
             'pathKZ': 'http://193.106.99.68:2287/static/Приказ%20о%20назначении.html',
+            'description': "Приказ о назначении на позицию - это официальный документ, который используется для уведомления сотрудников о назначении на определенную должность в организации. Он может быть выдан руководителем организации, отдела или менеджером по персоналу.",
             'subject_type': "EMPLOYEE",
             'properties': {
                 "signed_at": {
@@ -1631,6 +1632,7 @@ def upgrade() -> None:
             'path': None,
             'pathKZ': 'http://193.106.99.68:2287/static/Приказ_о_присвоении_звания_повышение.html',
             'subject_type': "EMPLOYEE",
+            'description': "Приказ о присвоении звания - это официальный документ, который используется для уведомления сотрудников о присвоении им нового звания в организации. Он может быть выдан руководителем организации, отдела или менеджером по персоналу.",
             'properties': {
                 "signed_at": {
                     "alias_name": "Дата подписания",
@@ -1692,6 +1694,7 @@ def upgrade() -> None:
             'path': None,
             'pathKZ': 'http://193.106.99.68:2287/static/Приказ_о_присвоении_Черного_берета.html',
             'subject_type': "EMPLOYEE",
+            'description': "Приказ о присвоении черного берета - это официальный документ, который используется для уведомления сотрудников о присвоении им высокой воинской награды в виде черного берета. Он может быть выдан руководителем воинской или правительственной организации.",
             'properties': {
                 "signed_at": {
                     "alias_name": "Дата подписания",
@@ -1762,6 +1765,7 @@ def upgrade() -> None:
             "path": "http://193.106.99.68:2287/static/кандидаты1.html",
             "pathKZ": "http://193.106.99.68:2287/static/кандидаты1.html",
             "subject_type": 1,
+            'description': "",
             "properties": {
                 "recipient.organization_name": {
                     "alias_name": "Наименование ссылаемой организации",
@@ -1884,6 +1888,7 @@ def upgrade() -> None:
             "path": "http://193.106.99.68:2287/static/pre-finalv2.html",
             "pathKZ": "http://193.106.99.68:2287/static/pre-finalv2.html",
             "subject_type": 1,
+            'description': "",
             "properties": {
                 "curator.rank.name": {
                     "alias_name": "Звание куратора",
@@ -2061,6 +2066,7 @@ def upgrade() -> None:
             "path": "http://193.106.99.68:2287/static/finish_candidate.html",
             "pathKZ": "http://193.106.99.68:2287/static/finish_candidate.html",
             "subject_type": 1,
+            'description': "",
             "properties": {
                 "example": {
                     "alias_name": "Звание куратора",

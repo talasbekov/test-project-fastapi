@@ -3,6 +3,7 @@
 from .base import ServiceBase
 from .position import position_service
 from .profile import *
+from .notification import notification_service
 
 from .jurisdiction import jurisdiction_service
 from .staff_division import staff_division_service

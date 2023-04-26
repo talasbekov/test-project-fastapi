@@ -8,6 +8,12 @@ from models import SubjectType
 from .validator import hr_document_templates_properties_validator
 
 
+class SuggestCorrections(Model):
+    hr_document_template_id: uuid.UUID
+    receiver_id: uuid.UUID
+    text: str
+
+
 class HrDocumentTemplateBase(NamedModel):
     path: Optional[str]
     pathKZ: str

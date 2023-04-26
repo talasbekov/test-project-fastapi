@@ -3,15 +3,18 @@ import uuid
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
-from models import HrDocumentTemplate, HrDocumentStep, DocumentStaffFunction, User, StaffUnit
+from models import HrDocumentTemplate, HrDocumentStep, DocumentStaffFunction, User, Notification
 from schemas import (
     HrDocumentTemplateCreate,
     HrDocumentTemplateUpdate,
     DocumentStaffFunctionCreate,
     HrDocumentStepCreate,
+    SuggestCorrections,
+    NotificationCreate, 
 )
 from .base import ServiceBase
-from services import hr_document_step_service, document_staff_function_service
+from services import hr_document_step_service, document_staff_function_service, notification_service
+from ws import notification_manager
 
 """
 {
@@ -105,6 +108,18 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
             db.add(new_staff_function)
         db.add(new_template)
         return new_template
+
+    async def suggest_corrections(self, db: Session, body: SuggestCorrections, current_user_id: uuid.UUID):
+        db.add(notification_service.create(
+            db,
+            NotificationCreate(
+                message=body.text,
+                sender_id=current_user_id,
+                receiver_id=body.receiver_id
+                )
+            )
+        )
+        await notification_manager.broadcast(body.text, body.receiver_id)
 
 
 hr_document_template_service = HrDocumentTemplateService(HrDocumentTemplate)

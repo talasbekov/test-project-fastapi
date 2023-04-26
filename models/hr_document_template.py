@@ -1,6 +1,6 @@
 import enum
 
-from sqlalchemy import Column, Enum, String
+from sqlalchemy import Column, Enum, String, TEXT
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.orm import relationship
 
@@ -26,7 +26,7 @@ class HrDocumentTemplate(NamedModel, isActiveModel):
     pathKZ = Column(String(255))
     subject_type = Column(Enum(SubjectType))
     properties = Column(JSON(none_as_null=True))
-    description = Column(String(255))
+    description = Column(TEXT())
     actions = Column(JSON(none_as_null=True))
 
     documents = relationship(

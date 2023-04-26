@@ -38,6 +38,7 @@ from .coolness import router as coolness_router
 from .user_oath import router as user_oauth_router
 from .military_unit import router as military_unit_router
 from .recommender_user import router as recommender_user_router
+from .notification import router as notification_router
 
 router = APIRouter(prefix="/v1")
 
@@ -60,6 +61,7 @@ router.include_router(equipment_router)
 router.include_router(badge_router)
 router.include_router(rank_router)
 router.include_router(jurisdiction_router)
+router.include_router(notification_router)
 
 
 router.include_router(privelege_emergency_router)

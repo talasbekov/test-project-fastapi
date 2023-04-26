@@ -9,6 +9,7 @@ from .hr_document_info import HrDocumentInfo
 from .hr_document_step import HrDocumentStep
 from .hr_document_template import HrDocumentTemplate, SubjectType, LanguageEnum
 from .rank import Rank
+from .notification import Notification
 from .staff_division import StaffDivision, StaffDivisionEnum
 from .jurisdiction import Jurisdiction
 from .staff_function import (DocumentFunctionType, DocumentStaffFunction,

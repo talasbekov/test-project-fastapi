@@ -140,7 +140,7 @@ def upgrade() -> None:
     sa.Column('pathKZ', sa.String(length=255), nullable=True),
     sa.Column('subject_type', sa.Enum('CANDIDATE', 'EMPLOYEE', 'PERSONNEL', 'STAFF', name='subjecttype'), nullable=True),
     sa.Column('properties', postgresql.JSON(none_as_null=True, astext_type=sa.Text()), nullable=True),
-    sa.Column('description', sa.String(length=255), nullable=True),
+    sa.Column('description', sa.TEXT(), nullable=True, default=''),
     sa.Column('actions', postgresql.JSON(none_as_null=True, astext_type=sa.Text()), nullable=True),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('nameKZ', sa.String(), nullable=True),

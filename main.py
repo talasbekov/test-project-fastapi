@@ -1,7 +1,7 @@
 import time
 import socket
 
-from fastapi import Depends, FastAPI, Request
+from fastapi import Depends, FastAPI, Request, WebSocket, WebSocketDisconnect, Query, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -16,6 +16,7 @@ import sentry_sdk
 
 from api import router
 from core import configs, get_db
+from ws import notification_manager
 
 
 socket.setdefaulttimeout(15)
@@ -98,3 +99,25 @@ async def docs_redirect():
 @app.get("/sentry-debug")
 async def trigger_error():
     division_by_zero = 1 / 0
+
+
+@app.websocket("/ws")
+async def websocket_endpoint(
+    websocket: WebSocket,
+    token: str = Query(...),
+    Authorize: AuthJWT = Depends(),
+):
+    try:
+        Authorize.jwt_required('websocket', token=token)
+        user_id = Authorize.get_jwt_subject()
+        if user_id is None:
+            raise AuthJWTException()
+    except AuthJWTException:
+        await websocket.close()
+
+    await notification_manager.connect(websocket, user_id)
+    try:
+        while True:
+            data = await websocket.receive_text()
+    except WebSocketDisconnect:
+        notification_manager.disconnect(user_id, websocket)

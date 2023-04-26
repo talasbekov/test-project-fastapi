@@ -60,5 +60,16 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
 
         return step
 
+    def get_all_notifiers_by_template_id(self, db: Session, template_id: uuid.UUID):
+        return (
+            db.query(self.model)
+            .join(DocumentStaffFunction)
+            .filter(
+                self.model.hr_document_template_id == template_id,
+                DocumentStaffFunction.priority == -1
+            )
+            .all()
+        )
+
 
 hr_document_step_service = HrDocumentStepService(HrDocumentStep)

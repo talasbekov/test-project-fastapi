@@ -52,6 +52,7 @@ from schemas import (
     CoolnessTypeRead,
     PenaltyTypeRead,
     ContractTypeRead,
+    NotificationCreate,
 )
 from services import (
     badge_service,
@@ -71,8 +72,10 @@ from services import (
     coolness_service,
     penalty_service,
     contract_service,
+    notification_service,
 )
 from .base import ServiceBase
+from ws import notification_manager
 
 options = {
     "staff_unit": staff_unit_service,
@@ -309,7 +312,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         return document
 
-    def initialize(self, db: Session, body: HrDocumentInit, user_id: str, role: str):
+    async def initialize(self, db: Session, body: HrDocumentInit, user_id: str, role: str):
         template = hr_document_template_service.get_by_id(
             db, body.hr_document_template_id
         )
@@ -367,7 +370,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         document.users = users_document
 
         if len(all_steps) == 0:
-            self._finish_document(db, document, document.users)
+            self._finish_document(db, document, document.users, user_id)
 
         for step, user_id in zip(all_steps, users):
             hr_document_info_service.create_info_for_step(
@@ -383,7 +386,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         db.flush()
         return document
 
-    def sign(
+    async def sign(
             self,
             db: Session,
             document_id: str,
@@ -438,13 +441,13 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         hr_document_info_service.sign(db, info, user, body.comment, body.is_signed)
 
-        if body.is_signed:
-            next_step = hr_document_step_service.get_next_step_from_previous_step(
+        next_step = hr_document_step_service.get_next_step_from_previous_step(
                 db, info.hr_document_step
             )
 
+        if body.is_signed:
             if next_step is None:
-                return self._finish_document(db, document, document.users)
+                return self._finish_document(db, document, document.users, user_id)
 
             document.last_step_id = next_step.id
 
@@ -454,6 +457,12 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             document.status_id = in_progress_status.id
 
         else:
+            if next_step is None:
+                document.status_id = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.CANCELED.value).id
+                db.add(document)
+                db.flush()
+                return document
+
             steps = hr_document_step_service.get_all_by_document_template_id(
                 db, document.hr_document_template_id
             )
@@ -572,13 +581,13 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 detail="Количество пользователей не соответствует количеству шагов!"
             )
 
-    def _finish_document(self, db: Session, document: HrDocument, users: List[User]):
+    async def _finish_document(self, db: Session, document: HrDocument, users: List[User], current_user_id: uuid.UUID):
         completed_status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.COMPLETED.value)
         document.status_id = completed_status.id
 
         props = document.document_template.properties
 
-        template = document.document_template
+        template: HrDocumentTemplate = document.document_template
 
         properties: dict = document.properties
 
@@ -606,6 +615,26 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         db.add(document)
         db.flush()
+        
+        # message = f"{template.name} №{document.reg_number} успешно подписан!"
+        # notifiers = hr_document_step_service.get_all_notifiers_by_template_id(db, template.id)
+
+        # notified_users = {}
+
+        # for notifier in notifiers:
+        #     staff_units: list[StaffUnit] = notifier.staff_function.staff_units
+        #     for i in staff_units:
+        #         for j in i.actual_users:
+        #             if notified_users.get(j.id) is not None:
+        #                 continue
+        #             db.add(notification_service.create(db, NotificationCreate(
+        #                 message=message,
+        #                 sender_id=current_user_id,
+        #                 receiver_id=j.id
+        #             )))
+
+        #             await notification_manager.broadcast(message, j.id)
+        #             notified_users[j.id] = True
 
         return document
 

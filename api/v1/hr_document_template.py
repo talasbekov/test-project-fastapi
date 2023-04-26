@@ -7,7 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import HrDocumentTemplateCreate, HrDocumentTemplateUpdate, HrDocumentTemplateRead
+from schemas import HrDocumentTemplateCreate, HrDocumentTemplateUpdate, HrDocumentTemplateRead, SuggestCorrections
 from services import hr_document_template_service
 
 router = APIRouter(prefix="/hr-documents-template", tags=["HrDocumentTemplates"], dependencies=[Depends(HTTPBearer())])
@@ -159,3 +159,13 @@ async def duplicate(*,
 ):
     Authorize.jwt_required()
     hr_document_template_service.duplicate(db, id)
+
+@router.post('/corrections/')
+async def suggest_corrections(*,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends(),
+    body: SuggestCorrections
+):
+    Authorize.jwt_required()
+    current_user_id = Authorize.get_jwt_subject()
+    await hr_document_template_service.suggest_corrections(db, body, current_user_id)

@@ -1,5 +1,6 @@
 from .base import Model, NamedModel, ReadModel, ReadNamedModel
 from .badge import *
+from .notification import *
 from .equipment import (EquipmentCreate, 
                         EquipmentRead, 
                         EquipmentUpdate,
@@ -11,7 +12,8 @@ from .equipment import (EquipmentCreate,
 from .event import EventCreate, EventRead, EventUpdate
 from .hr_document_template import (HrDocumentTemplateCreate,
                                    HrDocumentTemplateRead,
-                                   HrDocumentTemplateUpdate)
+                                   HrDocumentTemplateUpdate,
+                                   SuggestCorrections)
 from .permission import (PermissionCreate, PermissionRead, PermissionUpdate,
                          UserPermission)
 
