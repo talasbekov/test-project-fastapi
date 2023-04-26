@@ -345,6 +345,25 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         users_document = [
             user_service.get_by_id(db, user_id) for user_id in body.user_ids
         ]
+
+        props = document.document_template.properties
+
+        template = document.document_template
+
+        properties: dict = document.properties
+
+        for user in users_document:
+            for i in template.actions['args']:
+                action_name = list(i)[0]
+                action = i[action_name]
+
+                if handlers.get(action_name) is None:
+                    raise InvalidOperationException(
+                        f"Action {action_name} is not supported!"
+                    )
+                    
+                handlers[action_name].handle_validation(db, user, action, props, properties, document)
+
         document.users = users_document
 
         if len(all_steps) == 0:

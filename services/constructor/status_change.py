@@ -33,10 +33,7 @@ class StatusChangeHandler(BaseHandler):
     ):
         status = action["status"]["tagname"]
 
-        if status_service.exists_relation(db, user.id, props[status]["value"]):
-            raise ForbiddenException(
-                f"This status is already assigned to this user: {user.first_name}, {user.last_name}"
-            )
+        self.handle_validation(db, user, action, template_props, props, document)
 
         if props[status]["name"] in archive_status:
             staff_unit = staff_unit_service.existing_or_create(db, props[status]["name"])
@@ -57,5 +54,20 @@ class StatusChangeHandler(BaseHandler):
 
         return user
 
+    def handle_validation(
+        self,
+        db: Session,
+        user: User,
+        action: dict,
+        template_props: dict,
+        props: dict,
+        document: HrDocument,
+    ):
+        status = action["status"]["tagname"]
+
+        if status_service.exists_relation(db, user.id, props[status]["value"]):
+            raise ForbiddenException(
+                f"This status is already assigned to this user: {user.first_name}, {user.last_name}"
+            )
 
 handler = StatusChangeHandler()

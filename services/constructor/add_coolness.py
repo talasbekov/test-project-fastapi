@@ -20,10 +20,7 @@ class AddCoolnessHandler(BaseHandler):
         document: HrDocument,
     ):
         tagname = action["coolness"]["tagname"]
-        if coolness_service.exists_relation(db, user.id, props[tagname]["value"]):
-            raise ForbiddenException(
-                f"Coolness is already assigned to this user: {user.first_name}, {user.last_name}"
-            )
+        self.handle_validation(db, user, action, template_props, props, document)
         res = coolness_service.create_relation(db, user.id, props[tagname]["value"])
         user.coolnesses.append(res)
         history = history_service.create_history(db, user.id, res)
@@ -35,6 +32,21 @@ class AddCoolnessHandler(BaseHandler):
         db.flush()
 
         return user
+    
+    def handle_validation(
+        self,
+        db: Session,
+        user: User,
+        action: dict,
+        template_props: dict,
+        props: dict,
+        document: HrDocument,
+    ):
+        tagname = action["coolness"]["tagname"]
+        if coolness_service.exists_relation(db, user.id, props[tagname]["value"]):
+            raise ForbiddenException(
+                f"Coolness is already assigned to this user: {user.first_name}, {user.last_name}"
+            )
 
 
 handler = AddCoolnessHandler()

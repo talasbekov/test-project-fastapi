@@ -20,12 +20,9 @@ class IncreaseRankHandler(BaseHandler):
         document: HrDocument,
     ):
         tagname = action["rank"]["tagname"]
-        print(props)
         rank = rank_service.get_by_id(db, props[tagname]["value"])
-        user_rank = rank_service.get_by_id(db, user.rank_id)
 
-        if user_rank.order >= rank.order:
-            raise ForbiddenException(detail=f"You can not increase rank to {rank.name}")
+        self.handle_validation(db, user, action, template_props, props, document)
         user.rank = rank
         history = rank_service.find_last_history(db, user.id)
         res = history_service.create_history(db, user.id, rank)
@@ -36,6 +33,22 @@ class IncreaseRankHandler(BaseHandler):
         db.flush()
 
         return user
+    
+    def handle_validation(
+        self,
+        db: Session,
+        user: User,
+        action: dict,
+        template_props: dict,
+        props: dict,
+        document: HrDocument,
+    ):
+        tagname = action["rank"]["tagname"]
+        rank = rank_service.get_by_id(db, props[tagname]["value"])
+        user_rank = rank_service.get_by_id(db, user.rank_id)
+
+        if user_rank.order >= rank.order:
+            raise ForbiddenException(detail=f"You can not increase rank to {rank.name}")
 
 
 handler = IncreaseRankHandler()
