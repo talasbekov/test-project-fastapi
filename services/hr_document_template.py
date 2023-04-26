@@ -110,16 +110,18 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
         return new_template
 
     async def suggest_corrections(self, db: Session, body: SuggestCorrections, current_user_id: uuid.UUID):
-        db.add(notification_service.create(
-            db,
-            NotificationCreate(
-                message=body.text,
-                sender_id=current_user_id,
-                receiver_id=body.receiver_id
+        template = self.get_by_id(db, body.hr_document_template_id)
+        for i in template.maintainer.actual_users:            
+            db.add(notification_service.create(
+                db,
+                NotificationCreate(
+                    message=template.name+body.text,
+                    sender_id=current_user_id,
+                    receiver_id=i.id
+                    )
                 )
             )
-        )
-        await notification_manager.broadcast(body.text, body.receiver_id)
+            await notification_manager.broadcast(body.text, i.id)
 
 
 hr_document_template_service = HrDocumentTemplateService(HrDocumentTemplate)

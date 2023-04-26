@@ -10,7 +10,6 @@ from .validator import hr_document_templates_properties_validator
 
 class SuggestCorrections(Model):
     hr_document_template_id: uuid.UUID
-    receiver_id: uuid.UUID
     text: str
 
 
@@ -18,6 +17,7 @@ class HrDocumentTemplateBase(NamedModel):
     path: Optional[str]
     pathKZ: str
     subject_type: SubjectType
+    maintainer_id: Optional[uuid.UUID]
     properties: Dict[str, dict]
     description: Optional[str]
     actions: Dict[str, list]

@@ -1,6 +1,6 @@
 import enum
 
-from sqlalchemy import Column, Enum, String, TEXT
+from sqlalchemy import Column, Enum, String, TEXT, UUID, ForeignKey
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.orm import relationship
 
@@ -28,7 +28,11 @@ class HrDocumentTemplate(NamedModel, isActiveModel):
     properties = Column(JSON(none_as_null=True))
     description = Column(TEXT())
     actions = Column(JSON(none_as_null=True))
+    maintainer_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"))
 
     documents = relationship(
         "HrDocument", cascade="all,delete", back_populates="document_template"
+    )
+    maintainer = relationship(
+        'StaffUnit', foreign_keys=[maintainer_id]
     )

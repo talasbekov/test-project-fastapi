@@ -148,6 +148,8 @@ def upgrade() -> None:
     sa.Column('is_active', sa.Boolean(), nullable=False, default=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('maintainer_id', sa.UUID(), nullable=True),
+    sa.ForeignKeyConstraint(['maintainer_id'], ['staff_units.id']),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('institution_degree_types',

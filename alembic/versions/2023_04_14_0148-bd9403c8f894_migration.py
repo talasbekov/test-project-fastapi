@@ -1320,7 +1320,7 @@ def upgrade() -> None:
         staff_unit9_id,
         rank1_id,
         staff_unit9_id,
-        "http://192.168.0.169:8083/static/Erdaulet.png",
+        "http://192.168.0.169:8083/static/Adil.png",
         position3_id,
         True,
         "1.2.217K",
@@ -1356,7 +1356,7 @@ def upgrade() -> None:
         staff_unit16_id,
         rank5_id,
         staff_unit16_id,
-        "http://192.168.0.169:8083/static/Erdaulet.png",
+        "http://192.168.0.169:8083/static/Almaz.png",
         position23_id,
         True,
         "1.2.217K",
@@ -1392,7 +1392,7 @@ def upgrade() -> None:
         staff_unit18_id,
         rank5_id,
         staff_unit18_id,
-        "http://192.168.0.169:8083/static/Erdaulet.png",
+        "http://192.168.0.169:8083/static/Adil.png",
         position21_id,
         True,
         "1.2.217K",
@@ -1428,7 +1428,7 @@ def upgrade() -> None:
         staff_unit20_id,
         rank5_id,
         staff_unit20_id,
-        "http://192.168.0.169:8083/static/Erdaulet.png",
+        "http://192.168.0.169:8083/static/Erzhan.png",
         position19_id,
         True,
         "1.2.217K",
@@ -1446,7 +1446,7 @@ def upgrade() -> None:
         staff_unit21_id,
         rank5_id,
         staff_unit21_id,
-        "http://192.168.0.169:8083/static/Erdaulet.png",
+        "http://192.168.0.169:8083/static/Almaz.png",
         position18_id,
         True,
         "1.2.217K",
@@ -1547,6 +1547,7 @@ def upgrade() -> None:
             'pathKZ': 'http://193.106.99.68:2287/static/Приказ%20о%20назначении.html',
             'description': "Приказ о назначении на позицию - это официальный документ, который используется для уведомления сотрудников о назначении на определенную должность в организации. Он может быть выдан руководителем организации, отдела или менеджером по персоналу.",
             'subject_type': "EMPLOYEE",
+            'maintainer_id': staff_unit4_id,
             'properties': {
                 "signed_at": {
                     "alias_name": "Дата подписания",
@@ -1632,6 +1633,7 @@ def upgrade() -> None:
             'path': None,
             'pathKZ': 'http://193.106.99.68:2287/static/Приказ_о_присвоении_звания_повышение.html',
             'subject_type': "EMPLOYEE",
+            'maintainer_id': staff_unit4_id,
             'description': "Приказ о присвоении звания - это официальный документ, который используется для уведомления сотрудников о присвоении им нового звания в организации. Он может быть выдан руководителем организации, отдела или менеджером по персоналу.",
             'properties': {
                 "signed_at": {
@@ -1694,6 +1696,7 @@ def upgrade() -> None:
             'path': None,
             'pathKZ': 'http://193.106.99.68:2287/static/Приказ_о_присвоении_Черного_берета.html',
             'subject_type': "EMPLOYEE",
+            'maintainer_id': staff_unit4_id,
             'description': "Приказ о присвоении черного берета - это официальный документ, который используется для уведомления сотрудников о присвоении им высокой воинской награды в виде черного берета. Он может быть выдан руководителем воинской или правительственной организации.",
             'properties': {
                 "signed_at": {
@@ -1766,6 +1769,7 @@ def upgrade() -> None:
             "pathKZ": "http://193.106.99.68:2287/static/кандидаты1.html",
             "subject_type": 1,
             'description': "",
+            'maintainer_id': staff_unit4_id,
             "properties": {
                 "recipient.organization_name": {
                     "alias_name": "Наименование ссылаемой организации",
@@ -1889,6 +1893,7 @@ def upgrade() -> None:
             "pathKZ": "http://193.106.99.68:2287/static/pre-finalv2.html",
             "subject_type": 1,
             'description': "",
+            'maintainer_id': staff_unit4_id,
             "properties": {
                 "curator.rank.name": {
                     "alias_name": "Звание куратора",
@@ -2066,6 +2071,7 @@ def upgrade() -> None:
             "path": "http://193.106.99.68:2287/static/finish_candidate.html",
             "pathKZ": "http://193.106.99.68:2287/static/finish_candidate.html",
             "subject_type": 1,
+            'maintainer_id': staff_unit4_id,
             'description': "",
             "properties": {
                 "example": {
