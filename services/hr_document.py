@@ -152,6 +152,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                     (or_(*[func.lower(User.last_name).contains(name) for name in key_words])) |
                     (or_(*[func.lower(User.father_name).contains(name) for name in key_words])) |
                     (or_(*[func.lower(HrDocumentTemplate.name).contains(name) for name in key_words]))
+                    (or_(*[func.lower(HrDocumentTemplate.nameKZ).contains(name) for name in key_words]))
                     )
             .order_by(self.model.due_date.asc())
             .offset(skip)
@@ -182,6 +183,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                         (or_(*[func.lower(User.last_name).contains(name) for name in key_words])) |
                         (or_(*[func.lower(User.father_name).contains(name) for name in key_words])) |
                         (or_(*[func.lower(HrDocumentTemplate.name).contains(name) for name in key_words]))
+                        (or_(*[func.lower(HrDocumentTemplate.nameKZ).contains(name) for name in key_words]))
                 )
             )
             .order_by(self.model.due_date.asc())
@@ -192,13 +194,29 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         return self._return_correctly(db, documents, user)
 
-    def get_draft_documents(self, db: Session, user_id: str, skip: int = 0, limit: int = 100):
+    def get_draft_documents(self, db: Session, user_id: str, filter: str, skip: int = 0, limit: int = 100):
         status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.DRAFT.value)
 
-        return db.query(self.model).filter(
-            self.model.status_id == status.id,
-            self.model.initialized_by_id == user_id
-        ).offset(skip).limit(limit).all()
+        key_words = filter.lower().split()
+
+        return (
+            db.query(self.model)
+            .join(self.model.users)
+            .filter(
+                self.model.status_id == status.id,
+                self.model.initialized_by_id == user_id,
+                (
+                        (or_(*[func.lower(User.first_name).contains(name) for name in key_words]))
+                        (or_(*[func.lower(User.last_name).contains(name) for name in key_words])) |
+                        (or_(*[func.lower(User.father_name).contains(name) for name in key_words])) |
+                        (or_(*[func.lower(HrDocumentTemplate.name).contains(name) for name in key_words]))
+                        (or_(*[func.lower(HrDocumentTemplate.nameKZ).contains(name) for name in key_words]))
+                )
+            ).order_by(self.model.due_date.asc())
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
 
     def save_to_draft(self, db: Session, user_id: str, body: DraftHrDocumentCreate, role: str):
         template = hr_document_template_service.get_by_id(
@@ -209,7 +227,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             db, template.id
         )
 
-        self._validate_document(db, body=body, role=role, step=step)
+        self._validate_document(db, body=body, role=role, step=step, users=body.user_ids)
 
         status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.DRAFT.value)
 
@@ -266,7 +284,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             document_step_users_ids=body.document_step_users_ids
         )
 
-        self._validate_document(db, hr_document_init, role=role, step=step)
+        self._validate_document(db, hr_document_init, role=role, step=step, users=subject_users_ids)
         self._validate_document_for_steps(step=step, all_steps=all_steps, users=users)
 
         current_user = user_service.get_by_id(db, user_id)

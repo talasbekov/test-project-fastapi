@@ -87,7 +87,8 @@ async def get_draft_documents(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
     skip: int = 0,
-    limit: int = 10
+    limit: int = 10,
+    filter: str = ""
 ):
     """
         Get all Draft HrDocuments
@@ -97,7 +98,7 @@ async def get_draft_documents(*,
     """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
-    return hr_document_service.get_draft_documents(db, user_id, skip, limit)
+    return hr_document_service.get_draft_documents(db, user_id, filter, skip, limit)
 
 
 @router.post("/drafts", status_code=status.HTTP_201_CREATED, response_model=HrDocumentRead,
