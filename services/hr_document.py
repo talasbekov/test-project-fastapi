@@ -151,7 +151,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             .filter((or_(*[func.lower(User.first_name).contains(name) for name in key_words])) |
                     (or_(*[func.lower(User.last_name).contains(name) for name in key_words])) |
                     (or_(*[func.lower(User.father_name).contains(name) for name in key_words])) |
-                    (or_(*[func.lower(HrDocumentTemplate.name).contains(name) for name in key_words]))
+                    (or_(*[func.lower(HrDocumentTemplate.name).contains(name) for name in key_words])) |
                     (or_(*[func.lower(HrDocumentTemplate.nameKZ).contains(name) for name in key_words]))
                     )
             .order_by(self.model.due_date.asc())
@@ -182,7 +182,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                         (or_(*[func.lower(User.first_name).contains(name) for name in key_words])) |
                         (or_(*[func.lower(User.last_name).contains(name) for name in key_words])) |
                         (or_(*[func.lower(User.father_name).contains(name) for name in key_words])) |
-                        (or_(*[func.lower(HrDocumentTemplate.name).contains(name) for name in key_words]))
+                        (or_(*[func.lower(HrDocumentTemplate.name).contains(name) for name in key_words])) |
                         (or_(*[func.lower(HrDocumentTemplate.nameKZ).contains(name) for name in key_words]))
                 )
             )
