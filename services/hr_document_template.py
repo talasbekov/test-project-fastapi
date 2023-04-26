@@ -2,6 +2,7 @@ import uuid
 
 from sqlalchemy.orm import Session
 from fastapi.encoders import jsonable_encoder
+from typing import List
 
 from exceptions import NotFoundException
 from models import HrDocumentTemplate, HrDocumentStep, DocumentStaffFunction, User, Notification
@@ -12,7 +13,7 @@ from schemas import (
     DocumentStaffFunctionCreate,
     HrDocumentStepCreate,
     SuggestCorrections,
-    NotificationCreate, 
+    NotificationCreate,
 )
 from .base import ServiceBase
 from services import (hr_document_step_service, document_staff_function_service, notification_service,
@@ -74,6 +75,17 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
                 HrDocumentTemplate.name.ilike(f'%{name}%')
             ).offset(skip).limit(limit).all()
         return super().get_multi(db, skip, limit)
+
+    def get_multi(
+        self, db: Session, skip: int = 0, limit: int = 100
+    ) -> List[HrDocumentTemplateRead]:
+        return (
+            db.query(self.model)
+            .filter(self.model.is_active == True)
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
 
     def get_all_archived(self, db: Session, skip: int, limit: int):
         return (
