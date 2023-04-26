@@ -51,12 +51,12 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
         return hr_document_template
 
     def get_steps_by_document_template_id(self, db: Session, document_template_id: str) -> dict[str, uuid.UUID]:
-        
+
         all_steps = db.query(DocumentStaffFunction).filter(
             HrDocumentStep.hr_document_template_id == document_template_id,
             DocumentStaffFunction.priority != 1
         ).join(HrDocumentStep.staff_function).order_by(DocumentStaffFunction.priority.asc()).all()
-         
+
         steps = {}
         for function in all_steps:
             function: DocumentStaffFunction
@@ -72,17 +72,17 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
     def get_all_by_name(self, db: Session, name: str, skip: int, limit: int):
         if name:
             return db.query(HrDocumentTemplate).filter(
-                HrDocumentTemplate.name.ilike(f'%{name}%'),
-                self.model.is_active == True
+                HrDocumentTemplate.is_active == True,
+                HrDocumentTemplate.name.ilike(f'%{name}%')
             ).offset(skip).limit(limit).all()
-        return self.get_multi(db, skip, limit)
+        return self.get_all_active(db, skip, limit)
 
-    def get_multi(
+    def get_all_active(
         self, db: Session, skip: int = 0, limit: int = 100
     ) -> List[HrDocumentTemplateRead]:
         return (
-            db.query(self.model)
-            .filter(self.model.is_active == True)
+            db.query(HrDocumentTemplate)
+            .filter(HrDocumentTemplate.is_active == True)
             .offset(skip)
             .limit(limit)
             .all()
@@ -141,7 +141,7 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
 
     async def suggest_corrections(self, db: Session, body: SuggestCorrections, current_user_id: uuid.UUID):
         template = self.get_by_id(db, body.hr_document_template_id)
-        for i in template.maintainer.actual_users:            
+        for i in template.maintainer.actual_users:
             db.add(notification_service.create(
                 db,
                 NotificationCreate(
