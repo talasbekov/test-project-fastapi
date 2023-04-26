@@ -1,19 +1,23 @@
 import uuid
 
 from sqlalchemy.orm import Session
+from fastapi.encoders import jsonable_encoder
 
 from exceptions import NotFoundException
 from models import HrDocumentTemplate, HrDocumentStep, DocumentStaffFunction, User, Notification
 from schemas import (
     HrDocumentTemplateCreate,
     HrDocumentTemplateUpdate,
+    HrDocumentTemplateRead,
     DocumentStaffFunctionCreate,
     HrDocumentStepCreate,
     SuggestCorrections,
     NotificationCreate, 
 )
 from .base import ServiceBase
-from services import hr_document_step_service, document_staff_function_service, notification_service
+from services import (hr_document_step_service, document_staff_function_service, notification_service,
+                      staff_unit_service)
+
 from ws import notification_manager
 
 """
@@ -25,6 +29,19 @@ from ws import notification_manager
 
 
 class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTemplateCreate, HrDocumentTemplateUpdate]):
+
+    def create_template(self, db: Session, body: HrDocumentTemplateCreate, role: str) -> HrDocumentTemplateRead:
+        current_user_staff_unit_id = staff_unit_service.get_by_id(db, role)
+
+        obj_in_data = jsonable_encoder(body)
+        hr_document_template = self.model(**obj_in_data)
+
+        hr_document_template.maintainer_id = current_user_staff_unit_id.id
+
+        db.add(hr_document_template)
+        db.flush()
+
+        return hr_document_template
 
     def get_by_id(self, db: Session, id: str) -> HrDocumentTemplate:
         hr_document_template = super().get(db, id)
