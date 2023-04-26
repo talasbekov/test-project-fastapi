@@ -110,8 +110,17 @@ class CandidateStageAnswerService(ServiceBase[CandidateStageAnswer, CandidateSta
                 db_obj = super().update(db, db_obj=item_update_obj, obj_in=item_update)
                  
                 db_obj_list.append(db_obj)
-               
+
+        body_list = [body]
+
+        current_stage_info = self._set_pending_status_to_current_stage_info(db, candidate_id=body_list[-1].candidate_stage_answers[-1].candidate_id,
+                                                                            candidate_stage_question_id=body_list[-1].candidate_stage_answers[-1].candidate_stage_question_id)
+        if current_stage_info:
+            db.add(current_stage_info)
+            db.flush()
+
         return db_obj_list
+
     def _get_chosen_class(self, type):
         if type == CandidateStageQuestionTypeEnum.STRING_TYPE.value:
             return CandidateStageAnswerDefault
