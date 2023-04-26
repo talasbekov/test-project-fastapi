@@ -79,8 +79,7 @@ async def initialize(*,
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
     role = Authorize.get_raw_jwt()['role']
-    return hr_document_service.initialize(db, body, user_id, role)
-
+    return await hr_document_service.initialize(db, body, user_id, role)
 
 @router.get("/drafts", response_model=List[HrDocumentRead],
             summary="Get all Draft HrDocuments")
@@ -212,7 +211,7 @@ async def sign(*,
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
     role = Authorize.get_raw_jwt()['role']
-    hr_document_service.sign(db, id, body, user_id, role)
+    await hr_document_service.sign(db, id, body, user_id, role)
 
 
 @router.get("/{id}/", response_model=HrDocumentRead,
@@ -246,7 +245,7 @@ async def generate(*,
         - **id**: UUID - required.
     """
     Authorize.jwt_required()
-    return hr_document_service.generate(db, id, LanguageEnum.kz)
+    return await hr_document_service.generate(db, id, LanguageEnum.kz)
 
 
 @router.get('/options', status_code=status.HTTP_200_OK,

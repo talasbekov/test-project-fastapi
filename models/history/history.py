@@ -67,6 +67,7 @@ class History(Model):
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     document_link = Column(TEXT, nullable=True)
     cancel_document_link = Column(TEXT, nullable=True)
+    confirm_document_link = Column(TEXT, nullable=True)
     document_number = Column(String, nullable=True)
     type = Column(String, nullable=True)
     document_style = Column(String, nullable=True)
@@ -424,6 +425,7 @@ class StatusHistory(History):
 
     status_id = Column(UUID(as_uuid=True), ForeignKey("statuses.id"), nullable=True)
     status = relationship("Status")
+    status_name = Column(String, nullable=True)
 
     @classmethod
     def create_history(cls, db: Session, user_id: uuid.UUID, id: Union[uuid.UUID, str], finish_last):

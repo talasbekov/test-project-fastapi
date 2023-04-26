@@ -21,4 +21,6 @@ from .stop_status import handler as stop_status_handler
 from .temporary_status_change import handler as temporary_status_change_handler
 from .status_change import handler as status_change_handler
 from .position_change import handler as position_change_handler
+from .confirm_coolness import handler as confirm_coolness_handler
+
 

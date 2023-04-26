@@ -123,6 +123,7 @@ handlers = {
     "delete_coolness": delete_coolness_handler,
     "add_secondment": add_secondment_handler,
     "position_change": position_change_handler,
+    "confirm_coolness": confirm_coolness_handler,
 }
 
 
@@ -370,7 +371,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         document.users = users_document
 
         if len(all_steps) == 0:
-            self._finish_document(db, document, document.users, user_id)
+            await self._finish_document(db, document, document.users, user_id)
 
         for step, user_id in zip(all_steps, users):
             hr_document_info_service.create_info_for_step(
@@ -447,7 +448,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         if body.is_signed:
             if next_step is None:
-                return self._finish_document(db, document, document.users, user_id)
+                return await self._finish_document(db, document, document.users, user_id)
 
             document.last_step_id = next_step.id
 

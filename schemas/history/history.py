@@ -41,6 +41,7 @@ from .history_personal import (
 class HistoryBase(BaseModel):
     document_link: Optional[str]
     cancel_document_link: Optional[str]
+    confirm_document_link: Optional[str]
     document_number: Optional[str]
     date_from: Optional[datetime]
     date_to: Optional[datetime]
@@ -54,6 +55,7 @@ class HistoryBase(BaseModel):
     characteristic_initiator_id: Optional[uuid.UUID]
     rank_assigned_by: Optional[str]
     status_id: Optional[uuid.UUID]
+    status_name: Optional[str]
     coolness_id: Optional[uuid.UUID]
     contract_id: Optional[uuid.UUID]
     badge_id: Optional[uuid.UUID]

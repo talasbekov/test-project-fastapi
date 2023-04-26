@@ -103,6 +103,7 @@ class BadgePersonalReadHistory(BaseModel):
 
 class StatusReadHistory(BaseModel):
     name: Optional[str]
+    status_name: Optional[str]
 
     class Config:
         orm_mode = True

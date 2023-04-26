@@ -61,5 +61,12 @@ class CoolnessService(ServiceBase[Coolness, CoolnessCreate, CoolnessUpdate]):
             .first()
         ) is not None
 
+    def get_relation(self, db: Session, user_id: str, coolness_type_id: uuid.UUID):
+        return (
+            db.query(Coolness)
+            .filter(Coolness.user_id == user_id)
+            .filter(Coolness.type_id == coolness_type_id)
+            .first()
+        )
 
 coolness_service = CoolnessService(Coolness)
