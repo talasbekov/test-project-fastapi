@@ -963,25 +963,25 @@ def upgrade() -> None:
             'parent_group_id': group1_id,
             'id': group2_id,
             'name': "Управление 1",
-            'nameKZ': 'Управление 1',
+            'nameKZ': 'Басқару 1',
             'is_combat_unit': False
         }, {
             'parent_group_id': group1_id,
             'id': group3_id,
             'name': "Управление 2",
-            'nameKZ': 'Управление 2',
+            'nameKZ': 'Басқару 2',
             'is_combat_unit': True
         }, {
             'parent_group_id': group1_id,
             'id': group4_id,
             'name': "Управление 3",
-            'nameKZ': 'Управление 3',
+            'nameKZ': 'Басқару 3',
             'is_combat_unit': False
         }, {
             'parent_group_id': group1_id,
             'id': group5_id,
             'name': "Управление 4",
-            'nameKZ': 'Управление 4',
+            'nameKZ': 'Басқару 4',
             'is_combat_unit': True
         }, {
             'parent_group_id': None,
