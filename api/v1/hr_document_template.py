@@ -67,7 +67,8 @@ async def create(*,
         - STAFF = 4
     """
     Authorize.jwt_required()
-    return hr_document_template_service.create(db, body)
+    role = Authorize.get_raw_jwt()['role']
+    return hr_document_template_service.create_template(db, body, role)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
