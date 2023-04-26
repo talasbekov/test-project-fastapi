@@ -206,7 +206,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 self.model.status_id == status.id,
                 self.model.initialized_by_id == user_id,
                 (
-                        (or_(*[func.lower(User.first_name).contains(name) for name in key_words]))
+                        (or_(*[func.lower(User.first_name).contains(name) for name in key_words])) |
                         (or_(*[func.lower(User.last_name).contains(name) for name in key_words])) |
                         (or_(*[func.lower(User.father_name).contains(name) for name in key_words])) |
                         (or_(*[func.lower(HrDocumentTemplate.name).contains(name) for name in key_words])) |
