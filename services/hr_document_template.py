@@ -72,9 +72,10 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
     def get_all_by_name(self, db: Session, name: str, skip: int, limit: int):
         if name:
             return db.query(HrDocumentTemplate).filter(
-                HrDocumentTemplate.name.ilike(f'%{name}%')
+                HrDocumentTemplate.name.ilike(f'%{name}%'),
+                self.model.is_active == True
             ).offset(skip).limit(limit).all()
-        return super().get_multi(db, skip, limit)
+        return self.get_multi(db, skip, limit)
 
     def get_multi(
         self, db: Session, skip: int = 0, limit: int = 100
