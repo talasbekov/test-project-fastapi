@@ -479,6 +479,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         else:
             if next_step is None:
                 document.status_id = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.CANCELED.value).id
+                document.last_step = None
                 db.add(document)
                 db.flush()
                 return document
