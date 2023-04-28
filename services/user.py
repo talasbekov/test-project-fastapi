@@ -1,14 +1,16 @@
 import types
+import uuid
 from typing import List
 
 from sqlalchemy.orm import Session
-from sqlalchemy import func, or_
+from sqlalchemy import func, or_, and_
 
 from exceptions import NotFoundException
 from models import StaffDivision, User, StaffUnit, Jurisdiction, JurisdictionEnum, DocumentStaffFunction, \
-    StaffDivisionEnum
+    StaffDivisionEnum, HrDocument, HrDocumentInfo
 from schemas import (UserCreate, UserUpdate)
-from services import (staff_division_service, staff_unit_service, jurisdiction_service, document_staff_function_service)
+from services import (staff_division_service, staff_unit_service, jurisdiction_service, document_staff_function_service,
+                      hr_document_status_service)
 from .base import ServiceBase
 
 CALLABLES = types.FunctionType, types.MethodType
@@ -24,22 +26,26 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
         return user
 
-    def get_all(self, db: Session, filter: str, skip: int, limit: int) -> List[User]:
-        if filter is not None:
-            key_words = filter.lower().split()
-            users = (
-                db.query(self.model)
-                .filter((or_(*[func.lower(self.model.first_name).contains(name) for name in key_words])) |
-                        (or_(*[func.lower(self.model.last_name).contains(name) for name in key_words])) |
-                        (or_(*[func.lower(self.model.father_name).contains(name) for name in key_words]))
-                        )
-                .order_by(self.model.created_at.asc())
-                .offset(skip)
-                .limit(limit)
-                .all()
-                )
-        else:
-            users = super().get_multi(db, skip, limit)
+    def get_all(self, db: Session, hr_document_template_id: uuid.UUID, filter: str, skip: int, limit: int) -> List[User]:
+        key_words = filter.lower().split()
+        users = (
+            db.query(self.model)
+            .filter((or_(*[func.lower(self.model.first_name).contains(name) for name in key_words])) |
+                    (or_(*[func.lower(self.model.last_name).contains(name) for name in key_words])) |
+                    (or_(*[func.lower(self.model.father_name).contains(name) for name in key_words]))
+                    )
+        )
+
+        if hr_document_template_id is not None:
+            excepted_users = self._get_excepted_users_by_document_in_progress(db, hr_document_template_id)
+            users = users.except_(excepted_users)
+
+        users = (users
+                 .order_by(self.model.created_at.asc())
+                 .offset(skip)
+                 .limit(limit)
+                 .all()
+                 )
 
         return users
 
@@ -183,6 +189,20 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             users.extend(i.actual_users)
 
         return users
+
+    def _get_excepted_users_by_document_in_progress(self, db: Session, hr_document_template_id: uuid.UUID):
+        forbidden_statuses = hr_document_status_service.get_by_names(db, ["Завершен", "Отменен"])
+        excepted_users = (
+            db.query(self.model)
+            .distinct(self.model.id)
+            .join(HrDocument.users)
+            .join(HrDocumentInfo, HrDocument.id == HrDocumentInfo.hr_document_id)
+            .filter(HrDocument.hr_document_template_id == hr_document_template_id,
+                    HrDocumentInfo.signed_by_id.is_(None),
+                    and_(*[HrDocument.status_id != status.id for status in forbidden_statuses])
+                    )
+        )
+        return excepted_users
 
     def _get_users_by_combat_unit_jurisdiction(self, db: Session):
         staff_divisions = db.query(StaffDivision).filter(

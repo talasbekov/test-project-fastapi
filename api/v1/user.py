@@ -19,18 +19,20 @@ router = APIRouter(prefix="/users", tags=["Users"], dependencies=[Depends(HTTPBe
 async def get_all(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
-    filter: str = None,
+    hr_document_template_id: uuid.UUID = None,
+    filter: str = "",
     skip: int = 0,
     limit: int = 10
 ):
     """
         Get all Users
+        - **hr_document_template_id**: str - The value which returns filtered results by hr_document_template_id. This parameter is optional and defaults to None
        - **filter**: str - The value which returns filtered results. This parameter is optional and defaults to None
        - **skip**: int - The number of users to skip before returning the results. This parameter is optional and defaults to 0.
        - **limit**: int - The maximum number of users to return in response. This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
-    return user_service.get_all(db, filter, skip, limit)
+    return user_service.get_all(db, hr_document_template_id, filter, skip, limit)
 
 @router.get("/archived", dependencies=[Depends(HTTPBearer())], response_model=List[UserRead],
             summary="Get all Users")
