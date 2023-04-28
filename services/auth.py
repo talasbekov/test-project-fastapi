@@ -82,26 +82,42 @@ class AuthService():
         return user
 
     def register_candidate(self, form: CandidateRegistrationForm, db: Session, staff_unit_id: str):
+        
+        if user_service.get_by_iin(db, form.iin):
+            raise BadRequestException(detail="User with this iin already exists!")
 
         current_user_staff_unit: StaffUnit = staff_unit_service.get_by_id(db, staff_unit_id)
         current_user: User = current_user_staff_unit.actual_users[0]
 
         special_candidate_group = staff_division_service.get_by_name(db, StaffDivisionEnum.CANDIDATES.value)
-
+        
         staff_unit = staff_unit_service.create(db, obj_in=StaffUnitCreate(
             position_id=current_user_staff_unit.position_id,
             staff_division_id=special_candidate_group.id
         ))
+        
+        # extract date of birth from iin
+        date_str = form.iin[:6]
+        date_obj = datetime.strptime(date_str, '%y%m%d')
+        
+        #fake egov
+        first_names = ["Канат", "Мади", "Алибек", "Абдулла", "Аскар", "Хабдулла", "Азамат", "Бахыт", "Дамир", "Дастан"]
+        last_names = ["Алибеков", "Қанатов", "Қенжебаев", "Құдайбергенов", "Нұрғалиев", "Омаров", "Оспанов", "Султанов", "Турсынбаев", "Жақыпов"]
+        father_names = ["Әбдулович", "Айбекович", "Әлишерович", "Әрманович", "Бекзатович", "Дәулетович", "Нұрлыбекович", "Русланович", "Санжарович", "Ержанович"]
+        
+        first_name = random.choice(first_names)
+        last_name = random.choice(last_names)
+        father_name = random.choice(father_names)
 
-        random_string = ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
-        call_sign = current_user.call_sign + '_' + random_string  # concatenate random string to call_sign
-        id_number = current_user.id_number + '_' + random_string  # concatenate random string to id_number
+        random_int = random.randint(10000000, 99999999)
+        call_sign = f"{current_user.call_sign}{random_int}"  # concatenate random int to call_sign
+        id_number = f"{current_user.id_number}{random_int}"  # concatenate random int to id_number
 
         user_obj_in = UserCreate(
             email=None,
-            first_name="Турлыбек",
-            last_name="Турлыбеков",
-            father_name="Турлыбекович",
+            first_name=first_name,
+            last_name=last_name,
+            father_name=father_name,
             staff_unit_id=staff_unit.id,
             actual_staff_unit_id=staff_unit.id,
             icon=current_user.icon,
@@ -114,7 +130,7 @@ class AuthService():
             supervised_by=current_user.id,
             is_military=None,
             personal_id=None,
-            date_birth=current_user.date_birth,
+            date_birth=date_obj,
             iin=form.iin,
             password=None,
             is_active=True
