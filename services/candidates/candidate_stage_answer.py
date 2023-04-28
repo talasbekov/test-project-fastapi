@@ -40,8 +40,7 @@ class CandidateStageAnswerService(ServiceBase[CandidateStageAnswer, CandidateSta
 
         db.add(db_obj)
 
-        current_stage_info = self._set_pending_status_to_current_stage_info(db=db, candidate_id=body.candidate_id,
-                                                                            candidate_stage_question_id=body.candidate_stage_question_id)
+        current_stage_info = self._set_status_to_current_stage_info(db=db, candidate_id=body.candidate_id, candidate_stage_question_id=body.candidate_stage_question_id, status=CandidateStageInfoStatusEnum.APPROVED)
         if current_stage_info:
             db.add(current_stage_info)
 
@@ -111,8 +110,8 @@ class CandidateStageAnswerService(ServiceBase[CandidateStageAnswer, CandidateSta
 
         body_list = [body]
 
-        current_stage_info = self._set_pending_status_to_current_stage_info(db, candidate_id=body_list[-1].candidate_stage_answers[-1].candidate_id,
-                                                                            candidate_stage_question_id=body_list[-1].candidate_stage_answers[-1].candidate_stage_question_id)
+        current_stage_info = self._set_status_to_current_stage_info(db, candidate_id=body_list[-1].candidate_stage_answers[-1].candidate_id,
+                                                                            candidate_stage_question_id=body_list[-1].candidate_stage_answers[-1].candidate_stage_question_id, status=CandidateStageInfoStatusEnum.APPROVED)
         if current_stage_info:
             db.add(current_stage_info)
             db.flush()
@@ -193,7 +192,7 @@ class CandidateStageAnswerService(ServiceBase[CandidateStageAnswer, CandidateSta
         print('success')
         return db_obj
 
-    def _set_pending_status_to_current_stage_info(self, db: Session, candidate_id: str, candidate_stage_question_id: str):
+    def _set_status_to_current_stage_info(self, db: Session, candidate_id: str, candidate_stage_question_id: str, status: CandidateStageInfoStatusEnum):
         question = db.query(CandidateStageQuestion).filter(
             CandidateStageQuestion.id == candidate_stage_question_id
         ).first()
@@ -202,18 +201,13 @@ class CandidateStageAnswerService(ServiceBase[CandidateStageAnswer, CandidateSta
             CandidateStageType.candidate_stage_questions.contains(question),
         ).first()
 
-        if candidate_stage_type:
+        current_stage_info = db.query(CandidateStageInfo).filter(
+            CandidateStageInfo.candidate_id == candidate_id,
+            CandidateStageInfo.candidate_stage_type_id == candidate_stage_type.id
+        ).first()
 
-            current_stage_info = db.query(CandidateStageInfo).filter(
-                CandidateStageInfo.candidate_id == candidate_id,
-                CandidateStageInfo.candidate_stage_type_id == candidate_stage_type.id
-            ).first()
+        current_stage_info.status = status.value
 
-            current_stage_info.status = CandidateStageInfoStatusEnum.PENDING.value
-
-            return current_stage_info
-
-        return None
-     
+        return current_stage_info
 
 candidate_stage_answer_service = CandidateStageAnswerService(CandidateStageAnswer)
