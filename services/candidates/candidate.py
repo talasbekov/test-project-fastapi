@@ -23,15 +23,15 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
     }
 
     def get_multiple(self, db: Session,
-                     filter: str,
-                     user_id: str,
-                     role_id: str,
-                     skip: int = 0,
-                     limit: int = 100) -> CandidateRead:
+                filter: str,
+                user_id: str,
+                role_id: str,
+                skip: int = 0,
+                limit: int = 100) -> CandidateRead:
         """
-             Returns a list of active candidates.
+            Returns a list of active candidates.
 
-             If the user does not have permission to view all candidates, it returns only supervised candidates.
+            If the user does not have permission to view all candidates, it returns only supervised candidates.
         """
 
         # If user hasn't permission to view all candidates, then return only supervised candidates
@@ -41,11 +41,11 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
         return self._get_candidates_by_status(db, filter, skip, limit, CandidateStatusEnum.ACTIVE)
 
     def get_draft_candidates(self, db: Session,
-                             filter: str,
-                             user_id: str,
-                             role_id: str,
-                             skip: int = 0,
-                             limit: int = 100) -> CandidateRead:
+                filter: str,
+                user_id: str,
+                role_id: str,
+                skip: int = 0,
+                limit: int = 100) -> CandidateRead:
         """
             Returns a list of draft candidates.
 
@@ -210,20 +210,27 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
             candidate['last_edit_date'] = candidate_obj.candidate_stage_answers[0].created_at
 
     def _get_candidates_by_status(self, db: Session,
-                                  filter: str,
-                                  skip: int = 0,
-                                  limit: int = 100,
-                                  status: CandidateStatusEnum = None) -> CandidateRead:
+                    filter: str,
+                    skip: int = 0,
+                    limit: int = 100,
+                    status: CandidateStatusEnum = None) -> CandidateRead:
         """
             Returns a list of candidates based on the given status and filter.
         """
 
         if filter is not None:
-            return self._get_candidates_by_status_and_filter(db, filter, skip, limit, status)
-
-        return db.query(self.model).filter(
-            self.model.status == status.value
-        ).order_by(self.model.id.asc()).offset(skip).limit(limit).all()
+            candidates = self._get_candidates_by_status_and_filter(db, filter, skip, limit, status)
+        else: 
+            candidates = db.query(self.model).filter(
+                self.model.status == status.value
+            ).order_by(self.model.id.asc()).offset(skip).limit(limit).all()
+            
+        candidates = [CandidateRead.from_orm(candidate).dict() for candidate in candidates]
+        
+        for candidate in candidates:
+            self._validate_candidate(db, candidate)
+            
+        return candidates
 
     def _get_candidates_by_status_and_filter(self, db: Session,
                                              filter: str,
@@ -249,19 +256,26 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
                                    limit: int = 100,
                                    status: CandidateStatusEnum = None) -> CandidateRead:
         """
-           Returns a list of supervised candidates.
+            Returns a list of supervised candidates.
 
-           If the user does not have permission to view all candidates, it returns only supervised candidate
+            If the user does not have permission to view all candidates, it returns only supervised candidate
         """
         user = user_service.get_by_id(db, user_id)
 
         if filter is not None:
-            return self._get_supervised_candidates_by_status_and_filter(db, filter, user, skip, limit, status)
-
-        return db.query(self.model).filter(
-            self.model.staff_unit_curator_id == user.actual_staff_unit_id,
-            self.model.status == status.value
-        ).order_by(self.model.id.asc()).offset(skip).limit(limit).all()
+            candidates = self._get_supervised_candidates_by_status_and_filter(db, filter, user, skip, limit, status)
+        else: 
+            candidates = db.query(self.model).filter(
+                self.model.staff_unit_curator_id == user.actual_staff_unit_id,
+                self.model.status == status.value
+            ).order_by(self.model.id.asc()).offset(skip).limit(limit).all()
+            
+        candidates = [CandidateRead.from_orm(candidate).dict() for candidate in candidates]
+        
+        for candidate in candidates:
+            self._validate_candidate(db, candidate)
+            
+        return candidates
 
     def _get_supervised_candidates_by_status_and_filter(self, db: Session,
                                                         filter: str,
