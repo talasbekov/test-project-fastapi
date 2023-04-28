@@ -195,7 +195,13 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
         current_stage_info = db.query(CandidateStageInfo).filter(
             CandidateStageInfo.status == CandidateStageInfoStatusEnum.PENDING.value,
             CandidateStageInfo.candidate_id == candidate['id']
-        ).order_by(CandidateStageInfo.created_at.desc()).first()
+        ).order_by(CandidateStageInfo.date_sign.desc()).first()
+        
+        if not current_stage_info:
+            current_stage_info = db.query(CandidateStageInfo).filter(
+                CandidateStageInfo.status == CandidateStageInfoStatusEnum.APPROVED.value,
+                CandidateStageInfo.candidate_id == candidate['id']
+            ).order_by(CandidateStageInfo.date_sign.desc()).first()
 
         if current_stage_info:
             current_stage_type = db.query(CandidateStageType).filter(

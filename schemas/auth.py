@@ -1,7 +1,7 @@
 import uuid
 from typing import Optional
 from datetime import date
-from pydantic import EmailStr
+from pydantic import EmailStr, validator
 
 from schemas import Model
 
@@ -36,3 +36,11 @@ class RegistrationForm(Model):
 
 class CandidateRegistrationForm(Model):
     iin: str
+    
+    @validator('iin')
+    def validate_iin(cls, v):
+        if not v.isdigit():
+            raise ValueError('iin must contain only digits')
+        if len(v) != 12:
+            raise ValueError('iin must be exactly 12 digits')
+        return v

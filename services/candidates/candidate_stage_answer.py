@@ -1,4 +1,5 @@
 from typing import List
+from datetime import datetime
 
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
@@ -201,12 +202,15 @@ class CandidateStageAnswerService(ServiceBase[CandidateStageAnswer, CandidateSta
             CandidateStageType.candidate_stage_questions.contains(question),
         ).first()
 
-        current_stage_info = db.query(CandidateStageInfo).filter(
+        current_stage_info: CandidateStageInfo = db.query(CandidateStageInfo).filter(
             CandidateStageInfo.candidate_id == candidate_id,
             CandidateStageInfo.candidate_stage_type_id == candidate_stage_type.id
         ).first()
 
         current_stage_info.status = status.value
+        
+        if status == CandidateStageInfoStatusEnum.APPROVED:
+            current_stage_info.date_sign = datetime.now()
 
         return current_stage_info
 

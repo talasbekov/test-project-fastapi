@@ -131,6 +131,14 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         ).all()
 
         return users
+    
+    def get_by_iin(self, db: Session, iin: str):
+
+        user = db.query(self.model).filter(
+            self.model.iin == iin
+        ).first()
+
+        return user
 
     def get_by_jurisdiction(
             self, db: Session,

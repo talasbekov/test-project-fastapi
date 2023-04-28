@@ -19,7 +19,7 @@ class CandidateStageInfo(Model):
     __tablename__ = "candidate_stage_infos"
 
     status = Column(Enum(CandidateStageInfoStatusEnum), nullable=True, server_default=CandidateStageInfoStatusEnum.NOT_STARTED.value)
-    date_sign = Column(TIMESTAMP, nullable=True, default=None)
+    date_sign = Column(TIMESTAMP(timezone=True), nullable=True, default=None)
     candidate_id = Column(UUID(as_uuid=True), ForeignKey("candidates.id"), nullable=True)
     candidate_stage_type_id = Column(UUID(as_uuid=True), ForeignKey("candidate_stage_types.id"), nullable=True)
     candidate_stage_type = relationship("CandidateStageType", back_populates="candidate_stage_infos")
