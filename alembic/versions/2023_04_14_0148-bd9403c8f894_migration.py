@@ -950,7 +950,7 @@ def upgrade() -> None:
     group11_id = get_uuid()
     group12_id = get_uuid()
     group13_id = get_uuid()
-
+    group2_1_id = get_uuid()
     op.bulk_insert(
         Base.metadata.tables['staff_divisions'],
         [{
@@ -964,6 +964,12 @@ def upgrade() -> None:
             'id': group2_id,
             'name': "Управление 1",
             'nameKZ': 'Басқару 1',
+            'is_combat_unit': False
+        },  {
+            'parent_group_id': group2_id,
+            'id': group2_1_id,
+            'name': "Отдел 1",
+            'nameKZ': 'Бөлім 1',
             'is_combat_unit': False
         }, {
             'parent_group_id': group1_id,
