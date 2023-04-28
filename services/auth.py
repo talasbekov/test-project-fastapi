@@ -86,21 +86,25 @@ class AuthService():
         if user_service.get_by_iin(db, form.iin):
             raise BadRequestException(detail="User with this iin already exists!")
 
+        # Get current user and staff unit
         current_user_staff_unit: StaffUnit = staff_unit_service.get_by_id(db, staff_unit_id)
         current_user: User = current_user_staff_unit.actual_users[0]
 
+        # Create new staff unit for candidate
         special_candidate_group = staff_division_service.get_by_name(db, StaffDivisionEnum.CANDIDATES.value)
-        
         staff_unit = staff_unit_service.create(db, obj_in=StaffUnitCreate(
             position_id=current_user_staff_unit.position_id,
             staff_division_id=special_candidate_group.id
         ))
         
         # extract date of birth from iin
-        date_str = form.iin[:6]
-        date_obj = datetime.strptime(date_str, '%y%m%d')
+        try:
+            date_str = form.iin[:6]
+            date_obj = datetime.strptime(date_str, '%y%m%d')
+        except ValueError:
+            raise BadRequestException(detail="Invalid date in iin parameter!")
         
-        #fake egov
+        # Generate fake personal information for candidate
         first_names = ["Канат", "Мади", "Алибек", "Абдулла", "Аскар", "Хабдулла", "Азамат", "Бахыт", "Дамир", "Дастан"]
         last_names = ["Алибеков", "Қанатов", "Қенжебаев", "Құдайбергенов", "Нұрғалиев", "Омаров", "Оспанов", "Султанов", "Турсынбаев", "Жақыпов"]
         father_names = ["Әбдулович", "Айбекович", "Әлишерович", "Әрманович", "Бекзатович", "Дәулетович", "Нұрлыбекович", "Русланович", "Санжарович", "Ержанович"]
@@ -113,6 +117,7 @@ class AuthService():
         call_sign = f"{current_user.call_sign}{random_int}"  # concatenate random int to call_sign
         id_number = f"{current_user.id_number}{random_int}"  # concatenate random int to id_number
 
+        # Create new user and candidate
         user_obj_in = UserCreate(
             email=None,
             first_name=first_name,
