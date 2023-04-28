@@ -85,6 +85,8 @@ class AuthService():
         
         if user_service.get_by_iin(db, form.iin):
             raise BadRequestException(detail="User with this iin already exists!")
+        
+        birth_date = self._extract_birth_date_from_iin(form.iin)
 
         # Get current user and staff unit
         current_user_staff_unit: StaffUnit = staff_unit_service.get_by_id(db, staff_unit_id)
@@ -96,13 +98,6 @@ class AuthService():
             position_id=current_user_staff_unit.position_id,
             staff_division_id=special_candidate_group.id
         ))
-        
-        # extract date of birth from iin
-        try:
-            date_str = form.iin[:6]
-            date_obj = datetime.strptime(date_str, '%y%m%d')
-        except ValueError:
-            raise BadRequestException(detail="Invalid date in iin parameter!")
         
         # Generate fake personal information for candidate
         first_names = ["Канат", "Мади", "Алибек", "Абдулла", "Аскар", "Хабдулла", "Азамат", "Бахыт", "Дамир", "Дастан"]
@@ -135,7 +130,7 @@ class AuthService():
             supervised_by=current_user.id,
             is_military=None,
             personal_id=None,
-            date_birth=date_obj,
+            date_birth=birth_date,
             iin=form.iin,
             password=None,
             is_active=True
@@ -213,6 +208,19 @@ class AuthService():
 
         db.add(user)
         db.flush()
+        
+    def _extract_birth_date_from_iin(self, iin: str):
+        try:
+            date_str = iin[:6]
+            birth_date = datetime.strptime(date_str, '%y%m%d')
+        except ValueError:
+            raise BadRequestException(detail="Invalid date in iin parameter!")
+        
+        # ensure date of birth is in the past
+        if birth_date > datetime.today():
+            raise BadRequestException(detail="Date of birth in iin parameter is in the future!")
+        
+        return birth_date
 
 
 auth_service = AuthService()
