@@ -520,7 +520,7 @@ def upgrade() -> None:
     )
     op.create_table('candidate_stage_infos',
     sa.Column('status', sa.Enum('PENDING', 'APPROVED', 'DECLINED', 'NOT_STARTED', name='candidatestageinfostatusenum'), server_default='NOT_STARTED', nullable=True),
-    sa.Column('date_sign', sa.TIMESTAMP(), nullable=True),
+    sa.Column('date_sign', sa.TIMESTAMP(timezone=True), nullable=True),
     sa.Column('candidate_id', sa.UUID(), nullable=True),
     sa.Column('candidate_stage_type_id', sa.UUID(), nullable=True),
     sa.Column('staff_unit_coordinate_id', sa.UUID(), nullable=True),

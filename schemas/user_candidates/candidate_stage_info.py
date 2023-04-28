@@ -43,6 +43,6 @@ class CandidateStageInfoRead(CandidateStageInfoBase):
     staff_unit_coordinate: Optional[StaffUnitRead]
     candidate_stage_type_id: Optional[uuid.UUID]
     candidate_stage_type: Optional[CandidateStageTypeRead]
-    date_sign: Optional[datetime.date]
+    date_sign: Optional[datetime.datetime]
     created_at: Optional[datetime.datetime]
     updated_at: Optional[datetime.datetime]
