@@ -189,7 +189,7 @@ class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageIn
                 detail=f"Введите staff_unit_coordinate_id"
             )
 
-        staff_unit = staff_unit_service.get_all_by_position(db, position.id)
+        staff_unit = staff_unit_service.get_all_by_position(db, position)
 
         candidate_stage_info.staff_unit_coordinate_id = staff_unit.id
 

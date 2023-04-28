@@ -171,10 +171,12 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         staff_function_ids = [i.id for i in staff_unit.staff_functions]
 
         draft_status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.DRAFT.value)
+        revision_status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.ON_REVISION.value)
         key_words = filter.lower().split()
         documents = (
             db.query(self.model)
-            .filter(self.model.status_id != draft_status.id)
+            .filter(self.model.status_id != draft_status.id,
+                    self.model.status_id != revision_status.id)
             .join(HrDocumentStep)
             .join(self.model.users)
             .filter(
