@@ -190,7 +190,6 @@ class CandidateStageAnswerService(ServiceBase[CandidateStageAnswer, CandidateSta
                 candidate_stage_question_id=body_data['candidate_stage_question_id'],
                 candidate_id=body_data['candidate_id']
             )
-        print('success')
         return db_obj
 
     def _set_status_to_current_stage_info(self, db: Session, candidate_id: str, candidate_stage_question_id: str, status: CandidateStageInfoStatusEnum):

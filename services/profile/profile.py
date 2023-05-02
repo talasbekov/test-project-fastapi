@@ -69,8 +69,6 @@ class ProfileService(ServiceBase[Profile, ProfileCreate, ProfileUpdate]):
     #     template_file.render(docx_context_data)
     #     template_file.save(generated_file_path)
 
-    #     print(docx_context_data)
-
     #     return {
     #         "file_location": generated_file_path,
     #         "file_name": generated_file_name

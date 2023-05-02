@@ -28,7 +28,6 @@ class ConnectionManager:
         return user_id
 
     async def broadcast(self, message:str, user_id: uuid.UUID):
-        print(user_id)
         ws = self.active_connections.get(user_id)
         if ws is not None:
             ws.send_text(message)

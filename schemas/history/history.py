@@ -412,7 +412,6 @@ class ExperienceRead(ReadModel):
 
     @classmethod
     def from_orm(cls, orm_obj):
-        print(orm_obj.name_of_organization)
         return cls(
             id=orm_obj.id,
             date_from=orm_obj.date_from,

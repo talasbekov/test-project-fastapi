@@ -118,7 +118,6 @@ async def get_profile(*,
 ):
     Authorize.jwt_required()
     profile = profile_service.get_by_user_id(db, Authorize.get_jwt_subject())
-    print(profile.educational_profile.language_proficiency)
     return educational_profile_service.get_by_id(db, profile.educational_profile.id)
 
 

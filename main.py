@@ -84,7 +84,6 @@ def jwt_decode_error_handler(request: Request, exc: JWTDecodeError):
 
 @app.exception_handler(AuthJWTException)
 def authjwt_exception_handler(request: Request, exc: AuthJWTException):
-    print(type(exc))
     return JSONResponse(
         status_code=exc.status_code,
         content={"detail": exc.message}
