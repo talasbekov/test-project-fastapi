@@ -112,7 +112,7 @@ class CandidateStageAnswerService(ServiceBase[CandidateStageAnswer, CandidateSta
         body_list = [body]
 
         current_stage_info = self._set_status_to_current_stage_info(db, candidate_id=body_list[-1].candidate_stage_answers[-1].candidate_id,
-                                                                            candidate_stage_question_id=body_list[-1].candidate_stage_answers[-1].candidate_stage_question_id, status=CandidateStageInfoStatusEnum.APPROVED)
+                                                                            candidate_stage_question_id=body_list[-1].candidate_stage_answers[-1].candidate_stage_question_id, status=CandidateStageInfoStatusEnum.NOT_STARTED)
         if current_stage_info:
             db.add(current_stage_info)
             db.flush()
