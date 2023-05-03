@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import func, or_
+from sqlalchemy import func, and_
 from sqlalchemy.orm import Session
 
 from exceptions import ForbiddenException, BadRequestException
@@ -241,9 +241,9 @@ class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageIn
             .filter(
                 CandidateStageInfo.staff_unit_coordinate_id == staff_unit_id,
                 CandidateStageInfo.is_waits == True,
-                ((or_(*[func.lower(User.first_name).contains(name) for name in key_words])) |
-                 (or_(*[func.lower(User.last_name).contains(name) for name in key_words])) |
-                 (or_(*[func.lower(User.father_name).contains(name) for name in key_words])))
+                (and_(func.concat(func.lower(User.first_name), ' ',
+                                     func.lower(User.last_name), ' ',
+                                     func.lower(User.father_name)).contains(name) for name in key_words))
             )
         )
 

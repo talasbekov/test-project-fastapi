@@ -20,7 +20,7 @@ router = APIRouter(prefix="/hr-documents", tags=["HrDocuments"], dependencies=[D
 async def get_not_signed(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
-    filter: str = "",
+    filter: str = None,
     skip: int = 0,
     limit: int = 10,
 ):
@@ -41,7 +41,7 @@ async def get_not_signed(*,
 async def get_initialized(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
-    filter: str = "",
+    filter: str = None,
     skip: int = 0,
     limit: int = 10,
 ):
@@ -86,13 +86,14 @@ async def initialize(*,
 async def get_draft_documents(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
+    filter: str = None,
     skip: int = 0,
     limit: int = 10,
-    filter: str = ""
+
 ):
     """
         Get all Draft HrDocuments
-
+        - **filter**: str - The value which returns filtered results. This parameter is optional and defaults to None
         - **skip**: int - The number of HrDocuments to skip before returning the results. This parameter is optional and defaults to 0.
         - **limit**: int - The maximum number of HrDocuments to return in the response. This parameter is optional and defaults to 10.
     """

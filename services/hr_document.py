@@ -136,7 +136,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
     def get_initialized_documents(self, db: Session, user_id: uuid.UUID, filter: str, skip: int, limit: int):
         user = user_service.get_by_id(db, user_id)
-        key_words = filter.lower().split()
         documents = (
             db.query(self.model)
             .join(self.model.hr_document_infos)
@@ -146,19 +145,19 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 HrDocumentInfo.assigned_to_id == user_id,
                 DocumentStaffFunction.priority == 1
                 )
-            .join(self.model.users)
-            .join(self.model.document_template)
-            .filter((or_(*[func.lower(User.first_name).contains(name) for name in key_words])) |
-                    (or_(*[func.lower(User.last_name).contains(name) for name in key_words])) |
-                    (or_(*[func.lower(User.father_name).contains(name) for name in key_words])) |
-                    (or_(*[func.lower(HrDocumentTemplate.name).contains(name) for name in key_words])) |
-                    (or_(*[func.lower(HrDocumentTemplate.nameKZ).contains(name) for name in key_words]))
-                    )
+        )
+
+        if filter is not None:
+            documents = self._add_filter_to_query(documents, filter)
+
+        documents = (
+            documents
             .order_by(self.model.due_date.asc())
             .offset(skip)
             .limit(limit)
             .all()
         )
+        print(documents)
         return self._return_correctly(db, documents, user)
 
     def get_not_signed_documents(
@@ -172,50 +171,43 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         draft_status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.DRAFT.value)
         revision_status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.ON_REVISION.value)
-        key_words = filter.lower().split()
         documents = (
             db.query(self.model)
             .filter(self.model.status_id != draft_status.id,
                     self.model.status_id != revision_status.id)
             .join(HrDocumentStep)
-            .join(self.model.users)
-            .filter(
-                HrDocumentStep.staff_function_id.in_(staff_function_ids) & (
-                        (or_(*[func.lower(User.first_name).contains(name) for name in key_words])) |
-                        (or_(*[func.lower(User.last_name).contains(name) for name in key_words])) |
-                        (or_(*[func.lower(User.father_name).contains(name) for name in key_words])) |
-                        (or_(*[func.lower(HrDocumentTemplate.name).contains(name) for name in key_words])) |
-                        (or_(*[func.lower(HrDocumentTemplate.nameKZ).contains(name) for name in key_words]))
-                )
-            )
+            .filter(HrDocumentStep.staff_function_id.in_(staff_function_ids))
+        )
+
+        if filter is not None:
+            documents = self._add_filter_to_query(documents, filter)
+
+        documents = (
+            documents
             .order_by(self.model.due_date.asc())
             .offset(skip)
             .limit(limit)
             .all()
         )
-
         return self._return_correctly(db, documents, user)
 
     def get_draft_documents(self, db: Session, user_id: str, filter: str, skip: int = 0, limit: int = 100):
         user = user_service.get_by_id(db, user_id)
         status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.DRAFT.value)
 
-        key_words = filter.lower().split()
-
         documents = (
             db.query(self.model)
-            .join(self.model.users)
             .filter(
                 self.model.status_id == status.id,
-                self.model.initialized_by_id == user_id,
-                (
-                        (or_(*[func.lower(User.first_name).contains(name) for name in key_words])) |
-                        (or_(*[func.lower(User.last_name).contains(name) for name in key_words])) |
-                        (or_(*[func.lower(User.father_name).contains(name) for name in key_words])) |
-                        (or_(*[func.lower(HrDocumentTemplate.name).contains(name) for name in key_words])) |
-                        (or_(*[func.lower(HrDocumentTemplate.nameKZ).contains(name) for name in key_words]))
-                )
-            ).order_by(self.model.due_date.asc())
+                self.model.initialized_by_id == user_id
+            ))
+
+        if filter is not None:
+            documents = self._add_filter_to_query(documents, filter)
+
+        documents = (
+            documents
+            .order_by(self.model.due_date.asc())
             .offset(skip)
             .limit(limit)
             .all()
@@ -867,5 +859,20 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         return True
 
+    def _add_filter_to_query(self, document_query, filter):
+        key_words = filter.lower().split()
+        documents = (
+            document_query
+            .join(self.model.users)
+            .join(self.model.document_template)
+            .filter(and_(func.concat(func.lower(User.first_name), ' ',
+                                     func.lower(User.last_name), ' ',
+                                     func.lower(User.father_name), ' ',
+                                     func.lower(HrDocumentTemplate.name), ' ',
+                                     func.lower(HrDocumentTemplate.nameKZ)
+                                     ).contains(name) for name in key_words)
+                    )
+        )
+        return documents
 
 hr_document_service = HrDocumentService(HrDocument)

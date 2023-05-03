@@ -1,5 +1,5 @@
 from fastapi.logger import logger as log
-from sqlalchemy import func, or_
+from sqlalchemy import func, and_
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException, ForbiddenException, BadRequestException
@@ -311,10 +311,12 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
             .join(StaffUnit, self.model.staff_unit_id == StaffUnit.id)
             .join(User, User.staff_unit_id == StaffUnit.id)
             .filter(
-                self.model.status == status.value,
-                ((or_(*[func.lower(User.first_name).contains(name) for name in key_words])) |
-                (or_(*[func.lower(User.last_name).contains(name) for name in key_words])) |
-                (or_(*[func.lower(User.father_name).contains(name) for name in key_words])))
+                self.model.status == status.value
+            )
+            .filter(
+                and_(func.concat(func.lower(User.first_name), ' ',
+                                 func.lower(User.last_name), ' ',
+                                 func.lower(User.father_name)).contains(name) for name in key_words)
             )
         )
 

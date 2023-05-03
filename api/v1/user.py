@@ -20,7 +20,7 @@ async def get_all(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
     hr_document_template_id: uuid.UUID = None,
-    filter: str = "",
+    filter: str = None,
     skip: int = 0,
     limit: int = 10
 ):

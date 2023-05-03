@@ -27,25 +27,24 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         return user
 
     def get_all(self, db: Session, hr_document_template_id: uuid.UUID, filter: str, skip: int, limit: int) -> List[User]:
-        key_words = filter.lower().split()
         users = (
             db.query(self.model)
-            .filter((or_(*[func.lower(self.model.first_name).contains(name) for name in key_words])) |
-                    (or_(*[func.lower(self.model.last_name).contains(name) for name in key_words])) |
-                    (or_(*[func.lower(self.model.father_name).contains(name) for name in key_words]))
-                    )
         )
+
+        if filter is not None:
+            users = self._add_filter_to_query(users, filter)
 
         if hr_document_template_id is not None:
             excepted_users = self._get_excepted_users_by_document_in_progress(db, hr_document_template_id)
             users = users.except_(excepted_users)
 
-        users = (users
-                 .order_by(self.model.created_at.asc())
-                 .offset(skip)
-                 .limit(limit)
-                 .all()
-                 )
+        users = (
+            users
+            .order_by(self.model.created_at.asc())
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
 
         return users
 
@@ -258,30 +257,31 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
     def _get_users_by_filter_is_active(self, db: Session, filter: str, skip: int, limit: int, is_active: bool)\
             -> List[User]:
-        if filter is not None:
-            key_words = filter.lower().split()
-            users = (
-                db.query(self.model)
-                .filter((or_(*[func.lower(self.model.first_name).contains(name) for name in key_words])) |
-                        (or_(*[func.lower(self.model.last_name).contains(name) for name in key_words])) |
-                        (or_(*[func.lower(self.model.father_name).contains(name) for name in key_words]))
-                        )
-                .filter(self.model.is_active.is_(is_active))
-                .order_by(self.model.created_at.asc())
-                .offset(skip)
-                .limit(limit)
-                .all()
-                )
-        else:
-            users = (
-                db.query(self.model)
-                .filter(self.model.is_active.is_(is_active))
-                .order_by(self.model.created_at.asc())
-                .offset(skip)
-                .limit(limit)
-                .all()
-            )
+        users = (
+            db.query(self.model)
+            .filter(self.model.is_active.is_(is_active))
+        )
 
+        if filter is not None:
+            users = self._add_filter_to_query(users, filter)
+
+        users = (
+            users
+            .order_by(self.model.created_at.asc())
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
+        return users
+
+    def _add_filter_to_query(self, user_query, filter):
+        key_words = filter.lower().split()
+        users = (user_query
+                 .filter(and_(func.concat(func.lower(User.first_name), ' ',
+                              func.lower(User.last_name), ' ',
+                              func.lower(User.father_name)).contains(name) for name in key_words)
+                )
+        )
         return users
 
 user_service = UserService(User)
