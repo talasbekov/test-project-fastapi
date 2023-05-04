@@ -272,6 +272,10 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             recommender_user = recommender.user_by.last_name + ' ' + recommender.user_by.first_name[0] + '.' + recommender.user_by.father_name[0] + '.'
         else:
             recommender_user = None
+        if user:
+            researcher = user.last_name + ' ' + user.first_name[0] + '.' + user.father_name[0] + '.'
+        else:
+            researcher = None
 
         general_information_read = GeneralInformationRead(
             oath=user_oath_read,
@@ -279,8 +283,8 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             personnel_reserve=personal_reserve_read,
             coolness=coolness_read,
             is_badge_black=is_badge_black,
-            researcher=user.last_name + ' ' + user.first_name[0] + '.' + user.father_name[0] + '.',
-            recommender=recommender
+            researcher=researcher,
+            recommender=recommender_user
         )
 
 
