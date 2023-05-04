@@ -113,6 +113,18 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
     def get_all_by_type(self, db: Session, type: str):
         return db.query(self.model).filter(self.model.type == type).all()
 
+    def get_all_by_type_and_user_id(self, db: Session, type: str, user_id: uuid.UUID, skip: int, limit: int):
+        return (
+            db.query(self.model)
+            .filter(
+                self.model.type == type,
+                self.model.user_id == user_id
+            )
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
+
     def create(self, db: Session, obj_in: HistoryCreate):
         cls = options.get(obj_in.type) 
         if cls is None:
