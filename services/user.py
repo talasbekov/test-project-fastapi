@@ -1,6 +1,6 @@
 import types
 import uuid
-from typing import List
+from typing import List, Optional
 
 from sqlalchemy.orm import Session
 from sqlalchemy import func, or_, and_
@@ -30,8 +30,8 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         users = (
             db.query(self.model)
         )
-
-        if filter is not None:
+        filter.lstrip().rstrip()
+        if filter != '':
             users = self._add_filter_to_query(users, filter)
 
         if hr_document_template_id is not None:
@@ -255,14 +255,14 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
         return users
 
-    def _get_users_by_filter_is_active(self, db: Session, filter: str, skip: int, limit: int, is_active: bool)\
+    def _get_users_by_filter_is_active(self, db: Session, filter: Optional[str], skip: int, limit: int, is_active: bool)\
             -> List[User]:
         users = (
             db.query(self.model)
             .filter(self.model.is_active.is_(is_active))
         )
-
-        if filter is not None:
+        filter.lstrip().rstrip()
+        if filter != '':
             users = self._add_filter_to_query(users, filter)
 
         users = (

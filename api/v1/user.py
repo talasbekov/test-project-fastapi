@@ -20,7 +20,7 @@ async def get_all(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
     hr_document_template_id: uuid.UUID = None,
-    filter: str = None,
+    filter: str = '',
     skip: int = 0,
     limit: int = 10
 ):
@@ -32,6 +32,7 @@ async def get_all(*,
        - **limit**: int - The maximum number of users to return in response. This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
+    filter.lstrip().rstrip()
     return user_service.get_all(db, hr_document_template_id, filter, skip, limit)
 
 @router.get("/archived", dependencies=[Depends(HTTPBearer())], response_model=List[UserRead],
@@ -39,7 +40,7 @@ async def get_all(*,
 async def get_all_archived(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
-    filter: str = None,
+    filter: str = '',
     skip: int = 0,
     limit: int = 10
 ):
@@ -50,6 +51,7 @@ async def get_all_archived(*,
        - **limit**: int - The maximum number of users to return in response. This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
+    filter.lstrip().rstrip()
     return user_service.get_all_archived(db, filter, skip, limit)
 
 @router.get("/active", dependencies=[Depends(HTTPBearer())], response_model=List[UserRead],
@@ -57,7 +59,7 @@ async def get_all_archived(*,
 async def get_all_active(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
-    filter: str = None,
+    filter: str = '',
     skip: int = 0,
     limit: int = 10
 ):
@@ -68,6 +70,7 @@ async def get_all_active(*,
        - **limit**: int - The maximum number of users to return in response. This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
+    filter.lstrip().rstrip()
     return user_service.get_all_active(db, filter, skip, limit)
 
 @router.get("/jurisdiction", dependencies=[Depends(HTTPBearer())], response_model=List[UserRead],
