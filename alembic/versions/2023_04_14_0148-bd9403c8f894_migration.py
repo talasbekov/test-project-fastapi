@@ -2686,22 +2686,22 @@ def upgrade() -> None:
         [{
             'id': status_type,
             'name': 'На работе',
-            'nameKZ': 'Жумыста'
+            'nameKZ': 'Жұмыста'
         },
         {
             'id': status_type2,
             'name': 'В отпуске',
-            'nameKZ': 'Отпускта'
+            'nameKZ': 'Демалыста (Отпуск)'
         },
         {
             'id': status_type3,
             'name': "Умер",
-            'nameKZ': 'Өлі'
+            'nameKZ': 'Қайтыс болды'
         },
         {
             'id': status_type4,
             'name': "В отставке",
-            'nameKZ': 'Зейнеткер'
+            'nameKZ': 'Қызметін доғарды (Отставка)'
         },
         {
             'id': status_type5,
