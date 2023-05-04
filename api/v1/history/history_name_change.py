@@ -64,6 +64,22 @@ async def get_by_id(*,
     """
     Authorize.jwt_required()
     return history_name_change_service.get_by_id(db, id)
+
+
+@router.get("/user/{user_id}/", dependencies=[Depends(HTTPBearer())],
+            summary="Get History Name Changes by user id")
+async def get_by_user_id(*,
+    db: Session = Depends(get_db),
+    user_id: str,
+    Authorize: AuthJWT = Depends()
+):
+    """
+       Get History Name Changes by user id
+
+       - **user_id**: UUID - required
+    """
+    Authorize.jwt_required()
+    return history_name_change_service.get_all_by_user_id(db, user_id)
     
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],

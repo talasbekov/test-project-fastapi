@@ -5,7 +5,7 @@ from models import NameChange
 from schemas import HistoryNameChangeCreate, HistoryNameChangeUpdate
 from services import ServiceBase
 
- 
+
 
 class NameChangeService(ServiceBase[NameChange, HistoryNameChangeCreate, HistoryNameChangeUpdate]):
     
