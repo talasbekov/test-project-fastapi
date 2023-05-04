@@ -1063,6 +1063,8 @@ def upgrade() -> None:
     staff_unit20_id = get_uuid()
     staff_unit21_id = get_uuid()
     staff_unit22_id = get_uuid()
+    
+    empty_unit_id = get_uuid()
 
 
     op.bulk_insert(
@@ -1082,6 +1084,11 @@ def upgrade() -> None:
             'user_id': None,
             'position_id': position4_id,
             'staff_division_id': group3_id
+        }, {
+            'id': empty_unit_id,
+            'user_id': None,
+            'position_id': position4_id,
+            'staff_division_id': group2_1_id
         }]
     )
 
