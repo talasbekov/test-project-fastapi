@@ -227,11 +227,10 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         if coolness is None:
             coolness_read = None
         else:
-                
             coolness_read = CoolnessRead(
                 type_id=coolness.type_id,
                 date_to=coolness.history.date_to,
-                name=coolness.type.name,
+                type=coolness.type,
                 id=coolness.id,
                 user_id=coolness.user_id,
             )
