@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     SENTRY_DSN: str = None
     
     GENERATE_IP: str = None
+    SQLALCHEMY_ECHO: bool = False
 
     class Config:
         env_file = ".env"

@@ -21,6 +21,7 @@ class HrDocumentTemplateBase(NamedModel):
     properties: Dict[str, dict]
     description: Optional[str]
     actions: Dict[str, list]
+    is_visible: bool
 
     _check_properties = validator('properties', allow_reuse=True)(hr_document_templates_properties_validator)
 
@@ -40,6 +41,7 @@ class HrDocumentTemplateRead(HrDocumentTemplateBase, ReadNamedModel):
     properties: Optional[Union[dict, None]]
     actions: Optional[Union[dict, None]]
     is_active: Optional[bool]
+    is_visible: Optional[bool]
 
     class Config:
         orm_mode = True
