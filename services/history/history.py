@@ -114,6 +114,20 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         return db.query(self.model).filter(self.model.type == type).all()
 
     def get_all_by_type_and_user_id(self, db: Session, type: str, user_id: uuid.UUID, skip: int, limit: int):
+        if type == 'beret_history':
+            black_beret_type = badge_service.get_black_beret(db)
+            black_beret = badge_service.get_badge_by_type(db, black_beret_type.id)
+            return (
+                db.query(BadgeHistory)
+                .filter(
+                    BadgeHistory.user_id == user_id,
+                    BadgeHistory.badge_id == black_beret.id
+                )
+                .offset(skip)
+                .limit(limit)
+                .all()
+            )
+
         return (
             db.query(self.model)
             .filter(
