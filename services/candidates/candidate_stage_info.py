@@ -19,7 +19,8 @@ class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageIn
         """
             Retrieves a list of CandidateStageInfo records for a specific staff_unit_id.
         """
-        if filter is None:
+        filter.lstrip().rstrip()
+        if filter == '':
             return db.query(CandidateStageInfo).filter(
                 CandidateStageInfo.staff_unit_coordinate_id == staff_unit_id,
                 CandidateStageInfo.is_waits == True

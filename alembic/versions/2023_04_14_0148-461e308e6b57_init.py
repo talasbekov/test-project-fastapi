@@ -293,6 +293,7 @@ def upgrade() -> None:
                     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'),
                               nullable=False),
                     sa.Column('maintainer_id', sa.UUID(), nullable=True),
+                    sa.Column('is_visible', sa.Boolean(), default=True),
                     sa.ForeignKeyConstraint(['maintainer_id'], ['staff_units.id']),
                     sa.PrimaryKeyConstraint('id')
                     )

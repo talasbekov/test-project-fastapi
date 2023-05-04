@@ -78,9 +78,11 @@ class CandidateStageAnswerService(ServiceBase[CandidateStageAnswer, CandidateSta
         for item in body_data.get('candidate_stage_answers', []):
             answer_type = item.get('type')
             if not item.get('answer_id'): 
-                answer = db.query(CandidateStageAnswer).filter(CandidateStageAnswer.candidate_id == item.get('candidate_id'), CandidateStageAnswer.candidate_stage_question_id == item.get('candidate_stage_question_id')).first()
+                answer = db.query(CandidateStageAnswer).filter(CandidateStageAnswer.candidate_id == item.get('candidate_id'),
+                                                               CandidateStageAnswer.candidate_stage_question_id == item.get('candidate_stage_question_id')).first()
 
                 if answer:
+                    print("Answer already exists!")
                     raise SgoErpException(detail=f"Answer with id {answer.id} already exists!", status_code=400) 
                 db_obj = self._create_candidate_stage_answer_string(answer_type, item)
                 if db_obj is None:
@@ -100,10 +102,11 @@ class CandidateStageAnswerService(ServiceBase[CandidateStageAnswer, CandidateSta
                 ).first()
 
                 if item_update_obj is None:
+                    print("Answer not found")
                     raise NotFoundException(f"Answer with id {item.get('answer_id')} not found!")
                  
                 if item['type'] == 'Dropdown':
-                    item['type'] = 'String' 
+                    item['type'] = 'String'  
                 item_update = CandidateStageAnswerUpdate(**item)
                 db_obj = super().update(db, db_obj=item_update_obj, obj_in=item_update)
                  

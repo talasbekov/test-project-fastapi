@@ -146,8 +146,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 DocumentStaffFunction.priority == 1
                 )
         )
-
-        if filter is not None:
+        filter.lstrip().rstrip()
+        if filter != '':
             documents = self._add_filter_to_query(documents, filter)
 
         documents = (
@@ -178,8 +178,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             .join(HrDocumentStep)
             .filter(HrDocumentStep.staff_function_id.in_(staff_function_ids))
         )
-
-        if filter is not None:
+        filter.lstrip().rstrip()
+        if filter != '':
             documents = self._add_filter_to_query(documents, filter)
 
         documents = (
@@ -201,8 +201,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 self.model.status_id == status.id,
                 self.model.initialized_by_id == user_id
             ))
-
-        if filter is not None:
+        filter.lstrip().rstrip()
+        if filter != '':
             documents = self._add_filter_to_query(documents, filter)
 
         documents = (

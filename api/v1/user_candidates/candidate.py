@@ -21,7 +21,7 @@ async def get_all(
         skip: int = 0,
         limit: int = 100,
         Authorize: AuthJWT = Depends(),
-        filter: str = None
+        filter: str = ''
 ):
     """
         Get all Candidates.
@@ -32,6 +32,7 @@ async def get_all(
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
     role = Authorize.get_raw_jwt()['role']
+    filter.lstrip().rstrip()
     return candidate_service.get_multiple(db, filter=filter, user_id=user_id, role_id=role, skip=skip, limit=limit)
 
 
@@ -43,7 +44,7 @@ async def get_all_draft_candidates(
         skip: int = 0,
         limit: int = 100,
         Authorize: AuthJWT = Depends(),
-        filter: str = None
+        filter: str = ''
 ):
     """
         Get all Draft Candidates.
@@ -54,6 +55,7 @@ async def get_all_draft_candidates(
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
     role = Authorize.get_raw_jwt()['role']
+    filter.lstrip().rstrip()
     return candidate_service.get_draft_candidates(db, filter=filter, user_id=user_id, role_id=role, skip=skip, limit=limit)
 
 

@@ -22,7 +22,7 @@ async def get_all(
         skip: int = 0,
         limit: int = 100,
         Authorize: AuthJWT = Depends(),
-        filter: str = None
+        filter: str = ''
 ):
     """
         Get all Incoming CandidateStageInfo.
@@ -32,6 +32,7 @@ async def get_all(
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
+    filter.lstrip().rstrip()
     return candidate_stage_info_service.get_all_by_staff_unit_id(db, filter, skip, limit, role)
 
 

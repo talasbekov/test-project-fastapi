@@ -223,8 +223,8 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
         """
             Returns a list of candidates based on the given status and filter.
         """
-
-        if filter is not None:
+        filter.lstrip().rstrip()
+        if filter != '':
             candidates = self._get_candidates_by_status_and_filter(db, filter, skip, limit, status)
         else: 
             candidates = db.query(self.model).filter(
@@ -267,8 +267,8 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
             If the user does not have permission to view all candidates, it returns only supervised candidate
         """
         user = user_service.get_by_id(db, user_id)
-
-        if filter is not None:
+        filter.lstrip().rstrip()
+        if filter != '':
             candidates = self._get_supervised_candidates_by_status_and_filter(db, filter, user, skip, limit, status)
         else: 
             candidates = db.query(self.model).filter(

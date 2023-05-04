@@ -1063,6 +1063,8 @@ def upgrade() -> None:
     staff_unit20_id = get_uuid()
     staff_unit21_id = get_uuid()
     staff_unit22_id = get_uuid()
+    
+    empty_unit_id = get_uuid()
 
 
     op.bulk_insert(
@@ -1082,6 +1084,11 @@ def upgrade() -> None:
             'user_id': None,
             'position_id': position4_id,
             'staff_division_id': group3_id
+        }, {
+            'id': empty_unit_id,
+            'user_id': None,
+            'position_id': position4_id,
+            'staff_division_id': group2_1_id
         }]
     )
 
@@ -1553,6 +1560,7 @@ def upgrade() -> None:
             'pathKZ': 'http://193.106.99.68:2287/static/Приказ%20о%20назначении.html',
             'description': "Приказ о назначении на позицию - это официальный документ, который используется для уведомления сотрудников о назначении на определенную должность в организации. Он может быть выдан руководителем организации, отдела или менеджером по персоналу.",
             'subject_type': "EMPLOYEE",
+            'is_visible': True,
             'maintainer_id': staff_unit4_id,
             'properties': {
                 "signed_at": {
@@ -1640,6 +1648,7 @@ def upgrade() -> None:
             'pathKZ': 'http://193.106.99.68:2287/static/Приказ_о_присвоении_звания_повышение.html',
             'subject_type': "EMPLOYEE",
             'maintainer_id': staff_unit4_id,
+            'is_visible': True,
             'description': "Приказ о присвоении звания - это официальный документ, который используется для уведомления сотрудников о присвоении им нового звания в организации. Он может быть выдан руководителем организации, отдела или менеджером по персоналу.",
             'properties': {
                 "signed_at": {
@@ -1679,7 +1688,7 @@ def upgrade() -> None:
                     "data_taken": "auto"
                 },
                 "new_position": {
-                    "alias_name": "Новая звание субъекта",
+                    "alias_name": "Новое звание субъекта",
                     'alias_nameKZ': 'Жаңа атақ',
                     "type": "write",
                     "data_taken": "dropdown",
@@ -1703,6 +1712,7 @@ def upgrade() -> None:
             'pathKZ': 'http://193.106.99.68:2287/static/Приказ_о_присвоении_Черного_берета.html',
             'subject_type': "EMPLOYEE",
             'maintainer_id': staff_unit4_id,
+            'is_visible': True,
             'description': "Приказ о присвоении черного берета - это официальный документ, который используется для уведомления сотрудников о присвоении им высокой воинской награды в виде черного берета. Он может быть выдан руководителем воинской или правительственной организации.",
             'properties': {
                 "signed_at": {
@@ -1776,6 +1786,7 @@ def upgrade() -> None:
             "subject_type": 1,
             'description': "",
             'maintainer_id': staff_unit4_id,
+            'is_visible': False,
             "properties": {
                 "recipient.organization_name": {
                     "alias_name": "Наименование ссылаемой организации",
@@ -1899,6 +1910,7 @@ def upgrade() -> None:
             "pathKZ": "http://193.106.99.68:2287/static/pre-finalv2.html",
             "subject_type": 1,
             'description': "",
+            'is_visible': False,
             'maintainer_id': staff_unit4_id,
             "properties": {
                 "curator.rank.name": {
@@ -2079,6 +2091,7 @@ def upgrade() -> None:
             "subject_type": 1,
             'maintainer_id': staff_unit4_id,
             'description': "",
+            'is_visible': False,
             "properties": {
                 "example": {
                     "alias_name": "Звание куратора",
