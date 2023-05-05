@@ -267,7 +267,7 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
             If the user does not have permission to view all candidates, it returns only supervised candidate
         """
         user = user_service.get_by_id(db, user_id)
-        filter.lstrip().rstrip()
+
         if filter != '':
             candidates = self._get_supervised_candidates_by_status_and_filter(db, filter, user, skip, limit, status)
         else: 

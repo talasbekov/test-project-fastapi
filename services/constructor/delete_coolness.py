@@ -23,7 +23,7 @@ class DeleteCoolnessHandler(BaseHandler):
         self.handle_validation(db, user, action, template_props, props, document)
         res = coolness_service.stop_relation(db, user.id, props[tagname]["value"])
 
-        res.document_link = configs.GENERATE_IP + str(document.id)
+        res.cancel_document_link = configs.GENERATE_IP + str(document.id)
         document.old_history_id = res.id
 
     def handle_validation(

@@ -32,8 +32,7 @@ async def get_all(
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
     role = Authorize.get_raw_jwt()['role']
-    filter.lstrip().rstrip()
-    return candidate_service.get_multiple(db, filter=filter, user_id=user_id, role_id=role, skip=skip, limit=limit)
+    return candidate_service.get_multiple(db, filter=filter.lstrip().rstrip(), user_id=user_id, role_id=role, skip=skip, limit=limit)
 
 
 @router.get("/drafts", dependencies=[Depends(HTTPBearer())],
@@ -55,8 +54,7 @@ async def get_all_draft_candidates(
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
     role = Authorize.get_raw_jwt()['role']
-    filter.lstrip().rstrip()
-    return candidate_service.get_draft_candidates(db, filter=filter, user_id=user_id, role_id=role, skip=skip, limit=limit)
+    return candidate_service.get_draft_candidates(db, filter=filter.lstrip().rstrip(), user_id=user_id, role_id=role, skip=skip, limit=limit)
 
 
 @router.get("/{id}", dependencies=[Depends(HTTPBearer())],

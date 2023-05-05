@@ -20,7 +20,7 @@ from .staff_unit import StaffUnit
 from .service_id import ServiceID, ServiceIDStatus
 from .privelege_emergency import PrivilegeEmergency, FormEnum
 from .recommender_user import RecommenderUser
-from .coolness import Coolness, SpecialtyEnum
+from .coolness import Coolness, SpecialtyEnum, CoolnessStatusEnum
 from .military_unit import MilitaryUnit
 from .user_oath import UserOath
 from .user_stat import UserStat

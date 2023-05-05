@@ -23,6 +23,7 @@ from schemas import (
     StaffDivisionRead,
 )
 from schemas import Model, NamedModel, ReadModel, ReadNamedModel
+from models import CoolnessStatusEnum
 
 from .general_information import GeneralInformationRead
 from .history_personal import (
@@ -114,6 +115,8 @@ class HistoryPersonalRead(ReadModel):
     coolness: Optional['CoolnessReadHistory']
     contract: Optional['ContractReadHistory']
     document_link: Optional[str]
+    confirm_document_link: Optional[str]
+    cancel_document_link: Optional[str]
     document_number: Optional[str]
     name_of_organization: Optional[str]
     user_id: uuid.UUID
@@ -150,6 +153,20 @@ class HistoryPersonalRead(ReadModel):
         else:
             return None
 
+    @property
+    def coolness_status(self) -> Optional[dict]:
+        if self.coolness is not None:
+            status = CoolnessStatusEnum.granted
+            if self.confirm_document_link is not None:
+                status = CoolnessStatusEnum.confirmed
+            if self.cancel_document_link is not None:
+                status = CoolnessStatusEnum.removed
+            dict_coolness = self.coolness.dict()
+            dict_coolness["status"] = status
+            return dict_coolness
+        else:
+            return None
+
     def to_dict(self) -> dict:
         return {
             "id": self.id,
@@ -163,9 +180,11 @@ class HistoryPersonalRead(ReadModel):
             "name_change": self.name_change,
             "attestation": self.attestation,
             "status": self.status,
-            "coolness": self.coolness,
+            "coolness": self.coolness_status,
             "contract": self.contract,
             "document_link": self.document_link,
+            "confirm_document_link": self.confirm_document_link,
+            "cancel_document_link": self.cancel_document_link,
             "document_number": self.document_number,
             "user_id": self.user_id,
             "type": self.type,
