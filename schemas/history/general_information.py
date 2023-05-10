@@ -32,5 +32,5 @@ class GeneralInformationRead(BaseModel):
     personnel_reserve: Optional[PersonnalReserveRead]
     coolness: Optional[CoolnessRead]
     is_badge_black: Optional[bool]
-    researcher: Optional[str]
-    recommender: Optional[RecommenderUserRead]
+    researcher: Optional[dict]
+    recommender: Optional[dict]
