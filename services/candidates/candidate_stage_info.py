@@ -239,14 +239,18 @@ class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageIn
         """
             This method returns the query for getting the CandidateStageInfo records based on the provided staff_unit_id and key_words.
         """
+        subquery = db.query(staff_unit_candidate_stage_infos.c.candidate_stage_info_id).filter(
+                        staff_unit_candidate_stage_infos.c.staff_unit_id == staff_unit_id
+                    )
+        
         return (
             db.query(CandidateStageInfo)
             .join(Candidate, self.model.candidate_id == Candidate.id)
             .join(StaffUnit, Candidate.staff_unit_id == StaffUnit.id)
             .join(User, User.staff_unit_id == StaffUnit.id)
             .filter(
-                CandidateStageInfo.staff_unit_coordinate_ids.any(text("'" + staff_unit_id + "'")),
-                CandidateStageInfo.is_waits is True,
+                CandidateStageInfo.id.in_(subquery),
+                CandidateStageInfo.is_waits == True,
                 (and_(func.concat(func.lower(User.first_name), ' ',
                                      func.lower(User.last_name), ' ',
                                      func.lower(User.father_name)).contains(name) for name in key_words))
