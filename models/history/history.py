@@ -13,7 +13,7 @@ from models import (
     NamedModel,
     Model,
     StaffUnit,
-    Rank,
+    Rank, 
     Penalty,
     Coolness,
     Contract,

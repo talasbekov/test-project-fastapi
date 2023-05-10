@@ -1579,7 +1579,11 @@ def upgrade() -> None:
                     "alias_name": "Звание субъекта",
                     'alias_nameKZ': 'Атауы',
                     "type": "read",
-                    "data_taken": "auto"
+                    "data_taken": "auto",
+                    'case': {
+                        'kz': 1,
+                        'ru': 1
+                    }
                 },
                 "last_name": {
                     "alias_name": "Фамилия субъекта",
@@ -3311,7 +3315,7 @@ def upgrade() -> None:
             'document_link': 'https://www.google.com',
             'document_number': '№ 12421',
             'type': type_of_histories[7],
-            'attestation_status': 'Подтверждено',  # МЕНЯТЬ НА attestation_status
+            'attestation_status': 'Занимаемой должности соответсвует',  # МЕНЯТЬ НА attestation_status
             'penalty_id': None,
             'name': '3 history',
             'position_id': None,  # Add the missing parameter here
