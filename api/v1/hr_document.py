@@ -33,8 +33,7 @@ async def get_not_signed(*,
     """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
-    filter.lstrip().rstrip()
-    return hr_document_service.get_not_signed_documents(db, user_id, filter, skip, limit)
+    return hr_document_service.get_not_signed_documents(db, user_id, filter.lstrip().rstrip(), skip, limit)
 
 
 @router.get("/initialized", response_model=List[HrDocumentRead],
@@ -56,8 +55,7 @@ async def get_initialized(*,
     """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
-    filter.lstrip().rstrip()
-    return hr_document_service.get_initialized_documents(db, user_id, filter, skip, limit)
+    return hr_document_service.get_initialized_documents(db, user_id, filter.lstrip().rstrip(), skip, limit)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED, response_model=HrDocumentRead,

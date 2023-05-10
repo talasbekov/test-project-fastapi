@@ -30,7 +30,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         users = (
             db.query(self.model)
         )
-        filter.lstrip().rstrip()
+
         if filter != '':
             users = self._add_filter_to_query(users, filter)
 
@@ -261,7 +261,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             db.query(self.model)
             .filter(self.model.is_active.is_(is_active))
         )
-        filter.lstrip().rstrip()
+
         if filter != '':
             users = self._add_filter_to_query(users, filter)
 
