@@ -153,6 +153,14 @@ options = {
     'koktem@mail.ru': {
         'first_name': 'Көктем',
         'father_name': 'Исмаилова'
+    },
+    'alishev@mail.ru': {
+        'first_name': 'Нейл',
+        'father_name': 'Алишев'
+    },
+    'batyrbek@mail.ru': {
+        'first_name': 'Батырбек',
+        'father_name': 'Бакыткерей'
     }
 }
 
@@ -364,6 +372,7 @@ def upgrade() -> None:
     position29_id = get_uuid()  # Исключен из списков личного состава
     position30_id = get_uuid()  # Откомандирован в другой гос. орган
     position31_id = get_uuid()  # Погиб
+    position32_id = get_uuid()  # HR
 
     op.bulk_insert(
         Base.metadata.tables['positions'],
@@ -522,6 +531,11 @@ def upgrade() -> None:
             'id': position31_id,
             'name': "Погиб",
             'nameKZ': 'Қайтыс болды',
+            'max_rank_id': None
+        }, {
+            'id': position32_id,
+            'name': "HR-менеджер",
+            'nameKZ': 'HR-менеджері',
             'max_rank_id': None
         }]
     )
@@ -1063,6 +1077,8 @@ def upgrade() -> None:
     staff_unit20_id = get_uuid()
     staff_unit21_id = get_uuid()
     staff_unit22_id = get_uuid()
+    staff_unit23_id = get_uuid()
+    staff_unit25_id = get_uuid()
     
     empty_unit_id = get_uuid()
 
@@ -1157,6 +1173,8 @@ def upgrade() -> None:
     user16_id = get_uuid()
     user17_id = get_uuid()
     user18_id = get_uuid()
+    user19_id = get_uuid()
+    user21_id = get_uuid()
 
     create_user(
         user10_id,
@@ -1482,6 +1500,43 @@ def upgrade() -> None:
         True,
         "1.2.217K",
         False)
+    create_user(
+        user19_id,
+        "Нейл",
+        "Алишев",
+        None,
+        'alishev@mail.ru',
+        group3_id,
+        None,
+        "Альфа 19",
+        '19',
+        staff_unit23_id,
+        rank5_id,
+        staff_unit23_id,
+        "http://192.168.0.169:8083/static/Erdaulet.png",
+        position25_id,
+        True,
+        "1.2.217K",
+        False)
+    create_user(
+        user21_id,
+        "Батырбек",
+        "Бакыткерей",
+        None,
+        'batyrbek@mail.ru',
+        group3_id,
+        None,
+        "Альфа 21",
+        '21',
+        staff_unit25_id,
+        rank5_id,
+        staff_unit25_id,
+        "http://192.168.0.169:8083/static/photo_2023-05-10_13-30-27.jpg",
+        position32_id,
+        True,
+        "1.2.217K",
+        False
+    )
     create_user(
         str(uuid.uuid4()),
         "Админ",
