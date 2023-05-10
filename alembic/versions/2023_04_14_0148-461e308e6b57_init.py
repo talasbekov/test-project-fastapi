@@ -524,14 +524,12 @@ def upgrade() -> None:
     sa.Column('date_sign', sa.TIMESTAMP(timezone=True), nullable=True),
     sa.Column('candidate_id', sa.UUID(), nullable=True),
     sa.Column('candidate_stage_type_id', sa.UUID(), nullable=True),
-    sa.Column('staff_unit_coordinate_id', sa.UUID(), nullable=True),
     sa.Column('is_waits', sa.Boolean(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['candidate_id'], ['candidates.id'], ),
     sa.ForeignKeyConstraint(['candidate_stage_type_id'], ['candidate_stage_types.id'], ),
-    sa.ForeignKeyConstraint(['staff_unit_coordinate_id'], ['staff_units.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('contracts',
@@ -703,6 +701,12 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['staff_function_id'], ['staff_functions.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['staff_unit_id'], ['staff_units.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('staff_unit_id', 'staff_function_id')
+    )
+    op.create_table('staff_unit_candidate_stage_infos',
+    sa.Column('staff_unit_id', sa.UUID(), nullable=True),
+    sa.Column('candidate_stage_info_id', sa.UUID(), nullable=True),
+    sa.ForeignKeyConstraint(['candidate_stage_info_id'], ['candidate_stage_infos.id'], ),
+    sa.ForeignKeyConstraint(['staff_unit_id'], ['staff_units.id'], )
     )
     op.create_table('statuses',
     sa.Column('type_id', sa.UUID(), nullable=True),

@@ -1,12 +1,13 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import func, and_
+from sqlalchemy import func, and_, text
 from sqlalchemy.orm import Session
 
 from exceptions import ForbiddenException, BadRequestException
 from models import (CandidateStageInfo, Candidate, StaffUnit, User,
                     CandidateStageInfoStatusEnum, PositionNameEnum, Position, CandidateStageType)
+from models.association import staff_unit_candidate_stage_infos
 from schemas import (CandidateStageInfoRead, CandidateStageInfoCreate, CandidateStageInfoUpdate,
                      CandidateStageInfoSendToApproval)
 from services import ServiceBase, staff_unit_service, position_service
@@ -15,13 +16,17 @@ from .candidate_stage_type import candidate_stage_type_service
 
 class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageInfoCreate, CandidateStageInfoUpdate]):
 
-    def get_all_by_staff_unit_id(self, db: Session, filter: str, skip: int, limit: int, staff_unit_id: str) -> CandidateStageInfoRead:
+    def get_all_by_staff_unit_id(self, db: Session, filter: str, skip: int, limit: int, staff_unit_id: uuid.UUID) -> CandidateStageInfoRead:
         """
             Retrieves a list of CandidateStageInfo records for a specific staff_unit_id.
         """
         if filter == '':
+            subquery = db.query(staff_unit_candidate_stage_infos.c.candidate_stage_info_id).filter(
+                staff_unit_candidate_stage_infos.c.staff_unit_id == staff_unit_id
+            )
+            
             return db.query(CandidateStageInfo).filter(
-                CandidateStageInfo.staff_unit_coordinate_id == staff_unit_id,
+                CandidateStageInfo.id.in_(subquery),
                 CandidateStageInfo.is_waits == True
             ).order_by(self.model.id.asc()).offset(skip).limit(limit).all()
 
@@ -78,7 +83,7 @@ class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageIn
             )
 
         if body.staff_unit_coordinate_id is not None:
-            candidate_stage_info.staff_unit_coordinate_id = body.staff_unit_coordinate_id
+            candidate_stage_info.staff_unit_coordinate_ids.append(body.staff_unit_coordinate_id)
         else:
             candidate_stage_info = self._send_to_multiple_approval(db, candidate_stage_info, candidate)
 
@@ -189,10 +194,11 @@ class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageIn
                 detail=f"Введите staff_unit_coordinate_id"
             )
 
-        staff_unit = staff_unit_service.get_all_by_position(db, position)
+        staff_units = staff_unit_service.get_all_by_position(db, position)
 
-        candidate_stage_info.staff_unit_coordinate_id = staff_unit.id
-
+        for staff_unit in staff_units:
+            candidate_stage_info.staff_unit_coordinate_ids.append(staff_unit)
+            
         db.add(candidate_stage_info)
         db.flush()
 
@@ -233,13 +239,17 @@ class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageIn
         """
             This method returns the query for getting the CandidateStageInfo records based on the provided staff_unit_id and key_words.
         """
+        subquery = db.query(staff_unit_candidate_stage_infos.c.candidate_stage_info_id).filter(
+                        staff_unit_candidate_stage_infos.c.staff_unit_id == staff_unit_id
+                    )
+        
         return (
             db.query(CandidateStageInfo)
             .join(Candidate, self.model.candidate_id == Candidate.id)
             .join(StaffUnit, Candidate.staff_unit_id == StaffUnit.id)
             .join(User, User.staff_unit_id == StaffUnit.id)
             .filter(
-                CandidateStageInfo.staff_unit_coordinate_id == staff_unit_id,
+                CandidateStageInfo.id.in_(subquery),
                 CandidateStageInfo.is_waits == True,
                 (and_(func.concat(func.lower(User.first_name), ' ',
                                      func.lower(User.last_name), ' ',

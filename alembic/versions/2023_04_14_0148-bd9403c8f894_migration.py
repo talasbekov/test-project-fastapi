@@ -4363,17 +4363,17 @@ def upgrade() -> None:
         }]
     )
 
-    candidate_stage_info_id = get_uuid()
+    # candidate_stage_info_id = get_uuid()
 
-    op.bulk_insert(
-        Base.metadata.tables['candidate_stage_infos'],
-        [{
-            'id': candidate_stage_info_id,
-            'staff_unit_coordinate_id': staff_unit1_id,
-            'candidate_stage_type_id': candidate_stage_types1_id,
-            'is_waits': True
-        }]
-    )
+    # op.bulk_insert(
+    #     Base.metadata.tables['candidate_stage_infos'],
+    #     [{
+    #         'id': candidate_stage_info_id,
+    #         'staff_unit_coordinate_id': staff_unit1_id,
+    #         'candidate_stage_type_id': candidate_stage_types1_id,
+    #         'is_waits': True
+    #     }]
+    # )
 
 
 def create_user(id,
