@@ -38,6 +38,18 @@ from .history_personal import (
     ContractReadHistory,
 )
 
+def get_coolness_status(coolness, confirm_document_link, cancel_document_link):
+    if coolness is not None:
+        status = CoolnessStatusEnum.granted
+        if confirm_document_link is not None:
+            status = CoolnessStatusEnum.confirmed
+        if cancel_document_link is not None:
+            status = CoolnessStatusEnum.removed
+        dict_coolness = coolness.dict()
+        dict_coolness["status"] = status
+        return dict_coolness
+    else:
+        return None
 
 class HistoryBase(BaseModel):
     document_link: Optional[str]
@@ -95,6 +107,62 @@ class HistoryRead(HistoryBase, ReadNamedModel):
     contract: Optional[ContractRead]
     badge: Optional[BadgeRead]
     staff_division: Optional[StaffDivisionRead]
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
+
+    @property
+    def coolness_status(self) -> Optional[dict]:
+        return get_coolness_status(self.coolness, self.confirm_document_link, self.cancel_document_link)
+
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "name": self.name,
+            "nameKZ": self.nameKZ,
+            "document_link": self.document_link,
+            "confirm_document_link": self.confirm_document_link,
+            "cancel_document_link": self.cancel_document_link,
+            "date_from": self.date_from,
+            "date_to": self.date_to,
+            "position_id": self.position_id,
+            "rank_id": self.rank_id,
+            "penalty_id": self.penalty_id,
+            "emergency_service_id": self.emergency_service_id,
+            "secondment_id": self.secondment_id,
+            "name_change_id": self.name_change_id,
+            "attestation_id": self.attestation_id,
+            "characteristic_initiator_id": self.characteristic_initiator_id,
+            "rank_assigned_by": self.rank_assigned_by,
+            "status_id": self.status_id,
+            "status_name": self.status_name,
+            "coolness_id": self.coolness_id,
+            "contract_id": self.contract_id,
+            "badge_id": self.badge_id,
+            "user_id": self.user_id,
+            "is_credited": self.is_credited,
+            "document_style": self.document_style,
+            "date_credited": self.date_credited,
+            "name_of_organization": self.name_of_organization,
+            "position_work_experience": self.position_work_experience,
+            "coefficient": self.coefficient,
+            "percentage": self.percentage,
+            "staff_division_name": self.staff_division_name,
+            "staff_division_nameKZ": self.staff_division_nameKZ,
+            "position": self.position,
+            "rank": self.rank,
+            "penalty": self.penalty,
+            "secondment": self.secondment,
+            "status": self.status,
+            "coolness": self.coolness_status,
+            "contract": self.contract,
+            "document_number": self.document_number,
+            "badge": self.badge,
+            "staff_division": self.staff_division,
+            "type": self.type,
+        }
+
 
 
 class HistoryPersonalRead(ReadModel):
@@ -155,17 +223,7 @@ class HistoryPersonalRead(ReadModel):
 
     @property
     def coolness_status(self) -> Optional[dict]:
-        if self.coolness is not None:
-            status = CoolnessStatusEnum.granted
-            if self.confirm_document_link is not None:
-                status = CoolnessStatusEnum.confirmed
-            if self.cancel_document_link is not None:
-                status = CoolnessStatusEnum.removed
-            dict_coolness = self.coolness.dict()
-            dict_coolness["status"] = status
-            return dict_coolness
-        else:
-            return None
+        return get_coolness_status(self.coolness, self.confirm_document_link, self.cancel_document_link)
 
     def to_dict(self) -> dict:
         return {

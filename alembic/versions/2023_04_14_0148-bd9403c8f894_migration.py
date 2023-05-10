@@ -157,6 +157,10 @@ options = {
     'alishev@mail.ru': {
         'first_name': 'Нейл',
         'father_name': 'Алишев'
+    },
+    'batyrbek@mail.ru': {
+        'first_name': 'Батырбек',
+        'father_name': 'Бакыткерей'
     }
 }
 
@@ -368,6 +372,7 @@ def upgrade() -> None:
     position29_id = get_uuid()  # Исключен из списков личного состава
     position30_id = get_uuid()  # Откомандирован в другой гос. орган
     position31_id = get_uuid()  # Погиб
+    position32_id = get_uuid()  # HR
 
     op.bulk_insert(
         Base.metadata.tables['positions'],
@@ -526,6 +531,11 @@ def upgrade() -> None:
             'id': position31_id,
             'name': "Погиб",
             'nameKZ': 'Қайтыс болды',
+            'max_rank_id': None
+        }, {
+            'id': position32_id,
+            'name': "HR-менеджер",
+            'nameKZ': 'HR-менеджері',
             'max_rank_id': None
         }]
     )
@@ -1068,6 +1078,7 @@ def upgrade() -> None:
     staff_unit21_id = get_uuid()
     staff_unit22_id = get_uuid()
     staff_unit23_id = get_uuid()
+    staff_unit25_id = get_uuid()
     
     empty_unit_id = get_uuid()
 
@@ -1163,6 +1174,7 @@ def upgrade() -> None:
     user17_id = get_uuid()
     user18_id = get_uuid()
     user19_id = get_uuid()
+    user21_id = get_uuid()
 
     create_user(
         user10_id,
@@ -1507,6 +1519,25 @@ def upgrade() -> None:
         "1.2.217K",
         False)
     create_user(
+        user21_id,
+        "Батырбек",
+        "Бакыткерей",
+        None,
+        'batyrbek@mail.ru',
+        group3_id,
+        None,
+        "Альфа 21",
+        '21',
+        staff_unit25_id,
+        rank5_id,
+        staff_unit25_id,
+        "http://192.168.0.169:8083/static/photo_2023-05-10_13-30-27.jpg",
+        position32_id,
+        True,
+        "1.2.217K",
+        False
+    )
+    create_user(
         str(uuid.uuid4()),
         "Админ",
         "Админов",
@@ -1603,7 +1634,11 @@ def upgrade() -> None:
                     "alias_name": "Звание субъекта",
                     'alias_nameKZ': 'Атауы',
                     "type": "read",
-                    "data_taken": "auto"
+                    "data_taken": "auto",
+                    'case': {
+                        'kz': 1,
+                        'ru': 1
+                    }
                 },
                 "last_name": {
                     "alias_name": "Фамилия субъекта",
@@ -3335,7 +3370,7 @@ def upgrade() -> None:
             'document_link': 'https://www.google.com',
             'document_number': '№ 12421',
             'type': type_of_histories[7],
-            'attestation_status': 'Подтверждено',  # МЕНЯТЬ НА attestation_status
+            'attestation_status': 'Занимаемой должности соответсвует',  # МЕНЯТЬ НА attestation_status
             'penalty_id': None,
             'name': '3 history',
             'position_id': None,  # Add the missing parameter here

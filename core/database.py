@@ -13,8 +13,7 @@ SQLALCHEMY_DATABASE_URL = f"postgresql://{configs.POSTGRES_USER}:{configs.POSTGR
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
     pool_size=20,
-    echo=False
-    
+    echo=configs.SQLALCHEMY_ECHO
 )
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

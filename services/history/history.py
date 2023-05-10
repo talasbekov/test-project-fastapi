@@ -108,16 +108,26 @@ def finish_last(db: Session, user_id: str, type: str):
 class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
 
     def get_by_type(self, db: Session, type: str):
-        return db.query(self.model).filter(self.model.type == type).first()
+        histories = db.query(self.model).filter(self.model.type == type).all()
 
-    def get_all_by_type(self, db: Session, type: str):
-        return db.query(self.model).filter(self.model.type == type).all()
+        lis_of_histories = []
+        for history in histories:
+            lis_of_histories.append(HistoryRead.from_orm(history).to_dict())
+        return lis_of_histories
+
+    def get_all_by_type(self, db: Session, type: str, skip: int, limit: int):
+        histories = db.query(self.model).filter(self.model.type == type).offset(skip).limit(limit).all()
+
+        lis_of_histories = []
+        for history in histories:
+            lis_of_histories.append(HistoryRead.from_orm(history).to_dict())
+        return lis_of_histories
 
     def get_all_by_type_and_user_id(self, db: Session, type: str, user_id: uuid.UUID, skip: int, limit: int):
         if type == 'beret_history':
             black_beret_type = badge_service.get_black_beret(db)
             black_beret = badge_service.get_badge_by_type(db, black_beret_type.id)
-            return (
+            histories = (
                 db.query(BadgeHistory)
                 .filter(
                     BadgeHistory.user_id == user_id,
@@ -127,17 +137,22 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                 .limit(limit)
                 .all()
             )
-
-        return (
-            db.query(self.model)
-            .filter(
-                self.model.type == type,
-                self.model.user_id == user_id
+        else:
+            histories = (
+                db.query(self.model)
+                .filter(
+                    self.model.type == type,
+                    self.model.user_id == user_id
+                )
+                .offset(skip)
+                .limit(limit)
+                .all()
             )
-            .offset(skip)
-            .limit(limit)
-            .all()
-        )
+
+        lis_of_histories = []
+        for history in histories:
+            lis_of_histories.append(HistoryRead.from_orm(history).to_dict())
+        return lis_of_histories
 
     def create(self, db: Session, obj_in: HistoryCreate):
         cls = options.get(obj_in.type) 
