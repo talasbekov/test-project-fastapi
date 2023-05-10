@@ -110,8 +110,8 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
     def get_by_type(self, db: Session, type: str):
         return db.query(self.model).filter(self.model.type == type).first()
 
-    def get_all_by_type(self, db: Session, type: str):
-        return db.query(self.model).filter(self.model.type == type).all()
+    def get_all_by_type(self, db: Session, type: str, skip: int, limit: int):
+        return db.query(self.model).filter(self.model.type == type).offset(skip).limit(limit).all()
 
     def get_all_by_type_and_user_id(self, db: Session, type: str, user_id: uuid.UUID, skip: int, limit: int):
         if type == 'beret_history':
