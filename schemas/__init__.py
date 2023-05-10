@@ -27,13 +27,14 @@ from .staff_function import (DocumentStaffFunctionCreate, DocumentStaffFunctionR
                              ServiceStaffFunctionCreate, ServiceStaffFunctionRead, ServiceStaffFunctionUpdate,
                              StaffUnitFunctions, StaffFunctionRead, DocumentStaffFunctionAdd,
                              DocumentStaffFunctionConstructorAdd, DocumentStaffFunctionAppendToStaffUnit)
+from .status import *
 from .staff_division import (StaffDivisionCreate, StaffDivisionRead,
                              StaffDivisionUpdate, StaffDivisionUpdateParentGroup,
                              StaffDivisionOptionRead, StaffUnitDivisionRead)
 from .staff_unit import StaffUnitCreate, StaffUnitRead, StaffUnitUpdate, UserStaffUnitRead
 from .hr_document_step import (HrDocumentStepCreate, HrDocumentStepRead,
                                HrDocumentStepUpdate)
-from .status import *
+
 from .user import UserCreate, UserRead, UserUpdate, UserGroupUpdate
 from .profile import ProfileCreate, ProfileUpdate, ProfileRead
 from .hr_document_status import HrDocumentStatusRead, HrDocumentStatusCreate, HrDocumentStatusUpdate
