@@ -153,6 +153,10 @@ options = {
     'koktem@mail.ru': {
         'first_name': 'Көктем',
         'father_name': 'Исмаилова'
+    },
+    'alishev@mail.ru': {
+        'first_name': 'Нейл',
+        'father_name': 'Алишев'
     }
 }
 
@@ -1063,6 +1067,7 @@ def upgrade() -> None:
     staff_unit20_id = get_uuid()
     staff_unit21_id = get_uuid()
     staff_unit22_id = get_uuid()
+    staff_unit23_id = get_uuid()
     
     empty_unit_id = get_uuid()
 
@@ -1157,6 +1162,7 @@ def upgrade() -> None:
     user16_id = get_uuid()
     user17_id = get_uuid()
     user18_id = get_uuid()
+    user19_id = get_uuid()
 
     create_user(
         user10_id,
@@ -1477,6 +1483,24 @@ def upgrade() -> None:
         staff_unit22_id,
         rank5_id,
         staff_unit22_id,
+        "http://192.168.0.169:8083/static/Erdaulet.png",
+        position25_id,
+        True,
+        "1.2.217K",
+        False)
+    create_user(
+        user19_id,
+        "Нейл",
+        "Алишев",
+        None,
+        'alishev@mail.ru',
+        group3_id,
+        None,
+        "Альфа 19",
+        '19',
+        staff_unit23_id,
+        rank5_id,
+        staff_unit23_id,
         "http://192.168.0.169:8083/static/Erdaulet.png",
         position25_id,
         True,
@@ -4304,17 +4328,17 @@ def upgrade() -> None:
         }]
     )
 
-    candidate_stage_info_id = get_uuid()
+    # candidate_stage_info_id = get_uuid()
 
-    op.bulk_insert(
-        Base.metadata.tables['candidate_stage_infos'],
-        [{
-            'id': candidate_stage_info_id,
-            'staff_unit_coordinate_id': staff_unit1_id,
-            'candidate_stage_type_id': candidate_stage_types1_id,
-            'is_waits': True
-        }]
-    )
+    # op.bulk_insert(
+    #     Base.metadata.tables['candidate_stage_infos'],
+    #     [{
+    #         'id': candidate_stage_info_id,
+    #         'staff_unit_coordinate_id': staff_unit1_id,
+    #         'candidate_stage_type_id': candidate_stage_types1_id,
+    #         'is_waits': True
+    #     }]
+    # )
 
 
 def create_user(id,

@@ -3,7 +3,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from models import Model
-from .association import staff_unit_function
+from .association import staff_unit_function, staff_unit_candidate_stage_infos
 
 
 class StaffUnit(Model):
@@ -28,5 +28,11 @@ class StaffUnit(Model):
         "StaffFunction",
         secondary=staff_unit_function,
         back_populates="staff_units",
+        cascade="all,delete",
+    )
+    candidate_stage_infos = relationship(
+        "CandidateStageInfo",
+        secondary=staff_unit_candidate_stage_infos,
+        back_populates="staff_unit_coordinate_ids",
         cascade="all,delete",
     )

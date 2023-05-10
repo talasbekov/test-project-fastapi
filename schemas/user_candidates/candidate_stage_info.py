@@ -1,6 +1,6 @@
 import datetime
 import uuid
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel
 
@@ -39,8 +39,6 @@ class CandidateStageInfoRead(CandidateStageInfoBase):
     candidate_id: Optional[uuid.UUID]
     candidate: Optional[CandidateRead]
     is_waits: Optional[bool]
-    staff_unit_coordinate_id: Optional[uuid.UUID]
-    staff_unit_coordinate: Optional[StaffUnitRead]
     candidate_stage_type_id: Optional[uuid.UUID]
     candidate_stage_type: Optional[CandidateStageTypeRead]
     date_sign: Optional[datetime.datetime]

@@ -5,6 +5,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from models import Model
+from models.association import staff_unit_candidate_stage_infos
 
 
 class CandidateStageInfoStatusEnum(str, enum.Enum):
@@ -24,8 +25,12 @@ class CandidateStageInfo(Model):
     candidate_stage_type_id = Column(UUID(as_uuid=True), ForeignKey("candidate_stage_types.id"), nullable=True)
     candidate_stage_type = relationship("CandidateStageType", back_populates="candidate_stage_infos")
     
-    staff_unit_coordinate_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"), nullable=True)
     is_waits = Column(Boolean, nullable=True, default=True)
 
     candidate = relationship("Candidate", back_populates="candidate_stage_infos")
-    staff_unit_coordinate = relationship("StaffUnit", cascade="all, delete")
+    staff_unit_coordinate_ids = relationship(
+        "StaffUnit",
+        secondary=staff_unit_candidate_stage_infos,
+        back_populates="candidate_stage_infos",
+        cascade="all,delete",
+    )

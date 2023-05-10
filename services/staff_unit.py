@@ -77,7 +77,7 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
     def get_all_by_position(self, db: Session, position_id: str):
         return db.query(self.model).filter(
             self.model.position_id == position_id
-        ).first()
+        ).all()
 
     def get_by_option(self, db: Session, type: str, id: uuid.UUID, skip: int, limit: int):
         return [StaffUnitRead.from_orm(item).dict() for item in super().get_multi(db, skip, limit)]
