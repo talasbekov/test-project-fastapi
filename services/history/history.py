@@ -287,13 +287,13 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             recommender_user = {"name": recommender.user_by.last_name + ' '
                                         + recommender.user_by.first_name[0] + '.'
                                         + recommender.user_by.father_name[0] + '.',
-                                "id": user.id
+                                "id": str(user.id)
                                 }
         else:
             recommender_user = None
         if user:
             researcher = {"name": user.last_name + ' ' + user.first_name[0] + '.' + user.father_name[0] + '.',
-                          "id": user.id
+                          "id": str(user.id)
                           }
         else:
             researcher = None
