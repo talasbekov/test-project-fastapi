@@ -5001,6 +5001,8 @@ def create_user(id,
             'id': properties_id,
             'type_id': property_type1_id,
             'purchase_date': "2022-09-12",
+            'purchase_type': "В подарок",
+            'purchase_typeKZ': "Силыққа",
             'address': "Достык 5",
             'profile_id': additional_profile_id
         }]
