@@ -4531,7 +4531,7 @@ def create_user(id,
         Base.metadata.tables['user_vehicles'],
         [{
             'id': user_vehicles,
-            'profile_id': profile_id,
+            'profile_id': additional_profile_id,
             'date_from': '2021-02-25',
             'number': '021 AMS 01',
             'document_link': 'https://www.google.com',
