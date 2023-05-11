@@ -1,13 +1,10 @@
 import pdfkit
 import random
 import tempfile
-import urllib.parse
-import urllib.request
 import uuid
 from datetime import datetime
 from typing import List
 
-from docxtpl import DocxTemplate
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import func, or_, and_
@@ -562,11 +559,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             raise InvalidOperationException(
                 f"Работа с {option} еще не поддерживается! Обратитесь к администратору для получения информации!"
             )
-        if data_taken is not None and data_taken == "matreshka":
-            if id is None:
-                return [responses.get(option).from_orm(i) for i in service.get_parents(db, skip, limit)]
-            else:
-                return [responses.get(option).from_orm(i) for i in service.get_by_id(db, id).children]
         return service.get_by_option(db, type, id, skip, limit)
 
     def _validate_document(self, db: Session, body: HrDocumentInit, role: str, step: HrDocumentStep, users: List[uuid.UUID]):

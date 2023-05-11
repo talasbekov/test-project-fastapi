@@ -2,14 +2,17 @@ import uuid
 from typing import List
 
 from sqlalchemy.orm import Session
+from sqlalchemy import and_
+from fastapi.logger import logger as log
 
 from exceptions import BadRequestException, NotFoundException, NotSupportedException
-from models import StaffDivision
+from models import StaffDivision, StaffDivisionEnum
 from schemas import (
     StaffDivisionCreate,
     StaffDivisionRead,
     StaffDivisionUpdate,
     StaffDivisionUpdateParentGroup,
+    StaffDivisionOptionRead,
 )
 
 from .base import ServiceBase
@@ -35,13 +38,14 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
     
     def get_parents(self, db: Session, skip: int, limit: int) -> List[StaffDivision]:
         return db.query(self.model).filter(
-            StaffDivision.parent_group_id == None
+            StaffDivision.parent_group_id == None,
+            StaffDivision.name != StaffDivisionEnum.SPECIAL_GROUP.value
         ).offset(skip).limit(limit).all()
 
-    def get_child_groups(self, db: Session, id: str) -> List[StaffDivision]:
+    def get_child_groups(self, db: Session, id: str, skip: int, limit: int) -> List[StaffDivision]:
         return db.query(self.model).filter(
            StaffDivision.parent_group_id == id
-        ).all()
+        ).offset(skip).limit(limit).all()
 
     def get_by_name(self, db: Session, name: str) -> StaffDivision:
         group = db.query(self.model).filter(
@@ -85,8 +89,9 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
         return res_id
     
     def get_by_option(self, db: Session, type: str, id: uuid.UUID, skip: int, limit: int):
-        raise NotSupportedException(detail=f'Use matreshka with instead')
-
+        if id is None:
+            return [StaffDivisionOptionRead.from_orm(i) for i in self.get_parents(db, skip, limit)]
+        return [StaffDivisionOptionRead.from_orm(i) for i in self.get_child_groups(db, id, skip, limit)]
 
 
 staff_division_service = StaffDivisionService(StaffDivision)
