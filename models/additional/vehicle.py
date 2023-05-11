@@ -13,6 +13,7 @@ class Vehicle(NamedModel):
     date_from = Column(TIMESTAMP(timezone=True), nullable=False)
     number = Column(String(255), nullable=False, default="")
     document_link = Column(TEXT)
+    vin_code = Column(String, nullable=False)
 
     profile_id = Column(UUID(as_uuid=True), ForeignKey("additional_profiles.id"), nullable=False)
     profile = relationship("AdditionalProfile", back_populates="user_vehicles")

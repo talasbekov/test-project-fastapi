@@ -1266,6 +1266,7 @@ def upgrade() -> None:
     sa.Column('date_from', postgresql.TIMESTAMP(timezone=True), nullable=False),
     sa.Column('number', sa.String(length=255), nullable=False),
     sa.Column('document_link', sa.TEXT(), nullable=True),
+    sa.Column('vin_code', sa.String(), nullable=False),
     sa.Column('profile_id', sa.UUID(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('nameKZ', sa.String(), nullable=True),
