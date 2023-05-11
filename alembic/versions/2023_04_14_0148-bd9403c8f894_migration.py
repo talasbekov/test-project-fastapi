@@ -1227,7 +1227,7 @@ def upgrade() -> None:
         staff_unit2_id,
         "http://192.168.0.169:8083/static/Erzhan.png",
         position1_id,
-        False,
+        True,
         '1.2.213K',
         True)
     create_user(
@@ -1335,7 +1335,7 @@ def upgrade() -> None:
         staff_unit8_id,
         "http://192.168.0.169:8083/static/Erdaulet.png",
         position1_id,
-        False,
+        True,
         "1.2.216K",
         True)
     create_user(
@@ -1367,7 +1367,7 @@ def upgrade() -> None:
         "Альфа 11",
         '11',
         staff_unit15_id,
-        None,
+        rank5_id,
         staff_unit15_id,
         "http://192.168.0.169:8083/static/Aislu.png",
         position22_id,
@@ -4522,6 +4522,21 @@ def create_user(id,
             'id': additional_profile_id,
             'profile_id': profile_id
 
+        }]
+    )
+    
+    user_vehicles = get_uuid()
+    
+    op.bulk_insert(
+        Base.metadata.tables['user_vehicles'],
+        [{
+            'id': user_vehicles,
+            'profile_id': profile_id,
+            'date_from': '2021-02-25',
+            'number': '021 AMS 01',
+            'document_link': 'https://www.google.com',
+            'name': 'Toyota Camry ACV50(2020)',
+            'nameKZ': 'Toyota Camry ACV50(2020)'
         }]
     )
 
