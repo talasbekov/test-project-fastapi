@@ -1015,7 +1015,7 @@ def upgrade() -> None:
             'name': "Особая группа",
             'nameKZ': 'Арнайы группа',
             'is_combat_unit': False,
-            'order': 100
+            'order': 2
         }, {
             'parent_group_id': group6_id,
             'id': group7_id,
