@@ -247,6 +247,7 @@ def upgrade() -> None:
     sa.Column('description', sa.TEXT(), nullable=True),
     sa.Column('is_combat_unit', sa.Boolean(), nullable=True),
     sa.Column('leader_id', sa.UUID(), nullable=True),
+    sa.Column('order', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('nameKZ', sa.String(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
