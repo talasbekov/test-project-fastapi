@@ -407,13 +407,21 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('type_clothing_equipment_models',
-    sa.Column('type_of_clothing_equipment_id', sa.UUID(), nullable=True),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('nameKZ', sa.String(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.ForeignKeyConstraint(['type_of_clothing_equipment_id'], ['type_clothing_equipments.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('clothing_equipment_types_models',
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('type_clothing_equipments_id', sa.UUID(), nullable=True),
+    sa.Column('type_clothing_equipment_models_id', sa.UUID(), nullable=True),
+    sa.ForeignKeyConstraint(['type_clothing_equipments_id'], ['type_clothing_equipments.id'], ),
+    sa.ForeignKeyConstraint(['type_clothing_equipment_models_id'], ['type_clothing_equipment_models.id'], ),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('type_other_equipment_models',
@@ -565,11 +573,12 @@ def upgrade() -> None:
     sa.Column('type_of_army_equipment_model_id', sa.UUID(), nullable=True),
     sa.Column('inventory_number', sa.String(), nullable=True),
     sa.Column('count_of_ammo', sa.BigInteger(), nullable=True),
-    sa.Column('type_of_clothing_equipment_model_id', sa.UUID(), nullable=True),
+    sa.Column('inventory_count', sa.BigInteger(), nullable=True),
+    sa.Column('clothing_size', sa.String(), nullable=True),
+    sa.Column('clothing_equipment_types_models_id', sa.UUID(), nullable=True),
     sa.Column('type_of_other_equipment_model_id', sa.UUID(), nullable=True),
-    sa.Column('inventory_number_of_other_equipment', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['type_of_army_equipment_model_id'], ['type_army_equipment_models.id'], ),
-    sa.ForeignKeyConstraint(['type_of_clothing_equipment_model_id'], ['type_clothing_equipment_models.id'], ),
+    sa.ForeignKeyConstraint(['clothing_equipment_types_models_id'], ['clothing_equipment_types_models.id'], ),
     sa.ForeignKeyConstraint(['type_of_other_equipment_model_id'], ['type_other_equipment_models.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')

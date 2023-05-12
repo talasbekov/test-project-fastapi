@@ -17,6 +17,7 @@ class Equipment(Model):
 
     hr_documents = relationship("HrDocument", secondary=hr_document_equipments,
                                 back_populates="equipments")
+    inventory_count = Column(BigInteger, nullable=True)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     user = relationship("User", back_populates="equipments")
     
@@ -56,24 +57,38 @@ class ArmyEquipment(Equipment):
 class TypeClothingEquipmentModel(NamedModel):
     """Type of equipment. Example: ШАПКА, ПОЛУЧЕК, ПОЛУЧЕК, etc."""
     __tablename__ = "type_clothing_equipment_models"
-    
-    type_of_clothing_equipment_id = Column(UUID(as_uuid=True), ForeignKey("type_clothing_equipments.id"), nullable=True)
-    clothing_equipments = relationship("ClothingEquipment", back_populates="type_of_clothing_equipment_model")
-    type_of_clothing_equipment = relationship("TypeClothingEquipment", back_populates="type_of_clothing_equipment_models")
+
+    clothing_equipment_types_models = relationship("ClothingEquipmentTypesModels", back_populates="type_clothing_equipment_models")
 
 
-class TypeClothingEquipment(NamedModel):
+class TypeClothingEquipment(NamedModel): #obj.
     """Type of clothing equipment. Example: ПАРАДНАЯ, ПОВСЕДНЕВНО-ПОСТОВАЯ, ТАКТИЧЕСКАЯ, etc."""
     __tablename__ = "type_clothing_equipments"
 
-    type_of_clothing_equipment_models = relationship("TypeClothingEquipmentModel", back_populates="type_of_clothing_equipment")
+    clothing_equipment_types_models = relationship("ClothingEquipmentTypesModels", back_populates="type_clothing_equipments")
+
+
+class ClothingEquipmentTypesModels(Model):
+    __tablename__ = 'clothing_equipment_types_models'
+
+    type_clothing_equipment_models_id = Column(UUID(as_uuid=True), ForeignKey("type_clothing_equipment_models.id"),
+                                                 nullable=True)
+    type_clothing_equipment_models = relationship("TypeClothingEquipmentModel", back_populates="clothing_equipment_types_models",
+                                                    uselist=False)
+
+    type_clothing_equipments_id = Column(UUID(as_uuid=True), ForeignKey("type_clothing_equipments.id"),
+                                                 nullable=True)
+    type_clothing_equipments = relationship("TypeClothingEquipment", back_populates="clothing_equipment_types_models",
+                                                    uselist=False)
+
+    clothing_equipments = relationship("ClothingEquipment", back_populates="clothing_equipment_types_models")
 
 
 class ClothingEquipment(Equipment):
     
-    type_of_clothing_equipment_model_id = Column(UUID(as_uuid=True), ForeignKey("type_clothing_equipment_models.id"), nullable=True)
-    type_of_clothing_equipment_model = relationship("TypeClothingEquipmentModel", back_populates="clothing_equipments", uselist=False)
-
+    clothing_equipment_types_models_id = Column(UUID(as_uuid=True), ForeignKey("clothing_equipment_types_models.id"), nullable=True)
+    clothing_equipment_types_models = relationship("ClothingEquipmentTypesModels", back_populates="clothing_equipments", uselist=False)
+    clothing_size = Column(String, nullable=True)
     __mapper_args__ = {
         "polymorphic_identity": "clothing_equipment",
     }
@@ -99,7 +114,6 @@ class OtherEquipment(Equipment):
     
     type_of_other_equipment_model_id = Column(UUID(as_uuid=True), ForeignKey("type_other_equipment_models.id"), nullable=True)
     type_of_other_equipment_model = relationship("TypeOtherEquipmentModel", back_populates="other_equipments", uselist=False)
-    inventory_number_of_other_equipment = Column(String, nullable=True)
 
     __mapper_args__ = {
         "polymorphic_identity": "other_equipment",

@@ -2520,63 +2520,45 @@ def upgrade() -> None:
     type_of_clothing_equipment_model_id = get_uuid()
     type_of_clothing_equipment_model2_id = get_uuid()
     type_of_clothing_equipment_model3_id = get_uuid()
-    type_of_clothing_equipment_model4_id = get_uuid()
-    type_of_clothing_equipment_model5_id = get_uuid()
-    type_of_clothing_equipment_model6_id = get_uuid()
-    type_of_clothing_equipment_model7_id = get_uuid()
-    type_of_clothing_equipment_model8_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['type_clothing_equipment_models'],
         [{
             'id': type_of_clothing_equipment_model_id,
-            'name': 'Шапка военная',
-            'nameKZ': 'Әскери бас киім',
+            'name': 'Военная',
+            'nameKZ': 'Әскери',
             'type_of_clothing_equipment_id': type_of_clothing_equipment_id
         },
             {
             'id': type_of_clothing_equipment_model2_id,
-            'name': 'Куртка военная',
-            'nameKZ': 'Әскери куртка',
+            'name': 'Тактическая',
+            'nameKZ': 'Тактикалық',
             'type_of_clothing_equipment_id': type_of_clothing_equipment2_id
         },
             {
             'id': type_of_clothing_equipment_model3_id,
             'name': 'Футболка военная',
-            'nameKZ': 'Әскери футболка',
+            'nameKZ': 'Салтанатты',
             'type_of_clothing_equipment_id': type_of_clothing_equipment3_id
         },
-            {
-            'id': type_of_clothing_equipment_model4_id,
-            'name': 'Кофта военная',
-            'nameKZ': 'Әскери жейде',
-            'type_of_clothing_equipment_id': type_of_clothing_equipment4_id
+        ])
+
+    clothing_equipment_types_model_id = get_uuid()
+    clothing_equipment_types_model2_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['clothing_equipment_types_models'],
+        [{
+            'id': clothing_equipment_types_model_id,
+            'type_clothing_equipments_id': type_of_clothing_equipment_id,
+            'type_clothing_equipment_models_id': type_of_clothing_equipment_model_id
         },
             {
-            'id': type_of_clothing_equipment_model5_id,
-            'name': 'Штаны военные',
-            'nameKZ': 'Әскери шалбар',
-            'type_of_clothing_equipment_id': type_of_clothing_equipment5_id
-        },
-            {
-            'id': type_of_clothing_equipment_model6_id,
-            'name': 'Термобелье военное',
-            'nameKZ': 'Әскери термиялық іш киім',
-            'type_of_clothing_equipment_id': type_of_clothing_equipment6_id
-        },
-            {
-            'id': type_of_clothing_equipment_model7_id,
-            'name': 'Ботинки военные',
-            'nameKZ': 'Әскери етік',
-            'type_of_clothing_equipment_id': type_of_clothing_equipment7_id
-        },
-            {
-            'id': type_of_clothing_equipment_model8_id,
-            'name': 'Носки военные',
-            'nameKZ': 'Әскери шұлық',
-            'type_of_clothing_equipment_id': type_of_clothing_equipment8_id
-        }])
-    
+            'id': clothing_equipment_types_model2_id,
+            'type_clothing_equipments_id': type_of_clothing_equipment2_id,
+            'type_clothing_equipment_models_id': type_of_clothing_equipment_model2_id
+            },
+        ])
 
     type_other_equipment_id = get_uuid()
     
@@ -2649,9 +2631,11 @@ def upgrade() -> None:
             'type_of_army_equipment_model_id': type_army_equipment_model_id,
             'count_of_ammo': 100,
             'inventory_number': '123456789',
+            'inventory_count': 1,
+            'clothing_size': None,
             'user_id': user1_id,
             'type_of_equipment': 'army_equipment',
-            'type_of_clothing_equipment_model_id': None,
+            'clothing_equipment_types_models_id': None,
             'type_of_other_equipment_model_id': None,
             'document_link': 'https://www.google.com/',
             'document_number': '123456789',
@@ -2660,11 +2644,13 @@ def upgrade() -> None:
         },
          {
             'id': clothing_equipment_id,
-            'type_of_clothing_equipment_model_id': type_of_clothing_equipment_model_id,
+            'clothing_equipment_types_models_id': clothing_equipment_types_model_id,
             'user_id': user1_id,
             'type_of_equipment': 'clothing_equipment',
             'count_of_ammo': None,
             'inventory_number': None,
+            'inventory_count': None,
+            'clothing_size': '56',
             'type_of_army_equipment_model_id': None,
             'type_of_other_equipment_model_id': None,
             'document_link': 'https://www.google.com/',
@@ -2678,9 +2664,11 @@ def upgrade() -> None:
             'user_id': user1_id,
             'type_of_equipment': 'other_equipment',
             'count_of_ammo': None,
-            'inventory_number': None,
+            'inventory_number': '123456789',
+            'inventory_count': 1,
+            'clothing_size': None,
             'type_of_army_equipment_model_id': None,
-            'type_of_clothing_equipment_model_id': None,
+            'clothing_equipment_types_models_id': None,
             'document_link': 'https://www.google.com/',
             'document_number': '123456789',
             'date_from': '2023-04-11T19:43:02.556000',
@@ -4974,12 +4962,13 @@ def create_user(id,
         Base.metadata.tables['hospital_datas'],
         [{
             'id': hospital_datas_id,
-            'reason': "Больничный (код-829121)",
+            'reason': "Больничный",
             'place': 'ГКП на ПХВ "Городская поликлиника №3"',
             'start_date': "2022-09-12",
             'end_date': "2022-10-12",
             'profile_id': medical_profile_id,
-            'document_link': "document_link"
+            'document_link': "document_link",
+            'code': 'код-829121'
         }, {
             'id': hospital_datas1_id,
             'reason': "Больничный по причине ОРВИ",
@@ -4987,7 +4976,8 @@ def create_user(id,
             'start_date': "2022-12-15",
             'end_date': "2022-12-16",
             'profile_id': medical_profile_id,
-            'document_link': "document_link"
+            'document_link': "document_link",
+            'code': None
         }]
     )
 

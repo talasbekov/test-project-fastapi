@@ -551,9 +551,9 @@ class TypeOfArmyEquipmentModelRead(ReadNamedModel):
         )
 
 
-class TypeOfClothingEquipmentModelRead(ReadNamedModel):
+class TypeOfClothingEquipmentModelRead(ReadModel):
     type_of_equipment: Optional[str]
-
+    model_of_equipment: Optional[str]
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
@@ -562,9 +562,8 @@ class TypeOfClothingEquipmentModelRead(ReadNamedModel):
     def from_orm(cls, orm_obj):
         return cls(
             id=orm_obj.id,
-            name=orm_obj.name,
-            nameKZ=orm_obj.nameKZ,
-            type_of_equipment=orm_obj.type_of_clothing_equipment.name,
+            type_of_equipment=orm_obj.type_clothing_equipments.name,
+            model_of_equipment=orm_obj.type_clothing_equipment_models.name,
         )
 
 class TypeOfOtherEquipmentModelRead(ReadNamedModel):
@@ -589,16 +588,17 @@ class EquipmentRead(ReadModel):
     user_id: Optional[uuid.UUID]
     type_of_army_equipment_model_id: Optional[uuid.UUID]
     inventory_number: Optional[str]
-    inventory_number_of_other_equipment: Optional[str]
+    inventory_count: Optional[int]
     count_of_ammo: Optional[int]
-    type_of_clothing_equipment_model_id: Optional[uuid.UUID]
+    clothing_size: Optional[str]
+    clothing_equipment_types_models_id: Optional[uuid.UUID]
     type_of_other_equipment_model_id: Optional[uuid.UUID]
     document_link: Optional[str]
     document_number: Optional[str]
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     type_of_army_equipment_model: Optional[TypeOfArmyEquipmentModelRead]
-    type_of_clothing_equipment_model: Optional[TypeOfClothingEquipmentModelRead]
+    clothing_equipment_types_models: Optional[TypeOfClothingEquipmentModelRead]
     type_of_other_equipment_model: Optional[TypeOfOtherEquipmentModelRead]
 
 
@@ -623,7 +623,7 @@ class HistoryServiceDetailRead(Model):
     emergency_contracts: Optional[List[EmergencyContactRead]]
     experience: Optional[List[ExperienceRead]]
     secondments: Optional[List[SecondmentRead]]
-    equipments: Optional[List[EquipmentRead]]
+    equipments: Optional[List[dict]]
 
     class Config:
         orm_mode = True

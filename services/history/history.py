@@ -35,6 +35,7 @@ from models import (
     User
 )
 from schemas import HistoryCreate, HistoryUpdate
+from schemas.history.history import EquipmentRead
 from services import ServiceBase
 
 
@@ -54,7 +55,7 @@ from schemas import (
 
 from services import (privelege_emergency_service, coolness_service, badge_service,
                       personnal_reserve_service, service_id_service, user_service,
-                      recommender_user_service)
+                      recommender_user_service, equipment_service)
 
 
 classes = {
@@ -177,7 +178,8 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
 
     def get_all_by_user_id(self, db: Session, user_id: str):
         user = user_service.get_by_id(db, user_id)
-        general_information = self.get_general_information_by_user_id(db, user_id, user)        
+
+        general_information = self.get_general_information_by_user_id(db, user_id, user)
         badges = db.query(BadgeHistory).filter(BadgeHistory.user_id == user_id).all()
         ranks = db.query(RankHistory).filter(RankHistory.user_id == user_id).all()
         penalties = db.query(PenaltyHistory).filter(PenaltyHistory.user_id == user_id).all()
@@ -189,8 +191,17 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         experience = db.query(WorkExperienceHistory).filter(WorkExperienceHistory.user_id == user_id).all()
         secondments = db.query(SecondmentHistory).filter(SecondmentHistory.user_id == user_id).all()
         equipments = user.equipments
+
+        clothing_equipments_type_count = equipment_service.get_clothing_equipments_type_count(db)
+        equipment_models_count = equipment_service.get_clothing_equipment_models_count_by_user(db, user_id)
+        percentage = {}
+        if equipment_models_count:
+            for equipment_model in equipment_models_count:
+                percentage[equipment_model[0]] = (equipment_model[1]*100)/clothing_equipments_type_count
+
         service_id_info =self.get_service_id_by_user_id(db, user_id)
-        
+        equipments_dict = [EquipmentRead.from_orm(equipment).dict() for equipment in equipments]
+        equipments_dict.append(percentage)
         attendance = AttendanceRead(
             physical_training=100,
             tactical_training=100,
@@ -209,11 +220,12 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             emergency_contracts=emergency_contracts,
             experience=experience,
             secondments=secondments,
-            equipments=equipments,
+            equipments=equipments_dict,
             general_information=general_information,
             service_id_info=service_id_info
         )
-        return history_service_detail_read
+        history_dict = HistoryServiceDetailRead.from_orm(history_service_detail_read).dict()
+        return history_dict
 
 
     def get_service_id_by_user_id(self, db: Session, user_id: str):
