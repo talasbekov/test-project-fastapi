@@ -1,6 +1,6 @@
 import enum
 
-from sqlalchemy import Column, ForeignKey, Boolean
+from sqlalchemy import Column, ForeignKey, Boolean, Integer
 from sqlalchemy.dialects.postgresql import TEXT, UUID
 from sqlalchemy.orm import relationship
 
@@ -26,6 +26,7 @@ class StaffDivision(NamedNestedModel):
     description = Column(TEXT)
     is_combat_unit = Column(Boolean)
     leader_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"), nullable=True)
+    order = Column(Integer, nullable=False)
 
     children = relationship("StaffDivision")
 
