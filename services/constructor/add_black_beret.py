@@ -42,7 +42,7 @@ class AddBlackBeretHandler(BaseHandler):
         badge_type = badge_service.get_black_beret(db)
         if badge_service.exists_relation(db, user.id, badge_type.id):
             raise ForbiddenException(
-                f"Badge is already assigned to this user: {user.first_name}, {user.last_name}"
+                f"Badge is already assigned to this user: {user.first_name} {user.last_name}"
             )
 
 handler = AddBlackBeretHandler()
