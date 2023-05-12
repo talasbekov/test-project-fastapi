@@ -2,6 +2,7 @@ import uuid
 from datetime import datetime, timedelta
 
 from sqlalchemy.orm import Session
+from fastapi.logger import logger as log
 
 from exceptions import NotFoundException, NotSupportedException
 from models import (
@@ -284,15 +285,14 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             )
         recommender = recommender_user_service.get_by_user_id(db, user_id)
         if recommender:
-            recommender_user = {"name": recommender.user_by.last_name + ' '
-                                        + recommender.user_by.first_name[0] + '.'
-                                        + recommender.user_by.father_name[0] + '.',
+            recommender_user = {"name": f"{recommender.user_by.last_name} {recommender.user_by.first_name[0]}{' ' + recommender.user_by.father_name[0] + '.' if recommender.user_by.father_name is not None else ''}",
                                 "id": str(user.id)
                                 }
         else:
             recommender_user = None
         if user:
-            researcher = {"name": user.last_name + ' ' + user.first_name[0] + '.' + user.father_name[0] + '.',
+            log.info(user.last_name, user.first_name, user.father_name)
+            researcher = {"name": f"{user.last_name} {user.first_name[0]} {' ' + user.father_name[0] + '.' if user.father_name is not None else ''}",
                           "id": str(user.id)
                           }
         else:

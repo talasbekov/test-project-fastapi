@@ -246,7 +246,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         return document
 
-    def initialize_draft_document(self, db: Session, body: DraftHrDocumentInit, document_id: str, user_id: str, role: str):
+    def initialize_draft_document(self, db: Session, body: DraftHrDocumentCreate, document_id: str, user_id: str, role: str):
         document = hr_document_service.get_by_id(db, document_id)
 
         template = hr_document_template_service.get_by_id(
@@ -257,22 +257,24 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             db, template.id
         )
 
-        all_steps: list = hr_document_step_service.get_all_by_document_template_id(
+        all_steps = hr_document_step_service.get_all_by_document_template_id(
             db, template.id
         )
 
-        users = [v for _, v in body.document_step_users_ids.items()]
+        step_from_template = hr_document_template_service.get_steps_by_document_template_id(db, document.hr_document_template_id)
+
+        users = [v for _, v in step_from_template.items()]
         subject_users_ids: List[uuid.UUID] = []
 
-        for user in document.users:
-            subject_users_ids.append(user.id)
+        for user in body.user_ids:
+            subject_users_ids.append(user)
 
         hr_document_init = HrDocumentInit(
-            properties=document.properties,
-            due_date=document.due_date,
+            properties=body.properties,
+            due_date=body.due_date,
             hr_document_template_id=document.hr_document_template_id,
-            user_ids=subject_users_ids,
-            document_step_users_ids=body.document_step_users_ids
+            user_ids=body.user_ids,
+            document_step_users_ids=step_from_template
         )
 
         self._validate_document(db, hr_document_init, role=role, step=step, users=subject_users_ids)

@@ -32,20 +32,24 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
             skip: int = 0,
             limit: int = 100
     ) -> List[StaffDivision]:
-        return db.query(self.model).filter(
+        departments = db.query(self.model).filter(
             StaffDivision.parent_group_id == None
-        ).offset(skip).limit(limit).all()
+        ).order_by(StaffDivision.order).offset(skip).limit(limit).all()
+        for departament in departments:
+            if departament.children:
+                departament.children = sorted(departament.children, key=lambda x: x.order)
+        return departments
     
     def get_parents(self, db: Session, skip: int, limit: int) -> List[StaffDivision]:
         return db.query(self.model).filter(
             StaffDivision.parent_group_id == None,
             StaffDivision.name != StaffDivisionEnum.SPECIAL_GROUP.value
-        ).offset(skip).limit(limit).all()
+        ).order_by(StaffDivision.order).offset(skip).limit(limit).all()
 
     def get_child_groups(self, db: Session, id: str, skip: int, limit: int) -> List[StaffDivision]:
         return db.query(self.model).filter(
            StaffDivision.parent_group_id == id
-        ).offset(skip).limit(limit).all()
+        ).order_by(StaffDivision.order).offset(skip).limit(limit).all()
 
     def get_by_name(self, db: Session, name: str) -> StaffDivision:
         group = db.query(self.model).filter(
