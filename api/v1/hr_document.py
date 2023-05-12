@@ -129,7 +129,7 @@ async def save_to_draft(*,
              summary="Initialize Draft HrDocument")
 async def initialize_draft_document(*,
     db: Session = Depends(get_db),
-    body: DraftHrDocumentInit,
+    body: DraftHrDocumentCreate,
     Authorize: AuthJWT = Depends(),
     id: uuid.UUID
 ):
@@ -139,7 +139,9 @@ async def initialize_draft_document(*,
         The user must have a role that allows them to create HR documents.
 
         - **document_id**: UUID - required.
-        - **document_step_users_ids**: UUID - required and should exist in database. Dictionary of priority to user IDs to be assigned to the HrDocument.
+        - **due_date**: the end date of this document - format (YYYY-MM-DD). This parameter is required.
+        - **properties**: A dictionary containing properties for the HrDocument.
+        - **user_ids**: UUID - required and should exist in database. A list of user IDs to be assigned to the HrDocument.
     """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
