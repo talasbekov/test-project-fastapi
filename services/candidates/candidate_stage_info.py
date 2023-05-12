@@ -83,7 +83,9 @@ class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageIn
             )
 
         if body.staff_unit_coordinate_id is not None:
-            candidate_stage_info.staff_unit_coordinate_ids.append(body.staff_unit_coordinate_id)
+            staff_unit = staff_unit_service.get_by_id(db, body.staff_unit_coordinate_id)\
+            
+            candidate_stage_info.staff_unit_coordinate_ids.append(staff_unit)
         else:
             candidate_stage_info = self._send_to_multiple_approval(db, candidate_stage_info, candidate)
 
