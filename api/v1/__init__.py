@@ -39,10 +39,12 @@ from .user_oath import router as user_oauth_router
 from .military_unit import router as military_unit_router
 from .recommender_user import router as recommender_user_router
 from .notification import router as notification_router
+from .action import router as action_router
 
 router = APIRouter(prefix="/v1")
 
 router.include_router(auth_router)
+router.include_router(action_router)
 router.include_router(render_router)
 router.include_router(user_router)
 router.include_router(hr_document_status_router)
