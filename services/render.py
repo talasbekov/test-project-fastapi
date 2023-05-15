@@ -102,147 +102,23 @@ class RenderService:
             filename=document_template.name + "." + extension,
         )
     
-    def generate_finish_candidate(self, db: Session, candidate_id: str, template_id: str):
+    async def generate_finish_candidate(self, db: Session, candidate_id: str, template_id: str):
+        print("generate_finish_candidate service")
+        hr_document_template = hr_document_template_service.get_by_id(db, template_id)
         candidate = candidate_service.get_by_id(db, candidate_id)
-
-        candidate_staff_unit = staff_unit_service.get_by_id(db, candidate['staff_unit_id'])
-
-        candidate_user: User = candidate_staff_unit.users[0]
-
-        curator_staff_unit = staff_unit_service.get_by_id(db, candidate['staff_unit_curator_id'])
-
-        curator_user: User = curator_staff_unit.users[0]
-
-        profile: Profile = profile_service.get_by_user_id(db, candidate_user.id)
-
-        father_relation = family_relation_service.get_by_name(db, "Отец")
-        mother_relation = family_relation_service.get_by_name(db, "Мать")
-
-        father = family_service.get_by_relation_id(db, father_relation.id)
-        mother = family_service.get_by_relation_id(db, mother_relation.id)
-
-        document_template = hr_document_template_service.get_by_id(
-            db, template_id
-        )
+        print("candidate")
+        print(candidate)
         
-        # with tempfile.NamedTemporaryFile(delete=False) as temp:
-        #     arr = document_template.path.rsplit(".")
-        #     extension = arr[len(arr) - 1]
-        #     temp_file_path = temp.name + "." + extension
-        #     try:
-        #         urllib.request.urlretrieve(document_template.path, temp_file_path)
-        #     except Exception:
-        #         raise NotFoundException(detail="Файл не найден!")
-        
-        # return FileResponse(
-        #     path=temp_file_path,
-        #     media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        #     filename=document_template.name + "." + extension,
-        # )
-
-        first_stage_type = db.query(CandidateStageType).filter(CandidateStageType.name == 'Первичная беседа').first()
-
-        autobigoraphy_question = db.query(CandidateStageQuestion).filter(
-            CandidateStageQuestion.question == "Краткие сведения из автобиографии"
-        ).first()
-
-        autobiography_answer = db.query(CandidateStageAnswerDefault).filter(
-            CandidateStageAnswerDefault.candidate_id == candidate_id, 
-            CandidateStageAnswerDefault.candidate_stage_question_id == autobigoraphy_question.id   
-        ).first()
-
-        reccommend_question = db.query(CandidateStageQuestion).filter(
-            CandidateStageQuestion.question == "Кем подобран и кем рекомендован"
-        ).first()
-
-        recommend_answer = db.query(CandidateStageAnswerDefault).filter(
-            CandidateStageAnswerDefault.candidate_id == candidate_id, 
-            CandidateStageAnswerDefault.candidate_stage_question_id == reccommend_question.id   
-        ).first()
-
-        essay_stage_type = db.query(CandidateStageType).filter(CandidateStageType.name == 'Рецензия на эссе').first()
-
-        essay_stage_question = db.query(CandidateStageQuestion).filter(
-            CandidateStageQuestion.candidate_stage_type_id == essay_stage_type.id
-        ).first()
-
-        essay_answer = db.query(CandidateStageAnswerText).filter(
-            CandidateStageAnswerText.candidate_id == candidate_id, 
-            CandidateStageAnswerText.candidate_stage_question_id == essay_stage_question.id   
-        ).first()
-        
-
-        with tempfile.NamedTemporaryFile(delete=False) as temp:
-            arr = document_template.path.rsplit(".")
-            extension = arr[len(arr) - 1]
-            temp_file_path = temp.name + "." + extension
-            try:
-                urllib.request.urlretrieve(document_template.path, temp_file_path)
-            except Exception:
-                raise NotFoundException(detail="Файл не найден!")
-
+        temp_file_path = await download_file_to_tempfile(hr_document_template.pathKZ)
         template = jinja_env.get_template(temp_file_path.replace('/tmp/', ''))
-
-        if autobiography_answer is not None:
-            autobiography_text = autobiography_answer.answer_str
-        else:
-            autobiography_text = ""
-
-        if essay_answer is not None:
-            essay_answer_text = essay_answer.answer
-        else:
-            essay_answer_text = ""
-
-        if recommend_answer is not None:
-            recommend_answer_text = recommend_answer.answer_str
-        else:
-            recommend_answer_text = ""
-
-        context = {
-            'candidate': candidate_user,
-            'candidate_sgo': candidate,
-            'curator': curator_user,
-            'father': father,
-            'mother': mother,
-            'autobiography': autobiography_text,
-            'recommend': recommend_answer_text,
-            'essay': essay_answer_text
-        }
-
-        ans = template.render(context)
-
-        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-            file_name = temp_file.name + "." + extension
-            with open(file_name, "w") as f:
-                f.write(ans)
-
-        return FileResponse(
-            path=file_name,
-            filename=document_template.name + "." + extension,
-        )
-
-    async def test_finish_candidate(self, db: Session, candidate_id: str, url: str):
-        # temp_file_path = await self.download_file_to_tempfile(url)
-
-        # try:
-        #     doc = Document(temp_file_path)
-        #     text = "\n".join([paragraph.text for paragraph in doc.paragraphs])
-        #     template = jinja_env.from_string(text)
-        # except UnicodeDecodeError:
-        #     raise BadRequestException(detail="Неверный формат файла!")
+        
+        candidate_staff_unit = staff_unit_service.get_by_id(db, candidate.staff_unit_id)
+        print("candidate_staff_unit")
+        print(candidate_staff_unit)
+        user = candidate_staff_unit.users[0]
+        print("user")
+        print(user)
             
-        # try:
-        #     template = jinja_env.get_template(temp_file_path.replace('/tmp/', ''))
-        # except UnicodeDecodeError:
-        #     raise BadRequestException(detail="Неверный формат файла!")
-        
-        temp_file_path = await download_file_to_tempfile(url)
-
-        template = jinja_env.get_template(temp_file_path.replace('/tmp/', ''))
-        
-        user = user_service.get_by_id(db, candidate_id)
-        candidate = candidate_service.get_by_staff_unit_id(db, user.staff_unit_id)
-        
         # autobiography
         autobigoraphy_question = db.query(CandidateStageQuestion).filter(
             CandidateStageQuestion.question == "Краткие сведения из автобиографии"
@@ -364,18 +240,6 @@ class RenderService:
         }
         
         ans = template.render(context)
-
-        # with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-        #     file_name = temp_file.name + "." + extension
-        #     doc = Document()  # Create a new Document
-        #     doc.add_paragraph(ans)  # Add your text to it
-        #     doc.save(file_name)
-
-        # return FileResponse(
-        #     path=file_name,
-        #     filename="Заключение о зачислении кандидата " + user.last_name + " " + user.first_name + "." + extension,
-        #     media_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'  # This is the media type for .docx files
-        # )
         
         opts = {
             'encoding': 'UTF-8',

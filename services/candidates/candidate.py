@@ -61,13 +61,8 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
     def get_by_id(self, db: Session, id: str):
         """
             Returns a single candidate based on the given ID.
-            It also validates the candidate by calling the _validate_candidate method.
         """
         candidate = super().get_by_id(db, id)
-
-        candidate = CandidateRead.from_orm(candidate).dict()
-
-        self._validate_candidate(db, candidate)
 
         return candidate
     

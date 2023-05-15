@@ -16,23 +16,9 @@ from services import render_service
 class ConvertCandidateTemplate(BaseModel):
     hr_document_template_id: uuid.UUID
     candidate_id: uuid.UUID
-    
-    
-class Test(BaseModel):
-    user_id: str
-    url: str
 
 
 router = APIRouter(prefix="/render", tags=["Render Jinja"], dependencies=[Depends(HTTPBearer())])
-
-@router.post("/test", dependencies=[Depends(HTTPBearer())])
-async def test(*,
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends(),
-    body: Test
-):
-    Authorize.jwt_required()
-    return await render_service.test_finish_candidate(db, candidate_id=body.user_id, url=body.url)
 
 
 @router.post("/render", dependencies=[Depends(HTTPBearer())],
@@ -65,7 +51,8 @@ async def render_finish_candidate(*,
         - **candidate_id**: UUID - required
     """
     Authorize.jwt_required()
-    return render_service.generate_finish_candidate(db, candidate_id=body.candidate_id, template_id=body.hr_document_template_id)
+    print("render_finish_candidate controller")
+    return await render_service.generate_finish_candidate(db=db, candidate_id=body.candidate_id, template_id=body.hr_document_template_id)
 
 
 class HTML(BaseModel):
