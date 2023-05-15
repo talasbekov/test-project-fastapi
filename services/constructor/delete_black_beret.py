@@ -47,7 +47,7 @@ class DeleteBlackBeretHandler(BaseHandler):
 
     def handle_filter(self, db: Session, user_query: Query[Any]):
         badge_type = badge_service.get_black_beret(db)
-        return user_query.join(Badge).filter(Badge.type_id == badge_type.id)
+        return user_query.filter(User.badges.any(Badge.type_id == badge_type.id))
 
 
 handler = DeleteBlackBeretHandler()
