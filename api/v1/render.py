@@ -16,9 +16,23 @@ from services import render_service
 class ConvertCandidateTemplate(BaseModel):
     hr_document_template_id: uuid.UUID
     candidate_id: uuid.UUID
+    
+    
+class Test(BaseModel):
+    user_id: str
+    url: str
 
 
 router = APIRouter(prefix="/render", tags=["Render Jinja"], dependencies=[Depends(HTTPBearer())])
+
+@router.post("/test", dependencies=[Depends(HTTPBearer())])
+async def test(*,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends(),
+    body: Test
+):
+    Authorize.jwt_required()
+    return await render_service.test_finish_candidate(db, candidate_id=body.user_id, url=body.url)
 
 
 @router.post("/render", dependencies=[Depends(HTTPBearer())],

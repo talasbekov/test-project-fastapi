@@ -2,6 +2,8 @@ import tempfile
 import urllib.parse
 import urllib.request
 import datetime
+import aiohttp
+from api.v1.additional import psychological_check
 
 import pdfkit
 import docx2python
@@ -11,19 +13,22 @@ from docx.shared import Inches
 from bs4 import BeautifulSoup
 from docxtpl import DocxTemplate
 from fastapi.responses import FileResponse
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from core import wkhtmltopdf_path
 
 
 from core import jinja_env
+from exceptions.client import BadRequestException
 from services import (hr_document_template_service, candidate_service, staff_unit_service,
                       profile_service, family_profile_service, family_relation_service,
-                      family_service)
+                      family_service, user_service)
 from models import (User, Profile, CandidateStageInfo, CandidateStageAnswer,
                     CandidateStageAnswerDefault, CandidateStageAnswerText, CandidateStageType,
-                    CandidateStageQuestion)
+                    CandidateStageQuestion, CandidateStageAnswerChoice)
 from exceptions import NotFoundException
+from services.candidates import candidate_stage_type
 
 
 class RenderService:
@@ -216,6 +221,160 @@ class RenderService:
             filename=document_template.name + "." + extension,
         )
 
+    async def test_finish_candidate(self, db: Session, candidate_id: str, url: str):
+        
+        arr = url.rsplit(".")
+        extension = arr[len(arr) - 1]
+    
+        temp_file_path = await self.download_file_to_tempfile(url)
+
+        try:
+            doc = Document(temp_file_path)
+            text = "\n".join([paragraph.text for paragraph in doc.paragraphs])
+            template = jinja_env.from_string(text)
+        except UnicodeDecodeError:
+            raise BadRequestException(detail="Неверный формат файла!")
+            
+        # try:
+        #     template = jinja_env.get_template(temp_file_path.replace('/tmp/', ''))
+        # except UnicodeDecodeError:
+        #     raise BadRequestException(detail="Неверный формат файла!")
+        
+        user = user_service.get_by_id(db, candidate_id)
+        candidate = candidate_service.get_by_staff_unit_id(db, user.staff_unit_id)
+        
+        # autobiography
+        autobigoraphy_question = db.query(CandidateStageQuestion).filter(
+            CandidateStageQuestion.question == "Краткие сведения из автобиографии"
+        ).first()
+
+        autobiography_answer = db.query(CandidateStageAnswerDefault).filter(
+            CandidateStageAnswerDefault.candidate_id == candidate_id, 
+            CandidateStageAnswerDefault.candidate_stage_question_id == autobigoraphy_question.id   
+        ).first()
+        
+        # essay
+        essay_stage_type = db.query(CandidateStageType).filter(CandidateStageType.name == 'Рецензия на эссе').first()
+        
+        essay_stage_question = db.query(CandidateStageQuestion).filter(
+            CandidateStageQuestion.candidate_stage_type_id == essay_stage_type.id
+        ).first()
+
+        essay_answer = db.query(CandidateStageAnswerText).filter(
+            CandidateStageAnswerText.candidate_id == candidate_id, 
+            CandidateStageAnswerText.candidate_stage_question_id == essay_stage_question.id   
+        ).first()
+        
+        # military medical commision
+        military_medical_commision_stage = db.query(CandidateStageType).filter(CandidateStageType.name == 'Военно-врачебная комиссия').first()
+        
+        military_medical_commision_question = db.query(CandidateStageQuestion).filter(
+            CandidateStageQuestion.candidate_stage_type_id == military_medical_commision_stage.id
+        ).first()
+        
+        military_medical_commision_answer = db.query(CandidateStageAnswerChoice).filter(
+            CandidateStageAnswerText.candidate_id == candidate_id, 
+            CandidateStageAnswerText.candidate_stage_question_id == military_medical_commision_question.id   
+        ).first()
+        
+        # psychological stage
+        psychological_stage_type = db.query(CandidateStageType).filter(CandidateStageType.name == 'Беседа с психологом').first()
+        
+        psychological_stage_question = db.query(CandidateStageQuestion).filter(
+            CandidateStageQuestion.candidate_stage_type_id == psychological_stage_type.id
+        ).first()
+        
+        psychological_stage_answer = db.query(CandidateStageAnswerText).filter(
+            CandidateStageAnswerText.candidate_id == candidate_id, 
+            CandidateStageAnswerText.candidate_stage_question_id == psychological_stage_question.id   
+        ).first()
+        
+        # polygraph stage
+        polygraph_stage_type = db.query(CandidateStageType).filter(CandidateStageType.name == 'Результаты полиграфологического исследования').first()
+        
+        polygraph_stage_question = db.query(CandidateStageQuestion).filter(
+            CandidateStageQuestion.candidate_stage_type_id == polygraph_stage_type.id
+        ).first()
+        
+        polygraph_stage_answer = db.query(CandidateStageAnswerChoice).filter(
+            CandidateStageAnswerChoice.candidate_id == candidate_id, 
+            CandidateStageAnswerChoice.candidate_stage_question_id == polygraph_stage_question.id   
+        ).first()
+        
+        # sport stage
+        sport_stage_type = db.query(CandidateStageType).filter(CandidateStageType.name == 'Результаты физической подготовки').first()
+        
+        sport_stage_question = db.query(CandidateStageQuestion).filter(
+            CandidateStageQuestion.candidate_stage_type_id == sport_stage_type.id
+        ).first()
+        
+        sport_stage_answer = db.query(CandidateStageAnswerChoice).filter(
+            CandidateStageAnswerChoice.candidate_id == candidate_id, 
+            CandidateStageAnswerChoice.candidate_stage_question_id == sport_stage_question.id   
+        ).first()
+        
+        # legislation stage
+        legislation_stage_type = db.query(CandidateStageType).filter(CandidateStageType.name == 'Результаты тестирования на знание законодательства РК').first()
+        
+        legislation_stage_question = db.query(CandidateStageQuestion).filter(
+            CandidateStageQuestion.candidate_stage_type_id == legislation_stage_type.id
+        ).first()
+
+        legislation_stage_answer = db.query(CandidateStageAnswerChoice).filter(
+            CandidateStageAnswerChoice.candidate_id == candidate_id, 
+            CandidateStageAnswerChoice.candidate_stage_question_id == legislation_stage_question.id   
+        ).first()
+
+        # Wife
+        wife_relation = family_relation_service.get_by_name(db, "Жена")
+        wife = family_service.get_by_relation_id(db, wife_relation.id)
+
+        # Husband
+        husband_relation = family_relation_service.get_by_name(db, "Муж")
+        husband = family_service.get_by_relation_id(db, husband_relation.id)
+        
+        # Father
+        father_relation = family_relation_service.get_by_name(db, "Отец")
+        father = family_service.get_by_relation_id(db, father_relation.id)
+        
+        # Mother
+        mother_relation = family_relation_service.get_by_name(db, "Мать")
+        mother = family_service.get_by_relation_id(db, mother_relation.id)
+        
+        # Brother
+        brother_relation = family_relation_service.get_by_name(db, "Брат")
+        brother = family_service.get_by_relation_id(db, brother_relation.id)
+
+        context = {
+            'user': user,
+            'candidate': candidate,
+            'autobiography_answer': autobiography_answer,
+            'essay_answer': essay_answer,
+            'military_medical_commision_answer': military_medical_commision_answer,
+            'psychological_stage_answer': psychological_stage_answer,
+            'polygraph_stage_answer': polygraph_stage_answer,
+            'sport_stage_answer': sport_stage_answer,
+            'legislation_stage_answer': legislation_stage_answer,
+            'department_planned': None,
+            'wife': wife,
+            'husband': husband,
+            'father': father,
+            'mother': mother,
+            'brother': brother
+        }
+        
+        ans = template.render(context)
+
+        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+            file_name = temp_file.name + "." + extension
+            with open(file_name, "w") as f:
+                f.write(ans)
+
+        return FileResponse(
+            path=file_name,
+            filename="123" + "." + extension,
+        )
+    
     def convert_html_to_docx(self, html: str):
         soup = BeautifulSoup(html, "html.parser")
         
@@ -336,6 +495,21 @@ class RenderService:
             path=file_name,
             filename='result.pdf',
         )
+        
+    async def download_file_to_tempfile(self, url: str) -> str:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as response:
+                if response.status != 200:
+                    raise HTTPException(status_code=404, detail="Failed to download file")
+
+                file_content = await response.read()  # using read() instead of text()
+                extension = url.split(".")[-1]
+
+                with tempfile.NamedTemporaryFile(mode="wb", delete=False) as f:
+                    file_name = f.name + "." + extension
+                    with open(file_name, 'wb') as file:  # opening the file in binary mode
+                        file.write(file_content)
+                    return file_name
 
 
 render_service = RenderService()
