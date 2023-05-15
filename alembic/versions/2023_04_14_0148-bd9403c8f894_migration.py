@@ -2537,7 +2537,7 @@ def upgrade() -> None:
         },
             {
             'id': type_of_clothing_equipment_model3_id,
-            'name': 'Футболка военная',
+            'name': 'Парадная',
             'nameKZ': 'Салтанатты',
             'type_of_clothing_equipment_id': type_of_clothing_equipment3_id
         },
@@ -2622,6 +2622,7 @@ def upgrade() -> None:
 
     army_equipment_id = get_uuid()
     clothing_equipment_id = get_uuid()
+    clothing_equipment2_id = get_uuid()
     other_equipment_id = get_uuid()
     
     op.bulk_insert(
@@ -2648,7 +2649,23 @@ def upgrade() -> None:
             'user_id': user1_id,
             'type_of_equipment': 'clothing_equipment',
             'count_of_ammo': None,
-            'inventory_number': None,
+            'inventory_number': '123456789',
+            'inventory_count': None,
+            'clothing_size': '56',
+            'type_of_army_equipment_model_id': None,
+            'type_of_other_equipment_model_id': None,
+            'document_link': 'https://www.google.com/',
+            'document_number': '123456789',
+            'date_from': '2023-04-11T19:43:02.556000',
+            'date_to': None,
+         },
+         {
+            'id': clothing_equipment2_id,
+            'clothing_equipment_types_models_id': clothing_equipment_types_model2_id,
+            'user_id': user1_id,
+            'type_of_equipment': 'clothing_equipment',
+            'count_of_ammo': None,
+            'inventory_number': '123456789',
             'inventory_count': None,
             'clothing_size': '56',
             'type_of_army_equipment_model_id': None,
