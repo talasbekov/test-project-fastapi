@@ -1,7 +1,9 @@
-from sqlalchemy.orm import Session
+from typing import Any
+
+from sqlalchemy.orm import Session, Query
 
 from core import configs
-from models import User, HrDocument
+from models import User, HrDocument, Penalty
 from .base import BaseHandler
 from services import penalty_service
 from exceptions import ForbiddenException
@@ -44,5 +46,9 @@ class DeletePenaltyHandler(BaseHandler):
         document: HrDocument,
     ):
         pass
+
+    def handle_filter(self, db: Session, user_query: Query[Any]):
+        return user_query.filter(User.penalties.any(User.id == Penalty.user_id))
+
 
 handler = DeletePenaltyHandler()

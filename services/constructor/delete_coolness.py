@@ -1,7 +1,9 @@
-from sqlalchemy.orm import Session
+from typing import Any
+
+from sqlalchemy.orm import Session, Query
 
 from core import configs
-from models import User, HrDocument
+from models import User, HrDocument, Coolness
 from .base import BaseHandler
 from services import coolness_service
 from exceptions import ForbiddenException
@@ -40,6 +42,9 @@ class DeleteCoolnessHandler(BaseHandler):
             raise ForbiddenException(
                 f"Coolness is not assigned to this user: {user.first_name}, {user.last_name}"
             )
+
+    def handle_filter(self, db: Session, user_query: Query[Any]):
+        return user_query.filter(User.coolnesses.any(User.id == Coolness.user_id))
 
 
 handler = DeleteCoolnessHandler()
