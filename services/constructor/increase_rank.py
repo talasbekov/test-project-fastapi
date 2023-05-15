@@ -50,5 +50,9 @@ class IncreaseRankHandler(BaseHandler):
         if user_rank.order >= rank.order:
             raise ForbiddenException(detail=f"You can not increase rank to {rank.name}")
 
+    def handle_filter(self, db: Session, user_query):
+        max_rank = rank_service.get_max_rank(db)
+        return user_query.filter(User.rank_id != max_rank.id)
+
 
 handler = IncreaseRankHandler()

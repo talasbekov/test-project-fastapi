@@ -49,4 +49,5 @@ class DecreaseRankHandler(BaseHandler):
             raise ForbiddenException(detail=f"You can not decrease rank to {rank.name}")
 
 
+
 handler = DecreaseRankHandler()

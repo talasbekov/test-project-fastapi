@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from core import configs
-from models import User, HrDocument
+from models import User, HrDocument, Badge
 from exceptions import ForbiddenException
 from services import badge_service, history_service
 from .base import BaseHandler
@@ -44,5 +44,10 @@ class AddBlackBeretHandler(BaseHandler):
             raise ForbiddenException(
                 f"Badge is already assigned to this user: {user.first_name} {user.last_name}"
             )
+
+    def handle_filter(self, db: Session, user_queue):
+        badge_type = badge_service.get_black_beret(db)
+        return user_queue.join(Badge).filter(Badge.type_id != badge_type.id)
+
 
 handler = AddBlackBeretHandler()
