@@ -42,6 +42,6 @@ class DeleteBadgeHandler(BaseHandler):
             raise ForbiddenException(
                 f"Badge is not assigned to this user: {user.first_name}, {user.last_name}"
             )
-        
+
 
 handler = DeleteBadgeHandler()

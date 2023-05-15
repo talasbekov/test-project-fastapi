@@ -1,4 +1,6 @@
-from sqlalchemy.orm import Session
+from typing import Any
+
+from sqlalchemy.orm import Session, Query
 
 from core import configs
 from models import User, HrDocument, Badge
@@ -45,10 +47,9 @@ class AddBlackBeretHandler(BaseHandler):
                 f"Badge is already assigned to this user: {user.first_name} {user.last_name}"
             )
 
-    def handle_filter(self, db: Session, user_queue):
+    def handle_filter(self, db: Session, user_query: Query[Any]):
         badge_type = badge_service.get_black_beret(db)
-        print(badge_type.id)
-        return user_queue.join(Badge).filter(Badge.type_id != badge_type.id)
+        return user_query.join(Badge).filter(Badge.type_id != badge_type.id)
 
 
 handler = AddBlackBeretHandler()

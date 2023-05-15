@@ -1,6 +1,6 @@
 import types
 import uuid
-from typing import List, Optional
+from typing import List, Optional, Any
 
 from sqlalchemy.orm import Session, Query
 from sqlalchemy import func, or_, and_
@@ -36,8 +36,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
         if hr_document_template_id is not None:
             excepted_users = self._get_excepted_users_by_document_in_progress(db, hr_document_template_id)
-            users = users.except_(excepted_users)
-            users = self._filter_for_eligible_actions(db, users, hr_document_template_id)
+            users = self._filter_for_eligible_actions(db, users, hr_document_template_id).except_(excepted_users)
 
         users = (
             users
@@ -285,22 +284,16 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         )
         return users
 
-    def _filter_for_eligible_actions(self, db: Session, user_query: Query, hr_document_template_id: uuid.UUID):
+    def _filter_for_eligible_actions(self, db: Session, user_query: Query[Any], hr_document_template_id: uuid.UUID):
         from .constructor import handlers
         template = hr_document_template_service.get_by_id(
             db, hr_document_template_id
         )
         for i in template.actions['args']:
             action_name = list(i)[0]
-            action = i[action_name]
             handler = handlers.get(action_name)
 
-            if handler is None:
-                raise InvalidOperationException(
-                    f"Action {action_name} is not supported!"
-                )
-
-            if getattr(handler, 'handle_filter') is None:
+            if handler or getattr(handler, 'handle_filter') is None:
                 continue
 
             user_query = handlers[action_name].handle_filter(db, user_query)
