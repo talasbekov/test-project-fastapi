@@ -12,7 +12,6 @@ from schemas import (UserCreate, UserUpdate)
 from services import (staff_division_service, staff_unit_service, jurisdiction_service, document_staff_function_service,
                       hr_document_status_service, hr_document_template_service)
 from .base import ServiceBase
-from .constructor import handlers
 
 CALLABLES = types.FunctionType, types.MethodType
 
@@ -287,6 +286,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         return users
 
     def _filter_for_eligible_actions(self, db: Session, user_query: Query, hr_document_template_id: uuid.UUID):
+        from .constructor import handlers
         template = hr_document_template_service.get_by_id(
             db, hr_document_template_id
         )
