@@ -61,15 +61,18 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
     def get_by_id(self, db: Session, id: str):
         """
             Returns a single candidate based on the given ID.
-            It also validates the candidate by calling the _validate_candidate method.
         """
         candidate = super().get_by_id(db, id)
 
-        candidate = CandidateRead.from_orm(candidate).dict()
-
-        self._validate_candidate(db, candidate)
-
         return candidate
+    
+    def get_by_staff_unit_id(self, db: Session, staff_unit_id: str):
+        """
+            Returns a list of candidates based on the given staff unit ID.
+        """
+        candidates = db.query(Candidate).filter(Candidate.staff_unit_id == staff_unit_id).first()
+
+        return candidates
 
     def create(self, db: Session, body: CandidateCreate):
         """
@@ -115,6 +118,8 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
         if body.is_physical_passed is not None:
             if body.is_physical_passed:
                 candidate.is_physical_passed = body.is_physical_passed
+        if body.recommended_by is not None:
+            candidate.recommended_by = body.recommended_by
 
         db.add(candidate)
         db.flush()

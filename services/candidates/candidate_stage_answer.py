@@ -82,7 +82,6 @@ class CandidateStageAnswerService(ServiceBase[CandidateStageAnswer, CandidateSta
                                                                CandidateStageAnswer.candidate_stage_question_id == item.get('candidate_stage_question_id')).first()
 
                 if answer:
-                    print("Answer already exists!")
                     raise SgoErpException(detail=f"Answer with id {answer.id} already exists!", status_code=400) 
                 db_obj = self._create_candidate_stage_answer_string(answer_type, item)
                 if db_obj is None:
@@ -102,7 +101,6 @@ class CandidateStageAnswerService(ServiceBase[CandidateStageAnswer, CandidateSta
                 ).first()
 
                 if item_update_obj is None:
-                    print("Answer not found")
                     raise NotFoundException(f"Answer with id {item.get('answer_id')} not found!")
                  
                 if item['type'] == 'Dropdown':

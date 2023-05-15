@@ -35,6 +35,9 @@ family_status4_id = get_uuid()
 
 family_relation_id = get_uuid()
 family_relation2_id = get_uuid()
+family_relation3_id = get_uuid()
+family_relation4_id = get_uuid()
+family_relation5_id = get_uuid()
 
 # Medical
 liberation_id = get_uuid()
@@ -1153,6 +1156,18 @@ def upgrade() -> None:
             'id': family_relation2_id,
             'name': 'Мать',
             'nameKZ': 'Анасы'
+        }, {
+            'id': family_relation3_id,
+            'name': 'Жена',
+            'nameKZ': 'Әйелі'
+        }, {
+            'id': family_relation4_id,
+            'name': 'Муж',
+            'nameKZ': 'Күйеуі'
+        }, {
+            'id': family_relation5_id,
+            'name': 'Брат',
+            'nameKZ': 'Інісі'
         }]
     )
 
@@ -2159,7 +2174,7 @@ def upgrade() -> None:
         {
             "name": "Заключение на зачисление",
             "nameKZ": "Қабылдау қорытындысы",
-            "path": "http://193.106.99.68:2287/static/finish_candidate.html",
+            "path": None,
             "pathKZ": "http://193.106.99.68:2287/static/finish_candidate.html",
             "subject_type": 1,
             'maintainer_id': staff_unit4_id,
