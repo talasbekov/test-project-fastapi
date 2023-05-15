@@ -535,7 +535,7 @@ class SecondmentRead(Model):
         )
 
 class TypeOfArmyEquipmentModelRead(ReadNamedModel):
-    type_of_equipment: Optional[str]
+    type_of_equipment: Optional[dict]
 
     class Config:
         orm_mode = True
@@ -547,13 +547,14 @@ class TypeOfArmyEquipmentModelRead(ReadNamedModel):
             id=orm_obj.id,
             name=orm_obj.name,
             nameKZ=orm_obj.nameKZ,
-            type_of_equipment=orm_obj.type_of_army_equipment.name,
+            type_of_equipment={"name": orm_obj.type_of_army_equipment.name,
+                               "nameKZ": orm_obj.type_of_army_equipment.nameKZ}
         )
 
 
 class TypeOfClothingEquipmentModelRead(ReadModel):
-    type_of_equipment: Optional[str]
-    model_of_equipment: Optional[str]
+    type_of_equipment: Optional[dict]
+    model_of_equipment: Optional[dict]
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
@@ -562,12 +563,14 @@ class TypeOfClothingEquipmentModelRead(ReadModel):
     def from_orm(cls, orm_obj):
         return cls(
             id=orm_obj.id,
-            type_of_equipment=orm_obj.type_clothing_equipments.name,
-            model_of_equipment=orm_obj.type_clothing_equipment_models.name,
+            type_of_equipment={"name": orm_obj.type_clothing_equipments.name,
+                               "nameKZ": orm_obj.type_clothing_equipments.nameKZ},
+            model_of_equipment={"name": orm_obj.type_clothing_equipment_models.name,
+                                "nameKZ": orm_obj.type_clothing_equipment_models.nameKZ}
         )
 
 class TypeOfOtherEquipmentModelRead(ReadNamedModel):
-    type_of_equipment: Optional[str]
+    type_of_equipment: Optional[dict]
 
     class Config:
         orm_mode = True
@@ -579,7 +582,8 @@ class TypeOfOtherEquipmentModelRead(ReadNamedModel):
             id=orm_obj.id,
             name=orm_obj.name,
             nameKZ=orm_obj.nameKZ,
-            type_of_equipment=orm_obj.type_of_other_equipment.name,
+            type_of_equipment={"name": orm_obj.type_of_other_equipment.name,
+                               "nameKZ": orm_obj.type_of_other_equipment.nameKZ}
         )
 
 
