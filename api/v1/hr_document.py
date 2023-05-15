@@ -164,6 +164,7 @@ async def update(*,
         - **hr_document_template_id**: UUID - required. HrDocument will be initialized based on HrDocumentTemplate.
         - **due_date**: the end date of this document - format (YYYY-MM-DD). This parameter is required.
         - **properties**: A dictionary containing properties for the HrDocument.
+        - **user_ids**: UUID - required and should exist in database. A list of user IDs to be assigned to the HrDocument.
         - **status**: the status of the HrDocument. This field should accept one of the following statuses:
 
         * Иницилизирован
@@ -173,10 +174,10 @@ async def update(*,
         * На доработке
     """
     Authorize.jwt_required()
-    return hr_document_service.update(
+    return hr_document_service.update_document(
         db=db,
-        db_obj=hr_document_service.get_by_id(db, id),
-        obj_in=body)
+        hr_document=hr_document_service.get_by_id(db, id),
+        hr_document_update=body)
 
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,

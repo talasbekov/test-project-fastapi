@@ -5,6 +5,7 @@ import uuid
 from datetime import datetime
 from typing import List
 
+from fastapi.encoders import jsonable_encoder
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import func, or_, and_
@@ -867,5 +868,29 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                     )
         )
         return documents
+
+    def update_document(
+        self,
+        db: Session,
+        hr_document: HrDocument,
+        hr_document_update: HrDocumentUpdate
+    ) -> HrDocument:
+        document_data = jsonable_encoder(hr_document)
+        if isinstance(hr_document_update, dict):
+            update_data = hr_document_update
+        else:
+            update_data = hr_document_update.dict(exclude_unset=True)
+        for field in document_data:
+            if field in update_data:
+                setattr(hr_document, field, update_data[field])
+        if update_data['user_ids'] and update_data['user_ids'] != []:
+            users_document = [
+                user_service.get_by_id(db, user_id) for user_id in update_data['user_ids']
+            ]
+            hr_document.users = users_document
+        hr_document.updated_at = datetime.now()
+        db.add(hr_document)
+        db.flush()
+        return hr_document
 
 hr_document_service = HrDocumentService(HrDocument)

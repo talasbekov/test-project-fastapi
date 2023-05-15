@@ -79,6 +79,7 @@ class HrDocumentCreate(HrDocumentBase):
 
 
 class HrDocumentUpdate(HrDocumentBase):
+    user_ids: List[uuid.UUID]
     status_id: uuid.UUID
 
 
