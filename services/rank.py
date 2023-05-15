@@ -33,5 +33,15 @@ class RankService(ServiceBase[Rank, RankCreate, RankUpdate]):
             .first()
         )
 
+    def get_max_rank(self, db: Session):
+        return (
+            db.query(Rank).order_by(Rank.order.desc()).limit(1).first()
+        )
+
+    def get_min_rank(self, db: Session):
+        return (
+            db.query(Rank).order_by(Rank.order.asc()).limit(1).first()
+        )
+
 
 rank_service = RankService(Rank)

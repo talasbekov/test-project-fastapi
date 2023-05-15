@@ -1,4 +1,6 @@
-from sqlalchemy.orm import Session
+from typing import Any
+
+from sqlalchemy.orm import Session, Query
 
 from core import configs
 from models import User, HrDocument
@@ -47,6 +49,10 @@ class DecreaseRankHandler(BaseHandler):
         rank = rank_service.get_by_id(db, props[tagname]["value"])
         if user.rank.order <= rank.order:
             raise ForbiddenException(detail=f"You can not decrease rank to {rank.name}")
+
+    def handle_filter(self, db: Session, user_query: Query[Any]):
+        min_rank = rank_service.get_min_rank(db)
+        return user_query.filter(User.rank_id != min_rank.id)
 
 
 handler = DecreaseRankHandler()
