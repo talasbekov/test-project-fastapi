@@ -3148,6 +3148,40 @@ def upgrade() -> None:
             'date_credited': None,
             'emergency_rank_id': None,
          },
+        {
+            'id': history14_id,
+            'date_from': datetime.datetime(2012, 3, 1),
+            'date_to': datetime.datetime(2014, 3, 31),
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 12421',
+            'type': 'emergency_history',
+            'penalty_id': None,
+            'name': '18 history',
+            'position_id': None,  # Add the missing parameter here
+            'rank_id': None,  # Add the missing parameter here
+            'emergency_service_id': privelege_emergency_service_id,  # Add the missing parameter here
+            'work_experience_id': None,  # Add the missing parameter here
+            'secondment_id': None,  # Add the missing parameter here
+            'name_change_id': None,  # МЕНЯТЬ НА name_change_id
+            'attestation_id': None,  # Add the missing parameter here
+            'service_characteristic_id': None,  # Add the missing parameter here
+            'status_id': None,  # Add the missing parameter here
+            'coolness_id': None,  # Add the missing parameter here
+            'contract_id': None,  # Add the missing parameter here
+            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+            'experience_years': None,  # Add the missing parameter here
+            'characteristic_initiator_id': None,  # Add the missing parameter here
+            'coefficient': 1.0,
+            'percentage': 50,
+            'staff_division_id': group3_id,
+            'badge_id': None,
+            'name_of_organization': None,
+            'is_credited': None,
+            'document_style': None,
+            'date_credited': None,
+            'emergency_rank_id': rank4_id,
+         },
         # {
         #     'id': history14_id,
         #     'date_from': str(datetime.datetime(2019, 2, 1)),

@@ -228,7 +228,7 @@ class EmergencyServiceHistory(History):
 
     
     __mapper_args__ = {
-        'polymorphic_identity': 'emergency_service_history'
+        'polymorphic_identity': 'emergency_history'
     }
 
 

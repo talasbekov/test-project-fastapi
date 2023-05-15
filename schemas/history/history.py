@@ -1,3 +1,4 @@
+import math
 import uuid
 from enum import Enum
 from decimal import Decimal
@@ -454,15 +455,19 @@ class EmergencyContactRead(ReadModel):
 
     @classmethod
     def from_orm(cls, orm_obj):
+        if orm_obj.date_to:
+            length_of_service = orm_obj.date_to - orm_obj.date_from
+        else:
+            length_of_service = datetime.now() - orm_obj.date_from
+        length_of_service = math.floor(length_of_service.days/365)
         return cls(
             id=orm_obj.id,
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
-            length_of_service=0,
+            length_of_service=length_of_service,
             coefficient=orm_obj.coefficient,
             percentage=orm_obj.percentage,
             staff_division=orm_obj.staff_division.name,
-            emergency_rank_id=orm_obj.emergency_rank_id,
             document_link=orm_obj.document_link,
             document_number=orm_obj.document_number,
             staff_division_id=orm_obj.staff_division_id,
