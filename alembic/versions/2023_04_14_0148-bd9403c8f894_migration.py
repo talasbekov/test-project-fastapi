@@ -3166,7 +3166,7 @@ def upgrade() -> None:
         {
             'id': history14_id,
             'date_from': datetime.datetime(2012, 3, 1),
-            'date_to': datetime.datetime(2014, 3, 31),
+            'date_to': datetime.datetime(2015, 3, 12),
             'user_id': user1_id,
             'document_link': 'https://www.google.com',
             'document_number': '№ 12421',
