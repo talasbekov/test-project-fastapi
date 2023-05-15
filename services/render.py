@@ -103,21 +103,14 @@ class RenderService:
         )
     
     async def generate_finish_candidate(self, db: Session, candidate_id: str, template_id: str):
-        print("generate_finish_candidate service")
         hr_document_template = hr_document_template_service.get_by_id(db, template_id)
         candidate = candidate_service.get_by_id(db, candidate_id)
-        print("candidate")
-        print(candidate)
         
         temp_file_path = await download_file_to_tempfile(hr_document_template.pathKZ)
         template = jinja_env.get_template(temp_file_path.replace('/tmp/', ''))
         
         candidate_staff_unit = staff_unit_service.get_by_id(db, candidate.staff_unit_id)
-        print("candidate_staff_unit")
-        print(candidate_staff_unit)
         user = candidate_staff_unit.users[0]
-        print("user")
-        print(user)
             
         # autobiography
         autobigoraphy_question = db.query(CandidateStageQuestion).filter(
