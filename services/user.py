@@ -293,7 +293,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             action_name = list(i)[0]
             handler = handlers.get(action_name)
 
-            if handler is None or getattr(handler, 'handle_filter') is None:
+            if handler is None or handler.__class__.__dict__.get('handle_filter', None) is None:
                 continue
 
             user_query = handlers[action_name].handle_filter(db, user_query)
