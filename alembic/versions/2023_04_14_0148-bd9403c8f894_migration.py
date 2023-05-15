@@ -2174,7 +2174,7 @@ def upgrade() -> None:
         {
             "name": "Заключение на зачисление",
             "nameKZ": "Қабылдау қорытындысы",
-            "path": "http://193.106.99.68:2287/static/finish_candidate.html",
+            "path": None,
             "pathKZ": "http://193.106.99.68:2287/static/finish_candidate.html",
             "subject_type": 1,
             'maintainer_id': staff_unit4_id,

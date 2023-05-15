@@ -16,7 +16,7 @@ from fastapi.responses import FileResponse
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from core import wkhtmltopdf_path
+from core import wkhtmltopdf_path, download_file_to_tempfile
 
 
 from core import jinja_env
@@ -222,23 +222,23 @@ class RenderService:
         )
 
     async def test_finish_candidate(self, db: Session, candidate_id: str, url: str):
-        
-        arr = url.rsplit(".")
-        extension = arr[len(arr) - 1]
-    
-        temp_file_path = await self.download_file_to_tempfile(url)
+        # temp_file_path = await self.download_file_to_tempfile(url)
 
-        try:
-            doc = Document(temp_file_path)
-            text = "\n".join([paragraph.text for paragraph in doc.paragraphs])
-            template = jinja_env.from_string(text)
-        except UnicodeDecodeError:
-            raise BadRequestException(detail="Неверный формат файла!")
+        # try:
+        #     doc = Document(temp_file_path)
+        #     text = "\n".join([paragraph.text for paragraph in doc.paragraphs])
+        #     template = jinja_env.from_string(text)
+        # except UnicodeDecodeError:
+        #     raise BadRequestException(detail="Неверный формат файла!")
             
         # try:
         #     template = jinja_env.get_template(temp_file_path.replace('/tmp/', ''))
         # except UnicodeDecodeError:
         #     raise BadRequestException(detail="Неверный формат файла!")
+        
+        temp_file_path = await download_file_to_tempfile(url)
+
+        template = jinja_env.get_template(temp_file_path.replace('/tmp/', ''))
         
         user = user_service.get_by_id(db, candidate_id)
         candidate = candidate_service.get_by_staff_unit_id(db, user.staff_unit_id)
@@ -365,14 +365,30 @@ class RenderService:
         
         ans = template.render(context)
 
+        # with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+        #     file_name = temp_file.name + "." + extension
+        #     doc = Document()  # Create a new Document
+        #     doc.add_paragraph(ans)  # Add your text to it
+        #     doc.save(file_name)
+
+        # return FileResponse(
+        #     path=file_name,
+        #     filename="Заключение о зачислении кандидата " + user.last_name + " " + user.first_name + "." + extension,
+        #     media_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'  # This is the media type for .docx files
+        # )
+        
+        opts = {
+            'encoding': 'UTF-8',
+            'enable-local-file-access': True
+        }
+        
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-            file_name = temp_file.name + "." + extension
-            with open(file_name, "w") as f:
-                f.write(ans)
+            file_name = temp_file.name + ".pdf"
+            pdfkit.from_string(ans, file_name, options=opts, configuration=pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path))
 
         return FileResponse(
             path=file_name,
-            filename="123" + "." + extension,
+            filename="Заключение о зачислении кандидата " + user.last_name + " " + user.first_name + ".pdf",
         )
     
     def convert_html_to_docx(self, html: str):
