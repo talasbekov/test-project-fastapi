@@ -368,21 +368,5 @@ class RenderService:
             path=file_name,
             filename='result.pdf',
         )
-        
-    async def download_file_to_tempfile(self, url: str) -> str:
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as response:
-                if response.status != 200:
-                    raise HTTPException(status_code=404, detail="Failed to download file")
-
-                file_content = await response.read()  # using read() instead of text()
-                extension = url.split(".")[-1]
-
-                with tempfile.NamedTemporaryFile(mode="wb", delete=False) as f:
-                    file_name = f.name + "." + extension
-                    with open(file_name, 'wb') as file:  # opening the file in binary mode
-                        file.write(file_content)
-                    return file_name
-
 
 render_service = RenderService()
