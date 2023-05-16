@@ -39,6 +39,10 @@ from .history_personal import (
     ContractReadHistory,
 )
 
+class StatusEnum(Enum):
+    granted = "Присвоен"
+    confirmed = "Подтвержден"
+    canceled = "Отменен"
 
 def get_date_difference(date1, date2):
     # Calculate the difference
@@ -53,14 +57,14 @@ def get_date_difference(date1, date2):
     return {"years": years, "months": months, "days": days}
 
 
-def get_coolness_status(coolness, confirm_document_link, cancel_document_link):
-    if coolness is not None:
-        status = CoolnessStatusEnum.granted
+def get_status(obj, confirm_document_link, cancel_document_link):
+    if obj is not None:
+        status = StatusEnum.granted
         if confirm_document_link is not None:
-            status = CoolnessStatusEnum.confirmed
+            status = StatusEnum.confirmed
         if cancel_document_link is not None:
-            status = CoolnessStatusEnum.removed
-        dict_coolness = coolness.dict()
+            status = StatusEnum.canceled
+        dict_coolness = obj.dict()
         dict_coolness["status"] = status
         return dict_coolness
     else:
@@ -129,7 +133,12 @@ class HistoryRead(HistoryBase, ReadNamedModel):
 
     @property
     def coolness_status(self) -> Optional[dict]:
-        return get_coolness_status(self.coolness, self.confirm_document_link, self.cancel_document_link)
+        return get_status(self.coolness, self.confirm_document_link, self.cancel_document_link)
+
+    @property
+    def badge_status(self) -> Optional[dict]:
+        return get_status(self.badge, self.confirm_document_link, self.cancel_document_link)
+
 
     def to_dict(self) -> dict:
         return {
@@ -173,7 +182,7 @@ class HistoryRead(HistoryBase, ReadNamedModel):
             "coolness": self.coolness_status,
             "contract": self.contract,
             "document_number": self.document_number,
-            "badge": self.badge,
+            "badge": self.badge_status,
             "staff_division": self.staff_division,
             "type": self.type,
         }
@@ -238,7 +247,8 @@ class HistoryPersonalRead(ReadModel):
 
     @property
     def coolness_status(self) -> Optional[dict]:
-        return get_coolness_status(self.coolness, self.confirm_document_link, self.cancel_document_link)
+        return get_status(self.coolness, self.confirm_document_link, self.cancel_document_link)
+
 
     def to_dict(self) -> dict:
         return {
@@ -457,6 +467,8 @@ class EmergencyContactRead(ReadModel):
     coefficient: Optional[Decimal] # КОЭФФИЦИЕНТ
     percentage: Optional[int] # ПРОЦЕНТ
     staff_division: Optional[str]
+    position: Optional[str]
+    position_id: Optional[uuid.UUID]
     emergency_rank_id: Optional[uuid.UUID]
     document_link: Optional[str]
     document_number: Optional[str]
@@ -481,6 +493,8 @@ class EmergencyContactRead(ReadModel):
             coefficient=orm_obj.coefficient,
             percentage=orm_obj.percentage,
             staff_division=orm_obj.staff_division.name,
+            position=orm_obj.position.name,
+            position_id=orm_obj.position_id,
             document_link=orm_obj.document_link,
             document_number=orm_obj.document_number,
             staff_division_id=orm_obj.staff_division_id,

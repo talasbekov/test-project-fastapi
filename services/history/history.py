@@ -35,7 +35,7 @@ from models import (
     User
 )
 from schemas import HistoryCreate, HistoryUpdate
-from schemas.history.history import EquipmentRead
+from schemas.history.history import EquipmentRead, EmergencyContactRead
 from services import ServiceBase
 
 
@@ -117,13 +117,21 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             lis_of_histories.append(HistoryRead.from_orm(history).to_dict())
         return lis_of_histories
 
+    def get_all(self, db: Session, skip: int, limit: int):
+        histories = db.query(self.model).offset(skip).limit(limit).all()
+
+        list_of_histories = []
+        for history in histories:
+            list_of_histories.append(HistoryRead.from_orm(history).to_dict())
+        return list_of_histories
+
     def get_all_by_type(self, db: Session, type: str, skip: int, limit: int):
         histories = db.query(self.model).filter(self.model.type == type).offset(skip).limit(limit).all()
 
-        lis_of_histories = []
+        list_of_histories = []
         for history in histories:
-            lis_of_histories.append(HistoryRead.from_orm(history).to_dict())
-        return lis_of_histories
+            list_of_histories.append(HistoryRead.from_orm(history).to_dict())
+        return list_of_histories
 
     def get_all_by_type_and_user_id(self, db: Session, type: str, user_id: uuid.UUID, skip: int, limit: int):
         if type == 'beret_history':
