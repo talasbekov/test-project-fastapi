@@ -1,3 +1,4 @@
+import math
 import uuid
 from enum import Enum
 from decimal import Decimal
@@ -37,6 +38,20 @@ from .history_personal import (
     SecondmentReadHistory,
     ContractReadHistory,
 )
+
+
+def get_date_difference(date1, date2):
+    # Calculate the difference
+    difference = date2 - date1
+
+    # Extract years, months, and days from the difference
+    years = difference.days // 365
+    remaining_days = difference.days % 365
+    months = remaining_days // 30
+    days = remaining_days % 30
+
+    return {"years": years, "months": months, "days": days}
+
 
 def get_coolness_status(coolness, confirm_document_link, cancel_document_link):
     if coolness is not None:
@@ -438,7 +453,7 @@ class HolidayRead(Model):
 class EmergencyContactRead(ReadModel):
     date_from: Optional[datetime]
     date_to: Optional[datetime]
-    length_of_service: Optional[int] # ВЫСЛУГА ЛЕТ
+    length_of_service: Optional[dict] # ВЫСЛУГА ЛЕТ
     coefficient: Optional[Decimal] # КОЭФФИЦИЕНТ
     percentage: Optional[int] # ПРОЦЕНТ
     staff_division: Optional[str]
@@ -454,15 +469,18 @@ class EmergencyContactRead(ReadModel):
 
     @classmethod
     def from_orm(cls, orm_obj):
+        if orm_obj.date_to:
+            length_of_service = get_date_difference(orm_obj.date_from, orm_obj.date_to)
+        else:
+            length_of_service = get_date_difference(orm_obj.date_from, datetime.now())
         return cls(
             id=orm_obj.id,
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
-            length_of_service=0,
+            length_of_service=length_of_service,
             coefficient=orm_obj.coefficient,
             percentage=orm_obj.percentage,
             staff_division=orm_obj.staff_division.name,
-            emergency_rank_id=orm_obj.emergency_rank_id,
             document_link=orm_obj.document_link,
             document_number=orm_obj.document_number,
             staff_division_id=orm_obj.staff_division_id,

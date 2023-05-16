@@ -51,7 +51,7 @@ async def render_finish_candidate(*,
         - **candidate_id**: UUID - required
     """
     Authorize.jwt_required()
-    return render_service.generate_finish_candidate(db, candidate_id=body.candidate_id, template_id=body.hr_document_template_id)
+    return await render_service.generate_finish_candidate(db=db, candidate_id=body.candidate_id, template_id=body.hr_document_template_id)
 
 
 class HTML(BaseModel):

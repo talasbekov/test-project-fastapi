@@ -35,6 +35,9 @@ family_status4_id = get_uuid()
 
 family_relation_id = get_uuid()
 family_relation2_id = get_uuid()
+family_relation3_id = get_uuid()
+family_relation4_id = get_uuid()
+family_relation5_id = get_uuid()
 
 # Medical
 liberation_id = get_uuid()
@@ -1153,6 +1156,18 @@ def upgrade() -> None:
             'id': family_relation2_id,
             'name': 'Мать',
             'nameKZ': 'Анасы'
+        }, {
+            'id': family_relation3_id,
+            'name': 'Жена',
+            'nameKZ': 'Әйелі'
+        }, {
+            'id': family_relation4_id,
+            'name': 'Муж',
+            'nameKZ': 'Күйеуі'
+        }, {
+            'id': family_relation5_id,
+            'name': 'Брат',
+            'nameKZ': 'Інісі'
         }]
     )
 
@@ -2159,7 +2174,7 @@ def upgrade() -> None:
         {
             "name": "Заключение на зачисление",
             "nameKZ": "Қабылдау қорытындысы",
-            "path": "http://193.106.99.68:2287/static/finish_candidate.html",
+            "path": None,
             "pathKZ": "http://193.106.99.68:2287/static/finish_candidate.html",
             "subject_type": 1,
             'maintainer_id': staff_unit4_id,
@@ -2537,7 +2552,7 @@ def upgrade() -> None:
         },
             {
             'id': type_of_clothing_equipment_model3_id,
-            'name': 'Футболка военная',
+            'name': 'Парадная',
             'nameKZ': 'Салтанатты',
             'type_of_clothing_equipment_id': type_of_clothing_equipment3_id
         },
@@ -2622,6 +2637,7 @@ def upgrade() -> None:
 
     army_equipment_id = get_uuid()
     clothing_equipment_id = get_uuid()
+    clothing_equipment2_id = get_uuid()
     other_equipment_id = get_uuid()
     
     op.bulk_insert(
@@ -2648,7 +2664,23 @@ def upgrade() -> None:
             'user_id': user1_id,
             'type_of_equipment': 'clothing_equipment',
             'count_of_ammo': None,
-            'inventory_number': None,
+            'inventory_number': '123456789',
+            'inventory_count': None,
+            'clothing_size': '56',
+            'type_of_army_equipment_model_id': None,
+            'type_of_other_equipment_model_id': None,
+            'document_link': 'https://www.google.com/',
+            'document_number': '123456789',
+            'date_from': '2023-04-11T19:43:02.556000',
+            'date_to': None,
+         },
+         {
+            'id': clothing_equipment2_id,
+            'clothing_equipment_types_models_id': clothing_equipment_types_model2_id,
+            'user_id': user1_id,
+            'type_of_equipment': 'clothing_equipment',
+            'count_of_ammo': None,
+            'inventory_number': '159815617',
             'inventory_count': None,
             'clothing_size': '56',
             'type_of_army_equipment_model_id': None,
@@ -2664,7 +2696,7 @@ def upgrade() -> None:
             'user_id': user1_id,
             'type_of_equipment': 'other_equipment',
             'count_of_ammo': None,
-            'inventory_number': '123456789',
+            'inventory_number': '987456123',
             'inventory_count': 1,
             'clothing_size': None,
             'type_of_army_equipment_model_id': None,
@@ -3130,6 +3162,40 @@ def upgrade() -> None:
             'document_style': None,
             'date_credited': None,
             'emergency_rank_id': None,
+         },
+        {
+            'id': history14_id,
+            'date_from': datetime.datetime(2012, 3, 1),
+            'date_to': datetime.datetime(2015, 3, 12),
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 12421',
+            'type': 'emergency_history',
+            'penalty_id': None,
+            'name': '18 history',
+            'position_id': None,  # Add the missing parameter here
+            'rank_id': None,  # Add the missing parameter here
+            'emergency_service_id': privelege_emergency_service_id,  # Add the missing parameter here
+            'work_experience_id': None,  # Add the missing parameter here
+            'secondment_id': None,  # Add the missing parameter here
+            'name_change_id': None,  # МЕНЯТЬ НА name_change_id
+            'attestation_id': None,  # Add the missing parameter here
+            'service_characteristic_id': None,  # Add the missing parameter here
+            'status_id': None,  # Add the missing parameter here
+            'coolness_id': None,  # Add the missing parameter here
+            'contract_id': None,  # Add the missing parameter here
+            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+            'experience_years': None,  # Add the missing parameter here
+            'characteristic_initiator_id': None,  # Add the missing parameter here
+            'coefficient': 1.0,
+            'percentage': 50,
+            'staff_division_id': group3_id,
+            'badge_id': None,
+            'name_of_organization': None,
+            'is_credited': None,
+            'document_style': None,
+            'date_credited': None,
+            'emergency_rank_id': rank4_id,
          },
         # {
         #     'id': history14_id,

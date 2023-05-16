@@ -18,6 +18,7 @@ class Equipment(Model):
     hr_documents = relationship("HrDocument", secondary=hr_document_equipments,
                                 back_populates="equipments")
     inventory_count = Column(BigInteger, nullable=True)
+    inventory_number = Column(String, nullable=True)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     user = relationship("User", back_populates="equipments")
     
@@ -45,7 +46,6 @@ class TypeArmyEquipment(NamedModel):
 class ArmyEquipment(Equipment):
 
     type_of_army_equipment_model_id = Column(UUID(as_uuid=True), ForeignKey("type_army_equipment_models.id"), nullable=True)
-    inventory_number = Column(String, nullable=True)
     count_of_ammo = Column(BigInteger, nullable=True)
 
     type_of_army_equipment_model = relationship("TypeArmyEquipmentModel", back_populates="army_equipments", uselist=False)
