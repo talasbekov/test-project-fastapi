@@ -52,7 +52,7 @@ async def get_departments(*,
     return staff_division_service.get_departments(db, skip, limit)
 
 @router.get("/division_parents/", dependencies=[Depends(HTTPBearer())],
-            response_model=List[StaffDivisionRead],
+            response_model=StaffDivisionRead,
             summary="Get Staff Division and all his parents")
 async def get_division_parents_by_id(*,
     db: Session = Depends(get_db),

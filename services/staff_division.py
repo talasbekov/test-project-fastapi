@@ -96,13 +96,16 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
 
         parent_id = staff_division.parent_group_id
 
-        staff_division_list = [staff_division]
+        prev_staff_division = staff_division
+        staff_division.children = []
         while parent_id is not None:
             staff_division = self.get_by_id(db, parent_id)
-            staff_division_list.append(staff_division)
+            staff_division.children = [prev_staff_division]
+            prev_staff_division = staff_division
             parent_id = staff_division.parent_group_id
-
-        return staff_division_list
+        res = StaffDivisionRead.from_orm(staff_division)
+        db.rollback()
+        return res
     
     def get_by_option(self, db: Session, type: str, id: uuid.UUID, skip: int, limit: int):
         if id is None:
