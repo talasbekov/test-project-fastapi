@@ -35,25 +35,19 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
         departments = db.query(self.model).filter(
             StaffDivision.parent_group_id == None,
             StaffDivision.name.not_in([*StaffDivisionEnum])
-        ).order_by(StaffDivision.order).offset(skip).limit(limit).all()
-        for departament in departments:
-            if departament.children:
-                departament.children = sorted(departament.children, key=lambda x: x.order)
+        ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
         return departments
     
     def get_all_parents(self, db: Session, skip: int, limit: int) -> List[StaffDivision]:
         parents = db.query(self.model).filter(
             StaffDivision.parent_group_id == None
-        ).order_by(StaffDivision.order).offset(skip).limit(limit).all()
-        for parent in parents:
-            if parent.children:
-                parent.children = sorted(parent.children, key=lambda x: x.order)
+        ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
         return parents
 
     def get_child_groups(self, db: Session, id: str, skip: int, limit: int) -> List[StaffDivision]:
         return db.query(self.model).filter(
            StaffDivision.parent_group_id == id
-        ).order_by(StaffDivision.order).offset(skip).limit(limit).all()
+        ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
 
     def get_by_name(self, db: Session, name: str) -> StaffDivision:
         group = db.query(self.model).filter(

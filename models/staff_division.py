@@ -26,7 +26,6 @@ class StaffDivision(NamedNestedModel):
     description = Column(TEXT)
     is_combat_unit = Column(Boolean)
     leader_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"), nullable=True)
-    order = Column(Integer, nullable=False)
 
     children = relationship("StaffDivision")
 

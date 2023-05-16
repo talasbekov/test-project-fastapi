@@ -976,14 +976,12 @@ def upgrade() -> None:
             'name': "Департамент 1",
             'nameKZ': "Департамент 1",
             'is_combat_unit': True,
-            'order': 1
         }, {
             'parent_group_id': group1_id,
             'id': group2_id,
             'name': "Управление 1",
             'nameKZ': 'Басқару 1',
             'is_combat_unit': False,
-            'order': 1
         },  {
             'parent_group_id': group2_id,
             'id': group2_1_id,
@@ -997,77 +995,66 @@ def upgrade() -> None:
             'name': "Управление 2",
             'nameKZ': 'Басқару 2',
             'is_combat_unit': True,
-            'order': 2
         }, {
             'parent_group_id': group1_id,
             'id': group4_id,
             'name': "Управление 3",
             'nameKZ': 'Басқару 3',
             'is_combat_unit': False,
-            'order': 3
         }, {
             'parent_group_id': group1_id,
             'id': group5_id,
             'name': "Управление 4",
             'nameKZ': 'Басқару 4',
             'is_combat_unit': True,
-            'order': 4
         }, {
             'parent_group_id': None,
             'id': group6_id,
             'name': "Особая группа",
             'nameKZ': 'Арнайы группа',
             'is_combat_unit': False,
-            'order': 2
         }, {
             'parent_group_id': group6_id,
             'id': group7_id,
             'name': "Кандидаты",
             'nameKZ': 'Кандидаттар',
             'is_combat_unit': False,
-            'order': 1
         }, {
             'parent_group_id': group6_id,
             'id': group8_id,
             'name': "Умер",
             'nameKZ': 'Өлі',
             'is_combat_unit': False,
-            'order': 2
         }, {
             'parent_group_id': group6_id,
             'id': group9_id,
             'name': "В отставке",
             'nameKZ': 'Зейнеткер',
             'is_combat_unit': False,
-            'order': 3
         }, {
             'parent_group_id': group6_id,
             'id': group10_id,
             'name': "В запасе",
             'nameKZ': 'Резервте',
             'is_combat_unit': False,
-            'order': 4
         }, {
             'parent_group_id': group6_id,
             'id': group11_id,
             'name': "Исключен из списков личного состава",
             'nameKZ': 'Кадрлар тізімінен шығарылған',
             'is_combat_unit': False,
-            'order': 5
         },  {
             'parent_group_id': group6_id,
             'id': group12_id,
             'name': "Откомандирован в другой гос. орган",
             'nameKZ': 'Басқа мемлекеттік органға жіберілді',
             'is_combat_unit': False,
-            'order': 6
         },  {
             'parent_group_id': group6_id,
             'id': group13_id,
             'name': "Погиб",
             'nameKZ': 'Қайтыс болды',
             'is_combat_unit': False,
-            'order': 7
         },
         ]
     )
