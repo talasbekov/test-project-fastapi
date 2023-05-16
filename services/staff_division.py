@@ -89,6 +89,20 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
             parent_id = tmp.parent_group_id
         
         return res_id
+
+    def get_division_parents_by_id(self, db: Session, staff_division_id: uuid.UUID):
+
+        staff_division = self.get_by_id(db, staff_division_id)
+
+        parent_id = staff_division.parent_group_id
+
+        staff_division_list = [staff_division]
+        while parent_id is not None:
+            staff_division = self.get_by_id(db, parent_id)
+            staff_division_list.append(staff_division)
+            parent_id = staff_division.parent_group_id
+
+        return staff_division_list
     
     def get_by_option(self, db: Session, type: str, id: uuid.UUID, skip: int, limit: int):
         if id is None:
