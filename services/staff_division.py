@@ -98,7 +98,7 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
     
     def get_by_option(self, db: Session, type: str, id: uuid.UUID, skip: int, limit: int):
         if id is None:
-            return [StaffDivisionOptionRead.from_orm(i) for i in self.get_parents(db, skip, limit)]
+            return [StaffDivisionOptionRead.from_orm(i) for i in self.get_all_parents(db, skip, limit)]
         return [StaffDivisionOptionRead.from_orm(i) for i in self.get_child_groups(db, id, skip, limit)]
 
 
