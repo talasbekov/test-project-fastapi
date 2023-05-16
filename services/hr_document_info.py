@@ -133,5 +133,15 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
 
         return info
 
+    def get_last_signed_by_document_id(self, db: Session, document_id: uuid.UUID) -> HrDocumentInfo:
+        info = (
+            db.query(HrDocumentInfo)
+                .join()
+                .filter(
+                    HrDocumentInfo.hr_document_id == document_id,
+                    
+                )
+        )
+
 
 hr_document_info_service = HrDocumentInfoService(HrDocumentInfo)

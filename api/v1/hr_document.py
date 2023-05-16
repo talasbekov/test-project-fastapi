@@ -9,7 +9,9 @@ from sqlalchemy.orm import Session
 from core import get_db
 from models import LanguageEnum
 from schemas import (HrDocumentInit, HrDocumentRead,
-                     HrDocumentSign, HrDocumentUpdate, DraftHrDocumentCreate, DraftHrDocumentInit)
+                     HrDocumentSign, HrDocumentUpdate,
+                     DraftHrDocumentCreate, DraftHrDocumentInit,
+                     UserRead)
 from services import hr_document_service
 
 router = APIRouter(prefix="/hr-documents", tags=["HrDocuments"], dependencies=[Depends(HTTPBearer())])
@@ -279,3 +281,17 @@ async def get_data_by_option(*,
     Authorize.jwt_required()
     res = hr_document_service.get_all_by_option(db, option, data_taken, id, type, skip, limit)
     return res
+
+@router.get('/signee/{id}/', response_model=UserRead)
+async def get_signee(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Get signee
+
+        - **id**: UUID - required.
+    """
+    Authorize.jwt_required()
+    return hr_document_service.get_signee(db, id)

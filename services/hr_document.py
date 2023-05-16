@@ -872,4 +872,16 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         db.flush()
         return hr_document
 
+    def get_signee(self, db: Session, id: uuid.UUID) -> User:
+        document = self.get_by_id(db, id)
+        if document.status.name != HrDocumentStatusEnum.COMPLETED.value:
+            raise ForbiddenException('Документ не завершен')
+        steps = hr_document_step_service.get_all_by_document_template_id(db, document.hr_document_template_id)
+        if len(steps) < 3:
+            raise ForbiddenException('Документ не завершен')
+        last_step = steps[len(steps)-1]
+        info = hr_document_info_service.get_by_document_id_and_step_id(db, id, last_step.id)
+        return info.signed_by
+
+
 hr_document_service = HrDocumentService(HrDocument)
