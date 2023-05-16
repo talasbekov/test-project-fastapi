@@ -20,6 +20,8 @@ class HrDocumentStatusEnum(str, enum.Enum):
 class HrDocument(Model):
     __tablename__ = "hr_documents"
 
+    parent_id = Column(UUID(as_uuid=True), ForeignKey("hr_documents.id"), nullable=True)
+
     hr_document_template_id = Column(
         UUID(as_uuid=True), ForeignKey("hr_document_templates.id"), nullable=True)
     due_date = Column(TIMESTAMP(timezone=True), nullable=False)
@@ -46,3 +48,5 @@ class HrDocument(Model):
     initialized_by = relationship("User")
     hr_document_infos = relationship("HrDocumentInfo", back_populates="hr_document", cascade="all,delete")
     old_history = relationship("History", foreign_keys=[old_history_id])
+
+    children = relationship("HrDocument")

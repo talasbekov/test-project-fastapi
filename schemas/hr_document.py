@@ -11,6 +11,7 @@ from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 class HrDocumentBase(Model):
     hr_document_template_id: uuid.UUID
     due_date: datetime
+    parent_id: Optional[uuid.UUID]
     properties: Dict[str, Any]
 
     @validator('properties')

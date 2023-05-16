@@ -232,6 +232,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 status_id=status.id,
                 due_date=body.due_date,
                 properties=body.properties,
+                parent_id=None,
             ),
         )
 
@@ -335,6 +336,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 status_id=status.id,
                 due_date=body.due_date,
                 properties=body.properties,
+                parent_id=None,
             ),
         )
         # comm = ""
