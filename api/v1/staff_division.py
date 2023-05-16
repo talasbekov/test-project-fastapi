@@ -30,6 +30,25 @@ async def get_all(*,
        - **limit**: int - The maximum number of staff divisions to return in the response. This parameter is optional and defaults to 100.
    """
     Authorize.jwt_required()
+    return staff_division_service.get_all_parents(db, skip, limit)
+
+
+@router.get("/departments/", dependencies=[Depends(HTTPBearer())],
+            response_model=List[StaffDivisionRead],
+            summary="Get all Staff Divisions")
+async def get_departments(*,
+    db: Session = Depends(get_db),
+    skip: int = 0,
+    limit: int = 100,
+    Authorize: AuthJWT = Depends()
+):
+    """
+       Get all Staff Divisions
+
+       - **skip**: int - The number of staff divisions to skip before returning the results. This parameter is optional and defaults to 0.
+       - **limit**: int - The maximum number of staff divisions to return in the response. This parameter is optional and defaults to 100.
+   """
+    Authorize.jwt_required()
     return staff_division_service.get_departments(db, skip, limit)
 
 
