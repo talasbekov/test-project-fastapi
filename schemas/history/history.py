@@ -481,6 +481,9 @@ class EmergencyContactRead(ReadModel):
 
     @classmethod
     def from_orm(cls, orm_obj):
+        position_name = None
+        if orm_obj.position:
+            position_name = orm_obj.position.name
         if orm_obj.date_to:
             length_of_service = get_date_difference(orm_obj.date_from, orm_obj.date_to)
         else:
@@ -493,7 +496,7 @@ class EmergencyContactRead(ReadModel):
             coefficient=orm_obj.coefficient,
             percentage=orm_obj.percentage,
             staff_division=orm_obj.staff_division.name,
-            position=orm_obj.position.name,
+            position=position_name,
             position_id=orm_obj.position_id,
             document_link=orm_obj.document_link,
             document_number=orm_obj.document_number,
