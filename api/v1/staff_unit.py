@@ -66,11 +66,10 @@ async def update(*,
 
         - **id**: UUID - required
         - **name**: required
-        - **max_rank_id**: UUID - required and should exist in the database
-        - **description**: a long description. This parameter is optional.
+        - **position_id**: id of position. This parameter is optional.
+        - **staff_division_id**: id of staff_division. This parameter is optional.
     """
     Authorize.jwt_required()
-    rank_service.get_by_id(db, body.max_rank_id)
     return staff_unit_service.update(
         db=db,
         db_obj=staff_unit_service.get_by_id(db, id),
