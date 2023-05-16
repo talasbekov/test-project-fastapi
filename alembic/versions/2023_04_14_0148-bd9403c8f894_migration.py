@@ -3173,7 +3173,7 @@ def upgrade() -> None:
             'type': 'emergency_history',
             'penalty_id': None,
             'name': '18 history',
-            'position_id': None,  # Add the missing parameter here
+            'position_id': position4_id,  # Add the missing parameter here
             'rank_id': None,  # Add the missing parameter here
             'emergency_service_id': privelege_emergency_service_id,  # Add the missing parameter here
             'work_experience_id': None,  # Add the missing parameter here

@@ -467,6 +467,8 @@ class EmergencyContactRead(ReadModel):
     coefficient: Optional[Decimal] # КОЭФФИЦИЕНТ
     percentage: Optional[int] # ПРОЦЕНТ
     staff_division: Optional[str]
+    position: Optional[str]
+    position_id: Optional[uuid.UUID]
     emergency_rank_id: Optional[uuid.UUID]
     document_link: Optional[str]
     document_number: Optional[str]
@@ -491,6 +493,8 @@ class EmergencyContactRead(ReadModel):
             coefficient=orm_obj.coefficient,
             percentage=orm_obj.percentage,
             staff_division=orm_obj.staff_division.name,
+            position=orm_obj.position.name,
+            position_id=orm_obj.position_id,
             document_link=orm_obj.document_link,
             document_number=orm_obj.document_number,
             staff_division_id=orm_obj.staff_division_id,

@@ -35,7 +35,7 @@ from models import (
     User
 )
 from schemas import HistoryCreate, HistoryUpdate
-from schemas.history.history import EquipmentRead
+from schemas.history.history import EquipmentRead, EmergencyContactRead
 from services import ServiceBase
 
 
