@@ -92,6 +92,8 @@ async def inflect_word(word: str, septik_int: int, lang: LanguageEnum = Language
         return [i.word for i in morph.parse(word)[0].lexeme][septik_int]
     if lang == LanguageEnum.kz:
         return septik(word, septik_int)
+    else:
+        return None
 
 
 def septik(text, septik):
