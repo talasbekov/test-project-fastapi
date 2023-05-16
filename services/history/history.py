@@ -303,7 +303,6 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         else:
             recommender_user = None
         if user:
-            log.info(user.last_name, user.first_name, user.father_name)
             researcher = {"name": f"{user.last_name} {user.first_name[0]} {' ' + user.father_name[0] + '.' if user.father_name is not None else ''}",
                           "id": str(user.id)
                           }
