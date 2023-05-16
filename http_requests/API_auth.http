@@ -21,3 +21,27 @@ Content-Type: application/json
 
 
 > {% client.global.set("auth_token2", response.body.access_token); %}
+
+### Authorization by token, part 2. Beksundet.
+POST http://localhost:8002/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "arman@mail.ru",
+  "password": "123456"
+}
+
+
+> {% client.global.set("auth_token3", response.body.access_token); %}
+
+### Authorization by token, part 2. Beksundet.
+POST http://localhost:8002/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "bauyrzhan@mail.ru",
+  "password": "123456"
+}
+
+
+> {% client.global.set("auth_token4", response.body.access_token); %}
