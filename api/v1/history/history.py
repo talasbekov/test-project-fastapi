@@ -30,7 +30,7 @@ async def get_all(*,
         - **limit**: int - The maximum number of equipments to return in the response. This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
-    return history_service.get_multi(db, skip, limit)
+    return history_service.get_all(db, skip, limit)
 
 # get enums
 @router.get("/enums", dependencies=[Depends(HTTPBearer())],
