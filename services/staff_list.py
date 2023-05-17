@@ -78,6 +78,11 @@ class StaffListService(ServiceBase[StaffList,StaffListCreate,StaffListUpdate]):
                 child_archive_staff_division = self._create_archive_staff_division(db, child, staff_list_id, archive_division.id)
                 archive_division.children.append(child_archive_staff_division)
 
+        is_leader_needed = False
+        leader_id = None
+        if staff_division.leader_id is not None:
+            is_leader_needed = True
+
         if staff_division.staff_units:
             for staff_unit in staff_division.staff_units:
                 staff_unit: StaffUnit
@@ -85,7 +90,11 @@ class StaffListService(ServiceBase[StaffList,StaffListCreate,StaffListUpdate]):
                 staff_unit_user_id = staff_unit.users[0].id if staff_unit.users else None
                 staff_unit_actual_user_id = staff_unit.actual_users[0].id if staff_unit.actual_users else None
 
-                archive_staff_unit = archive_staff_unit_service.create_based_on_existing_staff_unit(db, staff_unit, staff_unit_user_id, staff_unit_actual_user_id)
+                archive_staff_unit = archive_staff_unit_service.create_based_on_existing_staff_unit(db, staff_unit, staff_unit_user_id, staff_unit_actual_user_id, archive_division)
+
+                if is_leader_needed:
+                    if staff_division.leader_id == staff_unit.id:
+                        leader_id = archive_staff_unit.id
 
                 if staff_unit.staff_functions:
                     for staff_function in staff_unit.staff_functions:
@@ -111,6 +120,9 @@ class StaffListService(ServiceBase[StaffList,StaffListCreate,StaffListUpdate]):
                             archive_staff_unit.staff_functions.append(archive_staff_function)
 
                 archive_division.staff_units.append(archive_staff_unit)
+
+        if is_leader_needed:
+            archive_division.leader_id = leader_id
 
         db.add(archive_division)
         db.flush()

@@ -72,7 +72,9 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
             name=staff_division.name,
             description=staff_division.description,
             staff_list_id=staff_list_id,
-            origin_id=staff_division.id
+            origin_id=staff_division.id,
+            is_combat_unit=staff_division.is_combat_unit,
+            leader_id=None,
         ))
 
     def create_staff_division(self, db: Session, body: NewArchiveStaffDivisionCreate):
@@ -81,7 +83,9 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
             name=body.name,
             description=body.description,
             staff_list_id=body.staff_list_id,
-            origin_id=None
+            origin_id=None,
+            is_combat_unit=body.is_combat_unit,
+            leader_id=body.leader_id,
         ))
 
     def update_staff_division(self, db: Session, archive_staff_division: ArchiveStaffDivision, body: NewArchiveStaffDivisionUpdate):
@@ -90,7 +94,9 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
             name=body.name,
             description=body.description,
             staff_list_id=body.staff_list_id,
-            origin_id=None
+            origin_id=None,
+            is_combat_unit=body.is_combat_unit,
+            leader_id=body.leader_id,
         ))
 
 

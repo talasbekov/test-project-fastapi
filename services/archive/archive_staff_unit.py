@@ -3,7 +3,7 @@ import uuid
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
-from models import ArchiveStaffUnit, StaffUnit
+from models import ArchiveStaffUnit, StaffUnit, ArchiveStaffDivision
 from schemas import ArchiveStaffUnitCreate, ArchiveStaffUnitUpdate, ArchiveStaffUnitFunctions, \
     NewArchiveStaffUnitCreate, NewArchiveStaffUnitUpdate
 from services import service_staff_function_service, document_staff_function_service
@@ -71,10 +71,10 @@ class ArchiveStaffUnitService(ServiceBase[ArchiveStaffUnit, ArchiveStaffUnitCrea
         db.add(staff_unit)
         db.flush()
 
-    def create_based_on_existing_staff_unit(self, db: Session, staff_unit: StaffUnit, user_id: uuid.UUID, actual_user_id: uuid.UUID):
+    def create_based_on_existing_staff_unit(self, db: Session, staff_unit: StaffUnit, user_id: uuid.UUID, actual_user_id: uuid.UUID, archive_staff_division: ArchiveStaffDivision):
         return super().create(db, ArchiveStaffUnitCreate(
             position_id=staff_unit.position_id,
-            staff_division_id=staff_unit.staff_division_id,
+            staff_division_id=archive_staff_division.id,
             user_id=user_id,
             actual_user_id=user_id,
             origin_id=staff_unit.id

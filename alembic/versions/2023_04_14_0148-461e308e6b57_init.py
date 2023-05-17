@@ -765,6 +765,8 @@ def upgrade() -> None:
     op.create_table('archive_staff_divisions',
     sa.Column('parent_group_id', sa.UUID(), nullable=True),
     sa.Column('description', sa.TEXT(), nullable=True),
+    sa.Column('is_combat_unit', sa.Boolean(), nullable=True),
+    sa.Column('leader_id', sa.UUID(), nullable=True),
     sa.Column('staff_list_id', sa.UUID(), nullable=False),
     sa.Column('origin_id', sa.UUID(), nullable=True),
     sa.Column('name', sa.String(), nullable=False),
@@ -962,6 +964,7 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_foreign_key('archive_staff_divisions_leader_id_fkey', 'archive_staff_divisions', 'archive_staff_units', ['leader_id'], ['id'])
     op.create_table('biographic_infos',
     sa.Column('place_birth', sa.String(), nullable=True),
     sa.Column('gender', sa.Boolean(), nullable=True),
