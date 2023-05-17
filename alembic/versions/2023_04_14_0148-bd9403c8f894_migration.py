@@ -1621,6 +1621,7 @@ def upgrade() -> None:
     template4_id = get_uuid()
     template5_id = get_uuid()
     template6_id = get_uuid()
+    template7_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['hr_document_templates'],
@@ -2178,6 +2179,24 @@ def upgrade() -> None:
             
             ]},
             'id': template6_id
+        }, {
+            "name": "Superdoc",
+            "nameKZ": "Superdoc",
+            "path": None,
+            "pathKZ": None,
+            "subject_type": None,
+            'maintainer_id': None,
+            'description': "",
+            'is_visible': False,
+            "properties": {
+                
+            },
+            'actions': {'args': [
+                {
+                    'superdoc': {}
+                }
+            ]},
+            'id': template7_id
         }]
     )
 
@@ -2193,6 +2212,10 @@ def upgrade() -> None:
     step3_2 = get_uuid()
     step3_3 = get_uuid()
     step3_4 = get_uuid()
+    step4_1 = get_uuid()
+    step4_2 = get_uuid()
+    step4_3 = get_uuid()
+    step4_4 = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['hr_document_steps'],
@@ -2256,7 +2279,27 @@ def upgrade() -> None:
             'previous_step_id': step3_2,
             'staff_function_id': staff_function9_id,
             'id': step3_4
-        }]
+        }, {
+            'hr_document_template_id': template7_id,
+            'previous_step_id': None,
+            'staff_function_id': staff_function4_id,
+            'id': step4_1
+        }, {
+            'hr_document_template_id': template7_id,
+            'previous_step_id': step4_1,
+            'staff_function_id': staff_function5_id,
+            'id': step4_2
+        }, {
+            'hr_document_template_id': template7_id,
+            'previous_step_id': step4_2,
+            'staff_function_id': staff_function10_id,
+            'id': step4_3
+        }, {
+            'hr_document_template_id': template7_id,
+            'previous_step_id': step4_2,
+            'staff_function_id': staff_function6_id,
+            'id': step4_4
+        }, ]
     )
 
     candidate_id = get_uuid()
