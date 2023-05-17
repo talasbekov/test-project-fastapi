@@ -23,6 +23,8 @@ from .status_change import handler as status_change_handler
 from .position_change import handler as position_change_handler
 from .confirm_coolness import handler as confirm_coolness_handler
 from .apply_staff_list import handler as apply_staff_list_handler
+from .superdoc import handler as superdoc_handler
+
 
 handlers = {
     "add_badge": add_badge_handler,
@@ -43,5 +45,6 @@ handlers = {
     "add_secondment": add_secondment_handler,
     "position_change": position_change_handler,
     "confirm_coolness": confirm_coolness_handler,
-    "apply_staff_list": apply_staff_list_handler
+    "superdoc": superdoc_handler,
+    "apply_staff_list": apply_staff_list_handler,
 }
