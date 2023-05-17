@@ -35,25 +35,19 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
         departments = db.query(self.model).filter(
             StaffDivision.parent_group_id == None,
             StaffDivision.name.not_in([*StaffDivisionEnum])
-        ).order_by(StaffDivision.order).offset(skip).limit(limit).all()
-        for departament in departments:
-            if departament.children:
-                departament.children = sorted(departament.children, key=lambda x: x.order)
+        ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
         return departments
     
     def get_all_parents(self, db: Session, skip: int, limit: int) -> List[StaffDivision]:
         parents = db.query(self.model).filter(
             StaffDivision.parent_group_id == None
-        ).order_by(StaffDivision.order).offset(skip).limit(limit).all()
-        for parent in parents:
-            if parent.children:
-                parent.children = sorted(parent.children, key=lambda x: x.order)
+        ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
         return parents
 
     def get_child_groups(self, db: Session, id: str, skip: int, limit: int) -> List[StaffDivision]:
         return db.query(self.model).filter(
            StaffDivision.parent_group_id == id
-        ).order_by(StaffDivision.order).offset(skip).limit(limit).all()
+        ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
 
     def get_by_name(self, db: Session, name: str) -> StaffDivision:
         group = db.query(self.model).filter(
@@ -95,10 +89,27 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
             parent_id = tmp.parent_group_id
         
         return res_id
+
+    def get_division_parents_by_id(self, db: Session, staff_division_id: uuid.UUID):
+
+        staff_division = self.get_by_id(db, staff_division_id)
+
+        parent_id = staff_division.parent_group_id
+
+        prev_staff_division = staff_division
+        staff_division.children = []
+        while parent_id is not None:
+            staff_division = self.get_by_id(db, parent_id)
+            staff_division.children = [prev_staff_division]
+            prev_staff_division = staff_division
+            parent_id = staff_division.parent_group_id
+        res = StaffDivisionRead.from_orm(staff_division)
+        db.rollback()
+        return res
     
     def get_by_option(self, db: Session, type: str, id: uuid.UUID, skip: int, limit: int):
         if id is None:
-            return [StaffDivisionOptionRead.from_orm(i) for i in self.get_parents(db, skip, limit)]
+            return [StaffDivisionOptionRead.from_orm(i) for i in self.get_all_parents(db, skip, limit)]
         return [StaffDivisionOptionRead.from_orm(i) for i in self.get_child_groups(db, id, skip, limit)]
 
 

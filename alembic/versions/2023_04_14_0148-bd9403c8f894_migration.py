@@ -976,14 +976,12 @@ def upgrade() -> None:
             'name': "Департамент 1",
             'nameKZ': "Департамент 1",
             'is_combat_unit': True,
-            'order': 1
         }, {
             'parent_group_id': group1_id,
             'id': group2_id,
             'name': "Управление 1",
             'nameKZ': 'Басқару 1',
             'is_combat_unit': False,
-            'order': 1
         },  {
             'parent_group_id': group2_id,
             'id': group2_1_id,
@@ -997,77 +995,66 @@ def upgrade() -> None:
             'name': "Управление 2",
             'nameKZ': 'Басқару 2',
             'is_combat_unit': True,
-            'order': 2
         }, {
             'parent_group_id': group1_id,
             'id': group4_id,
             'name': "Управление 3",
             'nameKZ': 'Басқару 3',
             'is_combat_unit': False,
-            'order': 3
         }, {
             'parent_group_id': group1_id,
             'id': group5_id,
             'name': "Управление 4",
             'nameKZ': 'Басқару 4',
             'is_combat_unit': True,
-            'order': 4
         }, {
             'parent_group_id': None,
             'id': group6_id,
             'name': "Особая группа",
             'nameKZ': 'Арнайы группа',
             'is_combat_unit': False,
-            'order': 2
         }, {
             'parent_group_id': group6_id,
             'id': group7_id,
             'name': "Кандидаты",
             'nameKZ': 'Кандидаттар',
             'is_combat_unit': False,
-            'order': 1
         }, {
             'parent_group_id': group6_id,
             'id': group8_id,
             'name': "Умер",
             'nameKZ': 'Өлі',
             'is_combat_unit': False,
-            'order': 2
         }, {
             'parent_group_id': group6_id,
             'id': group9_id,
             'name': "В отставке",
             'nameKZ': 'Зейнеткер',
             'is_combat_unit': False,
-            'order': 3
         }, {
             'parent_group_id': group6_id,
             'id': group10_id,
             'name': "В запасе",
             'nameKZ': 'Резервте',
             'is_combat_unit': False,
-            'order': 4
         }, {
             'parent_group_id': group6_id,
             'id': group11_id,
             'name': "Исключен из списков личного состава",
             'nameKZ': 'Кадрлар тізімінен шығарылған',
             'is_combat_unit': False,
-            'order': 5
         },  {
             'parent_group_id': group6_id,
             'id': group12_id,
             'name': "Откомандирован в другой гос. орган",
             'nameKZ': 'Басқа мемлекеттік органға жіберілді',
             'is_combat_unit': False,
-            'order': 6
         },  {
             'parent_group_id': group6_id,
             'id': group13_id,
             'name': "Погиб",
             'nameKZ': 'Қайтыс болды',
             'is_combat_unit': False,
-            'order': 7
         },
         ]
     )
@@ -2461,8 +2448,8 @@ def upgrade() -> None:
         Base.metadata.tables['type_army_equipment_models'],
         [{
             'id': type_army_equipment_model_id,
-            'name': 'Автомат винтовка',
-            'nameKZ': 'Автомат мылтық',
+            'name': 'AK-74',
+            'nameKZ': 'AK-74',
             'type_of_army_equipment_id': type_army_equipment_id
         },
             {
@@ -2560,6 +2547,8 @@ def upgrade() -> None:
 
     clothing_equipment_types_model_id = get_uuid()
     clothing_equipment_types_model2_id = get_uuid()
+    clothing_equipment_types_model3_id = get_uuid()
+    clothing_equipment_types_model4_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['clothing_equipment_types_models'],
@@ -2571,18 +2560,33 @@ def upgrade() -> None:
             {
             'id': clothing_equipment_types_model2_id,
             'type_clothing_equipments_id': type_of_clothing_equipment2_id,
+            'type_clothing_equipment_models_id': type_of_clothing_equipment_model_id
+        },
+            {
+            'id': clothing_equipment_types_model3_id,
+            'type_clothing_equipments_id': type_of_clothing_equipment2_id,
             'type_clothing_equipment_models_id': type_of_clothing_equipment_model2_id
-            },
+        },
+            {
+            'id': clothing_equipment_types_model4_id,
+            'type_clothing_equipments_id': type_of_clothing_equipment_id,
+            'type_clothing_equipment_models_id': type_of_clothing_equipment_model2_id
+        },
         ])
 
     type_other_equipment_id = get_uuid()
-    
+    type_other_equipment2_id = get_uuid()
     op.bulk_insert(
         Base.metadata.tables['type_other_equipments'],
         [{
             'id': type_other_equipment_id,
-            'name': 'Техника',
-            'nameKZ': 'Техника'
+            'name': 'Принтер',
+            'nameKZ': 'Принтер'
+        },
+        {
+            'id': type_other_equipment2_id,
+            'name': 'Телефон',
+            'nameKZ': 'Телефон'
         }]
     )
 
@@ -2590,47 +2594,35 @@ def upgrade() -> None:
     type_other_equipment_model2_id = get_uuid()
     type_other_equipment_model3_id = get_uuid()
     type_other_equipment_model4_id = get_uuid()
-    type_other_equipment_model5_id = get_uuid()
-    type_other_equipment_model6_id = get_uuid()
+
 
     op.bulk_insert(
         Base.metadata.tables['type_other_equipment_models'],
         [{
             'id': type_other_equipment_model_id,
-            'name': 'Принтер',
-            'nameKZ': 'Принтер',
+            'name': 'HP LaserJet N7100',
+            'nameKZ': 'HP LaserJet N7100',
             'type_of_other_equipment_id': type_other_equipment_id
         },
             {
             'id': type_other_equipment_model2_id,
-            'name': 'Радиостанция',
-            'nameKZ': 'Радиостанция',
+            'name': 'HP LaserJet P1102',
+            'nameKZ': 'HP LaserJet P1102',
             'type_of_other_equipment_id': type_other_equipment_id
         },
             {
             'id': type_other_equipment_model3_id,
-            'name': 'Персональный компьютер',
-            'nameKZ': 'Дербес компьютер',
-            'type_of_other_equipment_id': type_other_equipment_id
+            'name': 'Mitel 6865',
+            'nameKZ': 'Mitel 6865',
+            'type_of_other_equipment_id': type_other_equipment2_id
         },
             {
             'id': type_other_equipment_model4_id,
-            'name': 'Телефон',
-            'nameKZ': 'Телефон',
-            'type_of_other_equipment_id': type_other_equipment_id
-        },
-            {
-            'id': type_other_equipment_model5_id,
-            'name': 'Ноутбук',
-            'nameKZ': 'Ноутбук',
-            'type_of_other_equipment_id': type_other_equipment_id
-        },
-            {
-            'id': type_other_equipment_model6_id,
-            'name': 'Копировальный аппарат',
-            'nameKZ': 'Көшіру машинасы',
-            'type_of_other_equipment_id': type_other_equipment_id
-        }])
+            'name': 'Mitel 5304',
+            'nameKZ': 'Mitel 5304',
+            'type_of_other_equipment_id': type_other_equipment2_id
+        }
+        ])
     
 
 
@@ -2638,8 +2630,11 @@ def upgrade() -> None:
     army_equipment_id = get_uuid()
     clothing_equipment_id = get_uuid()
     clothing_equipment2_id = get_uuid()
+    clothing_equipment3_id = get_uuid()
+    clothing_equipment4_id = get_uuid()
     other_equipment_id = get_uuid()
-    
+    other_equipment2_id = get_uuid()
+
     op.bulk_insert(
         Base.metadata.tables['equipments'],
         [{
@@ -2680,7 +2675,39 @@ def upgrade() -> None:
             'user_id': user1_id,
             'type_of_equipment': 'clothing_equipment',
             'count_of_ammo': None,
+            'inventory_number': '64718248',
+            'inventory_count': None,
+            'clothing_size': '56',
+            'type_of_army_equipment_model_id': None,
+            'type_of_other_equipment_model_id': None,
+            'document_link': 'https://www.google.com/',
+            'document_number': '123456789',
+            'date_from': '2023-04-11T19:43:02.556000',
+            'date_to': None,
+         },
+         {
+            'id': clothing_equipment3_id,
+            'clothing_equipment_types_models_id': clothing_equipment_types_model3_id,
+            'user_id': user1_id,
+            'type_of_equipment': 'clothing_equipment',
+            'count_of_ammo': None,
             'inventory_number': '159815617',
+            'inventory_count': None,
+            'clothing_size': '56',
+            'type_of_army_equipment_model_id': None,
+            'type_of_other_equipment_model_id': None,
+            'document_link': 'https://www.google.com/',
+            'document_number': '123456789',
+            'date_from': '2023-04-11T19:43:02.556000',
+            'date_to': None,
+         },
+        {
+            'id': clothing_equipment4_id,
+            'clothing_equipment_types_models_id': clothing_equipment_types_model4_id,
+            'user_id': user1_id,
+            'type_of_equipment': 'clothing_equipment',
+            'count_of_ammo': None,
+            'inventory_number': '637041620',
             'inventory_count': None,
             'clothing_size': '56',
             'type_of_army_equipment_model_id': None,
@@ -2705,6 +2732,22 @@ def upgrade() -> None:
             'document_number': '123456789',
             'date_from': '2023-04-11T19:43:02.556000',
             'date_to': None,
+         },
+         {
+             'id': other_equipment2_id,
+             'type_of_other_equipment_model_id': type_other_equipment_model3_id,
+             'user_id': user1_id,
+             'type_of_equipment': 'other_equipment',
+             'count_of_ammo': None,
+             'inventory_number': '1721581041',
+             'inventory_count': 1,
+             'clothing_size': None,
+             'type_of_army_equipment_model_id': None,
+             'clothing_equipment_types_models_id': None,
+             'document_link': 'https://www.google.com/',
+             'document_number': '123456789',
+             'date_from': '2023-04-11T19:43:02.556000',
+             'date_to': None,
          }
         ])
     
