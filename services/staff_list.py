@@ -118,10 +118,14 @@ class StaffListService(ServiceBase[StaffList,StaffListCreate,StaffListUpdate]):
         return archive_division
 
     def sign(self, db: Session, id: str):
+        from .constructor import handlers
         staff_divisions = db.query(StaffDivision).all()
         staff_list = self.get_by_id(db, id)
-        staff_obj = staff_list.data 
-        return None
+        archive_staff_divisions = 0
+        handler = handlers.get('apply_staff_list')
+        if handler is None:
+            return None
+        handler.handle_action(staff_list, staff_divisions)
 
 
 staff_list_service = StaffListService(StaffList)
