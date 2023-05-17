@@ -59,7 +59,7 @@ from services import (privelege_emergency_service, coolness_service, badge_servi
 
 
 classes = {
-    StaffUnit: 'emergency_service_history',
+    StaffUnit: 'emergency_history',
     Rank: 'rank_history',
     Penalty: 'penalty_history',
     Contract: 'contract_history',
@@ -75,7 +75,7 @@ options = {
     'rank_history': RankHistory,
     'penalty_history': PenaltyHistory,
     'contract_history': ContractHistory,
-    'emergency_service_history': EmergencyServiceHistory,
+    'emergency_history': EmergencyServiceHistory,
     'work_experience_history': WorkExperienceHistory,
     'secondment_history': SecondmentHistory,
     'attestation': AttestationHistory,
