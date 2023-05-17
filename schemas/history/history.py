@@ -474,6 +474,7 @@ class EmergencyContactRead(ReadModel):
     document_number: Optional[str]
     staff_division_id: Optional[uuid.UUID]
     document_style: Optional[str]
+    contractor_signer_name: Optional[str]
 
     class Config:
         orm_mode = True
@@ -499,6 +500,7 @@ class EmergencyContactRead(ReadModel):
             document_number=orm_obj.document_number,
             staff_division_id=orm_obj.staff_division_id,
             document_style=orm_obj.document_style,
+            contractor_signer_name=orm_obj.contractor_signer_name,
         )
 
 
