@@ -121,4 +121,4 @@ async def sign(*,
         - **id**: UUID - id of the Staff List.
     """
     Authorize.jwt_required()
-    return staff_list_service.sign(db, str(id))
+    return staff_list_service.sign(db, id)

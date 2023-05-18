@@ -129,7 +129,8 @@ class StaffListService(ServiceBase[StaffList,StaffListCreate,StaffListUpdate]):
 
         return archive_division
 
-    def sign(self, db: Session, id: str):
+    def sign(self, db: Session, id: uuid.UUID):
+        # TODO: implement creation of super document
         from .constructor import handlers
         staff_divisions = db.query(StaffDivision).all()
         staff_list = self.get_by_id(db, id)
