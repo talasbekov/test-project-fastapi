@@ -2180,8 +2180,8 @@ def upgrade() -> None:
             ]},
             'id': template6_id
         }, {
-            "name": "Superdoc",
-            "nameKZ": "Superdoc",
+            "name": "Приказ об изменении штатного расписания",
+            "nameKZ": "Штат кестесін өзгерту туралы бұйрық",
             "path": None,
             "pathKZ": None,
             "subject_type": None,
@@ -2189,11 +2189,23 @@ def upgrade() -> None:
             'description': "",
             'is_visible': False,
             "properties": {
-                
+                "staff_list": {
+                    'alias_name': 'Штатное расписание',
+                    'alias_nameKZ': 'Штат кестесі',
+                    'type': 'write',
+                    'data_taken': "dropdown",
+                    'field_name': ""
+                }
             },
             'actions': {'args': [
                 {
-                    'superdoc': {}
+                    'superdoc': {},
+                }, {
+                    'apply_staff_list': {
+                        'staff_list': {
+                            'tagname': 'staff_list'
+                        }
+                    }
                 }
             ]},
             'id': template7_id
@@ -2296,7 +2308,7 @@ def upgrade() -> None:
             'id': step4_3
         }, {
             'hr_document_template_id': template7_id,
-            'previous_step_id': step4_2,
+            'previous_step_id': step4_3,
             'staff_function_id': staff_function6_id,
             'id': step4_4
         }, ]

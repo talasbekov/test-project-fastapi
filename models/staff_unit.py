@@ -2,11 +2,11 @@ from sqlalchemy import Column, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from models import Model
+from models import isActiveModel
 from .association import staff_unit_function, staff_unit_candidate_stage_infos
 
 
-class StaffUnit(Model):
+class StaffUnit(isActiveModel):
 
     __tablename__ = "staff_units"
 

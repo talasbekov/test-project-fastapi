@@ -4,7 +4,7 @@ from typing import List
 from sqlalchemy.orm import Session
 
 from exceptions import BadRequestException, NotFoundException
-from models import ArchiveStaffDivision, StaffDivision
+from models import ArchiveStaffDivision, StaffDivision, StaffDivisionEnum
 from schemas import (ArchiveStaffDivisionCreate, ArchiveStaffDivisionUpdate,
                      ArchiveStaffDivisionUpdateParentGroup, ArchiveStaffDivisionRead, NewArchiveStaffDivisionCreate,
                      NewArchiveStaffDivisionUpdate)
@@ -22,16 +22,20 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
     def get_departments(
             self,
             db: Session,
+            staff_list_id: uuid.UUID,
             skip: int = 0,
             limit: int = 100
     ) -> List[ArchiveStaffDivision]:
         return db.query(self.model).filter(
-            ArchiveStaffDivision.parent_group_id == None
+            ArchiveStaffDivision.staff_list_id == staff_list_id,
+            ArchiveStaffDivision.parent_group_id == None,
         ).offset(skip).limit(limit).all()
     
-    def get_parents(self, db: Session) -> List[ArchiveStaffDivision]:
+    def get_parents(self, db: Session, staff_list_id: uuid.UUID) -> List[ArchiveStaffDivision]:
         return db.query(self.model).filter(
-            ArchiveStaffDivision.parent_group_id == None
+            ArchiveStaffDivision.staff_list_id == staff_list_id,
+            ArchiveStaffDivision.parent_group_id == None,
+            StaffDivision.name.not_in([*StaffDivisionEnum])
         ).all()
 
     def change_parent_group(self,
@@ -39,13 +43,8 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
             id: str,
             body: ArchiveStaffDivisionUpdateParentGroup
     ) -> ArchiveStaffDivisionRead:
-        group = super().get(db, id)
-        if group is None:
-            raise NotFoundException(f"StaffDivision with id: {id} is not found!")
-
-        parent_group = super().get(db, body.parent_group_id)
-        if parent_group is None:
-            raise BadRequestException(f"Parent staffDivision with id: {body.parent_group_id} is not found!")
+        group = self.get_by_id(db, id)
+        self.get_by_id(db, body.parent_group_id)
         group.parent_group_id = body.parent_group_id
         db.add(group)
         db.flush()

@@ -21,13 +21,6 @@ from services import (hr_document_step_service, document_staff_function_service,
 
 from ws import notification_manager
 
-"""
-{
-  "1": "uuid",
-  "2": "uuid"
-}
-"""
-
 
 class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTemplateCreate, HrDocumentTemplateUpdate]):
 
