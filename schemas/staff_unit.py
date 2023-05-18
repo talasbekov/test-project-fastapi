@@ -13,6 +13,7 @@ from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 class StaffUnitBase(Model):
     position_id: uuid.UUID
     staff_division_id: uuid.UUID
+    is_active: Optional[bool] = True
 
 
 class StaffUnitCreate(StaffUnitBase):

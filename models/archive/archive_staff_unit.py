@@ -16,7 +16,7 @@ class ArchiveStaffUnit(Model):
 
     position = relationship("Position", cascade="all,delete")
     staff_division = relationship(
-        "ArchiveStaffDivision", back_populates="staff_units", cascade="all,delete"
+        "ArchiveStaffDivision", back_populates="staff_units", cascade="all,delete", foreign_keys=[staff_division_id]
     )
 
     staff_functions = relationship(

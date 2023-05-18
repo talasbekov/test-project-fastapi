@@ -10,14 +10,6 @@ from models import NamedModel
 from .association import archive_staff_unit_function
 
 
-class RoleName(str, Enum):
-    AGREER = "Утверждающий"
-    EXPERT = "Эксперт"
-    APPROVER = "Согласующий"
-    NOTIFIER = "Увемдомляемый"
-    INITIATOR = "Инициатор"
-
-
 class ArchiveDocumentFunctionType(NamedModel):
 
     __tablename__ = "archive_document_function_types"

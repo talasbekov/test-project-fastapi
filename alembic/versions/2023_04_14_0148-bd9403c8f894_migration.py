@@ -1622,6 +1622,7 @@ def upgrade() -> None:
     template5_id = get_uuid()
     template6_id = get_uuid()
     template7_id = get_uuid()
+    template8_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['hr_document_templates'],
@@ -2180,8 +2181,8 @@ def upgrade() -> None:
             ]},
             'id': template6_id
         }, {
-            "name": "Superdoc",
-            "nameKZ": "Superdoc",
+            "name": "Приказ об изменении штатного расписания",
+            "nameKZ": "Штат кестесін өзгерту туралы бұйрық",
             "path": None,
             "pathKZ": None,
             "subject_type": None,
@@ -2189,14 +2190,42 @@ def upgrade() -> None:
             'description': "",
             'is_visible': False,
             "properties": {
-                
+                "staff_list": {
+                    'alias_name': 'Штатное расписание',
+                    'alias_nameKZ': 'Штат кестесі',
+                    'type': 'write',
+                    'data_taken': "dropdown",
+                    'field_name': ""
+                }
             },
+            'actions': {'args': [
+                {
+                    'superdoc': {},
+                }, {
+                    'apply_staff_list': {
+                        'staff_list': {
+                            'tagname': 'staff_list'
+                        }
+                    }
+                }
+            ]},
+            'id': template7_id
+        }, {
+            'name': "Супер документ",
+            'nameKZ': "Супер құжат",
+            'path': None,
+            'pathKZ': None,
+            'subject_type': None,
+            'maintainer_id': None,
+            'description': "",
+            'is_visible': False,
+            'properties': {},
             'actions': {'args': [
                 {
                     'superdoc': {}
                 }
             ]},
-            'id': template7_id
+            'id': template8_id
         }]
     )
 
@@ -2216,6 +2245,10 @@ def upgrade() -> None:
     step4_2 = get_uuid()
     step4_3 = get_uuid()
     step4_4 = get_uuid()
+    step5_1 = get_uuid()
+    step5_2 = get_uuid()
+    step5_3 = get_uuid()
+    step5_4 = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['hr_document_steps'],
@@ -2296,9 +2329,29 @@ def upgrade() -> None:
             'id': step4_3
         }, {
             'hr_document_template_id': template7_id,
-            'previous_step_id': step4_2,
+            'previous_step_id': step4_3,
             'staff_function_id': staff_function6_id,
             'id': step4_4
+        }, {
+            'hr_document_template_id': template8_id,
+            'previous_step_id': None,
+            'staff_function_id': staff_function4_id,
+            'id': step5_1
+        }, {
+            'hr_document_template_id': template8_id,
+            'previous_step_id': step5_1,
+            'staff_function_id': staff_function5_id,
+            'id': step5_2
+        }, {
+            'hr_document_template_id': template8_id,
+            'previous_step_id': step5_2,
+            'staff_function_id': staff_function10_id,
+            'id': step5_3
+        }, {
+            'hr_document_template_id': template8_id,
+            'previous_step_id': step5_3,
+            'staff_function_id': staff_function6_id,
+            'id': step5_4
         }, ]
     )
 

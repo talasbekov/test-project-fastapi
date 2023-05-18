@@ -14,6 +14,7 @@ class StaffDivisionBase(NamedModel):
     description: Optional[str]
     is_combat_unit: bool
     leader_id: Optional[uuid.UUID]
+    is_active: Optional[bool] = True
 
 
 class StaffDivisionCreate(StaffDivisionBase):

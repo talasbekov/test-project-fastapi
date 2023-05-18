@@ -428,18 +428,18 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                                                                                                    step.staff_function_id)
 
         superdoc = False
-        
+
         if document.parent_id is None:
             template = hr_document_template_service.get_by_id(db, document.hr_document_template_id)
-            
+
             for i in template.actions['args']:
-                action_name = list(i)[0]
-                
-                if action_name == "superdoc":
+                actions = list(i)
+
+                if "superdoc" in actions:
                     superdoc = True
 
         user: User = user_service.get_by_id(db, user_id)
-        
+
         if not superdoc:
             user_ids = []
             for user in document.users:
@@ -463,8 +463,9 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         next_step = hr_document_step_service.get_next_step_from_previous_step(
                 db, info.hr_document_step
             )
-        
+
         if superdoc:
+            print('daun')
             return await self._sign_super_document(db, document, next_step, body.is_signed, body.comment, info, user)
 
         if body.is_signed:
@@ -701,7 +702,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             if child_document.last_step is None and child_document.status_id is completed_status.id:
                 raise InvalidOperationException(detail=f'Document with id {child_document.id} is already signed!')
         
-        if is_signed:                                                                                        
+        if is_signed:
             if super_document_next_step is None:
                 return await self._finish_super_document(db, super_document)
             
@@ -806,7 +807,24 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         documents = db.query(self.model).filter(
             self.model.parent_id == super_document.id
         ).all()
-        
+
+        super_template: HrDocumentTemplate = super_document.document_template
+
+        for i in super_template.actions['args']:
+            action_name = list(i)[0]
+            action = i[action_name]
+            print(action_name)
+
+            if handlers.get(action_name) is None:
+                raise InvalidOperationException(
+                    f"Action {action_name} is not supported!"
+                )
+            if super_document.users is not None and len(super_document.users) > 0:
+                for user in super_document.users:
+                    handlers[action_name].handle_action(db, user, action, super_template.properties, super_document.properties, super_document)
+            else:
+                handlers[action_name].handle_action(db, None, action, super_template.properties, super_document.properties, super_document)
+
         for document in documents:
             document.status_id = completed_status.id
 
@@ -830,15 +848,27 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
             document.signed_at = datetime.now()
             document.reg_number = (
-                    str(random.randint(1, 10000))
-                    + "-"
-                    + str(random.randint(1, 10000))
-                    + "қбп/жқ"
+                str(random.randint(1, 10000))
+                + "-"
+                + str(random.randint(1, 10000))
+                + "қбп/жқ"
             )
 
+            document.status_id = completed_status.id
             document.last_step_id = None
 
+        super_document.signed_at = datetime.now()
+        super_document.reg_number = (
+            str(random.randint(1, 10000))
+            + "-"
+            + str(random.randint(1, 10000))
+            + "қбп/жқ"
+        )
+
+        super_document.last_step_id = None
+
         db.add_all(documents)
+        db.add(super_document)
         db.flush()
 
         return super_document

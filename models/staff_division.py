@@ -4,7 +4,7 @@ from sqlalchemy import Column, ForeignKey, Boolean, Integer
 from sqlalchemy.dialects.postgresql import TEXT, UUID
 from sqlalchemy.orm import relationship
 
-from models import NamedNestedModel
+from models import NamedNestedModel, isActiveModel
 
 
 class StaffDivisionEnum(str, enum.Enum):
@@ -18,7 +18,7 @@ class StaffDivisionEnum(str, enum.Enum):
     PERISHED = "Погиб"
 
 
-class StaffDivision(NamedNestedModel):
+class StaffDivision(NamedNestedModel, isActiveModel):
 
     __tablename__ = "staff_divisions"
 

@@ -250,6 +250,7 @@ def upgrade() -> None:
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('nameKZ', sa.String(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('is_active', sa.Boolean(), nullable=False, default=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['parent_group_id'], ['staff_divisions.id'], ),
@@ -269,6 +270,7 @@ def upgrade() -> None:
     sa.Column('position_id', sa.UUID(), nullable=False),
     sa.Column('staff_division_id', sa.UUID(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('is_active', sa.Boolean(), nullable=False, default=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['position_id'], ['positions.id'], ),
@@ -765,6 +767,8 @@ def upgrade() -> None:
     op.create_table('archive_staff_divisions',
     sa.Column('parent_group_id', sa.UUID(), nullable=True),
     sa.Column('description', sa.TEXT(), nullable=True),
+    sa.Column('is_combat_unit', sa.Boolean(), nullable=True),
+    sa.Column('leader_id', sa.UUID(), nullable=True),
     sa.Column('staff_list_id', sa.UUID(), nullable=False),
     sa.Column('origin_id', sa.UUID(), nullable=True),
     sa.Column('name', sa.String(), nullable=False),
@@ -964,6 +968,7 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_foreign_key('archive_staff_divisions_leader_id_fkey', 'archive_staff_divisions', 'archive_staff_units', ['leader_id'], ['id'])
     op.create_table('biographic_infos',
     sa.Column('place_birth', sa.String(), nullable=True),
     sa.Column('gender', sa.Boolean(), nullable=True),
