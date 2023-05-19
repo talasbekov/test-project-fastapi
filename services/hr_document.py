@@ -52,6 +52,7 @@ from schemas import (
     ContractTypeRead,
     NotificationCreate,
 )
+from schemas.hr_document import SuperHrDocumentInit
 from services import (
     badge_service,
     document_staff_function_service,
@@ -70,7 +71,7 @@ from services import (
     coolness_service,
     penalty_service,
     contract_service,
-    notification_service,
+    notification_service, staff_list_service,
 )
 from .base import ServiceBase
 from ws import notification_manager
@@ -289,7 +290,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         return document
 
-    async def initialize(self, db: Session, body: HrDocumentInit, user_id: str, role: str):
+    async def initialize(self, db: Session, body: HrDocumentInit, user_id: str, role: str, parent_id: uuid.UUID = None):
         template = hr_document_template_service.get_by_id(
             db, body.hr_document_template_id
         )
@@ -318,7 +319,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 status_id=status.id,
                 due_date=body.due_date,
                 properties=body.properties,
-                parent_id=None,
+                parent_id=parent_id,
             ),
         )
         # comm = ""
@@ -574,6 +575,13 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             )
         return service.get_by_option(db, type, id, skip, limit)
 
+    def create_document_body(self, db: Session, user_id: uuid.UUID, parent_body):
+        steps = hr_document_template_service.get_steps_by_document_template_id(db, parent_body.hr_document_template_id)
+        parent_body.user_ids = [user_id]
+        parent_body.document_step_users_ids = steps
+        # TODO parent_body.properties = {}
+        return parent_body
+
     def _validate_document(self, db: Session, body: HrDocumentInit, role: str, step: HrDocumentStep, users: List[uuid.UUID]):
 
         staff_unit: StaffUnit = staff_unit_service.get_by_id(db, role)
@@ -683,7 +691,18 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         #             notified_users[j.id] = True
 
         return document
-    
+
+    async def initialize_super_document(self, db: Session, staff_list_id: uuid.UUID, user_id: str, role: str):
+        body: HrDocumentInit = {}
+        document = await self.initialize(db, body, user_id, role)
+        staff_list = staff_list_service.get_by_id(staff_list_id)
+        for archive_staff_division in staff_list.archive_staff_divisions:
+            for archive_staff_unit in archive_staff_division.staff_units:
+                if not staff_unit_service.exists_relation(db, archive_staff_unit.user_id, archive_staff_unit.origin_id):
+                    child_body = self.create_document_body(db, archive_staff_unit.user_id, body)
+                    await self.initialize(db, child_body, user_id, role, parent_id=document.id)
+        return document
+
     async def _sign_super_document(self,
                                    db: Session,
                                    super_document: HrDocument,
