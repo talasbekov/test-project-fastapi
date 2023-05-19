@@ -37,3 +37,10 @@ staff_unit_candidate_stage_infos = Table(
     Column("staff_unit_id", ForeignKey("staff_units.id")),
     Column("candidate_stage_info_id", ForeignKey("candidate_stage_infos.id"))
 )
+
+hr_vacancy_hr_vacancy_requirements = Table(
+    "hr_vacancy_hr_vacancy_requirements",
+    Base.metadata,
+    Column("vacancy_id", ForeignKey("hr_vacancies.id")),
+    Column("requirement_id", ForeignKey("hr_vacancies_requirements.id"))
+)

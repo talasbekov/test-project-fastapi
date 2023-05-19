@@ -64,3 +64,5 @@ from .penalty import *
 from .contract import *
 from .secondment import *
 from .history import *
+from .hr_vacancy_requirements import *
+from .hr_vacancy import *

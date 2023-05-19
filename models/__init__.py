@@ -42,3 +42,5 @@ from .status import Status, StatusType
 from .coolness import Coolness, CoolnessType
 from .history import *
 from .user import User
+from .hr_vacancy import HrVacancy
+from .hr_vacancy_requirements import HrVacancyRequirements
