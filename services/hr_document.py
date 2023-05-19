@@ -111,7 +111,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             raise NotFoundException(detail="Document is not found!")
         return document
 
-    def get_initialized_documents(self, db: Session, user_id: uuid.UUID, filter: str, skip: int, limit: int):
+    def get_initialized_documents(self, db: Session, user_id: uuid.UUID, parent_id: uuid.UUID, filter: str, skip: int, limit: int):
         user = user_service.get_by_id(db, user_id)
         documents = (
             db.query(self.model)
@@ -121,7 +121,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             .filter(
                 HrDocumentInfo.assigned_to_id == user_id,
                 DocumentStaffFunction.priority == 1,
-                self.model.parent_id == None
+                self.model.parent_id == parent_id,
                 )
         )
 
@@ -138,7 +138,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         return self._return_correctly(db, documents, user)
 
     def get_not_signed_documents(
-            self, db: Session, user_id: str, filter: str, skip: int, limit: int
+            self, db: Session, user_id: str, parent_id: uuid.UUID, filter: str, skip: int, limit: int
     ):
         user = user_service.get_by_id(db, user_id)
 
@@ -152,7 +152,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             db.query(self.model)
             .filter(self.model.status_id != draft_status.id,
                     self.model.status_id != revision_status.id,
-                    self.model.parent_id == None)
+                    self.model.parent_id == parent_id)
             .join(HrDocumentStep)
             .filter(HrDocumentStep.staff_function_id.in_(staff_function_ids))
         )
@@ -169,7 +169,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         )
         return self._return_correctly(db, documents, user)
 
-    def get_draft_documents(self, db: Session, user_id: str, filter: str, skip: int = 0, limit: int = 100):
+    def get_draft_documents(self, db: Session, user_id: str, parent_id: uuid.UUID, filter: str, skip: int = 0, limit: int = 100):
         user = user_service.get_by_id(db, user_id)
         status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.DRAFT.value)
 
@@ -178,7 +178,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             .filter(
                 self.model.status_id == status.id,
                 self.model.initialized_by_id == user_id,
-                self.model.parent_id == None
+                self.model.parent_id == parent_id,
             ))
 
         if filter != '':
