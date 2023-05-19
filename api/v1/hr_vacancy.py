@@ -7,7 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import HrVacancyRead, HrVacancyCreate, HrVacancyUpdate
+from schemas import HrVacancyRead, HrVacancyCreate, StaffUnitRead
 from services import hr_vacancy_service
 
 router = APIRouter(prefix="/hr_vacancies", tags=["HrVacancies"], dependencies=[Depends(HTTPBearer())])
@@ -49,6 +49,44 @@ async def get_not_active(*,
     """
     Authorize.jwt_required()
     return hr_vacancy_service.get_multi_not_active(db, skip, limit)
+
+
+@router.get("/{id}/candidates", dependencies=[Depends(HTTPBearer())],
+            response_model=List[StaffUnitRead],
+            summary="Get all candidates of Vacancy")
+async def get_all_candidates(*,
+    id: uuid.UUID,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Get all HrVacancies
+
+       - **skip**: int - The number of HrVacancies to skip before returning the results. This parameter is optional and defaults to 0.
+       - **limit**: int - The maximum number of HrVacancies to return in the response. This parameter is optional and defaults to 100.
+    """
+    Authorize.jwt_required()
+    role = Authorize.get_raw_jwt()['role']
+    return hr_vacancy_service.get_candidates(db, id, role)
+
+
+@router.post("/{id}/respond", dependencies=[Depends(HTTPBearer())],
+            response_model=HrVacancyRead,
+            summary="Respond to Candidate (Отклик)")
+async def respond(*,
+    id: uuid.UUID,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Get all HrVacancies
+
+       - **skip**: int - The number of HrVacancies to skip before returning the results. This parameter is optional and defaults to 0.
+       - **limit**: int - The maximum number of HrVacancies to return in the response. This parameter is optional and defaults to 100.
+    """
+    Authorize.jwt_required()
+    role = Authorize.get_raw_jwt()['role']
+    return hr_vacancy_service.respond_to_vacancy(db, id, role)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,

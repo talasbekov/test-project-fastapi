@@ -3,8 +3,7 @@ from sqlalchemy.orm import Session
 from fastapi.encoders import jsonable_encoder
 
 from exceptions.client import ForbiddenException, NotFoundException
-from models import HrVacancy
-from models.hr_vacancy import HrVacancy
+from models import HrVacancy, StaffUnit
 from models.position import PositionNameEnum
 from schemas import HrVacancyCreate, HrVacancyUpdate
 from .base import ServiceBase
@@ -48,23 +47,46 @@ class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate])
         position = position_service.get_by_id(db, body.position_id)
         staff_division = staff_division_service.get_by_id(db, body.staff_division_id)
         
-        vacancy_requirements = []
-        
-        if body.hr_vacancy_requirements_ids is not None:
-            for requirement in body.hr_vacancy_requirements_ids:
-                requirement = hr_vacancy_requirement_service.get_by_id(db, requirement)
-
-                vacancy_requirements.append(requirement)
-                    
         vacancy = self.model() # init object
         
         vacancy.position_id = position.id
         vacancy.staff_division_id = staff_division.id
-        vacancy.hr_vacancy_requirements = vacancy_requirements
+        
+        
+        if body.hr_vacancy_requirements_ids is not None:
+            vacancy_requirements = []
+            
+            for requirement in body.hr_vacancy_requirements_ids:
+                requirement = hr_vacancy_requirement_service.get_by_id(db, requirement)
+            
+                vacancy_requirements.append(requirement)
+            
+            vacancy.hr_vacancy_requirements = vacancy_requirements
         
         
         db.add(vacancy)
         db.flush()
+        
+        return vacancy
+    
+    
+    def get_candidates(self, db: Session, id: str, role_id: str) -> List[StaffUnit]:
+        
+        if not self._check_by_role(db, role_id):
+            raise ForbiddenException("You don't have permission to manage vacancy!")
+        
+        vacancy = self.get_by_id(db, id)
+        
+        return vacancy.hr_vacancy_candidates
+    
+    
+    def respond_to_vacancy(self, db: Session, id: str, role_id: str):
+        
+        current_user_staff_unit = staff_unit_service.get_by_id(db, role_id)
+        
+        vacancy = self.get_by_id(db, id)
+        
+        vacancy.hr_vacancy_candidates.append(current_user_staff_unit)
         
         return vacancy
 

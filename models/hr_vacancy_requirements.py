@@ -9,6 +9,5 @@ class HrVacancyRequirements(NamedModel):
     hr_vacancies = relationship(
         "HrVacancy",
         secondary=hr_vacancy_hr_vacancy_requirements,
-        back_populates="hr_vacancy_requirements",
-        cascade="all,delete"
+        back_populates="hr_vacancy_requirements"
     )

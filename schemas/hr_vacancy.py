@@ -5,6 +5,7 @@ from schemas import Model, ReadModel
 from .hr_vacancy_requirements import HrVacancyRequirementsRead
 from .position import PositionRead
 from .staff_division import StaffDivisionRead
+from .staff_unit import StaffUnitRead
 
 
 class HrVacancyBase(Model):
@@ -28,6 +29,7 @@ class HrVacancyRead(HrVacancyBase, ReadModel):
     hr_vacancy_requirements: Optional[List[HrVacancyRequirementsRead]]
     position: Optional[PositionRead]
     staff_division: Optional[StaffDivisionRead]
+    hr_vacancy_candidates: Optional[StaffUnitRead]
     
     class Config:
         orm_mode = True
