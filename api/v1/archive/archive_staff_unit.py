@@ -7,7 +7,14 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import NewArchiveStaffUnitCreate, ArchiveStaffUnitRead, ArchiveStaffUnitFunctions, NewArchiveStaffUnitUpdate
+from schemas import (
+    NewArchiveStaffUnitCreate,
+    ArchiveStaffUnitRead,
+    ArchiveStaffUnitFunctions,
+    NewArchiveStaffUnitUpdate,
+    ArchiveServiceStaffFunctionRead,
+    ArchiveDocumentStaffFunctionRead
+)
 from services import rank_service, archive_staff_unit_service
 
 router = APIRouter(prefix="/archive_staff_unit", tags=["ArchiveStaffUnit"], dependencies=[Depends(HTTPBearer())])
@@ -111,6 +118,23 @@ async def delete(*,
     archive_staff_unit_service.remove(db, id)
 
 
+@router.get('/get-service-staff-functions/{id}', dependencies=[Depends(HTTPBearer())],
+            response_model=List[ArchiveServiceStaffFunctionRead],
+            summary="Get ServiceStaffFunctions by StaffUnit id")
+async def get_service_staff_functions(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Get ServiceStaffFunctions by StaffUnit id
+
+        - **id** - UUID - required
+    """
+    Authorize.jwt_required()
+    return archive_staff_unit_service.get_service_staff_functions(db, id)
+
+
 @router.post("/add-service-staff-function", dependencies=[Depends(HTTPBearer())],
              summary="Add ServiceStaffFunction")
 async def add_service_staff_function(*,
@@ -141,12 +165,29 @@ async def remove_service_staff_function(*,
     archive_staff_unit_service.remove_service_staff_function(db, body)
 
 
+@router.get('/get-document-staff-functions/{id}', dependencies=[Depends(HTTPBearer())],
+            response_model=List[ArchiveDocumentStaffFunctionRead],
+            summary="Get DocumentStaffFunctions by StaffUnit id")
+async def get_document_staff_functions(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Get DocumentStaffFunctions by StaffUnit id
+
+        - **id** - UUID - required
+    """
+    Authorize.jwt_required()
+    return archive_staff_unit_service.get_document_staff_functions(db, id)
+
+
 @router.post("/add-document-staff-function", dependencies=[Depends(HTTPBearer())],
              summary="Add DocumentStaffFunction")
 async def add_document_staff_function(*,
-     db: Session = Depends(get_db),
-     body: ArchiveStaffUnitFunctions,
-     Authorize: AuthJWT = Depends()
+    db: Session = Depends(get_db),
+    body: ArchiveStaffUnitFunctions,
+    Authorize: AuthJWT = Depends()
 ):
     """
         Add DocumentStaffFunction to StaffUnit
@@ -159,9 +200,9 @@ async def add_document_staff_function(*,
 @router.post("/remove-document-staff-function", dependencies=[Depends(HTTPBearer())],
              summary="Remove DocumentStaffFunction")
 async def remove_document_staff_function(*,
-        db: Session = Depends(get_db),
-        body: ArchiveStaffUnitFunctions,
-        Authorize: AuthJWT = Depends()
+    db: Session = Depends(get_db),
+    body: ArchiveStaffUnitFunctions,
+    Authorize: AuthJWT = Depends()
 ):
     """
         Remove DocumentStaffFunction from StaffUnit

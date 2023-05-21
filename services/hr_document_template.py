@@ -5,7 +5,14 @@ from fastapi.encoders import jsonable_encoder
 from typing import List
 
 from exceptions import NotFoundException
-from models import HrDocumentTemplate, HrDocumentStep, DocumentStaffFunction, User, Notification
+from models import (
+    HrDocumentTemplate,
+    HrDocumentStep,
+    DocumentStaffFunction,
+    User,
+    Notification,
+    HrDocumentTemplateEnum,
+)
 from schemas import (
     HrDocumentTemplateCreate,
     HrDocumentTemplateUpdate,
@@ -16,8 +23,12 @@ from schemas import (
     NotificationCreate,
 )
 from .base import ServiceBase
-from services import (hr_document_step_service, document_staff_function_service, notification_service,
-                      staff_unit_service)
+from services import (
+    hr_document_step_service,
+    document_staff_function_service,
+    notification_service,
+    staff_unit_service,
+)
 
 from ws import notification_manager
 
@@ -143,6 +154,18 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
                 )
             )
             await notification_manager.broadcast(body.text, i.id)
+
+    def get_staff_list(self, db: Session):
+        res = db.query(self.model).filter(self.model.name == HrDocumentTemplateEnum.STAFF_LIST.value).first()
+        if res is None:
+            raise NotFoundException(detail=f'HrDocumentTemplate with name: {HrDocumentTemplateEnum.STAFF_LIST.value} is not found!')
+        return res
+
+    def get_staff_unit(self, db: Session):
+        res = db.query(self.model).filter(self.model.name == HrDocumentTemplateEnum.STAFF_UNIT.value).first()
+        if res is None:
+            raise NotFoundException(detail=f'HrDocumentTemplate with name: {HrDocumentTemplateEnum.STAFF_UNIT.value} is not found!')
+        return res
 
 
 hr_document_template_service = HrDocumentTemplateService(HrDocumentTemplate)

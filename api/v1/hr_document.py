@@ -295,3 +295,21 @@ async def get_signee(*,
     """
     Authorize.jwt_required()
     return hr_document_service.get_signee(db, id)
+
+
+@router.post('/initialize/staff_list/{id}/', response_model=HrDocumentRead,
+             summary="Initialize HrDocument from staff list")
+async def initialize_from_staff_list(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Initialize HrDocument from staff list
+
+        - **id**: UUID - required.
+    """
+    Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
+    role = Authorize.get_raw_jwt()['role']
+    return await hr_document_service.initialize_super_document(db, id, user_id, role)
