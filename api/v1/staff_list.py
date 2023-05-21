@@ -122,20 +122,3 @@ async def sign(*,
     """
     Authorize.jwt_required()
     return staff_list_service.sign(db, id)
-
-
-@router.post("/{id}/", status_code=status.HTTP_201_CREATED, summary="Initialize SuperDocument")
-async def initialize(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
-    """
-        Initialize SuperDocument
-
-        - **user_ids**: UUID - required and should exist in database. A list of user IDs to be assigned to the HrDocument.
-    """
-    Authorize.jwt_required()
-    user_id = Authorize.get_jwt_subject()
-    role = Authorize.get_raw_jwt()['role']
-    return await hr_document_service.initialize_super_document(db, id, user_id, role)
