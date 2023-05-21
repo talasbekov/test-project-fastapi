@@ -3354,6 +3354,7 @@ def upgrade() -> None:
             'date_credited': None,
             'emergency_rank_id': None,
             'contractor_signer_name': None,
+            'contractor_signer_nameKZ': None,
          },
         {
             'id': history14_id,
@@ -3389,6 +3390,7 @@ def upgrade() -> None:
             'date_credited': None,
             'emergency_rank_id': rank4_id,
             'contractor_signer_name': "Начальник Службы",
+            'contractor_signer_nameKZ': "Қызмет бастығы",
          },
         # {
         #     'id': history14_id,
@@ -3486,7 +3488,8 @@ def upgrade() -> None:
             'date_credited': None,
             'emergency_rank_id': None,
             'contractor_signer_name': None,
-        },
+            'contractor_signer_nameKZ': None,
+            },
              
             {
             'id': history6_id,
@@ -3522,6 +3525,7 @@ def upgrade() -> None:
             'date_credited': None,
             'emergency_rank_id': None,
             'contractor_signer_name': None,
+            'contractor_signer_nameKZ': None,
         },
             {
             'id': history7_id,
@@ -3557,6 +3561,7 @@ def upgrade() -> None:
             'date_credited': None,
             'emergency_rank_id': None,
             'contractor_signer_name': None,
+            'contractor_signer_nameKZ': None,
         },
          {
             'id': history15_id, # TODO: change the id
@@ -3592,6 +3597,7 @@ def upgrade() -> None:
             'date_credited': datetime.datetime(2014, 3, 31),
             'emergency_rank_id': None,
             'contractor_signer_name': None,
+            'contractor_signer_nameKZ': None,
          },
         {
             'id': history16_id,
@@ -3627,6 +3633,7 @@ def upgrade() -> None:
             'date_credited': None,
             'emergency_rank_id': None,
             'contractor_signer_name': None,
+            'contractor_signer_nameKZ': None,
         },
             {
             'id': history8_id,
@@ -3662,6 +3669,7 @@ def upgrade() -> None:
             'date_credited': None,
             'emergency_rank_id': None,
             'contractor_signer_name': None,
+            'contractor_signer_nameKZ': None,
         },
            
             {
@@ -3698,6 +3706,7 @@ def upgrade() -> None:
             'date_credited': None,
             'emergency_rank_id': None,
             'contractor_signer_name': None,
+            'contractor_signer_nameKZ': None,
         },
             {
             'id': history11_id,
@@ -3733,6 +3742,7 @@ def upgrade() -> None:
             'date_credited': None,
             'emergency_rank_id': None,
             'contractor_signer_name': None,
+            'contractor_signer_nameKZ': None,
         },
             {
             'id': history12_id,
@@ -3768,6 +3778,7 @@ def upgrade() -> None:
             'date_credited': None,
             'emergency_rank_id': None,
             'contractor_signer_name': None,
+            'contractor_signer_nameKZ': None,
         },
          {
             'id': history13_id,
@@ -3803,6 +3814,7 @@ def upgrade() -> None:
             'date_credited': None,
             'emergency_rank_id': None,
             'contractor_signer_name': None,
+            'contractor_signer_nameKZ': None,
         }
         ])
 

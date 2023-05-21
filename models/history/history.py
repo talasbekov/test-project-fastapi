@@ -202,6 +202,7 @@ class EmergencyServiceHistory(History):
     staff_division_nameKZ = Column(String, nullable=True)
 
     contractor_signer_name = Column(String, nullable=True)
+    contractor_signer_nameKZ = Column(String, nullable=True)
 
     @classmethod
     def create_history(self, db: Session, user_id: uuid.UUID, id: uuid.UUID, finish_last):
