@@ -5,10 +5,9 @@ from sqlalchemy.orm import Session
 from exceptions.client import NotFoundException
 from models import ArchiveDocumentStaffFunction, DocumentStaffFunction, User
 from schemas import (
-    ArchiveDocumentStaffFunctionCreate,
-    ArchiveDocumentStaffFunctionUpdate,
-    DocumentArchiveStaffFunctionTypeCreate,
-    DocumentArchiveStaffFunctionTypeUpdate, NewArchiveDocumentStaffFunctionCreate,
+    ArchiveDocumentStaffFunctionCreate, ArchiveDocumentStaffFunctionUpdate,
+    DocumentArchiveStaffFunctionTypeCreate, DocumentArchiveStaffFunctionTypeUpdate,
+    NewArchiveDocumentStaffFunctionCreate, ArchiveStaffUnitFunctions,
 )
 from services import ServiceBase
 
@@ -18,13 +17,14 @@ from .document_archive_staff_function_type import (
 
 
 class DocumentArchiveStaffFunction(ServiceBase[ArchiveDocumentStaffFunction, ArchiveDocumentStaffFunctionCreate, ArchiveDocumentStaffFunctionUpdate]):
-    
+
     def get_by_id(self, db: Session, id: str):
         document_staff_function = super().get(db, id)
         if document_staff_function is None:
-            raise NotFoundException(detail=f"DocumentArchiveStaffFunction with id: {id} is not found!")
+            raise NotFoundException(
+                detail=f"DocumentArchiveStaffFunction with id: {id} is not found!")
         return document_staff_function
-    
+
     def create_based_on_existing_archive_staff_function(self, db: Session, staff_function: DocumentStaffFunction, role_id: uuid.UUID):
         return super().create(db, ArchiveDocumentStaffFunctionCreate(
             name=staff_function.name,
