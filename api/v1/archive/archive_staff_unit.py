@@ -77,11 +77,10 @@ async def update(*,
         - **description**: a long description. This parameter is optional.
     """
     Authorize.jwt_required()
-    rank_service.get_by_id(db, body.position_id)
     return archive_staff_unit_service.update_staff_unit(
-        db=db,
-        db_obj=archive_staff_unit_service.get_by_id(db, id),
-        obj_in=body)
+        db,
+        archive_staff_unit_service.get_by_id(db, id),
+        body)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],

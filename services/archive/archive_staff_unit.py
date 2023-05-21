@@ -18,7 +18,7 @@ class ArchiveStaffUnitService(ServiceBase[ArchiveStaffUnit, ArchiveStaffUnitCrea
     def get_by_id(self, db: Session, id: str) -> ArchiveStaffUnit:
         position = super().get(db, id)
         if position is None:
-            raise NotFoundException(detail="StaffUnit is not found!")
+            raise NotFoundException(detail=f"ArchiveStaffUnit with id: {id} is not found!")
         return position
 
     def add_service_staff_function(self, db: Session, body: ArchiveStaffUnitFunctions):
@@ -97,7 +97,7 @@ class ArchiveStaffUnitService(ServiceBase[ArchiveStaffUnit, ArchiveStaffUnitCrea
             staff_division_id=body.staff_division_id,
             user_id=body.user_id,
             actual_user_id=body.actual_user_id,
-            origin_id=None
+            origin_id=staff_unit.origin_id
         ))
 
     def get_service_staff_functions(self, db: Session, staff_unit_id: uuid.UUID):

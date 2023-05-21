@@ -32,6 +32,7 @@ from models import (
     HrDocumentInfo,
     LanguageEnum,
     DocumentFunctionTypeEnum,
+    ArchiveStaffUnit,
 )
 from schemas import (
     BadgeRead,
@@ -51,6 +52,7 @@ from schemas import (
     PenaltyTypeRead,
     ContractTypeRead,
     NotificationCreate,
+    ArchiveStaffUnitRead,
 )
 from services import (
     badge_service,
@@ -70,7 +72,9 @@ from services import (
     coolness_service,
     penalty_service,
     contract_service,
-    notification_service, staff_list_service,
+    notification_service,
+    staff_list_service,
+    archive_staff_unit_service
 )
 from .base import ServiceBase
 from ws import notification_manager
@@ -86,6 +90,7 @@ options = {
     'coolnesses': coolness_service,
     'penalties': penalty_service,
     'contracts': contract_service,
+    'archive_staff_unit': archive_staff_unit_service,
 }
 
 responses = {
@@ -99,6 +104,7 @@ responses = {
     'coolnesses': CoolnessTypeRead,
     'penalties': PenaltyTypeRead,
     'contracts': ContractTypeRead,
+    'archive_staff_unit': ArchiveStaffUnitRead,
 }
 
 from .constructor import handlers
@@ -465,7 +471,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             )
 
         if superdoc:
-            print('daun')
             return await self._sign_super_document(db, document, next_step, body.is_signed, body.comment, info, user)
 
         if body.is_signed:
@@ -574,10 +579,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             )
         return service.get_by_option(db, type, id, skip, limit)
 
-    def _create_staff_unit_document_body(self, db: Session, user_id: uuid.UUID, staff_unit_id: uuid.UUID, template_id: uuid.UUID, parent_id: uuid.UUID):
+    def _create_staff_unit_document_body(self, db: Session, user_id: uuid.UUID, staff_unit: ArchiveStaffUnit, template_id: uuid.UUID, parent_id: uuid.UUID):
         steps = hr_document_template_service.get_steps_by_document_template_id(db, template_id)
-        staff_unit: StaffUnit = staff_unit_service.get_by_id(db, staff_unit_id)
-        print(user_id)
         body = HrDocumentInit(
             hr_document_template_id=template_id,
             user_ids=[user_id],
@@ -589,7 +592,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                     'name': staff_unit.position.name,
                     'nameKZ': staff_unit.position.nameKZ,
                     'value': staff_unit.id,
-                    'field_name': "staff_unit"
+                    'field_name': "archive_staff_unit"
                 }
             }
         )
@@ -710,12 +713,16 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         child_template = hr_document_template_service.get_staff_unit(db)
         body: HrDocumentInit = HrDocumentInit(
             hr_document_template_id=template.id,
-            user_ids=[user_id],
+            user_ids=[],
             parent_id=None,
             due_date= datetime.now() + timedelta(days=7),
             document_step_users_ids=hr_document_template_service.get_steps_by_document_template_id(db, template.id),
             properties={
-                'staff_list': str(staff_list_id),
+                'staff_list': {
+                    'name': 'staff_list',
+                    'nameKZ': "Штатный список",
+                    'value': str(staff_list_id)
+                },
             },
         )
         document = await self.initialize(db, body, user_id, role)
@@ -724,7 +731,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             for archive_staff_unit in archive_staff_division.staff_units:
                 if not staff_unit_service.exists_relation(db, archive_staff_unit.user_id, archive_staff_unit.origin_id):
                     if archive_staff_unit.user_id is not None:
-                        child_body = self._create_staff_unit_document_body(db, archive_staff_unit.user_id, archive_staff_unit.origin_id, child_template.id, document.id)
+                        child_body = self._create_staff_unit_document_body(db, archive_staff_unit.user_id, archive_staff_unit, child_template.id, document.id)
                         await self.initialize(db, child_body, user_id, role, parent_id=document.id)
         return document
 
@@ -754,19 +761,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             
             super_document.status_id = in_progress_status.id
             super_document.last_step_id = super_document_next_step.id
-            
-            for child_document in child_documents:
-                child_document_info = hr_document_info_service.get_by_document_id_and_step_id(
-                    db, child_document.id, child_document.last_step_id
-                )
-                
-                child_next_step = hr_document_step_service.get_next_step_from_previous_step(
-                    db, child_document_info.hr_document_step
-                )
-                
-                child_document.last_step_id = child_next_step.id
-                
-                child_document.status_id = in_progress_status.id
+
         else:
             if super_document_next_step is None:
                 
@@ -838,6 +833,13 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 )
 
             hr_document_info_service.sign(db, child_document_info, user, comment, is_signed)
+            
+            next_step = hr_document_step_service.get_next_step_from_previous_step(
+                db, child_document_info.hr_document_step
+            )
+            
+            child_document.last_step_id = next_step.id
+            child_document.status_id = in_progress_status.id
 
         db.add_all(child_documents)
         db.add(super_document)

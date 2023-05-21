@@ -18,10 +18,10 @@ class ApplyArchivePosition(BaseHandler):
                       action: dict,
                       template_props: dict,
                       props: dict,
-                      document: HrDocument, ):
+                      document: HrDocument):
         position = action["staff_unit"]["tagname"]
         staff_unit_id = archive_staff_unit_service.get_by_id(db, props[position]["value"]).origin_id
-        self._handle_validation(db, user, action, template_props, props, document, staff_unit_id)
+        self._handle_validation(db, user, staff_unit_id)
 
         old_history = staff_unit_service.get_last_history(db, user.id)
         if old_history is not None:
@@ -39,7 +39,7 @@ class ApplyArchivePosition(BaseHandler):
 
         return user
 
-    def _handle_validation(
+    def handle_validation(
         self,
         db: Session,
         user: User,
@@ -47,8 +47,13 @@ class ApplyArchivePosition(BaseHandler):
         template_props: dict,
         props: dict,
         document: HrDocument,
-        staff_unit_id: uuid.UUID
     ):
+        if staff_unit_service.exists_relation(db, user.id, props[action["staff_unit"]["tagname"]]['value']):
+            raise ForbiddenException(
+                f"This position is already assigned to this user: {user.first_name}, {user.last_name}"
+            )
+
+    def _handle_validation(self, db: Session, user: User, staff_unit_id: uuid.UUID):
         if staff_unit_service.exists_relation(db, user.id, staff_unit_id):
             raise ForbiddenException(
                 f"This position is already assigned to this user: {user.first_name}, {user.last_name}"

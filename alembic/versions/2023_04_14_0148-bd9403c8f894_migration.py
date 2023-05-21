@@ -2241,6 +2241,7 @@ def upgrade() -> None:
                     'alias_name': 'Позиция сотрудника',
                     'data_taken': 'dropdown',
                     'type': 'write',
+                    'field_name': 'staff_unit'
                 }
             },
             'actions': {'args': [

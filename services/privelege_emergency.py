@@ -11,7 +11,7 @@ class PrivelegeEmergencyService(ServiceBase[PrivilegeEmergency, PrivelegeEmergen
     def get_by_id(self, db: Session, id: str):
         rank = super().get(db, id)
         if rank is None:
-            raise NotFoundException(detail=f"Rank with id: {id} is not found!")
+            raise NotFoundException(detail=f"PrivilegeEmergency with id: {id} is not found!")
         return rank
 
     def get_by_user_id(self, db: Session, user_id: str):
