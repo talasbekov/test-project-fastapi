@@ -976,7 +976,6 @@ def upgrade() -> None:
             'name': "Департамент 1",
             'nameKZ': "Департамент 1",
             'is_combat_unit': True,
-            'leader_id': staff_unit10_id,
             'is_visible': True,
         }, {
             'parent_group_id': group1_id,
@@ -984,7 +983,6 @@ def upgrade() -> None:
             'name': "Управление 1",
             'nameKZ': 'Басқару 1',
             'is_combat_unit': False,
-            'leader_id': staff_unit1_id,
             'is_visible': True,
         },  {
             'parent_group_id': group2_id,
@@ -992,7 +990,6 @@ def upgrade() -> None:
             'name': "Отдел 1",
             'nameKZ': 'Бөлім 1',
             'is_combat_unit': False,
-            'leader_id': staff_unit7_id,
             'is_visible': True,
         }, {
             'parent_group_id': group1_id,
@@ -1000,7 +997,6 @@ def upgrade() -> None:
             'name': "Управление 2",
             'nameKZ': 'Басқару 2',
             'is_combat_unit': True,
-            'leader_id': staff_unit2_id,
             'is_visible': True,
         }, {
             'parent_group_id': group1_id,
@@ -1008,7 +1004,6 @@ def upgrade() -> None:
             'name': "Управление 3",
             'nameKZ': 'Басқару 3',
             'is_combat_unit': False,
-            'leader_id': staff_unit8_id,
             'is_visible': True,
         }, {
             'parent_group_id': group1_id,
@@ -1016,7 +1011,6 @@ def upgrade() -> None:
             'name': "Управление 4",
             'nameKZ': 'Басқару 4',
             'is_combat_unit': True,
-            'leader_id': staff_unit16_id,
             'is_visible': True,
         }, {
             'parent_group_id': None,
@@ -1024,7 +1018,6 @@ def upgrade() -> None:
             'name': "Особая группа",
             'nameKZ': 'Арнайы группа',
             'is_combat_unit': False,
-            'leader_id': None,
             'is_visible': False,
         }, {
             'parent_group_id': group6_id,
@@ -1033,7 +1026,6 @@ def upgrade() -> None:
             'nameKZ': 'Кандидаттар',
             'is_combat_unit': False,
             'is_visible': False,
-            'leader_id': None,
         }, {
             'parent_group_id': group6_id,
             'id': group8_id,
@@ -1041,7 +1033,6 @@ def upgrade() -> None:
             'nameKZ': 'Өлі',
             'is_combat_unit': False,
             'is_visible': False,
-            'leader_id': None,
         }, {
             'parent_group_id': group6_id,
             'id': group9_id,
@@ -1049,7 +1040,6 @@ def upgrade() -> None:
             'nameKZ': 'Зейнеткер',
             'is_combat_unit': False,
             'is_visible': False,
-            'leader_id': None,
         }, {
             'parent_group_id': group6_id,
             'id': group10_id,
@@ -1057,7 +1047,6 @@ def upgrade() -> None:
             'nameKZ': 'Резервте',
             'is_combat_unit': False,
             'is_visible': False,
-            'leader_id': None,
         }, {
             'parent_group_id': group6_id,
             'id': group11_id,
@@ -1065,7 +1054,6 @@ def upgrade() -> None:
             'nameKZ': 'Кадрлар тізімінен шығарылған',
             'is_combat_unit': False,
             'is_visible': False,
-            'leader_id': None,
         },  {
             'parent_group_id': group6_id,
             'id': group12_id,
@@ -1073,7 +1061,6 @@ def upgrade() -> None:
             'nameKZ': 'Басқа мемлекеттік органға жіберілді',
             'is_combat_unit': False,
             'is_visible': False,
-            'leader_id': None,
         },  {
             'parent_group_id': group6_id,
             'id': group13_id,
@@ -1081,7 +1068,6 @@ def upgrade() -> None:
             'nameKZ': 'Қайтыс болды',
             'is_combat_unit': False,
             'is_visible': False,
-            'leader_id': None,
         }, ]
     )
 
@@ -1598,7 +1584,12 @@ def upgrade() -> None:
         '1.2.100K',
         True)
 
-    op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(staff_unit8_id, group3_id))
+    op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(staff_unit10_id, group1_id))
+    op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(staff_unit1_id, group2_id))
+    op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(staff_unit7_id, group2_1_id))
+    op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(staff_unit2_id, group3_id))
+    op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(staff_unit8_id, group4_id))
+    op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(staff_unit16_id, group5_id))
 
     op.bulk_insert(
         Base.metadata.tables['staff_unit_functions'],
