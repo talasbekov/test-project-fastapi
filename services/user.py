@@ -111,7 +111,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             user.father_name = body.father_name
         if body.icon is not None:
             user.icon = body.icon
-        if body.call_sign is not None:
+        if body.call_sign is not None and body.call_sign != user.call_sign:
             self._validate_call_sign(db, body.call_sign)
             user.call_sign = body.call_sign
         if body.id_number is not None:
