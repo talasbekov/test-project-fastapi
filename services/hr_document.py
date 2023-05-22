@@ -865,6 +865,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             + "қбп/жқ"
         )
 
+        document.status_id = completed_status.id
         super_document.last_step_id = None
 
         db.add_all(documents)
