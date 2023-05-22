@@ -15,7 +15,8 @@ from models import (
 from schemas import (
     StaffListCreate,
     StaffListUpdate,
-    StaffListUserCreate
+    StaffListUserCreate,
+    StaffListStatusRead
 )
 from services import (
     ServiceBase,
@@ -60,7 +61,6 @@ class StaffListService(ServiceBase[StaffList,StaffListCreate,StaffListUpdate]):
 
         create_staff_list = StaffListCreate(
             name = obj_in.name,
-            status="IN PROGRESS",
             user_id=user_id
         )
         staff_list = super().create(db, create_staff_list)
@@ -137,13 +137,8 @@ class StaffListService(ServiceBase[StaffList,StaffListCreate,StaffListUpdate]):
         db: Session,
         id: uuid.UUID
     ):
-        hr_document_template = hr_document_template_service.get_all_by_name(
-            db=db,
-            name='Приказ об изменении штатного расписания',
-            skip=0,
-            limit=1
-        )
-        hr_document_template_id = hr_document_template[0].id
+        hr_document_template = hr_document_template_service.get_staff_list(db=db)
+        hr_document_template_id = hr_document_template.id
         hr_documents = db.query(HrDocument).filter(
             HrDocument.hr_document_template_id == hr_document_template_id
         )
@@ -159,34 +154,19 @@ class StaffListService(ServiceBase[StaffList,StaffListCreate,StaffListUpdate]):
         staff_lists = (db.query(StaffList)
                   .join(User)
                   .options(joinedload(StaffList.user))
-                  .filter(StaffList.status == 'DRAFT')
+                  .filter(StaffList.is_signed == False)
                   .offset(skip)
                   .limit(limit)
                   .all())
-        draft_staff_lists = [
-            {
-                "id": staff_list.id,
-                "status": staff_list.status,
-                "updated_at": staff_list.updated_at,
-                "changes_count": 10,
-                "user":{
-                    "user_id": staff_list.user.id,
-                    "first_name": staff_list.user.first_name,
-                    "last_name": staff_list.user.last_name,
-                    "father_name": staff_list.user.father_name,
-                    "icon": staff_list.user.icon
-                } 
-            }
-            for staff_list in staff_lists  
-        ]
 
-        return draft_staff_lists
+        return [StaffListStatusRead.from_orm(staff_list)
+                            for staff_list in staff_lists]
 
     def get_signed(self, db: Session, skip: int = 0, limit: int = 100):
         staff_lists = (db.query(StaffList)
                   .join(User)
                   .options(joinedload(StaffList.user))
-                  .filter(StaffList.status != 'DRAFT')
+                  .filter(StaffList.is_signed == True)
                   .offset(skip)
                   .limit(limit)
                   .all())
@@ -195,23 +175,13 @@ class StaffListService(ServiceBase[StaffList,StaffListCreate,StaffListUpdate]):
             super_doc = self.get_super_doc_by_staff_list_id(db, staff_list.id)
             status = super_doc.status
             reg_number = super_doc.reg_number
-            signed_staff_lists.append({
-                "id": staff_list.id,
-                "status": {
-                    "name": status.name,
-                    "nameKZ": status.nameKZ,
-                },
-                "reg_number": reg_number,
-                "updated_at": staff_list.updated_at,
-                "changes_count": 10,
-                "user":{
-                    "user_id": staff_list.user.id,
-                    "first_name": staff_list.user.first_name,
-                    "last_name": staff_list.user.last_name,
-                    "father_name": staff_list.user.father_name,
-                    "icon": staff_list.user.icon
-                } 
-            })
+            signed_staff_list = StaffListStatusRead.from_orm(staff_list)
+            signed_staff_list.status = {
+                "name": status.name,
+                "nameKZ": status.nameKZ,
+            }
+            signed_staff_list.reg_number = reg_number
+            signed_staff_lists.append(signed_staff_list)
              
         return signed_staff_lists
 

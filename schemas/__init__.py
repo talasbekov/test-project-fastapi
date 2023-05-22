@@ -35,7 +35,7 @@ from .staff_unit import StaffUnitCreate, StaffUnitRead, StaffUnitUpdate, UserSta
 from .hr_document_step import (HrDocumentStepCreate, HrDocumentStepRead,
                                HrDocumentStepUpdate)
 
-from .user import UserCreate, UserRead, UserUpdate, UserGroupUpdate
+from .user import UserCreate, UserRead, UserUpdate, UserGroupUpdate, UserShortRead
 from .profile import ProfileCreate, ProfileUpdate, ProfileRead
 from .hr_document_status import HrDocumentStatusRead, HrDocumentStatusCreate, HrDocumentStatusUpdate
 from .hr_document import (HrDocumentCreate, HrDocumentInit, HrDocumentRead,
@@ -48,7 +48,7 @@ from .personnal_reserve import (PersonnalReserveCreate, PersonnalReserveRead, Pe
 from .coolness import *
 from .user_stat import UserStatCreate, UserStatRead, UserStatUpdate
 from .auth import LoginForm, RegistrationForm, CandidateRegistrationForm
-from .staff_list import (StaffListCreate, StaffListRead, StaffListUpdate, StaffListUserCreate)
+from .staff_list import (StaffListCreate, StaffListRead, StaffListUpdate, StaffListUserCreate, StaffListStatusRead)
 from .service_id import (ServiceIDCreate, ServiceIDRead, ServiceIDUpdate)
 from .military_unit import (MilitaryUnitCreate, MilitaryUnitRead, MilitaryUnitUpdate)
 from .user_oath import (UserOathCreate, UserOathRead, UserOathUpdate)
