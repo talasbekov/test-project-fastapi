@@ -38,6 +38,7 @@ family_relation2_id = get_uuid()
 family_relation3_id = get_uuid()
 family_relation4_id = get_uuid()
 family_relation5_id = get_uuid()
+family_relation6_id = get_uuid()
 
 # Medical
 liberation_id = get_uuid()
@@ -1167,7 +1168,11 @@ def upgrade() -> None:
             'id': family_relation5_id,
             'name': 'Брат',
             'nameKZ': 'Інісі'
-        }]
+        }, {
+            'id': family_relation6_id,
+            'name': 'Сестра',
+            'nameKZ': 'Апасы'
+        }, ]
     )
 
     op.bulk_insert(
