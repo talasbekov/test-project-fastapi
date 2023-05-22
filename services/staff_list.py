@@ -8,7 +8,7 @@ from models import (
     ServiceStaffFunction,
     StaffDivision,
     StaffList,
-    StaffUnit,
+    StaffUnit, ArchiveStaffDivision,
 )
 from schemas import (
     StaffListCreate,
@@ -45,18 +45,18 @@ options = {
 }
 
 
-class StaffListService(ServiceBase[StaffList,StaffListCreate,StaffListUpdate]):
+class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate]):
 
     def get_by_id(self, db: Session, id: str):
-        staff_list = super().get(db,id)
+        staff_list = super().get(db, id)
         if staff_list is None:
             raise NotFoundException(detail="Staff list is not found!")
         return staff_list
 
-    def create_by_user_id(self,db: Session, user_id: uuid.UUID, obj_in: StaffListUserCreate):
+    def create_by_user_id(self, db: Session, user_id: uuid.UUID, obj_in: StaffListUserCreate):
 
         create_staff_list = StaffListCreate(
-            name = obj_in.name,
+            name=obj_in.name,
             status="IN PROGRESS",
             user_id=user_id
         )
@@ -69,13 +69,33 @@ class StaffListService(ServiceBase[StaffList,StaffListCreate,StaffListUpdate]):
         db.flush()
         return staff_list
 
-    def _create_archive_staff_division(self, db: Session, staff_division: StaffDivision, staff_list_id: uuid.UUID, parent_group_id: uuid.UUID):
+    def duplicate(self, db: Session, staff_list_id: uuid.UUID, user_id: uuid.UUID, obj_in: StaffListUserCreate):
+        create_staff_list = StaffListCreate(
+            name=obj_in.name,
+            status="IN PROGRESS",
+            user_id=user_id
+        )
+        staff_list = super().create(db, create_staff_list)
+        for archive_staff_division in db.query(ArchiveStaffDivision).filter(
+                ArchiveStaffDivision.staff_list_id == staff_list_id):
+            staff_division = staff_division_service.get_by_id(db, archive_staff_division.origin_id)
+            self._create_archive_staff_division(db, staff_division, staff_list.id, None)
 
-        archive_division = archive_staff_division_service.create_based_on_existing_staff_division(db, staff_division, staff_list_id, parent_group_id)
+        db.add(staff_list)
+        db.flush()
+        return staff_list
+
+    def _create_archive_staff_division(self, db: Session, staff_division: StaffDivision, staff_list_id: uuid.UUID,
+                                       parent_group_id: uuid.UUID):
+
+        archive_division = archive_staff_division_service.create_based_on_existing_staff_division(db, staff_division,
+                                                                                                  staff_list_id,
+                                                                                                  parent_group_id)
 
         if staff_division.children:
             for child in staff_division.children:
-                child_archive_staff_division = self._create_archive_staff_division(db, child, staff_list_id, archive_division.id)
+                child_archive_staff_division = self._create_archive_staff_division(db, child, staff_list_id,
+                                                                                   archive_division.id)
                 archive_division.children.append(child_archive_staff_division)
 
         is_leader_needed = False
@@ -90,7 +110,10 @@ class StaffListService(ServiceBase[StaffList,StaffListCreate,StaffListUpdate]):
                 staff_unit_user_id = staff_unit.users[0].id if staff_unit.users else None
                 staff_unit_actual_user_id = staff_unit.actual_users[0].id if staff_unit.actual_users else None
 
-                archive_staff_unit = archive_staff_unit_service.create_based_on_existing_staff_unit(db, staff_unit, staff_unit_user_id, staff_unit_actual_user_id, archive_division)
+                archive_staff_unit = archive_staff_unit_service.create_based_on_existing_staff_unit(db, staff_unit,
+                                                                                                    staff_unit_user_id,
+                                                                                                    staff_unit_actual_user_id,
+                                                                                                    archive_division)
 
                 if is_leader_needed:
                     if staff_division.leader_id == staff_unit.id:
@@ -102,7 +125,7 @@ class StaffListService(ServiceBase[StaffList,StaffListCreate,StaffListUpdate]):
                             service = options.get(staff_function.discriminator)
                             if service is None:
                                 raise NotSupportedException(detail="Staff function type is not supported!")
-                            
+
                             type = service['type'].get_by_origin_id(db, staff_function.id)
 
                             if type is None:
@@ -116,7 +139,7 @@ class StaffListService(ServiceBase[StaffList,StaffListCreate,StaffListUpdate]):
                                 staff_function,
                                 type.id
                             )
-                            
+
                             archive_staff_unit.staff_functions.append(archive_staff_function)
 
                 archive_division.staff_units.append(archive_staff_unit)
@@ -134,7 +157,6 @@ class StaffListService(ServiceBase[StaffList,StaffListCreate,StaffListUpdate]):
         from .constructor import handlers
         staff_divisions = db.query(StaffDivision).all()
         staff_list = self.get_by_id(db, id)
-        archive_staff_divisions = 0
         handler = handlers.get('apply_staff_list')
         if handler is None:
             return None
