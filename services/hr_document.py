@@ -444,8 +444,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 if "superdoc" in actions:
                     superdoc = True
 
-        user: User = user_service.get_by_id(db, user_id)
-
         if not superdoc:
             user_ids = []
             for user in document.users:
@@ -464,7 +462,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         if document_staff_function.role.name == DocumentFunctionTypeEnum.EXPERT.value:
             body.is_signed = True
 
-        hr_document_info_service.sign(db, info, user, body.comment, body.is_signed)
+        hr_document_info_service.sign(db, info, user_service.get_by_id(db, user_id), body.comment, body.is_signed)
 
         next_step = hr_document_step_service.get_next_step_from_previous_step(
                 db, info.hr_document_step

@@ -2814,7 +2814,7 @@ def upgrade() -> None:
             'type_of_equipment': 'army_equipment',
             'clothing_equipment_types_models_id': None,
             'type_of_other_equipment_model_id': None,
-            'document_link': 'https://www.google.com/',
+            'document_link': 'http://192.168.0.169:8083/static/example.docx',
             'document_number': '123456789',
             'date_from': '2023-04-11T19:43:02.556000',
             'date_to': None,
@@ -2830,7 +2830,7 @@ def upgrade() -> None:
             'clothing_size': '56',
             'type_of_army_equipment_model_id': None,
             'type_of_other_equipment_model_id': None,
-            'document_link': 'https://www.google.com/',
+            'document_link': 'http://192.168.0.169:8083/static/example.docx',
             'document_number': '123456789',
             'date_from': '2023-04-11T19:43:02.556000',
             'date_to': None,
@@ -2846,7 +2846,7 @@ def upgrade() -> None:
             'clothing_size': '56',
             'type_of_army_equipment_model_id': None,
             'type_of_other_equipment_model_id': None,
-            'document_link': 'https://www.google.com/',
+            'document_link': 'http://192.168.0.169:8083/static/example.docx',
             'document_number': '123456789',
             'date_from': '2023-04-11T19:43:02.556000',
             'date_to': None,
@@ -2862,7 +2862,7 @@ def upgrade() -> None:
             'clothing_size': '56',
             'type_of_army_equipment_model_id': None,
             'type_of_other_equipment_model_id': None,
-            'document_link': 'https://www.google.com/',
+            'document_link': 'http://192.168.0.169:8083/static/example.docx',
             'document_number': '123456789',
             'date_from': '2023-04-11T19:43:02.556000',
             'date_to': None,
@@ -2878,7 +2878,7 @@ def upgrade() -> None:
             'clothing_size': '56',
             'type_of_army_equipment_model_id': None,
             'type_of_other_equipment_model_id': None,
-            'document_link': 'https://www.google.com/',
+            'document_link': 'http://192.168.0.169:8083/static/example.docx',
             'document_number': '123456789',
             'date_from': '2023-04-11T19:43:02.556000',
             'date_to': None,
@@ -2894,7 +2894,7 @@ def upgrade() -> None:
             'clothing_size': None,
             'type_of_army_equipment_model_id': None,
             'clothing_equipment_types_models_id': None,
-            'document_link': 'https://www.google.com/',
+            'document_link': 'http://192.168.0.169:8083/static/example.docx',
             'document_number': '123456789',
             'date_from': '2023-04-11T19:43:02.556000',
             'date_to': None,
@@ -2910,7 +2910,7 @@ def upgrade() -> None:
              'clothing_size': None,
              'type_of_army_equipment_model_id': None,
              'clothing_equipment_types_models_id': None,
-             'document_link': 'https://www.google.com/',
+             'document_link': 'http://192.168.0.169:8083/static/example.docx',
              'document_number': '123456789',
              'date_from': '2023-04-11T19:43:02.556000',
              'date_to': None,
@@ -4866,7 +4866,7 @@ def create_user(id,
             'science_id': science1_id,
             'specialty_id': specialty1_id,
             'document_number': "1231262",
-            'document_link': "document_link",
+            'document_link': "http://192.168.0.169:8083/static/example.docx",
             'assignment_date': "2022-10-07"
         }, {
             'id': academic_degree2_id,
@@ -4875,7 +4875,7 @@ def create_user(id,
             'science_id': science2_id,
             'specialty_id': specialty2_id,
             'document_number': 2,
-            'document_link': "document_link",
+            'document_link': "http://192.168.0.169:8083/static/example.docx",
             'assignment_date': "2022-10-08"
         }]
     )
@@ -4915,7 +4915,7 @@ def create_user(id,
             'degree_id': academic_title_degree1_id,
             'specialty_id': specialty1_id,
             'document_number': '123123',
-            'document_link': "document_link",
+            'document_link': "http://192.168.0.169:8083/static/example.docx",
             'assignment_date': "2022-12-12"
         }, {
             'id': academic_title2_id,
@@ -4923,7 +4923,7 @@ def create_user(id,
             'degree_id': academic_title_degree2_id,
             'specialty_id': specialty2_id,
             'document_number': '123123',
-            'document_link': "document_link",
+            'document_link': "http://192.168.0.169:8083/static/example.docx",
             'assignment_date': "2022-12-13"
         }]
     )
@@ -4942,7 +4942,7 @@ def create_user(id,
             'course_provider_id': course_provider1_id,
             'specialty_id': specialty1_id,
             'document_number': 1,
-            'document_link': "document_link",
+            'document_link': "http://192.168.0.169:8083/static/example.docx",
             'assignment_date': "2022-12-12",
             'start_date': '2019-10-12',
             'end_date': '2019-12-10'
@@ -4954,7 +4954,7 @@ def create_user(id,
             'course_provider_id': course_provider2_id,
             'specialty_id': specialty2_id,
             'document_number': 2,
-            'document_link': "document_link",
+            'document_link': "http://192.168.0.169:8083/static/example.docx",
             'assignment_date': "2022-12-13",
             'start_date': '2020-11-25',
             'end_date': '2020-12-15'
@@ -4966,7 +4966,7 @@ def create_user(id,
             'course_provider_id': course_provider3_id,
             'specialty_id': specialty3_id,
             'document_number': 3,
-            'document_link': "document_link",
+            'document_link': "http://192.168.0.169:8083/static/example.docx",
             'assignment_date': "2022-12-14",
             'start_date': '2021-11-12',
             'end_date': '2022-02-05'
@@ -5010,7 +5010,7 @@ def create_user(id,
             'name': "Мастер спорта по боксу",
             'nameKZ': 'Бокстан спорт шебері',
             'assignment_date': '2022-10-09',
-            'document_link': 'document_link1',
+            'document_link': 'http://192.168.0.169:8083/static/example.docx',
             'sport_type_id': sport_type1_id
         }, {
             'id': sport_degree2_id,
@@ -5018,7 +5018,7 @@ def create_user(id,
             'name': "Мастер спорта по карате",
             'nameKZ': 'Каратэден спорт шебері',
             'assignment_date': '2022-10-10',
-            'document_link': 'document_link2',
+            'document_link': 'http://192.168.0.169:8083/static/example.docx',
             'sport_type_id': sport_type2_id
         }, {
             'id': sport_degree3_id,
@@ -5026,7 +5026,7 @@ def create_user(id,
             'name': "Кандидат мастер спорта по джиу-джитсу",
             'nameKZ': 'Джиу-джитсудан спорт шеберілігінен үміткер',
             'assignment_date': '2022-10-11',
-            'document_link': 'document_link3',
+            'document_link': 'http://192.168.0.169:8083/static/example.docx',
             'sport_type_id': sport_type3_id
         }]
     )
@@ -5043,7 +5043,7 @@ def create_user(id,
             'name': "III место на Токийском съезде джиу-джитсу",
             'nameKZ': 'Токио джиу-джитсу конгресінде III орын',
             'assignment_date': '2022-10-09',
-            'document_link': 'document_link1',
+            'document_link': 'http://192.168.0.169:8083/static/example.docx',
             'sport_type_id': sport_type3_id
         }, {
             'id': sport_achievement2_id,
@@ -5051,7 +5051,7 @@ def create_user(id,
             'name': "I место в Чемпионате Мира по боксу",
             'nameKZ': 'Бокстан Әлем чемпионатында I орын',
             'assignment_date': '2022-10-10',
-            'document_link': 'document_link2',
+            'document_link': 'http://192.168.0.169:8083/static/example.docx',
             'sport_type_id': sport_type1_id
         }, {
             'id': sport_achievement3_id,
@@ -5059,7 +5059,7 @@ def create_user(id,
             'name': "II место в Чемпионате города Астаны по карате",
             'nameKZ': 'II место в Чемпионате города Астаны по карате',
             'assignment_date': '2022-10-11',
-            'document_link': 'document_link3',
+            'document_link': 'http://192.168.0.169:8083/static/example.docx',
             'sport_type_id': sport_type2_id
         }]
     )
@@ -5152,7 +5152,7 @@ def create_user(id,
             'date_of_issue': "2022-09-11",
             'date_to': "2025-09-12",
             'issued_by': "МВД РК",
-            'document_link': "document_link",
+            'document_link': "http://192.168.0.169:8083/static/example.docx",
             'profile_id': personal_profile_id
         }]
     )
@@ -5167,7 +5167,7 @@ def create_user(id,
             'category': ["A", "B", "C"],
             'date_of_issue': "2022-09-11",
             'date_to': "2022-09-12",
-            'document_link': "document_link",
+            'document_link': "http://192.168.0.169:8083/static/example.docx",
             'profile_id': personal_profile_id
         }]
     )
@@ -5181,7 +5181,7 @@ def create_user(id,
             'document_number': "95909558",
             'date_of_issue': "2022-09-11",
             'date_to': "2022-09-12",
-            'document_link': "document_link",
+            'document_link': "http://192.168.0.169:8083/static/example.docx",
             'profile_id': personal_profile_id
         }]
     )
@@ -5227,7 +5227,7 @@ def create_user(id,
             'initiator': 'Республиканская больница',
             'start_date': "2022-09-12",
             'profile_id': medical_profile_id,
-            'document_link': "document_link"
+            'document_link': "http://192.168.0.169:8083/static/example.docx"
         }, {
             'id': dispensary_registrations1_id,
             'name': "Сахарный Диабет",
@@ -5235,7 +5235,7 @@ def create_user(id,
             'initiator': 'Клиника "Нурсултан"',
             'start_date': "2022-12-15",
             'profile_id': medical_profile_id,
-            'document_link': "document_link"
+            'document_link': "http://192.168.0.169:8083/static/example.docx"
         }]
     )
 
@@ -5266,7 +5266,7 @@ def create_user(id,
             'start_date': "2022-09-12",
             'end_date': "2022-10-12",
             'profile_id': medical_profile_id,
-            'document_link': "document_link",
+            'document_link': "http://192.168.0.169:8083/static/example.docx",
             'code': 'код-829121'
         }, {
             'id': hospital_datas1_id,
@@ -5275,7 +5275,7 @@ def create_user(id,
             'start_date': "2022-12-15",
             'end_date': "2022-12-16",
             'profile_id': medical_profile_id,
-            'document_link': "document_link",
+            'document_link': "http://192.168.0.169:8083/static/example.docx",
             'code': None
         }]
     )
@@ -5322,7 +5322,7 @@ def create_user(id,
             'date_from': "2022-05-10",
             'date_to': "2022-05-11",
             'reason': "Служебная командировка",
-            'document_link': "document_link",
+            'document_link': "http://192.168.0.169:8083/static/example.docx",
             'profile_id': additional_profile_id
 
         }]
@@ -5348,7 +5348,7 @@ def create_user(id,
             'number': "4584908",
             'issued_by': "Иманов А.Е.",
             'date_of_issue': "2022-01-15",
-            'document_link': "document_link",
+            'document_link': "http://192.168.0.169:8083/static/example.docx",
             "profile_id": additional_profile_id
 
         }]
@@ -5362,7 +5362,7 @@ def create_user(id,
             'id': psychological_checks_id,
             'issued_by': "Назаров К.С.",
             'date_of_issue': "2022-03-25",
-            'document_link': "document_link",
+            'document_link': "http://192.168.0.169:8083/static/example.docx",
             'profile_id': additional_profile_id
         }]
     )
@@ -5376,7 +5376,7 @@ def create_user(id,
             'number': "84088880",
             "issued_by": "Жапаров Е.С.",
             "date_of_issue": "2021-02-03",
-            "document_link": "document_link",
+            "document_link": "http://192.168.0.169:8083/static/example.docx",
             'profile_id': additional_profile_id
         }]
     )
