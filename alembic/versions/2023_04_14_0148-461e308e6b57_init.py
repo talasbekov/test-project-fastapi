@@ -698,7 +698,7 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('staff_lists',
-    sa.Column('status', sa.String(), nullable=False),
+    sa.Column('is_signed', sa.Boolean(), nullable=False),
     sa.Column('user_id', sa.UUID(), nullable=True),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('nameKZ', sa.String(), nullable=True),
