@@ -11,7 +11,7 @@ class FamilyBase(BaseModel):
     relation_id: uuid.UUID
     first_name: str
     last_name: str
-    father_name: str
+    father_name: Optional[str]
     IIN: str
     birthday: datetime.datetime
     death_day: Optional[datetime.datetime]
