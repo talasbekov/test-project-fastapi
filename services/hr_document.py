@@ -774,9 +774,9 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                     child_document.status_id = canceled_status.id
                     child_document.last_step = None
                     
-                    db.add_all(child_document)
-                    db.add(super_document)
-                    db.flush()
+                db.add_all(child_documents)
+                db.add(super_document)
+                db.flush()
                     
                 return super_document
             
