@@ -14,7 +14,7 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
     def get_by_id(self, db: Session, id: uuid.UUID):
         position = super().get(db, id)
         if position is None:
-            raise NotFoundException(detail="StaffUnit is not found!")
+            raise NotFoundException(detail=f"StaffUnit  with id: {id} is not found!")
         return position
 
     def get_by_staff_division_id(self, db: Session, staff_division_id: str):

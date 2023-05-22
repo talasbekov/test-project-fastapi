@@ -1623,6 +1623,7 @@ def upgrade() -> None:
     template6_id = get_uuid()
     template7_id = get_uuid()
     template8_id = get_uuid()
+    template9_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['hr_document_templates'],
@@ -2226,6 +2227,33 @@ def upgrade() -> None:
                 }
             ]},
             'id': template8_id
+        }, {
+            'name': "Приказ о назначении на должность (штатное расписание)",
+            'nameKZ': "Штат кестесіне байланысты есепке алу туралы бұйрық (Штат кестесіне байланысты есепке алу туралы бұйрық)",
+            'path': None,
+            'pathKZ': None,
+            'subject_type': 'EMPLOYEE',
+            'maintainer_id': None,
+            'description': "",
+            'is_visible': False,
+            'properties': {
+                'staff_unit': {
+                    'alias_name': 'Позиция сотрудника',
+                    'data_taken': 'dropdown',
+                    'type': 'write',
+                    'field_name': 'staff_unit'
+                }
+            },
+            'actions': {'args': [
+                {
+                    'apply_archive_position': {
+                        'staff_unit': {
+                            'tagname': 'staff_unit'
+                        }
+                    }
+                }
+            ]},
+            'id': template9_id
         }]
     )
 
@@ -2249,6 +2277,11 @@ def upgrade() -> None:
     step5_2 = get_uuid()
     step5_3 = get_uuid()
     step5_4 = get_uuid()
+    step6_1 = get_uuid()
+    step6_2 = get_uuid()
+    step6_3 = get_uuid()
+    step6_4 = get_uuid()
+    
 
     op.bulk_insert(
         Base.metadata.tables['hr_document_steps'],
@@ -2352,7 +2385,27 @@ def upgrade() -> None:
             'previous_step_id': step5_3,
             'staff_function_id': staff_function6_id,
             'id': step5_4
-        }, ]
+        }, {
+            'hr_document_template_id': template9_id,
+            'previous_step_id': None,
+            'staff_function_id': staff_function4_id,
+            'id': step6_1
+        }, {
+            'hr_document_template_id': template9_id,
+            'previous_step_id': step6_1,
+            'staff_function_id': staff_function5_id,
+            'id': step6_2
+        }, {
+            'hr_document_template_id': template9_id,
+            'previous_step_id': step6_2,
+            'staff_function_id': staff_function10_id,
+            'id': step6_3
+        }, {
+            'hr_document_template_id': template9_id,
+            'previous_step_id': step6_3,
+            'staff_function_id': staff_function6_id,
+            'id': step6_4
+        } ]
     )
 
     candidate_id = get_uuid()
@@ -3302,6 +3355,7 @@ def upgrade() -> None:
             'date_credited': None,
             'emergency_rank_id': None,
             'contractor_signer_name': None,
+            'contractor_signer_nameKZ': None,
          },
         {
             'id': history14_id,
@@ -3337,6 +3391,7 @@ def upgrade() -> None:
             'date_credited': None,
             'emergency_rank_id': rank4_id,
             'contractor_signer_name': "Начальник Службы",
+            'contractor_signer_nameKZ': "Қызмет бастығы",
          },
         # {
         #     'id': history14_id,
@@ -3434,7 +3489,8 @@ def upgrade() -> None:
             'date_credited': None,
             'emergency_rank_id': None,
             'contractor_signer_name': None,
-        },
+            'contractor_signer_nameKZ': None,
+            },
              
             {
             'id': history6_id,
@@ -3470,6 +3526,7 @@ def upgrade() -> None:
             'date_credited': None,
             'emergency_rank_id': None,
             'contractor_signer_name': None,
+            'contractor_signer_nameKZ': None,
         },
             {
             'id': history7_id,
@@ -3505,6 +3562,7 @@ def upgrade() -> None:
             'date_credited': None,
             'emergency_rank_id': None,
             'contractor_signer_name': None,
+            'contractor_signer_nameKZ': None,
         },
          {
             'id': history15_id, # TODO: change the id
@@ -3540,6 +3598,7 @@ def upgrade() -> None:
             'date_credited': datetime.datetime(2014, 3, 31),
             'emergency_rank_id': None,
             'contractor_signer_name': None,
+            'contractor_signer_nameKZ': None,
          },
         {
             'id': history16_id,
@@ -3575,6 +3634,7 @@ def upgrade() -> None:
             'date_credited': None,
             'emergency_rank_id': None,
             'contractor_signer_name': None,
+            'contractor_signer_nameKZ': None,
         },
             {
             'id': history8_id,
@@ -3610,6 +3670,7 @@ def upgrade() -> None:
             'date_credited': None,
             'emergency_rank_id': None,
             'contractor_signer_name': None,
+            'contractor_signer_nameKZ': None,
         },
            
             {
@@ -3646,6 +3707,7 @@ def upgrade() -> None:
             'date_credited': None,
             'emergency_rank_id': None,
             'contractor_signer_name': None,
+            'contractor_signer_nameKZ': None,
         },
             {
             'id': history11_id,
@@ -3681,6 +3743,7 @@ def upgrade() -> None:
             'date_credited': None,
             'emergency_rank_id': None,
             'contractor_signer_name': None,
+            'contractor_signer_nameKZ': None,
         },
             {
             'id': history12_id,
@@ -3716,6 +3779,7 @@ def upgrade() -> None:
             'date_credited': None,
             'emergency_rank_id': None,
             'contractor_signer_name': None,
+            'contractor_signer_nameKZ': None,
         },
          {
             'id': history13_id,
@@ -3751,6 +3815,7 @@ def upgrade() -> None:
             'date_credited': None,
             'emergency_rank_id': None,
             'contractor_signer_name': None,
+            'contractor_signer_nameKZ': None,
         }
         ])
 

@@ -2,7 +2,7 @@ import math
 import uuid
 from enum import Enum
 from decimal import Decimal
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from typing import Optional, List, Union
 from decimal import Decimal
 import uuid
@@ -38,6 +38,9 @@ from .history_personal import (
     SecondmentReadHistory,
     ContractReadHistory,
 )
+
+# Set time_zone to UTC(+06:00)
+time_zone = timezone(timedelta(hours=6))
 
 class StatusEnum(Enum):
     granted = "Присвоен"
@@ -466,29 +469,28 @@ class EmergencyContactRead(ReadModel):
     length_of_service: Optional[dict] # ВЫСЛУГА ЛЕТ
     coefficient: Optional[Decimal] # КОЭФФИЦИЕНТ
     percentage: Optional[int] # ПРОЦЕНТ
-    staff_division: Optional[str]
-    position: Optional[str]
+    staff_division: Optional[dict]
+    position: Optional[dict]
     position_id: Optional[uuid.UUID]
     emergency_rank_id: Optional[uuid.UUID]
     document_link: Optional[str]
     document_number: Optional[str]
     staff_division_id: Optional[uuid.UUID]
     document_style: Optional[str]
-    contractor_signer_name: Optional[str]
-
+    contractor_signer_name: Optional[dict]
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
 
     @classmethod
     def from_orm(cls, orm_obj):
-        position_name = None
-        if orm_obj.position:
-            position_name = orm_obj.position.name
-        if orm_obj.date_to:
-            length_of_service = get_date_difference(orm_obj.date_from, orm_obj.date_to)
-        else:
-            length_of_service = get_date_difference(orm_obj.date_from, datetime.now())
+        position_name = orm_obj.position.name if orm_obj.position else None
+        position_nameKZ = orm_obj.position.nameKZ if orm_obj.position else None
+        staff_division_name = orm_obj.staff_division.name if orm_obj.staff_division else None
+        staff_division_nameKZ = orm_obj.staff_division.nameKZ if orm_obj.staff_division else None
+
+        date_to = orm_obj.date_to or datetime.now()
+        length_of_service = get_date_difference(orm_obj.date_from, date_to)
         return cls(
             id=orm_obj.id,
             date_from=orm_obj.date_from,
@@ -496,14 +498,17 @@ class EmergencyContactRead(ReadModel):
             length_of_service=length_of_service,
             coefficient=orm_obj.coefficient,
             percentage=orm_obj.percentage,
-            staff_division=orm_obj.staff_division.name,
-            position=position_name,
+            staff_division={"name": staff_division_name,
+                            "nameKZ": staff_division_nameKZ},
+            position={"name": position_name,
+                      "nameKZ": position_nameKZ},
             position_id=orm_obj.position_id,
             document_link=orm_obj.document_link,
             document_number=orm_obj.document_number,
             staff_division_id=orm_obj.staff_division_id,
             document_style=orm_obj.document_style,
-            contractor_signer_name=orm_obj.contractor_signer_name,
+            contractor_signer_name={"name": orm_obj.contractor_signer_name,
+                                    "nameKZ": orm_obj.contractor_signer_nameKZ}
         )
 
 

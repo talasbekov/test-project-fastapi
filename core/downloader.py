@@ -10,7 +10,7 @@ wkhtmltopdf_path = os.system("which wkhtmltopdf")
 
 async def download_file_to_tempfile(url: str) -> str:
     async with aiohttp.ClientSession() as session:
-        async with session.get(url) as response:
+        async with session.get(url, ssl=False) as response:
             if response.status != 200:
                 raise HTTPException(status_code=404, detail="Failed to download file")
 
