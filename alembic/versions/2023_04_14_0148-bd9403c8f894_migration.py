@@ -34,11 +34,22 @@ family_status3_id = get_uuid()
 family_status4_id = get_uuid()
 
 family_relation_id = get_uuid()
+family_relation1_id = get_uuid()
 family_relation2_id = get_uuid()
 family_relation3_id = get_uuid()
 family_relation4_id = get_uuid()
 family_relation5_id = get_uuid()
 family_relation6_id = get_uuid()
+family_relation7_id = get_uuid()
+family_relation8_id = get_uuid()
+family_relation9_id = get_uuid()
+family_relation10_id = get_uuid()
+family_relation11_id = get_uuid()
+family_relation12_id = get_uuid()
+family_relation13_id = get_uuid()
+family_relation14_id = get_uuid()
+family_relation15_id = get_uuid()
+family_relation16_id = get_uuid()
 
 # Medical
 liberation_id = get_uuid()
@@ -1247,25 +1258,69 @@ def upgrade() -> None:
             'name': 'Отец',
             'nameKZ': 'Әкесі'
         }, {
+            'id': family_relation1_id,
+            'name': 'Отчим',
+            'nameKZ': 'Өгей әкесі'
+        }, {
             'id': family_relation2_id,
             'name': 'Мать',
             'nameKZ': 'Анасы'
         }, {
             'id': family_relation3_id,
-            'name': 'Жена',
-            'nameKZ': 'Әйелі'
+            'name': 'Мачеха',
+            'nameKZ': 'Өгей анасы'
         }, {
             'id': family_relation4_id,
-            'name': 'Муж',
-            'nameKZ': 'Күйеуі'
+            'name': 'Супруг(-а)',
+            'nameKZ': 'Жұбайы'
         }, {
             'id': family_relation5_id,
+            'name': 'Отец супруги',
+            'nameKZ': 'Жұбайының әкесі'
+        }, {
+            'id': family_relation6_id,
+            'name': 'Мать супруги',
+            'nameKZ': 'Жұбайының анасы'
+        }, {
+            'id': family_relation7_id,
+            'name': 'Отчим супруги',
+            'nameKZ': 'Жұбайының өгей әкесі'
+        }, {
+            'id': family_relation8_id,
+            'name': 'Мачеха супруги',
+            'nameKZ': 'Жұбайының өгей анасы'
+        }, {
+            'id': family_relation9_id,
+            'name': 'Сын',
+            'nameKZ': 'Ұлы'
+        }, {
+            'id': family_relation10_id,
+            'name': 'Усыновлен',
+            'nameKZ': 'Асырап алған ұлы'
+        }, {
+            'id': family_relation11_id,
+            'name': 'Удочерен',
+            'nameKZ': 'Асырап алған қызы'
+        }, {
+            'id': family_relation12_id,
             'name': 'Брат',
             'nameKZ': 'Інісі'
         }, {
-            'id': family_relation6_id,
+            'id': family_relation13_id,
             'name': 'Сестра',
             'nameKZ': 'Апасы'
+        }, {
+            'id': family_relation14_id,
+            'name': 'Брат супруги',
+            'nameKZ': 'Жұбайының інісі'
+        }, {
+            'id': family_relation15_id,
+            'name': 'Сестра супруги',
+            'nameKZ': 'Жұбайының апасы'
+        }, {
+            'id': family_relation16_id,
+            'name': 'Внук/Внучка',
+            'nameKZ': 'Немересі'
         }, ]
     )
 
