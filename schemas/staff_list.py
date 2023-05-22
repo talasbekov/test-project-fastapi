@@ -4,7 +4,7 @@ from typing import Optional, List
 
 from pydantic import BaseModel
 
-from schemas import Model, NamedModel, ReadModel, ReadNamedModel
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel, UserRead
 
 
 class StaffListBase(NamedModel):

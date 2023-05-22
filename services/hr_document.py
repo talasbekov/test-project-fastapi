@@ -727,6 +727,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         )
         document = await self.initialize(db, body, user_id, role)
         staff_list = staff_list_service.get_by_id(db, staff_list_id)
+        staff_list.status = "IN PROGRESS"
         for archive_staff_division in staff_list.archive_staff_divisions:
             for archive_staff_unit in archive_staff_division.staff_units:
                 if not staff_unit_service.exists_relation(db, archive_staff_unit.user_id, archive_staff_unit.origin_id):
