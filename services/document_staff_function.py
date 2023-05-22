@@ -6,9 +6,14 @@ from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import DocumentStaffFunction, HrDocumentStep, User, StaffUnit
-from schemas import (DocumentStaffFunctionAdd, DocumentStaffFunctionCreate,
-                     DocumentStaffFunctionUpdate, DocumentStaffFunctionConstructorAdd,
-                     DocumentStaffFunctionAppendToStaffUnit)
+from schemas import (
+    DocumentStaffFunctionAdd,
+    DocumentStaffFunctionCreate,
+    DocumentStaffFunctionUpdate,
+    DocumentStaffFunctionConstructorAdd,
+    DocumentStaffFunctionAppendToStaffUnit,
+)
+from services import document_staff_function_type_service
 from .base import ServiceBase
 
 

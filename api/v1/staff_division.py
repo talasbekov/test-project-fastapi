@@ -51,7 +51,7 @@ async def get_departments(*,
     Authorize.jwt_required()
     return staff_division_service.get_departments(db, skip, limit)
 
-@router.get("/division_parents/", dependencies=[Depends(HTTPBearer())],
+@router.get("/division_parents/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=StaffDivisionRead,
             summary="Get Staff Division and all his parents")
 async def get_division_parents_by_id(*,

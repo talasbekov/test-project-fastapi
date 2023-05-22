@@ -171,3 +171,12 @@ async def get_profile(*,
     Authorize.jwt_required()
     id = Authorize.get_jwt_subject()
     return user_service.get_by_id(db, id)
+
+@router.get('/templates/{user_id}/')
+async def get_templates(*,
+    db: Session = Depends(get_db),
+    user_id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    return user_service.get_available_templates(db, user_id)

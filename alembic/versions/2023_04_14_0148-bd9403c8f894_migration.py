@@ -38,6 +38,7 @@ family_relation2_id = get_uuid()
 family_relation3_id = get_uuid()
 family_relation4_id = get_uuid()
 family_relation5_id = get_uuid()
+family_relation6_id = get_uuid()
 
 # Medical
 liberation_id = get_uuid()
@@ -976,87 +977,99 @@ def upgrade() -> None:
             'name': "Департамент 1",
             'nameKZ': "Департамент 1",
             'is_combat_unit': True,
+            'is_visible': True,
         }, {
             'parent_group_id': group1_id,
             'id': group2_id,
             'name': "Управление 1",
             'nameKZ': 'Басқару 1',
             'is_combat_unit': False,
+            'is_visible': True,
         },  {
             'parent_group_id': group2_id,
             'id': group2_1_id,
             'name': "Отдел 1",
             'nameKZ': 'Бөлім 1',
             'is_combat_unit': False,
-            'order': 1
+            'is_visible': True,
         }, {
             'parent_group_id': group1_id,
             'id': group3_id,
             'name': "Управление 2",
             'nameKZ': 'Басқару 2',
             'is_combat_unit': True,
+            'is_visible': True,
         }, {
             'parent_group_id': group1_id,
             'id': group4_id,
             'name': "Управление 3",
             'nameKZ': 'Басқару 3',
             'is_combat_unit': False,
+            'is_visible': True,
         }, {
             'parent_group_id': group1_id,
             'id': group5_id,
             'name': "Управление 4",
             'nameKZ': 'Басқару 4',
             'is_combat_unit': True,
+            'is_visible': True,
         }, {
             'parent_group_id': None,
             'id': group6_id,
             'name': "Особая группа",
             'nameKZ': 'Арнайы группа',
             'is_combat_unit': False,
+            'is_visible': False,
         }, {
             'parent_group_id': group6_id,
             'id': group7_id,
             'name': "Кандидаты",
             'nameKZ': 'Кандидаттар',
             'is_combat_unit': False,
+            'is_visible': False,
         }, {
             'parent_group_id': group6_id,
             'id': group8_id,
             'name': "Умер",
             'nameKZ': 'Өлі',
             'is_combat_unit': False,
+            'is_visible': False,
         }, {
             'parent_group_id': group6_id,
             'id': group9_id,
             'name': "В отставке",
             'nameKZ': 'Зейнеткер',
             'is_combat_unit': False,
+            'is_visible': False,
         }, {
             'parent_group_id': group6_id,
             'id': group10_id,
             'name': "В запасе",
             'nameKZ': 'Резервте',
             'is_combat_unit': False,
+            'is_visible': False,
         }, {
             'parent_group_id': group6_id,
             'id': group11_id,
             'name': "Исключен из списков личного состава",
             'nameKZ': 'Кадрлар тізімінен шығарылған',
             'is_combat_unit': False,
+            'is_visible': False,
         },  {
             'parent_group_id': group6_id,
             'id': group12_id,
             'name': "Откомандирован в другой гос. орган",
             'nameKZ': 'Басқа мемлекеттік органға жіберілді',
             'is_combat_unit': False,
+            'is_visible': False,
         },  {
             'parent_group_id': group6_id,
             'id': group13_id,
             'name': "Погиб",
             'nameKZ': 'Қайтыс болды',
             'is_combat_unit': False,
-        },
-        ]
+            'is_visible': False,
+        }, ]
     )
 
     staff_unit1_id = get_uuid()
@@ -1155,7 +1168,11 @@ def upgrade() -> None:
             'id': family_relation5_id,
             'name': 'Брат',
             'nameKZ': 'Інісі'
-        }]
+        }, {
+            'id': family_relation6_id,
+            'name': 'Сестра',
+            'nameKZ': 'Апасы'
+        }, ]
     )
 
     op.bulk_insert(
@@ -1324,7 +1341,7 @@ def upgrade() -> None:
         "Ескендиров",
         'Алматович',
         'erden@mail.ru',
-        group2_id,
+        group2_1_id,
         user10_id,
         "Альфа 7",
         '7',
@@ -1342,7 +1359,7 @@ def upgrade() -> None:
         "Рахатов",
         'Серикович',
         'erkin@mail.ru',
-        group3_id,
+        group4_id,
         None,
         "Альфа 8",
         '8',
@@ -1396,7 +1413,7 @@ def upgrade() -> None:
         "Жакупов",
         'Азаматұлы',
         'aidar@mail.ru',
-        group3_id,
+        group5_id,
         None,
         "Альфа 12",
         '12',
@@ -1572,7 +1589,12 @@ def upgrade() -> None:
         '1.2.100K',
         True)
 
-    op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(staff_unit8_id, group3_id))
+    op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(staff_unit10_id, group1_id))
+    op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(staff_unit1_id, group2_id))
+    op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(staff_unit7_id, group2_1_id))
+    op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(staff_unit2_id, group3_id))
+    op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(staff_unit8_id, group4_id))
+    op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(staff_unit16_id, group5_id))
 
     op.bulk_insert(
         Base.metadata.tables['staff_unit_functions'],
@@ -1630,8 +1652,8 @@ def upgrade() -> None:
         [{
             'name': 'Приказ о назначении',
             'nameKZ': 'Тағайындау бұйрығы',
-            'path': 'http://193.106.99.68:2287/static/Приказ%20о%20назначении.html',
-            'pathKZ': 'http://193.106.99.68:2287/static/Приказ%20о%20назначении.html',
+            'path': 'http://192.168.0.169:8083/static/Приказ%20о%20назначении.html',
+            'pathKZ': 'http://192.168.0.169:8083/static/Приказ%20о%20назначении.html',
             'description': "Приказ о назначении на позицию - это официальный документ, который используется для уведомления сотрудников о назначении на определенную должность в организации. Он может быть выдан руководителем организации, отдела или менеджером по персоналу.",
             'subject_type': "EMPLOYEE",
             'is_visible': True,
@@ -1723,7 +1745,7 @@ def upgrade() -> None:
             'name': 'Приказ о присвоения звания',
             'nameKZ': 'Атақ беру бұйрығы',
             'path': None,
-            'pathKZ': 'http://193.106.99.68:2287/static/Приказ_о_присвоении_звания_повышение.html',
+            'pathKZ': 'http://192.168.0.169:8083/static/Приказ_о_присвоении_звания_повышение.html',
             'subject_type': "EMPLOYEE",
             'maintainer_id': staff_unit4_id,
             'is_visible': True,
@@ -1787,7 +1809,7 @@ def upgrade() -> None:
             'name': 'Приказ о присвоения черного берета',
             'nameKZ': 'Қара берет беру бұйрығы',
             'path': None,
-            'pathKZ': 'http://193.106.99.68:2287/static/Приказ_о_присвоении_Черного_берета.html',
+            'pathKZ': 'http://192.168.0.169:8083/static/Приказ_о_присвоении_Черного_берета.html',
             'subject_type': "EMPLOYEE",
             'maintainer_id': staff_unit4_id,
             'is_visible': True,
@@ -1859,8 +1881,8 @@ def upgrade() -> None:
         }, {
             "name": "Запрос на наличие сведений для указанных граждан о причастности к религиозному экстремизму",
             "nameKZ": "Көрсетілген азаматтар үшін діни экстремизмге қатысы бар екендігі туралы мәліметтердің болуына сұрау салу",
-            "path": "http://193.106.99.68:2287/static/кандидаты1.html",
-            "pathKZ": "http://193.106.99.68:2287/static/кандидаты1.html",
+            "path": "http://192.168.0.169:8083/static/кандидаты1.html",
+            "pathKZ": "http://192.168.0.169:8083/static/кандидаты1.html",
             "subject_type": 1,
             'description': "",
             'maintainer_id': staff_unit4_id,
@@ -1984,8 +2006,8 @@ def upgrade() -> None:
         {
             "name": "Заключение спец. проверки",
             "nameKZ": "Арнайы қорытынды тексерулер",
-            "path": "http://193.106.99.68:2287/static/pre-finalv2.html",
-            "pathKZ": "http://193.106.99.68:2287/static/pre-finalv2.html",
+            "path": "http://192.168.0.169:8083/static/pre-finalv2.html",
+            "pathKZ": "http://192.168.0.169:8083/static/pre-finalv2.html",
             "subject_type": 1,
             'description': "",
             'is_visible': False,
@@ -2165,7 +2187,7 @@ def upgrade() -> None:
             "name": "Заключение на зачисление",
             "nameKZ": "Қабылдау қорытындысы",
             "path": None,
-            "pathKZ": "http://193.106.99.68:2287/static/finish_candidate.html",
+            "pathKZ": "http://192.168.0.169:8083/static/finish_candidate.html",
             "subject_type": 1,
             'maintainer_id': staff_unit4_id,
             'description': "",
@@ -2797,7 +2819,7 @@ def upgrade() -> None:
             'type_of_equipment': 'army_equipment',
             'clothing_equipment_types_models_id': None,
             'type_of_other_equipment_model_id': None,
-            'document_link': 'https://www.google.com/',
+            'document_link': 'http://192.168.0.169:8083/static/example.docx',
             'document_number': '123456789',
             'date_from': '2023-04-11T19:43:02.556000',
             'date_to': None,
@@ -2813,7 +2835,7 @@ def upgrade() -> None:
             'clothing_size': '56',
             'type_of_army_equipment_model_id': None,
             'type_of_other_equipment_model_id': None,
-            'document_link': 'https://www.google.com/',
+            'document_link': 'http://192.168.0.169:8083/static/example.docx',
             'document_number': '123456789',
             'date_from': '2023-04-11T19:43:02.556000',
             'date_to': None,
@@ -2829,7 +2851,7 @@ def upgrade() -> None:
             'clothing_size': '56',
             'type_of_army_equipment_model_id': None,
             'type_of_other_equipment_model_id': None,
-            'document_link': 'https://www.google.com/',
+            'document_link': 'http://192.168.0.169:8083/static/example.docx',
             'document_number': '123456789',
             'date_from': '2023-04-11T19:43:02.556000',
             'date_to': None,
@@ -2845,7 +2867,7 @@ def upgrade() -> None:
             'clothing_size': '56',
             'type_of_army_equipment_model_id': None,
             'type_of_other_equipment_model_id': None,
-            'document_link': 'https://www.google.com/',
+            'document_link': 'http://192.168.0.169:8083/static/example.docx',
             'document_number': '123456789',
             'date_from': '2023-04-11T19:43:02.556000',
             'date_to': None,
@@ -2861,7 +2883,7 @@ def upgrade() -> None:
             'clothing_size': '56',
             'type_of_army_equipment_model_id': None,
             'type_of_other_equipment_model_id': None,
-            'document_link': 'https://www.google.com/',
+            'document_link': 'http://192.168.0.169:8083/static/example.docx',
             'document_number': '123456789',
             'date_from': '2023-04-11T19:43:02.556000',
             'date_to': None,
@@ -2877,7 +2899,7 @@ def upgrade() -> None:
             'clothing_size': None,
             'type_of_army_equipment_model_id': None,
             'clothing_equipment_types_models_id': None,
-            'document_link': 'https://www.google.com/',
+            'document_link': 'http://192.168.0.169:8083/static/example.docx',
             'document_number': '123456789',
             'date_from': '2023-04-11T19:43:02.556000',
             'date_to': None,
@@ -2893,7 +2915,7 @@ def upgrade() -> None:
              'clothing_size': None,
              'type_of_army_equipment_model_id': None,
              'clothing_equipment_types_models_id': None,
-             'document_link': 'https://www.google.com/',
+             'document_link': 'http://192.168.0.169:8083/static/example.docx',
              'document_number': '123456789',
              'date_from': '2023-04-11T19:43:02.556000',
              'date_to': None,
@@ -4849,7 +4871,7 @@ def create_user(id,
             'science_id': science1_id,
             'specialty_id': specialty1_id,
             'document_number': "1231262",
-            'document_link': "document_link",
+            'document_link': "http://192.168.0.169:8083/static/example.docx",
             'assignment_date': "2022-10-07"
         }, {
             'id': academic_degree2_id,
@@ -4858,7 +4880,7 @@ def create_user(id,
             'science_id': science2_id,
             'specialty_id': specialty2_id,
             'document_number': 2,
-            'document_link': "document_link",
+            'document_link': "http://192.168.0.169:8083/static/example.docx",
             'assignment_date': "2022-10-08"
         }]
     )
@@ -4898,7 +4920,7 @@ def create_user(id,
             'degree_id': academic_title_degree1_id,
             'specialty_id': specialty1_id,
             'document_number': '123123',
-            'document_link': "document_link",
+            'document_link': "http://192.168.0.169:8083/static/example.docx",
             'assignment_date': "2022-12-12"
         }, {
             'id': academic_title2_id,
@@ -4906,7 +4928,7 @@ def create_user(id,
             'degree_id': academic_title_degree2_id,
             'specialty_id': specialty2_id,
             'document_number': '123123',
-            'document_link': "document_link",
+            'document_link': "http://192.168.0.169:8083/static/example.docx",
             'assignment_date': "2022-12-13"
         }]
     )
@@ -4925,7 +4947,7 @@ def create_user(id,
             'course_provider_id': course_provider1_id,
             'specialty_id': specialty1_id,
             'document_number': 1,
-            'document_link': "document_link",
+            'document_link': "http://192.168.0.169:8083/static/example.docx",
             'assignment_date': "2022-12-12",
             'start_date': '2019-10-12',
             'end_date': '2019-12-10'
@@ -4937,7 +4959,7 @@ def create_user(id,
             'course_provider_id': course_provider2_id,
             'specialty_id': specialty2_id,
             'document_number': 2,
-            'document_link': "document_link",
+            'document_link': "http://192.168.0.169:8083/static/example.docx",
             'assignment_date': "2022-12-13",
             'start_date': '2020-11-25',
             'end_date': '2020-12-15'
@@ -4949,7 +4971,7 @@ def create_user(id,
             'course_provider_id': course_provider3_id,
             'specialty_id': specialty3_id,
             'document_number': 3,
-            'document_link': "document_link",
+            'document_link': "http://192.168.0.169:8083/static/example.docx",
             'assignment_date': "2022-12-14",
             'start_date': '2021-11-12',
             'end_date': '2022-02-05'
@@ -4993,7 +5015,7 @@ def create_user(id,
             'name': "Мастер спорта по боксу",
             'nameKZ': 'Бокстан спорт шебері',
             'assignment_date': '2022-10-09',
-            'document_link': 'document_link1',
+            'document_link': 'http://192.168.0.169:8083/static/example.docx',
             'sport_type_id': sport_type1_id
         }, {
             'id': sport_degree2_id,
@@ -5001,7 +5023,7 @@ def create_user(id,
             'name': "Мастер спорта по карате",
             'nameKZ': 'Каратэден спорт шебері',
             'assignment_date': '2022-10-10',
-            'document_link': 'document_link2',
+            'document_link': 'http://192.168.0.169:8083/static/example.docx',
             'sport_type_id': sport_type2_id
         }, {
             'id': sport_degree3_id,
@@ -5009,7 +5031,7 @@ def create_user(id,
             'name': "Кандидат мастер спорта по джиу-джитсу",
             'nameKZ': 'Джиу-джитсудан спорт шеберілігінен үміткер',
             'assignment_date': '2022-10-11',
-            'document_link': 'document_link3',
+            'document_link': 'http://192.168.0.169:8083/static/example.docx',
             'sport_type_id': sport_type3_id
         }]
     )
@@ -5026,7 +5048,7 @@ def create_user(id,
             'name': "III место на Токийском съезде джиу-джитсу",
             'nameKZ': 'Токио джиу-джитсу конгресінде III орын',
             'assignment_date': '2022-10-09',
-            'document_link': 'document_link1',
+            'document_link': 'http://192.168.0.169:8083/static/example.docx',
             'sport_type_id': sport_type3_id
         }, {
             'id': sport_achievement2_id,
@@ -5034,7 +5056,7 @@ def create_user(id,
             'name': "I место в Чемпионате Мира по боксу",
             'nameKZ': 'Бокстан Әлем чемпионатында I орын',
             'assignment_date': '2022-10-10',
-            'document_link': 'document_link2',
+            'document_link': 'http://192.168.0.169:8083/static/example.docx',
             'sport_type_id': sport_type1_id
         }, {
             'id': sport_achievement3_id,
@@ -5042,7 +5064,7 @@ def create_user(id,
             'name': "II место в Чемпионате города Астаны по карате",
             'nameKZ': 'II место в Чемпионате города Астаны по карате',
             'assignment_date': '2022-10-11',
-            'document_link': 'document_link3',
+            'document_link': 'http://192.168.0.169:8083/static/example.docx',
             'sport_type_id': sport_type2_id
         }]
     )
@@ -5135,7 +5157,7 @@ def create_user(id,
             'date_of_issue': "2022-09-11",
             'date_to': "2025-09-12",
             'issued_by': "МВД РК",
-            'document_link': "document_link",
+            'document_link': "http://192.168.0.169:8083/static/example.docx",
             'profile_id': personal_profile_id
         }]
     )
@@ -5150,7 +5172,7 @@ def create_user(id,
             'category': ["A", "B", "C"],
             'date_of_issue': "2022-09-11",
             'date_to': "2022-09-12",
-            'document_link': "document_link",
+            'document_link': "http://192.168.0.169:8083/static/example.docx",
             'profile_id': personal_profile_id
         }]
     )
@@ -5164,7 +5186,7 @@ def create_user(id,
             'document_number': "95909558",
             'date_of_issue': "2022-09-11",
             'date_to': "2022-09-12",
-            'document_link': "document_link",
+            'document_link': "http://192.168.0.169:8083/static/example.docx",
             'profile_id': personal_profile_id
         }]
     )
@@ -5210,7 +5232,7 @@ def create_user(id,
             'initiator': 'Республиканская больница',
             'start_date': "2022-09-12",
             'profile_id': medical_profile_id,
-            'document_link': "document_link"
+            'document_link': "http://192.168.0.169:8083/static/example.docx"
         }, {
             'id': dispensary_registrations1_id,
             'name': "Сахарный Диабет",
@@ -5218,7 +5240,7 @@ def create_user(id,
             'initiator': 'Клиника "Нурсултан"',
             'start_date': "2022-12-15",
             'profile_id': medical_profile_id,
-            'document_link': "document_link"
+            'document_link': "http://192.168.0.169:8083/static/example.docx"
         }]
     )
 
@@ -5249,7 +5271,7 @@ def create_user(id,
             'start_date': "2022-09-12",
             'end_date': "2022-10-12",
             'profile_id': medical_profile_id,
-            'document_link': "document_link",
+            'document_link': "http://192.168.0.169:8083/static/example.docx",
             'code': 'код-829121'
         }, {
             'id': hospital_datas1_id,
@@ -5258,7 +5280,7 @@ def create_user(id,
             'start_date': "2022-12-15",
             'end_date': "2022-12-16",
             'profile_id': medical_profile_id,
-            'document_link': "document_link",
+            'document_link': "http://192.168.0.169:8083/static/example.docx",
             'code': None
         }]
     )
@@ -5305,7 +5327,7 @@ def create_user(id,
             'date_from': "2022-05-10",
             'date_to': "2022-05-11",
             'reason': "Служебная командировка",
-            'document_link': "document_link",
+            'document_link': "http://192.168.0.169:8083/static/example.docx",
             'profile_id': additional_profile_id
 
         }]
@@ -5331,7 +5353,7 @@ def create_user(id,
             'number': "4584908",
             'issued_by': "Иманов А.Е.",
             'date_of_issue': "2022-01-15",
-            'document_link': "document_link",
+            'document_link': "http://192.168.0.169:8083/static/example.docx",
             "profile_id": additional_profile_id
 
         }]
@@ -5345,7 +5367,7 @@ def create_user(id,
             'id': psychological_checks_id,
             'issued_by': "Назаров К.С.",
             'date_of_issue': "2022-03-25",
-            'document_link': "document_link",
+            'document_link': "http://192.168.0.169:8083/static/example.docx",
             'profile_id': additional_profile_id
         }]
     )
@@ -5359,7 +5381,7 @@ def create_user(id,
             'number': "84088880",
             "issued_by": "Жапаров Е.С.",
             "date_of_issue": "2021-02-03",
-            "document_link": "document_link",
+            "document_link": "http://192.168.0.169:8083/static/example.docx",
             'profile_id': additional_profile_id
         }]
     )

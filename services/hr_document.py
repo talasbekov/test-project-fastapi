@@ -175,6 +175,31 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         )
         return self._return_correctly(db, documents, user)
 
+    def get_signed_documents(
+            self, db: Session, user_id: str, parent_id: uuid.UUID, filter: str, skip: int, limit: int
+    ):
+        user = user_service.get_by_id(db, user_id)
+        documents = (
+            db.query(self.model)
+            .join(self.model.hr_document_infos)
+            .filter(
+                HrDocumentInfo.signed_by_id == user_id,
+                self.model.parent_id == parent_id,
+                )
+        )
+
+        if filter != '':
+            documents = self._add_filter_to_query(documents, filter)
+
+        documents = (
+            documents
+            .order_by(self.model.due_date.asc())
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
+        return self._return_correctly(db, documents, user)
+
     def get_draft_documents(self, db: Session, user_id: str, parent_id: uuid.UUID, filter: str, skip: int = 0, limit: int = 100):
         user = user_service.get_by_id(db, user_id)
         status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.DRAFT.value)
@@ -444,8 +469,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 if "superdoc" in actions:
                     superdoc = True
 
-        user: User = user_service.get_by_id(db, user_id)
-
         if not superdoc:
             user_ids = []
             for user in document.users:
@@ -464,7 +487,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         if document_staff_function.role.name == DocumentFunctionTypeEnum.EXPERT.value:
             body.is_signed = True
 
-        hr_document_info_service.sign(db, info, user, body.comment, body.is_signed)
+        hr_document_info_service.sign(db, info, user_service.get_by_id(db, user_id), body.comment, body.is_signed)
 
         next_step = hr_document_step_service.get_next_step_from_previous_step(
                 db, info.hr_document_step

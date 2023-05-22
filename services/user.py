@@ -6,11 +6,32 @@ from sqlalchemy.orm import Session, Query
 from sqlalchemy import func, or_, and_
 
 from exceptions import NotFoundException, InvalidOperationException
-from models import StaffDivision, User, StaffUnit, Jurisdiction, JurisdictionEnum, DocumentStaffFunction, \
-    StaffDivisionEnum, HrDocument, HrDocumentInfo
-from schemas import (UserCreate, UserUpdate)
-from services import (staff_division_service, staff_unit_service, jurisdiction_service, document_staff_function_service,
-                      hr_document_status_service, hr_document_template_service)
+from models import (
+    StaffDivision,
+    User,
+    StaffUnit,
+    Jurisdiction,
+    JurisdictionEnum,
+    DocumentStaffFunction,
+    StaffDivisionEnum,
+    HrDocument,
+    HrDocumentInfo,
+)
+from schemas import (
+    UserCreate,
+    UserUpdate,
+    HrDocumentTemplateRead,
+)
+from services import (
+    staff_division_service,
+    staff_unit_service,
+    jurisdiction_service,
+    document_staff_function_service,
+    document_staff_function_type_service,
+    hr_document_status_service,
+    hr_document_template_service,
+    staff_unit_service,
+)
 from .base import ServiceBase
 
 CALLABLES = types.FunctionType, types.MethodType
@@ -91,6 +112,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         if body.icon is not None:
             user.icon = body.icon
         if body.call_sign is not None:
+            self._validate_call_sign(db, body.call_sign)
             user.call_sign = body.call_sign
         if body.id_number is not None:
             user.id_number = body.id_number
@@ -299,6 +321,24 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             user_query = handler.handle_filter(db, user_query)
 
         return user_query
+
+    def get_available_templates(self, db: Session, user_id: uuid.UUID) -> List[HrDocumentTemplateRead]:
+        initiator_role = document_staff_function_type_service.get_initiator(db)
+        user = self.get_by_id(db, user_id)
+        document_ids = []
+        for function in user.actual_staff_unit.staff_functions:
+            function: DocumentStaffFunction
+            if function.role_id == initiator_role.id:
+                document_ids.append(function.hr_document_step.hr_document_template_id)
+        return hr_document_template_service.get_all(db, document_ids)
+
+    def _validate_call_sign(self,db: Session, call_sign: str):
+        user = db.query(User).filter(User.call_sign == call_sign).first()
+        if user:
+            user_name = user.first_name + " " + user.last_name + " " + user.father_name
+            raise InvalidOperationException(
+                f"call_sign {call_sign} is already assigned to {user_name}!"
+            )
 
 
 user_service = UserService(User)
