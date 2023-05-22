@@ -32,8 +32,7 @@ async def get_all(
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
-    filter.lstrip().rstrip()
-    return candidate_stage_info_service.get_all_by_staff_unit_id(db, filter, skip, limit, role)
+    return candidate_stage_info_service.get_all_by_staff_unit_id(db, filter.lstrip().rstrip(), skip, limit, role)
 
 
 @router.get("/{id}", dependencies=[Depends(HTTPBearer())],

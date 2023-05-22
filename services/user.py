@@ -1,16 +1,16 @@
 import types
 import uuid
-from typing import List, Optional
+from typing import List, Optional, Any
 
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, Query
 from sqlalchemy import func, or_, and_
 
-from exceptions import NotFoundException
+from exceptions import NotFoundException, InvalidOperationException
 from models import StaffDivision, User, StaffUnit, Jurisdiction, JurisdictionEnum, DocumentStaffFunction, \
     StaffDivisionEnum, HrDocument, HrDocumentInfo
 from schemas import (UserCreate, UserUpdate)
 from services import (staff_division_service, staff_unit_service, jurisdiction_service, document_staff_function_service,
-                      hr_document_status_service)
+                      hr_document_status_service, hr_document_template_service)
 from .base import ServiceBase
 
 CALLABLES = types.FunctionType, types.MethodType
@@ -30,13 +30,13 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         users = (
             db.query(self.model)
         )
-        filter.lstrip().rstrip()
+
         if filter != '':
             users = self._add_filter_to_query(users, filter)
 
         if hr_document_template_id is not None:
             excepted_users = self._get_excepted_users_by_document_in_progress(db, hr_document_template_id)
-            users = users.except_(excepted_users)
+            users = self._filter_for_eligible_actions(db, users, hr_document_template_id).except_(excepted_users)
 
         users = (
             users
@@ -261,7 +261,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             db.query(self.model)
             .filter(self.model.is_active.is_(is_active))
         )
-        filter.lstrip().rstrip()
+
         if filter != '':
             users = self._add_filter_to_query(users, filter)
 
@@ -283,5 +283,22 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
                 )
         )
         return users
+
+    def _filter_for_eligible_actions(self, db: Session, user_query: Query[Any], hr_document_template_id: uuid.UUID):
+        from .constructor import handlers
+        template = hr_document_template_service.get_by_id(
+            db, hr_document_template_id
+        )
+        for i in template.actions['args']:
+            action_name = list(i)[0]
+            handler = handlers.get(action_name)
+
+            if handler is None or getattr(handler, 'handle_filter', None) is None:
+                continue
+
+            user_query = handler.handle_filter(db, user_query)
+
+        return user_query
+
 
 user_service = UserService(User)

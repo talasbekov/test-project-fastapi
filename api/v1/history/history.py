@@ -30,7 +30,7 @@ async def get_all(*,
         - **limit**: int - The maximum number of equipments to return in the response. This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
-    return history_service.get_multi(db, skip, limit)
+    return history_service.get_all(db, skip, limit)
 
 # get enums
 @router.get("/enums", dependencies=[Depends(HTTPBearer())],
@@ -120,7 +120,6 @@ async def get_by_id(*,
     
 # get all by type
 @router.get("/type/{type}/", dependencies=[Depends(HTTPBearer())],
-            response_model=List[HistoryRead],
             summary="Get all Histories by type")
 async def get_all_by_type(*,
     db: Session = Depends(get_db),
@@ -179,7 +178,6 @@ async def delete(*,
 
 
 @router.get("/all/type/{type}/{user_id}", dependencies=[Depends(HTTPBearer())],
-            response_model=List[HistoryPersonalRead],
             summary="Get all Histories by type and user id")
 async def get_all_by_type_and_user_id(*,
     db: Session = Depends(get_db),

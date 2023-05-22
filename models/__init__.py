@@ -1,13 +1,13 @@
 from .base import Model, NamedModel, NestedModel, NamedNestedModel, isActiveModel
 from .badge import Badge, BadgeType
 from .equipment import (Equipment, TypeClothingEquipment, TypeArmyEquipment, TypeOtherEquipment, ClothingEquipment, ArmyEquipment, OtherEquipment,
-                    TypeClothingEquipmentModel)
+                    TypeClothingEquipmentModel, ClothingEquipmentTypesModels)
 from .event import Event
 from .hr_document_status import HrDocumentStatus
 from .hr_document import HrDocument, HrDocumentStatusEnum
 from .hr_document_info import HrDocumentInfo
 from .hr_document_step import HrDocumentStep
-from .hr_document_template import HrDocumentTemplate, SubjectType, LanguageEnum
+from .hr_document_template import HrDocumentTemplate, SubjectType, LanguageEnum, HrDocumentTemplateEnum
 from .rank import Rank
 from .notification import Notification
 from .staff_division import StaffDivision, StaffDivisionEnum
@@ -20,7 +20,7 @@ from .staff_unit import StaffUnit
 from .service_id import ServiceID, ServiceIDStatus
 from .privelege_emergency import PrivilegeEmergency, FormEnum
 from .recommender_user import RecommenderUser
-from .coolness import Coolness, SpecialtyEnum
+from .coolness import Coolness, SpecialtyEnum, CoolnessStatusEnum
 from .military_unit import MilitaryUnit
 from .user_oath import UserOath
 from .user_stat import UserStat

@@ -1,7 +1,8 @@
+import math
 import uuid
 from enum import Enum
 from decimal import Decimal
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from typing import Optional, List, Union
 from decimal import Decimal
 import uuid
@@ -23,6 +24,7 @@ from schemas import (
     StaffDivisionRead,
 )
 from schemas import Model, NamedModel, ReadModel, ReadNamedModel
+from models import CoolnessStatusEnum
 
 from .general_information import GeneralInformationRead
 from .history_personal import (
@@ -37,6 +39,39 @@ from .history_personal import (
     ContractReadHistory,
 )
 
+# Set time_zone to UTC(+06:00)
+time_zone = timezone(timedelta(hours=6))
+
+class StatusEnum(Enum):
+    granted = "Присвоен"
+    confirmed = "Подтвержден"
+    canceled = "Отменен"
+
+def get_date_difference(date1, date2):
+    # Calculate the difference
+    difference = date2 - date1
+
+    # Extract years, months, and days from the difference
+    years = difference.days // 365
+    remaining_days = difference.days % 365
+    months = remaining_days // 30
+    days = remaining_days % 30
+
+    return {"years": years, "months": months, "days": days}
+
+
+def get_status(obj, confirm_document_link, cancel_document_link):
+    if obj is not None:
+        status = StatusEnum.granted
+        if confirm_document_link is not None:
+            status = StatusEnum.confirmed
+        if cancel_document_link is not None:
+            status = StatusEnum.canceled
+        dict_coolness = obj.dict()
+        dict_coolness["status"] = status
+        return dict_coolness
+    else:
+        return None
 
 class HistoryBase(BaseModel):
     document_link: Optional[str]
@@ -95,6 +130,67 @@ class HistoryRead(HistoryBase, ReadNamedModel):
     badge: Optional[BadgeRead]
     staff_division: Optional[StaffDivisionRead]
 
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
+
+    @property
+    def coolness_status(self) -> Optional[dict]:
+        return get_status(self.coolness, self.confirm_document_link, self.cancel_document_link)
+
+    @property
+    def badge_status(self) -> Optional[dict]:
+        return get_status(self.badge, self.confirm_document_link, self.cancel_document_link)
+
+
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "name": self.name,
+            "nameKZ": self.nameKZ,
+            "document_link": self.document_link,
+            "confirm_document_link": self.confirm_document_link,
+            "cancel_document_link": self.cancel_document_link,
+            "date_from": self.date_from,
+            "date_to": self.date_to,
+            "position_id": self.position_id,
+            "rank_id": self.rank_id,
+            "penalty_id": self.penalty_id,
+            "emergency_service_id": self.emergency_service_id,
+            "secondment_id": self.secondment_id,
+            "name_change_id": self.name_change_id,
+            "attestation_id": self.attestation_id,
+            "characteristic_initiator_id": self.characteristic_initiator_id,
+            "rank_assigned_by": self.rank_assigned_by,
+            "status_id": self.status_id,
+            "status_name": self.status_name,
+            "coolness_id": self.coolness_id,
+            "contract_id": self.contract_id,
+            "badge_id": self.badge_id,
+            "user_id": self.user_id,
+            "is_credited": self.is_credited,
+            "document_style": self.document_style,
+            "date_credited": self.date_credited,
+            "name_of_organization": self.name_of_organization,
+            "position_work_experience": self.position_work_experience,
+            "coefficient": self.coefficient,
+            "percentage": self.percentage,
+            "staff_division_name": self.staff_division_name,
+            "staff_division_nameKZ": self.staff_division_nameKZ,
+            "position": self.position,
+            "rank": self.rank,
+            "penalty": self.penalty,
+            "secondment": self.secondment,
+            "status": self.status,
+            "coolness": self.coolness_status,
+            "contract": self.contract,
+            "document_number": self.document_number,
+            "badge": self.badge_status,
+            "staff_division": self.staff_division,
+            "type": self.type,
+        }
+
+
 
 class HistoryPersonalRead(ReadModel):
     date_from: Optional[datetime]
@@ -114,6 +210,8 @@ class HistoryPersonalRead(ReadModel):
     coolness: Optional['CoolnessReadHistory']
     contract: Optional['ContractReadHistory']
     document_link: Optional[str]
+    confirm_document_link: Optional[str]
+    cancel_document_link: Optional[str]
     document_number: Optional[str]
     name_of_organization: Optional[str]
     user_id: uuid.UUID
@@ -150,6 +248,11 @@ class HistoryPersonalRead(ReadModel):
         else:
             return None
 
+    @property
+    def coolness_status(self) -> Optional[dict]:
+        return get_status(self.coolness, self.confirm_document_link, self.cancel_document_link)
+
+
     def to_dict(self) -> dict:
         return {
             "id": self.id,
@@ -163,9 +266,11 @@ class HistoryPersonalRead(ReadModel):
             "name_change": self.name_change,
             "attestation": self.attestation,
             "status": self.status,
-            "coolness": self.coolness,
+            "coolness": self.coolness_status,
             "contract": self.contract,
             "document_link": self.document_link,
+            "confirm_document_link": self.confirm_document_link,
+            "cancel_document_link": self.cancel_document_link,
             "document_number": self.document_number,
             "user_id": self.user_id,
             "type": self.type,
@@ -361,35 +466,49 @@ class HolidayRead(Model):
 class EmergencyContactRead(ReadModel):
     date_from: Optional[datetime]
     date_to: Optional[datetime]
-    length_of_service: Optional[int] # ВЫСЛУГА ЛЕТ
+    length_of_service: Optional[dict] # ВЫСЛУГА ЛЕТ
     coefficient: Optional[Decimal] # КОЭФФИЦИЕНТ
     percentage: Optional[int] # ПРОЦЕНТ
-    staff_division: Optional[str]
+    staff_division: Optional[dict]
+    position: Optional[dict]
+    position_id: Optional[uuid.UUID]
     emergency_rank_id: Optional[uuid.UUID]
     document_link: Optional[str]
     document_number: Optional[str]
     staff_division_id: Optional[uuid.UUID]
     document_style: Optional[str]
-
+    contractor_signer_name: Optional[dict]
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
 
     @classmethod
     def from_orm(cls, orm_obj):
+        position_name = orm_obj.position.name if orm_obj.position else None
+        position_nameKZ = orm_obj.position.nameKZ if orm_obj.position else None
+        staff_division_name = orm_obj.staff_division.name if orm_obj.staff_division else None
+        staff_division_nameKZ = orm_obj.staff_division.nameKZ if orm_obj.staff_division else None
+
+        date_to = orm_obj.date_to or datetime.now()
+        length_of_service = get_date_difference(orm_obj.date_from, date_to)
         return cls(
             id=orm_obj.id,
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
-            length_of_service=0,
+            length_of_service=length_of_service,
             coefficient=orm_obj.coefficient,
             percentage=orm_obj.percentage,
-            staff_division=orm_obj.staff_division.name,
-            emergency_rank_id=orm_obj.emergency_rank_id,
+            staff_division={"name": staff_division_name,
+                            "nameKZ": staff_division_nameKZ},
+            position={"name": position_name,
+                      "nameKZ": position_nameKZ},
+            position_id=orm_obj.position_id,
             document_link=orm_obj.document_link,
             document_number=orm_obj.document_number,
             staff_division_id=orm_obj.staff_division_id,
             document_style=orm_obj.document_style,
+            contractor_signer_name={"name": orm_obj.contractor_signer_name,
+                                    "nameKZ": orm_obj.contractor_signer_nameKZ}
         )
 
 
@@ -458,7 +577,7 @@ class SecondmentRead(Model):
         )
 
 class TypeOfArmyEquipmentModelRead(ReadNamedModel):
-    type_of_equipment: Optional[str]
+    type_of_equipment: Optional[dict]
 
     class Config:
         orm_mode = True
@@ -470,13 +589,14 @@ class TypeOfArmyEquipmentModelRead(ReadNamedModel):
             id=orm_obj.id,
             name=orm_obj.name,
             nameKZ=orm_obj.nameKZ,
-            type_of_equipment=orm_obj.type_of_army_equipment.name,
+            type_of_equipment={"name": orm_obj.type_of_army_equipment.name,
+                               "nameKZ": orm_obj.type_of_army_equipment.nameKZ}
         )
 
 
-class TypeOfClothingEquipmentModelRead(ReadNamedModel):
-    type_of_equipment: Optional[str]
-
+class TypeOfClothingEquipmentModelRead(ReadModel):
+    type_of_equipment: Optional[dict]
+    model_of_equipment: Optional[dict]
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
@@ -485,13 +605,14 @@ class TypeOfClothingEquipmentModelRead(ReadNamedModel):
     def from_orm(cls, orm_obj):
         return cls(
             id=orm_obj.id,
-            name=orm_obj.name,
-            nameKZ=orm_obj.nameKZ,
-            type_of_equipment=orm_obj.type_of_clothing_equipment.name,
+            type_of_equipment={"name": orm_obj.type_clothing_equipments.name,
+                               "nameKZ": orm_obj.type_clothing_equipments.nameKZ},
+            model_of_equipment={"name": orm_obj.type_clothing_equipment_models.name,
+                                "nameKZ": orm_obj.type_clothing_equipment_models.nameKZ}
         )
 
 class TypeOfOtherEquipmentModelRead(ReadNamedModel):
-    type_of_equipment: Optional[str]
+    type_of_equipment: Optional[dict]
 
     class Config:
         orm_mode = True
@@ -503,7 +624,8 @@ class TypeOfOtherEquipmentModelRead(ReadNamedModel):
             id=orm_obj.id,
             name=orm_obj.name,
             nameKZ=orm_obj.nameKZ,
-            type_of_equipment=orm_obj.type_of_other_equipment.name,
+            type_of_equipment={"name": orm_obj.type_of_other_equipment.name,
+                               "nameKZ": orm_obj.type_of_other_equipment.nameKZ}
         )
 
 
@@ -512,16 +634,17 @@ class EquipmentRead(ReadModel):
     user_id: Optional[uuid.UUID]
     type_of_army_equipment_model_id: Optional[uuid.UUID]
     inventory_number: Optional[str]
-    inventory_number_of_other_equipment: Optional[str]
+    inventory_count: Optional[int]
     count_of_ammo: Optional[int]
-    type_of_clothing_equipment_model_id: Optional[uuid.UUID]
+    clothing_size: Optional[str]
+    clothing_equipment_types_models_id: Optional[uuid.UUID]
     type_of_other_equipment_model_id: Optional[uuid.UUID]
     document_link: Optional[str]
     document_number: Optional[str]
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     type_of_army_equipment_model: Optional[TypeOfArmyEquipmentModelRead]
-    type_of_clothing_equipment_model: Optional[TypeOfClothingEquipmentModelRead]
+    clothing_equipment_types_models: Optional[TypeOfClothingEquipmentModelRead]
     type_of_other_equipment_model: Optional[TypeOfOtherEquipmentModelRead]
 
 
@@ -546,7 +669,7 @@ class HistoryServiceDetailRead(Model):
     emergency_contracts: Optional[List[EmergencyContactRead]]
     experience: Optional[List[ExperienceRead]]
     secondments: Optional[List[SecondmentRead]]
-    equipments: Optional[List[EquipmentRead]]
+    equipments: Optional[List[dict]]
 
     class Config:
         orm_mode = True

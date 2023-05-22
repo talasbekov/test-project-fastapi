@@ -30,3 +30,10 @@ user_liberations_liberations = Table(
     Column("user_liberation_id", ForeignKey("user_liberations.id")),
     Column("liberation_id", ForeignKey("liberations.id"))
 )
+
+staff_unit_candidate_stage_infos = Table(
+    "staff_unit_candidate_stage_infos",
+    Base.metadata,
+    Column("staff_unit_id", ForeignKey("staff_units.id")),
+    Column("candidate_stage_info_id", ForeignKey("candidate_stage_infos.id"))
+)

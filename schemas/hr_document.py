@@ -11,7 +11,8 @@ from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 class HrDocumentBase(Model):
     hr_document_template_id: uuid.UUID
     due_date: datetime
-    properties: Dict[str, Any]
+    parent_id: Optional[uuid.UUID]
+    properties: Optional[Dict[str, Any]]
 
     @validator('properties')
     def properties_validator(cls, v):
@@ -31,7 +32,7 @@ class HrDocumentBase(Model):
 
 
 class DraftHrDocumentCreate(HrDocumentBase):
-    user_ids: List[uuid.UUID]
+    user_ids: Optional[List[uuid.UUID]]
 
 
 class DraftHrDocumentInit(Model):
@@ -79,6 +80,7 @@ class HrDocumentCreate(HrDocumentBase):
 
 
 class HrDocumentUpdate(HrDocumentBase):
+    user_ids: List[uuid.UUID]
     status_id: uuid.UUID
 
 
@@ -99,6 +101,7 @@ class HrDocumentRead(HrDocumentBase, ReadModel):
     last_step: Optional[HrDocumentStepRead]
     new_value: Optional[dict]
     old_history_id: Optional[uuid.UUID]
+    children: Optional[List['HrDocumentRead']]
 
     class Config:
         orm_mode = True

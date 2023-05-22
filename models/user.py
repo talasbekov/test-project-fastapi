@@ -2,7 +2,7 @@ from sqlalchemy import TIMESTAMP, Column, ForeignKey, String, Boolean
 from sqlalchemy.dialects.postgresql import TEXT, UUID
 from sqlalchemy.orm import relationship
 
-from models import Model
+from models import Model, History
 from .association import hr_documents_users
 
 
@@ -52,6 +52,7 @@ class User(Model):
     staff_list = relationship("StaffList", back_populates="user", cascade="all,delete")
 
     profile = relationship("Profile", back_populates="user", uselist=False)
+    history = relationship("History", back_populates="user", uselist=False, foreign_keys=[History.user_id])
 
     statuses = relationship("Status", back_populates="user", cascade="all,delete")
     secondments = relationship("Secondment", back_populates="user", cascade="all,delete")

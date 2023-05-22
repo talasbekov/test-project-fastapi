@@ -2,6 +2,7 @@ import uuid
 from datetime import datetime, timedelta
 
 from sqlalchemy.orm import Session
+from fastapi.logger import logger as log
 
 from exceptions import NotFoundException, NotSupportedException
 from models import (
@@ -34,6 +35,7 @@ from models import (
     User
 )
 from schemas import HistoryCreate, HistoryUpdate
+from schemas.history.history import EquipmentRead, EmergencyContactRead
 from services import ServiceBase
 
 
@@ -53,11 +55,11 @@ from schemas import (
 
 from services import (privelege_emergency_service, coolness_service, badge_service,
                       personnal_reserve_service, service_id_service, user_service,
-                      recommender_user_service)
+                      recommender_user_service, equipment_service)
 
 
 classes = {
-    StaffUnit: 'emergency_service_history',
+    StaffUnit: 'emergency_history',
     Rank: 'rank_history',
     Penalty: 'penalty_history',
     Contract: 'contract_history',
@@ -73,7 +75,7 @@ options = {
     'rank_history': RankHistory,
     'penalty_history': PenaltyHistory,
     'contract_history': ContractHistory,
-    'emergency_service_history': EmergencyServiceHistory,
+    'emergency_history': EmergencyServiceHistory,
     'work_experience_history': WorkExperienceHistory,
     'secondment_history': SecondmentHistory,
     'attestation': AttestationHistory,
@@ -108,16 +110,34 @@ def finish_last(db: Session, user_id: str, type: str):
 class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
 
     def get_by_type(self, db: Session, type: str):
-        return db.query(self.model).filter(self.model.type == type).first()
+        histories = db.query(self.model).filter(self.model.type == type).all()
 
-    def get_all_by_type(self, db: Session, type: str):
-        return db.query(self.model).filter(self.model.type == type).all()
+        lis_of_histories = []
+        for history in histories:
+            lis_of_histories.append(HistoryRead.from_orm(history).to_dict())
+        return lis_of_histories
+
+    def get_all(self, db: Session, skip: int, limit: int):
+        histories = db.query(self.model).offset(skip).limit(limit).all()
+
+        list_of_histories = []
+        for history in histories:
+            list_of_histories.append(HistoryRead.from_orm(history).to_dict())
+        return list_of_histories
+
+    def get_all_by_type(self, db: Session, type: str, skip: int, limit: int):
+        histories = db.query(self.model).filter(self.model.type == type).offset(skip).limit(limit).all()
+
+        list_of_histories = []
+        for history in histories:
+            list_of_histories.append(HistoryRead.from_orm(history).to_dict())
+        return list_of_histories
 
     def get_all_by_type_and_user_id(self, db: Session, type: str, user_id: uuid.UUID, skip: int, limit: int):
         if type == 'beret_history':
             black_beret_type = badge_service.get_black_beret(db)
             black_beret = badge_service.get_badge_by_type(db, black_beret_type.id)
-            return (
+            histories = (
                 db.query(BadgeHistory)
                 .filter(
                     BadgeHistory.user_id == user_id,
@@ -127,17 +147,22 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                 .limit(limit)
                 .all()
             )
-
-        return (
-            db.query(self.model)
-            .filter(
-                self.model.type == type,
-                self.model.user_id == user_id
+        else:
+            histories = (
+                db.query(self.model)
+                .filter(
+                    self.model.type == type,
+                    self.model.user_id == user_id
+                )
+                .offset(skip)
+                .limit(limit)
+                .all()
             )
-            .offset(skip)
-            .limit(limit)
-            .all()
-        )
+
+        lis_of_histories = []
+        for history in histories:
+            lis_of_histories.append(HistoryRead.from_orm(history).to_dict())
+        return lis_of_histories
 
     def create(self, db: Session, obj_in: HistoryCreate):
         cls = options.get(obj_in.type) 
@@ -161,7 +186,8 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
 
     def get_all_by_user_id(self, db: Session, user_id: str):
         user = user_service.get_by_id(db, user_id)
-        general_information = self.get_general_information_by_user_id(db, user_id, user)        
+
+        general_information = self.get_general_information_by_user_id(db, user_id, user)
         badges = db.query(BadgeHistory).filter(BadgeHistory.user_id == user_id).all()
         ranks = db.query(RankHistory).filter(RankHistory.user_id == user_id).all()
         penalties = db.query(PenaltyHistory).filter(PenaltyHistory.user_id == user_id).all()
@@ -173,8 +199,17 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         experience = db.query(WorkExperienceHistory).filter(WorkExperienceHistory.user_id == user_id).all()
         secondments = db.query(SecondmentHistory).filter(SecondmentHistory.user_id == user_id).all()
         equipments = user.equipments
+
+        clothing_equipments_type_count = equipment_service.get_clothing_equipments_type_count(db)
+        equipment_models_count = equipment_service.get_clothing_equipment_models_count_by_user(db, user_id)
+        percentage = {}
+        if equipment_models_count:
+            for equipment_model in equipment_models_count:
+                percentage[equipment_model[0]] = (equipment_model[1]*100)/clothing_equipments_type_count
+
         service_id_info =self.get_service_id_by_user_id(db, user_id)
-        
+        equipments_dict = [EquipmentRead.from_orm(equipment).dict() for equipment in equipments]
+        equipments_dict.append(percentage)
         attendance = AttendanceRead(
             physical_training=100,
             tactical_training=100,
@@ -193,11 +228,12 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             emergency_contracts=emergency_contracts,
             experience=experience,
             secondments=secondments,
-            equipments=equipments,
+            equipments=equipments_dict,
             general_information=general_information,
             service_id_info=service_id_info
         )
-        return history_service_detail_read
+        history_dict = HistoryServiceDetailRead.from_orm(history_service_detail_read).dict()
+        return history_dict
 
 
     def get_service_id_by_user_id(self, db: Session, user_id: str):
@@ -269,11 +305,15 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             )
         recommender = recommender_user_service.get_by_user_id(db, user_id)
         if recommender:
-            recommender_user = recommender.user_by.last_name + ' ' + recommender.user_by.first_name[0] + '.' + recommender.user_by.father_name[0] + '.'
+            recommender_user = {"name": f"{recommender.user_by.last_name} {recommender.user_by.first_name[0]}{' ' + recommender.user_by.father_name[0] + '.' if recommender.user_by.father_name is not None else ''}",
+                                "id": str(user.id)
+                                }
         else:
             recommender_user = None
         if user:
-            researcher = user.last_name + ' ' + user.first_name[0] + '.' + user.father_name[0] + '.'
+            researcher = {"name": f"{user.last_name} {user.first_name[0]} {' ' + user.father_name[0] + '.' if user.father_name is not None else ''}",
+                          "id": str(user.id)
+                          }
         else:
             researcher = None
 

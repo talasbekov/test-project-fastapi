@@ -12,6 +12,7 @@ class VehicleBase(NamedModel):
     date_from: datetime
     profile_id: uuid.UUID
     document_link: Optional[str]
+    vin_code: str
 
     class Config:
         orm_mode = True

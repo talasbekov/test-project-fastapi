@@ -4,7 +4,7 @@ import uuid
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
-from models import StaffUnit, Position, User, StaffDivision, EmergencyServiceHistory
+from models import StaffUnit, Position, User, StaffDivision, EmergencyServiceHistory, ArchiveStaffUnit, StaffDivisionEnum
 from schemas import StaffUnitCreate, StaffUnitUpdate, StaffUnitFunctions, StaffUnitRead
 from services import service_staff_function_service, document_staff_function_service, staff_division_service
 from .base import ServiceBase
@@ -14,7 +14,7 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
     def get_by_id(self, db: Session, id: uuid.UUID):
         position = super().get(db, id)
         if position is None:
-            raise NotFoundException(detail="StaffUnit is not found!")
+            raise NotFoundException(detail=f"StaffUnit  with id: {id} is not found!")
         return position
 
     def get_by_staff_division_id(self, db: Session, staff_division_id: str):
@@ -77,7 +77,7 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
     def get_all_by_position(self, db: Session, position_id: str):
         return db.query(self.model).filter(
             self.model.position_id == position_id
-        ).first()
+        ).all()
 
     def get_by_option(self, db: Session, type: str, id: uuid.UUID, skip: int, limit: int):
         return [StaffUnitRead.from_orm(item).dict() for item in super().get_multi(db, skip, limit)]
@@ -140,6 +140,45 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
             .order_by(EmergencyServiceHistory.date_from.desc())
             .first()
         )
+
+    def create_from_archive(self, db: Session, archive_staff_unit: ArchiveStaffUnit, staff_division_id: uuid.UUID):
+        res = super().create(
+            db, StaffUnitCreate(
+                position_id=archive_staff_unit.position_id,
+                staff_division_id=staff_division_id
+                )
+            )
+        return res
+
+    def update_from_archive(self, db: Session, archive_staff_unit: ArchiveStaffUnit, staff_division_id: uuid.UUID):
+        staff_unit = self.get_by_id(db, archive_staff_unit.origin_id)
+        res = super().update(
+            db,
+            db_obj=staff_unit,
+            obj_in=StaffUnitUpdate(
+                position_id=archive_staff_unit.position_id,
+                staff_division_id=staff_division_id,
+            )
+        )
+        return res
+
+    def create_or_update_from_archive(self, db: Session, archive_staff_unit: ArchiveStaffUnit, staff_division_id: uuid.UUID):
+        if archive_staff_unit.origin_id is None:
+            return self.create_from_archive(db, archive_staff_unit, staff_division_id)
+        return self.update_from_archive(db, archive_staff_unit, staff_division_id)
+
+    def make_all_inactive(self, db: Session, exclude_ids: list[uuid.UUID] = []):
+        db.query(self.model).filter(
+            self.model.staff_division_id.not_in(exclude_ids)
+        ).update({self.model.is_active: False})
+        db.flush()
+
+    def delete_all_inactive(self, db: Session, exclude_ids: list[uuid.UUID] = []):
+        db.query(self.model).filter(
+            self.model.staff_division_id.not_in(exclude_ids),
+            self.model.is_active == False
+        ).update({self.model.staff_division_id: None})
+        db.flush()
 
 
 staff_unit_service = StaffUnitService(StaffUnit)

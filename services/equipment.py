@@ -1,3 +1,6 @@
+import uuid
+
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
@@ -5,11 +8,11 @@ from models import (Equipment,
                     TypeClothingEquipment, 
                     TypeArmyEquipment, 
                     TypeOtherEquipment,
-                    ClothingEquipment,
                     TypeClothingEquipmentModel,
                     ArmyEquipment,
                     ClothingEquipment,
-                    OtherEquipment)
+                    OtherEquipment,
+                    ClothingEquipmentTypesModels)
 from schemas import (EquipmentCreate, 
                      EquipmentUpdate,
                      TypeClothingEquipmentRead, 
@@ -44,23 +47,76 @@ class EquipmentService(ServiceBase[Equipment, EquipmentCreate, EquipmentUpdate])
         return [TypeArmyEquipmentRead.from_orm(army_equipment) for army_equipment in db.query(TypeArmyEquipment).offset(skip).limit(limit).all()]
     
     def get_all_clothing_equipments(self, db: Session, skip: int = 0, limit: int = 10):
-        return [TypeClothingEquipmentRead.from_orm(clothing_equipment) for clothing_equipment in db.query(TypeClothingEquipment).offset(skip).limit(limit).all()]
-    
+        type_clothing_equipments_list = db.query(TypeClothingEquipment).offset(skip).limit(limit).all()
+        if not type_clothing_equipments_list:
+            raise NotFoundException("Equipment not found")
+        type_clothing_equipments_read_list = []
+        for type_clothing_equipment in type_clothing_equipments_list:
+            clothing_equipment_models = (db.query(TypeClothingEquipmentModel)
+                                         .join(ClothingEquipmentTypesModels)
+                                         .filter(ClothingEquipmentTypesModels.type_clothing_equipments_id == type_clothing_equipment.id)
+                                         .offset(skip)
+                                         .limit(limit)
+                                         .all()
+                                         )
+            type_clothing_equipment_read = TypeClothingEquipmentRead.from_orm(type_clothing_equipment)
+            type_clothing_equipment_read.type_clothing_equipment_models = clothing_equipment_models
+            type_clothing_equipments_read_list.append(type_clothing_equipment_read)
+
+        return type_clothing_equipments_read_list
+
+    def get_all_clothing_equipment_models(self, db: Session):
+       return db.query(TypeClothingEquipmentModel).all()
+
+    def get_clothing_equipment_models_count_by_user(self, db: Session, user_id: uuid.UUID):
+        res = (
+        db.query(TypeClothingEquipmentModel.name,
+                 func.count(ClothingEquipmentTypesModels.type_clothing_equipments_id)
+        )
+        .join(ClothingEquipmentTypesModels)
+        .join(ClothingEquipment)
+        .filter(ClothingEquipment.user_id == user_id)
+        .group_by(TypeClothingEquipmentModel.name)
+        .all()
+         )
+        return res
+
+    def get_clothing_equipments_type_count(self, db: Session):
+        return db.query(TypeClothingEquipment).count()
+
     def get_all_other_equipments(self, db: Session, skip: int = 0, limit: int = 10):
         return [TypeOtherEquipmentRead.from_orm(other_equipment) for other_equipment in db.query(TypeOtherEquipment).offset(skip).limit(limit).all()]
-    
-    def get_all_available_equipments(self, db: Session, user_id: str, skip: int = 0, limit: int = 10): 
-     
-        history = db.query(ClothingEquipment.type_of_clothing_equipment_model_id).filter(
-            ClothingEquipment.user_id == user_id
-        ).distinct().subquery()
 
-        # Query for all clothing types which the user does not have in the history
-        return db.query(TypeClothingEquipment).filter(
-            ~TypeClothingEquipment.type_of_clothing_equipment_models.any(
-                TypeClothingEquipmentModel.id == history.c.type_of_clothing_equipment_model_id
+    def get_all_available_equipments(self, db: Session, user_id: str, skip: int = 0, limit: int = 10):
+
+        user_clothing_type = self._get_user_clothing_type_query(db, user_id)
+
+        return (
+            db.query(TypeClothingEquipment)
+            .except_(user_clothing_type)
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
+
+    def get_all_clothing_equipments_by_user(self, db: Session, user_id: str, skip: int = 0, limit: int = 10):
+
+        return (
+            self._get_user_clothing_type_query(db, user_id)
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
+
+    def _get_user_clothing_type_query(self, db: Session, user_id: str):
+        return (
+            db.query(TypeClothingEquipment)
+            .join(ClothingEquipmentTypesModels)
+            .join(ClothingEquipment)
+            .filter(
+                ClothingEquipment.user_id == user_id
             )
-        ).offset(skip).limit(limit).all()
+        )
 
     def create(self, db: Session, body: EquipmentCreate):
         cls = equipment[body.type_of_equipment]

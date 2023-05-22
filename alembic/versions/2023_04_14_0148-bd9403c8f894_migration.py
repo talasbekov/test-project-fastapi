@@ -35,6 +35,9 @@ family_status4_id = get_uuid()
 
 family_relation_id = get_uuid()
 family_relation2_id = get_uuid()
+family_relation3_id = get_uuid()
+family_relation4_id = get_uuid()
+family_relation5_id = get_uuid()
 
 # Medical
 liberation_id = get_uuid()
@@ -153,6 +156,14 @@ options = {
     'koktem@mail.ru': {
         'first_name': 'Көктем',
         'father_name': 'Исмаилова'
+    },
+    'alishev@mail.ru': {
+        'first_name': 'Нейл',
+        'father_name': 'Алишев'
+    },
+    'batyrbek@mail.ru': {
+        'first_name': 'Батырбек',
+        'father_name': 'Бакыткерей'
     }
 }
 
@@ -364,6 +375,7 @@ def upgrade() -> None:
     position29_id = get_uuid()  # Исключен из списков личного состава
     position30_id = get_uuid()  # Откомандирован в другой гос. орган
     position31_id = get_uuid()  # Погиб
+    position32_id = get_uuid()  # HR
 
     op.bulk_insert(
         Base.metadata.tables['positions'],
@@ -522,6 +534,11 @@ def upgrade() -> None:
             'id': position31_id,
             'name': "Погиб",
             'nameKZ': 'Қайтыс болды',
+            'max_rank_id': None
+        }, {
+            'id': position32_id,
+            'name': "HR-менеджер",
+            'nameKZ': 'HR-менеджері',
             'max_rank_id': None
         }]
     )
@@ -958,87 +975,100 @@ def upgrade() -> None:
             'id': group1_id,
             'name': "Департамент 1",
             'nameKZ': "Департамент 1",
-            'is_combat_unit': True
+            'is_combat_unit': True,
+            'is_visible': True,
         }, {
             'parent_group_id': group1_id,
             'id': group2_id,
             'name': "Управление 1",
             'nameKZ': 'Басқару 1',
-            'is_combat_unit': False
+            'is_combat_unit': False,
+            'is_visible': True,
         },  {
             'parent_group_id': group2_id,
             'id': group2_1_id,
             'name': "Отдел 1",
             'nameKZ': 'Бөлім 1',
-            'is_combat_unit': False
+            'is_combat_unit': False,
+            'is_visible': True,
         }, {
             'parent_group_id': group1_id,
             'id': group3_id,
             'name': "Управление 2",
             'nameKZ': 'Басқару 2',
-            'is_combat_unit': True
+            'is_combat_unit': True,
+            'is_visible': True,
         }, {
             'parent_group_id': group1_id,
             'id': group4_id,
             'name': "Управление 3",
             'nameKZ': 'Басқару 3',
-            'is_combat_unit': False
+            'is_combat_unit': False,
+            'is_visible': True,
         }, {
             'parent_group_id': group1_id,
             'id': group5_id,
             'name': "Управление 4",
             'nameKZ': 'Басқару 4',
-            'is_combat_unit': True
+            'is_combat_unit': True,
+            'is_visible': True,
         }, {
             'parent_group_id': None,
             'id': group6_id,
             'name': "Особая группа",
             'nameKZ': 'Арнайы группа',
-            'is_combat_unit': False
+            'is_combat_unit': False,
+            'is_visible': False,
         }, {
             'parent_group_id': group6_id,
             'id': group7_id,
             'name': "Кандидаты",
             'nameKZ': 'Кандидаттар',
-            'is_combat_unit': False
+            'is_combat_unit': False,
+            'is_visible': False,
         }, {
             'parent_group_id': group6_id,
             'id': group8_id,
             'name': "Умер",
             'nameKZ': 'Өлі',
-            'is_combat_unit': False
+            'is_combat_unit': False,
+            'is_visible': False,
         }, {
             'parent_group_id': group6_id,
             'id': group9_id,
             'name': "В отставке",
             'nameKZ': 'Зейнеткер',
-            'is_combat_unit': False
+            'is_combat_unit': False,
+            'is_visible': False,
         }, {
             'parent_group_id': group6_id,
             'id': group10_id,
             'name': "В запасе",
             'nameKZ': 'Резервте',
-            'is_combat_unit': False
+            'is_combat_unit': False,
+            'is_visible': False,
         }, {
             'parent_group_id': group6_id,
             'id': group11_id,
             'name': "Исключен из списков личного состава",
             'nameKZ': 'Кадрлар тізімінен шығарылған',
-            'is_combat_unit': False
+            'is_combat_unit': False,
+            'is_visible': False,
         },  {
             'parent_group_id': group6_id,
             'id': group12_id,
             'name': "Откомандирован в другой гос. орган",
             'nameKZ': 'Басқа мемлекеттік органға жіберілді',
-            'is_combat_unit': False
+            'is_combat_unit': False,
+            'is_visible': False,
         },  {
             'parent_group_id': group6_id,
             'id': group13_id,
             'name': "Погиб",
             'nameKZ': 'Қайтыс болды',
-            'is_combat_unit': False
-        },
-        ]
+            'is_combat_unit': False,
+            'is_visible': False,
+        }, ]
     )
 
     staff_unit1_id = get_uuid()
@@ -1063,6 +1093,8 @@ def upgrade() -> None:
     staff_unit20_id = get_uuid()
     staff_unit21_id = get_uuid()
     staff_unit22_id = get_uuid()
+    staff_unit23_id = get_uuid()
+    staff_unit25_id = get_uuid()
     
     empty_unit_id = get_uuid()
 
@@ -1123,6 +1155,18 @@ def upgrade() -> None:
             'id': family_relation2_id,
             'name': 'Мать',
             'nameKZ': 'Анасы'
+        }, {
+            'id': family_relation3_id,
+            'name': 'Жена',
+            'nameKZ': 'Әйелі'
+        }, {
+            'id': family_relation4_id,
+            'name': 'Муж',
+            'nameKZ': 'Күйеуі'
+        }, {
+            'id': family_relation5_id,
+            'name': 'Брат',
+            'nameKZ': 'Інісі'
         }]
     )
 
@@ -1157,6 +1201,8 @@ def upgrade() -> None:
     user16_id = get_uuid()
     user17_id = get_uuid()
     user18_id = get_uuid()
+    user19_id = get_uuid()
+    user21_id = get_uuid()
 
     create_user(
         user10_id,
@@ -1209,7 +1255,7 @@ def upgrade() -> None:
         staff_unit2_id,
         "http://192.168.0.169:8083/static/Erzhan.png",
         position1_id,
-        False,
+        True,
         '1.2.213K',
         True)
     create_user(
@@ -1290,7 +1336,7 @@ def upgrade() -> None:
         "Ескендиров",
         'Алматович',
         'erden@mail.ru',
-        group2_id,
+        group2_1_id,
         user10_id,
         "Альфа 7",
         '7',
@@ -1308,7 +1354,7 @@ def upgrade() -> None:
         "Рахатов",
         'Серикович',
         'erkin@mail.ru',
-        group3_id,
+        group4_id,
         None,
         "Альфа 8",
         '8',
@@ -1317,7 +1363,7 @@ def upgrade() -> None:
         staff_unit8_id,
         "http://192.168.0.169:8083/static/Erdaulet.png",
         position1_id,
-        False,
+        True,
         "1.2.216K",
         True)
     create_user(
@@ -1349,9 +1395,9 @@ def upgrade() -> None:
         "Альфа 11",
         '11',
         staff_unit15_id,
-        None,
+        rank5_id,
         staff_unit15_id,
-        "http://192.168.0.169:8083/static/Erdaulet.png",
+        "http://192.168.0.169:8083/static/Aislu.png",
         position22_id,
         True,
         "1.2.217K",
@@ -1362,7 +1408,7 @@ def upgrade() -> None:
         "Жакупов",
         'Азаматұлы',
         'aidar@mail.ru',
-        group3_id,
+        group5_id,
         None,
         "Альфа 12",
         '12',
@@ -1477,11 +1523,48 @@ def upgrade() -> None:
         staff_unit22_id,
         rank5_id,
         staff_unit22_id,
+        "http://192.168.0.169:8083/static/Aislu.png",
+        position25_id,
+        True,
+        "1.2.217K",
+        False)
+    create_user(
+        user19_id,
+        "Нейл",
+        "Алишев",
+        None,
+        'alishev@mail.ru',
+        group3_id,
+        None,
+        "Альфа 19",
+        '19',
+        staff_unit23_id,
+        rank5_id,
+        staff_unit23_id,
         "http://192.168.0.169:8083/static/Erdaulet.png",
         position25_id,
         True,
         "1.2.217K",
         False)
+    create_user(
+        user21_id,
+        "Батырбек",
+        "Бакыткерей",
+        None,
+        'batyrbek@mail.ru',
+        group3_id,
+        None,
+        "Альфа 21",
+        '21',
+        staff_unit25_id,
+        rank5_id,
+        staff_unit25_id,
+        "http://192.168.0.169:8083/static/photo_2023-05-10_13-30-27.jpg",
+        position32_id,
+        True,
+        "1.2.217K",
+        False
+    )
     create_user(
         str(uuid.uuid4()),
         "Админ",
@@ -1501,7 +1584,12 @@ def upgrade() -> None:
         '1.2.100K',
         True)
 
-    op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(staff_unit8_id, group3_id))
+    op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(staff_unit10_id, group1_id))
+    op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(staff_unit1_id, group2_id))
+    op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(staff_unit7_id, group2_1_id))
+    op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(staff_unit2_id, group3_id))
+    op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(staff_unit8_id, group4_id))
+    op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(staff_unit16_id, group5_id))
 
     op.bulk_insert(
         Base.metadata.tables['staff_unit_functions'],
@@ -1550,6 +1638,9 @@ def upgrade() -> None:
     template4_id = get_uuid()
     template5_id = get_uuid()
     template6_id = get_uuid()
+    template7_id = get_uuid()
+    template8_id = get_uuid()
+    template9_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['hr_document_templates'],
@@ -1579,7 +1670,11 @@ def upgrade() -> None:
                     "alias_name": "Звание субъекта",
                     'alias_nameKZ': 'Атауы',
                     "type": "read",
-                    "data_taken": "auto"
+                    "data_taken": "auto",
+                    'case': {
+                        'kz': 1,
+                        'ru': 1
+                    }
                 },
                 "last_name": {
                     "alias_name": "Фамилия субъекта",
@@ -2086,7 +2181,7 @@ def upgrade() -> None:
         {
             "name": "Заключение на зачисление",
             "nameKZ": "Қабылдау қорытындысы",
-            "path": "http://193.106.99.68:2287/static/finish_candidate.html",
+            "path": None,
             "pathKZ": "http://193.106.99.68:2287/static/finish_candidate.html",
             "subject_type": 1,
             'maintainer_id': staff_unit4_id,
@@ -2103,6 +2198,79 @@ def upgrade() -> None:
             
             ]},
             'id': template6_id
+        }, {
+            "name": "Приказ об изменении штатного расписания",
+            "nameKZ": "Штат кестесін өзгерту туралы бұйрық",
+            "path": None,
+            "pathKZ": None,
+            "subject_type": None,
+            'maintainer_id': None,
+            'description': "",
+            'is_visible': False,
+            "properties": {
+                "staff_list": {
+                    'alias_name': 'Штатное расписание',
+                    'alias_nameKZ': 'Штат кестесі',
+                    'type': 'write',
+                    'data_taken': "dropdown",
+                    'field_name': ""
+                }
+            },
+            'actions': {'args': [
+                {
+                    'superdoc': {},
+                }, {
+                    'apply_staff_list': {
+                        'staff_list': {
+                            'tagname': 'staff_list'
+                        }
+                    }
+                }
+            ]},
+            'id': template7_id
+        }, {
+            'name': "Супер документ",
+            'nameKZ': "Супер құжат",
+            'path': None,
+            'pathKZ': None,
+            'subject_type': None,
+            'maintainer_id': None,
+            'description': "",
+            'is_visible': False,
+            'properties': {},
+            'actions': {'args': [
+                {
+                    'superdoc': {}
+                }
+            ]},
+            'id': template8_id
+        }, {
+            'name': "Приказ о назначении на должность (штатное расписание)",
+            'nameKZ': "Штат кестесіне байланысты есепке алу туралы бұйрық (Штат кестесіне байланысты есепке алу туралы бұйрық)",
+            'path': None,
+            'pathKZ': None,
+            'subject_type': 'EMPLOYEE',
+            'maintainer_id': None,
+            'description': "",
+            'is_visible': False,
+            'properties': {
+                'staff_unit': {
+                    'alias_name': 'Позиция сотрудника',
+                    'data_taken': 'dropdown',
+                    'type': 'write',
+                    'field_name': 'staff_unit'
+                }
+            },
+            'actions': {'args': [
+                {
+                    'apply_archive_position': {
+                        'staff_unit': {
+                            'tagname': 'staff_unit'
+                        }
+                    }
+                }
+            ]},
+            'id': template9_id
         }]
     )
 
@@ -2118,6 +2286,19 @@ def upgrade() -> None:
     step3_2 = get_uuid()
     step3_3 = get_uuid()
     step3_4 = get_uuid()
+    step4_1 = get_uuid()
+    step4_2 = get_uuid()
+    step4_3 = get_uuid()
+    step4_4 = get_uuid()
+    step5_1 = get_uuid()
+    step5_2 = get_uuid()
+    step5_3 = get_uuid()
+    step5_4 = get_uuid()
+    step6_1 = get_uuid()
+    step6_2 = get_uuid()
+    step6_3 = get_uuid()
+    step6_4 = get_uuid()
+    
 
     op.bulk_insert(
         Base.metadata.tables['hr_document_steps'],
@@ -2181,7 +2362,67 @@ def upgrade() -> None:
             'previous_step_id': step3_2,
             'staff_function_id': staff_function9_id,
             'id': step3_4
-        }]
+        }, {
+            'hr_document_template_id': template7_id,
+            'previous_step_id': None,
+            'staff_function_id': staff_function4_id,
+            'id': step4_1
+        }, {
+            'hr_document_template_id': template7_id,
+            'previous_step_id': step4_1,
+            'staff_function_id': staff_function5_id,
+            'id': step4_2
+        }, {
+            'hr_document_template_id': template7_id,
+            'previous_step_id': step4_2,
+            'staff_function_id': staff_function10_id,
+            'id': step4_3
+        }, {
+            'hr_document_template_id': template7_id,
+            'previous_step_id': step4_3,
+            'staff_function_id': staff_function6_id,
+            'id': step4_4
+        }, {
+            'hr_document_template_id': template8_id,
+            'previous_step_id': None,
+            'staff_function_id': staff_function4_id,
+            'id': step5_1
+        }, {
+            'hr_document_template_id': template8_id,
+            'previous_step_id': step5_1,
+            'staff_function_id': staff_function5_id,
+            'id': step5_2
+        }, {
+            'hr_document_template_id': template8_id,
+            'previous_step_id': step5_2,
+            'staff_function_id': staff_function10_id,
+            'id': step5_3
+        }, {
+            'hr_document_template_id': template8_id,
+            'previous_step_id': step5_3,
+            'staff_function_id': staff_function6_id,
+            'id': step5_4
+        }, {
+            'hr_document_template_id': template9_id,
+            'previous_step_id': None,
+            'staff_function_id': staff_function4_id,
+            'id': step6_1
+        }, {
+            'hr_document_template_id': template9_id,
+            'previous_step_id': step6_1,
+            'staff_function_id': staff_function5_id,
+            'id': step6_2
+        }, {
+            'hr_document_template_id': template9_id,
+            'previous_step_id': step6_2,
+            'staff_function_id': staff_function10_id,
+            'id': step6_3
+        }, {
+            'hr_document_template_id': template9_id,
+            'previous_step_id': step6_3,
+            'staff_function_id': staff_function6_id,
+            'id': step6_4
+        } ]
     )
 
     candidate_id = get_uuid()
@@ -2373,8 +2614,8 @@ def upgrade() -> None:
         Base.metadata.tables['type_army_equipment_models'],
         [{
             'id': type_army_equipment_model_id,
-            'name': 'Автомат винтовка',
-            'nameKZ': 'Автомат мылтық',
+            'name': 'AK-74',
+            'nameKZ': 'AK-74',
             'type_of_army_equipment_id': type_army_equipment_id
         },
             {
@@ -2447,72 +2688,71 @@ def upgrade() -> None:
     type_of_clothing_equipment_model_id = get_uuid()
     type_of_clothing_equipment_model2_id = get_uuid()
     type_of_clothing_equipment_model3_id = get_uuid()
-    type_of_clothing_equipment_model4_id = get_uuid()
-    type_of_clothing_equipment_model5_id = get_uuid()
-    type_of_clothing_equipment_model6_id = get_uuid()
-    type_of_clothing_equipment_model7_id = get_uuid()
-    type_of_clothing_equipment_model8_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['type_clothing_equipment_models'],
         [{
             'id': type_of_clothing_equipment_model_id,
-            'name': 'Шапка военная',
-            'nameKZ': 'Әскери бас киім',
+            'name': 'Военная',
+            'nameKZ': 'Әскери',
             'type_of_clothing_equipment_id': type_of_clothing_equipment_id
         },
             {
             'id': type_of_clothing_equipment_model2_id,
-            'name': 'Куртка военная',
-            'nameKZ': 'Әскери куртка',
+            'name': 'Тактическая',
+            'nameKZ': 'Тактикалық',
             'type_of_clothing_equipment_id': type_of_clothing_equipment2_id
         },
             {
             'id': type_of_clothing_equipment_model3_id,
-            'name': 'Футболка военная',
-            'nameKZ': 'Әскери футболка',
+            'name': 'Парадная',
+            'nameKZ': 'Салтанатты',
             'type_of_clothing_equipment_id': type_of_clothing_equipment3_id
         },
-            {
-            'id': type_of_clothing_equipment_model4_id,
-            'name': 'Кофта военная',
-            'nameKZ': 'Әскери жейде',
-            'type_of_clothing_equipment_id': type_of_clothing_equipment4_id
+        ])
+
+    clothing_equipment_types_model_id = get_uuid()
+    clothing_equipment_types_model2_id = get_uuid()
+    clothing_equipment_types_model3_id = get_uuid()
+    clothing_equipment_types_model4_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['clothing_equipment_types_models'],
+        [{
+            'id': clothing_equipment_types_model_id,
+            'type_clothing_equipments_id': type_of_clothing_equipment_id,
+            'type_clothing_equipment_models_id': type_of_clothing_equipment_model_id
         },
             {
-            'id': type_of_clothing_equipment_model5_id,
-            'name': 'Штаны военные',
-            'nameKZ': 'Әскери шалбар',
-            'type_of_clothing_equipment_id': type_of_clothing_equipment5_id
+            'id': clothing_equipment_types_model2_id,
+            'type_clothing_equipments_id': type_of_clothing_equipment2_id,
+            'type_clothing_equipment_models_id': type_of_clothing_equipment_model_id
         },
             {
-            'id': type_of_clothing_equipment_model6_id,
-            'name': 'Термобелье военное',
-            'nameKZ': 'Әскери термиялық іш киім',
-            'type_of_clothing_equipment_id': type_of_clothing_equipment6_id
+            'id': clothing_equipment_types_model3_id,
+            'type_clothing_equipments_id': type_of_clothing_equipment2_id,
+            'type_clothing_equipment_models_id': type_of_clothing_equipment_model2_id
         },
             {
-            'id': type_of_clothing_equipment_model7_id,
-            'name': 'Ботинки военные',
-            'nameKZ': 'Әскери етік',
-            'type_of_clothing_equipment_id': type_of_clothing_equipment7_id
+            'id': clothing_equipment_types_model4_id,
+            'type_clothing_equipments_id': type_of_clothing_equipment_id,
+            'type_clothing_equipment_models_id': type_of_clothing_equipment_model2_id
         },
-            {
-            'id': type_of_clothing_equipment_model8_id,
-            'name': 'Носки военные',
-            'nameKZ': 'Әскери шұлық',
-            'type_of_clothing_equipment_id': type_of_clothing_equipment8_id
-        }])
-    
+        ])
 
     type_other_equipment_id = get_uuid()
-    
+    type_other_equipment2_id = get_uuid()
     op.bulk_insert(
         Base.metadata.tables['type_other_equipments'],
         [{
             'id': type_other_equipment_id,
-            'name': 'Техника',
-            'nameKZ': 'Техника'
+            'name': 'Принтер',
+            'nameKZ': 'Принтер'
+        },
+        {
+            'id': type_other_equipment2_id,
+            'name': 'Телефон',
+            'nameKZ': 'Телефон'
         }]
     )
 
@@ -2520,55 +2760,47 @@ def upgrade() -> None:
     type_other_equipment_model2_id = get_uuid()
     type_other_equipment_model3_id = get_uuid()
     type_other_equipment_model4_id = get_uuid()
-    type_other_equipment_model5_id = get_uuid()
-    type_other_equipment_model6_id = get_uuid()
+
 
     op.bulk_insert(
         Base.metadata.tables['type_other_equipment_models'],
         [{
             'id': type_other_equipment_model_id,
-            'name': 'Принтер',
-            'nameKZ': 'Принтер',
+            'name': 'HP LaserJet N7100',
+            'nameKZ': 'HP LaserJet N7100',
             'type_of_other_equipment_id': type_other_equipment_id
         },
             {
             'id': type_other_equipment_model2_id,
-            'name': 'Радиостанция',
-            'nameKZ': 'Радиостанция',
+            'name': 'HP LaserJet P1102',
+            'nameKZ': 'HP LaserJet P1102',
             'type_of_other_equipment_id': type_other_equipment_id
         },
             {
             'id': type_other_equipment_model3_id,
-            'name': 'Персональный компьютер',
-            'nameKZ': 'Дербес компьютер',
-            'type_of_other_equipment_id': type_other_equipment_id
+            'name': 'Mitel 6865',
+            'nameKZ': 'Mitel 6865',
+            'type_of_other_equipment_id': type_other_equipment2_id
         },
             {
             'id': type_other_equipment_model4_id,
-            'name': 'Телефон',
-            'nameKZ': 'Телефон',
-            'type_of_other_equipment_id': type_other_equipment_id
-        },
-            {
-            'id': type_other_equipment_model5_id,
-            'name': 'Ноутбук',
-            'nameKZ': 'Ноутбук',
-            'type_of_other_equipment_id': type_other_equipment_id
-        },
-            {
-            'id': type_other_equipment_model6_id,
-            'name': 'Копировальный аппарат',
-            'nameKZ': 'Көшіру машинасы',
-            'type_of_other_equipment_id': type_other_equipment_id
-        }])
+            'name': 'Mitel 5304',
+            'nameKZ': 'Mitel 5304',
+            'type_of_other_equipment_id': type_other_equipment2_id
+        }
+        ])
     
 
 
 
     army_equipment_id = get_uuid()
     clothing_equipment_id = get_uuid()
+    clothing_equipment2_id = get_uuid()
+    clothing_equipment3_id = get_uuid()
+    clothing_equipment4_id = get_uuid()
     other_equipment_id = get_uuid()
-    
+    other_equipment2_id = get_uuid()
+
     op.bulk_insert(
         Base.metadata.tables['equipments'],
         [{
@@ -2576,9 +2808,11 @@ def upgrade() -> None:
             'type_of_army_equipment_model_id': type_army_equipment_model_id,
             'count_of_ammo': 100,
             'inventory_number': '123456789',
+            'inventory_count': 1,
+            'clothing_size': None,
             'user_id': user1_id,
             'type_of_equipment': 'army_equipment',
-            'type_of_clothing_equipment_model_id': None,
+            'clothing_equipment_types_models_id': None,
             'type_of_other_equipment_model_id': None,
             'document_link': 'https://www.google.com/',
             'document_number': '123456789',
@@ -2587,11 +2821,61 @@ def upgrade() -> None:
         },
          {
             'id': clothing_equipment_id,
-            'type_of_clothing_equipment_model_id': type_of_clothing_equipment_model_id,
+            'clothing_equipment_types_models_id': clothing_equipment_types_model_id,
             'user_id': user1_id,
             'type_of_equipment': 'clothing_equipment',
             'count_of_ammo': None,
-            'inventory_number': None,
+            'inventory_number': '123456789',
+            'inventory_count': None,
+            'clothing_size': '56',
+            'type_of_army_equipment_model_id': None,
+            'type_of_other_equipment_model_id': None,
+            'document_link': 'https://www.google.com/',
+            'document_number': '123456789',
+            'date_from': '2023-04-11T19:43:02.556000',
+            'date_to': None,
+         },
+         {
+            'id': clothing_equipment2_id,
+            'clothing_equipment_types_models_id': clothing_equipment_types_model2_id,
+            'user_id': user1_id,
+            'type_of_equipment': 'clothing_equipment',
+            'count_of_ammo': None,
+            'inventory_number': '64718248',
+            'inventory_count': None,
+            'clothing_size': '56',
+            'type_of_army_equipment_model_id': None,
+            'type_of_other_equipment_model_id': None,
+            'document_link': 'https://www.google.com/',
+            'document_number': '123456789',
+            'date_from': '2023-04-11T19:43:02.556000',
+            'date_to': None,
+         },
+         {
+            'id': clothing_equipment3_id,
+            'clothing_equipment_types_models_id': clothing_equipment_types_model3_id,
+            'user_id': user1_id,
+            'type_of_equipment': 'clothing_equipment',
+            'count_of_ammo': None,
+            'inventory_number': '159815617',
+            'inventory_count': None,
+            'clothing_size': '56',
+            'type_of_army_equipment_model_id': None,
+            'type_of_other_equipment_model_id': None,
+            'document_link': 'https://www.google.com/',
+            'document_number': '123456789',
+            'date_from': '2023-04-11T19:43:02.556000',
+            'date_to': None,
+         },
+        {
+            'id': clothing_equipment4_id,
+            'clothing_equipment_types_models_id': clothing_equipment_types_model4_id,
+            'user_id': user1_id,
+            'type_of_equipment': 'clothing_equipment',
+            'count_of_ammo': None,
+            'inventory_number': '637041620',
+            'inventory_count': None,
+            'clothing_size': '56',
             'type_of_army_equipment_model_id': None,
             'type_of_other_equipment_model_id': None,
             'document_link': 'https://www.google.com/',
@@ -2605,13 +2889,31 @@ def upgrade() -> None:
             'user_id': user1_id,
             'type_of_equipment': 'other_equipment',
             'count_of_ammo': None,
-            'inventory_number': None,
+            'inventory_number': '987456123',
+            'inventory_count': 1,
+            'clothing_size': None,
             'type_of_army_equipment_model_id': None,
-            'type_of_clothing_equipment_model_id': None,
+            'clothing_equipment_types_models_id': None,
             'document_link': 'https://www.google.com/',
             'document_number': '123456789',
             'date_from': '2023-04-11T19:43:02.556000',
             'date_to': None,
+         },
+         {
+             'id': other_equipment2_id,
+             'type_of_other_equipment_model_id': type_other_equipment_model3_id,
+             'user_id': user1_id,
+             'type_of_equipment': 'other_equipment',
+             'count_of_ammo': None,
+             'inventory_number': '1721581041',
+             'inventory_count': 1,
+             'clothing_size': None,
+             'type_of_army_equipment_model_id': None,
+             'clothing_equipment_types_models_id': None,
+             'document_link': 'https://www.google.com/',
+             'document_number': '123456789',
+             'date_from': '2023-04-11T19:43:02.556000',
+             'date_to': None,
          }
         ])
     
@@ -3069,6 +3371,44 @@ def upgrade() -> None:
             'document_style': None,
             'date_credited': None,
             'emergency_rank_id': None,
+            'contractor_signer_name': None,
+            'contractor_signer_nameKZ': None,
+         },
+        {
+            'id': history14_id,
+            'date_from': datetime.datetime(2012, 3, 1),
+            'date_to': datetime.datetime(2015, 3, 12),
+            'user_id': user1_id,
+            'document_link': 'https://www.google.com',
+            'document_number': '№ 12421',
+            'type': 'emergency_history',
+            'penalty_id': None,
+            'name': '18 history',
+            'position_id': position4_id,  # Add the missing parameter here
+            'rank_id': None,  # Add the missing parameter here
+            'emergency_service_id': privelege_emergency_service_id,  # Add the missing parameter here
+            'work_experience_id': None,  # Add the missing parameter here
+            'secondment_id': None,  # Add the missing parameter here
+            'name_change_id': None,  # МЕНЯТЬ НА name_change_id
+            'attestation_id': None,  # Add the missing parameter here
+            'service_characteristic_id': None,  # Add the missing parameter here
+            'status_id': None,  # Add the missing parameter here
+            'coolness_id': None,  # Add the missing parameter here
+            'contract_id': None,  # Add the missing parameter here
+            'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+            'experience_years': None,  # Add the missing parameter here
+            'characteristic_initiator_id': None,  # Add the missing parameter here
+            'coefficient': 1.0,
+            'percentage': 50,
+            'staff_division_id': group3_id,
+            'badge_id': None,
+            'name_of_organization': None,
+            'is_credited': None,
+            'document_style': None,
+            'date_credited': None,
+            'emergency_rank_id': rank4_id,
+            'contractor_signer_name': "Начальник Службы",
+            'contractor_signer_nameKZ': "Қызмет бастығы",
          },
         # {
         #     'id': history14_id,
@@ -3164,8 +3504,10 @@ def upgrade() -> None:
             'is_credited': None,
             'document_style': None,
             'date_credited': None,
-            'emergency_rank_id': None
-        },
+            'emergency_rank_id': None,
+            'contractor_signer_name': None,
+            'contractor_signer_nameKZ': None,
+            },
              
             {
             'id': history6_id,
@@ -3199,7 +3541,9 @@ def upgrade() -> None:
             'is_credited': None,
             'document_style': None,
             'date_credited': None,
-            'emergency_rank_id': None
+            'emergency_rank_id': None,
+            'contractor_signer_name': None,
+            'contractor_signer_nameKZ': None,
         },
             {
             'id': history7_id,
@@ -3233,7 +3577,9 @@ def upgrade() -> None:
             'is_credited': None,
             'document_style': None,
             'date_credited': None,
-            'emergency_rank_id': None
+            'emergency_rank_id': None,
+            'contractor_signer_name': None,
+            'contractor_signer_nameKZ': None,
         },
          {
             'id': history15_id, # TODO: change the id
@@ -3267,7 +3613,9 @@ def upgrade() -> None:
             'is_credited': True,
             'document_style': 'Первый',
             'date_credited': datetime.datetime(2014, 3, 31),
-            'emergency_rank_id': None
+            'emergency_rank_id': None,
+            'contractor_signer_name': None,
+            'contractor_signer_nameKZ': None,
          },
         {
             'id': history16_id,
@@ -3301,7 +3649,9 @@ def upgrade() -> None:
             'is_credited': None,
             'document_style': None,
             'date_credited': None,
-            'emergency_rank_id': None
+            'emergency_rank_id': None,
+            'contractor_signer_name': None,
+            'contractor_signer_nameKZ': None,
         },
             {
             'id': history8_id,
@@ -3311,7 +3661,7 @@ def upgrade() -> None:
             'document_link': 'https://www.google.com',
             'document_number': '№ 12421',
             'type': type_of_histories[7],
-            'attestation_status': 'Подтверждено',  # МЕНЯТЬ НА attestation_status
+            'attestation_status': 'Занимаемой должности соответсвует',  # МЕНЯТЬ НА attestation_status
             'penalty_id': None,
             'name': '3 history',
             'position_id': None,  # Add the missing parameter here
@@ -3335,7 +3685,9 @@ def upgrade() -> None:
             'is_credited': None,
             'document_style': None,
             'date_credited': None,
-            'emergency_rank_id': None
+            'emergency_rank_id': None,
+            'contractor_signer_name': None,
+            'contractor_signer_nameKZ': None,
         },
            
             {
@@ -3370,7 +3722,9 @@ def upgrade() -> None:
             'is_credited': None,
             'document_style': None,
             'date_credited': None,
-            'emergency_rank_id': None
+            'emergency_rank_id': None,
+            'contractor_signer_name': None,
+            'contractor_signer_nameKZ': None,
         },
             {
             'id': history11_id,
@@ -3404,7 +3758,9 @@ def upgrade() -> None:
             'is_credited': None,
             'document_style': None,
             'date_credited': None,
-            'emergency_rank_id': None
+            'emergency_rank_id': None,
+            'contractor_signer_name': None,
+            'contractor_signer_nameKZ': None,
         },
             {
             'id': history12_id,
@@ -3438,7 +3794,9 @@ def upgrade() -> None:
             'is_credited': None,
             'document_style': None,
             'date_credited': None,
-            'emergency_rank_id': None
+            'emergency_rank_id': None,
+            'contractor_signer_name': None,
+            'contractor_signer_nameKZ': None,
         },
          {
             'id': history13_id,
@@ -3472,7 +3830,9 @@ def upgrade() -> None:
             'is_credited': None,
             'document_style': None,
             'date_credited': None,
-            'emergency_rank_id': None
+            'emergency_rank_id': None,
+            'contractor_signer_name': None,
+            'contractor_signer_nameKZ': None,
         }
         ])
 
@@ -4304,17 +4664,17 @@ def upgrade() -> None:
         }]
     )
 
-    candidate_stage_info_id = get_uuid()
+    # candidate_stage_info_id = get_uuid()
 
-    op.bulk_insert(
-        Base.metadata.tables['candidate_stage_infos'],
-        [{
-            'id': candidate_stage_info_id,
-            'staff_unit_coordinate_id': staff_unit1_id,
-            'candidate_stage_type_id': candidate_stage_types1_id,
-            'is_waits': True
-        }]
-    )
+    # op.bulk_insert(
+    #     Base.metadata.tables['candidate_stage_infos'],
+    #     [{
+    #         'id': candidate_stage_info_id,
+    #         'staff_unit_coordinate_id': staff_unit1_id,
+    #         'candidate_stage_type_id': candidate_stage_types1_id,
+    #         'is_waits': True
+    #     }]
+    # )
 
 
 def create_user(id,
@@ -4463,6 +4823,22 @@ def create_user(id,
             'id': additional_profile_id,
             'profile_id': profile_id
 
+        }]
+    )
+    
+    user_vehicles = get_uuid()
+    
+    op.bulk_insert(
+        Base.metadata.tables['user_vehicles'],
+        [{
+            'id': user_vehicles,
+            'profile_id': additional_profile_id,
+            'vin_code': 'JN1WNYD21U0000001',
+            'date_from': '2021-02-25',
+            'number': '021 AMS 01',
+            'document_link': 'https://www.google.com',
+            'name': 'Toyota Camry ACV50(2020)',
+            'nameKZ': 'Toyota Camry ACV50(2020)'
         }]
     )
 
@@ -4885,12 +5261,13 @@ def create_user(id,
         Base.metadata.tables['hospital_datas'],
         [{
             'id': hospital_datas_id,
-            'reason': "Больничный (код-829121)",
+            'reason': "Больничный",
             'place': 'ГКП на ПХВ "Городская поликлиника №3"',
             'start_date': "2022-09-12",
             'end_date': "2022-10-12",
             'profile_id': medical_profile_id,
-            'document_link': "document_link"
+            'document_link': "document_link",
+            'code': 'код-829121'
         }, {
             'id': hospital_datas1_id,
             'reason': "Больничный по причине ОРВИ",
@@ -4898,7 +5275,8 @@ def create_user(id,
             'start_date': "2022-12-15",
             'end_date': "2022-12-16",
             'profile_id': medical_profile_id,
-            'document_link': "document_link"
+            'document_link': "document_link",
+            'code': None
         }]
     )
 
@@ -4926,6 +5304,8 @@ def create_user(id,
             'id': properties_id,
             'type_id': property_type1_id,
             'purchase_date': "2022-09-12",
+            'purchase_type': "В подарок",
+            'purchase_typeKZ': "Силыққа",
             'address': "Достык 5",
             'profile_id': additional_profile_id
         }]

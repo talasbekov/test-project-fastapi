@@ -13,7 +13,7 @@ from models import (
     NamedModel,
     Model,
     StaffUnit,
-    Rank,
+    Rank, 
     Penalty,
     Coolness,
     Contract,
@@ -72,6 +72,8 @@ class History(Model):
     type = Column(String, nullable=True)
     document_style = Column(String, nullable=True)
     date_credited = Column(TIMESTAMP, nullable=True)
+    
+    user = relationship("User", back_populates="history", foreign_keys=[user_id])
 
     @classmethod
     def create_history(self, **kwargs):
@@ -199,6 +201,9 @@ class EmergencyServiceHistory(History):
     staff_division_name = Column(String, nullable=True)
     staff_division_nameKZ = Column(String, nullable=True)
 
+    contractor_signer_name = Column(String, nullable=True)
+    contractor_signer_nameKZ = Column(String, nullable=True)
+
     @classmethod
     def create_history(self, db: Session, user_id: uuid.UUID, id: uuid.UUID, finish_last):
         staff_unit = db.query(StaffUnit).filter(StaffUnit.id == id).first()
@@ -228,7 +233,7 @@ class EmergencyServiceHistory(History):
 
     
     __mapper_args__ = {
-        'polymorphic_identity': 'emergency_service_history'
+        'polymorphic_identity': 'emergency_history'
     }
 
 

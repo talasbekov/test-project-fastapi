@@ -1,7 +1,9 @@
-from sqlalchemy.orm import Session
+from typing import Any
+
+from sqlalchemy.orm import Session, Query
 
 from core import configs
-from models import User, HrDocument
+from models import User, HrDocument, Badge
 from .base import BaseHandler
 from services import badge_service, history_service
 from exceptions import ForbiddenException
@@ -42,6 +44,9 @@ class DeleteBadgeHandler(BaseHandler):
             raise ForbiddenException(
                 f"Badge is not assigned to this user: {user.first_name}, {user.last_name}"
             )
-        
+
+    def handle_filter(self, db: Session, user_query: Query[Any]):
+        return user_query.filter(User.badges.any(User.id == Badge.user_id))
+
 
 handler = DeleteBadgeHandler()

@@ -2,14 +2,17 @@ import uuid
 from typing import List
 
 from sqlalchemy.orm import Session
+from sqlalchemy import and_
+from fastapi.logger import logger as log
 
 from exceptions import BadRequestException, NotFoundException, NotSupportedException
-from models import StaffDivision
+from models import StaffDivision, StaffDivisionEnum, ArchiveStaffDivision
 from schemas import (
     StaffDivisionCreate,
     StaffDivisionRead,
     StaffDivisionUpdate,
     StaffDivisionUpdateParentGroup,
+    StaffDivisionOptionRead,
 )
 
 from .base import ServiceBase
@@ -29,19 +32,22 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
             skip: int = 0,
             limit: int = 100
     ) -> List[StaffDivision]:
-        return db.query(self.model).filter(
-            StaffDivision.parent_group_id == None
-        ).offset(skip).limit(limit).all()
+        departments = db.query(self.model).filter(
+            StaffDivision.parent_group_id == None,
+            StaffDivision.name.not_in([*StaffDivisionEnum])
+        ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
+        return departments
     
-    def get_parents(self, db: Session, skip: int, limit: int) -> List[StaffDivision]:
-        return db.query(self.model).filter(
+    def get_all_parents(self, db: Session, skip: int, limit: int) -> List[StaffDivision]:
+        parents = db.query(self.model).filter(
             StaffDivision.parent_group_id == None
-        ).offset(skip).limit(limit).all()
+        ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
+        return parents
 
-    def get_child_groups(self, db: Session, id: str) -> List[StaffDivision]:
+    def get_child_groups(self, db: Session, id: str, skip: int, limit: int) -> List[StaffDivision]:
         return db.query(self.model).filter(
            StaffDivision.parent_group_id == id
-        ).all()
+        ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
 
     def get_by_name(self, db: Session, name: str) -> StaffDivision:
         group = db.query(self.model).filter(
@@ -83,10 +89,97 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
             parent_id = tmp.parent_group_id
         
         return res_id
+
+    def get_division_parents_by_id(self, db: Session, staff_division_id: uuid.UUID):
+
+        staff_division = self.get_by_id(db, staff_division_id)
+
+        parent_id = staff_division.parent_group_id
+
+        prev_staff_division = staff_division
+        staff_division.children = []
+        while parent_id is not None:
+            staff_division = self.get_by_id(db, parent_id)
+            staff_division.children = [prev_staff_division]
+            prev_staff_division = staff_division
+            parent_id = staff_division.parent_group_id
+        res = StaffDivisionRead.from_orm(staff_division)
+        db.rollback()
+        return res
     
     def get_by_option(self, db: Session, type: str, id: uuid.UUID, skip: int, limit: int):
-        raise NotSupportedException(detail=f'Use matreshka with instead')
+        if id is None:
+            return [StaffDivisionOptionRead.from_orm(i) for i in self.get_all_parents(db, skip, limit)]
+        return [StaffDivisionOptionRead.from_orm(i) for i in self.get_child_groups(db, id, skip, limit)]
 
+    def get_full_name(self, db: Session, staff_division_id: uuid.UUID):
+        staff_division = self.get_by_id(db, staff_division_id)
+
+        parent_id = staff_division.parent_group_id
+
+        res_id = staff_division.id
+        
+        full_name = staff_division.name
+        full_nameKZ = staff_division.nameKZ
+
+        while parent_id != None:
+            res_id = parent_id
+            tmp = self.get_by_id(db, parent_id)
+            full_name = tmp.name + " / " + full_name
+            full_nameKZ = tmp.nameKZ + " / " + full_nameKZ
+            parent_id = tmp.parent_group_id
+        
+        return {full_name, full_nameKZ}
+        
+
+    def create_from_archive(self, db: Session, archive_staff_division: ArchiveStaffDivision, parent_id: uuid.UUID, leader_id: uuid.UUID):
+        res = super().create(
+            db, StaffDivisionCreate(
+                name=archive_staff_division.name,
+                nameKZ=archive_staff_division.nameKZ,
+                parent_group_id=parent_id,
+                description=archive_staff_division.description,
+                is_combat_unit=archive_staff_division.is_combat_unit,
+                leader_id=leader_id
+            )
+        )
+        return res
+
+    def update_from_archive(self, db: Session, archive_staff_division: ArchiveStaffDivision, parent_id: uuid.UUID, leader_id: uuid.UUID):
+        staff_division = self.get_by_id(db, archive_staff_division.origin_id)
+        res = super().update(
+            db,
+            db_obj=staff_division,
+            obj_in=StaffDivisionUpdate(
+                name=archive_staff_division.name,
+                nameKZ=archive_staff_division.nameKZ,
+                parent_group_id=parent_id,
+                description=archive_staff_division.description,
+                is_combat_unit=archive_staff_division.is_combat_unit,
+                leader_id=leader_id,
+                is_active=True
+            )
+        )
+        return res
+
+    def create_or_update_from_archive(self, db: Session, archive_staff_division: ArchiveStaffDivision, parent_id: uuid.UUID, leader_id: uuid.UUID):
+        if archive_staff_division.origin_id is None:
+            return self.create_from_archive(db, archive_staff_division, parent_id, leader_id)
+        return self.update_from_archive(db, archive_staff_division, parent_id, leader_id)
+
+    def make_all_inactive(self, db: Session):
+        db.query(self.model).filter(
+            StaffDivision.name.not_in([*StaffDivisionEnum])
+        ).update({StaffDivision.is_active: False})
+        db.flush()
+
+    def get_excluded_staff_divisions(self, db: Session):
+        return db.query(self.model).filter(
+            StaffDivision.name.in_([*StaffDivisionEnum])
+        ).all()
+
+    def delete_all_inactive(self, db: Session):
+        pass
 
 
 staff_division_service = StaffDivisionService(StaffDivision)

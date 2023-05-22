@@ -10,6 +10,9 @@ class ArchiveStaffDivisionBase(BaseModel):
     name: str
     description: Optional[str]
     staff_list_id: uuid.UUID
+    description: Optional[str]
+    is_combat_unit: Optional[bool]
+    leader_id: Optional[uuid.UUID]
 
 
 class ArchiveStaffDivisionCreate(ArchiveStaffDivisionBase):

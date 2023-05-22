@@ -42,7 +42,7 @@ class AddBadgeHandler(BaseHandler):
         tagname = action["badge"]["tagname"]
         if badge_service.exists_relation(db, user.id, props[tagname]["value"]):
             raise ForbiddenException(
-                f"Badge is already assigned to this user: {user.first_name}, {user.last_name}"
+                f"Badge is already assigned to this user: {user.first_name} {user.last_name}"
             )
 
 handler = AddBadgeHandler()

@@ -11,6 +11,8 @@ from .property_type import PropertyTypeRead
 class PropertiesBase(Model):
     type_id: uuid.UUID
     purchase_date: datetime.datetime
+    purchase_type: str
+    purchase_typeKZ: str
     address: str
     profile_id: uuid.UUID
     

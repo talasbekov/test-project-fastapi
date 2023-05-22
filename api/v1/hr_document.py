@@ -9,7 +9,9 @@ from sqlalchemy.orm import Session
 from core import get_db
 from models import LanguageEnum
 from schemas import (HrDocumentInit, HrDocumentRead,
-                     HrDocumentSign, HrDocumentUpdate, DraftHrDocumentCreate, DraftHrDocumentInit)
+                     HrDocumentSign, HrDocumentUpdate,
+                     DraftHrDocumentCreate, DraftHrDocumentInit,
+                     UserRead)
 from services import hr_document_service
 
 router = APIRouter(prefix="/hr-documents", tags=["HrDocuments"], dependencies=[Depends(HTTPBearer())])
@@ -20,6 +22,7 @@ router = APIRouter(prefix="/hr-documents", tags=["HrDocuments"], dependencies=[D
 async def get_not_signed(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
+    parent_id: uuid.UUID = None,
     filter: str = '',
     skip: int = 0,
     limit: int = 10,
@@ -33,8 +36,7 @@ async def get_not_signed(*,
     """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
-    filter.lstrip().rstrip()
-    return hr_document_service.get_not_signed_documents(db, user_id, filter, skip, limit)
+    return hr_document_service.get_not_signed_documents(db, user_id, parent_id, filter.lstrip().rstrip(), skip, limit)
 
 
 @router.get("/initialized", response_model=List[HrDocumentRead],
@@ -42,6 +44,7 @@ async def get_not_signed(*,
 async def get_initialized(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
+    parent_id: uuid.UUID = None,
     filter: str = '',
     skip: int = 0,
     limit: int = 10,
@@ -56,8 +59,7 @@ async def get_initialized(*,
     """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
-    filter.lstrip().rstrip()
-    return hr_document_service.get_initialized_documents(db, user_id, filter, skip, limit)
+    return hr_document_service.get_initialized_documents(db, user_id, parent_id, filter.lstrip().rstrip(), skip, limit)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED, response_model=HrDocumentRead,
@@ -88,6 +90,7 @@ async def initialize(*,
 async def get_draft_documents(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
+    parent_id: uuid.UUID = None,
     filter: str = '',
     skip: int = 0,
     limit: int = 10,
@@ -101,7 +104,7 @@ async def get_draft_documents(*,
     """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
-    return hr_document_service.get_draft_documents(db, user_id, filter, skip, limit)
+    return hr_document_service.get_draft_documents(db, user_id, parent_id, filter, skip, limit)
 
 
 @router.post("/drafts", status_code=status.HTTP_201_CREATED, response_model=HrDocumentRead,
@@ -131,7 +134,7 @@ async def save_to_draft(*,
              summary="Initialize Draft HrDocument")
 async def initialize_draft_document(*,
     db: Session = Depends(get_db),
-    body: DraftHrDocumentInit,
+    body: DraftHrDocumentCreate,
     Authorize: AuthJWT = Depends(),
     id: uuid.UUID
 ):
@@ -141,7 +144,9 @@ async def initialize_draft_document(*,
         The user must have a role that allows them to create HR documents.
 
         - **document_id**: UUID - required.
-        - **document_step_users_ids**: UUID - required and should exist in database. Dictionary of priority to user IDs to be assigned to the HrDocument.
+        - **due_date**: the end date of this document - format (YYYY-MM-DD). This parameter is required.
+        - **properties**: A dictionary containing properties for the HrDocument.
+        - **user_ids**: UUID - required and should exist in database. A list of user IDs to be assigned to the HrDocument.
     """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
@@ -164,6 +169,7 @@ async def update(*,
         - **hr_document_template_id**: UUID - required. HrDocument will be initialized based on HrDocumentTemplate.
         - **due_date**: the end date of this document - format (YYYY-MM-DD). This parameter is required.
         - **properties**: A dictionary containing properties for the HrDocument.
+        - **user_ids**: UUID - required and should exist in database. A list of user IDs to be assigned to the HrDocument.
         - **status**: the status of the HrDocument. This field should accept one of the following statuses:
 
         * Иницилизирован
@@ -173,10 +179,10 @@ async def update(*,
         * На доработке
     """
     Authorize.jwt_required()
-    return hr_document_service.update(
+    return hr_document_service.update_document(
         db=db,
-        db_obj=hr_document_service.get_by_id(db, id),
-        obj_in=body)
+        hr_document=hr_document_service.get_by_id(db, id),
+        hr_document_update=body)
 
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
@@ -278,3 +284,35 @@ async def get_data_by_option(*,
     Authorize.jwt_required()
     res = hr_document_service.get_all_by_option(db, option, data_taken, id, type, skip, limit)
     return res
+
+@router.get('/signee/{id}/', response_model=UserRead)
+async def get_signee(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Get signee
+
+        - **id**: UUID - required.
+    """
+    Authorize.jwt_required()
+    return hr_document_service.get_signee(db, id)
+
+
+@router.post('/initialize/staff_list/{id}/', response_model=HrDocumentRead,
+             summary="Initialize HrDocument from staff list")
+async def initialize_from_staff_list(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Initialize HrDocument from staff list
+
+        - **id**: UUID - required.
+    """
+    Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
+    role = Authorize.get_raw_jwt()['role']
+    return await hr_document_service.initialize_super_document(db, id, user_id, role)

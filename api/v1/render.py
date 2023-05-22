@@ -1,13 +1,15 @@
 import uuid
 
+from pydantic import BaseModel
 from fastapi import APIRouter, Depends, Form
 from fastapi.security import HTTPBearer
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from fastapi_jwt_auth import AuthJWT
-from pydantic import BaseModel
+import pymorphy2
 from core import get_db
 
+from models import LanguageEnum
 from services import render_service
 
 
@@ -49,7 +51,7 @@ async def render_finish_candidate(*,
         - **candidate_id**: UUID - required
     """
     Authorize.jwt_required()
-    return render_service.generate_finish_candidate(db, candidate_id=body.candidate_id, template_id=body.hr_document_template_id)
+    return await render_service.generate_finish_candidate(db=db, candidate_id=body.candidate_id, template_id=body.hr_document_template_id)
 
 
 class HTML(BaseModel):
@@ -81,3 +83,74 @@ async def convert_html_to_pdf(*,
 ):
     Authorize.jwt_required()
     return render_service.convert_html_to_pdf(body.html)
+
+
+@router.get('/inflect')
+async def inflect_word(word: str, septik_int: int, lang: LanguageEnum = LanguageEnum.ru):
+    if lang == LanguageEnum.ru:
+        morph = pymorphy2.MorphAnalyzer()
+        return [i.word for i in morph.parse(word)[0].lexeme][septik_int]
+    if lang == LanguageEnum.kz:
+        return septik(word, septik_int)
+    else:
+        return None
+
+
+def septik(text, septik):
+    text = text.lower()
+    vowels = 'аәеэёоөұүыіуияю'
+    hard = 'аоыұуияюё'
+    soft = 'әеэіөүуи'
+    consonants = 'жзкқлмнңпрстфхцчшщ'
+    deaf = 'кқпстфхцчшщбвгдғ'
+    voiced = 'бвгғджз'
+    sonor = 'рлймнң'
+    last_char = text[-1]
+    last_vowel = next((char for char in reversed(text) if char in vowels), None)
+    last_consonant = next((char for char in reversed(text) if char in consonants), None)
+    last_is_vowel = last_char in vowels
+    if septik == 1:
+        if last_is_vowel:
+            end = 'дАЕн'
+        elif last_consonant in deaf:
+            end = 'тАЕн'
+        elif last_consonant in 'лрйжз':
+            end = 'дАЕн'
+        elif last_consonant in 'мнң':
+            end = 'нАЕн'
+    elif septik == 2:
+        end = 'тАЕ' if last_consonant in deaf else 'дАЕ'
+    elif septik == 3:
+        end = 'гАЕ' if last_consonant in deaf else 'кАЕ'
+    elif septik == 4:
+        if last_char in 'июлруйжз':
+            end = 'дЫІң'
+        elif last_consonant in deaf:
+            end = 'тЫІң'
+        else:
+            end = 'нЫІң'
+    elif septik == 5:
+        if last_char in 'июжзрлймнң':
+            end = 'дЫІ'
+        elif last_consonant in deaf:
+            end = 'тЫІ'
+        else:
+            end = 'нЫІ'
+    elif septik == 6:
+        if last_char in 'жз':
+            end = 'бен'
+        elif last_consonant in deaf:
+            end = 'пен'
+        else:
+            end = 'мен'
+    else:
+        end = ''
+    if 'кАЕ' in end:
+        end = end.replace('кАЕ', 'қа') if last_vowel in hard else end.replace('АЕ', 'е')
+    elif 'гАЕ' in end:
+        end = end.replace('гАЕ', 'ға') if last_vowel in hard else end.replace('АЕ', 'е')
+    elif 'АЕ' in end:
+        end = end.replace('АЕ', 'а') if last_vowel in hard else end.replace('АЕ', 'е')
+    elif 'ЫІ' in end:
+        end = end.replace('ЫІ', 'ы') if last_vowel in hard else end.replace('ЫІ', 'і')
+    return text + end

@@ -19,6 +19,7 @@ router = APIRouter(prefix="/archive_staff_division", tags=["ArchiveStaffDivision
             summary="Get all Staff Divisions")
 async def get_all(*,
     db: Session = Depends(get_db),
+    staff_list_id: uuid.UUID,
     skip: int = 0,
     limit: int = 100,
     Authorize: AuthJWT = Depends()
@@ -30,7 +31,7 @@ async def get_all(*,
        - **limit**: int - The maximum number of staff divisions to return in the response. This parameter is optional and defaults to 100.
    """
     Authorize.jwt_required()
-    return archive_staff_division_service.get_multi(db, skip, limit)
+    return archive_staff_division_service.get_departments(db, staff_list_id, skip, limit)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,

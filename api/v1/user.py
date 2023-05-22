@@ -32,8 +32,7 @@ async def get_all(*,
        - **limit**: int - The maximum number of users to return in response. This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
-    filter.lstrip().rstrip()
-    return user_service.get_all(db, hr_document_template_id, filter, skip, limit)
+    return user_service.get_all(db, hr_document_template_id, filter.lstrip().rstrip(), skip, limit)
 
 @router.get("/archived", dependencies=[Depends(HTTPBearer())], response_model=List[UserRead],
             summary="Get all Users")
@@ -51,8 +50,7 @@ async def get_all_archived(*,
        - **limit**: int - The maximum number of users to return in response. This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
-    filter.lstrip().rstrip()
-    return user_service.get_all_archived(db, filter, skip, limit)
+    return user_service.get_all_archived(db, filter.lstrip().rstrip(), skip, limit)
 
 @router.get("/active", dependencies=[Depends(HTTPBearer())], response_model=List[UserRead],
             summary="Get all Users")
@@ -70,8 +68,7 @@ async def get_all_active(*,
        - **limit**: int - The maximum number of users to return in response. This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
-    filter.lstrip().rstrip()
-    return user_service.get_all_active(db, filter, skip, limit)
+    return user_service.get_all_active(db, filter.lstrip().rstrip(), skip, limit)
 
 @router.get("/jurisdiction", dependencies=[Depends(HTTPBearer())], response_model=List[UserRead],
             summary="Get all Users by Jurisdiction")

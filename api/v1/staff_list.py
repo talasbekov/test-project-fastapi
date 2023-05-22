@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from core import get_db
 from schemas import StaffListCreate, StaffListRead, StaffListUpdate, StaffListUserCreate
-from services import staff_list_service
+from services import staff_list_service, hr_document_service
 
 router = APIRouter(prefix="/staff_list", tags=["StaffList"], dependencies=[Depends(HTTPBearer())])
 
@@ -118,7 +118,7 @@ async def sign(*,
     """
         Sign Staff List
 
-        - **id**: UUID - id of the Staff Division.
+        - **id**: UUID - id of the Staff List.
     """
     Authorize.jwt_required()
-    return staff_list_service.sign(db, str(id))
+    return staff_list_service.sign(db, id)
