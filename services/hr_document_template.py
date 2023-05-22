@@ -170,5 +170,12 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
             raise NotFoundException(detail=f'HrDocumentTemplate with name: {HrDocumentTemplateEnum.STAFF_UNIT.value} is not found!')
         return res
 
+    def get_all(self, db: Session, ids: List[uuid.UUID]):
+        return db.query(self.model).filter(
+            self.model.id.in_(ids),
+            self.model.is_active == True,
+            self.model.is_visible == True,
+            ).all()
+
 
 hr_document_template_service = HrDocumentTemplateService(HrDocumentTemplate)
