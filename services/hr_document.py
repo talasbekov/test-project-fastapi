@@ -175,6 +175,31 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         )
         return self._return_correctly(db, documents, user)
 
+    def get_signed_documents(
+            self, db: Session, user_id: str, parent_id: uuid.UUID, filter: str, skip: int, limit: int
+    ):
+        user = user_service.get_by_id(db, user_id)
+        documents = (
+            db.query(self.model)
+            .join(self.model.hr_document_infos)
+            .filter(
+                HrDocumentInfo.signed_by_id == user_id,
+                self.model.parent_id == parent_id,
+                )
+        )
+
+        if filter != '':
+            documents = self._add_filter_to_query(documents, filter)
+
+        documents = (
+            documents
+            .order_by(self.model.due_date.asc())
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
+        return self._return_correctly(db, documents, user)
+
     def get_draft_documents(self, db: Session, user_id: str, parent_id: uuid.UUID, filter: str, skip: int = 0, limit: int = 100):
         user = user_service.get_by_id(db, user_id)
         status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.DRAFT.value)

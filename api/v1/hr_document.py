@@ -38,6 +38,27 @@ async def get_not_signed(*,
     user_id = Authorize.get_jwt_subject()
     return hr_document_service.get_not_signed_documents(db, user_id, parent_id, filter.lstrip().rstrip(), skip, limit)
 
+@router.get("/signed", response_model=List[HrDocumentRead],
+            summary="Get all not signed HrDocuments")
+async def get_signed(*,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends(),
+    parent_id: uuid.UUID = None,
+    filter: str = '',
+    skip: int = 0,
+    limit: int = 10,
+):
+    """
+        Get all not signed HrDocuments
+
+        - **skip**: int - The number of HrDocuments to skip before returning the results. This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of HrDocuments to return in the response. This parameter is optional and defaults to 10.
+        - **filter**: str - The value which returns filtered results. This parameter is optional and defaults to None
+    """
+    Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
+    return hr_document_service.get_signed_documents(db, user_id, parent_id, filter.lstrip().rstrip(), skip, limit)
+
 
 @router.get("/initialized", response_model=List[HrDocumentRead],
             summary="Get all initialized HrDocuments")
