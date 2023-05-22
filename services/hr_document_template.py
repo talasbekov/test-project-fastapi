@@ -77,7 +77,7 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
             return db.query(HrDocumentTemplate).filter(
                 HrDocumentTemplate.is_active == True,
                 HrDocumentTemplate.name.ilike(f'%{name}%')
-            ).offset(skip).limit(limit).all()
+            ).filter(HrDocumentTemplate.is_visible == True).offset(skip).limit(limit).all()
         return self.get_all_active(db, skip, limit)
 
     def get_all_active(
@@ -86,6 +86,7 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
         return (
             db.query(HrDocumentTemplate)
             .filter(HrDocumentTemplate.is_active == True)
+            .filter(HrDocumentTemplate.is_visible == True)
             .offset(skip)
             .limit(limit)
             .all()
@@ -95,6 +96,7 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
         return (
             db.query(self.model)
             .filter(self.model.is_active == False)
+            .filter(self.model.is_visible == True)
             .offset(skip)
             .limit(limit)
             .all()
@@ -113,6 +115,7 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
                 properties=template.properties,
                 description=template.description,
                 actions=template.actions,
+                is_visible=template.is_visible,
             )
         )
         steps = hr_document_step_service.get_all_by_document_template_id(db, template.id)
