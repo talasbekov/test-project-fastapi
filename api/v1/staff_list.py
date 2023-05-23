@@ -30,6 +30,40 @@ async def get_all(*,
     Authorize.jwt_required()
     return staff_list_service.get_multi(db, skip, limit)
 
+@router.get("/drafts/", dependencies=[Depends(HTTPBearer())],
+            summary="Get Staff List history")
+async def get_history(*,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends(),
+    skip: int = 0,
+    limit: int = 100
+):
+    """
+       Get Staff Lists drafts
+
+       - **skip**: int - The number of staff divisions to skip before returning the results. This parameter is optional and defaults to 0.
+       - **limit**: int - The maximum number of staff divisions to return in the response. This parameter is optional and defaults to 100.
+   """
+    Authorize.jwt_required()
+    return staff_list_service.get_drafts(db, skip, limit)
+
+@router.get("/signed/", dependencies=[Depends(HTTPBearer())],
+            summary="Get Staff List history")
+async def get_history(*,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends(),
+    skip: int = 0,
+    limit: int = 100
+):
+    """
+       Get Staff Lists signed
+
+       - **skip**: int - The number of staff divisions to skip before returning the results. This parameter is optional and defaults to 0.
+       - **limit**: int - The maximum number of staff divisions to return in the response. This parameter is optional and defaults to 100.
+   """
+    Authorize.jwt_required()
+    return staff_list_service.get_signed(db, skip, limit)
+
 
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
@@ -107,18 +141,3 @@ async def delete(*,
     return staff_list_service.remove(db, id)
 
 
-@router.post("/sign/{id}/", status_code=status.HTTP_201_CREATED,
-             dependencies=[Depends(HTTPBearer())], 
-             summary="Sign Staff List")
-async def sign(*,
-               db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
-    """
-        Sign Staff List
-
-        - **id**: UUID - id of the Staff List.
-    """
-    Authorize.jwt_required()
-    return staff_list_service.sign(db, id)

@@ -16,6 +16,7 @@ class HrDocumentInfoBase(Model):
     is_signed: Optional[bool]
     hr_document_id: uuid.UUID
     signed_at: Optional[datetime.datetime]
+    order: Optional[int] = 1
 
     class Config:
         orm_mode = True

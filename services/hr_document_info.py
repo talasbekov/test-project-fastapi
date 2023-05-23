@@ -26,7 +26,7 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
         return hr_document_info
 
     def create_info_for_step(self, db: Session, document_id: str, step_id: str, user_id: str, is_signed: bool,
-                             comment: str, signed_at: datetime):
+                             comment: str, signed_at: datetime, order: int = 1):
 
         document_info = HrDocumentInfoCreate(
             hr_document_id=document_id,
@@ -35,7 +35,8 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
             signed_by=None,
             comment="",
             is_signed=is_signed,
-            signed_at=signed_at
+            signed_at=signed_at,
+            order=order,
         )
 
         return super().create(db, document_info)
@@ -48,7 +49,7 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
             self.model.hr_document_id == document_id,
             self.model.hr_document_step_id == step_id,
             self.model.is_signed == None
-        ).first()
+        ).order_by(self.model.order).first()
 
         if info is None:
             raise NotFoundException(detail=f'Нет истории подписания!')
@@ -85,7 +86,7 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
                 self.model.hr_document_id == id,
                 self.model.signed_by_id != None
             )\
-            .order_by(self.model.created_at.asc(), DocumentStaffFunction.priority.asc())\
+            .order_by(self.model.created_at.asc(), DocumentStaffFunction.priority.asc(), self.model.order)\
             .all()
 
         additional_infos = db.query(self.model)\
@@ -95,7 +96,7 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
                 self.model.hr_document_id == id,
                 self.model.signed_by_id == None
             )\
-            .order_by(DocumentStaffFunction.priority.asc())\
+            .order_by(DocumentStaffFunction.priority.asc(), self.model.order)\
             .all()
 
         infos.extend(additional_infos)
@@ -134,16 +135,6 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
             raise NotFoundException(detail=f'Нет истории подписания!')
 
         return info
-
-    def get_last_signed_by_document_id(self, db: Session, document_id: uuid.UUID) -> HrDocumentInfo:
-        info = (
-            db.query(HrDocumentInfo)
-                .join()
-                .filter(
-                    HrDocumentInfo.hr_document_id == document_id,
-                    
-                )
-        )
 
 
 hr_document_info_service = HrDocumentInfoService(HrDocumentInfo)

@@ -51,3 +51,16 @@ hr_vacancy_hr_vacancy_candidates = Table(
     Column("hr_vacancy_id", ForeignKey("hr_vacancies.id")),
     Column("staff_unit_id", ForeignKey("staff_units.id"))
 )
+family_violation = Table(
+    "family_violations",
+    Base.metadata,
+    Column("family_id", ForeignKey("families.id")),
+    Column("violation_id", ForeignKey("violations.id"))
+)
+
+family_abroad_travel = Table(
+    "family_abroad_travels",
+    Base.metadata,
+    Column("family_id", ForeignKey("families.id")),
+    Column("abroad_travel_id", ForeignKey("abroad_travels.id"))
+)
