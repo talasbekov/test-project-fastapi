@@ -14,6 +14,7 @@ class DocumentStaffFunctionBase(StaffFunctionBase):
     priority: int
     role_id: uuid.UUID
     jurisdiction_id: uuid.UUID
+    is_direct_supervisor: Optional[bool] = None
 
 
 class ServiceStaffFunctionBase(StaffFunctionBase):

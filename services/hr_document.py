@@ -16,6 +16,7 @@ from exceptions import (
     ForbiddenException,
     InvalidOperationException,
     NotFoundException,
+    SgoErpException,
 )
 from models import (
     HrDocument,
@@ -334,6 +335,16 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         )
 
         for step, user_id in zip(all_steps, users):
+            if step.is_direct_supervisor is not None:
+                if not isinstance(user_id, dict):
+                    raise InvalidOperationException(
+                        f"User id must be dict for step {step.id}"
+                    )
+                for i in sorted(user_id.keys()):
+                    hr_document_info_service.create_info_for_step(
+                        db, document.id, step.id, user_id[i], None, None, None
+                    )
+                continue
             hr_document_info_service.create_info_for_step(
                 db, document.id, step.id, user_id, None, None, None
             )
@@ -378,18 +389,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 parent_id=parent_id,
             ),
         )
-        # comm = ""
-
-        # for key in list(template.properties):
-        #     value = template.properties[key]
-
-        #     if value['type'] != "read" and value['data_taken'] != "manual":
-        #         continue
-
-        #     if comm != "":
-        #         comm = ", " + comm + value['alias_name'] + ": " + document.properties[key]
-        #     else:
-        #         comm = comm + value['alias_name'] + ": " + document.properties[key] + ", "
 
         document_info_initiator = hr_document_info_service.create_info_for_step(
             db, document.id, step.id, user_id, True, None, datetime.now()
@@ -428,6 +427,16 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 await self._finish_document(db, document, document.users, user_id)
 
         for step, user_id in zip(all_steps, users):
+            if step.is_direct_supervisor is not None:
+                if not isinstance(user_id, dict):
+                    raise InvalidOperationException(
+                        f"User id must be dict for step {step.id}"
+                    )
+                for i in sorted(user_id.keys()):
+                    hr_document_info_service.create_info_for_step(
+                        db, document.id, step.id, user_id[i], None, None, None
+                    )
+                continue
             hr_document_info_service.create_info_for_step(
                 db, document.id, step.id, user_id, None, None, None
             )
@@ -515,7 +524,10 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         hr_document_info_service.sign(db, info, user_service.get_by_id(db, user_id), body.comment, body.is_signed)
 
-        next_step = hr_document_step_service.get_next_step_from_previous_step(
+        try:
+            next_step = hr_document_info_service.get_by_document_id_and_step_id(db, document_id, info.hr_document_step.id)
+        except SgoErpException as e:
+            next_step = hr_document_step_service.get_next_step_from_previous_step(
                 db, info.hr_document_step
             )
 

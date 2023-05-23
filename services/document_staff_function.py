@@ -59,7 +59,7 @@ class DocumentStaffFunctionService(ServiceBase[DocumentStaffFunction, DocumentSt
 
     def create_function(self, db: Session, body: DocumentStaffFunctionAdd):
 
-        create_function: DocumentStaffFunction = super().create(db, DocumentStaffFunctionCreate(
+        function: DocumentStaffFunction = super().create(db, DocumentStaffFunctionCreate(
             role_id=body.role_id,
             name=body.name,
             jurisdiction_id=body.jurisdiction_id,
@@ -68,15 +68,16 @@ class DocumentStaffFunctionService(ServiceBase[DocumentStaffFunction, DocumentSt
         ))
         new_step = HrDocumentStep(
             hr_document_template_id=body.hr_document_template_id,
-            staff_function_id=create_function.id,
-            created_at=datetime.datetime.now()
+            staff_function_id=function.id,
+            created_at=datetime.datetime.now(),
+            is_direct_supervisor=body.is_direct_supervisor,
         )
 
-        db.add(create_function)
+        db.add(function)
         db.add(new_step)
         db.flush()
-        db.refresh(create_function)
-        return create_function
+        db.refresh(function)
+        return function
 
 
     def create_function_for_constructor(self, db: Session, body: DocumentStaffFunctionConstructorAdd):

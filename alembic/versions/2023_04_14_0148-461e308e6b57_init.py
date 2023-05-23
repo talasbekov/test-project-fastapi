@@ -603,6 +603,7 @@ def upgrade() -> None:
     sa.Column('hr_document_template_id', sa.UUID(), nullable=False),
     sa.Column('staff_function_id', sa.UUID(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('is_direct_supervisor', sa.Boolean(), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['hr_document_template_id'], ['hr_document_templates.id'], onupdate='CASCADE', ondelete='CASCADE'),

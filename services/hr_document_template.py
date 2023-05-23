@@ -2,7 +2,7 @@ import uuid
 
 from sqlalchemy.orm import Session
 from fastapi.encoders import jsonable_encoder
-from typing import List
+from typing import List, Union, Dict
 
 from exceptions import NotFoundException
 from models import (
@@ -12,6 +12,7 @@ from models import (
     User,
     Notification,
     HrDocumentTemplateEnum,
+    StaffDivisionEnum
 )
 from schemas import (
     HrDocumentTemplateCreate,
@@ -28,6 +29,7 @@ from services import (
     document_staff_function_service,
     notification_service,
     staff_unit_service,
+    staff_division_service,
 )
 
 from ws import notification_manager
@@ -54,17 +56,27 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
             raise NotFoundException(detail=f'HrDocumentTemplate with id: {id} is not found!')
         return hr_document_template
 
-    def get_steps_by_document_template_id(self, db: Session, document_template_id: str) -> dict[str, uuid.UUID]:
+    def get_steps_by_document_template_id(self, db: Session, document_template_id: str, user_id: uuid.UUID) -> dict[str, Union[uuid.UUID, Dict[int, uuid.UUID]]]:
 
-        all_steps = db.query(DocumentStaffFunction).filter(
+        user = db.query(User).filter(User.id == user_id).first()
+        if user is None:
+            raise NotFoundException(detail=f'User with id: {user_id} is not found!')
+
+        all_steps = hr_document_step_service.get_all_by_document_template_id(db, document_template_id)
+
+        all_functions = db.query(DocumentStaffFunction).filter(
             HrDocumentStep.hr_document_template_id == document_template_id,
             DocumentStaffFunction.priority != 1
         ).join(HrDocumentStep.staff_function).order_by(DocumentStaffFunction.priority.asc()).all()
 
         steps = {}
-        for function in all_steps:
+        for function, step in zip(all_functions, all_steps):
             function: DocumentStaffFunction
             staff_units_ids = [unit.id for unit in function.staff_units]
+
+            if step.is_direct_supervisor is not None:
+                steps[str(function.priority)] = self.get_all_supervisors(db, step.id, step.is_direct_supervisor, document_template_id, user)
+                continue
 
             user = db.query(User).filter(
                 User.staff_unit_id.in_(staff_units_ids)
@@ -176,6 +188,30 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
             self.model.is_active == True,
             self.model.is_visible == True,
             ).all()
+
+    def get_all_supervisors(self, db: Session, step_id: uuid.UUID, is_direct: bool, template_id: uuid.UUID, user: User):
+        count = 1
+        all_steps = {}
+        if is_direct:
+            if user.staff_unit.staff_division.leader_id != user.staff_unit_id:
+                all_steps[count] = user.staff_unit.staff_division.leader.users[0].id
+            else:
+                staff_division = staff_division_service.get_by_id(db, user.staff_unit.staff_division.parent_group_id)
+                all_steps[count] = staff_division.leader.users[0].id
+            return all_steps
+        staff_division = self.get_by_id(db, user.staff_unit.staff_division_id)
+
+        parent_id = staff_division.parent_group_id
+
+        tmp = self.get_by_id(db, parent_id)
+
+        while tmp.name != StaffDivisionEnum.SERVICE.value:
+            tmp = self.get_by_id(db, parent_id)
+            all_steps[count] = tmp.leader.users[0].id
+            parent_id = tmp.parent_group_id
+            count += 1
+
+        return all_steps
 
 
 hr_document_template_service = HrDocumentTemplateService(HrDocumentTemplate)

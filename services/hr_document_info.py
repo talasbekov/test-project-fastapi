@@ -48,7 +48,7 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
             self.model.hr_document_id == document_id,
             self.model.hr_document_step_id == step_id,
             self.model.is_signed == None
-        ).first()
+        ).order_by(self.model.created_at).first()
 
         if info is None:
             raise NotFoundException(detail=f'Нет истории подписания!')

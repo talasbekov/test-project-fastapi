@@ -1075,10 +1075,20 @@ def upgrade() -> None:
     group12_id = get_uuid()
     group13_id = get_uuid()
     group2_1_id = get_uuid()
+
+    all_service_id = get_uuid()
+
     op.bulk_insert(
         Base.metadata.tables['staff_divisions'],
-        [{
+        [ {
             'parent_group_id': None,
+            'id': all_service_id,
+            'name': "Вся службы",
+            'nameKZ': 'Барлық қызмет',
+            'is_combat_unit': False,
+            'is_visible': True,
+        }, {
+            'parent_group_id': all_service_id,
             'id': group1_id,
             'name': "Департамент 1",
             'nameKZ': "Департамент 1",
@@ -1418,7 +1428,7 @@ def upgrade() -> None:
         "Султанов",
         'Асланович',
         'aset@mail.ru',
-        group3_id,
+        all_service_id,
         user10_id,
         "Альфа 3",
         '3',
@@ -1750,6 +1760,8 @@ def upgrade() -> None:
         staff_unit8_id, group4_id))
     op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(
         staff_unit16_id, group5_id))
+    op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(
+        staff_unit3_id, all_service_id))
 
     op.bulk_insert(
         Base.metadata.tables['staff_unit_functions'],
