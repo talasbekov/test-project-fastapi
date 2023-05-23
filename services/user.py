@@ -326,7 +326,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         initiator_role = document_staff_function_type_service.get_initiator(db)
         user = self.get_by_id(db, user_id)
         document_ids = []
-        for function in user.actual_staff_unit.staff_functions:
+        for function in user.staff_unit.staff_functions:
             function: DocumentStaffFunction
             if function.role_id == initiator_role.id:
                 document_ids.append(function.hr_document_step.hr_document_template_id)
