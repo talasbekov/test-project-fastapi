@@ -328,6 +328,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         document_ids = []
         for function in user.staff_unit.staff_functions:
             function: DocumentStaffFunction
+            print(function.role_id, initiator_role.id)
             if function.role_id == initiator_role.id:
                 document_ids.append(function.hr_document_step.hr_document_template_id)
         return hr_document_template_service.get_all(db, document_ids)

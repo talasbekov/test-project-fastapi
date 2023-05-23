@@ -180,5 +180,10 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
         ).update({self.model.staff_division_id: None})
         db.flush()
 
+    def get_all(self, db: Session, users: list[uuid.UUID]):
+        return db.query(self.model).filter(
+            self.model.users.any(User.id.in_(users))
+        ).all()
+
 
 staff_unit_service = StaffUnitService(StaffUnit)

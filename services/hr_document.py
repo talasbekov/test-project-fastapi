@@ -661,7 +661,21 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         staff_unit: StaffUnit = staff_unit_service.get_by_id(db, role)
 
-        if step.staff_function not in staff_unit.staff_functions:
+        staff_units = staff_unit_service.get_all(db, users)
+
+        if step.is_direct_supervisor is not None:
+            if staff_unit.staff_division.leader_id != staff_unit.id:
+                raise ForbiddenException(
+                    detail='Вы не можете инициализировать этот документ!'
+                )
+            if step.is_direct_supervisor:
+                for i in staff_units:
+                    if i.staff_division_id != staff_unit.staff_division_id:
+                        raise ForbiddenException(
+                            detail='Вы не можете инициализировать этот документ!'
+                        )
+
+        elif step.staff_function not in staff_unit.staff_functions:
             raise ForbiddenException(
                 detail=f"Вы не можете инициализировать этот документ!"
             )
@@ -841,7 +855,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 return super_document
             
             steps = hr_document_step_service.get_all_by_document_template_id(
-                db, super_document.hr_document_template_id
+                db, super_document.hr_document_template_id, False
             )
             
             for step in steps:
