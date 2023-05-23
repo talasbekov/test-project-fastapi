@@ -1,4 +1,4 @@
-from sqlalchemy import (TIMESTAMP, Boolean, Column, ForeignKey)
+from sqlalchemy import (TIMESTAMP, Boolean, Column, ForeignKey, Integer)
 from sqlalchemy.dialects.postgresql import TEXT, UUID
 from sqlalchemy.orm import relationship
 
@@ -19,6 +19,8 @@ class HrDocumentInfo(Model):
     is_signed = Column(Boolean())
 
     signed_at = Column(TIMESTAMP(timezone=True), nullable=True)
+
+    order = Column(Integer, default=1)
 
     hr_document_id = Column(UUID(as_uuid=True), ForeignKey("hr_documents.id"), nullable=False)
 

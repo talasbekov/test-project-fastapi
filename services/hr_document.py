@@ -434,7 +434,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                     )
                 for i in sorted(user_id.keys()):
                     hr_document_info_service.create_info_for_step(
-                        db, document.id, step.id, user_id[i], None, None, None
+                        db, document.id, step.id, user_id[i], None, None, None, i
                     )
                 continue
             hr_document_info_service.create_info_for_step(
@@ -562,7 +562,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 signed_info = hr_document_info_service.get_signed_by_document_id_and_step_id(db, document.id, step.id)
 
                 hr_document_info_service.create_info_for_step(
-                    db, document.id, step.id, signed_info.assigned_to_id, None, None, None
+                    db, document.id, step.id, signed_info.assigned_to_id, None, None, None, signed_info.order
                 )
 
                 if step == info.hr_document_step:
