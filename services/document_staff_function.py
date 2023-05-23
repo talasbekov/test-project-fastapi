@@ -88,11 +88,10 @@ class DocumentStaffFunctionService(ServiceBase[DocumentStaffFunction, DocumentSt
                 detail=f"StaffUnit with id: {body.staff_unit_id} is not found!")
 
         for staff_function in staff_unit.staff_functions:
-            for hr_document_step in staff_function.hr_document_step:
-                if body.hr_document_template_id == hr_document_step.hr_document_template_id:
-                    raise BadRequestException(
-                        detail=f"StaffFunction with template id: {body.hr_document_template_id} already exists!"
-                    )
+            if body.hr_document_template_id == staff_function.hr_document_step.hr_document_template_id:
+                raise BadRequestException(
+                    detail=f"StaffFunction with template id: {body.hr_document_template_id} already exists!"
+                )
 
         staff_unit.staff_functions.append(res)
         db.add(staff_unit)
