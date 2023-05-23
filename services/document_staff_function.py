@@ -72,11 +72,10 @@ class DocumentStaffFunctionService(ServiceBase[DocumentStaffFunction, DocumentSt
             created_at=datetime.datetime.now(),
             is_direct_supervisor=body.is_direct_supervisor,
         )
-
+        
         db.add(function)
         db.add(new_step)
-        db.flush()
-        db.refresh(function)
+        db.flush() 
         return function
 
 
@@ -88,7 +87,7 @@ class DocumentStaffFunctionService(ServiceBase[DocumentStaffFunction, DocumentSt
 
         staff_unit.staff_functions.append(res)
         db.add(staff_unit)
-        db.flush()
+        db.flush() 
         return res
 
     def get_staff_units_by_id(self, db: Session, id: uuid.UUID):

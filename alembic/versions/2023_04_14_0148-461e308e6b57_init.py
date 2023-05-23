@@ -1109,6 +1109,7 @@ def upgrade() -> None:
     sa.Column('is_signed', sa.Boolean(), nullable=True),
     sa.Column('signed_at', sa.TIMESTAMP(timezone=True), nullable=True),
     sa.Column('hr_document_id', sa.UUID(), nullable=False),
+    sa.Column('order', sa.Integer(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
