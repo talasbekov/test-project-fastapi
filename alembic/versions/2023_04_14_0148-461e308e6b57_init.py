@@ -901,7 +901,7 @@ def upgrade() -> None:
     sa.Column('date_to', postgresql.TIMESTAMP(timezone=True), nullable=False),
     sa.Column('reason', sa.String(length=255), nullable=False),
     sa.Column('document_link', sa.String(length=255), nullable=False),
-    sa.Column('profile_id', sa.UUID(), nullable=False),
+    sa.Column('profile_id', sa.UUID(), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['destination_country_id'], ['countries.id'], ),
@@ -1311,6 +1311,18 @@ def upgrade() -> None:
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['profile_id'], ['additional_profiles.id'], ),
     sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('family_violations',
+    sa.Column('family_id', sa.UUID(), nullable=True),
+    sa.Column('violation_id', sa.UUID(), nullable=True),
+    sa.ForeignKeyConstraint(['family_id'], ['families.id'], ),
+    sa.ForeignKeyConstraint(['violation_id'], ['violations.id'], )
+    )
+    op.create_table('family_abroad_travels',
+    sa.Column('family_id', sa.UUID(), nullable=True),
+    sa.Column('abroad_travel_id', sa.UUID(), nullable=True),
+    sa.ForeignKeyConstraint(['family_id'], ['families.id'], ),
+    sa.ForeignKeyConstraint(['abroad_travel_id'], ['abroad_travels.id'], )
     )
     op.create_table('archive_staff_unit_functions',
     sa.Column('staff_unit_id', sa.UUID(), nullable=False),

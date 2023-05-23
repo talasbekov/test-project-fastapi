@@ -16,7 +16,7 @@ class AbroadTravelBase(Model):
     date_to: datetime
     reason: str
     document_link: AnyUrl
-    profile_id: uuid.UUID
+    profile_id: Optional[uuid.UUID]
 
     class Config:
         orm_mode = True

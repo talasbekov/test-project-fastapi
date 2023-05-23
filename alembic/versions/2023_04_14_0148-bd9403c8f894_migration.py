@@ -5454,6 +5454,7 @@ def create_user(id,
     )
 
     violations_id = get_uuid()
+    violations_id1 = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['violations'],
@@ -5466,6 +5467,19 @@ def create_user(id,
             'article_number': "122.12(УК РК)",
             'consequence': "Штраф 40МРП",
             'profile_id': additional_profile_id
+        }]
+    )
+    op.bulk_insert(
+        Base.metadata.tables['violations'],
+        [{
+            'id': violations_id1,
+            'name': "Большое хулиганство",
+            'nameKZ': "Кішігірім тәртіп бұзушылық",
+            'date': "2022-10-12",
+            'issued_by': "Районный суд Сарыаркинского района г.Астана",
+            'article_number': "122.12(УК РК)",
+            'consequence': "Штраф 400МРП",
+            'profile_id': None
         }]
     )
 
@@ -5485,6 +5499,7 @@ def create_user(id,
     )
 
     abroad_travels_id = get_uuid()
+    abroad_travels_id1 = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['abroad_travels'],
@@ -5497,6 +5512,21 @@ def create_user(id,
             'reason': "Служебная командировка",
             'document_link': "http://192.168.0.169:8083/static/example.txt",
             'profile_id': additional_profile_id
+
+        }]
+    )
+
+    op.bulk_insert(
+        Base.metadata.tables['abroad_travels'],
+        [{
+            'id': abroad_travels_id1,
+            'vehicle_type': "Вертолет",
+            'destination_country_id': country_id,
+            'date_from': "2022-05-10",
+            'date_to': "2022-05-11",
+            'reason': "Праздничная командировка",
+            'document_link': "http://192.168.0.169:8083/static/example.txt",
+            'profile_id': None
 
         }]
     )
@@ -5584,7 +5614,20 @@ def create_user(id,
             'profile_id': family_profile_id
         }]
     )
-
+    op.bulk_insert(
+        Base.metadata.tables['family_abroad_travels'],
+        [{
+            'family_id': families_profile_id,
+            'abroad_travel_id': abroad_travels_id1,
+        }]
+    )
+    op.bulk_insert(
+        Base.metadata.tables['family_violations'],
+        [{
+            'family_id': families_profile_id,
+            'violation_id': violations_id1,
+        }]
+    )
 
 def downgrade() -> None:
     pass
