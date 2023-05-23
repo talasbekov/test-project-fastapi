@@ -7,6 +7,11 @@ from sqlalchemy.orm import relationship
 from models import NamedModel, isActiveModel
 
 
+class HrDocumentTemplateEnum(str, enum.Enum):
+    STAFF_LIST = "Приказ об изменении штатного расписания"
+    STAFF_UNIT = "Приказ о назначении на должность (штатное расписание)"
+
+
 class LanguageEnum(str, enum.Enum):
     ru = "ru"
     kz = "kz"

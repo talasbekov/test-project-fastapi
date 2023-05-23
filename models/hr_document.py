@@ -49,4 +49,4 @@ class HrDocument(Model):
     hr_document_infos = relationship("HrDocumentInfo", back_populates="hr_document", cascade="all,delete")
     old_history = relationship("History", foreign_keys=[old_history_id])
 
-    children = relationship("HrDocument")
+    children = relationship("HrDocument", cascade="all,delete")

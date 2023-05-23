@@ -42,6 +42,8 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
 
     def get_by_document_id_and_step_id(self, db: Session, document_id: str, step_id: str) -> HrDocumentInfo:
 
+        print(document_id, step_id)
+
         info = db.query(self.model).filter(
             self.model.hr_document_id == document_id,
             self.model.hr_document_step_id == step_id,

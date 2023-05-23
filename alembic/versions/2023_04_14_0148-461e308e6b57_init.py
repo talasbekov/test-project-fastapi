@@ -820,6 +820,7 @@ def upgrade() -> None:
     sa.Column('percentage', sa.Integer(), nullable=True),
     sa.Column('emergency_rank_id', sa.UUID(), nullable=True),
     sa.Column('contractor_signer_name', sa.String(), nullable=True),
+    sa.Column('contractor_signer_nameKZ', sa.String(), nullable=True),
     sa.Column('staff_division_id', sa.UUID(), nullable=True),
     sa.Column('staff_division_name', sa.String(), nullable=True),
     sa.Column('staff_division_nameKZ', sa.String(), nullable=True),

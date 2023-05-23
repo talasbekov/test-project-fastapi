@@ -6,7 +6,10 @@ from exceptions.client import NotFoundException
 from models import ArchiveStaffUnit, StaffUnit, ArchiveStaffDivision
 from schemas import ArchiveStaffUnitCreate, ArchiveStaffUnitUpdate, ArchiveStaffUnitFunctions, \
     NewArchiveStaffUnitCreate, NewArchiveStaffUnitUpdate
-from services import service_staff_function_service, document_staff_function_service
+from services import (
+    service_staff_function_service,
+    document_staff_function_service,
+)
 
 from services.base import ServiceBase
 
@@ -15,7 +18,7 @@ class ArchiveStaffUnitService(ServiceBase[ArchiveStaffUnit, ArchiveStaffUnitCrea
     def get_by_id(self, db: Session, id: str) -> ArchiveStaffUnit:
         position = super().get(db, id)
         if position is None:
-            raise NotFoundException(detail="StaffUnit is not found!")
+            raise NotFoundException(detail=f"ArchiveStaffUnit with id: {id} is not found!")
         return position
 
     def add_service_staff_function(self, db: Session, body: ArchiveStaffUnitFunctions):
@@ -25,7 +28,6 @@ class ArchiveStaffUnitService(ServiceBase[ArchiveStaffUnit, ArchiveStaffUnitCrea
             staff_function = service_staff_function_service.get_by_id(db, id)
             if staff_function not in staff_unit.staff_functions:
                 staff_unit.staff_functions.append(staff_function)
-
 
         db.add(staff_unit)
         db.flush()
@@ -95,8 +97,18 @@ class ArchiveStaffUnitService(ServiceBase[ArchiveStaffUnit, ArchiveStaffUnitCrea
             staff_division_id=body.staff_division_id,
             user_id=body.user_id,
             actual_user_id=body.actual_user_id,
-            origin_id=None
+            origin_id=staff_unit.origin_id
         ))
+
+    def get_service_staff_functions(self, db: Session, staff_unit_id: uuid.UUID):
+        staff_unit = self.get_by_id(db, staff_unit_id)
+        # filter so that only service staff functions are returned discriminator field is different
+        return [staff_function for staff_function in staff_unit.staff_functions if staff_function.discriminator == "service_staff_function"]
+
+    def get_document_staff_functions(self, db: Session, staff_unit_id: uuid.UUID):
+        staff_unit = self.get_by_id(db, staff_unit_id)
+        # filter so that only document staff functions are returned discriminator field is different
+        return [staff_function for staff_function in staff_unit.staff_functions if staff_function.discriminator == "document_staff_function"]
 
 
 archive_staff_unit_service = ArchiveStaffUnitService(ArchiveStaffUnit)
