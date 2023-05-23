@@ -7,7 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import StaffListCreate, StaffListRead, StaffListUpdate, StaffListUserCreate
+from schemas import StaffListCreate, StaffListRead, StaffListUpdate, StaffListUserCreate, StaffListStatusRead
 from services import staff_list_service, hr_document_service
 
 router = APIRouter(prefix="/staff_list", tags=["StaffList"], dependencies=[Depends(HTTPBearer())])
@@ -31,6 +31,7 @@ async def get_all(*,
     return staff_list_service.get_multi(db, skip, limit)
 
 @router.get("/drafts/", dependencies=[Depends(HTTPBearer())],
+            response_model=List[StaffListStatusRead],
             summary="Get Staff List history")
 async def get_history(*,
     db: Session = Depends(get_db),
@@ -48,6 +49,7 @@ async def get_history(*,
     return staff_list_service.get_drafts(db, skip, limit)
 
 @router.get("/signed/", dependencies=[Depends(HTTPBearer())],
+            response_model=List[StaffListStatusRead],
             summary="Get Staff List history")
 async def get_history(*,
     db: Session = Depends(get_db),
