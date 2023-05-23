@@ -1,5 +1,5 @@
 import uuid
-from typing import List, Dict
+from typing import List, Dict, Union
 
 from fastapi import APIRouter, Depends, status
 from fastapi.security import HTTPBearer
@@ -89,7 +89,6 @@ async def get_by_id(*,
 
 
 @router.get("/steps/{id}", dependencies=[Depends(HTTPBearer())],
-            response_model=Dict[int, str],
             summary="Get HrDocumentTemplate by step id")
 async def get_steps_by_document_template_id(*,
     db: Session = Depends(get_db),
