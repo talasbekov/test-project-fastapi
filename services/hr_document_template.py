@@ -62,6 +62,8 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
         if user is None:
             raise NotFoundException(detail=f'User with id: {user_id} is not found!')
 
+        initial_step = hr_document_step_service.get_initial_step_for_template(db, document_template_id)
+
         all_steps = hr_document_step_service.get_all_by_document_template_id(db, document_template_id)
 
         all_functions = db.query(DocumentStaffFunction).filter(
@@ -69,15 +71,17 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
             DocumentStaffFunction.priority != 1
         ).join(HrDocumentStep.staff_function).order_by(DocumentStaffFunction.priority.asc()).all()
 
+        all_steps.remove(initial_step)
+
         steps = {}
         for function, step in zip(all_functions, all_steps):
             function: DocumentStaffFunction
-            staff_units_ids = [unit.id for unit in function.staff_units]
 
             if step.is_direct_supervisor is not None:
                 steps[str(function.priority)] = self.get_all_supervisors(db, step.id, step.is_direct_supervisor, document_template_id, user)
                 continue
 
+            staff_units_ids = [unit.id for unit in function.staff_units]
             user = db.query(User).filter(
                 User.staff_unit_id.in_(staff_units_ids)
             ).first()
@@ -199,14 +203,16 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
                 staff_division = staff_division_service.get_by_id(db, user.staff_unit.staff_division.parent_group_id)
                 all_steps[count] = staff_division.leader.users[0].id
             return all_steps
-        staff_division = self.get_by_id(db, user.staff_unit.staff_division_id)
+        staff_division = staff_division_service.get_by_id(db, user.staff_unit.staff_division_id)
 
         parent_id = staff_division.parent_group_id
 
-        tmp = self.get_by_id(db, parent_id)
+        service_division = staff_division_service.get_by_name(db, StaffDivisionEnum.SERVICE.value)
 
-        while tmp.name != StaffDivisionEnum.SERVICE.value:
-            tmp = self.get_by_id(db, parent_id)
+        tmp = staff_division_service.get_by_id(db, parent_id)
+
+        while tmp.id != service_division.id:
+            tmp = staff_division_service.get_by_id(db, parent_id)
             all_steps[count] = tmp.leader.users[0].id
             parent_id = tmp.parent_group_id
             count += 1

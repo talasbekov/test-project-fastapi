@@ -161,7 +161,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                     self.model.status_id != revision_status.id,
                     self.model.parent_id == parent_id)
             .join(HrDocumentStep)
-            .filter(HrDocumentStep.staff_function_id.in_(staff_function_ids))
+            .join(HrDocumentInfo, and_(HrDocumentInfo.hr_document_step_id == HrDocumentStep.id, HrDocumentInfo.assigned_to_id == user_id, HrDocumentInfo.signed_by_id == None))
         )
 
         if filter != '':
@@ -479,11 +479,13 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             db, document_id, document.last_step_id
         )
 
-        staff_unit = staff_unit_service.get_by_id(db, role)
+        current_user = user_service.get_by_id(db, user_id)
 
-        if info.hr_document_step.staff_function not in staff_unit.staff_functions:
+        print(info.assigned_to_id, current_user.id)
+
+        if info.assigned_to_id != current_user.id:
             raise ForbiddenException(
-                detail=f"Вы не можете подписать этот документ из-за роли!"
+                detail=f"User {user_id} is not assigned to this step!"
             )
 
         step: HrDocumentStep = hr_document_step_service.get_initial_step_for_template(
@@ -497,10 +499,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         if document.parent_id is None:
             template = hr_document_template_service.get_by_id(db, document.hr_document_template_id)
-
             for i in template.actions['args']:
                 actions = list(i)
-
                 if "superdoc" in actions:
                     superdoc = True
 
@@ -509,23 +509,13 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             for user in document.users:
                 user_ids.append(user.id)
 
-            if not self._check_jurisdiction(db, staff_unit, document_staff_function, user_ids):
-                raise ForbiddenException(
-                    detail=f"Вы не можете инициализировать этот документ из-за юрисдикции!"
-                )
-
-            if not self._check_for_department(db, user, document.users[0]):
-                raise ForbiddenException(
-                    detail=f"Вы не можете подписать документ относящийся не к вашему департаменту!"
-                )
-
         if document_staff_function.role.name == DocumentFunctionTypeEnum.EXPERT.value:
             body.is_signed = True
 
         hr_document_info_service.sign(db, info, user_service.get_by_id(db, user_id), body.comment, body.is_signed)
 
         try:
-            next_step = hr_document_info_service.get_by_document_id_and_step_id(db, document_id, info.hr_document_step.id)
+            next_step = hr_document_info_service.get_by_document_id_and_step_id(db, document_id, info.hr_document_step.id).hr_document_step
         except SgoErpException as e:
             next_step = hr_document_step_service.get_next_step_from_previous_step(
                 db, info.hr_document_step
@@ -553,19 +543,27 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 db.flush()
                 return document
 
-            steps = hr_document_step_service.get_all_by_document_template_id(
+            steps = hr_document_step_service.get_all_by_document_template_id_without_notifiers(
                 db, document.hr_document_template_id
             )
 
+            print(len(steps))
+
             for step in steps:
+                had_step = False
+                count = 1
+                while True:
+                    try:
+                        signed_info = hr_document_info_service.get_signed_by_document_id_and_step_id(db, document.id, step.id, count)
+                        had_step = True
+                        hr_document_info_service.create_info_for_step(
+                            db, document.id, step.id, signed_info.assigned_to_id, None, None, None, signed_info.order
+                        )
 
-                signed_info = hr_document_info_service.get_signed_by_document_id_and_step_id(db, document.id, step.id)
-
-                hr_document_info_service.create_info_for_step(
-                    db, document.id, step.id, signed_info.assigned_to_id, None, None, None, signed_info.order
-                )
-
-                if step == info.hr_document_step:
+                        count += 1
+                    except SgoErpException:
+                        break
+                if not had_step:
                     break
 
             document.last_step = steps[0]
