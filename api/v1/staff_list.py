@@ -127,7 +127,7 @@ async def sign(*,
 
 @router.post("/duplicate/{id}/", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
-             summary="Sign Staff List")
+             summary="Duplicate Staff List")
 async def duplicate(*,
                     db: Session = Depends(get_db),
                     id: uuid.UUID,
@@ -140,5 +140,4 @@ async def duplicate(*,
         - **id**: UUID - id of the Staff List.
     """
     Authorize.jwt_required()
-    user_id = Authorize.get_jwt_subject()
-    return staff_list_service.duplicate(db, id, user_id, body)
+    return staff_list_service.duplicate(db, staff_list_id=id, user_id=Authorize.get_jwt_subject(), obj_in=body)
