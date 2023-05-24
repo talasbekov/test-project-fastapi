@@ -1083,7 +1083,7 @@ def upgrade() -> None:
         [ {
             'parent_group_id': None,
             'id': all_service_id,
-            'name': "Вся службы",
+            'name': "Вся служба",
             'nameKZ': 'Барлық қызмет',
             'is_combat_unit': False,
             'is_visible': True,
@@ -1939,14 +1939,14 @@ def upgrade() -> None:
             ]},
             'id': template1_id
         }, {
-            'name': 'Приказ о присвоения звания',
-            'nameKZ': 'Атақ беру бұйрығы',
+            'name': 'Приказ о повышении звания',
+            'nameKZ': 'Атағын көтеру туралы бұйрық',
             'path': None,
             'pathKZ': 'http://192.168.0.169:8083/static/Приказ_о_присвоении_звания_повышение.html',
             'subject_type': "EMPLOYEE",
             'maintainer_id': staff_unit4_id,
             'is_visible': True,
-            'description': "Приказ о присвоении звания - это официальный документ, который используется для уведомления сотрудников о присвоении им нового звания в организации. Он может быть выдан руководителем организации, отдела или менеджером по персоналу.",
+            'description': "Приказ о повышении звания - это официальный документ, который используется для уведомления сотрудников о присвоении им нового звания в организации. Он может быть выдан руководителем организации, отдела или менеджером по персоналу.",
             'properties': {
                 "signed_at": {
                     "alias_name": "Дата подписания",
@@ -4848,6 +4848,76 @@ def upgrade() -> None:
     #         'is_waits': True
     #     }]
     # )
+    
+    hr_vacancy_id = get_uuid()
+    hr_vacancy2_id = get_uuid()
+    
+    op.bulk_insert(
+        Base.metadata.tables['hr_vacancies'],
+        [{
+            'id': hr_vacancy_id,
+            'position_id': position9_id,
+            'is_active': True,
+            'staff_division_id': group1_id 
+        }, {
+            'id': hr_vacancy2_id,
+            'position_id': position6_id,
+            'is_active': True,
+            'staff_division_id': group2_id
+        }]
+    )
+    
+    hr_vacancy_requirement_id = get_uuid()
+    hr_vacancy_requirement2_id = get_uuid()
+    hr_vacancy_requirement3_id = get_uuid()
+    hr_vacancy_requirement4_id = get_uuid()
+    hr_vacancy_requirement5_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['hr_vacancies_requirements'],
+        [{
+            'id': hr_vacancy_requirement_id,
+            'name': "Пригодность по состоянию здоровья",
+            'nameKZ': "Денсаулық жағдайы бойынша жарамдылық"
+        }, {
+            'id': hr_vacancy_requirement2_id,
+            'name': "10 лет стажа работы",
+            'nameKZ': "10 жыл жұмыс тәжірибесі"
+        },{
+            'id': hr_vacancy_requirement3_id,
+            'name': "Высшее образование",
+            'nameKZ': "Жоғары білім"
+        },{
+            'id': hr_vacancy_requirement4_id,
+            'name': "Коммуникационные навыки",
+            'nameKZ': "Қарым-қатынас дағдылары"
+        },{
+            'id': hr_vacancy_requirement5_id,
+            'name': "Знание законодательства и правил",
+            'nameKZ': "Заң мен ережелерді білу"
+        }]
+    )
+    
+    op.bulk_insert(
+        Base.metadata.tables['hr_vacancy_hr_vacancy_requirements'],
+        [{
+            'vacancy_id': hr_vacancy_id,
+            'requirement_id': hr_vacancy_requirement_id
+        },{
+            'vacancy_id': hr_vacancy_id,
+            'requirement_id': hr_vacancy_requirement2_id
+        },{
+            'vacancy_id': hr_vacancy_id,
+            'requirement_id': hr_vacancy_requirement3_id
+        },{
+            'vacancy_id': hr_vacancy2_id,
+            'requirement_id': hr_vacancy_requirement4_id
+        },{
+            'vacancy_id': hr_vacancy2_id,
+            'requirement_id': hr_vacancy_requirement5_id
+        }]
+    )
+
 
 
 def create_user(id,

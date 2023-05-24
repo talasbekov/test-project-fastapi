@@ -3,7 +3,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from models import isActiveModel
-from .association import staff_unit_function, staff_unit_candidate_stage_infos
+from .association import staff_unit_function, staff_unit_candidate_stage_infos, hr_vacancy_hr_vacancy_candidates
 
 
 class StaffUnit(isActiveModel):
@@ -35,4 +35,9 @@ class StaffUnit(isActiveModel):
         secondary=staff_unit_candidate_stage_infos,
         back_populates="staff_unit_coordinate_ids",
         cascade="all,delete",
+    )
+    hr_vacancies = relationship(
+        "HrVacancy",
+        secondary=hr_vacancy_hr_vacancy_candidates,
+        back_populates="hr_vacancy_candidates",
     )

@@ -57,12 +57,14 @@ class DraftHrDocumentInit(Model):
             elif key == 1:
                 raise ValueError(f"Don't add initiator")
             else:
+                if isinstance(value, dict):
+                    continue
                 value_to_uuid = uuid.UUID(value)
                 if not isinstance(value_to_uuid, uuid.UUID):
                     raise ValueError(f'document_step_users_ids should be uuid.UUID')
         
         sorted(v, key=lambda x: keys.index(x))
-        
+
         return v
 
 
