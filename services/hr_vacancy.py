@@ -15,11 +15,11 @@ from .staff_division import staff_division_service
 
 class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate]):
     
-    def get_multi(self, db: Session, skip: int = 0, limit: int = 100) -> List[HrVacancy]:
+    def get_multi(self, db: Session) -> List[HrVacancy]:
         
         vacancies = db.query(self.model).filter(
             self.model.is_active == True
-        ).offset(skip).limit(limit).all()
+        ).all()
         
         return vacancies
     
