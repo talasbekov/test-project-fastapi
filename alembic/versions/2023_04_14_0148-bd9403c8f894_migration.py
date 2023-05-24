@@ -5027,6 +5027,13 @@ def upgrade() -> None:
     
     hr_vacancy_id = get_uuid()
     hr_vacancy2_id = get_uuid()
+    hr_vacancy3_id = get_uuid()
+    hr_vacancy4_id = get_uuid()
+    hr_vacancy6_id = get_uuid()
+    hr_vacancy7_id = get_uuid()
+    hr_vacancy8_id = get_uuid()
+    hr_vacancy9_id = get_uuid()
+    hr_vacancy10_id = get_uuid()
     
     op.bulk_insert(
         Base.metadata.tables['hr_vacancies'],
@@ -5036,6 +5043,27 @@ def upgrade() -> None:
         }, {
             'id': hr_vacancy2_id,
             'staff_unit_id': staff_unit22_id
+        }, {
+            'id': hr_vacancy3_id,
+            'staff_unit_id': staff_unit1_id
+        }, {
+            'id': hr_vacancy4_id,
+            'staff_unit_id': staff_unit2_id
+        }, {
+            'id': hr_vacancy6_id,
+            'staff_unit_id': staff_unit4_id
+        }, {
+            'id': hr_vacancy7_id,
+            'staff_unit_id': staff_unit5_id
+        }, {
+            'id': hr_vacancy8_id,
+            'staff_unit_id': staff_unit6_id
+        }, {
+            'id': hr_vacancy9_id,
+            'staff_unit_id': staff_unit7_id
+        }, {
+            'id': hr_vacancy10_id,
+            'staff_unit_id': staff_unit29_id
         }]
     )
     
@@ -5086,6 +5114,45 @@ def upgrade() -> None:
             'hr_vacancy_requirement_id': hr_vacancy_requirement4_id
         },{
             'hr_vacancy_id': hr_vacancy2_id,
+            'hr_vacancy_requirement_id': hr_vacancy_requirement5_id
+        }, {
+            'hr_vacancy_id': hr_vacancy3_id,
+            'hr_vacancy_requirement_id': hr_vacancy_requirement_id
+        },{
+            'hr_vacancy_id': hr_vacancy3_id,
+            'hr_vacancy_requirement_id': hr_vacancy_requirement2_id
+        },{
+            'hr_vacancy_id': hr_vacancy4_id,
+            'hr_vacancy_requirement_id': hr_vacancy_requirement3_id
+        },{
+            'hr_vacancy_id': hr_vacancy4_id,
+            'hr_vacancy_requirement_id': hr_vacancy_requirement4_id
+        }, {
+            'hr_vacancy_id': hr_vacancy6_id,
+            'hr_vacancy_requirement_id': hr_vacancy_requirement2_id
+        },{
+            'hr_vacancy_id': hr_vacancy6_id,
+            'hr_vacancy_requirement_id': hr_vacancy_requirement3_id
+        },{
+            'hr_vacancy_id': hr_vacancy7_id,
+            'hr_vacancy_requirement_id': hr_vacancy_requirement4_id
+        },{
+            'hr_vacancy_id': hr_vacancy7_id,
+            'hr_vacancy_requirement_id': hr_vacancy_requirement5_id
+        }, {
+            'hr_vacancy_id': hr_vacancy8_id,
+            'hr_vacancy_requirement_id': hr_vacancy_requirement_id
+        },{
+            'hr_vacancy_id': hr_vacancy8_id,
+            'hr_vacancy_requirement_id': hr_vacancy_requirement2_id
+        },{
+            'hr_vacancy_id': hr_vacancy9_id,
+            'hr_vacancy_requirement_id': hr_vacancy_requirement3_id
+        },{
+            'hr_vacancy_id': hr_vacancy9_id,
+            'hr_vacancy_requirement_id': hr_vacancy_requirement4_id
+        },{
+            'hr_vacancy_id': hr_vacancy10_id,
             'hr_vacancy_requirement_id': hr_vacancy_requirement5_id
         }]
     )
