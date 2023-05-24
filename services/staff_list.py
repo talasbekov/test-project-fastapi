@@ -65,6 +65,7 @@ class StaffListService(ServiceBase[StaffList,StaffListCreate,StaffListUpdate]):
         )
         staff_list = super().create(db, create_staff_list)
         staff_divisions = staff_division_service.get_departments(db, 0, 100)
+        print(len(staff_divisions))
         for staff_division in staff_divisions:
             self._create_archive_staff_division(db, staff_division, staff_list.id, None)
 
