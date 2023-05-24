@@ -1328,8 +1328,8 @@ def upgrade() -> None:
     op.create_table('archive_staff_unit_functions',
     sa.Column('staff_unit_id', sa.UUID(), nullable=False),
     sa.Column('staff_function_id', sa.UUID(), nullable=False),
-    sa.ForeignKeyConstraint(['staff_function_id'], ['archive_staff_functions.id'], onupdate='CASCADE', ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['staff_unit_id'], ['archive_staff_units.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['staff_function_id'], ['archive_staff_functions.id']),
+    sa.ForeignKeyConstraint(['staff_unit_id'], ['archive_staff_units.id']),
     sa.PrimaryKeyConstraint('staff_unit_id', 'staff_function_id')
     )
     op.create_table('user_liberations_liberations',

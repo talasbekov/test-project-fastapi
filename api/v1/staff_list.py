@@ -140,6 +140,4 @@ async def delete(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return staff_list_service.remove(db, id)
-
-
+    staff_list_service.remove(db, id)

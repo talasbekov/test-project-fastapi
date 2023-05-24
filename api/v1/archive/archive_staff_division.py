@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from core import get_db
 from schemas import (ArchiveStaffDivisionRead, ArchiveStaffDivisionUpdateParentGroup, NewArchiveStaffDivisionCreate,
                      NewArchiveStaffDivisionUpdate)
-from services import archive_staff_division_service
+from services import archive_staff_division_service, staff_list_service
 
 router = APIRouter(prefix="/archive_staff_division", tags=["ArchiveStaffDivision"], dependencies=[Depends(HTTPBearer())])
 
@@ -31,6 +31,7 @@ async def get_all(*,
        - **limit**: int - The maximum number of staff divisions to return in the response. This parameter is optional and defaults to 100.
    """
     Authorize.jwt_required()
+    staff_list_service.get_by_id(db, staff_list_id)
     return archive_staff_division_service.get_departments(db, staff_list_id, skip, limit)
 
 

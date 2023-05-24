@@ -13,5 +13,5 @@ class StaffList(NamedModel):
     is_signed: bool = Column(Boolean, nullable=False, default=False)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
     
-    archive_staff_divisions = relationship("ArchiveStaffDivision", back_populates="staff_list")
+    archive_staff_divisions = relationship("ArchiveStaffDivision", back_populates="staff_list", cascade="all, delete")
     user = relationship("User", back_populates="staff_list", uselist=False)
