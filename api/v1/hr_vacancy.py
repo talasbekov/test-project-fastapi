@@ -18,18 +18,13 @@ router = APIRouter(prefix="/hr_vacancies", tags=["HrVacancies"], dependencies=[D
             summary="Get all HrVacancies")
 async def get_all(*,
     db: Session = Depends(get_db),
-    skip: int = 0,
-    limit: int = 100,
     Authorize: AuthJWT = Depends()
 ):
     """
         Get all HrVacancies
-
-       - **skip**: int - The number of HrVacancies to skip before returning the results. This parameter is optional and defaults to 0.
-       - **limit**: int - The maximum number of HrVacancies to return in the response. This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    return hr_vacancy_service.get_multi(db, skip, limit)
+    return hr_vacancy_service.get_multi(db)
 
 
 @router.get("/not_active", dependencies=[Depends(HTTPBearer())],
@@ -60,10 +55,9 @@ async def get_all_candidates(*,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Get all HrVacancies
-
-       - **skip**: int - The number of HrVacancies to skip before returning the results. This parameter is optional and defaults to 0.
-       - **limit**: int - The maximum number of HrVacancies to return in the response. This parameter is optional and defaults to 100.
+        Get all Candidates of HrVacancy
+        
+       - **id**: uuid - the id of HrVacancy.
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
@@ -79,10 +73,9 @@ async def respond(*,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Get all HrVacancies
+        Respond to the Hrvacancy
 
-       - **skip**: int - The number of HrVacancies to skip before returning the results. This parameter is optional and defaults to 0.
-       - **limit**: int - The maximum number of HrVacancies to return in the response. This parameter is optional and defaults to 100.
+       - **id**: uuid - the id of HrVacancy.
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
@@ -92,12 +85,19 @@ async def respond(*,
 @router.post("", status_code=status.HTTP_201_CREATED,
             dependencies=[Depends(HTTPBearer())],
             response_model=HrVacancyRead,
-            summary="Create HrVacancies")
+            summary="Create HrVacancy")
 async def create(*,
     body: HrVacancyCreate,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends()
 ):
+    """
+        Create HrVacancy
+        
+        - **position_id**: uuid - required
+        - **staff_division_id**: uuid - required
+        - **hr_vacancy_requirements_ids**: List of uuid - optional
+    """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
     return hr_vacancy_service.create(db, body, role)
@@ -111,6 +111,11 @@ async def unactive(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends()
 ):
+    """
+        Unactive HrVacancy
+        
+        - **id**: uuid - required
+    """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
     return hr_vacancy_service.unactive(db, id, role)
