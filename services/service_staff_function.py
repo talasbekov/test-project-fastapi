@@ -3,7 +3,7 @@ import uuid
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
-from models import ServiceStaffFunction, User
+from models import ServiceStaffFunction, User, StaffUnit
 from schemas import ServiceStaffFunctionCreate, ServiceStaffFunctionUpdate
 from .base import ServiceBase
 
@@ -15,6 +15,9 @@ class ServiceStaffFunctionService(ServiceBase[ServiceStaffFunction, ServiceStaff
         if service_staff_function is None:
             raise NotFoundException(detail=f"ServiceStaffFunction with id: {id} is not found!")
         return service_staff_function
+
+    def get_by_staff_unit(self, db: Session, staff_unit: StaffUnit):
+        return db.query(self.model).filter(self.model.staff_units.contains(staff_unit)).all()
 
     def get_by_user(self, db: Session, user: User):
         l = []
