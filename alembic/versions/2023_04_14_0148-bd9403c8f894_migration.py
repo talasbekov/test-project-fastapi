@@ -3343,6 +3343,7 @@ def upgrade() -> None:
     status_type6 = get_uuid()
     status_type7 = get_uuid()
     status_type8 = get_uuid()
+    status_type9 = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['status_types'],
@@ -3385,6 +3386,10 @@ def upgrade() -> None:
             'id': status_type8,
             'name': "Погиб",
             'nameKZ': 'Қайтыс болды'
+        }, {
+            'id': status_type9,
+            'name': "В отпуске по беременности и родам",
+            'nameKZ': 'Жүктілік және босану демалысында'
         }
         ]
     )
