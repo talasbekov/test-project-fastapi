@@ -10,6 +10,7 @@ from .base import ServiceBase
 from .hr_vacancy_requirements import hr_vacancy_requirement_service
 from .position import position_service
 from .staff_unit import staff_unit_service
+from .user import user_service
 from .staff_division import staff_division_service
 
 
@@ -80,13 +81,14 @@ class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate])
         return vacancy.hr_vacancy_candidates
     
     
-    def respond_to_vacancy(self, db: Session, id: str, role_id: str):
+    def respond_to_vacancy(self, db: Session, id: str, user_id: str):
         
-        current_user_staff_unit = staff_unit_service.get_by_id(db, role_id)
+        current_user = user_service.get_by_id(db, user_id)
         
         vacancy = self.get_by_id(db, id)
         
-        vacancy.hr_vacancy_candidates.append(current_user_staff_unit)
+        if current_user not in vacancy.hr_vacancy_candidates:
+            vacancy.hr_vacancy_candidates.append(current_user)
         
         return vacancy
 

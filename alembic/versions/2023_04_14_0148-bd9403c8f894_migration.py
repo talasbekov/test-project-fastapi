@@ -5032,14 +5032,10 @@ def upgrade() -> None:
         Base.metadata.tables['hr_vacancies'],
         [{
             'id': hr_vacancy_id,
-            'position_id': position9_id,
-            'is_active': True,
-            'staff_division_id': group1_id 
+            'staff_unit_id': staff_unit21_id
         }, {
             'id': hr_vacancy2_id,
-            'position_id': position6_id,
-            'is_active': True,
-            'staff_division_id': group2_id
+            'staff_unit_id': staff_unit22_id
         }]
     )
     
@@ -5077,20 +5073,20 @@ def upgrade() -> None:
     op.bulk_insert(
         Base.metadata.tables['hr_vacancy_hr_vacancy_requirements'],
         [{
-            'vacancy_id': hr_vacancy_id,
-            'requirement_id': hr_vacancy_requirement_id
+            'hr_vacancy_id': hr_vacancy_id,
+            'hr_vacancy_requirement_id': hr_vacancy_requirement_id
         },{
-            'vacancy_id': hr_vacancy_id,
-            'requirement_id': hr_vacancy_requirement2_id
+            'hr_vacancy_id': hr_vacancy_id,
+            'hr_vacancy_requirement_id': hr_vacancy_requirement2_id
         },{
-            'vacancy_id': hr_vacancy_id,
-            'requirement_id': hr_vacancy_requirement3_id
+            'hr_vacancy_id': hr_vacancy_id,
+            'hr_vacancy_requirement_id': hr_vacancy_requirement3_id
         },{
-            'vacancy_id': hr_vacancy2_id,
-            'requirement_id': hr_vacancy_requirement4_id
+            'hr_vacancy_id': hr_vacancy2_id,
+            'hr_vacancy_requirement_id': hr_vacancy_requirement4_id
         },{
-            'vacancy_id': hr_vacancy2_id,
-            'requirement_id': hr_vacancy_requirement5_id
+            'hr_vacancy_id': hr_vacancy2_id,
+            'hr_vacancy_requirement_id': hr_vacancy_requirement5_id
         }]
     )
 

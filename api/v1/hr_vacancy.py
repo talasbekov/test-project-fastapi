@@ -78,8 +78,8 @@ async def respond(*,
        - **id**: uuid - the id of HrVacancy.
     """
     Authorize.jwt_required()
-    role = Authorize.get_raw_jwt()['role']
-    return hr_vacancy_service.respond_to_vacancy(db, id, role)
+    user_id = Authorize.get_jwt_subject()
+    return hr_vacancy_service.respond_to_vacancy(db, id, user_id)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,

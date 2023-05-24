@@ -36,8 +36,8 @@ class StaffUnit(isActiveModel):
         back_populates="staff_unit_coordinate_ids",
         cascade="all,delete",
     )
-    hr_vacancies = relationship(
+    hr_vacancy = relationship(
         "HrVacancy",
-        secondary=hr_vacancy_hr_vacancy_candidates,
-        back_populates="hr_vacancy_candidates",
+        back_populates="staff_unit",
+        cascade="all,delete"
     )
