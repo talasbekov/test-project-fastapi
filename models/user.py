@@ -3,7 +3,7 @@ from sqlalchemy.dialects.postgresql import TEXT, UUID
 from sqlalchemy.orm import relationship
 
 from models import Model, History
-from .association import hr_documents_users
+from .association import hr_documents_users, hr_vacancy_hr_vacancy_candidates
 
 
 class User(Model):
@@ -47,6 +47,11 @@ class User(Model):
         secondary=hr_documents_users,
         back_populates="users",
         cascade="all,delete"
+    )
+    hr_vacancies = relationship(
+        "HrVacancy",
+        secondary=hr_vacancy_hr_vacancy_candidates,
+        back_populates="hr_vacancy_candidates"
     )
 
     staff_list = relationship("StaffList", back_populates="user", cascade="all,delete")

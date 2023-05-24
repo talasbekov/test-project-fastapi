@@ -41,15 +41,15 @@ staff_unit_candidate_stage_infos = Table(
 hr_vacancy_hr_vacancy_requirements = Table(
     "hr_vacancy_hr_vacancy_requirements",
     Base.metadata,
-    Column("vacancy_id", ForeignKey("hr_vacancies.id")),
-    Column("requirement_id", ForeignKey("hr_vacancies_requirements.id"))
+    Column("hr_vacancy_id", ForeignKey("hr_vacancies.id")),
+    Column("hr_vacancy_requirement_id", ForeignKey("hr_vacancies_requirements.id"))
 )
 
 hr_vacancy_hr_vacancy_candidates = Table(
-    "hr_vacancy_candidates",
+    "hr_vacancy_hr_vacancy_candidates",
     Base.metadata,
     Column("hr_vacancy_id", ForeignKey("hr_vacancies.id")),
-    Column("staff_unit_id", ForeignKey("staff_units.id"))
+    Column("user_id", ForeignKey("users.id"))
 )
 family_violation = Table(
     "family_violations",
