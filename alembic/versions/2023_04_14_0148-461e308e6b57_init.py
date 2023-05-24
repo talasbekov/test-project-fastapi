@@ -1338,6 +1338,37 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['liberation_id'], ['liberations.id'], ),
     sa.ForeignKeyConstraint(['user_liberation_id'], ['user_liberations.id'], )
     )
+    op.create_table('hr_vacancies_requirements',
+    sa.Column('name', sa.String(), nullable=False),
+    sa.Column('nameKZ', sa.String(), nullable=True),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('hr_vacancies',
+    sa.Column('position_id', sa.UUID(), nullable=False),
+    sa.Column('is_active', sa.Boolean(), nullable=False),
+    sa.Column('staff_division_id', sa.UUID(), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['position_id'], ['positions.id'], ),
+    sa.ForeignKeyConstraint(['staff_division_id'], ['staff_divisions.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('hr_vacancy_hr_vacancy_requirements',
+    sa.Column('vacancy_id', sa.UUID(), nullable=True),
+    sa.Column('requirement_id', sa.UUID(), nullable=True),
+    sa.ForeignKeyConstraint(['requirement_id'], ['hr_vacancies_requirements.id'], ),
+    sa.ForeignKeyConstraint(['vacancy_id'], ['hr_vacancies.id'], )
+    )
+    op.create_table('hr_vacancy_candidates',
+    sa.Column('hr_vacancy_id', sa.UUID(), nullable=True),
+    sa.Column('staff_unit_id', sa.UUID(), nullable=True),
+    sa.ForeignKeyConstraint(['hr_vacancy_id'], ['hr_vacancies.id'], ),
+    sa.ForeignKeyConstraint(['staff_unit_id'], ['staff_units.id'], )
+    )
     # ### end Alembic commands ###
 
 
@@ -1451,4 +1482,8 @@ def downgrade() -> None:
     op.drop_table('badge_types')
     op.drop_table('academic_title_degrees')
     op.drop_table('academic_degree_degrees')
+    op.drop_table('hr_vacancy_hr_vacancy_requirements')
+    op.drop_table('hr_vacancies')
+    op.drop_table('hr_vacancies_requirements')
+    op.drop_table('hr_vacancy_candidates')
     # ### end Alembic commands ###

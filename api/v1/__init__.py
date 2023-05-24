@@ -40,6 +40,8 @@ from .military_unit import router as military_unit_router
 from .recommender_user import router as recommender_user_router
 from .notification import router as notification_router
 from .action import router as action_router
+from .hr_vacancy import router as hr_vacancy_router
+from .hr_vacancy_requirement import router as hr_vacancy_requirement_router
 
 router = APIRouter(prefix="/v1")
 
@@ -99,3 +101,5 @@ router.include_router(history_name_change_router)
 router.include_router(user_oauth_router)
 router.include_router(military_unit_router)
 router.include_router(recommender_user_router)
+router.include_router(hr_vacancy_router)
+router.include_router(hr_vacancy_requirement_router)

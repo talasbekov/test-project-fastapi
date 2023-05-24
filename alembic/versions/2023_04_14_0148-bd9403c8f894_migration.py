@@ -4848,6 +4848,76 @@ def upgrade() -> None:
     #         'is_waits': True
     #     }]
     # )
+    
+    hr_vacancy_id = get_uuid()
+    hr_vacancy2_id = get_uuid()
+    
+    op.bulk_insert(
+        Base.metadata.tables['hr_vacancies'],
+        [{
+            'id': hr_vacancy_id,
+            'position_id': position9_id,
+            'is_active': True,
+            'staff_division_id': group1_id 
+        }, {
+            'id': hr_vacancy2_id,
+            'position_id': position6_id,
+            'is_active': True,
+            'staff_division_id': group2_id
+        }]
+    )
+    
+    hr_vacancy_requirement_id = get_uuid()
+    hr_vacancy_requirement2_id = get_uuid()
+    hr_vacancy_requirement3_id = get_uuid()
+    hr_vacancy_requirement4_id = get_uuid()
+    hr_vacancy_requirement5_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['hr_vacancies_requirements'],
+        [{
+            'id': hr_vacancy_requirement_id,
+            'name': "Пригодность по состоянию здоровья",
+            'nameKZ': "Денсаулық жағдайы бойынша жарамдылық"
+        }, {
+            'id': hr_vacancy_requirement2_id,
+            'name': "10 лет стажа работы",
+            'nameKZ': "10 жыл жұмыс тәжірибесі"
+        },{
+            'id': hr_vacancy_requirement3_id,
+            'name': "Высшее образование",
+            'nameKZ': "Жоғары білім"
+        },{
+            'id': hr_vacancy_requirement4_id,
+            'name': "Коммуникационные навыки",
+            'nameKZ': "Қарым-қатынас дағдылары"
+        },{
+            'id': hr_vacancy_requirement5_id,
+            'name': "Знание законодательства и правил",
+            'nameKZ': "Заң мен ережелерді білу"
+        }]
+    )
+    
+    op.bulk_insert(
+        Base.metadata.tables['hr_vacancy_hr_vacancy_requirements'],
+        [{
+            'vacancy_id': hr_vacancy_id,
+            'requirement_id': hr_vacancy_requirement_id
+        },{
+            'vacancy_id': hr_vacancy_id,
+            'requirement_id': hr_vacancy_requirement2_id
+        },{
+            'vacancy_id': hr_vacancy_id,
+            'requirement_id': hr_vacancy_requirement3_id
+        },{
+            'vacancy_id': hr_vacancy2_id,
+            'requirement_id': hr_vacancy_requirement4_id
+        },{
+            'vacancy_id': hr_vacancy2_id,
+            'requirement_id': hr_vacancy_requirement5_id
+        }]
+    )
+
 
 
 def create_user(id,
