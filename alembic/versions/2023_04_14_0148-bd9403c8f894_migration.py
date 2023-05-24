@@ -176,6 +176,30 @@ options = {
     'batyrbek@mail.ru': {
         'first_name': 'Батырбек',
         'father_name': 'Бакыткерей'
+    },
+    'kassymkhan@mail.ru': {
+        'first_name': 'Касымхан',
+        'father_name': 'Тлеуов'
+    },
+    'farkhat@mail.ru': {
+        'first_name': 'Фархат',
+        'father_name': 'Максатов'
+    },
+    'yerkebulan@mail.ru': {
+        'first_name': 'Еркебулан',
+        'father_name': 'Ескендиров'
+    },
+    'beibarys@mail.ru': {
+        'first_name': 'Бейбарыс',
+        'father_name': 'Телжанов'
+    },
+    'baltabay@mail.ru': {
+        'first_name': 'Балтабай',
+        'father_name': 'Баржаксы'
+    },
+    'askar@mail.ru': {
+        'first_name': 'Аскар',
+        'father_name': 'Абдурахманов'
     }
 }
 
@@ -1074,6 +1098,9 @@ def upgrade() -> None:
     group11_id = get_uuid()
     group12_id = get_uuid()
     group13_id = get_uuid()
+    group14_id = get_uuid()
+    group15_id = get_uuid()
+    group16_id = get_uuid()
     group2_1_id = get_uuid()
 
     all_service_id = get_uuid()
@@ -1171,21 +1198,43 @@ def upgrade() -> None:
             'nameKZ': 'Кадрлар тізімінен шығарылған',
             'is_combat_unit': False,
             'is_visible': False,
-        },  {
+        }, {
             'parent_group_id': group6_id,
             'id': group12_id,
             'name': "Откомандирован в другой гос. орган",
             'nameKZ': 'Басқа мемлекеттік органға жіберілді',
             'is_combat_unit': False,
             'is_visible': False,
-        },  {
+        }, {
             'parent_group_id': group6_id,
             'id': group13_id,
             'name': "Погиб",
             'nameKZ': 'Қайтыс болды',
             'is_combat_unit': False,
             'is_visible': False,
-        }, ]
+        }, {
+            'parent_group_id': all_service_id,
+            'id': group14_id,
+            'name': "Департамент 2",
+            'nameKZ': "Департамент 2",
+            'is_combat_unit': True,
+            'is_visible': True,
+        }, {
+            'parent_group_id': group1_id,
+            'id': group15_id,
+            'name': "Управление 5",
+            'nameKZ': 'Басқару 5',
+            'is_combat_unit': False,
+            'is_visible': True,
+        },  {
+            'parent_group_id': group2_id,
+            'id': group16_id,
+            'name': "Отдел 2",
+            'nameKZ': 'Бөлім 2',
+            'is_combat_unit': False,
+            'is_visible': True,
+        },
+        ]
     )
 
     staff_unit1_id = get_uuid()
@@ -1212,6 +1261,12 @@ def upgrade() -> None:
     staff_unit22_id = get_uuid()
     staff_unit23_id = get_uuid()
     staff_unit25_id = get_uuid()
+    staff_unit26_id = get_uuid()
+    staff_unit27_id = get_uuid()
+    staff_unit28_id = get_uuid()
+    staff_unit29_id = get_uuid()
+    staff_unit30_id = get_uuid()
+    staff_unit31_id = get_uuid()
 
     empty_unit_id = get_uuid()
 
@@ -1367,6 +1422,12 @@ def upgrade() -> None:
     user18_id = get_uuid()
     user19_id = get_uuid()
     user21_id = get_uuid()
+    user22_id = get_uuid()
+    user23_id = get_uuid()
+    user24_id = get_uuid()
+    user25_id = get_uuid()
+    user26_id = get_uuid()
+    user27_id = get_uuid()
 
     create_user(
         user10_id,
@@ -1747,13 +1808,122 @@ def upgrade() -> None:
         False,
         '1.2.100K',
         True)
+    create_user(
+        user22_id,
+        "Касымхан",
+        "Тлеуов",
+        'Кадырович',
+        'kassymkhan@mail.ru',
+        group1_id,
+        None,
+        "Альфа 22",
+        '22',
+        staff_unit26_id,
+        rank13_id,
+        staff_unit26_id,
+        "http://192.168.0.169:8083/static/Nurlan.png",
+        position15_id,
+        True,
+        '1.2.27K',
+        True)
+    create_user(
+        user23_id,
+        "Фархат",
+        "Максатов",
+        'Асхатович',
+        'farkhat@mail.ru',
+        group2_id,
+        user22_id,
+        "Альфа 23",
+        '23',
+        staff_unit27_id,
+        rank3_id,
+        staff_unit27_id,
+        "http://192.168.0.169:8083/static/Nurlan.png",
+        position13_id,
+        True,
+        '1.2.216K',
+        True)
+    create_user(
+        user24_id,
+        "Еркебулан",
+        "Ескендиров",
+        'Азаматович',
+        'yerkebulan@mail.ru',
+        group2_1_id,
+        user23_id,
+        "Альфа 24",
+        '24',
+        staff_unit28_id,
+        rank6_id,
+        staff_unit28_id,
+        "http://192.168.0.169:8083/static/Nurlan.png",
+        position10_id,
+        True,
+        '1.2.215K',
+        True)
+    create_user(
+        user25_id,
+        "Бейбарыс",
+        "Телжанов",
+        'Хакимович',
+        'beibarys@mail.ru',
+        group14_id,
+        None,
+        "Альфа 25",
+        '25',
+        staff_unit29_id,
+        rank13_id,
+        staff_unit29_id,
+        "http://192.168.0.169:8083/static/Nurlan.png",
+        position15_id,
+        True,
+        '1.2.27K',
+        True)
+    create_user(
+        user26_id,
+        "Балтабай",
+        "Баржаксы",
+        'Естиярович',
+        'baltabay@mail.ru',
+        group15_id,
+        user25_id,
+        "Альфа 26",
+        '26',
+        staff_unit30_id,
+        rank3_id,
+        staff_unit30_id,
+        "http://192.168.0.169:8083/static/Nurlan.png",
+        position13_id,
+        True,
+        '1.2.216K',
+        True)
+    create_user(
+        user27_id,
+        "Аскар",
+        "Абдурахманов",
+        'Куандыкович',
+        'askar@mail.ru',
+        group16_id,
+        user24_id,
+        "Альфа 27",
+        '27',
+        staff_unit31_id,
+        rank6_id,
+        staff_unit31_id,
+        "http://192.168.0.169:8083/static/Nurlan.png",
+        position10_id,
+        True,
+        '1.2.215K',
+        True)
+
 
     op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(
-        staff_unit10_id, group1_id))
+        staff_unit26_id, group1_id))
     op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(
-        staff_unit1_id, group2_id))
+        staff_unit27_id, group2_id))
     op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(
-        staff_unit7_id, group2_1_id))
+        staff_unit28_id, group2_1_id))
     op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(
         staff_unit2_id, group3_id))
     op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(
@@ -1762,6 +1932,12 @@ def upgrade() -> None:
         staff_unit16_id, group5_id))
     op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(
         staff_unit3_id, all_service_id))
+    op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(
+        staff_unit29_id, group14_id))
+    op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(
+        staff_unit30_id, group15_id))
+    op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(
+        staff_unit31_id, group16_id))
 
     op.bulk_insert(
         Base.metadata.tables['staff_unit_functions'],
@@ -4848,6 +5024,76 @@ def upgrade() -> None:
     #         'is_waits': True
     #     }]
     # )
+    
+    hr_vacancy_id = get_uuid()
+    hr_vacancy2_id = get_uuid()
+    
+    op.bulk_insert(
+        Base.metadata.tables['hr_vacancies'],
+        [{
+            'id': hr_vacancy_id,
+            'position_id': position9_id,
+            'is_active': True,
+            'staff_division_id': group1_id 
+        }, {
+            'id': hr_vacancy2_id,
+            'position_id': position6_id,
+            'is_active': True,
+            'staff_division_id': group2_id
+        }]
+    )
+    
+    hr_vacancy_requirement_id = get_uuid()
+    hr_vacancy_requirement2_id = get_uuid()
+    hr_vacancy_requirement3_id = get_uuid()
+    hr_vacancy_requirement4_id = get_uuid()
+    hr_vacancy_requirement5_id = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['hr_vacancies_requirements'],
+        [{
+            'id': hr_vacancy_requirement_id,
+            'name': "Пригодность по состоянию здоровья",
+            'nameKZ': "Денсаулық жағдайы бойынша жарамдылық"
+        }, {
+            'id': hr_vacancy_requirement2_id,
+            'name': "10 лет стажа работы",
+            'nameKZ': "10 жыл жұмыс тәжірибесі"
+        },{
+            'id': hr_vacancy_requirement3_id,
+            'name': "Высшее образование",
+            'nameKZ': "Жоғары білім"
+        },{
+            'id': hr_vacancy_requirement4_id,
+            'name': "Коммуникационные навыки",
+            'nameKZ': "Қарым-қатынас дағдылары"
+        },{
+            'id': hr_vacancy_requirement5_id,
+            'name': "Знание законодательства и правил",
+            'nameKZ': "Заң мен ережелерді білу"
+        }]
+    )
+    
+    op.bulk_insert(
+        Base.metadata.tables['hr_vacancy_hr_vacancy_requirements'],
+        [{
+            'vacancy_id': hr_vacancy_id,
+            'requirement_id': hr_vacancy_requirement_id
+        },{
+            'vacancy_id': hr_vacancy_id,
+            'requirement_id': hr_vacancy_requirement2_id
+        },{
+            'vacancy_id': hr_vacancy_id,
+            'requirement_id': hr_vacancy_requirement3_id
+        },{
+            'vacancy_id': hr_vacancy2_id,
+            'requirement_id': hr_vacancy_requirement4_id
+        },{
+            'vacancy_id': hr_vacancy2_id,
+            'requirement_id': hr_vacancy_requirement5_id
+        }]
+    )
+
 
 
 def create_user(id,
@@ -4900,7 +5146,6 @@ def create_user(id,
             'is_military': is_military,
             'cabinet': cabinet,
             'address': "г. Астана, ул. Мангилик ел 54, кв. 15",
-            'date_birth': "1990-01-01",
             'iin': "123456789012",
             'is_active': is_active,
         }]
