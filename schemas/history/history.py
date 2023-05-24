@@ -2,7 +2,7 @@ import math
 import uuid
 from enum import Enum
 from decimal import Decimal
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from typing import Optional, List, Union
 from decimal import Decimal
 import uuid
@@ -38,6 +38,9 @@ from .history_personal import (
     SecondmentReadHistory,
     ContractReadHistory,
 )
+
+# Set time_zone to UTC(+06:00)
+time_zone = timezone(timedelta(hours=6))
 
 class StatusEnum(Enum):
     granted = "Присвоен"

@@ -27,6 +27,7 @@ class PositionNameEnum(str, enum.Enum):
     REMOVED_FROM_LIST = "Исключен из списков личного состава"
     SECONDMENT_OTHER = "Откомандирован в другой гос. орган"
     PERISHED = "Погиб"
+    HR = "HR-менеджер"
 
 
 class Position(NamedModel):

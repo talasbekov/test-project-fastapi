@@ -4,7 +4,7 @@ from typing import Optional, List
 
 from pydantic import BaseModel
 
-from schemas import Model, NamedModel, ReadModel, ReadNamedModel
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel, UserShortRead
 
 
 class StaffListBase(NamedModel):
@@ -16,7 +16,7 @@ class StaffListBase(NamedModel):
 
 
 class StaffListCreate(StaffListBase):
-    status: str
+    pass
 
 
 class StaffListUpdate(StaffListBase):
@@ -28,4 +28,15 @@ class StaffListUserCreate(BaseModel):
 
 class StaffListRead(StaffListBase, ReadNamedModel):
     user_id: Optional[uuid.UUID]
-    status: Optional[str]
+
+class StaffListStatusRead(StaffListBase):
+    id: Optional[uuid.UUID]
+    status: Optional[dict]
+    updated_at: Optional[datetime]
+    changes_count: Optional[int]
+    user: Optional[UserShortRead]
+    reg_number: Optional[str]
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True

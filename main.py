@@ -1,3 +1,4 @@
+import uuid
 import time
 import socket
 
@@ -17,6 +18,7 @@ import sentry_sdk
 from api import router
 from core import configs, get_db
 from ws import notification_manager
+from services import staff_unit_service
 
 
 socket.setdefaulttimeout(15)

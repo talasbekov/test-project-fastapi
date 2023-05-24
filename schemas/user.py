@@ -68,3 +68,12 @@ class UserRead(UserBase, ReadModel):
 
     class Config:
         orm_mode = True
+
+class UserShortRead(BaseModel):
+    first_name: Optional[str]
+    last_name: Optional[str]
+    father_name: Optional[str]
+    icon: Optional[str]
+
+    class Config:
+        orm_mode = True

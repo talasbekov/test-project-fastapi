@@ -655,7 +655,7 @@ async def get_all_actions():
                 'alias_nameKZ': 'Жаңа қызмет атауы',
                 'tagname': 'staff_unit',
                 'data_taken': 'dropdown',
-                'field_name': 'staff_units',
+                'field_name': 'staff_unit',
             },
         ],
         'properties': {
@@ -664,7 +664,7 @@ async def get_all_actions():
                 'alias_nameKZ': 'Жаңа қызмет атауы',
                 'type': 'write',
                 'data_taken': 'dropdown',
-                'field_name': 'staff_units',
+                'field_name': 'staff_unit',
             },
         },
         'actions': {
@@ -691,7 +691,7 @@ async def get_all_actions():
                 'alias_nameKZ': 'Арттыру үшін Дәреже',
                 'tagname': 'rank',
                 'data_taken': 'dropdown',
-                'field_name': 'ranks',
+                'field_name': 'rank',
             },
         ],
         'properties': {
@@ -700,7 +700,7 @@ async def get_all_actions():
                 'alias_nameKZ': 'Арттыру үшін Дәреже',
                 'type': 'write',
                 'data_taken': 'dropdown',
-                'field_name': 'ranks',
+                'field_name': 'rank',
             },
         },
         'actions': {
@@ -727,7 +727,7 @@ async def get_all_actions():
                 'alias_nameKZ': 'Төмендету үшін дәреже',
                 'tagname': 'rank',
                 'data_taken': 'dropdown',
-                'field_name': 'ranks',
+                'field_name': 'rank',
             },
         ],
         'properties': {
@@ -736,7 +736,7 @@ async def get_all_actions():
                 'alias_nameKZ': 'Төмендету үшін дәреже',
                 'type': 'write',
                 'data_taken': 'dropdown',
-                'field_name': 'ranks',
+                'field_name': 'rank',
             },
         },
         'actions': {

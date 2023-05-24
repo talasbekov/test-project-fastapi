@@ -1,6 +1,7 @@
 from sqlalchemy import TIMESTAMP, Column, ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
+from ..association import family_violation, family_abroad_travel 
 
 from models import Model
 
@@ -24,3 +25,5 @@ class Family(Model):
 
     profile = relationship("FamilyProfile", back_populates="family")
     relation = relationship("FamilyRelation", cascade="all, delete")
+    violation = relationship("Violation", secondary=family_violation, cascade="all, delete")
+    abroad_travel = relationship("AbroadTravel", secondary=family_abroad_travel, cascade="all, delete")

@@ -4,11 +4,16 @@ from typing import List
 
 from sqlalchemy.orm import Session
 
-from exceptions.client import NotFoundException
+from exceptions.client import NotFoundException, BadRequestException
 from models import DocumentStaffFunction, HrDocumentStep, User, StaffUnit
-from schemas import (DocumentStaffFunctionAdd, DocumentStaffFunctionCreate,
-                     DocumentStaffFunctionUpdate, DocumentStaffFunctionConstructorAdd,
-                     DocumentStaffFunctionAppendToStaffUnit)
+from schemas import (
+    DocumentStaffFunctionAdd,
+    DocumentStaffFunctionCreate,
+    DocumentStaffFunctionUpdate,
+    DocumentStaffFunctionConstructorAdd,
+    DocumentStaffFunctionAppendToStaffUnit,
+)
+from services import document_staff_function_type_service
 from .base import ServiceBase
 
 
@@ -17,7 +22,8 @@ class DocumentStaffFunctionService(ServiceBase[DocumentStaffFunction, DocumentSt
     def get_by_id(self, db: Session, id: str) -> DocumentStaffFunction:
         service_staff_function = super().get(db, id)
         if service_staff_function is None:
-            raise NotFoundException(detail=f"DocumentStaffFunction with id: {id} is not found!")
+            raise NotFoundException(
+                detail=f"DocumentStaffFunction with id: {id} is not found!")
         return service_staff_function
 
     def get_by_user(self, db: Session, user: User) -> List[DocumentStaffFunction]:
@@ -54,7 +60,7 @@ class DocumentStaffFunctionService(ServiceBase[DocumentStaffFunction, DocumentSt
 
     def create_function(self, db: Session, body: DocumentStaffFunctionAdd):
 
-        create_function: DocumentStaffFunction = super().create(db, DocumentStaffFunctionCreate(
+        function: DocumentStaffFunction = super().create(db, DocumentStaffFunctionCreate(
             role_id=body.role_id,
             name=body.name,
             jurisdiction_id=body.jurisdiction_id,
@@ -63,26 +69,33 @@ class DocumentStaffFunctionService(ServiceBase[DocumentStaffFunction, DocumentSt
         ))
         new_step = HrDocumentStep(
             hr_document_template_id=body.hr_document_template_id,
-            staff_function_id=create_function.id,
-            created_at=datetime.datetime.now()
+            staff_function_id=function.id,
+            created_at=datetime.datetime.now(),
+            is_direct_supervisor=body.is_direct_supervisor,
         )
-
-        db.add(create_function)
+        
+        db.add(function)
         db.add(new_step)
-        db.flush()
-        db.refresh(create_function)
-        return create_function
-
+        db.flush() 
+        return function
 
     def create_function_for_constructor(self, db: Session, body: DocumentStaffFunctionConstructorAdd):
         res = self.create_function(db, DocumentStaffFunctionAdd(**body.dict()))
-        staff_unit = db.query(StaffUnit).filter(StaffUnit.id == body.staff_unit_id).first()
+        staff_unit = db.query(StaffUnit).filter(
+            StaffUnit.id == body.staff_unit_id).first()
         if staff_unit is None:
-            raise NotFoundException(detail=f"StaffUnit with id: {body.staff_unit_id} is not found!")
+            raise NotFoundException(
+                detail=f"StaffUnit with id: {body.staff_unit_id} is not found!")
+
+        for staff_function in staff_unit.staff_functions:
+            if body.hr_document_template_id == staff_function.hr_document_step.hr_document_template_id:
+                raise BadRequestException(
+                    detail=f"StaffFunction with template id: {body.hr_document_template_id} already exists!"
+                )
 
         staff_unit.staff_functions.append(res)
         db.add(staff_unit)
-        db.flush()
+        db.flush() 
         return res
 
     def get_staff_units_by_id(self, db: Session, id: uuid.UUID):
@@ -91,11 +104,16 @@ class DocumentStaffFunctionService(ServiceBase[DocumentStaffFunction, DocumentSt
 
     def append_to_staff_unit(self, db: Session, body: DocumentStaffFunctionAppendToStaffUnit):
         staff_function = self.get_by_id(db, body.staff_function_id)
-        staff_units = db.query(StaffUnit).filter(StaffUnit.id.in_(body.staff_unit_ids)).all()
+        staff_units = db.query(StaffUnit).filter(
+            StaffUnit.id.in_(body.staff_unit_ids)).all()
         for i in staff_units:
             i.staff_functions.append(staff_function)
             db.add(i)
         db.flush()
 
+    def get_by_staff_unit(self, db: Session, staff_unit: StaffUnit):
+        return db.query(self.model).filter(self.model.staff_units.contains(staff_unit)).all()
 
-document_staff_function_service = DocumentStaffFunctionService(DocumentStaffFunction)
+
+document_staff_function_service = DocumentStaffFunctionService(
+    DocumentStaffFunction)

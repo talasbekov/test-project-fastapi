@@ -1,17 +1,18 @@
 import datetime
 import uuid
-from typing import Optional
+from typing import List, Optional
 
 from pydantic import BaseModel
 
 from .family_relation import FamilyRelationRead
+from schemas import ViolationRead, AbroadTravelRead
 
 
 class FamilyBase(BaseModel):
     relation_id: uuid.UUID
     first_name: str
     last_name: str
-    father_name: str
+    father_name: Optional[str]
     IIN: str
     birthday: datetime.datetime
     death_day: Optional[datetime.datetime]
@@ -50,3 +51,5 @@ class FamilyRead(FamilyBase):
     profile_id: Optional[uuid.UUID]
 
     birthplace: Optional[str]
+    violation: Optional[List[ViolationRead]]
+    abroad_travel: Optional[List[AbroadTravelRead]]

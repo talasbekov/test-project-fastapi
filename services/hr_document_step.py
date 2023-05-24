@@ -42,13 +42,16 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
 
         return steps
 
-    def get_all_by_document_template_id(self, db: Session, template_id: uuid.UUID):
+    def get_all_by_document_template_id(self, db: Session, template_id: uuid.UUID, notifiers: bool = True):
 
-        steps = db.query(self.model).filter(
+        steps_query = db.query(self.model).filter(
             self.model.hr_document_template_id == template_id
-        ).join(self.model.staff_function).order_by(DocumentStaffFunction.priority.asc()).all()
+        ).join(self.model.staff_function).order_by(DocumentStaffFunction.priority.asc())
 
-        return steps
+        if not notifiers:
+            steps_query = steps_query.filter(DocumentStaffFunction.priority != -1)
+
+        return steps_query.all()
 
     def get_next_step_from_previous_step(self, db: Session, previous_step: HrDocumentStep):
         priority = previous_step.staff_function.priority
@@ -67,6 +70,17 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
             .filter(
                 self.model.hr_document_template_id == template_id,
                 DocumentStaffFunction.priority == -1
+            )
+            .all()
+        )
+
+    def get_all_by_document_template_id_without_notifiers(self, db: Session, template_id: uuid.UUID):
+        return (
+            db.query(self.model)
+            .join(DocumentStaffFunction)
+            .filter(
+                self.model.hr_document_template_id == template_id,
+                DocumentStaffFunction.priority > 0
             )
             .all()
         )

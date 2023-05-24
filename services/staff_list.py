@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from exceptions import NotFoundException, NotSupportedException
 from models import (
@@ -8,12 +8,16 @@ from models import (
     ServiceStaffFunction,
     StaffDivision,
     StaffList,
-    StaffUnit, ArchiveStaffDivision,
+    StaffUnit,
+    ArchiveStaffDivision,
+    User,
+    HrDocument,
 )
 from schemas import (
     StaffListCreate,
     StaffListUpdate,
     StaffListUserCreate,
+    StaffListStatusRead
 )
 from services import (
     ServiceBase,
@@ -27,6 +31,7 @@ from services import (
     service_archive_staff_function_type_service,
     document_staff_function_type_service,
     service_staff_function_type_service,
+    hr_document_template_service
 )
 
 options = {
@@ -57,11 +62,11 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
 
         create_staff_list = StaffListCreate(
             name=obj_in.name,
-            status="IN PROGRESS",
             user_id=user_id
         )
         staff_list = super().create(db, create_staff_list)
         staff_divisions = staff_division_service.get_departments(db, 0, 100)
+        print(len(staff_divisions))
         for staff_division in staff_divisions:
             self._create_archive_staff_division(db, staff_division, staff_list.id, None)
 
@@ -72,7 +77,6 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
     def duplicate(self, db: Session, staff_list_id: uuid.UUID, user_id: uuid.UUID, obj_in: StaffListUserCreate):
         create_staff_list = StaffListCreate(
             name=obj_in.name,
-            status="IN PROGRESS",
             user_id=user_id
         )
         staff_list = super().create(db, create_staff_list)
@@ -151,16 +155,59 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         db.flush()
 
         return archive_division
+    
+    def get_super_doc_by_staff_list_id(
+        self,
+        db: Session,
+        id: uuid.UUID
+    ):
+        hr_document_template = hr_document_template_service.get_staff_list(db=db)
+        hr_document_template_id = hr_document_template.id
+        hr_documents = db.query(HrDocument).filter(
+            HrDocument.hr_document_template_id == hr_document_template_id
+        )
+        super_doc = None
+        for hr_document in hr_documents:
+            if str(id) == hr_document.properties['staff_list'].get('value'):
+                super_doc = hr_document
+        if super_doc is None:
+            raise NotFoundException(detail="Hr document not found")
+        return super_doc
 
-    def sign(self, db: Session, id: uuid.UUID):
-        # TODO: implement creation of super document
-        from .constructor import handlers
-        staff_divisions = db.query(StaffDivision).all()
-        staff_list = self.get_by_id(db, id)
-        handler = handlers.get('apply_staff_list')
-        if handler is None:
-            return None
-        handler.handle_action(staff_list, staff_divisions)
+    def get_drafts(self, db: Session, skip: int = 0, limit: int = 100):
+        staff_lists = (db.query(StaffList)
+                  .join(User)
+                  .options(joinedload(StaffList.user))
+                  .filter(StaffList.is_signed == False)
+                  .offset(skip)
+                  .limit(limit)
+                  .all())
+
+        return [StaffListStatusRead.from_orm(staff_list)
+                            for staff_list in staff_lists]
+
+    def get_signed(self, db: Session, skip: int = 0, limit: int = 100):
+        staff_lists = (db.query(StaffList)
+                  .join(User)
+                  .options(joinedload(StaffList.user))
+                  .filter(StaffList.is_signed == True)
+                  .offset(skip)
+                  .limit(limit)
+                  .all())
+        signed_staff_lists = []
+        for staff_list in staff_lists:
+            super_doc = self.get_super_doc_by_staff_list_id(db, staff_list.id)
+            status = super_doc.status
+            reg_number = super_doc.reg_number
+            signed_staff_list = StaffListStatusRead.from_orm(staff_list)
+            signed_staff_list.status = {
+                "name": status.name,
+                "nameKZ": status.nameKZ,
+            }
+            signed_staff_list.reg_number = reg_number
+            signed_staff_lists.append(signed_staff_list)
+             
+        return signed_staff_lists
 
 
 staff_list_service = StaffListService(StaffList)

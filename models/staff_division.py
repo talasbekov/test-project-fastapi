@@ -16,6 +16,7 @@ class StaffDivisionEnum(str, enum.Enum):
     REMOVED_FROM_LIST = "Исключен из списков личного состава"
     SECONDMENT_OTHER = "Откомандирован в другой гос. орган"
     PERISHED = "Погиб"
+    SERVICE = 'Вся служба'
 
 
 class StaffDivision(NamedNestedModel, isActiveModel):

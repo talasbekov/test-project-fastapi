@@ -180,5 +180,18 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
         ).update({self.model.staff_division_id: None})
         db.flush()
 
+    def get_all(self, db: Session, users: list[uuid.UUID]):
+        return db.query(self.model).filter(
+            self.model.users.any(User.id.in_(users))
+        ).all()
+
+    def get_service_staff_functions(self, db: Session, staff_unit_id: uuid.UUID):
+        staff_unit = self.get_by_id(db, staff_unit_id)
+        return service_staff_function_service.get_by_staff_unit(db, staff_unit)
+
+    def get_document_staff_functions(self, db: Session, staff_unit_id: uuid.UUID):
+        staff_unit = self.get_by_id(db, staff_unit_id)
+        return document_staff_function_service.get_by_staff_unit(db, staff_unit)
+
 
 staff_unit_service = StaffUnitService(StaffUnit)

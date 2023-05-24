@@ -37,3 +37,30 @@ staff_unit_candidate_stage_infos = Table(
     Column("staff_unit_id", ForeignKey("staff_units.id")),
     Column("candidate_stage_info_id", ForeignKey("candidate_stage_infos.id"))
 )
+
+hr_vacancy_hr_vacancy_requirements = Table(
+    "hr_vacancy_hr_vacancy_requirements",
+    Base.metadata,
+    Column("hr_vacancy_id", ForeignKey("hr_vacancies.id")),
+    Column("hr_vacancy_requirement_id", ForeignKey("hr_vacancies_requirements.id"))
+)
+
+hr_vacancy_hr_vacancy_candidates = Table(
+    "hr_vacancy_hr_vacancy_candidates",
+    Base.metadata,
+    Column("hr_vacancy_id", ForeignKey("hr_vacancies.id")),
+    Column("user_id", ForeignKey("users.id"))
+)
+family_violation = Table(
+    "family_violations",
+    Base.metadata,
+    Column("family_id", ForeignKey("families.id")),
+    Column("violation_id", ForeignKey("violations.id"))
+)
+
+family_abroad_travel = Table(
+    "family_abroad_travels",
+    Base.metadata,
+    Column("family_id", ForeignKey("families.id")),
+    Column("abroad_travel_id", ForeignKey("abroad_travels.id"))
+)

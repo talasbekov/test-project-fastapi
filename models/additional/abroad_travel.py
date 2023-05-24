@@ -20,7 +20,7 @@ class AbroadTravel(Model):
     reason = Column(String(255), nullable=False, default="")
     document_link = Column(String(255), nullable=False, default="")
 
-    profile_id = Column(UUID(as_uuid=True), ForeignKey("additional_profiles.id"), nullable=False)
+    profile_id = Column(UUID(as_uuid=True), ForeignKey("additional_profiles.id"), nullable=True)
 
     profile = relationship("AdditionalProfile", back_populates="abroad_travels")
     destination_country = relationship("Country", back_populates="abroad_travels")
