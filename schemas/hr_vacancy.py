@@ -17,6 +17,10 @@ class HrVacancyCreate(HrVacancyBase):
 
 class HrVacancyUpdate(HrVacancyBase):
     hr_vacancy_requirements_ids: Optional[List[uuid.UUID]]
+    
+
+class HrVacancyStaffDivision(Model):
+    staff_division_ids: List[uuid.UUID]
 
 
 class HrVacancyRead(HrVacancyBase, ReadModel):
@@ -28,3 +32,9 @@ class HrVacancyRead(HrVacancyBase, ReadModel):
     
     class Config:
         orm_mode = True
+
+
+class HrVacancyStaffDivisionRead(Model):
+    id: uuid.UUID
+    name: str
+    vacancies: List[HrVacancyRead]
