@@ -1,12 +1,10 @@
 from typing import List
-import uuid
 from sqlalchemy.orm import Session
-from fastapi.encoders import jsonable_encoder
 
 from exceptions.client import ForbiddenException, NotFoundException
 from models import (HrVacancy, StaffUnit, StaffDivision,
                     StaffDivisionEnum, PositionNameEnum)
-from schemas import (HrVacancyCreate, HrVacancyUpdate, HrVacancyStaffDivision,
+from schemas import (HrVacancyCreate, HrVacancyUpdate,
                      HrVacancyRead, HrVacancyStaffDivisionRead)
 from .base import ServiceBase
 from .hr_vacancy_requirements import hr_vacancy_requirement_service
@@ -27,22 +25,19 @@ class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate])
         return vacancies
     
     
-    def get_by_departments(self, db: Session, body: HrVacancyStaffDivision):
-        responses = []
+    def get_by_department(self, db: Session, staff_division_id: str):
     
-        for staff_division_id in body.staff_division_ids:
-            staff_division = staff_division_service.get_by_id(db, staff_division_id)
-            vacancies = self._get_vacancies_recursive(db, staff_division)
+        staff_division = staff_division_service.get_by_id(db, staff_division_id)
+        vacancies = self._get_vacancies_recursive(db, staff_division)
 
-            response = HrVacancyStaffDivisionRead(
-                id = staff_division.id,
-                name = staff_division.name,
-                vacancies = [HrVacancyRead.from_orm(i).dict() for i in vacancies]
-            )
-            responses.append(response)
-            
-        return responses
+        response = HrVacancyStaffDivisionRead(
+            id = staff_division.id,
+            name = staff_division.name,
+            vacancies = [HrVacancyRead.from_orm(i).dict() for i in vacancies]
+        )
         
+        return response
+
     
     def _get_vacancies_recursive(self, db: Session, department: StaffDivision):
         vacancies = db.query(self.model)\
