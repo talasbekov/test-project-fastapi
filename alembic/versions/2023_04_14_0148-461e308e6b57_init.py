@@ -258,6 +258,7 @@ def upgrade() -> None:
     )
     op.create_table('positions',
     sa.Column('max_rank_id', sa.UUID(), nullable=True),
+    sa.Column('category_code', sa.String(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('nameKZ', sa.String(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
