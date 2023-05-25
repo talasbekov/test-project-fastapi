@@ -1,5 +1,5 @@
-from sqlalchemy import Column, ForeignKey
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, ForeignKey, ARRAY
+from sqlalchemy.dialects.postgresql import UUID, JSON
 from sqlalchemy.orm import relationship
 
 from models import isActiveModel
@@ -9,6 +9,8 @@ from .association import staff_unit_function, staff_unit_candidate_stage_infos, 
 class StaffUnit(isActiveModel):
 
     __tablename__ = "staff_units"
+
+    requirements = Column(ARRAY(JSON(none_as_null=True)))
 
     position_id = Column(UUID(as_uuid=True), ForeignKey("positions.id"), nullable=False)
     staff_division_id = Column(

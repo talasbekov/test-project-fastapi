@@ -11,7 +11,7 @@ from schemas import Model, NamedModel, ReadModel, ReadNamedModel, BadgeRead, Ran
 
 class StaffDivisionBase(NamedModel):
     parent_group_id: Optional[uuid.UUID]
-    description: Optional[str]
+    description: Optional[NamedModel]
     is_combat_unit: bool
     leader_id: Optional[uuid.UUID]
     is_active: Optional[bool] = True
@@ -52,6 +52,15 @@ class UserRead(ReadModel):
     status_till: Optional[datetime.datetime]
     class Config:
         orm_mode = True
+        
+        
+class HrVacancyRead(ReadModel):
+    is_active: Optional[bool]
+    staff_unit_id: Optional[uuid.UUID]
+    
+    class Config:
+        orm_mode = True
+
 
 class StaffUnitRead(ReadModel):
     staff_division_id: Optional[uuid.UUID]
@@ -59,6 +68,8 @@ class StaffUnitRead(ReadModel):
     position: Optional[PositionRead]
     users: Optional[List[Optional[UserRead]]]
     actual_users: Optional[List[Optional[UserRead]]]
+    hr_vacancy: Optional[List[Optional[HrVacancyRead]]]
+    requirements: Optional[List[dict]]
 
     class Config:
         orm_mode = True

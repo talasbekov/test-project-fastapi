@@ -139,6 +139,7 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
                 nameKZ=archive_staff_division.nameKZ,
                 parent_group_id=parent_id,
                 description=archive_staff_division.description,
+                descriptionKZ=archive_staff_division.descriptionKZ,
                 is_combat_unit=archive_staff_division.is_combat_unit,
                 leader_id=leader_id
             )
@@ -155,6 +156,7 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
                 nameKZ=archive_staff_division.nameKZ,
                 parent_group_id=parent_id,
                 description=archive_staff_division.description,
+                descriptionKZ=archive_staff_division.descriptionKZ,
                 is_combat_unit=archive_staff_division.is_combat_unit,
                 leader_id=leader_id,
                 is_active=True

@@ -7,7 +7,8 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import HrVacancyRead, HrVacancyCreate, StaffUnitRead
+from schemas import (HrVacancyRead, HrVacancyCreate, StaffUnitRead,
+                     HrVacancyStaffDivisionRead)
 from services import hr_vacancy_service
 
 router = APIRouter(prefix="/hr_vacancies", tags=["HrVacancies"], dependencies=[Depends(HTTPBearer())])
@@ -25,6 +26,23 @@ async def get_all(*,
     """
     Authorize.jwt_required()
     return hr_vacancy_service.get_multi(db)
+
+
+@router.get("/department/{staff_division_id}", dependencies=[Depends(HTTPBearer())],
+            response_model=HrVacancyStaffDivisionRead,
+            summary="Get all HrVacancies by department")
+async def get_all_by_department(*,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends(),
+    staff_division_id: uuid.UUID
+):
+    """
+        Get all HrVacancies by department
+        
+        - **staff_division_id**: uuid - required.
+    """
+    Authorize.jwt_required()
+    return hr_vacancy_service.get_by_department(db, staff_division_id)
 
 
 @router.get("/not_active", dependencies=[Depends(HTTPBearer())],

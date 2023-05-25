@@ -244,7 +244,7 @@ def upgrade() -> None:
     )
     op.create_table('staff_divisions',
     sa.Column('parent_group_id', sa.UUID(), nullable=True),
-    sa.Column('description', sa.TEXT(), nullable=True),
+    sa.Column('description', postgresql.JSON(none_as_null=True, astext_type=sa.Text()), nullable=True),
     sa.Column('is_combat_unit', sa.Boolean(), nullable=True),
     sa.Column('leader_id', sa.UUID(), nullable=True),
     sa.Column('name', sa.String(), nullable=False),
@@ -258,6 +258,7 @@ def upgrade() -> None:
     )
     op.create_table('positions',
     sa.Column('max_rank_id', sa.UUID(), nullable=True),
+    sa.Column('category_code', sa.String(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('nameKZ', sa.String(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
@@ -273,6 +274,7 @@ def upgrade() -> None:
     sa.Column('is_active', sa.Boolean(), nullable=False, default=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('requirements', sa.ARRAY(postgresql.JSON(none_as_null=True, astext_type=sa.Text())), nullable=True, default=''),
     sa.ForeignKeyConstraint(['position_id'], ['positions.id'], ),
     sa.ForeignKeyConstraint(['staff_division_id'], ['staff_divisions.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -767,7 +769,7 @@ def upgrade() -> None:
     )
     op.create_table('archive_staff_divisions',
     sa.Column('parent_group_id', sa.UUID(), nullable=True),
-    sa.Column('description', sa.TEXT(), nullable=True),
+    sa.Column('description', postgresql.JSON(none_as_null=True, astext_type=sa.Text()), nullable=True),
     sa.Column('is_combat_unit', sa.Boolean(), nullable=True),
     sa.Column('leader_id', sa.UUID(), nullable=True),
     sa.Column('staff_list_id', sa.UUID(), nullable=False),
@@ -1328,8 +1330,8 @@ def upgrade() -> None:
     op.create_table('archive_staff_unit_functions',
     sa.Column('staff_unit_id', sa.UUID(), nullable=False),
     sa.Column('staff_function_id', sa.UUID(), nullable=False),
-    sa.ForeignKeyConstraint(['staff_function_id'], ['archive_staff_functions.id'], onupdate='CASCADE', ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['staff_unit_id'], ['archive_staff_units.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['staff_function_id'], ['archive_staff_functions.id']),
+    sa.ForeignKeyConstraint(['staff_unit_id'], ['archive_staff_units.id']),
     sa.PrimaryKeyConstraint('staff_unit_id', 'staff_function_id')
     )
     op.create_table('user_liberations_liberations',
