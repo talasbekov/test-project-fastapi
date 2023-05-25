@@ -9,6 +9,7 @@ class ArchiveStaffDivisionBase(BaseModel):
     parent_group_id: Optional[uuid.UUID]
     name: str
     description: Optional[str]
+    descriptionKZ: Optional[str]
     staff_list_id: uuid.UUID
     description: Optional[str]
     is_combat_unit: Optional[bool]
