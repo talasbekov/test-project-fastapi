@@ -38,3 +38,4 @@ class Position(NamedModel):
                          nullable=True)
     
     rank = relationship("Rank", cascade="all,delete")
+    category_code = Column(String, nullable=False)
