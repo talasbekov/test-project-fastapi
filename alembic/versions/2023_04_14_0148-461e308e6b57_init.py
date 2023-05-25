@@ -274,6 +274,7 @@ def upgrade() -> None:
     sa.Column('is_active', sa.Boolean(), nullable=False, default=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('requirements', sa.ARRAY(postgresql.JSON(none_as_null=True, astext_type=sa.Text())), nullable=True, default=''),
     sa.ForeignKeyConstraint(['position_id'], ['positions.id'], ),
     sa.ForeignKeyConstraint(['staff_division_id'], ['staff_divisions.id'], ),
     sa.PrimaryKeyConstraint('id')

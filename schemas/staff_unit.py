@@ -14,6 +14,7 @@ class StaffUnitBase(Model):
     position_id: uuid.UUID
     staff_division_id: uuid.UUID
     is_active: Optional[bool] = True
+    requirements: Optional[List[dict]]
 
 
 class StaffUnitCreate(StaffUnitBase):
