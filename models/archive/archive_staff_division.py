@@ -1,5 +1,5 @@
 from sqlalchemy import Column, ForeignKey, TEXT, Boolean
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import UUID, JSON
 from sqlalchemy.orm import relationship
 
 from models import NamedNestedModel
@@ -11,8 +11,7 @@ class ArchiveStaffDivision(NamedNestedModel):
 
     # Properties
     parent_group_id = Column(UUID(as_uuid=True), ForeignKey("archive_staff_divisions.id"), nullable=True)
-    description = Column(TEXT)
-    descriptionKZ = Column(TEXT)
+    description = Column(JSON(none_as_null=True))
     is_combat_unit = Column(Boolean)
     leader_id = Column(UUID(as_uuid=True), ForeignKey("archive_staff_units.id"), nullable=True)
 
