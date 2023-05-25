@@ -37,7 +37,8 @@ async def get_history(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
     skip: int = 0,
-    limit: int = 100
+    limit: int = 100,
+    filter: str = '',
 ):
     """
        Get Staff Lists drafts
@@ -46,7 +47,7 @@ async def get_history(*,
        - **limit**: int - The maximum number of staff divisions to return in the response. This parameter is optional and defaults to 100.
    """
     Authorize.jwt_required()
-    return staff_list_service.get_drafts(db, skip, limit)
+    return staff_list_service.get_drafts(db, skip, limit, filter)
 
 @router.get("/signed/", dependencies=[Depends(HTTPBearer())],
             response_model=List[StaffListStatusRead],
@@ -55,7 +56,8 @@ async def get_history(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
     skip: int = 0,
-    limit: int = 100
+    limit: int = 100,
+    filter: str = ''
 ):
     """
        Get Staff Lists signed
@@ -64,7 +66,7 @@ async def get_history(*,
        - **limit**: int - The maximum number of staff divisions to return in the response. This parameter is optional and defaults to 100.
    """
     Authorize.jwt_required()
-    return staff_list_service.get_signed(db, skip, limit)
+    return staff_list_service.get_signed(db, skip, limit, filter)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,

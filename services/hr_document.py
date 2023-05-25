@@ -789,7 +789,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             user_ids=[],
             parent_id=None,
             due_date= datetime.now() + timedelta(days=7),
-            document_step_users_ids=hr_document_template_service.get_steps_by_document_template_id(db, template.id),
+            document_step_users_ids=hr_document_template_service.get_steps_by_document_template_id(db, template.id, user_id=user_id),
             properties={
                 'staff_list': {
                     'name': 'staff_list',
