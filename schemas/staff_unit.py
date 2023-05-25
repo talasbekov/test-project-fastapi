@@ -42,6 +42,14 @@ class UserRead(ReadModel):
         orm_mode = True
 
 
+class HrVacancyRead(ReadModel):
+    is_active: Optional[bool]
+    staff_unit_id: Optional[uuid.UUID]
+    
+    class Config:
+        orm_mode = True
+
+
 class StaffUnitRead(StaffUnitBase, ReadModel):
     staff_division_id: Optional[uuid.UUID]
     staff_division: Optional[StaffUnitDivisionRead]
@@ -50,6 +58,7 @@ class StaffUnitRead(StaffUnitBase, ReadModel):
     position: Optional[PositionRead]
     users: Optional[List[Optional[UserRead]]]
     actual_users: Optional[List[Optional[UserRead]]]
+    hr_vacancy: Optional[List[Optional[HrVacancyRead]]]
 
     class Config:
         orm_mode = True
