@@ -19,10 +19,6 @@ class HrVacancyUpdate(HrVacancyBase):
     hr_vacancy_requirements_ids: Optional[List[uuid.UUID]]
     
 
-class HrVacancyStaffDivision(Model):
-    staff_division_ids: List[uuid.UUID]
-
-
 class HrVacancyRead(HrVacancyBase, ReadModel):
     staff_unit_id: Optional[uuid.UUID]
     is_active: Optional[bool]
