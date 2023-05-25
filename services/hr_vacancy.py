@@ -1,11 +1,13 @@
 from typing import List
+import uuid
 from sqlalchemy.orm import Session
 from fastapi.encoders import jsonable_encoder
 
 from exceptions.client import ForbiddenException, NotFoundException
-from models import HrVacancy, StaffUnit
-from models.position import PositionNameEnum
-from schemas import HrVacancyCreate, HrVacancyUpdate
+from models import (HrVacancy, StaffUnit, StaffDivision,
+                    StaffDivisionEnum, PositionNameEnum)
+from schemas import (HrVacancyCreate, HrVacancyUpdate, HrVacancyStaffDivision,
+                     HrVacancyRead, HrVacancyStaffDivisionRead)
 from .base import ServiceBase
 from .hr_vacancy_requirements import hr_vacancy_requirement_service
 from .position import position_service
@@ -22,6 +24,39 @@ class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate])
             self.model.is_active == True
         ).all()
         
+        return vacancies
+    
+    
+    def get_by_departments(self, db: Session, body: HrVacancyStaffDivision):
+        responses = []
+    
+        for staff_division_id in body.staff_division_ids:
+            staff_division = staff_division_service.get_by_id(db, staff_division_id)
+            vacancies = self._get_vacancies_recursive(db, staff_division)
+
+            response = HrVacancyStaffDivisionRead(
+                id = staff_division.id,
+                name = staff_division.name,
+                vacancies = [HrVacancyRead.from_orm(i).dict() for i in vacancies]
+            )
+            responses.append(response)
+            
+        return responses
+        
+    
+    def _get_vacancies_recursive(self, db: Session, department: StaffDivision):
+        vacancies = db.query(self.model)\
+            .join(StaffUnit, self.model.staff_unit_id == StaffUnit.id)\
+            .join(StaffDivision, StaffUnit.staff_division_id == StaffDivision.id)\
+            .filter(
+                self.model.staff_unit_id == StaffUnit.id,
+                StaffUnit.staff_division_id == department.id
+            ).all()
+            
+        # Recursively call this function for each child division
+        for child in department.children:
+            vacancies.extend(self._get_vacancies_recursive(db, child))
+
         return vacancies
     
     
