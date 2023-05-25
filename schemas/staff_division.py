@@ -11,8 +11,7 @@ from schemas import Model, NamedModel, ReadModel, ReadNamedModel, BadgeRead, Ran
 
 class StaffDivisionBase(NamedModel):
     parent_group_id: Optional[uuid.UUID]
-    description: Optional[str]
-    descriptionKZ: Optional[str]
+    description: Optional[NamedModel]
     is_combat_unit: bool
     leader_id: Optional[uuid.UUID]
     is_active: Optional[bool] = True
