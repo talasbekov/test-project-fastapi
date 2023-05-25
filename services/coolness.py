@@ -25,7 +25,7 @@ class CoolnessService(ServiceBase[Coolness, CoolnessCreate, CoolnessUpdate]):
         return coolness
 
     def get_by_option(
-        self, db: Session, option: str, type: str, id: uuid.UUID, skip: int, limit: int
+        self, db: Session, type: str, id: uuid.UUID, skip: int, limit: int
     ):
         if type == "write":
             return [

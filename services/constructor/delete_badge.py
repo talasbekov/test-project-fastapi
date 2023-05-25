@@ -21,7 +21,12 @@ class DeleteBadgeHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        tagname = action["badge"]["tagname"]
+        try:
+            tagname = action["badge"]["tagname"]
+        except:
+            raise ForbiddenException(
+                f"Badge is not defined for this action: {self.__handler__}"
+            )
         res = badge_service.stop_relation(db, user.id, props[tagname]["value"])
         self.handle_validation(db, user, action, template_props, props, document)
         document.old_history_id = res.id

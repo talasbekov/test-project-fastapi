@@ -4,6 +4,7 @@ from core import configs
 from models import User, HrDocument
 from .base import BaseHandler
 from services import penalty_service, history_service
+from exceptions import ForbiddenException
 
 from utils import convert_str_to_datetime
 
@@ -20,8 +21,12 @@ class AddPenaltyHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        tagname = action["penalty"]["tagname"]
-
+        try:
+            tagname = action["penalty"]["tagname"]
+        except:
+            raise ForbiddenException(
+                f"Penalty is not defined for this action: {self.__handler__}"
+            )
         res = penalty_service.create_relation(db, user.id, props[tagname]["value"])
         res.name = action["reason"]["tagname"]
         user.penalties.append(res)

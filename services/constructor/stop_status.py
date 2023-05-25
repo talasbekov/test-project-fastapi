@@ -18,7 +18,12 @@ class StopStatusHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        status = action["status"]["tagname"]
+        try:
+            status = action["status"]["tagname"]
+        except:
+            raise ForbiddenException(
+                f"Status is not defined for this action: {self.__handler__}"
+            )
         res = status_service.stop_relation(db, user.id, props[status]["value"])
         res.cancel_document_link = configs.GENERATE_IP + str(document.id)
 

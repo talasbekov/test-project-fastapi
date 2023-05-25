@@ -31,7 +31,12 @@ class StatusChangeHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        status = action["status"]["tagname"]
+        try:
+            status = action["status"]["tagname"]
+        except:
+            raise ForbiddenException(
+                f"Status is not defined for this action: {self.__handler__}"
+            )
 
         self.handle_validation(db, user, action, template_props, props, document)
 

@@ -11,6 +11,7 @@ from models import (
     User,
     HrDocument,
 )
+from exceptions import ForbiddenException
 from .base import BaseHandler
 from .. import (
     staff_division_service,
@@ -33,8 +34,12 @@ class ApplyStaffListHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        print("apply_staff_list handler")
-        staff_list_tagname = action["staff_list"]["tagname"]
+        try:
+            staff_list_tagname = action["staff_list"]["tagname"]
+        except:
+            raise ForbiddenException(
+                f"Staff list is not defined for this action: {self.__handler__}"
+            )
         staff_list_id = props[staff_list_tagname]["value"]
 
         staff_list_service.get_by_id(db, staff_list_id)

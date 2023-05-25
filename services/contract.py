@@ -15,7 +15,7 @@ class ContractService(ServiceBase[Contract, ContractCreate, ContractUpdate]):
         contract = super().create(db, ContractCreate(type_id=type_id, user_id=user_id))
         return contract
 
-    def get_by_option(self, db: Session, option: str, type: str, id: uuid.UUID, skip: int, limit: int):
+    def get_by_option(self, db: Session, type: str, id: uuid.UUID, skip: int, limit: int):
         if type == 'write':
             return [ContractTypeRead.from_orm(i).dict() for i in db.query(ContractType).offset(skip).limit(limit).all()]
         else:

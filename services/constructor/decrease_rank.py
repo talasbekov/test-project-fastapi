@@ -21,7 +21,12 @@ class DecreaseRankHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        tagname = action["rank"]["tagname"]
+        try:
+            tagname = action["rank"]["tagname"]
+        except:
+            raise ForbiddenException(
+                f"Rank is not defined for this action: {self.__handler__}"
+            )
         rank = rank_service.get_by_id(db, props[tagname]["value"])
         self.handle_validation(db, user, action, template_props, props, document)
         user.rank = rank

@@ -28,7 +28,6 @@ class StaffUnit(isActiveModel):
         "StaffFunction",
         secondary=staff_unit_function,
         back_populates="staff_units",
-        cascade="all,delete",
     )
     candidate_stage_infos = relationship(
         "CandidateStageInfo",

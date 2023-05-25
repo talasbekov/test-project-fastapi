@@ -16,6 +16,7 @@ from models import (
     StaffDivisionEnum,
     HrDocument,
     HrDocumentInfo,
+    HrDocumentTemplate,
 )
 from schemas import (
     UserCreate,
@@ -322,14 +323,16 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
         return user_query
 
-    def get_available_templates(self, db: Session, user_id: uuid.UUID) -> List[HrDocumentTemplateRead]:
+    def get_available_templates(self, db: Session, user_id: uuid.UUID) -> List[HrDocumentTemplate]:
         initiator_role = document_staff_function_type_service.get_initiator(db)
         user = self.get_by_id(db, user_id)
         document_ids = []
+        print(user.staff_unit.staff_functions)
         for function in user.staff_unit.staff_functions:
-            function: DocumentStaffFunction
-            print(function.role_id, initiator_role.id)
+            if function.discriminator != DocumentStaffFunction.__mapper_args__['polymorphic_identity']:
+                continue
             if function.role_id == initiator_role.id:
+                print(function.hr_document_step)
                 document_ids.append(function.hr_document_step.hr_document_template_id)
         return hr_document_template_service.get_all(db, document_ids)
 

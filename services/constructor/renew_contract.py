@@ -6,7 +6,7 @@ from core import configs
 from models import User, ContractType, ContractHistory, HrDocument
 from .base import BaseHandler
 from services import contract_service, history_service
-from exceptions import ForbiddenException
+from exceptions import ForbiddenException, NotFoundException
 from utils import convert_str_to_datetime
 
 
@@ -32,11 +32,21 @@ class RenewContractHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        tagname = action["contract"]["tagname"]
+        try:
+            tagname = action["contract"]["tagname"]
+        except:
+            raise ForbiddenException(
+                f"Contract is not defined for this action: {self.__handler__}"
+            )
         self.handle_validation(db, user, action, template_props, props, document)
         contract_type = db.query(ContractType).filter(
             ContractType.id == props[tagname]["value"]
-        )
+        ).first()
+        
+        if not contract_type:
+            raise NotFoundException(
+                detail="Contract type not found"
+            )
 
         last_contract = get_last_by_user_id(db, user.id)
         last_contract.to_date = datetime.datetime.now()

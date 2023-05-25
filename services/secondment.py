@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException, NotSupportedException
 from models import Secondment, StaffDivision, SecondmentHistory
-from schemas import SecondmentRead, SecondmentCreate, SecondmentUpdate
+from schemas import SecondmentRead, SecondmentCreate, SecondmentUpdate, StaffDivisionOptionRead
 from .base import ServiceBase
 from services import staff_division_service
 from utils import is_valid_uuid
@@ -21,8 +21,11 @@ class SecondmentService(ServiceBase[Secondment, SecondmentCreate, SecondmentUpda
             status = super().create(db, SecondmentCreate(user_id=user_id, staff_division_id=None, name=value))
         return status
     
-    def get_by_option(self, db: Session, option: str, type: str, id: uuid.UUID, skip: int, limit: int):
-        raise NotSupportedException(detail="Use 'staff_division' with 'matreshka' instead of 'option'!")
+    def get_by_option(self, db: Session, type: str, id: uuid.UUID, skip: int, limit: int):
+        if id is None:
+            return [StaffDivisionOptionRead.from_orm(i) for i in staff_division_service.get_all_parents(db, skip, limit)]
+        return [StaffDivisionOptionRead.from_orm(i) for i in staff_division_service.get_child_groups(db, id, skip, limit)]
+
 
     def get_object(self, db: Session, value: str):
         if is_valid_uuid(value):

@@ -19,7 +19,12 @@ class AddBadgeHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        tagname = action["badge"]["tagname"]
+        try:
+            tagname = action["badge"]["tagname"]
+        except:
+            raise ForbiddenException(
+                f"Badge is not defined for this action: {self.__handler__}"
+            )
         self.handle_validation(db, user, action, template_props, props, document)
         res = badge_service.create_relation(db, user.id, props[tagname]["value"])
         user.badges.append(res)

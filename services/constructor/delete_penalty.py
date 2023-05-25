@@ -21,7 +21,12 @@ class DeletePenaltyHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        tagname = action["penalty"]["tagname"]
+        try:
+            tagname = action["penalty"]["tagname"]
+        except:
+            raise ForbiddenException(
+                f"Penalty is not defined for this action: {self.__handler__}"
+            )
         if not penalty_service.exists_relation(db, user.id, props[tagname]["value"]):
             raise ForbiddenException(
                 f"Penalty is not assigned to this user: {user.first_name}, {user.last_name}"
