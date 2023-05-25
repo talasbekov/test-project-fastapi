@@ -111,6 +111,9 @@ class DocumentStaffFunctionService(ServiceBase[DocumentStaffFunction, DocumentSt
             db.add(i)
         db.flush()
 
+    def get_by_staff_unit(self, db: Session, staff_unit: StaffUnit):
+        return db.query(self.model).filter(self.model.staff_units.contains(staff_unit)).all()
+
 
 document_staff_function_service = DocumentStaffFunctionService(
     DocumentStaffFunction)

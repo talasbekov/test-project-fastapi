@@ -26,6 +26,7 @@ def get_db():
         yield db
         db.commit()
     except SQLAlchemyError as e:
+        logging.debug(e)
         db.rollback()
         raise HTTPException(status_code=400, detail=str(e))
     finally:

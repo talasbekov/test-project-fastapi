@@ -1328,8 +1328,8 @@ def upgrade() -> None:
     op.create_table('archive_staff_unit_functions',
     sa.Column('staff_unit_id', sa.UUID(), nullable=False),
     sa.Column('staff_function_id', sa.UUID(), nullable=False),
-    sa.ForeignKeyConstraint(['staff_function_id'], ['archive_staff_functions.id'], onupdate='CASCADE', ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['staff_unit_id'], ['archive_staff_units.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['staff_function_id'], ['archive_staff_functions.id']),
+    sa.ForeignKeyConstraint(['staff_unit_id'], ['archive_staff_units.id']),
     sa.PrimaryKeyConstraint('staff_unit_id', 'staff_function_id')
     )
     op.create_table('user_liberations_liberations',
@@ -1347,27 +1347,25 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('hr_vacancies',
-    sa.Column('position_id', sa.UUID(), nullable=False),
+    sa.Column('staff_unit_id', sa.UUID(), nullable=False),
     sa.Column('is_active', sa.Boolean(), nullable=False),
-    sa.Column('staff_division_id', sa.UUID(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.ForeignKeyConstraint(['position_id'], ['positions.id'], ),
-    sa.ForeignKeyConstraint(['staff_division_id'], ['staff_divisions.id'], ),
+    sa.ForeignKeyConstraint(['staff_unit_id'], ['staff_units.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('hr_vacancy_hr_vacancy_requirements',
-    sa.Column('vacancy_id', sa.UUID(), nullable=True),
-    sa.Column('requirement_id', sa.UUID(), nullable=True),
-    sa.ForeignKeyConstraint(['requirement_id'], ['hr_vacancies_requirements.id'], ),
-    sa.ForeignKeyConstraint(['vacancy_id'], ['hr_vacancies.id'], )
-    )
-    op.create_table('hr_vacancy_candidates',
+    op.create_table('hr_vacancy_hr_vacancy_candidates',
     sa.Column('hr_vacancy_id', sa.UUID(), nullable=True),
-    sa.Column('staff_unit_id', sa.UUID(), nullable=True),
+    sa.Column('user_id', sa.UUID(), nullable=True),
     sa.ForeignKeyConstraint(['hr_vacancy_id'], ['hr_vacancies.id'], ),
-    sa.ForeignKeyConstraint(['staff_unit_id'], ['staff_units.id'], )
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], )
+    )
+    op.create_table('hr_vacancy_hr_vacancy_requirements',
+    sa.Column('hr_vacancy_id', sa.UUID(), nullable=True),
+    sa.Column('hr_vacancy_requirement_id', sa.UUID(), nullable=True),
+    sa.ForeignKeyConstraint(['hr_vacancy_id'], ['hr_vacancies.id'], ),
+    sa.ForeignKeyConstraint(['hr_vacancy_requirement_id'], ['hr_vacancies_requirements.id'], )
     )
     # ### end Alembic commands ###
 
