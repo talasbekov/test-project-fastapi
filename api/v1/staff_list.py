@@ -141,7 +141,7 @@ async def delete(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return staff_list_service.remove(db, id)
+    staff_list_service.remove(db, id)
 
 
 @router.post("/duplicate/{id}/", status_code=status.HTTP_201_CREATED,
