@@ -12,16 +12,10 @@ class ArchiveStaffDivision(NamedNestedModel):
     # Properties
     parent_group_id = Column(UUID(as_uuid=True), ForeignKey("archive_staff_divisions.id"), nullable=True)
     description = Column(TEXT)
+    descriptionKZ = Column(TEXT)
     is_combat_unit = Column(Boolean)
     leader_id = Column(UUID(as_uuid=True), ForeignKey("archive_staff_units.id"), nullable=True)
-<<<<<<< Updated upstream
-=======
 
-    description = Column(TEXT)
-    descriptionKZ = Column(TEXT)
-    children = relationship("ArchiveStaffDivision", foreign_keys=parent_group_id)
-
->>>>>>> Stashed changes
     staff_list_id = Column(UUID(as_uuid=True), ForeignKey("staff_lists.id"), nullable=False)
     origin_id = Column(UUID(as_uuid=True), ForeignKey("staff_divisions.id"), nullable=True)
 

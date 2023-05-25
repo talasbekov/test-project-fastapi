@@ -789,7 +789,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             user_ids=[],
             parent_id=None,
             due_date= datetime.now() + timedelta(days=7),
-            document_step_users_ids=hr_document_template_service.get_steps_by_document_template_id(db, template.id),
+            document_step_users_ids=hr_document_template_service.get_steps_by_document_template_id(db, template.id, user_id=user_id),
             properties={
                 'staff_list': {
                     'name': 'staff_list',
@@ -821,99 +821,97 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             self.model.parent_id == super_document.id
         ).all()
 
-        completed_status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.COMPLETED.value)            
-        
-        for child_document in child_documents:
-            if child_document.last_step is None and child_document.status_id is completed_status.id:
-                raise InvalidOperationException(detail=f'Document with id {child_document.id} is already signed!')
+        completed_status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.COMPLETED.value)
         
         if is_signed:
             if super_document_next_step is None:
                 return await self._finish_super_document(db, super_document)
-            
+
             in_progress_status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.IN_PROGRESS.value)
             
             super_document.status_id = in_progress_status.id
             super_document.last_step_id = super_document_next_step.id
-
         else:
             if super_document_next_step is None:
-                
                 canceled_status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.CANCELED.value)
                 
                 super_document.status_id = canceled_status.id
                 super_document.last_step_id = None
-                
-                for child_document in child_documents:
-                    child_document.status_id = canceled_status.id
-                    child_document.last_step = None
-                    
-                db.add_all(child_documents)
-                db.add(super_document)
-                db.flush()
-                    
-                return super_document
-            
-            steps = hr_document_step_service.get_all_by_document_template_id(
-                db, super_document.hr_document_template_id, False
-            )
-            
-            for step in steps:
-                signed_info = hr_document_info_service.get_signed_by_document_id_and_step_id(db, super_document.id, step.id)
-
-                hr_document_info_service.create_info_for_step(
-                    db, super_document.id, step.id, signed_info.assigned_to_id, None, None, None
-                )
-                
-                info = hr_document_info_service.get_by_document_id_and_step_id(
-                    db, super_document.id, super_document.last_step_id
-                )
-
-                if step == info.hr_document_step:
-                    break
-
-            super_document.last_step = steps[0]
-
-            on_revision_status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.ON_REVISION.value)
-
-            super_document.status_id = on_revision_status.id
-
-            for child_document in child_documents:
-                steps = hr_document_step_service.get_all_by_document_template_id(
-                    db, child_document.hr_document_template_id
+            else:
+                steps = hr_document_step_service.get_all_by_document_template_id_without_notifiers(
+                    db, super_document.hr_document_template_id
                 )
 
                 for step in steps:
-                    signed_info = hr_document_info_service.get_signed_by_document_id_and_step_id(db, child_document.id, step.id)
+                    had_step = False
+                    count = 1
+                    while True:
+                        try:
+                            signed_info = hr_document_info_service.get_signed_by_document_id_and_step_id(db, super_document.id, step.id, count)
+                            had_step = True
+                            hr_document_info_service.create_info_for_step(
+                                db, super_document.id, step.id, signed_info.assigned_to_id, None, None, None, signed_info.order
+                            )
 
-                    hr_document_info_service.create_info_for_step(
-                        db, child_document.id, step.id, signed_info.assigned_to_id, None, None, None
-                    )
-                    
-                    child_document_info = hr_document_info_service.get_by_document_id_and_step_id(
-                        db, child_document.id, child_document.last_step_id
-                    )
-
-                    if step == child_document_info.hr_document_step:
+                            count += 1
+                        except SgoErpException:
+                            break
+                    if not had_step:
                         break
 
-                child_document.last_step = steps[0]
+                super_document.last_step = steps[0]
 
-                child_document.status_id = on_revision_status.id
-                
+                on_revision_status: HrDocumentStatus = hr_document_status_service.get_by_name(db,
+                                                                                            HrDocumentStatusEnum.ON_REVISION.value)
+
+                super_document.status_id = on_revision_status.id
+        
         for child_document in child_documents:
+            if child_document.last_step is None and child_document.status_id is completed_status.id:
+                raise InvalidOperationException(detail=f'Document with id {child_document.id} is already signed!')
+            
             child_document_info = hr_document_info_service.get_by_document_id_and_step_id(
-                    db, child_document.id, child_document.last_step_id
-                )
+                db, child_document.id, child_document.last_step_id
+            )
 
             hr_document_info_service.sign(db, child_document_info, user, comment, is_signed)
-            
-            next_step = hr_document_step_service.get_next_step_from_previous_step(
-                db, child_document_info.hr_document_step
-            )
-            
-            child_document.last_step_id = next_step.id
-            child_document.status_id = in_progress_status.id
+
+            if is_signed:
+                next_step = hr_document_step_service.get_next_step_from_previous_step(
+                    db, child_document_info.hr_document_step
+                )
+                
+                child_document.last_step_id = next_step.id
+                child_document.status_id = in_progress_status.id
+            else:
+                if super_document_next_step is None:
+                    child_document.status_id = canceled_status.id
+                    child_document.last_step = None
+                else:
+                    child_steps = hr_document_step_service.get_all_by_document_template_id_without_notifiers(
+                        db, child_document.hr_document_template_id
+                    )
+                    
+                    for step in child_steps:
+
+                        had_step = False
+                        count = 1
+                        while True:
+                            try:
+                                had_step = True
+                                hr_document_info_service.create_info_for_step(
+                                    db, child_document.id, step.id, child_document_info.assigned_to_id, None, None, None, child_document_info.order
+                                )
+
+                                count += 1
+                            except SgoErpException:
+                                break
+                        if not had_step:
+                            break
+
+                    child_document.last_step = child_steps[0]
+
+                    child_document.status_id = on_revision_status.id
 
         db.add_all(child_documents)
         db.add(super_document)

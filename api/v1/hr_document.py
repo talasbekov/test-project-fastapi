@@ -362,4 +362,4 @@ async def initialize_from_staff_list(*,
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
     role = Authorize.get_raw_jwt()['role']
-    return await hr_document_service.initialize_super_document(db, id, user_id, role)
+    return await hr_document_service.initialize_super_document(db=db, staff_list_id=id, user_id=user_id, role=role)

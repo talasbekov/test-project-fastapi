@@ -174,11 +174,12 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
             raise NotFoundException(detail="Hr document not found")
         return super_doc
 
-    def get_drafts(self, db: Session, skip: int = 0, limit: int = 100):
+    def get_drafts(self, db: Session, skip: int = 0, limit: int = 100, filter: str = ''):
         staff_lists = (db.query(StaffList)
                   .join(User)
                   .options(joinedload(StaffList.user))
-                  .filter(StaffList.is_signed == False)
+                  .filter(StaffList.is_signed == False,
+                          StaffList.name.contains(filter))
                   .offset(skip)
                   .limit(limit)
                   .all())
@@ -186,11 +187,12 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         return [StaffListStatusRead.from_orm(staff_list)
                             for staff_list in staff_lists]
 
-    def get_signed(self, db: Session, skip: int = 0, limit: int = 100):
+    def get_signed(self, db: Session, skip: int = 0, limit: int = 100, filter: str = ''):
         staff_lists = (db.query(StaffList)
                   .join(User)
                   .options(joinedload(StaffList.user))
-                  .filter(StaffList.is_signed == True)
+                  .filter(StaffList.is_signed == True,
+                          StaffList.name.contains(filter))
                   .offset(skip)
                   .limit(limit)
                   .all())
