@@ -866,7 +866,7 @@ def upgrade() -> None:
                 'name': 'Инициатор приказа об изменении штатного расписания',
                 'nameKZ': 'Штаттық кестені өзгерту туралы бұйрықтың бастамашысы',
                 'jurisdiction_id': jurisdiction_id,
-                'priority': 3,
+                'priority': 1,
                 'role_id': doc_type5_id
             },
             {
@@ -886,7 +886,7 @@ def upgrade() -> None:
                 'name': 'Эксперт приказа об изменении штатного расписания',
                 'nameKZ': 'Штаттық кестені өзгерту туралы бұйрықтың сарапшысы',
                 'jurisdiction_id': jurisdiction_id,
-                'priority': 3,
+                'priority': 2,
                 'role_id': doc_type2_id
             },
 
@@ -897,7 +897,7 @@ def upgrade() -> None:
                 'name': 'Утверждающий приказа об изменении штатного расписания',
                 'nameKZ': 'Штаттық кестені өзгерту туралы бұйрықтың бекітушісі',
                 'jurisdiction_id': jurisdiction_id,
-                'priority': 3,
+                'priority': 100,
                 'role_id': doc_type3_id
             },
             {
@@ -907,7 +907,7 @@ def upgrade() -> None:
                 'name': 'Инициатор приказа об назначении на должность (штатное расписание)',
                 'nameKZ': 'Штаттық кестенің (жұмыс кестесінің) мүшесіне тағайындау туралы бұйрықтың бастамашысы',
                 'jurisdiction_id': jurisdiction_id,
-                'priority': 3,
+                'priority': 1,
                 'role_id': doc_type5_id
             },
             {
@@ -927,7 +927,7 @@ def upgrade() -> None:
                 'name': 'Эксперт приказа о назначении на должность (штатное расписание)',
                 'nameKZ': 'Штаттық кестенің (жұмыс кестесінің) мүшесіне тағайындау туралы бұйрықтың сарапшысы',
                 'jurisdiction_id': jurisdiction_id,
-                'priority': 3,
+                'priority': 2,
                 'role_id': doc_type2_id
             },
 
@@ -938,7 +938,7 @@ def upgrade() -> None:
                 'name': 'Утверждающий приказа о назначении на должность (штатное расписание)',
                 'nameKZ': 'Штаттық кестенің (жұмыс кестесінің) мүшесіне тағайындау туралы бұйрықтың бекітушісі',
                 'jurisdiction_id': jurisdiction_id,
-                'priority': 3,
+                'priority': 100,
                 'role_id': doc_type3_id
             }
 
