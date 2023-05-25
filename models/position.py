@@ -34,9 +34,5 @@ class Position(NamedModel):
 
     __tablename__ = "positions"
 
-    max_rank_id = Column(UUID(as_uuid=True), ForeignKey("ranks.id"),
-                         nullable=True)
-    max_rank = relationship("Rank", foreign_keys=max_rank_id)
-    
     rank = relationship("Rank", cascade="all,delete")
     category_code = Column(String, nullable=False)
