@@ -15,7 +15,6 @@ class DocumentStaffFunctionTypeService(ServiceBase[DocumentFunctionType, Documen
 
     def get_initiator(self, db: Session) -> DocumentFunctionType:
         res = db.query(self.model).filter(self.model.name == DocumentFunctionTypeEnum.INITIATOR.value).first()
-        print(res)
         if not res:
             raise NotFoundException(detail=f"DocumentFunctionType with name: {DocumentFunctionTypeEnum.INITIATOR.value} is not found!")
         return res

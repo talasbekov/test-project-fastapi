@@ -33,7 +33,6 @@ class ApplyStaffListHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        print("apply_staff_list handler")
         staff_list_tagname = action["staff_list"]["tagname"]
         staff_list_id = props[staff_list_tagname]["value"]
 

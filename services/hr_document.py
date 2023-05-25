@@ -481,8 +481,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         current_user = user_service.get_by_id(db, user_id)
 
-        print(info.assigned_to_id, current_user.id)
-
         if info.assigned_to_id != current_user.id:
             raise ForbiddenException(
                 detail=f"User {user_id} is not assigned to this step!"
@@ -546,8 +544,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             steps = hr_document_step_service.get_all_by_document_template_id_without_notifiers(
                 db, document.hr_document_template_id
             )
-
-            print(len(steps))
 
             for step in steps:
                 had_step = False
@@ -931,7 +927,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         for i in super_template.actions['args']:
             action_name = list(i)[0]
             action = i[action_name]
-            print(action_name)
 
             if handlers.get(action_name) is None:
                 raise InvalidOperationException(
