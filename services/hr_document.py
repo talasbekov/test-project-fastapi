@@ -838,19 +838,25 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 super_document.status_id = canceled_status.id
                 super_document.last_step_id = None
             else:
-                steps = hr_document_step_service.get_all_by_document_template_id(
+                steps = hr_document_step_service.get_all_by_document_template_id_without_notifiers(
                     db, super_document.hr_document_template_id
                 )
 
                 for step in steps:
+                    had_step = False
+                    count = 1
+                    while True:
+                        try:
+                            signed_info = hr_document_info_service.get_signed_by_document_id_and_step_id(db, super_document.id, step.id, count)
+                            had_step = True
+                            hr_document_info_service.create_info_for_step(
+                                db, super_document.id, step.id, signed_info.assigned_to_id, None, None, None, signed_info.order
+                            )
 
-                    signed_info = hr_document_info_service.get_signed_by_document_id_and_step_id(db, super_document.id, step.id)
-
-                    hr_document_info_service.create_info_for_step(
-                        db, super_document.id, step.id, signed_info.assigned_to_id, None, None, None
-                    )
-
-                    if step == super_document_info.hr_document_step:
+                            count += 1
+                        except SgoErpException:
+                            break
+                    if not had_step:
                         break
 
                 super_document.last_step = steps[0]
@@ -882,17 +888,25 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                     child_document.status_id = canceled_status.id
                     child_document.last_step = None
                 else:
-                    child_steps = hr_document_step_service.get_all_by_document_template_id(
+                    child_steps = hr_document_step_service.get_all_by_document_template_id_without_notifiers(
                         db, child_document.hr_document_template_id
                     )
                     
                     for step in child_steps:
 
-                        hr_document_info_service.create_info_for_step(
-                            db, child_document.id, step.id, child_document_info.assigned_to_id, None, None, None
-                        )
+                        had_step = False
+                        count = 1
+                        while True:
+                            try:
+                                had_step = True
+                                hr_document_info_service.create_info_for_step(
+                                    db, child_document.id, step.id, child_document_info.assigned_to_id, None, None, None, child_document_info.order
+                                )
 
-                        if step == child_document_info.hr_document_step:
+                                count += 1
+                            except SgoErpException:
+                                break
+                        if not had_step:
                             break
 
                     child_document.last_step = child_steps[0]

@@ -2583,8 +2583,27 @@ def upgrade() -> None:
             'previous_step_id': step4_3,
             'staff_function_id': staff_function16_id,
             'id': step4_4
-        },
-          {
+        }, {
+            'hr_document_template_id': template8_id,
+            'previous_step_id': None,
+            'staff_function_id': staff_function4_id,
+            'id': step5_1
+        }, {
+            'hr_document_template_id': template8_id,
+            'previous_step_id': step5_1,
+            'staff_function_id': staff_function5_id,
+            'id': step5_2
+        }, {
+            'hr_document_template_id': template8_id,
+            'previous_step_id': step5_2,
+            'staff_function_id': staff_function10_id,
+            'id': step5_3
+        }, {
+            'hr_document_template_id': template8_id,
+            'previous_step_id': step5_2,
+            'staff_function_id': staff_function6_id,
+            'id': step5_4
+        }, {
             'hr_document_template_id': template9_id,
             'previous_step_id': None,
             'staff_function_id': staff_function17_id,
