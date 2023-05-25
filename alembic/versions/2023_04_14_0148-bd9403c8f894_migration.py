@@ -2517,7 +2517,8 @@ def upgrade() -> None:
                     "alias_name": "Процент",
                     'alias_nameKZ': 'Пайыз',
                     "type": "read",
-                    "data_taken": "manual"
+                    "data_taken": "manual",
+                    'data_type': 'number'
                 }
             },
             'actions': {'args': [
@@ -2525,6 +2526,9 @@ def upgrade() -> None:
                     'position_change': {
                         'staff_unit': {
                             'tagname': 'new_position'
+                        },
+                        'percent': {
+                            'tagname': 'number'
                         }
                     }
                 }
@@ -3988,18 +3992,17 @@ def upgrade() -> None:
         Base.metadata.tables['contract_types'],
         [{
             'id': contract_type_id,
-            'name': 'Тип 1',
-            'nameKZ': 'Тип 1',
+            'name': 'Контракт на 2 года',
+            'nameKZ': '2 жылға арналған келісімшарт',
             'years': 2,
             'is_finite': True
-        },
-            {
-                'id': contract_type2_id,
-                'name': 'Тип 2',
-                'nameKZ': 'Тип 2',
-                'years': -1,
-                'is_finite': False
-            }]
+        }, {
+            'id': contract_type2_id,
+            'name': 'Тип 2',
+            'nameKZ': 'Тип 2',
+            'years': -1,
+            'is_finite': False
+        }]
     )
 
     contract_id = get_uuid()
