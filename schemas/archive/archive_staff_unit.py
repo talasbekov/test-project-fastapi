@@ -66,8 +66,8 @@ class ArchiveStaffUnitRead(ArchiveStaffUnitBase):
     staff_functions: Optional[List]
     position_id: Optional[uuid.UUID]
     position: Optional[PositionRead]
-    users: Optional[List[Optional[UserRead]]]
-    actual_users: Optional[List[Optional[UserRead]]]
+    user: Optional[UserRead]
+    actual_user: Optional[UserRead]
 
     class Config:
         orm_mode = True
