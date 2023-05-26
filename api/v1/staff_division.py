@@ -7,7 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import (StaffDivisionCreate, StaffDivisionRead, StaffDivisionHrVacancyRead,
+from schemas import (StaffDivisionCreate, StaffDivisionRead,
                      StaffDivisionUpdate, StaffDivisionUpdateParentGroup)
 from services import staff_division_service
 
@@ -34,7 +34,7 @@ async def get_all(*,
 
 
 @router.get("/departments/", dependencies=[Depends(HTTPBearer())],
-            response_model=List[StaffDivisionHrVacancyRead],
+            response_model=List[StaffDivisionRead],
             summary="Get all Staff Divisions")
 async def get_departments(*,
     db: Session = Depends(get_db),
@@ -49,7 +49,7 @@ async def get_departments(*,
        - **limit**: int - The maximum number of staff divisions to return in the response. This parameter is optional and defaults to 100.
    """
     Authorize.jwt_required()
-    return staff_division_service.get_departments(db, skip, limit)
+    return staff_division_service.get_all_departments(db, skip, limit)
 
 @router.get("/division_parents/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=StaffDivisionRead,

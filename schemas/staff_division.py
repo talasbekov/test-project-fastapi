@@ -77,15 +77,12 @@ class StaffUnitRead(ReadModel):
 
 class StaffDivisionRead(StaffDivisionBase, ReadNamedModel):
     is_combat_unit: Optional[bool]
+    count_vacancies: Optional[int]
     children: Optional[List['StaffDivisionRead']]
     staff_units: Optional[List['StaffUnitRead']]
 
     class Config:
         orm_mode = True
-        
-
-class StaffDivisionHrVacancyRead(StaffDivisionRead):
-    count_vacancies: Optional[int]
 
 
 class StaffDivisionOptionRead(StaffDivisionBase, ReadNamedModel):

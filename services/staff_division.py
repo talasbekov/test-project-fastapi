@@ -1,5 +1,5 @@
 import uuid
-from typing import List
+from typing import List, Dict, Any
 
 from sqlalchemy.orm import Session
 from sqlalchemy import and_
@@ -14,7 +14,6 @@ from schemas import (
     StaffDivisionUpdate,
     StaffDivisionUpdateParentGroup,
     StaffDivisionOptionRead,
-    StaffDivisionHrVacancyRead
 )
 
 from .base import ServiceBase
@@ -28,18 +27,30 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
             raise NotFoundException(f"StaffDivision with id: {id} is not found!")
         return group
 
-    def get_departments(
+    def get_all_departments(
             self,
             db: Session,
             skip: int = 0,
             limit: int = 100
-    ) -> List[StaffDivisionHrVacancyRead]:
+    ) -> List[Dict[str, Any]]:
         service_staff_function = self.get_by_name(db, StaffDivisionEnum.SERVICE.value)
         departments = db.query(self.model).filter(
             StaffDivision.parent_group_id == service_staff_function.id
         ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
         
         return [self._return_correctly(db, department) for department in departments]
+
+    def get_departments(
+            self,
+            db: Session,
+            skip: int = 0,
+            limit: int = 100
+    ) -> List[StaffDivision]:
+        service_staff_function = self.get_by_name(db, StaffDivisionEnum.SERVICE.value)
+        departments = db.query(self.model).filter(
+            StaffDivision.parent_group_id == service_staff_function.id
+        ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
+        return departments
 
     def get_all_parents(self, db: Session, skip: int, limit: int) -> List[StaffDivision]:
         parents = db.query(self.model).filter(
@@ -191,7 +202,7 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
         
         count_vacancies = self._get_count_vacancies_recursive(db, staff_division)
         
-        staff_division = StaffDivisionHrVacancyRead.from_orm(staff_division).dict()
+        staff_division = StaffDivisionRead.from_orm(staff_division).dict()
         
         staff_division['count_vacancies'] = count_vacancies
         
@@ -201,9 +212,9 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
     def _get_count_vacancies_recursive(self, db: Session, staff_division: StaffDivision):
         
         count_vacancies = (
-            db.query(HrVacancy)\
-                .join(StaffUnit, HrVacancy.staff_unit_id == StaffUnit.id)\
-                .join(StaffDivision, StaffUnit.staff_division_id == StaffDivision.id)\
+            db.query(HrVacancy)
+                .join(StaffUnit, HrVacancy.staff_unit_id == StaffUnit.id)
+                .join(StaffDivision, StaffUnit.staff_division_id == StaffDivision.id)
                 .filter(
                     HrVacancy.staff_unit_id == StaffUnit.id,
                     StaffUnit.staff_division_id == staff_division.id

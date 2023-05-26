@@ -30,7 +30,7 @@ from .staff_function import (DocumentStaffFunctionCreate, DocumentStaffFunctionR
 from .status import *
 from .staff_division import (StaffDivisionCreate, StaffDivisionRead,
                              StaffDivisionUpdate, StaffDivisionUpdateParentGroup,
-                             StaffDivisionOptionRead, StaffUnitDivisionRead, StaffDivisionHrVacancyRead)
+                             StaffDivisionOptionRead, StaffUnitDivisionRead)
 from .staff_unit import StaffUnitCreate, StaffUnitRead, StaffUnitUpdate, UserStaffUnitRead
 from .hr_document_step import (HrDocumentStepCreate, HrDocumentStepRead,
                                HrDocumentStepUpdate)
