@@ -2,7 +2,7 @@ import uuid
 from typing import List, Optional
 
 from pydantic import BaseModel
-from schemas import NamedModel
+from schemas import NamedModel, StaffUnitRead
 
 
 
@@ -37,9 +37,8 @@ class ArchiveStaffDivisionUpdateParentGroup(BaseModel):
 
 class ArchiveStaffDivisionRead(ArchiveStaffDivisionBase):
     id: Optional[uuid.UUID]
-    name: Optional[str]
     children: Optional[List['ArchiveStaffDivisionRead']]
-    staff_units: Optional[List]
+    staff_units: Optional[List['StaffUnitRead']]
 
     class Config:
         orm_mode = True

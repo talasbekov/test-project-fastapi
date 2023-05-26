@@ -783,80 +783,80 @@ async def get_all_actions():
             ],
         },
     },
-    # {
-    #     'action_name': 'Отпуск по болезни',
-    #     'action_nameKZ': 'Ауру демалысы',
-    #     'action_type': 'temporary_status_change',
-    #     'children': [
-    #         {
-    #             'alias_name': 'Временный статус',
-    #             'action_nameKZ': 'Уақытша мәртебе',
-    #             'tagname': 'status',
-    #             'data_taken': 'dropdown',
-    #             'field_name': 'statuses',
-    #         },
-    #         {
-    #             'alias_name': 'Дата начала',
-    #             'action_nameKZ': 'Басталу күні',
-    #             'tagname': 'date_from',
-    #             'data_taken': 'manual',
-    #             'data_type': 'date',
-    #         },
-    #         {
-    #             'alias_name': 'Дата конца',
-    #             'action_nameKZ': 'Аяқталу күні',
-    #             'tagname': 'date_to',
-    #             'data_taken': 'manual',
-    #             'data_type': 'date',
-    #         },
-    #     ],
-    #     'properties': {
-    #         'status': {
-    #             'alias_name': 'Временный статус',
-    #             'action_nameKZ': 'Уақытша мәртебе',
-    #             'type': 'write',
-    #             'data_taken': 'dropdown',
-    #             'field_name': 'statuses',
-    #         },
-    #         'date_from': {
-    #             'alias_name': 'Дата начала',
-    #             'action_nameKZ': 'Басталу күні',
-    #             'type': 'read',
-    #             'data_taken': 'manual',
-    #             'data_type': 'date',
-    #         },
-    #         'date_to': {
-    #             'alias_name': 'Дата конца',
-    #             'action_nameKZ': 'Аяқталу күні',
-    #             'type': 'read',
-    #             'data_taken': 'manual',
-    #             'data_type': 'date',
-    #         },
-    #     },
-    #     'actions': {
-    #         'args': [
-    #             {
-    #                 'temporary_status_change': {
-    #                     'status': {
-    #                         'tagname': 'status',
-    #                         'alias_name': 'Временный статус',
-    #                         'action_nameKZ': 'Уақытша мәртебе',
-    #                     },
-    #                     'date_from': {
-    #                         'tagname': 'date_from',
-    #                         'alias_name': 'Дата начала',
-    #                         'action_nameKZ': 'Басталу күні',
-    #                     },
-    #                     'date_to': {
-    #                         'tagname': 'date_to',
-    #                         'alias_name': 'Дата конца',
-    #                         'action_nameKZ': 'Аяқталу күні',
-    #                     },
-    #                 },
-    #             },
-    #         ],
-    #     },
-    # },
+    {
+        'action_name': 'Отпуск по болезни',
+        'action_nameKZ': 'Ауру демалысы',
+        'action_type': 'temporary_status_change',
+        'children': [
+            {
+                'alias_name': 'Временный статус',
+                'action_nameKZ': 'Уақытша мәртебе',
+                'tagname': 'status',
+                'data_taken': 'dropdown',
+                'field_name': 'statuses',
+            },
+            {
+                'alias_name': 'Дата начала',
+                'action_nameKZ': 'Басталу күні',
+                'tagname': 'date_from',
+                'data_taken': 'manual',
+                'data_type': 'date',
+            },
+            {
+                'alias_name': 'Дата конца',
+                'action_nameKZ': 'Аяқталу күні',
+                'tagname': 'date_to',
+                'data_taken': 'manual',
+                'data_type': 'date',
+            },
+        ],
+        'properties': {
+            'status': {
+                'alias_name': 'Временный статус',
+                'action_nameKZ': 'Уақытша мәртебе',
+                'type': 'write',
+                'data_taken': 'dropdown',
+                'field_name': 'statuses',
+            },
+            'date_from': {
+                'alias_name': 'Дата начала',
+                'action_nameKZ': 'Басталу күні',
+                'type': 'read',
+                'data_taken': 'manual',
+                'data_type': 'date',
+            },
+            'date_to': {
+                'alias_name': 'Дата конца',
+                'action_nameKZ': 'Аяқталу күні',
+                'type': 'read',
+                'data_taken': 'manual',
+                'data_type': 'date',
+            },
+        },
+        'actions': {
+            'args': [
+                {
+                    'temporary_status_change': {
+                        'status': {
+                            'tagname': 'status',
+                            'alias_name': 'Временный статус',
+                            'action_nameKZ': 'Уақытша мәртебе',
+                        },
+                        'date_from': {
+                            'tagname': 'date_from',
+                            'alias_name': 'Дата начала',
+                            'action_nameKZ': 'Басталу күні',
+                        },
+                        'date_to': {
+                            'tagname': 'date_to',
+                            'alias_name': 'Дата конца',
+                            'action_nameKZ': 'Аяқталу күні',
+                        },
+                    },
+                },
+            ],
+        },
+    },
     {
         'data_taken': 'auto',
         'properties': [

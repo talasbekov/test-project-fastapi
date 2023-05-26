@@ -489,7 +489,9 @@ class EmergencyContactRead(ReadModel):
         staff_division_name = orm_obj.staff_division.name if orm_obj.staff_division else None
         staff_division_nameKZ = orm_obj.staff_division.nameKZ if orm_obj.staff_division else None
 
-        date_to = orm_obj.date_to or datetime.now()
+        date_to = orm_obj.date_to or datetime.now(orm_obj.date_from.tzinfo)
+        print(orm_obj.date_from, type(orm_obj.date_from))
+        print(date_to, type(date_to))
         length_of_service = get_date_difference(orm_obj.date_from, date_to)
         return cls(
             id=orm_obj.id,
