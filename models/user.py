@@ -21,7 +21,7 @@ class User(isActiveModel):
     phone_number = Column(String(32))
     address = Column(String(255))
     rank_id = Column(
-        UUID(as_uuid=True), ForeignKey("ranks.id"), nullable=True)
+        UUID(as_uuid=True), ForeignKey("ranks.id", ondelete='SET NULL'), nullable=True)
     last_signed_at = Column(TIMESTAMP(timezone=True), nullable=True)
     
     staff_unit_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"), nullable=False)
@@ -36,7 +36,7 @@ class User(isActiveModel):
     iin = Column(String(255), nullable=True)
     date_birth = Column(TIMESTAMP(timezone=True))
 
-    rank = relationship("Rank", cascade="all,delete")
+    rank = relationship("Rank", cascade="")
     badges = relationship("Badge", back_populates='user', cascade="all,delete")
 
     staff_unit = relationship("StaffUnit", back_populates="users", foreign_keys=staff_unit_id)

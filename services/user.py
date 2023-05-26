@@ -19,6 +19,7 @@ from models import (
     HrDocumentTemplate,
     Attestation,
     Badge,
+    Rank,
     Contract,
     Coolness,
     Equipment,
@@ -158,12 +159,23 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             user.date_birth = body.date_birth
         if body.iin is not None:
             user.iin = body.iin
+        if self._validate_id(db, body.id):
+            print('id is valid')
+            self.update_id(db, user.id, body.id)    
 
         db.add(user)
         db.flush()
 
         return user
-
+    
+    def _validate_id(self, db: Session, id: str):
+        if id is None:
+            return False
+        user = db.query(self.model).filter(self.model.id == id).first()
+        if user is not None:
+            raise BadRequestException(detail="User with this id already exists!")
+        return True
+    
     def get_fields(self):
         fields = [key for key, value in User.__dict__.items() if
                   (not 'id' in key and not isinstance(value, CALLABLES) and not key.startswith('_'))]
@@ -369,8 +381,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
     def update_id(self, db: Session, id: uuid.UUID, new_id: uuid.UUID):
         user = self.get_by_id(db, id)
-        if self.get(db, new_id) is not None:
-            raise BadRequestException(f"User with id {new_id} already exists!")
+
         new_user = User(
             id=new_id,
             first_name=user.first_name,
@@ -392,8 +403,11 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             iin=user.iin,
             date_birth=user.date_birth,
         )
+        print('create new user')
         db.add(new_user)
-        print(new_user.id)
+        db.commit()
+        new_user = self.get_by_id(db, new_id)
+        print('new user created')
         db.query(History).filter(History.user_id == id).update({'user_id': new_user.id})
         db.query(Profile).filter(Profile.user_id == id).update({'user_id': new_user.id})
         db.query(Attestation).filter(Attestation.user_id == id).update({'user_id': new_user.id})
@@ -402,8 +416,8 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         db.query(Coolness).filter(Coolness.user_id == id).update({Coolness.user_id: new_user.id})
         db.query(Equipment).filter(Equipment.user_id == id).update({Equipment.user_id: new_user.id})
         db.query(Event).filter(Event.user_id == id).update({Event.user_id: new_user.id})
-        db.query(HrDocumentInfo.filter(HrDocumentInfo.signed_by_id == id).update({HrDocumentInfo.signed_by_id: new_user.id}))
-        db.query(HrDocumentInfo.filter(HrDocumentInfo.assigned_to_id == id).update({HrDocumentInfo.assigned_to_id: new_user.id}))
+        db.query(HrDocumentInfo).filter(HrDocumentInfo.signed_by_id == id).update({HrDocumentInfo.signed_by_id: new_user.id})
+        db.query(HrDocumentInfo).filter(HrDocumentInfo.assigned_to_id == id).update({HrDocumentInfo.assigned_to_id: new_user.id})
         db.query(HrDocument).filter(HrDocument.initialized_by_id == id).update({HrDocument.initialized_by_id: new_user.id})
         db.query(Notification).filter(Notification.receiver_id == id).update({Notification.receiver_id: new_user.id})
         db.query(Penalty).filter(Penalty.user_id == id).update({Penalty.user_id: new_user.id})
@@ -422,11 +436,15 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         db.query(NameChangeHistory).filter(NameChangeHistory.user_id == id).update({NameChangeHistory.user_id: new_user.id})
         db.query(ServiceCharacteristicHistory).filter(ServiceCharacteristicHistory.characteristic_initiator_id == id).update({ServiceCharacteristicHistory.characteristic_initiator_id: new_user.id})
         db.query(Candidate).filter(Candidate.recommended_by == id).update({Candidate.recommended_by: new_user.id})
+
         db.flush()
-        self.remove(user.id)
+        print('flushed')
+        self.remove(db, id)
+        print('removed')
         new_user.email = user.email
         new_user.call_sign = user.call_sign
         new_user.id_number = user.id_number
+        
         db.add(new_user)
         db.flush()
         return new_user
