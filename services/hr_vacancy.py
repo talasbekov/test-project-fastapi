@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from exceptions.client import ForbiddenException, NotFoundException
 from models import (HrVacancy, StaffUnit, StaffDivision,
-                    StaffDivisionEnum, PositionNameEnum)
+                    User, PositionNameEnum)
 from schemas import (HrVacancyCreate, HrVacancyUpdate,
                      HrVacancyRead, HrVacancyStaffDivisionRead)
 from .base import ServiceBase
@@ -101,7 +101,7 @@ class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate])
         return vacancy
     
     
-    def get_candidates(self, db: Session, id: str, role_id: str) -> List[StaffUnit]:
+    def get_candidates(self, db: Session, id: str, role_id: str) -> List[User]:
         
         if not self._check_by_role(db, role_id):
             raise ForbiddenException("You don't have permission to manage vacancy!")
