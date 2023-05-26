@@ -38,3 +38,4 @@ class Position(NamedModel):
                          nullable=True)
     
     rank = relationship("Rank", cascade="all,delete")
+    max_rank = relationship("Rank", foreign_keys=max_rank_id)

@@ -21,6 +21,7 @@ class PositionUpdate(PositionBase):
 class PositionRead(PositionBase, ReadNamedModel):
 
     max_rank_id: Optional[uuid.UUID]
+    max_rank: Optional[RankRead]
     rank: Optional[RankRead]
 
     class Config:
