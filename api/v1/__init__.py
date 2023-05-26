@@ -42,6 +42,7 @@ from .notification import router as notification_router
 from .action import router as action_router
 from .hr_vacancy import router as hr_vacancy_router
 from .hr_vacancy_requirement import router as hr_vacancy_requirement_router
+from .position import router as position_router
 
 router = APIRouter(prefix="/v1")
 
@@ -103,3 +104,4 @@ router.include_router(military_unit_router)
 router.include_router(recommender_user_router)
 router.include_router(hr_vacancy_router)
 router.include_router(hr_vacancy_requirement_router)
+router.include_router(position_router)
