@@ -7,6 +7,7 @@ from schemas import RankRead
 
 class PositionBase(NamedModel):
     category_code: str
+    max_rank_id: Optional[uuid.UUID]
 
 
 class PositionCreate(PositionBase):
@@ -22,7 +23,6 @@ class PositionRead(PositionBase, ReadNamedModel):
 
     max_rank_id: Optional[uuid.UUID]
     max_rank: Optional[RankRead]
-    rank: Optional[RankRead]
 
     class Config:
         orm_mode = True
