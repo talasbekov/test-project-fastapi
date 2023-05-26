@@ -6,13 +6,15 @@ from sqlalchemy import and_
 from fastapi.logger import logger as log
 
 from exceptions import BadRequestException, NotFoundException, NotSupportedException
-from models import StaffDivision, StaffDivisionEnum, ArchiveStaffDivision
+from models import (StaffDivision, StaffDivisionEnum, ArchiveStaffDivision,
+                    StaffUnit, HrVacancy)
 from schemas import (
     StaffDivisionCreate,
     StaffDivisionRead,
     StaffDivisionUpdate,
     StaffDivisionUpdateParentGroup,
     StaffDivisionOptionRead,
+    StaffDivisionHrVacancyRead
 )
 
 from .base import ServiceBase
@@ -31,12 +33,13 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
             db: Session,
             skip: int = 0,
             limit: int = 100
-    ) -> List[StaffDivision]:
+    ) -> List[StaffDivisionHrVacancyRead]:
         service_staff_function = self.get_by_name(db, StaffDivisionEnum.SERVICE.value)
         departments = db.query(self.model).filter(
             StaffDivision.parent_group_id == service_staff_function.id
         ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
-        return departments
+        
+        return [self._return_correctly(db, department) for department in departments]
 
     def get_all_parents(self, db: Session, skip: int, limit: int) -> List[StaffDivision]:
         parents = db.query(self.model).filter(
@@ -182,6 +185,35 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
 
     def delete_all_inactive(self, db: Session):
         pass
+    
+    
+    def _return_correctly(self, db: Session, staff_division: StaffDivision):
+        
+        count_vacancies = self._get_count_vacancies_recursive(db, staff_division)
+        
+        staff_division = StaffDivisionHrVacancyRead.from_orm(staff_division).dict()
+        
+        staff_division['count_vacancies'] = count_vacancies
+        
+        return staff_division
+    
+        
+    def _get_count_vacancies_recursive(self, db: Session, staff_division: StaffDivision):
+        
+        count_vacancies = (
+            db.query(HrVacancy)\
+                .join(StaffUnit, HrVacancy.staff_unit_id == StaffUnit.id)\
+                .join(StaffDivision, StaffUnit.staff_division_id == StaffDivision.id)\
+                .filter(
+                    HrVacancy.staff_unit_id == StaffUnit.id,
+                    StaffUnit.staff_division_id == staff_division.id
+                ).count()
+        )
+        
+        for child in staff_division.children:
+            count_vacancies += self._get_count_vacancies_recursive(db, child)
+            
+        return count_vacancies
 
 
 staff_division_service = StaffDivisionService(StaffDivision)

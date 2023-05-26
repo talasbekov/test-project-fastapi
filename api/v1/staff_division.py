@@ -7,7 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import (StaffDivisionCreate, StaffDivisionRead,
+from schemas import (StaffDivisionCreate, StaffDivisionRead, StaffDivisionHrVacancyRead,
                      StaffDivisionUpdate, StaffDivisionUpdateParentGroup)
 from services import staff_division_service
 
@@ -34,7 +34,7 @@ async def get_all(*,
 
 
 @router.get("/departments/", dependencies=[Depends(HTTPBearer())],
-            response_model=List[StaffDivisionRead],
+            response_model=List[StaffDivisionHrVacancyRead],
             summary="Get all Staff Divisions")
 async def get_departments(*,
     db: Session = Depends(get_db),

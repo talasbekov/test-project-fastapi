@@ -82,6 +82,10 @@ class StaffDivisionRead(StaffDivisionBase, ReadNamedModel):
 
     class Config:
         orm_mode = True
+        
+
+class StaffDivisionHrVacancyRead(StaffDivisionRead):
+    count_vacancies: Optional[int]
 
 
 class StaffDivisionOptionRead(StaffDivisionBase, ReadNamedModel):
