@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from sqlalchemy.orm import Session
 
 from core import configs
@@ -35,11 +37,26 @@ class DecreaseCoolnessHandler(BaseHandler):
             raise ForbiddenException(
                 f"Coolness is not defined for this action: {self.__handler__}"
             )
-        coolness = coolness_service.get_by_id(db, props[tagname]["value"])
 
         self.handle_validation(db, user, action, template_props, props, document)
-        user.coolnesses.append(coolness)
-        history = history_service.create_history(db, user.id, coolness)
+
+        coolness = coolness_service.get_by_id(db, props[tagname]["value"])
+        coolness_type = coolness.type
+
+        history = (
+            db.query(CoolnessHistory)
+                .filter(CoolnessHistory.user_id == user.id)
+                .filter(CoolnessHistory.coolness_id == coolness.id)
+            .first()
+        )
+        history.cancel_document_link = configs.GENERATE_IP + str(document.id)
+
+        type = coolness_service.get_type_by_order(db, coolness_type.order - 1)
+
+        new_coolness = coolness_service.create_relation(db, user.id, type.id)
+
+        user.coolnesses.append(new_coolness)
+        history = history_service.create_history(db, user.id, new_coolness)
 
         history.document_link = configs.GENERATE_IP + str(document.id)
         document.old_history_id = history.id
@@ -62,20 +79,13 @@ class DecreaseCoolnessHandler(BaseHandler):
     ):
         tagname = action["coolness"]["tagname"]
         coolness = coolness_service.get_by_id(db, props[tagname]["value"])
-        coolness_type = coolness_service.get_object(db, coolness.type_id)
-
-        history_last_coolness = get_last_by_user_id(db, user.id)
-        user_coolness = coolness_service.get_by_id(
-            db, history_last_coolness.coolness_id
-        )
-        user_coolness_type = coolness_service.get_object(db, user_coolness.type_id)
+        coolness_type = coolness.type
 
         if (
-            user_coolness_type.order <= coolness_type.order
-            or user_coolness_type.order - coolness_type.order != 1
+            coolness_type.order == 1
         ):
             raise ForbiddenException(
-                detail=f"You can not decrease coolness to {coolness.name}"
+                detail=f"You can not decrease coolness to {coolness_type.name}"
             )
 
 
