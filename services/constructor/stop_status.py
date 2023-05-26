@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 
 from core import configs
 from models import User, HrDocument
+from exceptions import ForbiddenException
 from .base import BaseHandler
 from services import status_service
 
@@ -20,6 +21,7 @@ class StopStatusHandler(BaseHandler):
     ):
         try:
             status = action["status"]["tagname"]
+            reason = action["reason"]["tagname"]
         except:
             raise ForbiddenException(
                 f"Status is not defined for this action: {self.__handler__}"

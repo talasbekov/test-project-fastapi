@@ -5,7 +5,7 @@ from typing import List, Optional, Any
 from sqlalchemy.orm import Session, Query
 from sqlalchemy import func, or_, and_
 
-from exceptions import NotFoundException, InvalidOperationException
+from exceptions import NotFoundException, InvalidOperationException, BadRequestException
 from models import (
     StaffDivision,
     User,
@@ -17,6 +17,29 @@ from models import (
     HrDocument,
     HrDocumentInfo,
     HrDocumentTemplate,
+    Attestation,
+    Badge,
+    Contract,
+    Coolness,
+    Equipment,
+    Event,
+    History,
+    Notification,
+    Penalty,
+    PersonalReserve,
+    PrivilegeEmergency,
+    Profile,
+    RecommenderUser,
+    Secondment,
+    ServiceID,
+    StaffList,
+    Status,
+    UserOath,
+    UserStat,
+    ArchiveStaffUnit,
+    NameChangeHistory,
+    Candidate,
+    ServiceCharacteristicHistory,
 )
 from schemas import (
     UserCreate,
@@ -327,12 +350,12 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         initiator_role = document_staff_function_type_service.get_initiator(db)
         user = self.get_by_id(db, user_id)
         document_ids = []
-        print(user.staff_unit.staff_functions)
         for function in user.staff_unit.staff_functions:
             if function.discriminator != DocumentStaffFunction.__mapper_args__['polymorphic_identity']:
                 continue
             if function.role_id == initiator_role.id:
-                print(function.hr_document_step)
+                if (function.hr_document_step is None):
+                    continue
                 document_ids.append(function.hr_document_step.hr_document_template_id)
         return hr_document_template_service.get_all(db, document_ids)
 
@@ -343,6 +366,70 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             raise InvalidOperationException(
                 f"call_sign {call_sign} is already assigned to {user_name}!"
             )
+
+    def update_id(self, db: Session, id: uuid.UUID, new_id: uuid.UUID):
+        user = self.get_by_id(db, id)
+        if self.get(db, new_id) is not None:
+            raise BadRequestException(f"User with id {new_id} already exists!")
+        new_user = User(
+            id=new_id,
+            first_name=user.first_name,
+            last_name=user.last_name,
+            father_name=user.father_name,
+            icon=user.icon,
+            phone_number=user.phone_number,
+            address=user.address,
+            rank_id=user.rank_id,
+            last_signed_at=user.last_signed_at,
+            staff_unit_id=user.staff_unit_id,
+            actual_staff_unit_id=user.actual_staff_unit_id,
+            supervised_by=user.supervised_by,
+            description=user.description,
+            cabinet=user.cabinet,
+            service_phone_number=user.service_phone_number,
+            is_military=user.is_military,
+            personal_id=user.personal_id,
+            iin=user.iin,
+            date_birth=user.date_birth,
+        )
+        db.add(new_user)
+        print(new_user.id)
+        db.query(History).filter(History.user_id == id).update({'user_id': new_user.id})
+        db.query(Profile).filter(Profile.user_id == id).update({'user_id': new_user.id})
+        db.query(Attestation).filter(Attestation.user_id == id).update({'user_id': new_user.id})
+        db.query(Badge).filter(Badge.user_id == id).update({Badge.user_id: new_user.id})
+        db.query(Contract).filter(Contract.user_id == id).update({Contract.user_id: new_user.id})
+        db.query(Coolness).filter(Coolness.user_id == id).update({Coolness.user_id: new_user.id})
+        db.query(Equipment).filter(Equipment.user_id == id).update({Equipment.user_id: new_user.id})
+        db.query(Event).filter(Event.user_id == id).update({Event.user_id: new_user.id})
+        db.query(HrDocumentInfo.filter(HrDocumentInfo.signed_by_id == id).update({HrDocumentInfo.signed_by_id: new_user.id}))
+        db.query(HrDocumentInfo.filter(HrDocumentInfo.assigned_to_id == id).update({HrDocumentInfo.assigned_to_id: new_user.id}))
+        db.query(HrDocument).filter(HrDocument.initialized_by_id == id).update({HrDocument.initialized_by_id: new_user.id})
+        db.query(Notification).filter(Notification.receiver_id == id).update({Notification.receiver_id: new_user.id})
+        db.query(Penalty).filter(Penalty.user_id == id).update({Penalty.user_id: new_user.id})
+        db.query(PersonalReserve).filter(PersonalReserve.user_id == id).update({PersonalReserve.user_id: new_user.id})
+        db.query(PrivilegeEmergency).filter(PrivilegeEmergency.user_id == id).update({PrivilegeEmergency.user_id: new_user.id})
+        db.query(RecommenderUser).filter(RecommenderUser.user_id == id).update({RecommenderUser.user_id: new_user.id})
+        db.query(RecommenderUser).filter(RecommenderUser.user_by_id == id).update({RecommenderUser.user_by_id: new_user.id})
+        db.query(Secondment).filter(Secondment.user_id == id).update({Secondment.user_id: new_user.id})
+        db.query(ServiceID).filter(ServiceID.user_id == id).update({ServiceID.user_id: new_user.id})
+        db.query(StaffList).filter(StaffList.user_id == id).update({StaffList.user_id: new_user.id})
+        db.query(Status).filter(Status.user_id == id).update({Status.user_id: new_user.id})
+        db.query(UserOath).filter(UserOath.user_id == id).update({UserOath.user_id: new_user.id})
+        db.query(UserStat).filter(UserStat.user_id == id).update({UserStat.user_id: new_user.id})
+        db.query(ArchiveStaffUnit).filter(ArchiveStaffUnit.user_id == id).update({ArchiveStaffUnit.user_id: new_user.id})
+        db.query(ArchiveStaffUnit).filter(ArchiveStaffUnit.actual_user_id == id).update({ArchiveStaffUnit.actual_user_id: new_user.id})
+        db.query(NameChangeHistory).filter(NameChangeHistory.user_id == id).update({NameChangeHistory.user_id: new_user.id})
+        db.query(ServiceCharacteristicHistory).filter(ServiceCharacteristicHistory.characteristic_initiator_id == id).update({ServiceCharacteristicHistory.characteristic_initiator_id: new_user.id})
+        db.query(Candidate).filter(Candidate.recommended_by == id).update({Candidate.recommended_by: new_user.id})
+        db.flush()
+        self.remove(user.id)
+        new_user.email = user.email
+        new_user.call_sign = user.call_sign
+        new_user.id_number = user.id_number
+        db.add(new_user)
+        db.flush()
+        return new_user
 
 
 user_service = UserService(User)

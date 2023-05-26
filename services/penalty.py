@@ -30,12 +30,19 @@ class PenaltyService(ServiceBase[Penalty, PenaltyCreate, PenaltyUpdate]):
 
             return [PenaltyRead.from_orm(penalty).dict() for penalty in user.penalties]
 
-    def get_object(self, db: Session, id: str):
-        return db.query(PenaltyType).filter(PenaltyType.id == id).first()
+    def get_object(self, db: Session, id: str, type: str):
+        if type == "write":
+            return db.query(PenaltyType).filter(PenaltyType.id == id).first()
+        else:
+            return db.query(Penalty).filter(Penalty.id == id).first().type
 
     def stop_relation(self, db: Session, user_id: uuid.UUID, id: uuid.UUID):
         penalty = (
-            db.query(PenaltyHistory).filter(PenaltyHistory.penalty_id == id).first()
+            db.query(PenaltyHistory)
+                .filter(
+                    PenaltyHistory.penalty_id == id,
+                    PenaltyHistory.user_id == user_id
+                ).first()
         )
         if penalty is None:
             raise NotFoundException(detail=f"Penalty with id: {id} is not found!")

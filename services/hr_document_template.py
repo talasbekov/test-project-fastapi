@@ -94,7 +94,10 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
         if name:
             return db.query(HrDocumentTemplate).filter(
                 HrDocumentTemplate.is_active == True,
-                HrDocumentTemplate.name.ilike(f'%{name}%')
+                (
+                    HrDocumentTemplate.name.ilike(f'%{name}%') |
+                    HrDocumentTemplate.description.ilike(f'%{name}%')
+                )
             ).filter(HrDocumentTemplate.is_visible == True).offset(skip).limit(limit).all()
         return self.get_all_active(db, skip, limit)
 

@@ -27,7 +27,7 @@ class SecondmentService(ServiceBase[Secondment, SecondmentCreate, SecondmentUpda
         return [StaffDivisionOptionRead.from_orm(i) for i in staff_division_service.get_child_groups(db, id, skip, limit)]
 
 
-    def get_object(self, db: Session, value: str):
+    def get_object(self, db: Session, value: str, type: str):
         if is_valid_uuid(value):
             return db.query(StaffDivision).filter(StaffDivision.id == value).first()
         return db.query(self.model).filter(self.model.name == value).first()

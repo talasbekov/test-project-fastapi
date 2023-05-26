@@ -47,7 +47,7 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
         db.add(staff_unit)
         db.flush()
 
-    def get_object(self, db: Session, id: str):
+    def get_object(self, db: Session, id: str, type: str):
         return self.get(db, id)
 
     def add_document_staff_function(self, db: Session, body: StaffUnitFunctions):

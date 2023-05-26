@@ -66,7 +66,10 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
     def stop_relation(self, db: Session, user_id: str, badge_id: uuid.UUID):
         res = (
             db.query(BadgeHistory)
-                .filter(BadgeHistory.badge_id == badge_id, BadgeHistory.date_to == None)
+                .filter(BadgeHistory.badge_id == badge_id,
+                        BadgeHistory.user_id == user_id,
+                        BadgeHistory.date_to == None
+                    )
                 .first()
         )
         if res is None:
@@ -132,8 +135,11 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
         else:
             return [BadgeRead.from_orm(badge).dict() for badge in user.badges]
 
-    def get_object(self, db: Session, id: str):
-        res = db.query(BadgeType).filter(BadgeType.id == id).first()
+    def get_object(self, db: Session, id: str, type: str):
+        if type == 'write':
+            res = db.query(BadgeType).filter(BadgeType.id == id).first()
+        else:
+            res = db.query(Badge).filter(Badge.id == id).first().type
         return res
 
     def get_black_beret(self, db: Session):

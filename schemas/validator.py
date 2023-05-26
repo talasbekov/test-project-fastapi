@@ -13,7 +13,7 @@ def hr_document_templates_properties_validator(v: dict):
 
         prefix_msg = f'In {key}: '
 
-        types = ["read", "write"]
+        types = ["read", "write", 'delete']
         type = value.get("type")
         if type is None or not isinstance(type, str) or type.lower() not in types:
             raise ValueError(prefix_msg + 'type should be either "read/write"')

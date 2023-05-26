@@ -19,7 +19,7 @@ class RankService(ServiceBase[Rank, RankCreate, RankUpdate]):
     def get_by_option(self, db: Session, type: str, id: uuid.UUID, skip: int, limit: int):
         return [RankRead.from_orm(rank).dict() for rank in super().get_multi(db, skip, limit)]
     
-    def get_object(self, db: Session, id: str):
+    def get_object(self, db: Session, id: str, type: str):
         return self.get(db, id)
 
     def find_last_history(self, db: Session, user_id: uuid.UUID):

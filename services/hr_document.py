@@ -1052,10 +1052,10 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 else:
                     if val["value"] == None:
                         raise BadRequestException(f"Обьект {key} должен иметь value!")
-                    obj = self._get_service(value["field_name"]).get_object(db, val["value"])
+                    obj = self._get_service(value["field_name"]).get_object(db, val["value"], value['type'])
                     new_val[value["field_name"]] = responses.get(
                         value["field_name"]
-                    ).from_orm(obj)
+                    ).from_orm(obj if not hasattr(obj, "type") else getattr(obj, 'type'))
 
         response.new_value = new_val
 

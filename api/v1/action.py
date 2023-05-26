@@ -167,18 +167,11 @@ async def get_all_actions():
                 'field_name': 'statuses',
             },
             {
-                'alias_name': 'Дата начала',
-                'alias_nameKZ': 'Басталу күні',
-                'tagname': 'date_from',
+                'alias_name': 'Причина',
+                'alias_nameKZ': 'Себеп',
+                'tagname': 'reason',
                 'data_taken': 'manual',
-                'data_type': 'date',
-            },
-            {
-                'alias_name': 'Дата конца',
-                'alias_nameKZ': 'Аяқталу күні',
-                'tagname': 'date_to',
-                'data_taken': 'manual',
-                'data_type': 'date',
+                'data_type': 'string',
             },
         ],
         'properties': {
@@ -189,39 +182,27 @@ async def get_all_actions():
                 'data_taken': 'dropdown',
                 'field_name': 'statuses',
             },
-            'date_from': {
-                'alias_name': 'Дата начала',
-                'alias_nameKZ': 'Басталу күні',
+            'reason': {
+                'alias_name': 'Причина',
+                'alias_nameKZ': 'Себеп',
                 'type': 'read',
                 'data_taken': 'manual',
-                'data_type': 'date',
-            },
-            'date_to': {
-                'alias_name': 'Дата конца',
-                'alias_nameKZ': 'Аяқталу күні',
-                'type': 'read',
-                'data_taken': 'manual',
-                'data_type': 'date',
-            },
+                'data_type': 'string',
+            }
         },
         'actions': {
             'args': [
                 {
-                    'temporary_status_change': {
+                    'stop_status': {
                         'status': {
                             'tagname': 'status',
                             'alias_name': 'Отзыв с отпуска',
                             'action_nameKZ': 'Демалыс туралы пікір',
                         },
-                        'date_from': {
-                            'tagname': 'date_from',
-                            'alias_name': 'Дата начала',
-                            'alias_nameKZ': 'Басталу күні',
-                        },
-                        'date_to': {
-                            'tagname': 'date_to',
-                            'alias_name': 'Дата конца',
-                            'alias_nameKZ': 'Аяқталу күні',
+                        'reason': {
+                            'tagname': 'reason',
+                            'alias_name': 'Причина',
+                            'alias_nameKZ': 'Себеп',
                         },
                     },
                 },

@@ -73,7 +73,7 @@ class History(Model):
     document_style = Column(String, nullable=True)
     date_credited = Column(TIMESTAMP, nullable=True)
     
-    user = relationship("User", back_populates="history", foreign_keys=[user_id])
+    user = relationship("User", back_populates="histories", foreign_keys=[user_id])
 
     @classmethod
     def create_history(self, **kwargs):

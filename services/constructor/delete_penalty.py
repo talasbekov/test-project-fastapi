@@ -22,16 +22,12 @@ class DeletePenaltyHandler(BaseHandler):
         document: HrDocument,
     ):
         try:
-            tagname = action["penalty"]["tagname"]
+            penalty_id = props[action["penalty"]["tagname"]]['value']
         except:
             raise ForbiddenException(
                 f"Penalty is not defined for this action: {self.__handler__}"
             )
-        if not penalty_service.exists_relation(db, user.id, props[tagname]["value"]):
-            raise ForbiddenException(
-                f"Penalty is not assigned to this user: {user.first_name}, {user.last_name}"
-            )
-        history = penalty_service.stop_relation(db, user.id, props[tagname]["value"])
+        history = penalty_service.stop_relation(db, user.id, penalty_id)
 
         history.document_link = configs.GENERATE_IP + str(document.id)
         document.old_history_id = history.id
