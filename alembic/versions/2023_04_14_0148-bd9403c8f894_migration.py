@@ -233,6 +233,7 @@ def create_candidate_stage_info(candidate_id,
 
 def upgrade() -> None:
     badgetype1_id = get_uuid()
+    badgetype2_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['badge_types'],
@@ -241,6 +242,11 @@ def upgrade() -> None:
             "name": "Черный Берет",
             "nameKZ": "Қара Берет",
             "url": "http://192.168.0.169:8083/static/black_beret.jpg"
+        }, {
+            "id": badgetype2_id,
+            "name": "Даня",
+            "nameKZ": "Даня",
+            "url": "http://192.168.0.169:8083/static/danya.jpg"
         }]
     )
 
@@ -1819,32 +1825,34 @@ def upgrade() -> None:
         }]
     )
 
-    user1_id = get_uuid()
-    user2_id = get_uuid()
-    user3_id = get_uuid()
+    user1_id = "704e13e5-2970-4dce-9db3-1dfcdfd25b7d"
+    user2_id = "b387564a-a25f-4cdf-8fd0-642a3c221548"
+    user3_id = "6175b070-c683-4e7b-b59a-3685a433506d"
     user4_id = get_uuid()
-    user5_id = get_uuid()
+    user5_id = "34525614-c698-4e40-a548-62f41aba2557"
     user6_id = get_uuid()
-    user7_id = get_uuid()
-    user8_id = get_uuid()
+    user7_id = "5d6f53c2-8f9f-4d0d-9b50-c24aa51f6574"
+    user8_id = "dfd0a5ec-a23a-47af-8f1c-fb5e4813f570"
     user9_id = get_uuid()
     user10_id = get_uuid()
-    user11_id = get_uuid()
-    user12_id = get_uuid()
-    user13_id = get_uuid()
-    user14_id = get_uuid()
-    user15_id = get_uuid()
-    user16_id = get_uuid()
-    user17_id = get_uuid()
-    user18_id = get_uuid()
-    user19_id = get_uuid()
-    user21_id = get_uuid()
+    user11_id = "c41e20f4-097d-4ab4-b8eb-623068054e06"
+    user12_id = "21a07369-1745-405b-9c4e-d17a4e448abf"
+    user13_id = "1cd68211-502f-4f91-918d-7da3ce64e112"
+    user14_id = "a0b4357a-5422-49d9-b43d-07291a732c44"
+    user15_id = "3f7451bb-ff2f-4f81-93c9-fe2c7074ff64"
+    user16_id = "40f0040e-5d6d-48d2-9a98-24c06c8dfeae"
+    user17_id = "6ebd4b23-ed91-4090-9c74-d9d606ac6d9a"
+    user18_id = "9c05476f-b398-44df-ad2f-4c6a55cc1050"
+    user19_id = "17b04b7c-f019-40d8-82b3-1035ed0731d1"
+    user21_id = "03a99775-01f2-45d9-8caa-e5cd83324dae"
     user22_id = get_uuid()
     user23_id = get_uuid()
     user24_id = get_uuid()
     user25_id = get_uuid()
     user26_id = get_uuid()
     user27_id = get_uuid()
+    
+    admin_user_id = "d2f57daa-f8e9-4d66-82d2-b184c3fdf7be"
 
     create_user(
         user10_id,
@@ -2208,7 +2216,7 @@ def upgrade() -> None:
         False
     )
     create_user(
-        str(uuid.uuid4()),
+        admin_user_id,
         "Админ",
         "Админов",
         "Админович",
