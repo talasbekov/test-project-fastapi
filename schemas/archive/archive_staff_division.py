@@ -37,7 +37,6 @@ class ArchiveStaffDivisionUpdateParentGroup(BaseModel):
 
 class ArchiveStaffDivisionRead(ArchiveStaffDivisionBase):
     id: Optional[uuid.UUID]
-    name: Optional[str]
     children: Optional[List['ArchiveStaffDivisionRead']]
     staff_units: Optional[List['StaffUnitRead']]
 
