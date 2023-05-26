@@ -12,8 +12,10 @@ from models import (
     User,
     Notification,
     HrDocumentTemplateEnum,
-    StaffDivisionEnum
+    StaffDivisionEnum,
+    
 )
+from models.association import staff_unit_function
 from schemas import (
     HrDocumentTemplateCreate,
     HrDocumentTemplateUpdate,
@@ -70,7 +72,7 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
             HrDocumentStep.hr_document_template_id == document_template_id,
             DocumentStaffFunction.priority != 1
         ).join(HrDocumentStep.staff_function).order_by(DocumentStaffFunction.priority.asc()).all()
-
+        
         all_steps.remove(initial_step)
 
         steps = {}
@@ -80,8 +82,8 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
             if step.is_direct_supervisor is not None:
                 steps[str(function.priority)] = self.get_all_supervisors(db, step.id, step.is_direct_supervisor, document_template_id, user)
                 continue
-
             staff_units_ids = [unit.id for unit in function.staff_units]
+            print(staff_units_ids)
             user = db.query(User).filter(
                 User.staff_unit_id.in_(staff_units_ids)
             ).first()
@@ -92,7 +94,10 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
         if name:
             return db.query(HrDocumentTemplate).filter(
                 HrDocumentTemplate.is_active == True,
-                HrDocumentTemplate.name.ilike(f'%{name}%')
+                (
+                    HrDocumentTemplate.name.ilike(f'%{name}%') |
+                    HrDocumentTemplate.description.ilike(f'%{name}%')
+                )
             ).filter(HrDocumentTemplate.is_visible == True).offset(skip).limit(limit).all()
         return self.get_all_active(db, skip, limit)
 
@@ -218,6 +223,14 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
             count += 1
 
         return all_steps
+    
+    
+    # def remove(self, db: Session, id: str):
+    #     hr_document_template = db.query(self.model).get(id)
+    #     staff_unit_function.delete().where(staff_unit_function.c.staff_function_id not in(db.query(self.model).get(id)))
+    #     db.delete(obj)
+    #     db.flush()
+    #     return obj
 
 
 hr_document_template_service = HrDocumentTemplateService(HrDocumentTemplate)

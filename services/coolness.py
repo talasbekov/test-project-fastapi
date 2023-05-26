@@ -25,7 +25,7 @@ class CoolnessService(ServiceBase[Coolness, CoolnessCreate, CoolnessUpdate]):
         return coolness
 
     def get_by_option(
-        self, db: Session, option: str, type: str, id: uuid.UUID, skip: int, limit: int
+        self, db: Session, type: str, id: uuid.UUID, skip: int, limit: int
     ):
         if type == "write":
             return [
@@ -38,8 +38,11 @@ class CoolnessService(ServiceBase[Coolness, CoolnessCreate, CoolnessUpdate]):
                 raise NotFoundException(detail=f"User with id: {id} is not found!")
             return [CoolnessRead.from_orm(status).dict() for status in user.coolnesses]
 
-    def get_object(self, db: Session, id: str):
-        return db.query(CoolnessType).filter(CoolnessType.id == id).first()
+    def get_object(self, db: Session, id: str, type: str):
+        if type == "write":
+            return db.query(CoolnessType).filter(CoolnessType.id == id).first()
+        else:
+            return db.query(Coolness).filter(Coolness.id == id).first().type
 
     def stop_relation(self, db: Session, user_id: uuid.UUID, id: uuid.UUID):
         res = (

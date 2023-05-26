@@ -110,5 +110,8 @@ class ArchiveStaffUnitService(ServiceBase[ArchiveStaffUnit, ArchiveStaffUnitCrea
         # filter so that only document staff functions are returned discriminator field is different
         return [staff_function for staff_function in staff_unit.staff_functions if staff_function.discriminator == "document_staff_function"]
 
+    def get_object(self, db: Session, id: uuid.UUID, type: str):
+        return db.query(ArchiveStaffUnit).filter(ArchiveStaffUnit.id == id).first()
+
 
 archive_staff_unit_service = ArchiveStaffUnitService(ArchiveStaffUnit)

@@ -20,8 +20,12 @@ class PositionChangeHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        position = action["staff_unit"]["tagname"]
-
+        try:
+            position = action["staff_unit"]["tagname"]
+        except:
+            raise ForbiddenException(
+                f"Position is not defined for this action: {self.__handler__}"
+            )
         self.handle_validation(db, user, action, template_props, props, document)
         old_history = staff_unit_service.get_last_history(db, user.id)
         if old_history is not None:
@@ -49,7 +53,12 @@ class PositionChangeHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        position = action["staff_unit"]["tagname"]
+        try:
+            position = action["staff_unit"]["tagname"]
+        except:
+            raise ForbiddenException(
+                f"Position is not defined for this action: {self.__handler__}"
+            )
 
         if staff_unit_service.exists_relation(db, user.id, props[position]["value"]):
             raise ForbiddenException(

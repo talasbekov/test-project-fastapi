@@ -28,7 +28,7 @@ class UserBase(Model):
     date_birth: Optional[datetime.date]
     iin: Optional[str]
     is_active: Optional[bool]
-
+    id: Optional[uuid.UUID]
 
 class UserCreate(UserBase):
     password: Optional[str]

@@ -73,7 +73,7 @@ class History(Model):
     document_style = Column(String, nullable=True)
     date_credited = Column(TIMESTAMP, nullable=True)
     
-    user = relationship("User", back_populates="history", foreign_keys=[user_id])
+    user = relationship("User", back_populates="histories", foreign_keys=[user_id])
 
     @classmethod
     def create_history(self, **kwargs):
@@ -172,15 +172,15 @@ class PenaltyHistory(History):
         penalty = db.query(Penalty).filter(Penalty.id == id).first()
         if penalty is None:
             raise NotFoundException(detail="Penalty not found")
-        db.add(
-            PenaltyHistory(
-                date_from=date_from,
-                date_to=date_to,
-                user_id=user_id,
-                penalty_id=id,
-            )
+        history = PenaltyHistory(
+            date_from=date_from,
+            date_to=date_to,
+            user_id=user_id,
+            penalty_id=id,
         )
+        db.add(history)
         db.flush()
+        return history
 
     __mapper_args__ = {
         "polymorphic_identity": "penalty_history",
@@ -255,7 +255,7 @@ class ContractHistory(History):
             date_to=None,
             user_id=user_id,
             contract_id=id,
-            experience_years=contract.experience_years,
+            experience_years=contract.type.years,
         )
         db.add(obj)
         db.flush()
@@ -276,7 +276,7 @@ class ContractHistory(History):
             date_to=date_to,
             user_id=user_id,
             contract_id=id,
-            experience_years=contract.experience_years,
+            experience_years=contract.type.years,
         )
         db.add(obj)
         db.flush()
@@ -360,15 +360,15 @@ class SecondmentHistory(History):
         secondment = db.query(Secondment).filter(Secondment.id == id).first()
         if secondment is None:
             raise NotFoundException(detail="Secondment not found")
-        db.add(
-            SecondmentHistory(
-                date_from=date_from,
-                date_to=date_to,
-                user_id=user_id,
-                secondment_id=id,
-            )
+        history = SecondmentHistory(
+            date_from=date_from,
+            date_to=date_to,
+            user_id=user_id,
+            secondment_id=id,
         )
+        db.add(history)
         db.flush()
+        return history
 
     __mapper_args__ = {
         "polymorphic_identity": "secondment_history",
@@ -471,15 +471,15 @@ class StatusHistory(History):
         status = db.query(Status).filter(Status.id == id).first()
         if status is None:
             raise NotFoundException(detail="Status not found")
-        db.add(
-            StatusHistory(
-                date_from=date_from,
-                date_to=date_to,
-                user_id=user_id,
-                status_id=id,
-            )
+        history = StatusHistory(
+            date_from=date_from,
+            date_to=date_to,
+            user_id=user_id,
+            status_id=id,
         )
+        db.add(history)
         db.flush()
+        return history
 
     __mapper_args__ = {
         "polymorphic_identity": "status_history",

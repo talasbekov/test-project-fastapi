@@ -6,6 +6,7 @@ from core import configs
 from exceptions import ForbiddenException
 from models import User, HrDocument, ArchiveStaffUnit
 from .base import BaseHandler
+from exceptions import ForbiddenException
 from .. import staff_unit_service, history_service, archive_staff_unit_service
 
 
@@ -19,7 +20,12 @@ class ApplyArchivePosition(BaseHandler):
                       template_props: dict,
                       props: dict,
                       document: HrDocument):
-        position = action["staff_unit"]["tagname"]
+        try:
+            position = action["staff_unit"]["tagname"]
+        except:
+            raise ForbiddenException(
+                f"Staff unit is not defined for this action: {self.__handler__}"
+            )
         staff_unit_id = archive_staff_unit_service.get_by_id(db, props[position]["value"]).origin_id
         self._handle_validation(db, user, staff_unit_id)
 

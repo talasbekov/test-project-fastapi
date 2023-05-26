@@ -6,7 +6,7 @@ from core import configs
 from models import User, ContractType, ContractHistory, HrDocument
 from .base import BaseHandler
 from services import contract_service, history_service
-from exceptions import ForbiddenException
+from exceptions import ForbiddenException, NotFoundException
 from utils import convert_str_to_datetime
 
 
@@ -32,15 +32,21 @@ class RenewContractHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        tagname = action["contract"]["tagname"]
-        self.handle_validation(db, user, action, template_props, props, document)
+        try:
+            tagname = action["contract"]["tagname"]
+        except:
+            raise ForbiddenException(
+                f"Contract is not defined for this action: {self.__handler__}"
+            )
+        # self.handle_validation(db, user, action, template_props, props, document)
         contract_type = db.query(ContractType).filter(
             ContractType.id == props[tagname]["value"]
-        )
-
-        last_contract = get_last_by_user_id(db, user.id)
-        last_contract.to_date = datetime.datetime.now()
-        db.add(last_contract)
+        ).first()
+        
+        if not contract_type:
+            raise NotFoundException(
+                detail="Contract type not found"
+            )
 
         res = contract_service.create_relation(db, user.id, props[tagname]["value"])
         user.contracts.append(res)
@@ -72,11 +78,12 @@ class RenewContractHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        tagname = action["contract"]["tagname"]
-        if not contract_service.exists_relation(db, user.id, props[tagname]["value"]):
-            raise ForbiddenException(
-                f"This user: {user.first_name}, {user.last_name}, doesn't have any contract"
-            )
+        # tagname = action["contract"]["tagname"]
+        # if not contract_service.exists_relation(db, user.id, props[tagname]["value"]):
+        #     raise ForbiddenException(
+        #         f"This user: {user.first_name}, {user.last_name}, doesn't have any contract"
+        #     )
+        pass
 
 
 handler = RenewContractHandler()

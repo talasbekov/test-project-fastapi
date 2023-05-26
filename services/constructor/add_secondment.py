@@ -4,6 +4,7 @@ from core import configs
 from models import User, HrDocument
 from .base import BaseHandler
 from services import secondment_service, history_service
+from exceptions import ForbiddenException
 from utils import convert_str_to_datetime
 
 
@@ -19,10 +20,14 @@ class AddSecondmentHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        tagname = action["secondment"]["tagname"]
-
-        date_from = convert_str_to_datetime(action["date_from"]["tagname"])
-        date_to = convert_str_to_datetime(action["date_to"]["tagname"])
+        try:
+            tagname = action["secondment"]["tagname"]
+            date_from = convert_str_to_datetime(props[action["date_from"]["tagname"]]['value'])
+            date_to = convert_str_to_datetime(props[action["date_to"]["tagname"]]['value'])
+        except:
+            raise ForbiddenException(
+                f"Secondment is not defined for this action: {self.__handler__}"
+            )
 
         res = secondment_service.create_relation(db, user.id, props[tagname]["value"])
         history = history_service.create_timeline_history(

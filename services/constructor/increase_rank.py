@@ -45,12 +45,19 @@ class IncreaseRankHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        tagname = action["rank"]["tagname"]
+        try:
+            tagname = action["rank"]["tagname"]
+        except:
+            raise ForbiddenException(
+                f"Rank is not defined for this action: {self.__handler__}"
+            )
         rank = rank_service.get_by_id(db, props[tagname]["value"])
         user_rank = rank_service.get_by_id(db, user.rank_id)
+        max_rank = user.staff_unit.position.rank
 
-        if user_rank.order >= rank.order:
+        if user_rank.order >= rank.order or rank.order > max_rank.order:
             raise ForbiddenException(detail=f"You can not increase rank to {rank.name}")
+
 
     def handle_filter(self, db: Session, user_query: Query[Any]):
         max_rank = rank_service.get_max_rank(db)

@@ -29,7 +29,12 @@ class DecreaseCoolnessHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        tagname = action["coolness"]["tagname"]
+        try:
+            tagname = action["coolness"]["tagname"]
+        except:
+            raise ForbiddenException(
+                f"Coolness is not defined for this action: {self.__handler__}"
+            )
         coolness = coolness_service.get_by_id(db, props[tagname]["value"])
 
         self.handle_validation(db, user, action, template_props, props, document)

@@ -20,7 +20,12 @@ class ConfirmCoolnessHandler(BaseHandler):
             props: dict,
             document: HrDocument,
     ):
-        tagname = action["coolness"]["tagname"]
+        try:
+            tagname = action["coolness"]["tagname"]
+        except:
+            raise ForbiddenException(
+                f"Coolness is not defined for this action: {self.__handler__}"
+            )
         self.handle_validation(db, user, action, template_props, props, document)
         res = coolness_service.get_relation(db, user.id, props[tagname]["value"])
         history = history_service.create_history(db, user.id, res)

@@ -15,8 +15,11 @@ class StatusService(ServiceBase[Status, StatusCreate, StatusUpdate]):
         status = super().create(db, StatusCreate(type_id=type_id, user_id=user_id))
         return status
 
-    def get_object(self, db: Session, id: str):
-        return db.query(StatusType).filter(StatusType.id == id).first()
+    def get_object(self, db: Session, id: str, type: str):
+        if type == 'write':
+            return db.query(StatusType).filter(StatusType.id == id).first()
+        else:
+            return db.query(Status).filter(Status.id == id).first().type
 
     def get_by_option(self, db: Session, type: str, id: uuid.UUID, skip: int, limit: int):
         user = db.query(User).filter(User.id == id).first()

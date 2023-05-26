@@ -659,7 +659,9 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         staff_units = staff_unit_service.get_all(db, users)
 
+        print('before if')
         if step.is_direct_supervisor is not None:
+            print('in if')
             if staff_unit.staff_division.leader_id != staff_unit.id:
                 raise ForbiddenException(
                     detail='Вы не можете инициализировать этот документ!'
@@ -670,8 +672,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                         raise ForbiddenException(
                             detail='Вы не можете инициализировать этот документ!'
                         )
-
         elif step.staff_function not in staff_unit.staff_functions:
+            print('in elif')
             raise ForbiddenException(
                 detail=f"Вы не можете инициализировать этот документ!"
             )
@@ -1050,10 +1052,10 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 else:
                     if val["value"] == None:
                         raise BadRequestException(f"Обьект {key} должен иметь value!")
-                    obj = self._get_service(value["field_name"]).get_object(db, val["value"])
+                    obj = self._get_service(value["field_name"]).get_object(db, val["value"], value['type'])
                     new_val[value["field_name"]] = responses.get(
                         value["field_name"]
-                    ).from_orm(obj)
+                    ).from_orm(obj if not hasattr(obj, "type") else getattr(obj, 'type'))
 
         response.new_value = new_val
 

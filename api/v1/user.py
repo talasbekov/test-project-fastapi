@@ -172,6 +172,7 @@ async def get_profile(*,
     id = Authorize.get_jwt_subject()
     return user_service.get_by_id(db, id)
 
+
 @router.get('/templates/{user_id}/')
 async def get_templates(*,
     db: Session = Depends(get_db),
@@ -180,3 +181,22 @@ async def get_templates(*,
 ):
     Authorize.jwt_required()
     return user_service.get_available_templates(db, user_id)
+
+
+@router.patch('/id/{id}/{new_id}/', dependencies=[Depends(HTTPBearer())],
+                response_model=UserRead,
+                summary="Update User by id")
+async def update_user(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    new_id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Update User by id
+
+        - **id**: UUID - required
+        - **new_id**: UUID - required
+    """
+    Authorize.jwt_required()
+    return user_service.update_id(db, id, new_id)

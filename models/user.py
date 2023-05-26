@@ -2,11 +2,11 @@ from sqlalchemy import TIMESTAMP, Column, ForeignKey, String, Boolean
 from sqlalchemy.dialects.postgresql import TEXT, UUID
 from sqlalchemy.orm import relationship
 
-from models import Model, History
+from models import isActiveModel, History
 from .association import hr_documents_users, hr_vacancy_hr_vacancy_candidates
 
 
-class User(Model):
+class User(isActiveModel):
 
     __tablename__ = "users"
 
@@ -21,7 +21,7 @@ class User(Model):
     phone_number = Column(String(32))
     address = Column(String(255))
     rank_id = Column(
-        UUID(as_uuid=True), ForeignKey("ranks.id"), nullable=True)
+        UUID(as_uuid=True), ForeignKey("ranks.id", ondelete='SET NULL'), nullable=True)
     last_signed_at = Column(TIMESTAMP(timezone=True), nullable=True)
     
     staff_unit_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"), nullable=False)
@@ -36,7 +36,7 @@ class User(Model):
     iin = Column(String(255), nullable=True)
     date_birth = Column(TIMESTAMP(timezone=True))
 
-    rank = relationship("Rank", cascade="all,delete")
+    rank = relationship("Rank", cascade="")
     badges = relationship("Badge", back_populates='user', cascade="all,delete")
 
     staff_unit = relationship("StaffUnit", back_populates="users", foreign_keys=staff_unit_id)
@@ -57,7 +57,7 @@ class User(Model):
     staff_list = relationship("StaffList", back_populates="user", cascade="all,delete")
 
     profile = relationship("Profile", back_populates="user", uselist=False)
-    history = relationship("History", back_populates="user", uselist=False, foreign_keys=[History.user_id])
+    histories = relationship("History", back_populates="user", foreign_keys=[History.user_id])
 
     statuses = relationship("Status", back_populates="user", cascade="all,delete")
     secondments = relationship("Secondment", back_populates="user", cascade="all,delete")
@@ -67,5 +67,3 @@ class User(Model):
     privelege_emergencies = relationship("PrivilegeEmergency", back_populates="user", cascade="all,delete")
     contracts = relationship("Contract", back_populates="user", cascade="all,delete")
     equipments = relationship("Equipment", back_populates="user", cascade="all,delete")
-
-    is_active = Column(Boolean, nullable=False)

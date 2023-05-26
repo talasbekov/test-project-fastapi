@@ -69,6 +69,7 @@ class StaffUnitRead(ReadModel):
     users: Optional[List[Optional[UserRead]]]
     actual_users: Optional[List[Optional[UserRead]]]
     hr_vacancy: Optional[List[Optional[HrVacancyRead]]]
+    requirements: Optional[List[dict]]
 
     class Config:
         orm_mode = True

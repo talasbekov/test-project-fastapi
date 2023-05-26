@@ -1,11 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends
 from fastapi.security import HTTPBearer
-from fastapi_jwt_auth import AuthJWT
-from sqlalchemy.orm import Session
 
-from core import get_db
-from schemas import LoginForm, RegistrationForm, CandidateRegistrationForm
-from services import auth_service
 
 router = APIRouter(prefix="/actions", tags=["Action"], dependencies=[Depends(HTTPBearer())])
 
@@ -66,7 +61,7 @@ async def get_all_actions():
             'badge_name': {
                 'alias_name': 'Медаль для лишения',
                 'alias_nameKZ': 'Медальдан айыру үшін',
-                'type': 'write',
+                'type': 'delete',
                 'data_taken': 'dropdown',
                 'field_name': 'badges',
             },
@@ -172,18 +167,11 @@ async def get_all_actions():
                 'field_name': 'statuses',
             },
             {
-                'alias_name': 'Дата начала',
-                'alias_nameKZ': 'Басталу күні',
-                'tagname': 'date_from',
+                'alias_name': 'Причина',
+                'alias_nameKZ': 'Себеп',
+                'tagname': 'reason',
                 'data_taken': 'manual',
-                'data_type': 'date',
-            },
-            {
-                'alias_name': 'Дата конца',
-                'alias_nameKZ': 'Аяқталу күні',
-                'tagname': 'date_to',
-                'data_taken': 'manual',
-                'data_type': 'date',
+                'data_type': 'string',
             },
         ],
         'properties': {
@@ -194,39 +182,27 @@ async def get_all_actions():
                 'data_taken': 'dropdown',
                 'field_name': 'statuses',
             },
-            'date_from': {
-                'alias_name': 'Дата начала',
-                'alias_nameKZ': 'Басталу күні',
+            'reason': {
+                'alias_name': 'Причина',
+                'alias_nameKZ': 'Себеп',
                 'type': 'read',
                 'data_taken': 'manual',
-                'data_type': 'date',
-            },
-            'date_to': {
-                'alias_name': 'Дата конца',
-                'alias_nameKZ': 'Аяқталу күні',
-                'type': 'read',
-                'data_taken': 'manual',
-                'data_type': 'date',
-            },
+                'data_type': 'string',
+            }
         },
         'actions': {
             'args': [
                 {
-                    'temporary_status_change': {
+                    'stop_status': {
                         'status': {
                             'tagname': 'status',
                             'alias_name': 'Отзыв с отпуска',
                             'action_nameKZ': 'Демалыс туралы пікір',
                         },
-                        'date_from': {
-                            'tagname': 'date_from',
-                            'alias_name': 'Дата начала',
-                            'alias_nameKZ': 'Басталу күні',
-                        },
-                        'date_to': {
-                            'tagname': 'date_to',
-                            'alias_name': 'Дата конца',
-                            'alias_nameKZ': 'Аяқталу күні',
+                        'reason': {
+                            'tagname': 'reason',
+                            'alias_name': 'Причина',
+                            'alias_nameKZ': 'Себеп',
                         },
                     },
                 },
@@ -656,7 +632,12 @@ async def get_all_actions():
                 'tagname': 'staff_unit',
                 'data_taken': 'dropdown',
                 'field_name': 'staff_unit',
-            },
+            }, {
+                'alias_name': 'Процент надбавки',
+                'alias_nameKZ': 'Қосымша пайыз',
+                'tagname': 'percent',
+                'data_taken': 'number'
+            }
         ],
         'properties': {
             'staff_unit': {
@@ -666,6 +647,13 @@ async def get_all_actions():
                 'data_taken': 'dropdown',
                 'field_name': 'staff_unit',
             },
+            'percent': {
+                'alias_name': 'Процент надбавки',
+                'alias_nameKZ': 'Қосымша пайыз',
+                'type': 'read',
+                'data_taken': 'manual',
+                'data_type': 'number',
+            }
         },
         'actions': {
             'args': [
@@ -676,6 +664,11 @@ async def get_all_actions():
                             'alias_name': 'Новая должность',
                             'alias_nameKZ': 'Жаңа қызмет атауы',
                         },
+                        'percent':{
+                            'tagname': 'percent',
+                            'alias_name': 'Процент надбавки',
+                            'alias_nameKZ': 'Қосымша пайыз',
+                        }
                     },
                 },
             ],

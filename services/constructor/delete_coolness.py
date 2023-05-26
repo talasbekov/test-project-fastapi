@@ -21,7 +21,12 @@ class DeleteCoolnessHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        tagname = action["coolness"]["tagname"]
+        try:
+            tagname = action["coolness"]["tagname"]
+        except:
+            raise ForbiddenException(
+                f"Coolness is not defined for this action: {self.__handler__}"
+            )
         self.handle_validation(db, user, action, template_props, props, document)
         res = coolness_service.stop_relation(db, user.id, props[tagname]["value"])
 
@@ -38,7 +43,8 @@ class DeleteCoolnessHandler(BaseHandler):
         document: HrDocument,
     ):
         tagname = action["coolness"]["tagname"]
-        if not coolness_service.exists_relation(db, user.id, props[tagname]["value"]):
+        coolness = coolness_service.get_by_id(db, props[tagname]["value"])
+        if not coolness_service.exists_relation(db, user.id, coolness.type_id):
             raise ForbiddenException(
                 f"Coolness is not assigned to this user: {user.first_name}, {user.last_name}"
             )
