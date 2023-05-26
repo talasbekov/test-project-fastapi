@@ -36,7 +36,14 @@ class CoolnessService(ServiceBase[Coolness, CoolnessCreate, CoolnessUpdate]):
             user = db.query(User).filter(User.id == id).first()
             if user is None:
                 raise NotFoundException(detail=f"User with id: {id} is not found!")
-            return [CoolnessRead.from_orm(status).dict() for status in user.coolnesses]
+            res = (
+                db.query(Coolness)
+                    .filter(Coolness.user_id == id)
+                    .join(CoolnessHistory, CoolnessHistory.coolness_id == Coolness.id)
+                    .filter(CoolnessHistory.date_to == None)
+                    .all()
+                )
+            return [CoolnessRead.from_orm(status).dict() for status in res]
 
     def get_object(self, db: Session, id: str, type: str):
         if type == "write":
@@ -71,5 +78,9 @@ class CoolnessService(ServiceBase[Coolness, CoolnessCreate, CoolnessUpdate]):
             .filter(Coolness.type_id == coolness_type_id)
             .first()
         )
+
+    def get_type_by_order(self, db: Session, order: int):
+        return db.query(CoolnessType).filter(CoolnessType.order == order).first()
+
 
 coolness_service = CoolnessService(Coolness)

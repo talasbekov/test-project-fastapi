@@ -566,7 +566,7 @@ async def get_all_actions():
             'coolness': {
                 'alias_name': 'Классная квалификация для понижения',
                 'alias_nameKZ': 'Төмендету үшін сыныптық квалификация',
-                'type': 'write',
+                'type': 'delete',
                 'data_taken': 'dropdown',
                 'field_name': 'coolnesses',
             },
@@ -588,7 +588,7 @@ async def get_all_actions():
     {
         'action_name': 'Лишение классной квалификации',
         'action_nameKZ': 'Сыныптық квалификациядан босату',
-        'action_type': 'decrease_coolness',
+        'action_type': 'delete_coolness',
         'children': [
             {
                 'alias_name': 'Классная квалификация для лишения',
@@ -602,7 +602,7 @@ async def get_all_actions():
             'coolness': {
                 'alias_name': 'Классная квалификация для лишения',
                 'alias_nameKZ': 'Босату үшін сыныптық квалификация',
-                'type': 'write',
+                'type': 'delete',
                 'data_taken': 'dropdown',
                 'field_name': 'coolnesses',
             },
@@ -610,7 +610,7 @@ async def get_all_actions():
         'actions': {
             'args': [
                 {
-                    'decrease_coolness': {
+                    'delete_coolness': {
                         'coolness': {
                             'tagname': 'coolness',
                             'alias_name': 'Классная квалификация для лишения',
@@ -636,7 +636,8 @@ async def get_all_actions():
                 'alias_name': 'Процент надбавки',
                 'alias_nameKZ': 'Қосымша пайыз',
                 'tagname': 'percent',
-                'data_taken': 'number'
+                'data_taken': 'manual',
+                'data_type': 'number'
             }
         ],
         'properties': {
@@ -782,7 +783,6 @@ async def get_all_actions():
             ],
         },
     },
- 
     {
         'action_name': 'Отпуск по болезни',
         'action_nameKZ': 'Ауру демалысы',

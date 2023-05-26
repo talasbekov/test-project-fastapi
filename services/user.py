@@ -1,7 +1,7 @@
 import types
 import uuid
 from typing import List, Optional, Any
-
+from sqlalchemy.orm import make_transient
 from sqlalchemy.orm import Session, Query
 from sqlalchemy import func, or_, and_
 
@@ -440,13 +440,17 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         db.flush()
         print('flushed')
         self.remove(db, id)
+
         print('removed')
+        
+        make_transient(user)
+
         new_user.email = user.email
         new_user.call_sign = user.call_sign
         new_user.id_number = user.id_number
         
         db.add(new_user)
-        db.flush()
+        db.flush() 
         return new_user
 
 

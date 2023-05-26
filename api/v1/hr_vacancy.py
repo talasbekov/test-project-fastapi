@@ -7,7 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import (HrVacancyRead, HrVacancyCreate, StaffUnitRead,
+from schemas import (HrVacancyRead, HrVacancyCreate, UserRead,
                      HrVacancyStaffDivisionRead)
 from services import hr_vacancy_service
 
@@ -65,7 +65,7 @@ async def get_not_active(*,
 
 
 @router.get("/{id}/candidates", dependencies=[Depends(HTTPBearer())],
-            response_model=List[StaffUnitRead],
+            response_model=List[UserRead],
             summary="Get all candidates of Vacancy")
 async def get_all_candidates(*,
     id: uuid.UUID,

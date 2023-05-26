@@ -25,7 +25,6 @@ from .confirm_coolness import handler as confirm_coolness_handler
 from .apply_staff_list import handler as apply_staff_list_handler
 from .superdoc import handler as superdoc_handler
 from .apply_archive_position import handler as apply_archive_position_handler
-from .grant_leave import grant_leave_handler
 
 
 handlers = {
@@ -50,5 +49,4 @@ handlers = {
     "superdoc": superdoc_handler,
     "apply_staff_list": apply_staff_list_handler,
     "apply_archive_position": apply_archive_position_handler,
-    'grant_leave': grant_leave_handler,
 }

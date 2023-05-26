@@ -22,8 +22,8 @@ class AddSecondmentHandler(BaseHandler):
     ):
         try:
             tagname = action["secondment"]["tagname"]
-            date_from = convert_str_to_datetime(props[action["date_from"]["tagname"]]['value'])
-            date_to = convert_str_to_datetime(props[action["date_to"]["tagname"]]['value'])
+            date_from = convert_str_to_datetime(props[action["date_from"]["tagname"]]['name'])
+            date_to = convert_str_to_datetime(props[action["date_to"]["tagname"]]['name'])
         except:
             raise ForbiddenException(
                 f"Secondment is not defined for this action: {self.__handler__}"
