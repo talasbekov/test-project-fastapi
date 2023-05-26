@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel, EmailStr
 
-from schemas import (BadgeRead, PositionRead,
+from schemas import (BadgeRead, PositionRead, PositionCreate,
                      RankRead, StaffUnitDivisionRead,
                      StaffFunctionRead)
 from schemas import Model, NamedModel, ReadModel, ReadNamedModel
@@ -20,6 +20,10 @@ class StaffUnitBase(Model):
 class StaffUnitCreate(StaffUnitBase):
     pass
 
+class StaffUnitCreateWithPosition(PositionCreate):
+    staff_division_id: uuid.UUID
+    is_active: Optional[bool] = True
+    requirements: Optional[List[dict]]
 
 class StaffUnitUpdate(StaffUnitBase):
     user_replacing_id: uuid.UUID

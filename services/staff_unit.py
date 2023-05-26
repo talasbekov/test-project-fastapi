@@ -1,11 +1,15 @@
 import datetime
 import uuid
 
+from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import StaffUnit, Position, User, StaffDivision, EmergencyServiceHistory, ArchiveStaffUnit, StaffDivisionEnum
-from schemas import StaffUnitCreate, StaffUnitUpdate, StaffUnitFunctions, StaffUnitRead
+from schemas import (StaffUnitCreate, StaffUnitUpdate,
+                     StaffUnitFunctions, StaffUnitRead,
+                     StaffUnitCreateWithPosition, PositionCreate,
+                    )
 from services import service_staff_function_service, document_staff_function_service, staff_division_service
 from .base import ServiceBase
 
@@ -16,6 +20,26 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
         if position is None:
             raise NotFoundException(detail=f"StaffUnit  with id: {id} is not found!")
         return position
+
+
+    def create_with_position(self, db: Session, staff_unit_with_position: StaffUnitCreateWithPosition):
+
+        position = Position(name=staff_unit_with_position.name,
+                            nameKZ=staff_unit_with_position.nameKZ,
+                            category_code=staff_unit_with_position.category_code,
+                            max_rank_id=staff_unit_with_position.max_rank_id
+                            )
+        db.add(position)
+        db.flush()
+
+        staff_unit = StaffUnit(position_id=position.id,
+                               staff_division_id=staff_unit_with_position.staff_division_id,
+                               is_active=staff_unit_with_position.is_active,
+                               requirements=staff_unit_with_position.requirements)
+        db.add(staff_unit)
+        db.flush()
+        return staff_unit
+
 
     def get_by_staff_division_id(self, db: Session, staff_division_id: str):
         return db.query(self.model).filter(self.model.staff_division_id == staff_division_id).all()

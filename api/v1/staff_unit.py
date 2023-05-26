@@ -14,6 +14,7 @@ from schemas import (
     StaffUnitFunctions,
     DocumentStaffFunctionRead,
     ServiceStaffFunctionRead,
+    StaffUnitCreateWithPosition,
 )
 from services import rank_service, staff_unit_service
 
@@ -58,6 +59,23 @@ async def create(*,
     Authorize.jwt_required()
     return staff_unit_service.create(db, body)
 
+
+@router.post("/position/", status_code=status.HTTP_201_CREATED,
+             dependencies=[Depends(HTTPBearer())],
+             response_model=StaffUnitRead,
+             summary="Create Staff Unit")
+async def create_with_position(*,
+    db: Session = Depends(get_db),
+    body: StaffUnitCreateWithPosition,
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Create Staff Unit with new position
+
+        - **max_rank_id**: UUID - required and should exist in the database
+    """
+    Authorize.jwt_required()
+    return staff_unit_service.create_with_position(db, body)
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=StaffUnitRead,
