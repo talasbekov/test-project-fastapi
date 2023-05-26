@@ -22,8 +22,15 @@ class StaffUnitCreate(StaffUnitBase):
 
 
 class StaffUnitUpdate(StaffUnitBase):
+    user_replacing_id: uuid.UUID
     pass
 
+class HrVacancyRead(ReadModel):
+    is_active: Optional[bool]
+    staff_unit_id: Optional[uuid.UUID]
+    
+    class Config:
+        orm_mode = True
 
 class UserRead(ReadModel):
     badges: Optional[List[BadgeRead]]
@@ -38,20 +45,10 @@ class UserRead(ReadModel):
     status: Optional[str]
     status_till: Optional[datetime.datetime]
 
-
     class Config:
         orm_mode = True
 
-
-class HrVacancyRead(ReadModel):
-    is_active: Optional[bool]
-    staff_unit_id: Optional[uuid.UUID]
-    
-    class Config:
-        orm_mode = True
-
-
-class StaffUnitRead(StaffUnitBase, ReadModel):
+class UserReplacingStaffUnitRead(StaffUnitBase, ReadModel):
     staff_division_id: Optional[uuid.UUID]
     staff_division: Optional[StaffUnitDivisionRead]
     staff_functions: Optional[List[StaffFunctionRead]]
@@ -64,6 +61,18 @@ class StaffUnitRead(StaffUnitBase, ReadModel):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
+
+class UserReplacingRead(UserRead):
+    staff_unit: Optional[UserReplacingStaffUnitRead]
+    
+    class Config:
+        arbitrary_types_allowed = True
+
+
+class StaffUnitRead(UserReplacingStaffUnitRead):
+    user_replacing: Optional[UserReplacingRead]
+    user_replacing_id: Optional[uuid.UUID]
+    
 
 
 class UserStaffUnitRead(StaffUnitBase, ReadModel):

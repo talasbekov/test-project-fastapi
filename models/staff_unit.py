@@ -16,7 +16,7 @@ class StaffUnit(isActiveModel):
     staff_division_id = Column(
         UUID(as_uuid=True), ForeignKey("staff_divisions.id"), nullable=False
     )   
-
+    user_replacing_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
     position = relationship("Position", cascade="all,delete", foreign_keys=[position_id])
     staff_division = relationship(
         "StaffDivision", back_populates="staff_units", foreign_keys=[staff_division_id]
@@ -26,6 +26,7 @@ class StaffUnit(isActiveModel):
     actual_users = relationship(
         "User", back_populates="actual_staff_unit", foreign_keys="User.actual_staff_unit_id"
     )
+    user_replacing = relationship("User", back_populates="staff_unit_replacing", foreign_keys=user_replacing_id)
     staff_functions = relationship(
         "StaffFunction",
         secondary=staff_unit_function,

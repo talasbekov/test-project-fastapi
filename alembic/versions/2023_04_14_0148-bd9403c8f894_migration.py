@@ -199,6 +199,10 @@ options = {
     'askar@mail.ru': {
         'first_name': 'Аскар',
         'father_name': 'Абдурахманов'
+    },
+    'super.raha2002@mail.ru': {
+        'first_name': 'Рахат',
+        'father_name': 'Шаяхметов'
     }
 }
 
@@ -1554,6 +1558,9 @@ def upgrade() -> None:
     staff_unit29_id = get_uuid()
     staff_unit30_id = get_uuid()
     staff_unit31_id = get_uuid()
+    staff_unit32_id = get_uuid()
+    staff_unit33_id = get_uuid()
+    staff_unit34_id = get_uuid()
 
     empty_unit_id = get_uuid()
 
@@ -1851,6 +1858,10 @@ def upgrade() -> None:
     user25_id = get_uuid()
     user26_id = get_uuid()
     user27_id = get_uuid()
+    user28_id = get_uuid()
+    user29_id = get_uuid()
+    user30_id = get_uuid()
+
     
     admin_user_id = "d2f57daa-f8e9-4d66-82d2-b184c3fdf7be"
 
@@ -2319,7 +2330,7 @@ def upgrade() -> None:
         rank3_id,
         staff_unit30_id,
         "http://192.168.0.169:8083/static/Nurlan.png",
-        position13_id,
+        position11_id,
         True,
         '1.2.216K',
         True)
@@ -2341,6 +2352,25 @@ def upgrade() -> None:
         True,
         '1.2.215K',
         True)
+    create_user(
+        user28_id,
+        "Рахат",
+        "Шаяхметов",
+        'Серикович',
+        'super.raha2002@mail.ru',
+        group15_id,
+        user25_id,
+        "Альфа 28",
+        '28',
+        staff_unit32_id,
+        rank6_id,
+        staff_unit32_id,
+        "http://192.168.0.169:8083/static/Nurlan.png",
+        position13_id,
+        True,
+        '1.2.215K',
+        True,
+        user26_id)
 
     op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(
         staff_unit26_id, group1_id))
@@ -2359,7 +2389,7 @@ def upgrade() -> None:
     op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(
         staff_unit29_id, group14_id))
     op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(
-        staff_unit30_id, group15_id))
+        staff_unit32_id, group15_id))
     op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(
         staff_unit31_id, group16_id))
 
@@ -5625,7 +5655,8 @@ def create_user(id,
                 position_id,
                 is_military,
                 cabinet,
-                is_active):
+                is_active,
+                user_replacing_id=None):
     op.bulk_insert(
         Base.metadata.tables['staff_units'],
         [{
@@ -5633,6 +5664,7 @@ def create_user(id,
             'user_id': id,
             'position_id': position_id,
             'staff_division_id': group_id,
+            'user_replacing_id': user_replacing_id,
             'requirements':
                 [
                     {

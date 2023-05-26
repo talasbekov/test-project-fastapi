@@ -270,6 +270,7 @@ def upgrade() -> None:
     op.create_table('staff_units',
     sa.Column('position_id', sa.UUID(), nullable=False),
     sa.Column('staff_division_id', sa.UUID(), nullable=False),
+    sa.Column('user_replacing_id', sa.UUID(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('is_active', sa.Boolean(), nullable=False, default=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
