@@ -1870,7 +1870,7 @@ def upgrade() -> None:
         "Сакен",
         "Исабеков",
         'Саинович',
-        'b_abdyshev@sgo.kz',
+        's_isabekov@sgo.kz',
         group1_id,
         None,
         "21",
