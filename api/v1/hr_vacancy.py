@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 from core import get_db
 from schemas import (HrVacancyRead, HrVacancyCreate, UserRead,
                      HrVacancyStaffDivisionRead)
+from schemas.hr_vacancy import HrVacancyUpdate
 from services import hr_vacancy_service
 
 router = APIRouter(prefix="/hr_vacancies", tags=["HrVacancies"], dependencies=[Depends(HTTPBearer())])
@@ -120,22 +121,26 @@ async def create(*,
     return hr_vacancy_service.create(db, body, role)
 
 
-@router.patch("/{id}/unactive", dependencies=[Depends(HTTPBearer())],
+@router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=HrVacancyRead,
-            summary="Unactive HrVacancy")
-async def unactive(*,
-    id: uuid.UUID,
+            summary="Update HrVacancy")
+async def update(*,
     db: Session = Depends(get_db),
+    id: uuid.UUID,
+    body: HrVacancyUpdate,
     Authorize: AuthJWT = Depends()
 ):
     """
-        Unactive HrVacancy
+        Update HrVacancy
         
         - **id**: uuid - required
+        - **staff_unit_id**: uuid - optional
+        - **is_active**: bool - optional
+        - **hr_vacancy_requirements_ids**: List of uuid - optional
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
-    return hr_vacancy_service.unactive(db, id, role)
+    return hr_vacancy_service.update(db, id, body, role)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
