@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import func
+from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
@@ -58,7 +58,12 @@ class StatusService(ServiceBase[Status, StatusCreate, StatusUpdate]):
     def get_active_status_of_user(self, db: Session, user_id: uuid.UUID, status_name: str):
         return (
             db.query(StatusHistory)
-            .filter(StatusHistory.date_to == None | StatusHistory.date_to > datetime.now())
+            .filter(
+                or_(
+                    StatusHistory.date_to == None,
+                    StatusHistory.date_to > datetime.now(),
+                ),
+            )
             .join(Status)
             .filter(Status.user_id == user_id)
             .join(StatusType)

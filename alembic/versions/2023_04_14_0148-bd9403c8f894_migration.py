@@ -4040,7 +4040,7 @@ def upgrade() -> None:
             'is_finite': True
         }, {
             'id': contract_type2_id,
-            'name': 'Тип 2',
+            'name': 'Контракт на неопределенный срок',
             'nameKZ': 'Тип 2',
             'years': -1,
             'is_finite': False
