@@ -75,7 +75,8 @@ from services import (
     contract_service,
     notification_service,
     staff_list_service,
-    archive_staff_unit_service
+    archive_staff_unit_service,
+    status_leave_service
 )
 from .base import ServiceBase
 from ws import notification_manager
@@ -92,6 +93,7 @@ options = {
     'penalties': penalty_service,
     'contracts': contract_service,
     'archive_staff_unit': archive_staff_unit_service,
+    'status_leave': status_leave_service
 }
 
 responses = {
