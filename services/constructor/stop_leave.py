@@ -47,7 +47,7 @@ class StopLeaveHandler(BaseHandler):
         action: dict
     ):
         try:
-            reason = props[action['reason']['tagname']]['value']
+            reason = props[action['reason']['tagname']]['name']
         except:
             raise ForbiddenException(detail=f'Invalid props for action: {self.__handler__}')
         return (reason)

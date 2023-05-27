@@ -4,8 +4,9 @@ from sqlalchemy.orm import Session
 from exceptions.client import ForbiddenException, NotFoundException
 from models import (HrVacancy, StaffUnit, StaffDivision,
                     User, PositionNameEnum)
+from models.hr_vacancy import HrVacancy
 from schemas import (HrVacancyCreate, HrVacancyUpdate,
-                     HrVacancyRead, HrVacancyStaffDivisionRead)
+                     HrVacancyRead, HrVacancyStaffDivisionRead, HrVacancyUpdate)
 from .base import ServiceBase
 from .hr_vacancy_requirements import hr_vacancy_requirement_service
 from .position import position_service
@@ -133,6 +134,35 @@ class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate])
         db.flush()
         
         return vacancy
+    
+    
+    def update(self, db: Session, id: str, body: HrVacancyUpdate, role_id: str) -> HrVacancy:
+        
+        if not self._check_by_role(db, role_id):
+            raise ForbiddenException("You don't have permission to manage vacancy!")
+        
+        hr_vacancy = self.get_by_id(db, id)
+        
+        if body.hr_vacancy_requirements_ids is not None:
+            vacancy_requirements = []
+            
+            for requirement in body.hr_vacancy_requirements_ids:
+                requirement = hr_vacancy_requirement_service.get_by_id(db, requirement)
+            
+                vacancy_requirements.append(requirement)
+            
+            hr_vacancy.hr_vacancy_requirements = vacancy_requirements
+                
+        if body.staff_unit_id is not None:
+            hr_vacancy.staff_unit_id = staff_unit_service.get_by_id(db, body.staff_unit_id).id
+            
+        if body.is_active is not None:
+            hr_vacancy.is_active = body.is_active
+            
+        db.add(hr_vacancy)
+        db.flush()
+        
+        return hr_vacancy
 
 
     def _check_by_role(self, db: Session, role_id: str) -> bool:

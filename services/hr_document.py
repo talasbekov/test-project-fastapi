@@ -1016,9 +1016,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 continue
 
             if value["field_name"] not in fields:
-                raise InvalidOperationException(
-                    f'Operation on {value["field_name"]} is not supported yet!'
-                )
+                continue
 
             if value["data_taken"] == "auto":
                 attr = getattr(user, value["field_name"])

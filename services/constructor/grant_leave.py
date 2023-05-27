@@ -1,3 +1,5 @@
+import logging
+
 from sqlalchemy.orm import Session
 
 from core import configs
@@ -44,9 +46,10 @@ class GrantLeaveHandler(BaseHandler):
         document: HrDocument,
     ):
         status_id, date_from, date_to = self.get_args(props, action)
-        status = status_service.get_by_id(db, status_id)
+        if status_service.get_object(db, status_id, 'write') is None:
+            raise ForbiddenException(detail=f'Invalid status_id for action: {self.__handler__}')
         if date_to < date_from:
-            raise ForbiddenException(detail=f'Invalid props for action: {self.__handler__}')
+            raise ForbiddenException(detail=f'Invalid dates for action: {self.__handler__}')
 
     def get_args(
         self,
@@ -55,9 +58,10 @@ class GrantLeaveHandler(BaseHandler):
     ):
         try:
             status_id = props[action['status']['tagname']]['value']
-            date_from = convert_str_to_datetime(props[action['date_from']['tagname']]['value'])
-            date_to = convert_str_to_datetime(props[action['date_to']['tagname']]['value'])
-        except:
+            date_from = convert_str_to_datetime(props[action['date_from']['tagname']]['name'])
+            date_to = convert_str_to_datetime(props[action['date_to']['tagname']]['name'])
+        except Exception as e:
+            logging.exception(e)
             raise ForbiddenException(detail=f'Invalid props for action: {self.__handler__}')
         return (status_id, date_from, date_to)
 

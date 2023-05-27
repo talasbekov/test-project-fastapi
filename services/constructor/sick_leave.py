@@ -53,8 +53,8 @@ class SickLeaveHandler(BaseHandler):
         action: dict
     ):
         try:
-            date_from = convert_str_to_datetime(props[action['date_from']['tagname']]['value'])
-            date_to = convert_str_to_datetime(props[action['date_to']['tagname']]['value'])
+            date_from = convert_str_to_datetime(props[action['date_from']['tagname']]['name'])
+            date_to = convert_str_to_datetime(props[action['date_to']['tagname']]['name'])
         except:
             raise ForbiddenException(detail=f'Invalid props for action: {self.__handler__}')
         return (date_from, date_to)
