@@ -27,6 +27,7 @@ class ArchiveStaffUnitCreateWithStaffFunctions(ArchiveStaffUnitBase):
 
 class ArchiveStaffUnitUpdate(ArchiveStaffUnitBase):
     origin_id: Optional[uuid.UUID]
+    user_replacing: Optional[uuid.UUID]
 
 
 class NewArchiveStaffUnitCreate(ArchiveStaffUnitBase):
@@ -53,6 +54,8 @@ class UserRead(BaseModel):
     id_number: Optional[str]
     status: Optional[str]
     status_till: Optional[datetime.datetime]
+    icon: Optional[str]
+    is_military: Optional[bool]
 
 
     class Config:
