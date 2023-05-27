@@ -29,6 +29,7 @@ from .hr_document_info import hr_document_info_service
 from .hr_document_status import hr_document_status_service
 from .user import user_service
 from .status import status_service
+from .status_leave import status_leave_service
 from .secondment import secondment_service
 from .privelege_emergency import privelege_emergency_service
 from .coolness import coolness_service

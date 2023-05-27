@@ -53,9 +53,9 @@ class IncreaseRankHandler(BaseHandler):
             )
         rank = rank_service.get_by_id(db, props[tagname]["value"])
         user_rank = rank_service.get_by_id(db, user.rank_id)
-        max_rank = user.staff_unit.position.rank
+        max_rank = user.staff_unit.position.max_rank
 
-        if user_rank.order >= rank.order or rank.order > max_rank.order:
+        if user_rank.order >= rank.order:
             raise ForbiddenException(detail=f"You can not increase rank to {rank.name}")
 
 
