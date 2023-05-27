@@ -82,7 +82,7 @@ async def get_all_actions():
     },
     {
         'action_name': 'Выход в отпуск',
-        'alias_nameKZ': 'Демалысқа шығу',
+        'action_nameKZ': 'Демалысқа шығу',
         'action_type': 'grant_leave',
         'children': [
             {
@@ -771,14 +771,14 @@ async def get_all_actions():
         'children': [
             {
                 'alias_name': 'Дата начала',
-                'action_nameKZ': 'Басталу күні',
+                'alias_nameKZ': 'Басталу күні',
                 'tagname': 'date_from',
                 'data_taken': 'manual',
                 'data_type': 'date',
             },
             {
                 'alias_name': 'Дата конца',
-                'action_nameKZ': 'Аяқталу күні',
+                'alias_nameKZ': 'Аяқталу күні',
                 'tagname': 'date_to',
                 'data_taken': 'manual',
                 'data_type': 'date',
@@ -787,14 +787,14 @@ async def get_all_actions():
         'properties': {
             'date_from': {
                 'alias_name': 'Дата начала',
-                'action_nameKZ': 'Басталу күні',
+                'alias_nameKZ': 'Басталу күні',
                 'type': 'read',
                 'data_taken': 'manual',
                 'data_type': 'date',
             },
             'date_to': {
                 'alias_name': 'Дата конца',
-                'action_nameKZ': 'Аяқталу күні',
+                'alias_nameKZ': 'Аяқталу күні',
                 'type': 'read',
                 'data_taken': 'manual',
                 'data_type': 'date',
@@ -807,12 +807,12 @@ async def get_all_actions():
                         'date_from': {
                             'tagname': 'date_from',
                             'alias_name': 'Дата начала',
-                            'action_nameKZ': 'Басталу күні',
+                            'alias_nameKZ': 'Басталу күні',
                         },
                         'date_to': {
                             'tagname': 'date_to',
                             'alias_name': 'Дата конца',
-                            'action_nameKZ': 'Аяқталу күні',
+                            'alias_nameKZ': 'Аяқталу күні',
                         },
                     },
                 },
