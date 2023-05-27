@@ -32,8 +32,7 @@ class StaffUnitCreateWithPosition(PositionCreate):
     requirements: Optional[List[dict]]
 
 class StaffUnitUpdate(StaffUnitBase):
-    user_replacing_id: uuid.UUID
-    pass
+    user_replacing_id: Optional[uuid.UUID]
 
 class HrVacancyRead(ReadModel):
     is_active: Optional[bool]

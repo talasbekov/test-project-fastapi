@@ -7,14 +7,14 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import PositionCreate, PositionUpdate, PositionRead
-from services import position_service
+from schemas import ArchivePositionCreate, ArchivePositionUpdate, ArchivePositionRead
+from services import archive_position_service
 
-router = APIRouter(prefix="/positions", tags=["Positions"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(prefix="/archive_positions", tags=["ArchivePositions"], dependencies=[Depends(HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[PositionRead],
+            response_model=List[ArchivePositionRead],
             summary="Get all Positions")
 async def get_all(*,
     db: Session = Depends(get_db),
@@ -29,16 +29,16 @@ async def get_all(*,
        - **limit**: int - The maximum number of Positions to return in the response. This parameter is optional and defaults to 100.
    """
     Authorize.jwt_required()
-    return position_service.get_multi(db, skip, limit)
+    return archive_position_service.get_multi(db, skip, limit)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
-             response_model=PositionRead,
+             response_model=ArchivePositionRead,
              summary="Create Position")
 async def create(*,
     db: Session = Depends(get_db),
-    body: PositionCreate,
+    body: ArchivePositionCreate,
     Authorize: AuthJWT = Depends()
 ):
     """
@@ -47,11 +47,11 @@ async def create(*,
         - **name**: required
     """
     Authorize.jwt_required()
-    return position_service.create(db, body)
+    return archive_position_service.create(db, body)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=PositionRead,
+            response_model=ArchivePositionRead,
             summary="Get Position by id")
 async def get_by_id(*,
     db: Session = Depends(get_db),
@@ -64,16 +64,16 @@ async def get_by_id(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return position_service.get_by_id(db, id)
+    return archive_position_service.get_by_id(db, id)
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=PositionRead,
+            response_model=ArchivePositionRead,
             summary="Update Position")
 async def update(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
-    body: PositionUpdate,
+    body: ArchivePositionUpdate,
     Authorize: AuthJWT = Depends()
 ):
     """
@@ -83,9 +83,9 @@ async def update(*,
         - **name**: required.
     """
     Authorize.jwt_required()
-    return position_service.update(
+    return archive_position_service.update(
         db,
-        db_obj=position_service.get_by_id(db, id),
+        db_obj=archive_position_service.get_by_id(db, id),
         obj_in=body)
 
 @router.delete("/{id}/",status_code=status.HTTP_204_NO_CONTENT,
@@ -102,4 +102,4 @@ async def delete(*,
         - **id**: UUId - required
     """
     Authorize.jwt_required()
-    position_service.remove(db, id)
+    archive_position_service.remove(db, id)

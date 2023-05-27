@@ -12,7 +12,7 @@ from .document_staff_function_type import document_staff_function_type_service
 from .service_staff_function import service_staff_function_service
 from .hr_document_step import hr_document_step_service
 from .document_staff_function import document_staff_function_service
-
+from .archive import *
 from .staff_unit import staff_unit_service
 
 from .badge import badge_service
@@ -39,7 +39,6 @@ from .service_id import service_id_service
 from .military_unit import military_unit_service
 from .user_oath import user_oath_service
 from .history import *
-from .archive import *
 from .staff_list import staff_list_service
 from .hr_document import hr_document_service
 from .additional import *

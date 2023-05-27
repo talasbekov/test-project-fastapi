@@ -87,7 +87,6 @@ async def create(*,
         - **description**: a long description. This parameter is optional.
     """
     Authorize.jwt_required()
-
     return staff_list_service.create_by_user_id(db, user_id=Authorize.get_jwt_subject(), obj_in=body)
 
 

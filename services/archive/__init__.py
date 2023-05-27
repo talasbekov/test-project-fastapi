@@ -4,4 +4,5 @@ from .service_archive_staff_function_type import service_archive_staff_function_
 from .document_archive_staff_function_type import document_archive_staff_function_type_service
 from .archive_staff_division import archive_staff_division_service
 from .archive_staff_function import archive_staff_function_service
+from .archive_position import archive_position_service
 from .archive_staff_unit import archive_staff_unit_service

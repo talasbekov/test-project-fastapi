@@ -31,7 +31,9 @@ from services import (
     service_archive_staff_function_type_service,
     document_staff_function_type_service,
     service_staff_function_type_service,
-    hr_document_template_service
+    hr_document_template_service,
+    position_service,
+    archive_position_service
 )
 
 options = {
@@ -68,7 +70,6 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         staff_divisions = staff_division_service.get_departments(db, 0, 100)
         for staff_division in staff_divisions:
             self._create_archive_staff_division(db, staff_division, staff_list.id, None)
-
         db.add(staff_list)
         db.flush()
         return staff_list
@@ -106,6 +107,14 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         if staff_division.leader_id is not None:
             is_leader_needed = True
 
+        positions = position_service.get_multi(db, 0, 100)
+        for position in positions:
+            archive_position_service.create_based_on_existing_position(db,
+                                                                       position.name,
+                                                                       position.nameKZ,
+                                                                       position.category_code,
+                                                                       position.max_rank_id,
+                                                                       position.id)
         if staff_division.staff_units:
             for staff_unit in staff_division.staff_units:
                 staff_unit: StaffUnit

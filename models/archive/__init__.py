@@ -1,4 +1,5 @@
 from .archive_staff_division import ArchiveStaffDivision
 from .archive_staff_function import ArchiveStaffFunction, ArchiveDocumentFunctionType, ArchiveServiceFunctionType, ArchiveDocumentStaffFunction, ArchiveServiceStaffFunction
 from .archive_staff_unit import ArchiveStaffUnit
+from .archive_position import ArchivePosition
 from .association import archive_staff_unit_function

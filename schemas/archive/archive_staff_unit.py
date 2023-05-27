@@ -49,6 +49,7 @@ class UserRead(BaseModel):
     email: Optional[EmailStr]
     first_name: Optional[str]
     last_name: Optional[str]
+    father_name: Optional[str]
     staff_unit_id: Optional[uuid.UUID]
     call_sign: Optional[str]
     id_number: Optional[str]

@@ -87,7 +87,7 @@ router.include_router(archive_staff_division_router)
 router.include_router(archive_service_staff_function_type_router)
 router.include_router(archive_staff_function_router)
 router.include_router(archive_staff_unit_router)
-
+router.include_router(archive_position_router)
 router.include_router(candidate_router)
 router.include_router(candidate_stage_info_router)
 router.include_router(candidate_stage_type_router)

@@ -8,8 +8,9 @@ from schemas import ArchiveStaffUnitCreate, ArchiveStaffUnitUpdate, ArchiveStaff
     NewArchiveStaffUnitCreate, NewArchiveStaffUnitUpdate
 from services import (
     service_staff_function_service,
-    document_staff_function_service,
+    document_staff_function_service
 )
+from .archive_position import archive_position_service
 
 from services.base import ServiceBase
 
@@ -79,8 +80,9 @@ class ArchiveStaffUnitService(ServiceBase[ArchiveStaffUnit, ArchiveStaffUnitCrea
                                             actual_user_id: uuid.UUID,
                                             user_replacing_id: uuid.UUID,
                                             archive_staff_division: ArchiveStaffDivision):
+        position = archive_position_service.get_by_origin_id(db,staff_unit.position_id)
         return super().create(db, ArchiveStaffUnitCreate(
-            position_id=staff_unit.position_id,
+            position_id=position.id,
             staff_division_id=archive_staff_division.id,
             user_id=user_id,
             actual_user_id=user_id,
