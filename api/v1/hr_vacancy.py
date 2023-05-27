@@ -112,8 +112,7 @@ async def create(*,
     """
         Create HrVacancy
         
-        - **position_id**: uuid - required
-        - **staff_division_id**: uuid - required
+        - **staff_unit_id**: uuid - required
         - **hr_vacancy_requirements_ids**: List of uuid - optional
     """
     Authorize.jwt_required()
