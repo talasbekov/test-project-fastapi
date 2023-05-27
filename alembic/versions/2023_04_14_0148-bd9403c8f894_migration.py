@@ -1835,13 +1835,13 @@ def upgrade() -> None:
     user1_id = "704e13e5-2970-4dce-9db3-1dfcdfd25b7d"
     user2_id = "b387564a-a25f-4cdf-8fd0-642a3c221548"
     user3_id = "6175b070-c683-4e7b-b59a-3685a433506d"
-    user4_id = get_uuid()
+    user4_id = "16fbddb8-f09d-4cfe-acc5-5768bcc40397"
     user5_id = "34525614-c698-4e40-a548-62f41aba2557"
-    user6_id = get_uuid()
+    user6_id = "544941b6-463f-4e02-a0dd-b67bc67bb83a"
     user7_id = "5d6f53c2-8f9f-4d0d-9b50-c24aa51f6574"
     user8_id = "dfd0a5ec-a23a-47af-8f1c-fb5e4813f570"
-    user9_id = get_uuid()
-    user10_id = get_uuid()
+    user9_id = "dc4b2cd6-00ca-439e-bb8b-fba49ac3df3c"
+    user10_id = "356f26fa-c181-47ba-972d-ad17d132c0cd"
     user11_id = "c41e20f4-097d-4ab4-b8eb-623068054e06"
     user12_id = "21a07369-1745-405b-9c4e-d17a4e448abf"
     user13_id = "1cd68211-502f-4f91-918d-7da3ce64e112"
