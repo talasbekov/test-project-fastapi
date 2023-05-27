@@ -104,15 +104,15 @@ options = {
         'first_name': 'Аслан',
         'father_name': 'Султанович'
     },
-    'zhasulan@mail.ru': {
-        'first_name': 'Дидар',
-        'father_name': 'Даниярович'
+    'a_kibataev@sgo.kz': {
+        'first_name': 'Козы',
+        'father_name': 'Кибатаевич'
     },
     'anuar@mail.ru': {
-        'first_name': 'Дидар',
+        'first_name': 'Аманкелди',
         'father_name': 'Наурызбевович'
     },
-    'beksundet@mail.ru': {
+    'a_amankeldiuly@sgo.kz': {
         'first_name': 'Гани',
         'father_name': 'Бахтиярович'
     },
@@ -124,13 +124,13 @@ options = {
         'first_name': 'Серик',
         'father_name': 'Рахатович'
     },
-    'arman@mail.ru': {
-        'first_name': 'Улан',
-        'father_name': 'Бауыржанович'
+    's_isabekov@sgo.kz': {
+        'first_name': 'Саин',
+        'father_name': 'Исабекович'
     },
-    'bauyrzhan@mail.ru': {
-        'first_name': 'Алдияр',
-        'father_name': 'Маратович'
+    'b_abdyshev@sgo.kz': {
+        'first_name': 'Кадырбек',
+        'father_name': 'Абдышович'
     },
     'admin@mail.com': {
         'first_name': 'Админ',
@@ -1867,21 +1867,21 @@ def upgrade() -> None:
 
     create_user(
         user10_id,
-        "Бауыржан",
-        "Маратов",
-        'Алдиярович',
-        'bauyrzhan@mail.ru',
+        "Сакен",
+        "Исабеков",
+        'Саинович',
+        'b_abdyshev@sgo.kz',
         group1_id,
         None,
-        "Альфа 10",
+        "21",
         '10',
         staff_unit10_id,
         rank3_id,
         staff_unit10_id,
-        "http://192.168.0.169:8083/static/Dima.png",
+        "https://10.15.3.180/s3/static/isabekov.jpg",
         position4_id,
         True,
-        "1.2.218K",
+        "А0201",
         True)
     create_user(
         user1_id,
@@ -1939,21 +1939,21 @@ def upgrade() -> None:
         True)
     create_user(
         user4_id,
-        "Жасулан",
-        "Данияров",
-        'Дидарович',
-        'zhasulan@mail.ru',
+        "Аскер",
+        "Кибатаев",
+        'Козыевич',
+        'a_kibataev@sgo.kz',
         group3_id,
         user10_id,
-        "Альфа 4",
+        "Алан-40",
         '4',
         staff_unit4_id,
         rank2_id,
         staff_unit4_id,
-        "http://192.168.0.169:8083/static/Adil.png",
+        "https://10.15.3.180/s3/static/kibataev.png",
         position2_id,
         False,
-        "1.2.214K",
+        "А0913",
         True)
     create_user(
         user5_id,
@@ -1975,18 +1975,18 @@ def upgrade() -> None:
         True)
     create_user(
         user6_id,
-        "Бексундет",
-        "Бахтияров",
-        'Ганиулы',
-        'beksundet@mail.ru',
+        "Айтым",
+        "Аманкелдіұлы",
+        None,
+        'a_amankeldiuly@sgo.kz',
         group2_id,
         user10_id,
-        "Альфа 6",
+        "Семсер-12",
         '6',
         staff_unit6_id,
         rank3_id,
         staff_unit6_id,
-        "http://192.168.0.169:8083/static/Ernazar.png",
+        "https://10.15.3.180/s3/static/amankeldiuly.jpg",
         position2_id,
         False,
         '1.2.215K',
@@ -2029,21 +2029,21 @@ def upgrade() -> None:
         True)
     create_user(
         user9_id,
-        "Арман",
-        "Бауыржанов",
-        'Уланович',
-        'arman@mail.ru',
+        "Батырбек",
+        "Абдышев",
+        'Кадырбекович',
+        'b_abdyshev@sgo.kz',
         group3_id,
         user10_id,
-        "Альфа 9",
+        "Алан-1",
         '9',
         staff_unit9_id,
         rank1_id,
         staff_unit9_id,
-        "http://192.168.0.169:8083/static/Adil.png",
+        "https://10.15.3.180/s3/static/abdyshev.jpg",
         position3_id,
         True,
-        "1.2.217K",
+        "А0915",
         True)
     create_user(
         user11_id,
