@@ -83,14 +83,14 @@ async def get_all_actions():
     {
         'action_name': 'Выход в отпуск',
         'alias_nameKZ': 'Демалысқа шығу',
-        'action_type': 'temporary_status_change',
+        'action_type': 'grant_leave',
         'children': [
             {
                 'alias_name': 'Выход в отпуск',
                 'alias_nameKZ': 'Демалысқа шығу',
                 'tagname': 'status',
                 'data_taken': 'dropdown',
-                'field_name': 'statuses',
+                'field_name': 'status_leave',
             },
             {
                 'alias_name': 'Дата начала',
@@ -113,7 +113,7 @@ async def get_all_actions():
                 'alias_nameKZ': 'Демалысқа шығу',
                 'type': 'write',
                 'data_taken': 'dropdown',
-                'field_name': 'statuses',
+                'field_name': 'status_leave',
             },
             'date_from': {
                 'alias_name': 'Дата начала',
@@ -133,7 +133,7 @@ async def get_all_actions():
         'actions': {
             'args': [
                 {
-                    'temporary_status_change': {
+                    'grant_leave': {
                         'status': {
                             'tagname': 'status',
                             'alias_name': 'Выход в отпуск',
@@ -157,15 +157,8 @@ async def get_all_actions():
     {
         'action_name': 'Отзыв с отпуска',
         'action_nameKZ': 'Демалыс туралы пікір',
-        'action_type': 'temporary_status_change',
+        'action_type': 'stop_leave',
         'children': [
-            {
-                'alias_name': 'Отзыв с отпуска',
-                'action_nameKZ': 'Демалыс туралы пікір',
-                'tagname': 'status',
-                'data_taken': 'dropdown',
-                'field_name': 'statuses',
-            },
             {
                 'alias_name': 'Причина',
                 'alias_nameKZ': 'Себеп',
@@ -175,13 +168,6 @@ async def get_all_actions():
             },
         ],
         'properties': {
-            'status': {
-                'alias_name': 'Отзыв с отпуска',
-                'action_nameKZ': 'Демалыс туралы пікір',
-                'type': 'write',
-                'data_taken': 'dropdown',
-                'field_name': 'statuses',
-            },
             'reason': {
                 'alias_name': 'Причина',
                 'alias_nameKZ': 'Себеп',
@@ -193,12 +179,7 @@ async def get_all_actions():
         'actions': {
             'args': [
                 {
-                    'stop_status': {
-                        'status': {
-                            'tagname': 'status',
-                            'alias_name': 'Отзыв с отпуска',
-                            'action_nameKZ': 'Демалыс туралы пікір',
-                        },
+                    'stop_leave': {
                         'reason': {
                             'tagname': 'reason',
                             'alias_name': 'Причина',
@@ -786,15 +767,8 @@ async def get_all_actions():
     {
         'action_name': 'Отпуск по болезни',
         'action_nameKZ': 'Ауру демалысы',
-        'action_type': 'temporary_status_change',
+        'action_type': 'sick_leave',
         'children': [
-            {
-                'alias_name': 'Временный статус',
-                'action_nameKZ': 'Уақытша мәртебе',
-                'tagname': 'status',
-                'data_taken': 'dropdown',
-                'field_name': 'statuses',
-            },
             {
                 'alias_name': 'Дата начала',
                 'action_nameKZ': 'Басталу күні',
@@ -811,13 +785,6 @@ async def get_all_actions():
             },
         ],
         'properties': {
-            'status': {
-                'alias_name': 'Временный статус',
-                'action_nameKZ': 'Уақытша мәртебе',
-                'type': 'write',
-                'data_taken': 'dropdown',
-                'field_name': 'statuses',
-            },
             'date_from': {
                 'alias_name': 'Дата начала',
                 'action_nameKZ': 'Басталу күні',
@@ -836,12 +803,7 @@ async def get_all_actions():
         'actions': {
             'args': [
                 {
-                    'temporary_status_change': {
-                        'status': {
-                            'tagname': 'status',
-                            'alias_name': 'Временный статус',
-                            'action_nameKZ': 'Уақытша мәртебе',
-                        },
+                    'sick_leave': {
                         'date_from': {
                             'tagname': 'date_from',
                             'alias_name': 'Дата начала',

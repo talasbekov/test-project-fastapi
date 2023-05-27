@@ -38,7 +38,7 @@ from .penalty import Penalty, PenaltyType
 from .contract import Contract, ContractType
 from .secondment import Secondment
 from .attestation import Attestation
-from .status import Status, StatusType
+from .status import Status, StatusType, StatusEnum
 from .coolness import Coolness, CoolnessType
 from .history import *
 from .user import User

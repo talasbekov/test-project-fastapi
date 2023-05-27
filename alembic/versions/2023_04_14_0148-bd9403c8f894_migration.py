@@ -3821,6 +3821,7 @@ def upgrade() -> None:
     status_type7 = get_uuid()
     status_type8 = get_uuid()
     status_type9 = get_uuid()
+    status_type10 = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['status_types'],
@@ -3829,46 +3830,49 @@ def upgrade() -> None:
             'name': 'На работе',
             'nameKZ': 'Жұмыста'
         },
-            {
-                'id': status_type2,
-                'name': 'В отпуске',
-                'nameKZ': 'Демалыста (Отпуск)'
-            },
-            {
-                'id': status_type3,
-                'name': "Умер",
-                'nameKZ': 'Қайтыс болды'
-            },
-            {
-                'id': status_type4,
-                'name': "В отставке",
-                'nameKZ': 'Қызметін доғарды (Отставка)'
-            },
-            {
-                'id': status_type5,
-                'name': "В запасе",
-                'nameKZ': 'Резервте'
-            },
-            {
-                'id': status_type6,
-                'name': "Исключен из списков личного состава",
-                'nameKZ': 'Кадрлар тізімінен шығарылған'
-            },
-            {
-                'id': status_type7,
-                'name': "Откомандирован в другой гос. орган",
-                'nameKZ': 'Басқа мемлекеттік органға жіберілді'
-            },
-            {
-                'id': status_type8,
-                'name': "Погиб",
-                'nameKZ': 'Қайтыс болды'
-            }, {
+        {
+            'id': status_type2,
+            'name': 'В отпуске',
+            'nameKZ': 'Демалыста (Отпуск)'
+        },
+        {
+            'id': status_type3,
+            'name': "Умер",
+            'nameKZ': 'Қайтыс болды'
+        },
+        {
+            'id': status_type4,
+            'name': "В отставке",
+            'nameKZ': 'Қызметін доғарды (Отставка)'
+        },
+        {
+            'id': status_type5,
+            'name': "В запасе",
+            'nameKZ': 'Резервте'
+        },
+        {
+            'id': status_type6,
+            'name': "Исключен из списков личного состава",
+            'nameKZ': 'Кадрлар тізімінен шығарылған'
+        },
+        {
+            'id': status_type7,
+            'name': "Откомандирован в другой гос. орган",
+            'nameKZ': 'Басқа мемлекеттік органға жіберілді'
+        },
+        {
+            'id': status_type8,
+            'name': "Погиб",
+            'nameKZ': 'Қайтыс болды'
+        }, {
             'id': status_type9,
             'name': "В отпуске по беременности и родам",
             'nameKZ': 'Жүктілік және босану демалысында'
-        }
-        ]
+        }, {
+            'id': status_type10,
+            'name': "В отпуске по болезни",
+            'nameKZ': 'Аурулардың демалысында'
+        }]
     )
 
     status_id = get_uuid()
@@ -3996,12 +4000,12 @@ def upgrade() -> None:
             'nameKZ': '1-сынып маманы',
             'order': 1
         },
-            {
-                'id': coolness_type2_id,
-                'name': 'Специалист 2 класса',
-                'nameKZ': '2-сынып маманы',
-                'order': 2
-            },
+        {
+            'id': coolness_type2_id,
+            'name': 'Специалист 2 класса',
+            'nameKZ': '2-сынып маманы',
+            'order': 2
+        },
         ]
     )
 

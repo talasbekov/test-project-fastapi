@@ -1,8 +1,18 @@
+from enum import Enum
+
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from models import NamedModel, Model
+
+
+class StatusEnum(Enum):
+    ROOT = 'отпуск'
+    VACATION = 'В отпуске'
+    MATERNITY_LEAVE = 'В отпуске по беременности и родам'
+    SICK_LEAVE = 'В отпуске по болезни'
+
 
 class StatusType(NamedModel):
 
