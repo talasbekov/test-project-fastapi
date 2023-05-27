@@ -75,7 +75,8 @@ from services import (
     contract_service,
     notification_service,
     staff_list_service,
-    archive_staff_unit_service
+    archive_staff_unit_service,
+    status_leave_service
 )
 from .base import ServiceBase
 from ws import notification_manager
@@ -92,6 +93,7 @@ options = {
     'penalties': penalty_service,
     'contracts': contract_service,
     'archive_staff_unit': archive_staff_unit_service,
+    'status_leave': status_leave_service
 }
 
 responses = {
@@ -659,9 +661,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         staff_units = staff_unit_service.get_all(db, users)
 
-        print('before if')
         if step.is_direct_supervisor is not None:
-            print('in if')
             if staff_unit.staff_division.leader_id != staff_unit.id:
                 raise ForbiddenException(
                     detail='Вы не можете инициализировать этот документ!'
@@ -673,7 +673,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                             detail='Вы не можете инициализировать этот документ!'
                         )
         elif step.staff_function not in staff_unit.staff_functions:
-            print('in elif')
             raise ForbiddenException(
                 detail=f"Вы не можете инициализировать этот документ!"
             )

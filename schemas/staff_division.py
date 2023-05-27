@@ -61,6 +61,27 @@ class HrVacancyRead(ReadModel):
     class Config:
         orm_mode = True
 
+class UserReplacingStaffUnitRead(ReadModel):
+    position_id: uuid.UUID
+    staff_division_id: uuid.UUID
+    is_active: Optional[bool] = True
+    requirements: Optional[List[dict]]
+    staff_division_id: Optional[uuid.UUID]
+    position_id: Optional[uuid.UUID]
+    position: Optional[PositionRead]
+    users: Optional[List[Optional[UserRead]]]
+    actual_users: Optional[List[Optional[UserRead]]]
+    hr_vacancy: Optional[List[Optional[HrVacancyRead]]]
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
+
+class UserReplacingRead(UserRead):
+    staff_unit: Optional[UserReplacingStaffUnitRead]
+    
+    class Config:
+        arbitrary_types_allowed = True
 
 class StaffUnitRead(ReadModel):
     staff_division_id: Optional[uuid.UUID]
@@ -70,6 +91,8 @@ class StaffUnitRead(ReadModel):
     actual_users: Optional[List[Optional[UserRead]]]
     hr_vacancy: Optional[List[Optional[HrVacancyRead]]]
     requirements: Optional[List[dict]]
+    user_replacing: Optional[UserReplacingRead]
+    user_replacing_id: Optional[uuid.UUID]
 
     class Config:
         orm_mode = True

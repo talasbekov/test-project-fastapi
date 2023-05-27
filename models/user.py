@@ -40,6 +40,7 @@ class User(isActiveModel):
 
     staff_unit = relationship("StaffUnit", back_populates="users", foreign_keys=staff_unit_id)
     staff_unit_replacing = relationship("StaffUnit", back_populates="user_replacing", foreign_keys="StaffUnit.user_replacing_id")
+    archive_staff_unit_replacing = relationship("ArchiveStaffUnit", back_populates="user_replacing", foreign_keys="ArchiveStaffUnit.user_replacing_id")
     actual_staff_unit = relationship("StaffUnit", back_populates="actual_users", foreign_keys=actual_staff_unit_id)
 
     hr_documents = relationship(

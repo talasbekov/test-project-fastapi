@@ -10,11 +10,17 @@ from schemas import (BadgeRead, PositionRead, PositionCreate,
 from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 
+class StaffUnitRequirements(Model):
+    name: Optional[str]
+    nameKZ: Optional[str]
+    full_text: Optional[NamedModel]
+
+
 class StaffUnitBase(Model):
     position_id: uuid.UUID
     staff_division_id: uuid.UUID
     is_active: Optional[bool] = True
-    requirements: Optional[List[dict]]
+    requirements: Optional[List[StaffUnitRequirements]]
 
 
 class StaffUnitCreate(StaffUnitBase):
@@ -77,7 +83,6 @@ class StaffUnitRead(UserReplacingStaffUnitRead):
     user_replacing: Optional[UserReplacingRead]
     user_replacing_id: Optional[uuid.UUID]
     
-
 
 class UserStaffUnitRead(StaffUnitBase, ReadModel):
     staff_division_id: Optional[uuid.UUID]
