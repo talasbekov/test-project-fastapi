@@ -75,14 +75,11 @@ class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate])
         if not self._check_by_role(db, role_id):
             raise ForbiddenException("You don't have permission to manage vacancy!")
         
-        position = position_service.get_by_id(db, body.position_id)
-        staff_division = staff_division_service.get_by_id(db, body.staff_division_id)
+        staff_unit = staff_unit_service.get_by_id(db, body.staff_unit_id)
         
         vacancy = self.model() # init object
         
-        vacancy.position_id = position.id
-        vacancy.staff_division_id = staff_division.id
-        
+        vacancy.staff_unit_id = staff_unit.id
         
         if body.hr_vacancy_requirements_ids is not None:
             vacancy_requirements = []
