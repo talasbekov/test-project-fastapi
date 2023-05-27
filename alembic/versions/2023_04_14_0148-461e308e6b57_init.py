@@ -962,6 +962,7 @@ def upgrade() -> None:
     sa.Column('staff_division_id', sa.UUID(), nullable=False),
     sa.Column('user_id', sa.UUID(), nullable=True),
     sa.Column('actual_user_id', sa.UUID(), nullable=True),
+    sa.Column('user_replacing_id', sa.UUID(), nullable=True),
     sa.Column('origin_id', sa.UUID(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
