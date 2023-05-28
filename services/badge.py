@@ -61,6 +61,7 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
             db.query(Badge)
             .filter(Badge.user_id == user_id)
             .filter(Badge.type_id == badge_type_id)
+            .join(BadgeHistory, and_(Badge.id == BadgeHistory.badge_id, BadgeHistory.date_to == None))
             .first()
         ) is not None
 

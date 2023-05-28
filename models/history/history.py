@@ -123,7 +123,6 @@ class BadgeHistory(History):
         badge = db.query(Badge).filter(Badge.id == id).first()
         if badge is None:
             raise NotFoundException(detail="Badge not found")
-        finish_last(db, user_id, cls.__mapper_args__["polymorphic_identity"])
         obj = BadgeHistory(
             date_from=datetime.datetime.now(),
             date_to=None,
