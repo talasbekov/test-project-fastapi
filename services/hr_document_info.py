@@ -7,7 +7,7 @@ from sqlalchemy.orm import Query
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
-from models import HrDocumentInfo, HrDocumentStep, DocumentStaffFunction
+from models import HrDocumentInfo, HrDocumentStep, DocumentStaffFunction, HrDocument
 from schemas import (HrDocumentInfoCreate, HrDocumentInfoUpdate)
 from .base import ServiceBase
 
@@ -53,6 +53,13 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
             raise NotFoundException(detail=f'Нет истории подписания!')
 
         return info
+
+    def find_by_document_id_and_step_id(self, db: Session, document_id: str, step_id: str) -> HrDocumentInfo:
+        return db.query(self.model).filter(
+            self.model.hr_document_id == document_id,
+            self.model.hr_document_step_id == step_id,
+            self.model.is_signed == None
+        ).order_by(self.model.order).first()
 
     def sign(self, db: Session, info: HrDocumentInfo, user_id: str, comment: str, is_signed: bool):
 

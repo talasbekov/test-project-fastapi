@@ -604,11 +604,18 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             context["signed_at"] = document.signed_at.strftime("%Y-%m-%d")
 
         ans = template.render(context)
-        
+
         opts = {
             'encoding': 'UTF-8',
             'enable-local-file-access': True
         }
+        last_step = hr_document_step_service.get_last_step_document_template_id(db, document.hr_document_template_id)
+
+        last_info = hr_document_info_service.find_by_document_id_and_step_id(db, document.id, last_step.id)
+        
+        if last_info.signed_at is not None:
+            context['approving_rank'] = last_info.signed_by.rank.name
+            context['approving_name'] = f"{last_info.signed_by.name} {last_info.signed_by.last_name} {last_info.signed_by.father_name}"
 
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
             file_name = temp_file.name + ".pdf"

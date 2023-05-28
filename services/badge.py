@@ -1,6 +1,7 @@
 import uuid
 from datetime import datetime
 
+from sqlalchemy import and_
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
@@ -122,18 +123,28 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
         user = db.query(User).filter(User.id == id).first()
         if user is None:
             raise NotFoundException(detail=f"User with id: {id} is not found!")
-        badge_ids = [i.type_id for i in user.badges]
         if type == "write":
+            active_badges = [i.id for i in (
+                db.query(BadgeType)
+                .join(Badge, and_(Badge.type_id == BadgeType.id, Badge.user_id == id))
+                .join(BadgeHistory, and_(Badge.id == BadgeHistory.badge_id, BadgeHistory.date_to == None))
+                .all()
+            )]
             return [
                 BadgeTypeRead.from_orm(badge).dict()
                 for badge in db.query(BadgeType)
-                .filter(BadgeType.id.notin_(badge_ids))
+                .filter(BadgeType.id.notin_(active_badges))
                 .offset(skip)
                 .limit(limit)
                 .all()
             ]
         else:
-            return [BadgeRead.from_orm(badge).dict() for badge in user.badges]
+            return [BadgeRead.from_orm(badge).dict() for badge in (
+                db.query(Badge)
+                .filter(Badge.user_id == id)
+                .join(BadgeHistory, and_(Badge.id == BadgeHistory.badge_id, BadgeHistory.date_to == None))
+                .all()
+            )]
 
     def get_object(self, db: Session, id: str, type: str):
         if type == 'write':

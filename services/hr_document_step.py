@@ -85,5 +85,18 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
             .all()
         )
 
+    def get_last_step_document_template_id(self, db: Session, template_id: uuid.UUID):
+        res = (
+            db.query(self.model)
+            .join(DocumentStaffFunction)
+            .filter(
+                self.model.hr_document_template_id == template_id,
+                DocumentStaffFunction.priority == 100
+            ).first()
+        )
+        if res is None:
+            raise NotFoundException(detail=f'Last step for template id: {template_id} is not found!')
+        return res
+
 
 hr_document_step_service = HrDocumentStepService(HrDocumentStep)

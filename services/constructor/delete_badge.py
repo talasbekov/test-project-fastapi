@@ -27,9 +27,8 @@ class DeleteBadgeHandler(BaseHandler):
             raise ForbiddenException(
                 f"Badge is not defined for this action: {self.__handler__}"
             )
-        print(user.id)
-        res = badge_service.stop_relation(db, user.id, badge_id)
         self.handle_validation(db, user, action, template_props, props, document)
+        res = badge_service.stop_relation(db, user.id, badge_id)
         document.old_history_id = res.id
         res.cancel_document_link = configs.GENERATE_IP + str(document.id)
         db.add(document)
