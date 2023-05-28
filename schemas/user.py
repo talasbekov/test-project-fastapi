@@ -29,6 +29,7 @@ class UserBase(Model):
     iin: Optional[str]
     is_active: Optional[bool]
     id: Optional[uuid.UUID]
+    description: Optional[str]
 
 class UserCreate(UserBase):
     password: Optional[str]
