@@ -299,7 +299,7 @@ async def get_all_actions():
             'penalty': {
                 'alias_name': 'Взыскание для снятия',
                 'alias_nameKZ': 'Алып тастауға арналған жаза',
-                'type': 'write',
+                'type': 'delete',
                 'data_taken': 'dropdown',
                 'field_name': 'penalties',
             },
