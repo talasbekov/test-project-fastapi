@@ -19,10 +19,11 @@ class RankService(ServiceBase[Rank, RankCreate, RankUpdate]):
 
     def get_by_option(self, db: Session, type: str, id: uuid.UUID, skip: int, limit: int):
         user = db.query(User).filter(User.id == id).first()
+        print(user.staff_unit.position.max_rank)
         if user is None:
             raise NotFoundException(detail=f"User with id: {id} is not found!")
         if type == "write":
-            return [RankRead.from_orm(rank).dict() for rank in db.query(Rank).filter(Rank.order <= user.staff_unit.position.rank.order).all()]
+            return [RankRead.from_orm(rank).dict() for rank in db.query(Rank).filter(Rank.order <= user.staff_unit.position.max_rank.order).all()]
         else:
             if user.rank.order == 1:
                 return []

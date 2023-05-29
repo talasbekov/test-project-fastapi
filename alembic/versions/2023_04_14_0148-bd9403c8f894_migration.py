@@ -555,67 +555,67 @@ def upgrade() -> None:
             'name': 'Психолог',
             'nameKZ': 'Психолог',
             'category_code': 'C-S-10',
-            'max_rank_id': None
+            'max_rank_id': rank9_id
         }, {
             'id': position23_id,
             'name': 'Представитель Управление собственной безопасности',
             'nameKZ': 'Өкіл жеке қауіпсіздік басқармасы',
             'category_code': 'C-S-6',
-            'max_rank_id': None
+            'max_rank_id': rank9_id
         }, {
             'id': position24_id,
             'name': 'Полиграфолог',
             'nameKZ': 'Полиграфолог',
             'category_code': 'C-S-10',
-            'max_rank_id': None
+            'max_rank_id': rank9_id
         }, {
             'id': position25_id,
             'name': 'Инструктор',
             'nameKZ': 'Инструктор',
             'category_code': 'C-S-10',
-            'max_rank_id': None
+            'max_rank_id': rank9_id
         }, {
             'id': position26_id,
             'name': "Умер",
             'nameKZ': 'Өлі',
             'category_code': 'C-RG-10',
-            'max_rank_id': None
+            'max_rank_id': rank9_id
         }, {
             'id': position27_id,
             'name': "В отставке",
             'nameKZ': 'Зейнеткер',
             'category_code': 'C-RG-10',
-            'max_rank_id': None
+            'max_rank_id': rank9_id
         }, {
             'id': position28_id,
             'name': "В запасе",
             'nameKZ': 'Резервте',
             'category_code': 'C-RG-10',
-            'max_rank_id': None
+            'max_rank_id': rank9_id
         }, {
             'id': position29_id,
             'name': "Исключен из списков личного состава",
             'nameKZ': 'Кадрлар тізімінен шығарылған',
             'category_code': 'C-RG-10',
-            'max_rank_id': None
+            'max_rank_id': rank9_id
         }, {
             'id': position30_id,
             'name': "Откомандирован в другой гос. орган",
             'nameKZ': 'Басқа мемлекеттік органға жіберілді',
             'category_code': 'C-RG-10',
-            'max_rank_id': None
+            'max_rank_id': rank9_id
         }, {
             'id': position31_id,
             'name': "Погиб",
             'nameKZ': 'Қайтыс болды',
             'category_code': 'C-RG-10',
-            'max_rank_id': None
+            'max_rank_id': rank9_id
         }, {
             'id': position32_id,
             'name': "HR-менеджер",
             'nameKZ': 'HR-менеджері',
             'category_code': 'C-RG-10',
-            'max_rank_id': None
+            'max_rank_id': rank9_id
         }]
     )
 
