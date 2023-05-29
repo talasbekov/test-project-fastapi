@@ -116,7 +116,7 @@ class RankHistory(History):
 class BadgeHistory(History):
 
     badge_id = Column(UUID(as_uuid=True), ForeignKey("badges.id"), nullable=True)
-    badge = relationship("Badge")
+    badge = relationship("Badge", back_populates="history")
 
     @classmethod
     def create_history(cls, db: Session, user_id: uuid.UUID, id: uuid.UUID, finish_last):

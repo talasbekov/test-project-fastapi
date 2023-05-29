@@ -20,3 +20,5 @@ class Badge(Model):
     type_id = Column(UUID(as_uuid=True), ForeignKey("badge_types.id"))
     type = relationship("BadgeType", back_populates="badges")
     user = relationship("User", back_populates='badges')
+
+    history = relationship("BadgeHistory", back_populates="badge", uselist=False)

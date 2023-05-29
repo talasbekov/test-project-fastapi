@@ -1,6 +1,7 @@
 import uuid
 from datetime import datetime
 
+from sqlalchemy import and_, or_
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
@@ -24,11 +25,12 @@ class PenaltyService(ServiceBase[Penalty, PenaltyCreate, PenaltyUpdate]):
                 for i in db.query(PenaltyType).offset(skip).limit(limit).all()
             ]
         else:
-            user = db.query(User).filter(User.id == id).first()
-            if user is None:
-                raise NotFoundException(detail=f"User with id: {id} is not found!")
-
-            return [PenaltyRead.from_orm(penalty).dict() for penalty in user.penalties]
+            penalties = (
+                db.query(Penalty)
+                    .filter(Penalty.user_id == id)
+                    .join(PenaltyHistory, and_(PenaltyHistory.user_id == id, or_(PenaltyHistory.date_to < datetime.now(), PenaltyHistory.date_to == None)))
+            )
+            return [PenaltyRead.from_orm(penalty).dict() for penalty in penalties]
 
     def get_object(self, db: Session, id: str, type: str):
         if type == "write":
