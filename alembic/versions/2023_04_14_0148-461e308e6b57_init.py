@@ -980,12 +980,19 @@ def upgrade() -> None:
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('requirements', sa.ARRAY(postgresql.JSON(none_as_null=True, astext_type=sa.Text())), nullable=True, default=''),
     sa.ForeignKeyConstraint(['actual_user_id'], ['users.id'], ),
     sa.ForeignKeyConstraint(['origin_id'], ['staff_units.id'], ),
     sa.ForeignKeyConstraint(['position_id'], ['archive_positions.id'], ),
     sa.ForeignKeyConstraint(['staff_division_id'], ['archive_staff_divisions.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('archive_staff_unit_candidate_stage_infos',
+    sa.Column('archive_staff_unit_id', sa.UUID(), nullable=True),
+    sa.Column('candidate_stage_info_id', sa.UUID(), nullable=True),
+    sa.ForeignKeyConstraint(['candidate_stage_info_id'], ['candidate_stage_infos.id'], ),
+    sa.ForeignKeyConstraint(['archive_staff_unit_id'], ['archive_staff_units.id'], )
     )
     op.create_foreign_key('archive_staff_divisions_leader_id_fkey', 'archive_staff_divisions', 'archive_staff_units', ['leader_id'], ['id'])
     op.create_table('biographic_infos',
@@ -1365,11 +1372,13 @@ def upgrade() -> None:
     )
     op.create_table('hr_vacancies',
     sa.Column('staff_unit_id', sa.UUID(), nullable=False),
+    sa.Column('archive_staff_unit_id', sa.UUID(), nullable=True),
     sa.Column('is_active', sa.Boolean(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['staff_unit_id'], ['staff_units.id'], ),
+    sa.ForeignKeyConstraint(['archive_staff_unit_id'], ['archive_staff_units.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('hr_vacancy_hr_vacancy_candidates',
