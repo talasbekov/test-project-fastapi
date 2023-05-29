@@ -110,7 +110,6 @@ class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate])
         vacancy = self.model() # init object
         
         vacancy.archive_staff_unit_id = archieve_staff_unit.id
-        vacancy.staff_unit_id = db.query(StaffUnit).first().id
         
         if body.hr_vacancy_requirements_ids is not None:
             vacancy.hr_vacancy_requirements = self._set_requirements_to_vacancy(db, body.hr_vacancy_requirements_ids)
@@ -195,9 +194,7 @@ class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate])
             
         if body.is_active is not None:
             hr_vacancy.is_active = body.is_active
-            
-        hr_vacancy.staff_unit_id = db.query(StaffUnit).first().id
-            
+                        
         db.add(hr_vacancy)
         db.flush()
         
