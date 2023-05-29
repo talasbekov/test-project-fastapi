@@ -23,9 +23,11 @@ class HrVacancyUpdate(HrVacancyBase):
 
 class HrVacancyRead(HrVacancyBase, ReadModel):
     staff_unit_id: Optional[uuid.UUID]
+    archive_staff_unit_id: Optional[uuid.UUID]
     is_active: Optional[bool]
     hr_vacancy_requirements: Optional[List[HrVacancyRequirementsRead]]
     staff_unit: Optional[StaffUnitRead]
+    archive_staff_unit: Optional[StaffUnitRead]
     hr_vacancy_candidates: Optional[List[UserRead]]
     
     class Config:

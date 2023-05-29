@@ -13,6 +13,7 @@ from .position import position_service
 from .staff_unit import staff_unit_service
 from .user import user_service
 from .staff_division import staff_division_service
+from .archive.archive_staff_unit import archive_staff_unit_service
 
 
 class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate]):
@@ -69,6 +70,14 @@ class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate])
         if hr_vacancy is None:
             raise NotFoundException(detail=f"HrVacancy with id: {id} is not found!")
         return hr_vacancy
+    
+    
+    def get_by_archieve_staff_unit(self, db: Session, archieve_staff_unit_id: str) -> HrVacancy:
+        hr_vacancy = db.query(self.model).filter(
+            self.model.archive_staff_unit_id == archieve_staff_unit_id
+        ).first()
+        
+        return hr_vacancy
 
 
     def create(self, db: Session, body: HrVacancyCreate, role_id: str) -> HrVacancy:
@@ -83,15 +92,27 @@ class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate])
         vacancy.staff_unit_id = staff_unit.id
         
         if body.hr_vacancy_requirements_ids is not None:
-            vacancy_requirements = []
-            
-            for requirement in body.hr_vacancy_requirements_ids:
-                requirement = hr_vacancy_requirement_service.get_by_id(db, requirement)
-            
-                vacancy_requirements.append(requirement)
-            
-            vacancy.hr_vacancy_requirements = vacancy_requirements
+            vacancy.hr_vacancy_requirements = self._set_requirements_to_vacancy(db, body.hr_vacancy_requirements_ids)
         
+        db.add(vacancy)
+        db.flush()
+        
+        return vacancy
+    
+    
+    def create_by_archive_staff_unit(self, db: Session, body: HrVacancyCreate, role_id: str) -> HrVacancy:
+        
+        if not self._check_by_role(db, role_id):
+            raise ForbiddenException("You don't have permission to manage vacancy!")
+        
+        archieve_staff_unit = archive_staff_unit_service.get_by_id(db, body.staff_unit_id)
+        
+        vacancy = self.model() # init object
+        
+        vacancy.archive_staff_unit_id = archieve_staff_unit.id
+        
+        if body.hr_vacancy_requirements_ids is not None:
+            vacancy.hr_vacancy_requirements = self._set_requirements_to_vacancy(db, body.hr_vacancy_requirements_ids)
         
         db.add(vacancy)
         db.flush()
@@ -144,21 +165,36 @@ class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate])
         hr_vacancy = self.get_by_id(db, id)
         
         if body.hr_vacancy_requirements_ids is not None:
-            vacancy_requirements = []
-            
-            for requirement in body.hr_vacancy_requirements_ids:
-                requirement = hr_vacancy_requirement_service.get_by_id(db, requirement)
-            
-                vacancy_requirements.append(requirement)
-            
-            hr_vacancy.hr_vacancy_requirements = vacancy_requirements
+            hr_vacancy.hr_vacancy_requirements = self._set_requirements_to_vacancy(db, body.hr_vacancy_requirements_ids)
                 
         if body.staff_unit_id is not None:
             hr_vacancy.staff_unit_id = staff_unit_service.get_by_id(db, body.staff_unit_id).id
             
         if body.is_active is not None:
             hr_vacancy.is_active = body.is_active
+                        
+        db.add(hr_vacancy)
+        db.flush()
+        
+        return hr_vacancy
+    
+    
+    def update_by_archieve_staff_unit(self, db: Session, id: str, body: HrVacancyUpdate, role_id: str) -> HrVacancy:
+        
+        if not self._check_by_role(db, role_id):
+            raise ForbiddenException("You don't have permission to manage vacancy!")
+        
+        hr_vacancy = self.get_by_id(db, id)
+        
+        if body.hr_vacancy_requirements_ids is not None:
+            hr_vacancy.hr_vacancy_requirements = self._set_requirements_to_vacancy(db, body.hr_vacancy_requirements_ids)
+                
+        if body.staff_unit_id is not None:
+            hr_vacancy.staff_unit_id = archive_staff_unit_service.get_by_id(db, body.staff_unit_id).id
             
+        if body.is_active is not None:
+            hr_vacancy.is_active = body.is_active
+                        
         db.add(hr_vacancy)
         db.flush()
         
@@ -173,5 +209,16 @@ class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate])
             return False
         
         return True
+
+
+    def _set_requirements_to_vacancy(self, db: Session, hr_vacancy_requirements_ids: List):
+        vacancy_requirements = []
+        
+        for requirement in hr_vacancy_requirements_ids:
+            requirement = hr_vacancy_requirement_service.get_by_id(db, requirement)
+        
+            vacancy_requirements.append(requirement)
+        
+        return vacancy_requirements
 
 hr_vacancy_service = HrVacancyService(HrVacancy)
