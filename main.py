@@ -1,7 +1,8 @@
 import uuid
+import requests
 import time
 import socket
-
+from core import download_file_to_tempfile 
 from fastapi import Depends, FastAPI, Request, WebSocket, WebSocketDisconnect, Query, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, RedirectResponse
@@ -58,6 +59,11 @@ if configs.DEBUG:
 def get_config():
     return configs
 
+@app.get("/test")
+async def test():  
+    file = await download_file_to_tempfile("http://192.168.0.169:8083/static/Nurlan.png")
+    print(file)
+    return {"test": "ok"}
 
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):
