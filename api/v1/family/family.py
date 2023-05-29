@@ -36,7 +36,7 @@ async def create(*,
 ):
     Authorize.jwt_required()
     return family_service.create(db, obj_in=body)
-
+ 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=FamilyRead)
