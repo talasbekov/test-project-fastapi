@@ -1,9 +1,10 @@
 from typing import Any
 
+from sqlalchemy import and_
 from sqlalchemy.orm import Session, Query
 
 from core import configs
-from models import User, HrDocument
+from models import User, HrDocument, Rank, Position
 from .base import BaseHandler
 from services import rank_service, history_service
 from exceptions import ForbiddenException
@@ -61,7 +62,9 @@ class IncreaseRankHandler(BaseHandler):
 
     def handle_filter(self, db: Session, user_query: Query[Any]):
         max_rank = rank_service.get_max_rank(db)
-        return user_query.filter(User.rank_id != max_rank.id)
+        return (
+            user_query.filter(User.rank_id != max_rank.id)
+        )
 
 
 handler = IncreaseRankHandler()

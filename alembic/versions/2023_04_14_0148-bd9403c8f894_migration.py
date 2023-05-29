@@ -2220,7 +2220,7 @@ def upgrade() -> None:
         staff_unit25_id,
         rank5_id,
         staff_unit25_id,
-        "http://192.168.0.169:8083/static/photo_2023-05-10_13-30-27.jpg",
+        "http://192.168.0.169:8083/static/Erdaulet.png",
         position32_id,
         True,
         "1.2.217K",

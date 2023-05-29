@@ -21,7 +21,13 @@ class RankService(ServiceBase[Rank, RankCreate, RankUpdate]):
         user = db.query(User).filter(User.id == id).first()
         if user is None:
             raise NotFoundException(detail=f"User with id: {id} is not found!")
-        return [RankRead.from_orm(rank).dict() for rank in db.query(Rank).filter(Rank.order <= user.staff_unit.position.max_rank.order).all()]
+        if type == "write":
+            return [RankRead.from_orm(rank).dict() for rank in db.query(Rank).filter(Rank.order <= user.staff_unit.position.rank.order).all()]
+        else:
+            if user.rank.order == 1:
+                return []
+            else:
+                return [self.get_by_order(db, user.rank.order - 1)]
 
     def get_object(self, db: Session, id: str, type: str):
         return self.get(db, id)
@@ -46,6 +52,12 @@ class RankService(ServiceBase[Rank, RankCreate, RankUpdate]):
         return (
             db.query(Rank).order_by(Rank.order.asc()).limit(1).first()
         )
+
+    def get_by_order(self, db: Session, order: int):
+        res = db.query(Rank).filter(Rank.order == order).first()
+        if res is None:
+            raise NotFoundException("Rank with order: {order} is not found!")
+        return res
 
 
 rank_service = RankService(Rank)

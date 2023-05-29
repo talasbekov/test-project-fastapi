@@ -668,6 +668,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         staff_units = staff_unit_service.get_all(db, users)
 
+        print(step.staff_function_id)
+
         if step.is_direct_supervisor is not None:
             if staff_unit.staff_division.leader_id != staff_unit.id:
                 raise ForbiddenException(
@@ -679,7 +681,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                         raise ForbiddenException(
                             detail='Вы не можете инициализировать этот документ!'
                         )
-        elif staff_unit_service.has_staff_function(db, staff_unit.id, step.staff_function_id):
+        elif not staff_unit_service.has_staff_function(db, staff_unit.id, step.staff_function_id):
             raise ForbiddenException(
                 detail=f"Вы не можете инициализировать этот документ из-за отсутсвия прав!"
             )
@@ -752,10 +754,10 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         document.signed_at = datetime.now()
         document.reg_number = (
-                str(random.randint(1, 10000))
+                "11"
                 + "-"
                 + str(random.randint(1, 10000))
-                + "қбп/жқ"
+                + "ДСП/ЛС-ЭС"
         )
 
         document.last_step_id = None

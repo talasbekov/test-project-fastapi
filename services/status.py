@@ -48,7 +48,7 @@ class StatusService(ServiceBase[Status, StatusCreate, StatusUpdate]):
             .filter(Status.user_id == user_id)
             .filter(Status.type_id == badge_type_id)
             .join(StatusHistory)
-            .filter(StatusHistory.date_to == None | StatusHistory.date_to > datetime.now())
+            .filter(or_(StatusHistory.date_to == None, StatusHistory.date_to > datetime.now()))
             .first()
         ) is not None
 

@@ -225,7 +225,8 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
         return document_staff_function_service.get_by_staff_unit(db, staff_unit)
 
     def has_staff_function(self, db: Session, staff_unit_id: uuid.UUID, staff_function_id: uuid.UUID):
-        return db.query(StaffUnit).filter(StaffUnit.id == staff_unit_id).filter(
+        return db.query(StaffUnit).filter(
+            StaffUnit.id == staff_unit_id,
             StaffUnit.staff_functions.any(id=staff_function_id)
         ).first() is not None
 
