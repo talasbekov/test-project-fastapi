@@ -160,3 +160,18 @@ async def delete(*,
     """
     Authrorize.jwt_required()
     staff_division_service.remove(db, id)
+
+@router.get('/name/{id}', dependencies=[Depends(HTTPBearer())],
+            summary="Get Staff Division by id")
+async def get_full_name_by_id(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Get Staff Division by id
+
+        - **id**: UUID - required
+    """
+    Authorize.jwt_required()
+    return staff_division_service.get_full_name(db, id)

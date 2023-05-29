@@ -45,3 +45,5 @@ class PenaltyUpdate(PenaltyBase):
 
 class PenaltyRead(PenaltyBase):
     id: uuid.UUID
+
+    type: Optional[PenaltyTypeRead]

@@ -21,7 +21,7 @@ class SickLeaveHandler(BaseHandler):
         document: HrDocument,
     ):
         date_from, date_to = self.get_args(props, action)
-        type = status_service.get_by_name(db, StatusEnum.SICK_LEAVE.value)
+        type = status_service.get_by_name(db, StatusEnum.SICK_LEAVE.value)[0]
 
         res = status_service.create_relation(db, user.id, type.id)
         history = history_service.create_timeline_history(db, user.id, res, date_from, date_to)

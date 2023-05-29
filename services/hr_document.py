@@ -679,9 +679,9 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                         raise ForbiddenException(
                             detail='Вы не можете инициализировать этот документ!'
                         )
-        elif step.staff_function not in staff_unit.staff_functions:
+        elif staff_unit_service.has_staff_function(db, staff_unit.id, step.staff_function_id):
             raise ForbiddenException(
-                detail=f"Вы не можете инициализировать этот документ!"
+                detail=f"Вы не можете инициализировать этот документ из-за отсутсвия прав!"
             )
 
         forbidden_users = self._exists_user_document_in_progress(db, body.hr_document_template_id, users)

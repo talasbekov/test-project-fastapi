@@ -136,7 +136,9 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
         full_name = staff_division.name
         full_nameKZ = staff_division.nameKZ
 
-        while parent_id != None:
+        service = self.get_by_name(db, StaffDivisionEnum.SERVICE.value)
+
+        while parent_id != service.id:
             res_id = parent_id
             tmp = self.get_by_id(db, parent_id)
             full_name = tmp.name + " / " + full_name
@@ -144,7 +146,6 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
             parent_id = tmp.parent_group_id
         
         return {full_name, full_nameKZ}
-        
 
     def create_from_archive(self, db: Session, archive_staff_division: ArchiveStaffDivision, parent_id: uuid.UUID, leader_id: uuid.UUID):
         res = super().create(
