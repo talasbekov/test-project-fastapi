@@ -65,6 +65,23 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
         
         return res_id
 
+    def get_division_parents_by_id(self, db: Session, archive_staff_division_id: uuid.UUID):
+
+        archive_staff_division = self.get_by_id(db, archive_staff_division_id)
+
+        parent_id = archive_staff_division.parent_group_id
+
+        prev_archive_staff_division = archive_staff_division
+        archive_staff_division.children = []
+        while parent_id is not None:
+            archive_staff_division = self.get_by_id(db, parent_id)
+            archive_staff_division.children = [prev_archive_staff_division]
+            prev_archive_staff_division = archive_staff_division
+            parent_id = archive_staff_division.parent_group_id
+        res = ArchiveStaffDivisionRead.from_orm(archive_staff_division)
+        db.rollback()
+        return res
+
     def create_based_on_existing_staff_division(self, db: Session, staff_division: StaffDivision, staff_list_id: uuid.UUID, parent_group_id: uuid.UUID):
         return super().create(db, ArchiveStaffDivisionCreate(
             parent_group_id=parent_group_id,

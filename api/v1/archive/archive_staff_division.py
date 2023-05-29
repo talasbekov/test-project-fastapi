@@ -35,6 +35,23 @@ async def get_all(*,
     return archive_staff_division_service.get_departments(db, staff_list_id, skip, limit)
 
 
+@router.get("/division_parents/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=ArchiveStaffDivisionRead,
+            summary="Get Archive Staff Division and all his parents")
+async def get_division_parents_by_id(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    """
+       Get all Staff Divisions
+
+       - **id**: uuid - The id of staff division. This parameter is required.
+   """
+    Authorize.jwt_required()
+    return archive_staff_division_service.get_division_parents_by_id(db, id)
+
+
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=ArchiveStaffDivisionRead,
