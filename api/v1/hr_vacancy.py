@@ -121,6 +121,26 @@ async def create(*,
     return hr_vacancy_service.create(db, body, role)
 
 
+@router.post("/archieve-staff-unit", status_code=status.HTTP_201_CREATED,
+            dependencies=[Depends(HTTPBearer())],
+            response_model=HrVacancyRead,
+            summary="Create HrVacancy by archieve staff unit")
+async def create_by_archieve_staff_unit(*,
+    body: HrVacancyCreate,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Create HrVacancy by archieve staff unit
+        
+        - **staff_unit_id**: uuid - required. The id of ArchieveStaffUnit
+        - **hr_vacancy_requirements_ids**: List of uuid - optional
+    """
+    Authorize.jwt_required()
+    role = Authorize.get_raw_jwt()['role']
+    return hr_vacancy_service.create_by_archive_staff_unit(db, body, role)
+
+
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=HrVacancyRead,
             summary="Update HrVacancy")
@@ -143,6 +163,28 @@ async def update(*,
     return hr_vacancy_service.update(db, id, body, role)
 
 
+@router.put("/{id}/archieve-staff-unit", dependencies=[Depends(HTTPBearer())],
+            response_model=HrVacancyRead,
+            summary="Update HrVacancy")
+async def update_by_archieve_staff_unit(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    body: HrVacancyUpdate,
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Update HrVacancy
+        
+        - **id**: uuid - required
+        - **staff_unit_id**: uuid - optional. The id of ArchieveStaffUnit
+        - **is_active**: bool - optional
+        - **hr_vacancy_requirements_ids**: List of uuid - optional
+    """
+    Authorize.jwt_required()
+    role = Authorize.get_raw_jwt()['role']
+    return hr_vacancy_service.update_by_archieve_staff_unit(db, id, body, role)
+
+
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=HrVacancyRead,
             summary="Get HrVacancy by id")
@@ -158,3 +200,21 @@ async def get_by_id(*,
     """
     Authorize.jwt_required()
     return hr_vacancy_service.get_by_id(db, id)
+
+
+@router.get("/archieve-staff-unit/{archieve_staff_unit_id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=HrVacancyRead,
+            summary="Get HrVacancy by archieve staff unit")
+async def get_by_archieve_staff_unit_id(*,
+    db: Session = Depends(get_db),
+    archieve_staff_unit_id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Get HrVacancy by archieve staff unit
+
+        - **archieve_staff_unit_id**: UUID - required
+    """
+    Authorize.jwt_required()
+    return hr_vacancy_service.get_by_archieve_staff_unit(db, archieve_staff_unit_id)
+

@@ -10,6 +10,7 @@ from .archive_staff_unit import ArchiveStaffUnitRead
 class ArchiveStaffDivisionBase(BaseModel):
     parent_group_id: Optional[uuid.UUID]
     name: str
+    nameKZ: Optional[str]
     description: Optional[NamedModel]
     staff_list_id: uuid.UUID
     is_combat_unit: Optional[bool]

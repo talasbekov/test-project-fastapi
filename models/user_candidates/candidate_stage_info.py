@@ -6,6 +6,7 @@ from sqlalchemy.orm import relationship
 
 from models import Model
 from models.association import staff_unit_candidate_stage_infos
+from models.archive.association import archive_staff_unit_candidate_stage_infos
 
 
 class CandidateStageInfoStatusEnum(str, enum.Enum):
@@ -31,6 +32,13 @@ class CandidateStageInfo(Model):
     staff_unit_coordinate_ids = relationship(
         "StaffUnit",
         secondary=staff_unit_candidate_stage_infos,
+        back_populates="candidate_stage_infos",
+        cascade="all,delete",
+    )
+
+    archive_staff_unit_coordinate_ids = relationship(
+        "ArchiveStaffUnit",
+        secondary=archive_staff_unit_candidate_stage_infos,
         back_populates="candidate_stage_infos",
         cascade="all,delete",
     )

@@ -13,7 +13,7 @@ from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 class StaffUnitRequirements(Model):
     name: Optional[str]
     nameKZ: Optional[str]
-    full_text: Optional[NamedModel]
+    keys: Optional[dict]
 
 
 class StaffUnitBase(Model):
