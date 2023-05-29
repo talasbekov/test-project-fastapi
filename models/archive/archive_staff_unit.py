@@ -23,7 +23,7 @@ class ArchiveStaffUnit(Model):
     user_replacing_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
     user_replacing = relationship("User", back_populates="archive_staff_unit_replacing", foreign_keys=user_replacing_id)
     # Relationships
-    position = relationship("ArchivePosition", cascade="all,delete", foreign_keys=[position_id])
+    position = relationship("ArchivePosition", cascade="all,delete", foreign_keys=[position_id], backref="archive_staff_units", passive_deletes=True)
     user = relationship("User", foreign_keys=user_id)
     actual_user = relationship("User", foreign_keys=actual_user_id)
     staff_division = relationship(
