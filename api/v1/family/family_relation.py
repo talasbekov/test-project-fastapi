@@ -23,7 +23,7 @@ async def get_all(*,
 ):
     Authorize.jwt_required()
     return family_relation_service.get_multi(db, skip, limit)
-
+ 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=FamilyRelationRead)
