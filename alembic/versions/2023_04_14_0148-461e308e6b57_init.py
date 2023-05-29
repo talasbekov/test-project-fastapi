@@ -1371,7 +1371,7 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('hr_vacancies',
-    sa.Column('staff_unit_id', sa.UUID(), nullable=False),
+    sa.Column('staff_unit_id', sa.UUID(), nullable=True),
     sa.Column('archive_staff_unit_id', sa.UUID(), nullable=True),
     sa.Column('is_active', sa.Boolean(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),

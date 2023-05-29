@@ -8,7 +8,7 @@ from .association import hr_vacancy_hr_vacancy_requirements, hr_vacancy_hr_vacan
 class HrVacancy(isActiveModel):
     __tablename__ = "hr_vacancies"
     
-    staff_unit_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"), nullable=False)
+    staff_unit_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"), nullable=True)
     archive_staff_unit_id = Column(UUID(as_uuid=True), ForeignKey("archive_staff_units.id"), nullable=True)
     
     hr_vacancy_requirements = relationship(
