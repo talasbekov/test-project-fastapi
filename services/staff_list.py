@@ -1,3 +1,4 @@
+from typing import List
 import uuid
 
 from sqlalchemy.orm import Session, joinedload
@@ -12,6 +13,8 @@ from models import (
     ArchiveStaffDivision,
     User,
     HrDocument,
+    PrivilegeEmergency,
+    ArchiveFormEnum
 )
 from schemas import (
     StaffListCreate,
@@ -24,6 +27,7 @@ from services import (
     archive_staff_division_service,
     archive_staff_function_service,
     archive_staff_unit_service,
+    archive_privelege_emergency_service,
     document_archive_staff_function_service,
     service_archive_staff_function_service,
     staff_division_service,
@@ -33,7 +37,8 @@ from services import (
     service_staff_function_type_service,
     hr_document_template_service,
     position_service,
-    archive_position_service
+    archive_position_service,
+    privelege_emergency_service
 )
 
 options = {
@@ -68,6 +73,8 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         )
         staff_list = super().create(db, create_staff_list)
         staff_divisions = staff_division_service.get_departments(db, 0, 100)
+        privelege_emergencies = privelege_emergency_service.get_multi(db, 0, 100)
+        self._create_archive_privelege_emergency(db, privelege_emergencies)
         for staff_division in staff_divisions:
             self._create_archive_staff_division(db, staff_division, staff_list.id, None)
         db.add(staff_list)
@@ -166,6 +173,18 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
 
         return archive_division
     
+    def _create_archive_privelege_emergency(self, db: Session, privelege_emergencies: List[PrivilegeEmergency]):
+        for privelege_emergency in privelege_emergencies:
+            archive_privelege_emergency_service.create_based_on_existing_position(
+                db=db,
+                form=privelege_emergency.form.name,
+                date_from=privelege_emergency.date_from,
+                date_to=privelege_emergency.date_to,
+                origin_id=privelege_emergency.id,
+                user_id=privelege_emergency.user_id
+            )
+        
+
     def get_super_doc_by_staff_list_id(
         self,
         db: Session,

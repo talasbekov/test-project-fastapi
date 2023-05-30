@@ -9,7 +9,7 @@ from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 
 class PrivelegeEmergency(Model):
-    form: Optional[Enum]
+    form: Optional[str]
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     user_id: Optional[uuid.UUID]
@@ -28,4 +28,5 @@ class PrivelegeEmergencyUpdate(PrivelegeEmergency):
 
 
 class PrivelegeEmergencyRead(PrivelegeEmergency, ReadModel):
+    form: Optional[Enum]
     pass

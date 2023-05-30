@@ -6,6 +6,7 @@ from pydantic import BaseModel, EmailStr
 
 
 class ServiceArchiveStaffFunctionTypeBase(BaseModel):
+    nameKZ: Optional[str]
     name: str
 
     class Config:

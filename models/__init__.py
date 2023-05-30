@@ -32,6 +32,7 @@ from .personal import *
 from .additional import *
 from .education import *
 from .family import *
+from .privelege_emergency import FormEnum as PrivelegeEnum
 from .archive import *
 from .user_candidates import *
 from .penalty import Penalty, PenaltyType

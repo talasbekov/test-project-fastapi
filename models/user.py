@@ -65,6 +65,7 @@ class User(isActiveModel):
     attestations = relationship("Attestation", back_populates="user", cascade="all,delete")
     coolnesses = relationship("Coolness", back_populates="user", cascade="all,delete")
     penalties = relationship("Penalty", back_populates="user", cascade="all,delete")
+    archive_privelege_emergencies = relationship("ArchivePrivilegeEmergency", back_populates="user", cascade="all, delete")
     privelege_emergencies = relationship("PrivilegeEmergency", back_populates="user", cascade="all,delete")
     contracts = relationship("Contract", back_populates="user", cascade="all,delete")
     equipments = relationship("Equipment", back_populates="user", cascade="all,delete")
