@@ -14,6 +14,17 @@ from .service_archive_staff_function_type import service_archive_staff_function_
 
 class ArchiveStaffFunctionService(ServiceBase[ArchiveStaffFunction, ArchiveStaffFunctionCreate, ArchiveStaffFunctionUpdate]):
 
+    def get_all_staff_functions(self, db: Session, skip: int, limit: int):
+        staff_functions = (
+            db.query(ArchiveStaffFunction)
+            .filter(ArchiveStaffFunction.discriminator != ''
+                    )
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
+        return staff_functions
+
     def get_by_id(self, db: Session, id: str):
         service_staff_function = super().get(db, id)
         if service_staff_function is None:

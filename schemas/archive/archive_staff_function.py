@@ -15,7 +15,7 @@ class ArchiveDocumentStaffFunctionBase(ArchiveStaffFunctionBase):
     priority: int
     role_id: uuid.UUID
     jurisdiction_id: uuid.UUID
-    
+
 
 class ArchiveServiceStaffFunctionBase(ArchiveStaffFunctionBase):
 
@@ -108,7 +108,7 @@ class ArchiveDocumentStaffFunctionStep(BaseModel):
 
 
 class ArchiveDocumentStaffFunctionRead(ArchiveStaffFunctionRead, ArchiveDocumentStaffFunctionBase):
-    
+
     priority: Optional[int]
     role_id: Optional[uuid.UUID]
     role: Optional[ArchiveStaffFunctionRead]
@@ -123,3 +123,10 @@ class ArchiveServiceStaffFunctionRead(ArchiveStaffFunctionRead, ArchiveServiceSt
 
     type_id: Optional[uuid.UUID]
     type: Optional[ServiceStaffFunctionTypeRead]
+
+
+class AllArchiveStaffFunctionsRead(ArchiveServiceStaffFunctionRead,
+                                   ArchiveDocumentStaffFunctionRead,
+                                   ArchiveServiceStaffFunctionBase):
+    pass
+
