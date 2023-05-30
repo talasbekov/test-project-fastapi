@@ -97,6 +97,21 @@ async def get_by_id(*,
     Authorize.jwt_required()
     return privelege_emergency_service.get_by_id(db, id)
 
+@router.get("/user/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=PrivelegeEmergencyRead,
+            summary="Get Privelege Emergency Unit by user id")
+async def get_by_user_id(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Get Privelege Emergency by user id
+
+        - **user_id** - UUID - required
+    """
+    Authorize.jwt_required()
+    return privelege_emergency_service.get_by_user_id(db, id)
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
