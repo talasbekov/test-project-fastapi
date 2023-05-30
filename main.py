@@ -19,7 +19,7 @@ import sentry_sdk
 from api import router
 from core import configs, get_db
 from ws import notification_manager
-from services import staff_unit_service
+from services import categories
 
 
 socket.setdefaulttimeout(15)
@@ -60,10 +60,8 @@ def get_config():
     return configs
 
 @app.get("/test")
-async def test():  
-    file = await download_file_to_tempfile("http://192.168.0.169:8083/static/Nurlan.png")
-    print(file)
-    return {"test": "ok"}
+async def test(db: Session = Depends(get_db)):
+    return []
 
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):

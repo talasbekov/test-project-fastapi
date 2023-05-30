@@ -15,11 +15,13 @@ class SupervisorCategory(BaseCategory):
             db.query(User)
             .join(User.staff_unit)
             .join(
-                StaffUnit.position, 
+                Position,
                 and_(
                     StaffUnit.position_id == Position.id,
-                    func.lower(Position.name).contains(PositionNameEnum.SUPERVISOR.value.lower())
-                )
+                    func.lower(Position.name).contains(
+                        PositionNameEnum.SUPERVISOR.value.lower()
+                    ),
+                ),
             )
             .all()
         )
