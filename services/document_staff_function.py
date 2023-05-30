@@ -72,11 +72,12 @@ class DocumentStaffFunctionService(ServiceBase[DocumentStaffFunction, DocumentSt
             staff_function_id=function.id,
             created_at=datetime.datetime.now(),
             is_direct_supervisor=body.is_direct_supervisor,
+            category=body.category,
         )
         
         db.add(function)
         db.add(new_step)
-        db.flush() 
+        db.flush()
         return function
 
     def create_function_for_constructor(self, db: Session, body: DocumentStaffFunctionConstructorAdd):

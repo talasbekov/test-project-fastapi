@@ -362,13 +362,11 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         initiator_role = document_staff_function_type_service.get_initiator(db)
         user = self.get_by_id(db, user_id)
         document_ids = []
-        for function in user.staff_unit.staff_functions:
-            if function.discriminator != DocumentStaffFunction.__mapper_args__['polymorphic_identity']:
-                continue
-            if function.role_id == initiator_role.id:
-                if (function.hr_document_step is None):
-                    continue
-                document_ids.append(function.hr_document_step.hr_document_template_id)
+        functions = db.query(DocumentStaffFunction).filter(
+            DocumentStaffFunction.staff_units.any(StaffUnit.id == user.staff_unit_id),
+            DocumentStaffFunction.role_id == initiator_role.id
+        ).all()
+        document_ids = [function.hr_document_step.hr_document_template_id for function in functions]
         return hr_document_template_service.get_all(db, document_ids)
 
     def _validate_call_sign(self,db: Session, call_sign: str):
