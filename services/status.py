@@ -68,6 +68,7 @@ class StatusService(ServiceBase[Status, StatusCreate, StatusUpdate]):
             .filter(Status.user_id == user_id)
             .join(StatusType)
             .filter(func.lower(StatusType.name).contains(status_name.lower()))
+            .order_by(StatusHistory.date_to.desc())
             .all()
         )
 

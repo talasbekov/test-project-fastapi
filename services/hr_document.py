@@ -505,9 +505,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                     superdoc = True
 
         if not superdoc:
-            user_ids = []
-            for user in document.users:
-                user_ids.append(user.id)
+            user_ids = [i.id for i in document.users]
 
         if document_staff_function.role.name == DocumentFunctionTypeEnum.EXPERT.value:
             body.is_signed = True
@@ -522,7 +520,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             )
 
         if superdoc:
-            return await self._sign_super_document(db, document, next_step, body.is_signed, body.comment, info, user)
+            return await self._sign_super_document(db, document, next_step, body.is_signed, body.comment, info, current_user)
 
         if body.is_signed:
             if next_step is None:
@@ -683,7 +681,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                         )
         elif not staff_unit_service.has_staff_function(db, staff_unit.id, step.staff_function_id):
             raise ForbiddenException(
-                detail=f"Вы не можете инициализировать этот документ из-за отсутсвия прав!"
+                detail=f"Вы не можете инициализировать этот документ из-за отсутствия прав!"
             )
 
         forbidden_users = self._exists_user_document_in_progress(db, body.hr_document_template_id, users)
@@ -711,12 +709,12 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             )
 
     def _exists_user_document_in_progress(self, db: Session, hr_document_template_id: uuid.UUID, user_ids: List[uuid.UUID]):
-        
+
         if user_ids is None:
             return None
-        
+
         forbidden_statuses = hr_document_status_service.get_by_names(db, ["Завершен", "Отменен"])
-        
+
         return(
             db.query(User)
             .distinct(User.id)
@@ -867,15 +865,14 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
                 super_document.last_step = steps[0]
 
-                on_revision_status: HrDocumentStatus = hr_document_status_service.get_by_name(db,
-                                                                                            HrDocumentStatusEnum.ON_REVISION.value)
+                on_revision_status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.ON_REVISION.value)
 
                 super_document.status_id = on_revision_status.id
         
         for child_document in child_documents:
             if child_document.last_step is None and child_document.status_id is completed_status.id:
                 raise InvalidOperationException(detail=f'Document with id {child_document.id} is already signed!')
-            
+
             child_document_info = hr_document_info_service.get_by_document_id_and_step_id(
                 db, child_document.id, child_document.last_step_id
             )
@@ -886,7 +883,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 next_step = hr_document_step_service.get_next_step_from_previous_step(
                     db, child_document_info.hr_document_step
                 )
-                
                 child_document.last_step_id = next_step.id
                 child_document.status_id = in_progress_status.id
             else:
@@ -897,7 +893,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                     child_steps = hr_document_step_service.get_all_by_document_template_id_without_notifiers(
                         db, child_document.hr_document_template_id
                     )
-                    
                     for step in child_steps:
 
                         had_step = False
@@ -922,9 +917,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         db.add_all(child_documents)
         db.add(super_document)
         db.flush()
-
         return super_document
-    
+
     async def _finish_super_document(self, db: Session, super_document: HrDocument):
         completed_status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.COMPLETED.value)
         

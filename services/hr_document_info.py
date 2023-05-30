@@ -7,7 +7,13 @@ from sqlalchemy.orm import Query
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
-from models import HrDocumentInfo, HrDocumentStep, DocumentStaffFunction, HrDocument
+from models import (
+    HrDocumentInfo,
+    HrDocumentStep,
+    DocumentStaffFunction,
+    HrDocument,
+    User,
+)
 from schemas import (HrDocumentInfoCreate, HrDocumentInfoUpdate)
 from .base import ServiceBase
 
@@ -61,9 +67,9 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
             self.model.is_signed == None
         ).order_by(self.model.order).first()
 
-    def sign(self, db: Session, info: HrDocumentInfo, user_id: str, comment: str, is_signed: bool):
+    def sign(self, db: Session, info: HrDocumentInfo, user: User, comment: str, is_signed: bool):
 
-        info.signed_by = user_id
+        info.signed_by = user
         info.comment = comment
         info.is_signed = is_signed
         info.updated_at = datetime.now()

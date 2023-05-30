@@ -4,6 +4,7 @@ from typing import Any
 from sqlalchemy import and_, or_
 from sqlalchemy.orm import Session, Query
 
+from core import configs
 from models import User, HrDocument, StatusEnum, StatusHistory, Status
 from services import status_service, history_service
 from exceptions import ForbiddenException
@@ -25,9 +26,11 @@ class StopLeaveHandler(BaseHandler):
     ):
         reason = self.get_args(props, action)
         statuses = status_service.get_active_status_of_user(db, user.id, StatusEnum.ROOT.value)
-        for i in statuses:
-            i.date_to = datetime.now()
-            db.add(i)
+        status = statuses[0]
+        if status is None:
+            return
+        res = status_service.stop_relation(db, user.id, status.id)
+        res.cancel_document_link = configs.GENERATE_IP + str(document.id)
         db.flush()
 
     def handle_validation(

@@ -272,12 +272,14 @@ def upgrade() -> None:
     sa.Column('staff_division_id', sa.UUID(), nullable=False),
     sa.Column('user_replacing_id', sa.UUID(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('curator_of_id', sa.UUID(), nullable=True),
     sa.Column('is_active', sa.Boolean(), nullable=False, default=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('requirements', sa.ARRAY(postgresql.JSON(none_as_null=True, astext_type=sa.Text())), nullable=True, default=''),
     sa.ForeignKeyConstraint(['position_id'], ['positions.id'], ),
     sa.ForeignKeyConstraint(['staff_division_id'], ['staff_divisions.id'], ),
+    sa.ForeignKeyConstraint(['curator_id', 'staff_divisions.id'] ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('hr_document_templates',
@@ -607,6 +609,7 @@ def upgrade() -> None:
     sa.Column('staff_function_id', sa.UUID(), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('is_direct_supervisor', sa.Boolean(), nullable=True),
+    sa.Column('category', sa.Integer(), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['hr_document_template_id'], ['hr_document_templates.id'], onupdate='CASCADE', ondelete='CASCADE'),

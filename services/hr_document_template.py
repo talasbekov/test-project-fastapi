@@ -33,7 +33,7 @@ from services import (
     staff_unit_service,
     staff_division_service,
 )
-
+from category import categories, BaseCategory
 from ws import notification_manager
 
 
@@ -82,8 +82,13 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
             if step.is_direct_supervisor is not None:
                 steps[str(function.priority)] = self.get_all_supervisors(db, step.id, step.is_direct_supervisor, document_template_id, user)
                 continue
+            if step.category is not None:
+                category: BaseCategory  = categories.get(step.category, None)
+                if category is None:
+                    raise NotFoundException(detail=f'Category with id: {step.category} is not found!')
+                steps[str(function.priority)] = category.handle(db)
+                continue
             staff_units_ids = [unit.id for unit in function.staff_units]
-            print(staff_units_ids)
             user = db.query(User).filter(
                 User.staff_unit_id.in_(staff_units_ids)
             ).first()

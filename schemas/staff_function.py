@@ -32,6 +32,7 @@ class DocumentStaffFunctionCreate(DocumentStaffFunctionBase):
 class DocumentStaffFunctionAdd(DocumentStaffFunctionBase):
     hr_document_template_id: uuid.UUID
     is_direct_supervisor: Optional[bool] = None
+    category: Optional[int] = None
 
 class DocumentStaffFunctionConstructorAdd(DocumentStaffFunctionAdd):
     staff_unit_id: uuid.UUID

@@ -28,6 +28,7 @@ class PositionNameEnum(str, enum.Enum):
     SECONDMENT_OTHER = "Откомандирован в другой гос. орган"
     PERISHED = "Погиб"
     HR = "HR-менеджер"
+    SUPERVISOR = "Начальник"
 
 
 class Position(NamedModel):

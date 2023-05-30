@@ -44,9 +44,10 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
 
     def get_all_by_document_template_id(self, db: Session, template_id: uuid.UUID, notifiers: bool = True):
 
-        steps_query = db.query(self.model).filter(
-            self.model.hr_document_template_id == template_id
-        ).join(self.model.staff_function).order_by(DocumentStaffFunction.priority.asc())
+        steps_query = db.query(self.model)\
+            .filter(self.model.hr_document_template_id == template_id)\
+            .join(self.model.staff_function)\
+            .order_by(DocumentStaffFunction.priority.asc())
 
         if not notifiers:
             steps_query = steps_query.filter(DocumentStaffFunction.priority != -1)
