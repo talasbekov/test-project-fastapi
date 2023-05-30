@@ -1,5 +1,7 @@
 from .archive_staff_unit import router as archive_staff_unit_router
 from .archive_staff_division import router as archive_staff_division_router
 from .archive_service_staff_function_type import router as archive_service_staff_function_type_router
-from .archive_service_staff_function import router as archive_staff_function_router
+from .archive_service_staff_function import router as archive_service_staff_function_router
+from .archive_staff_function import router as archive_staff_function_router
 from .archive_position import router as archive_position_router
+

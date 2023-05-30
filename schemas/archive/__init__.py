@@ -10,7 +10,7 @@ from .archive_staff_function import (ArchiveStaffFunctionCreate, ArchiveStaffFun
                                      NewArchiveStaffFunctionUpdate,
                                      NewArchiveDocumentStaffFunctionCreate, NewArchiveDocumentStaffFunctionUpdate,
                                      NewArchiveServiceStaffFunctionCreate,
-                                     NewArchiveServiceStaffFunctionUpdate)
+                                     NewArchiveServiceStaffFunctionUpdate, AllArchiveStaffFunctionsRead)
 from .archive_staff_unit import (ArchiveStaffUnitCreate, ArchiveStaffUnitUpdate, ArchiveStaffUnitRead,
                                  ArchiveStaffUnitCreateWithStaffFunctions, NewArchiveStaffUnitCreate,
                                  NewArchiveStaffUnitUpdate,
