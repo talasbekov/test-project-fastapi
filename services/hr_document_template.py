@@ -32,8 +32,9 @@ from services import (
     notification_service,
     staff_unit_service,
     staff_division_service,
+    categories,
+    BaseCategory,
 )
-from category import categories, BaseCategory
 from ws import notification_manager
 
 
