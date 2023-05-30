@@ -59,7 +59,7 @@ class HrDocumentTemplateService(ServiceBase[HrDocumentTemplate, HrDocumentTempla
             raise NotFoundException(detail=f'HrDocumentTemplate with id: {id} is not found!')
         return hr_document_template
 
-    def get_steps_by_document_template_id(self, db: Session, document_template_id: str, user_id: uuid.UUID) -> dict[str, Union[uuid.UUID, Dict[int, uuid.UUID]]]:
+    def get_steps_by_document_template_id(self, db: Session, document_template_id: str, user_id: uuid.UUID) -> dict[str, Union[Union[uuid.UUID, Dict[int, uuid.UUID]], list[uuid.UUID]]]:
 
         user = db.query(User).filter(User.id == user_id).first()
         if user is None:
