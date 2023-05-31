@@ -31,4 +31,5 @@ class SuperDocHandler(BaseHandler):
     ):
         pass
 
+
 handler = SuperDocHandler()

@@ -21,13 +21,8 @@ class AddPenaltyHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        try:
-            tagname = action["penalty"]["tagname"]
-        except:
-            raise ForbiddenException(
-                f"Penalty is not defined for this action: {self.__handler__}"
-            )
-        res = penalty_service.create_relation(db, user.id, props[tagname]["value"])
+        penalty_id = self.get_args(action, props)
+        res = penalty_service.create_relation(db, user.id, penalty_id)
         res.name = action["reason"]["tagname"]
         user.penalties.append(res)
         history = history_service.create_history(db, user.id, res)
@@ -52,5 +47,21 @@ class AddPenaltyHandler(BaseHandler):
         document: HrDocument,
     ):
         pass
+
+    def get_args(self, action, properties):
+        try:
+            penalty_id = properties[action["penalty"]["tagname"]]["value"]
+        except KeyError:
+            raise ForbiddenException(f"Penalty is not defined for this action: {self.__handler__}")
+        return penalty_id
+
+    def handle_response(self, db: Session,
+                        action: dict,
+                        properties: dict,
+    ):
+        args = self.get_args(action, properties)
+        obj = penalty_service.get_by_id(db, args).type
+        return obj
+
 
 handler = AddPenaltyHandler()

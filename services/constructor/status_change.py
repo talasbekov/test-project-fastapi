@@ -31,23 +31,18 @@ class StatusChangeHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        try:
-            status = action["status"]["tagname"]
-        except:
-            raise ForbiddenException(
-                f"Status is not defined for this action: {self.__handler__}"
-            )
+        status_id = self.get_args(action, props)
 
-        self.handle_validation(db, user, action, template_props, props, document)
+        self.handle_validation(db, user, action, props)
 
-        if props[status]["name"] in archive_status:
-            staff_unit = staff_unit_service.existing_or_create(db, props[status]["name"])
+        if status_id in archive_status:
+            staff_unit = staff_unit_service.existing_or_create(db, status_id)
             staff_unit.users.append(user)
             staff_unit.actual_users.append(user)
             user.is_active = False
             db.add(staff_unit)
 
-        res = status_service.create_relation(db, user.id, props[status]["value"])
+        res = status_service.create_relation(db, user.id, status_id)
         history = history_service.create_history(db, user.id, res)
 
         history.document_link = configs.GENERATE_IP + str(document.id)
@@ -64,15 +59,33 @@ class StatusChangeHandler(BaseHandler):
         db: Session,
         user: User,
         action: dict,
-        template_props: dict,
         props: dict,
-        document: HrDocument,
     ):
-        status = action["status"]["tagname"]
+        status_id = self.get_args(action, props)
 
-        if status_service.exists_relation(db, user.id, props[status]["value"]):
+        if status_service.exists_relation(db, user.id, status_id):
             raise ForbiddenException(
                 f"This status is already assigned to this user: {user.first_name}, {user.last_name}"
             )
+
+    def get_args(
+            self,
+            action: dict,
+            props: dict,
+    ):
+        try:
+            status_id = props[action['status']['tagname']]['value']
+        except Exception as e:
+            raise ForbiddenException(detail=f'Invalid props for action: {self.__handler__}')
+        return status_id
+
+    def handle_response(self, db: Session,
+                        action: dict,
+                        properties: dict,
+                        ):
+        status_id = self.get_args(action, properties)
+        obj = status_service.get_by_id(db, status_id)
+        return obj
+
 
 handler = StatusChangeHandler()

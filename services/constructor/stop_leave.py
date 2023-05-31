@@ -16,13 +16,13 @@ class StopLeaveHandler(BaseHandler):
     __handler__ = "stop_leave"
 
     def handle_action(
-        self,
-        db: Session,
-        user: User,
-        action: dict,
-        template_props: dict,
-        props: dict,
-        document: HrDocument,
+            self,
+            db: Session,
+            user: User,
+            action: dict,
+            template_props: dict,
+            props: dict,
+            document: HrDocument,
     ):
         reason = self.get_args(props, action)
         statuses = status_service.get_active_status_of_user(db, user.id, StatusEnum.ROOT.value)
@@ -34,20 +34,20 @@ class StopLeaveHandler(BaseHandler):
         db.flush()
 
     def handle_validation(
-        self,
-        db: Session,
-        user: User,
-        action: dict,
-        template_props: dict,
-        props: dict,
-        document: HrDocument,
+            self,
+            db: Session,
+            user: User,
+            action: dict,
+            template_props: dict,
+            props: dict,
+            document: HrDocument,
     ):
         pass
 
     def get_args(
-        self,
-        props: dict,
-        action: dict
+            self,
+            props: dict,
+            action: dict
     ):
         try:
             reason = props[action['reason']['tagname']]['name']
@@ -59,24 +59,30 @@ class StopLeaveHandler(BaseHandler):
         statuses = [i.id for i in status_service.get_by_name(db, StatusEnum.ROOT.value)]
         return (
             query
-                .join(
-                    Status,
-                    and_(
-                        Status.user_id == User.id,
-                        Status.type_id.in_(statuses),
-                    )
-                )
-                .join(
-                    StatusHistory, 
-                    and_(
-                        Status.id == StatusHistory.status_id,
-                        or_(
-                            StatusHistory.date_to == None,
-                            StatusHistory.date_to > datetime.now(),
-                        ),
-                    ),
+            .join(
+                Status,
+                and_(
+                    Status.user_id == User.id,
+                    Status.type_id.in_(statuses),
                 )
             )
+            .join(
+                StatusHistory,
+                and_(
+                    Status.id == StatusHistory.status_id,
+                    or_(
+                        StatusHistory.date_to == None,
+                        StatusHistory.date_to > datetime.now(),
+                    ),
+                ),
+            )
+        )
+
+    def handle_response(self, db: Session,
+                        action: dict,
+                        properties: dict,
+                        ):
+        return None
 
 
 handler = StopLeaveHandler()

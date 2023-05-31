@@ -32,28 +32,12 @@ class RenewContractHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        try:
-            tagname = action["contract"]["tagname"]
-        except:
-            raise ForbiddenException(
-                f"Contract is not defined for this action: {self.__handler__}"
-            )
-        # self.handle_validation(db, user, action, template_props, props, document)
-        contract_type = db.query(ContractType).filter(
-            ContractType.id == props[tagname]["value"]
-        ).first()
-        
-        if not contract_type:
-            raise NotFoundException(
-                detail="Contract type not found"
-            )
+        contract_type, date_from, date_to = self.get_args(db, action, props)
 
-        res = contract_service.create_relation(db, user.id, props[tagname]["value"])
+        res = contract_service.create_relation(db, user.id, contract_type.id)
         user.contracts.append(res)
 
         if contract_type.is_finite:
-            date_from = datetime.datetime.now()
-            date_to = date_from.replace(date_from.year + contract_type.years)
 
             history = history_service.create_timeline_history(
                 db, user.id, res, date_from, date_to
@@ -78,12 +62,36 @@ class RenewContractHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        # tagname = action["contract"]["tagname"]
-        # if not contract_service.exists_relation(db, user.id, props[tagname]["value"]):
-        #     raise ForbiddenException(
-        #         f"This user: {user.first_name}, {user.last_name}, doesn't have any contract"
-        #     )
         pass
+
+    def get_args(
+            self,
+            db: Session,
+            action: dict,
+            props: dict,
+    ):
+        try:
+            contract_type_id = props[action["contract"]["tagname"]]["value"]
+            contract_type = db.query(ContractType).filter(
+                ContractType.id == contract_type_id
+            ).first()
+
+            if not contract_type:
+                raise NotFoundException(
+                    detail="Contract type not found"
+                )
+            date_from = datetime.datetime.now()
+            date_to = date_from.replace(date_from.year + contract_type.years)
+        except:
+            raise ForbiddenException(detail=f'Invalid props for action: {self.__handler__}')
+        return contract_type, date_from, date_to
+
+    def handle_response(self, db: Session,
+                        action: dict,
+                        properties: dict,
+                        ):
+        data = list(self.get_args(db, action, properties))
+        return data
 
 
 handler = RenewContractHandler()

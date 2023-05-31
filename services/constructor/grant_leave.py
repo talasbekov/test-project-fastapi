@@ -14,13 +14,13 @@ class GrantLeaveHandler(BaseHandler):
     __handler__ = "grant_leave"
 
     def handle_action(
-        self,
-        db: Session,
-        user: User,
-        action: dict,
-        template_props: dict,
-        props: dict,
-        document: HrDocument,
+            self,
+            db: Session,
+            user: User,
+            action: dict,
+            template_props: dict,
+            props: dict,
+            document: HrDocument,
     ):
         self.handle_validation(db, user, action, template_props, props, document)
         status_id, date_from, date_to = self.get_args(props, action)
@@ -37,13 +37,13 @@ class GrantLeaveHandler(BaseHandler):
         db.flush()
 
     def handle_validation(
-        self,
-        db: Session,
-        user: User,
-        action: dict,
-        template_props: dict,
-        props: dict,
-        document: HrDocument,
+            self,
+            db: Session,
+            user: User,
+            action: dict,
+            template_props: dict,
+            props: dict,
+            document: HrDocument,
     ):
         status_id, date_from, date_to = self.get_args(props, action)
         if status_service.get_object(db, status_id, 'write') is None:
@@ -52,9 +52,9 @@ class GrantLeaveHandler(BaseHandler):
             raise ForbiddenException(detail=f'Invalid dates for action: {self.__handler__}')
 
     def get_args(
-        self,
-        props: dict,
-        action: dict
+            self,
+            props: dict,
+            action: dict
     ):
         try:
             status_id = props[action['status']['tagname']]['value']
@@ -63,7 +63,7 @@ class GrantLeaveHandler(BaseHandler):
         except Exception as e:
             logging.exception(e)
             raise ForbiddenException(detail=f'Invalid props for action: {self.__handler__}')
-        return (status_id, date_from, date_to)
+        return status_id, date_from, date_to
 
 
 handler = GrantLeaveHandler()
