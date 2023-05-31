@@ -267,8 +267,7 @@ async def sign(*,
     """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
-    role = Authorize.get_raw_jwt()['role']
-    await hr_document_service.sign(db, id, body, user_id, role)
+    await hr_document_service.sign(db, id, body, user_id)
 
 
 @router.get("/{id}/", response_model=HrDocumentRead,
