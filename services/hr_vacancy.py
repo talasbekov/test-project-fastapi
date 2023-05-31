@@ -39,22 +39,6 @@ class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate])
         )
         
         return response
-
-    
-    def _get_vacancies_recursive(self, db: Session, department: StaffDivision):
-        vacancies = db.query(self.model)\
-            .join(StaffUnit, self.model.staff_unit_id == StaffUnit.id)\
-            .join(StaffDivision, StaffUnit.staff_division_id == StaffDivision.id)\
-            .filter(
-                self.model.staff_unit_id == StaffUnit.id,
-                StaffUnit.staff_division_id == department.id
-            ).all()
-            
-        # Recursively call this function for each child division
-        for child in department.children:
-            vacancies.extend(self._get_vacancies_recursive(db, child))
-
-        return vacancies
     
     
     def get_multi_not_active(self, db: Session, skip: int = 0, limit: int = 100) -> List[HrVacancy]:
@@ -127,6 +111,9 @@ class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate])
         
         vacancy = self.get_by_id(db, id)
         
+        if vacancy.is_active is False:
+            raise ForbiddenException(f"Vacancy with id {id} is not active!")
+        
         return vacancy.hr_vacancy_candidates
     
     
@@ -135,6 +122,9 @@ class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate])
         current_user = user_service.get_by_id(db, user_id)
         
         vacancy = self.get_by_id(db, id)
+        
+        if vacancy.is_active is False:
+            raise ForbiddenException(f"Vacancy with id {id} is not active!")
         
         if current_user not in vacancy.hr_vacancy_candidates:
             vacancy.hr_vacancy_candidates.append(current_user)
@@ -209,8 +199,8 @@ class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate])
             return False
         
         return True
-
-
+    
+    
     def _set_requirements_to_vacancy(self, db: Session, hr_vacancy_requirements_ids: List):
         vacancy_requirements = []
         
@@ -220,5 +210,23 @@ class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate])
             vacancy_requirements.append(requirement)
         
         return vacancy_requirements
+    
+    
+    def _get_vacancies_recursive(self, db: Session, department: StaffDivision):
+        vacancies = db.query(self.model)\
+            .join(StaffUnit, self.model.staff_unit_id == StaffUnit.id)\
+            .join(StaffDivision, StaffUnit.staff_division_id == StaffDivision.id)\
+            .filter(
+                self.model.is_active == True,
+                self.model.staff_unit_id == StaffUnit.id,
+                StaffUnit.staff_division_id == department.id
+            ).all()
+            
+        # Recursively call this function for each child division
+        for child in department.children:
+            vacancies.extend(self._get_vacancies_recursive(db, child))
+        
+        return vacancies
+    
 
 hr_vacancy_service = HrVacancyService(HrVacancy)
