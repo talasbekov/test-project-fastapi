@@ -100,6 +100,23 @@ async def get_by_id(*,
     return archive_staff_unit_service.get_by_id(db, id)
 
 
+@router.get("user/{user_id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=ArchiveStaffUnitRead,
+            summary="Get Staff Unit by id")
+async def get_by_id(*,
+    db: Session = Depends(get_db),
+    user_id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Get Staff Unit by user
+
+        - **id** - UUID - required
+    """
+    Authorize.jwt_required()
+    return archive_staff_unit_service.get_by_user(db, user_id)
+
+
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
                summary="Delete Staff Unit")

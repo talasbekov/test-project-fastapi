@@ -1,6 +1,7 @@
 import uuid
 
 from sqlalchemy.orm import Session
+from api.v1 import position
 
 from exceptions.client import NotFoundException
 from models import ArchiveStaffUnit, StaffUnit, ArchiveStaffDivision
@@ -20,6 +21,16 @@ class ArchiveStaffUnitService(ServiceBase[ArchiveStaffUnit, ArchiveStaffUnitCrea
         position = super().get(db, id)
         if position is None:
             raise NotFoundException(detail=f"ArchiveStaffUnit with id: {id} is not found!")
+        return position
+    
+    def get_by_user(self, db: Session, user_id: str) -> ArchiveStaffUnit:
+        position = db.query(self.model).filter(
+            self.model.user_id == user_id
+        ).first()
+        
+        if position is None:
+            raise NotFoundException(detail=f"ArchiveStaffUnit with user_id: {user_id} is not found!")
+        
         return position
 
     def add_service_staff_function(self, db: Session, body: ArchiveStaffUnitFunctions):
