@@ -86,6 +86,7 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
         return super().create(db, ArchiveStaffDivisionCreate(
             parent_group_id=parent_group_id,
             name=staff_division.name,
+            nameKZ=staff_division.nameKZ,
             description=staff_division.description,
             staff_list_id=staff_list_id,
             origin_id=staff_division.id,
