@@ -364,7 +364,8 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         document_ids = []
         functions = db.query(DocumentStaffFunction).filter(
             DocumentStaffFunction.staff_units.any(StaffUnit.id == user.staff_unit_id),
-            DocumentStaffFunction.role_id == initiator_role.id
+            DocumentStaffFunction.role_id == initiator_role.id,
+            DocumentStaffFunction.hr_document_step != None
         ).all()
         document_ids = [function.hr_document_step.hr_document_template_id for function in functions]
         return hr_document_template_service.get_all(db, document_ids)
