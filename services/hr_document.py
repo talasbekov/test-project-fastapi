@@ -304,8 +304,10 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         all_steps = hr_document_step_service.get_all_by_document_template_id(
             db, template.id
         )
+        
+        current_user = user_service.get_by_id(db, user_id)
 
-        step_from_template = hr_document_template_service.get_steps_by_document_template_id(db, document.hr_document_template_id)
+        step_from_template = hr_document_template_service.get_steps_by_document_template_id(db, document.hr_document_template_id, current_user.id)
 
         users = [v for _, v in step_from_template.items()]
         subject_users_ids: List[uuid.UUID] = []
@@ -324,33 +326,11 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         self._validate_document(db, hr_document_init, role=role, step=step, users=subject_users_ids)
         self._validate_document_for_steps(step=step, all_steps=all_steps, users=users)
 
-        current_user = user_service.get_by_id(db, user_id)
+        self._create_hr_document_info_for_initiator(db, document, current_user, step)
+        self._create_hr_document_info_for_all_steps(db, document, users, all_steps)
 
         status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.IN_PROGRESS.value)
-
-        document_info_initiator = hr_document_info_service.create_info_for_step(
-            db, document_id, step.id, user_id, True, None, datetime.now()
-        )
-
-        hr_document_info_service.sign(
-            db, document_info_initiator, current_user, None, True
-        )
-
-        for step, user_id in zip(all_steps, users):
-            if step.is_direct_supervisor is not None:
-                if not isinstance(user_id, dict):
-                    raise InvalidOperationException(
-                        f"User id must be dict for step {step.id}"
-                    )
-                for i in sorted(user_id.keys()):
-                    hr_document_info_service.create_info_for_step(
-                        db, document.id, step.id, user_id[i], None, None, None
-                    )
-                continue
-            hr_document_info_service.create_info_for_step(
-                db, document.id, step.id, user_id, None, None, None
-            )
-
+        
         document.last_step_id = all_steps[0].id
         document.status_id = status.id
 
@@ -391,14 +371,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 parent_id=parent_id,
             ),
         )
-
-        document_info_initiator = hr_document_info_service.create_info_for_step(
-            db, document.id, step.id, user_id, True, None, datetime.now()
-        )
-
-        hr_document_info_service.sign(
-            db, document_info_initiator, current_user, None, True
-        )
+        
+        document_info_initiator = self._create_hr_document_info_for_initiator(db, document, current_user, step)
 
         if body.user_ids is not None:
             users_document = [
@@ -428,20 +402,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             if len(all_steps) == 0:
                 await self._finish_document(db, document, document.users, user_id)
 
-        for step, user_id in zip(all_steps, users):
-            if step.is_direct_supervisor is not None:
-                if not isinstance(user_id, dict):
-                    raise InvalidOperationException(
-                        f"User id must be dict for step {step.id}"
-                    )
-                for i in sorted(user_id.keys()):
-                    hr_document_info_service.create_info_for_step(
-                        db, document.id, step.id, user_id[i], None, None, None, i
-                    )
-                continue
-            hr_document_info_service.create_info_for_step(
-                db, document.id, step.id, user_id, None, None, None
-            )
+        self._create_hr_document_info_for_all_steps(db, document, users, all_steps)
 
         if len(all_steps) == 0:
             document.last_step_id = None
@@ -1237,6 +1198,33 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         last_step = steps[len(steps)-1]
         info = hr_document_info_service.get_by_document_id_and_step_id(db, id, last_step.id)
         return info.signed_by
+    
+    
+    def _create_hr_document_info_for_all_steps(self, db: Session, document: HrDocument, users: List[User], all_steps: List[HrDocumentStep]):
+        for step, user_id in zip(all_steps, users):
+            if step.is_direct_supervisor is not None:
+                if not isinstance(user_id, dict):
+                    raise InvalidOperationException(
+                        f"User id must be dict for step {step.id}"
+                    )
+                for i in sorted(user_id.keys()):
+                    hr_document_info_service.create_info_for_step(
+                        db, document.id, step.id, user_id[i], None, None, None
+                    )
+                continue
+            hr_document_info_service.create_info_for_step(
+                db, document.id, step.id, user_id, None, None, None
+            )
+    
+    def _create_hr_document_info_for_initiator(self, db: Session, document: HrDocument, current_user: User, step: HrDocumentStep):
+        document_info_initiator = hr_document_info_service.create_info_for_step(
+            db, document.id, step.id, current_user.id, True, None, datetime.now()
+        )
 
+        hr_document_info_service.sign(
+            db, document_info_initiator, current_user, None, True
+        )
+        
+        return document_info_initiator
 
 hr_document_service = HrDocumentService(HrDocument)
