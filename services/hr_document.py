@@ -666,8 +666,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         staff_units = staff_unit_service.get_all(db, users)
 
-        print(step.staff_function_id)
-
         if step.is_direct_supervisor is not None:
             if staff_unit.staff_division.leader_id != staff_unit.id:
                 raise ForbiddenException(
