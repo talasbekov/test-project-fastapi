@@ -1,12 +1,13 @@
 import uuid
 from typing import Optional
 
+from models.position import CategoryCodeEnum
 from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 from schemas import RankRead
 
 
 class PositionBase(NamedModel):
-    category_code: str
+    category_code: CategoryCodeEnum
     max_rank_id: Optional[uuid.UUID]
 
 
@@ -19,7 +20,7 @@ class PositionUpdate(PositionBase):
 
 
 class PositionRead(PositionBase, ReadNamedModel):
-    category_code: Optional[str]
+    category_code: CategoryCodeEnum
 
     max_rank_id: Optional[uuid.UUID]
     max_rank: Optional[RankRead]
