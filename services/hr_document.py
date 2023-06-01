@@ -439,8 +439,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         step: HrDocumentStep = hr_document_step_service.get_initial_step_for_template(db, document.hr_document_template_id)
         document_staff_function = document_staff_function_service.get_by_id(db, step.staff_function_id)
 
-        is_superdoc = self._is_superdoc(db, document)
-
         if document_staff_function.role.name == DocumentFunctionTypeEnum.EXPERT.value:
             body.is_signed = True
 
@@ -448,7 +446,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         next_step = self._set_next_step(db, document_id, info)
 
-        if is_superdoc:
+        if self._is_superdoc(db, document):
             return await self._sign_super_document(db, document, next_step, body.is_signed, body.comment, info, current_user)
 
         if body.is_signed:
