@@ -3,7 +3,7 @@ from sqlalchemy.dialects.postgresql import UUID, JSON
 from sqlalchemy.orm import relationship
 
 from models import isActiveModel
-from .association import staff_unit_function, staff_unit_candidate_stage_infos, hr_vacancy_hr_vacancy_candidates
+from .association import staff_unit_function, staff_unit_candidate_stage_infos
 
 
 class StaffUnit(isActiveModel):
