@@ -19,7 +19,6 @@ class RankService(ServiceBase[Rank, RankCreate, RankUpdate]):
 
     def get_by_option(self, db: Session, type: str, id: uuid.UUID, skip: int, limit: int):
         user = db.query(User).filter(User.id == id).first()
-        print(user.staff_unit.position.max_rank)
         if user is None:
             raise NotFoundException(detail=f"User with id: {id} is not found!")
         if type == "write":

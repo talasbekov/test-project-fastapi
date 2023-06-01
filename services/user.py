@@ -160,7 +160,6 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         if body.iin is not None:
             user.iin = body.iin
         if self._validate_id(db, body.id):
-            print('id is valid')
             self.update_id(db, user.id, body.id)    
 
         db.add(user)
