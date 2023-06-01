@@ -245,6 +245,12 @@ class HrDocumentTemplateService(
         return res
 
     def get_all(self, db: Session, ids: List[uuid.UUID]):
+        return self._get_all(db, ids).all()
+
+    def get_all_skip(self, db: Session, ids: List[uuid.UUID], skip: int, limit: int):
+        return self._get_all(db, ids).offset(skip).limit(limit).all()
+
+    def _get_all(self, db: Session, ids: List[uuid.UUID]):
         return (
             db.query(self.model)
             .filter(
@@ -252,7 +258,6 @@ class HrDocumentTemplateService(
                 self.model.is_active == True,
                 self.model.is_visible == True,
             )
-            .all()
         )
 
     def get_all_supervisors(
@@ -283,6 +288,9 @@ class HrDocumentTemplateService(
         service_division = staff_division_service.get_by_name(
             db, StaffDivisionEnum.SERVICE.value
         )
+        if service_division.id == staff_division.id:
+            all_steps[count] = staff_division.leader.users[0].id
+            return all_steps
 
         tmp = staff_division_service.get_by_id(db, parent_id)
 

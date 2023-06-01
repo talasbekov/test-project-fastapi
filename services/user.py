@@ -160,7 +160,6 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         if body.iin is not None:
             user.iin = body.iin
         if self._validate_id(db, body.id):
-            print('id is valid')
             self.update_id(db, user.id, body.id)    
 
         db.add(user)
@@ -358,7 +357,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
         return user_query
 
-    def get_available_templates(self, db: Session, user_id: uuid.UUID) -> List[HrDocumentTemplate]:
+    def get_available_templates(self, db: Session, user_id: uuid.UUID, skip: int, limit: int) -> List[HrDocumentTemplate]:
         initiator_role = document_staff_function_type_service.get_initiator(db)
         user = self.get_by_id(db, user_id)
         document_ids = []
@@ -368,7 +367,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             DocumentStaffFunction.hr_document_step != None
         ).all()
         document_ids = [function.hr_document_step.hr_document_template_id for function in functions]
-        return hr_document_template_service.get_all(db, document_ids)
+        return hr_document_template_service.get_all_skip(db, document_ids, skip, limit)
 
     def _validate_call_sign(self,db: Session, call_sign: str):
         user = db.query(User).filter(User.call_sign == call_sign).first()

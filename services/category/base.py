@@ -4,12 +4,8 @@ from sqlalchemy.orm import Session
 
 from exceptions import NotSupportedException
 
-class BaseCategory():
-    """ BaseCategory class
 
-    Raises:
-        NotImplementedError: _description_
-    """
+class BaseCategory:
     __handler__ = 0
 
     def handle(self, db: Session) -> list[uuid.UUID]:
