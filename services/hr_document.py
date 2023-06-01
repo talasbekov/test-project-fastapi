@@ -894,7 +894,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 elif isinstance(attr, list):
                     new_val[value["field_name"]] = self._get_service(
                         value["field_name"]
-                    ).get_object(db, value["value"])
+                    ).get_object(db, value["value"], value["type"])
                 else:
                     new_val[value["field_name"]] = value["value"]
 

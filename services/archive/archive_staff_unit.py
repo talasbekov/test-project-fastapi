@@ -3,7 +3,8 @@ import uuid
 from sqlalchemy.orm import Session
 from api.v1 import position
 
-from exceptions.client import NotFoundException
+
+from exceptions.client import NotFoundException, BadRequestException
 from models import ArchiveStaffUnit, StaffUnit, ArchiveStaffDivision
 from schemas import ArchiveStaffUnitCreate, ArchiveStaffUnitUpdate, ArchiveStaffUnitFunctions, \
     NewArchiveStaffUnitCreate, NewArchiveStaffUnitUpdate
@@ -58,6 +59,10 @@ class ArchiveStaffUnitService(ServiceBase[ArchiveStaffUnit, ArchiveStaffUnitCrea
 
         db.add(staff_unit)
         db.flush()
+
+    def remove(self, db: Session, id: uuid.UUID) -> ArchiveStaffUnit:
+        self._validate_leader(db, id)
+        super().remove(db, str(id))
 
     def add_document_staff_function(self, db: Session, body: ArchiveStaffUnitFunctions):
         staff_unit = self.get_by_id(db, body.staff_unit_id)
@@ -133,6 +138,14 @@ class ArchiveStaffUnitService(ServiceBase[ArchiveStaffUnit, ArchiveStaffUnitCrea
 
     def get_object(self, db: Session, id: uuid.UUID, type: str):
         return db.query(ArchiveStaffUnit).filter(ArchiveStaffUnit.id == id).first()
+    
+    def _validate_leader(self, db: Session, staff_unit_id: uuid.UUID):
+        # get staff_division by staff unit id, if staff_unit is staff_division leader, raise Exception
+        staff_division = (db.query(ArchiveStaffDivision)
+                          .filter(ArchiveStaffDivision.leader_id == staff_unit_id)
+                          .first())
+        if staff_division:
+            raise BadRequestException(detail=f"Невозможно удалить начальника {staff_division.name}")
 
 
 archive_staff_unit_service = ArchiveStaffUnitService(ArchiveStaffUnit)
