@@ -75,6 +75,7 @@ class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate])
         vacancy = self.model() # init object
         
         vacancy.staff_unit_id = staff_unit.id
+        vacancy.is_active = body.is_active
         
         if body.hr_vacancy_requirements_ids is not None:
             vacancy.hr_vacancy_requirements = self._set_requirements_to_vacancy(db, body.hr_vacancy_requirements_ids)

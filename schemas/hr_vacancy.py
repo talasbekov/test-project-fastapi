@@ -7,6 +7,7 @@ from .staff_unit import StaffUnitRead
 
 class HrVacancyBase(Model):
     staff_unit_id: uuid.UUID
+    is_active: bool
 
 
 class HrVacancyCreate(HrVacancyBase):
