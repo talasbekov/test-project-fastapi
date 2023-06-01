@@ -62,10 +62,7 @@ class ArchiveStaffUnitService(ServiceBase[ArchiveStaffUnit, ArchiveStaffUnitCrea
 
     def remove(self, db: Session, id: uuid.UUID) -> ArchiveStaffUnit:
         self._validate_leader(db, id)
-        archive_staff_unit = db.query(self.model).get(id)
-        db.delete(archive_staff_unit)
-        db.flush()
-        return archive_staff_unit
+        super().remove(db, str(id))
 
     def add_document_staff_function(self, db: Session, body: ArchiveStaffUnitFunctions):
         staff_unit = self.get_by_id(db, body.staff_unit_id)
