@@ -14,7 +14,7 @@ from services import (
 )
 from .archive_position import archive_position_service
 
-from services.base import ServiceBase, ModelType
+from services.base import ServiceBase
 
 
 class ArchiveStaffUnitService(ServiceBase[ArchiveStaffUnit, ArchiveStaffUnitCreate, ArchiveStaffUnitUpdate]):
@@ -60,12 +60,12 @@ class ArchiveStaffUnitService(ServiceBase[ArchiveStaffUnit, ArchiveStaffUnitCrea
         db.add(staff_unit)
         db.flush()
 
-    def remove(self, db: Session, id: str) -> ModelType:
-        self.__validate_leader(db, id)
-        obj = db.query(self.model).get(id)
-        db.delete(obj)
+    def remove(self, db: Session, id: uuid.UUID) -> ArchiveStaffUnit:
+        self._validate_leader(db, id)
+        archive_staff_unit = db.query(self.model).get(id)
+        db.delete(archive_staff_unit)
         db.flush()
-        return obj
+        return archive_staff_unit
 
     def add_document_staff_function(self, db: Session, body: ArchiveStaffUnitFunctions):
         staff_unit = self.get_by_id(db, body.staff_unit_id)
@@ -142,7 +142,7 @@ class ArchiveStaffUnitService(ServiceBase[ArchiveStaffUnit, ArchiveStaffUnitCrea
     def get_object(self, db: Session, id: uuid.UUID, type: str):
         return db.query(ArchiveStaffUnit).filter(ArchiveStaffUnit.id == id).first()
     
-    def __validate_leader(self, db: Session, staff_unit_id: uuid.UUID):
+    def _validate_leader(self, db: Session, staff_unit_id: uuid.UUID):
         # get staff_division by staff unit id, if staff_unit is staff_division leader, raise Exception
         staff_division = (db.query(ArchiveStaffDivision)
                           .filter(ArchiveStaffDivision.leader_id == staff_unit_id)
