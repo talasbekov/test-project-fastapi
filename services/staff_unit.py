@@ -174,7 +174,7 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
             db, StaffUnitCreate(
                 position_id=archive_staff_unit.position_id,
                 staff_division_id=staff_division_id,
-                form=None if archive_staff_unit.form is None else archive_staff_unit.form.name
+                form=getattr(archive_staff_unit, "form ", None)
                 )
             )
         return res
@@ -187,7 +187,7 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
             obj_in=StaffUnitUpdate(
                 position_id=archive_staff_unit.position_id,
                 staff_division_id=staff_division_id,
-                form=None if archive_staff_unit.form is None else archive_staff_unit.form.name
+                form=getattr(staff_unit, "form ", None)
             )
         )
         return res
