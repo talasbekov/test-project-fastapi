@@ -10,6 +10,8 @@ from .archive_position import ArchivePositionRead
 
 from .archive_staff_function import ArchiveStaffFunctionRead
 
+from enum import Enum
+
 
 class StaffUnitRequirements(Model):
     name: Optional[str]
@@ -24,6 +26,8 @@ class ArchiveStaffUnitBase(BaseModel):
     actual_user_id: Optional[uuid.UUID]
     user_replacing_id: Optional[uuid.UUID]
     requirements: Optional[List[StaffUnitRequirements]]
+    form: Optional[str]
+
 
 class ArchiveStaffUnitCreate(ArchiveStaffUnitBase):
     origin_id: Optional[uuid.UUID]
@@ -48,6 +52,7 @@ class NewArchiveStaffUnitCreateWithStaffFunctions(ArchiveStaffUnitBase):
 
 
 class NewArchiveStaffUnitUpdate(ArchiveStaffUnitBase):
+    form: Optional[str]
     pass
 
 
@@ -67,9 +72,9 @@ class UserRead(BaseModel):
     icon: Optional[str]
     is_military: Optional[bool]
 
-
     class Config:
         orm_mode = True
+
 
 class UserReplacingArchiveStaffUnitRead(ArchiveStaffUnitBase, ReadModel):
     id: Optional[uuid.UUID]
@@ -85,13 +90,14 @@ class UserReplacingArchiveStaffUnitRead(ArchiveStaffUnitBase, ReadModel):
         orm_mode = True
         arbitrary_types_allowed = True
 
+
 class UserReplacingRead(UserRead):
     staff_unit: Optional[UserReplacingArchiveStaffUnitRead]
-    
+
     class Config:
         arbitrary_types_allowed = True
 
 
 class ArchiveStaffUnitRead(UserReplacingArchiveStaffUnitRead):
     user_replacing: Optional[UserReplacingRead]
-    
+    form: Optional[str]

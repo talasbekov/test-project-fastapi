@@ -1,10 +1,16 @@
-from sqlalchemy import Column, ForeignKey, ARRAY
+from sqlalchemy import Column, ForeignKey, ARRAY, Enum
 from sqlalchemy.dialects.postgresql import UUID, JSON
 from sqlalchemy.orm import relationship
 
 from models import Model
 from .association import archive_staff_unit_function, archive_staff_unit_candidate_stage_infos
 
+from enum import Enum as EnumBase
+
+class FormEnum(EnumBase):
+    form1 = "Форма 1"
+    form2 = "Форма 2"
+    form3 = "Форма 3"
 
 class ArchiveStaffUnit(Model):
 
@@ -18,6 +24,8 @@ class ArchiveStaffUnit(Model):
         UUID(as_uuid=True), ForeignKey("archive_staff_divisions.id"), nullable=False
     )
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
+    curator_of_id = Column(UUID(as_uuid=True), ForeignKey("staff_divisions.id"), nullable=True)
+    form = Column(Enum(FormEnum), nullable=True)
     actual_user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
     origin_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"), nullable=True)
     user_replacing_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)

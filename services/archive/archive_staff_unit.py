@@ -87,7 +87,8 @@ class ArchiveStaffUnitService(ServiceBase[ArchiveStaffUnit, ArchiveStaffUnitCrea
 
     def create_based_on_existing_staff_unit(self, db: Session,
                                             staff_unit: StaffUnit, 
-                                            user_id: uuid.UUID, 
+                                            user_id: uuid.UUID,
+                                            staff_unit_form: str,
                                             actual_user_id: uuid.UUID,
                                             user_replacing_id: uuid.UUID,
                                             archive_staff_division: ArchiveStaffDivision):
@@ -96,6 +97,7 @@ class ArchiveStaffUnitService(ServiceBase[ArchiveStaffUnit, ArchiveStaffUnitCrea
             position_id=position.id,
             staff_division_id=archive_staff_division.id,
             user_id=user_id,
+            form=staff_unit_form,
             actual_user_id=user_id,
             user_replacing_id=user_replacing_id,
             origin_id=staff_unit.id
@@ -106,6 +108,7 @@ class ArchiveStaffUnitService(ServiceBase[ArchiveStaffUnit, ArchiveStaffUnitCrea
             position_id=body.position_id,
             staff_division_id=body.staff_division_id,
             user_id=body.user_id,
+            form=body.form,
             actual_user_id=body.actual_user_id,
             user_replacing_id=body.user_replacing_id,
             origin_id=None
@@ -116,6 +119,7 @@ class ArchiveStaffUnitService(ServiceBase[ArchiveStaffUnit, ArchiveStaffUnitCrea
             position_id=body.position_id,
             staff_division_id=body.staff_division_id,
             user_id=body.user_id,
+            form=body.form,
             actual_user_id=body.actual_user_id,
             user_replacing_id=body.user_replacing_id,
             origin_id=staff_unit.origin_id

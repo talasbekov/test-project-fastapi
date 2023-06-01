@@ -173,7 +173,8 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
         res = super().create(
             db, StaffUnitCreate(
                 position_id=archive_staff_unit.position_id,
-                staff_division_id=staff_division_id
+                staff_division_id=staff_division_id,
+                form=None if archive_staff_unit.form is None else archive_staff_unit.form.name
                 )
             )
         return res
@@ -186,6 +187,7 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
             obj_in=StaffUnitUpdate(
                 position_id=archive_staff_unit.position_id,
                 staff_division_id=staff_division_id,
+                form=None if archive_staff_unit.form is None else archive_staff_unit.form.name
             )
         )
         return res
