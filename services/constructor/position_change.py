@@ -70,7 +70,7 @@ class PositionChangeHandler(BaseHandler):
                         properties: dict,
                         ):
         args, _ = self.get_args(action, properties)
-        obj = staff_unit_service.get_by_id(db, properties[args]["value"]).position
+        obj = staff_unit_service.get_by_id(db, args).position
         return obj
 
 

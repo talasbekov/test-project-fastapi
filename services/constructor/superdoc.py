@@ -31,5 +31,11 @@ class SuperDocHandler(BaseHandler):
     ):
         pass
 
+    def handle_response(self, db: Session,
+                        action: dict,
+                        properties: dict,
+                        ):
+        pass
+
 
 handler = SuperDocHandler()

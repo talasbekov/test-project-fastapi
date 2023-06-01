@@ -57,7 +57,6 @@ class DeletePenaltyHandler(BaseHandler):
                         action: dict,
                         properties: dict,
                         ):
-
         return None
 
 

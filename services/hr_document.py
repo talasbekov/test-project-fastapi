@@ -989,64 +989,15 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         if document.last_step_id is not None:
             response.can_cancel = document.last_step.staff_function.role.can_cancel
 
-        user = response.users[0]
-        fields = user_service.get_fields()
-        props = document.document_template.properties
+        new_val = []
 
-        new_val = {}
+        properties = document.properties
+        actions = document.document_template.actions['args']
 
-        # properties = document.properties
-        # actions = document.document_template.actions['args']
-        #
-        # for action in actions:
-        #     for action_name in list(action.keys()):
-        #         new_val.update({f'{action_name}': handlers[action_name].handle_response(db, action[action_name],
-        #                                                                                 properties)})
-
-        for key in list(props):
-            value = props[key]
-
-            if value["type"] == "read":
-                continue
-
-            if value["field_name"] not in fields:
-                continue
-
-            if value["data_taken"] == "auto":
-                attr = getattr(user, value["field_name"])
-                if isinstance(attr, Base):
-                    new_val[value["field_name"]] = self._get_service(
-                        value["field_name"]
-                    ).get(db, value["value"])
-                elif isinstance(attr, list):
-                    new_val[value["field_name"]] = self._get_service(
-                        value["field_name"]
-                    ).get_object(db, value["value"], value["type"])
-                else:
-                    new_val[value["field_name"]] = value["value"]
-
-            else:
-                val = document.properties.get(key)
-
-                if val is None:
-                    continue
-                    # raise BadRequestException(f'Нет ключа {val} в document.properties')
-
-                if not type(val) == dict:
-                    attr = getattr(user, value["field_name"])
-                    if isinstance(attr, Base or isinstance(attr, list)):
-                        new_val[value["field_name"]] = responses.get(
-                            value["field_name"]
-                        ).from_orm(self._get_service(value["field_name"]).get(db, val))
-                    else:
-                        new_val[value["field_name"]] = val
-                else:
-                    if val["value"] == None:
-                        raise BadRequestException(f"Обьект {key} должен иметь value!")
-                    obj = self._get_service(value["field_name"]).get_object(db, val["value"], value['type'])
-                    new_val[value["field_name"]] = responses.get(
-                        value["field_name"]
-                    ).from_orm(obj if not hasattr(obj, "type") else getattr(obj, 'type'))
+        for action in actions:
+            for action_name in list(action.keys()):
+                new_val.append({f'{action_name}': handlers[action_name].handle_response(db, action[action_name],
+                                                                                        properties)})
 
         response.new_value = new_val
 

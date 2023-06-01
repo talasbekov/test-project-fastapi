@@ -56,9 +56,7 @@ class DeleteCoolnessHandler(BaseHandler):
                         action: dict,
                         properties: dict,
                         ):
-        args = self.get_args(action, properties)
-        obj = coolness_service.get_by_id(db, args).type
-        return obj
+        return None
 
 
 handler = DeleteCoolnessHandler()

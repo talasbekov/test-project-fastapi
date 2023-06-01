@@ -60,9 +60,7 @@ class DeleteBadgeHandler(BaseHandler):
                         action: dict,
                         properties: dict,
                         ):
-        badge_id = self.get_args(action, properties)
-        obj = badge_service.get_by_id(db, badge_id).type
-        return obj
+        return None
 
 
 handler = DeleteBadgeHandler()

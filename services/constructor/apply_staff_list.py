@@ -120,5 +120,13 @@ class ApplyStaffListHandler(BaseHandler):
             raise ForbiddenException(f"Staff list is not defined for this action: {self.__handler__}")
         return staff_list_id
 
+    def handle_response(self, db: Session,
+                        action: dict,
+                        properties: dict,
+                        ):
+        staff_list_id = self.get_args(action, properties)
+        staff_list = staff_list_service.get_by_id(db, staff_list_id)
+        return staff_list
+
 
 handler = ApplyStaffListHandler()

@@ -61,5 +61,13 @@ class ApplyArchivePosition(BaseHandler):
             raise ForbiddenException(f"Position is not defined for this action: {self.__handler__}")
         return position_id
 
+    def handle_response(self, db: Session,
+                        action: dict,
+                        properties: dict,
+                        ):
+        position_id = self.get_args(action, properties)
+        obj = staff_unit_service.get_by_id(db, position_id)
+        return obj
+
 
 handler = ApplyArchivePosition()

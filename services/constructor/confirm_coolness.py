@@ -54,5 +54,13 @@ class ConfirmCoolnessHandler(BaseHandler):
             raise ForbiddenException(f"Coolness is not defined for this action: {self.__handler__}")
         return coolness_id
 
+    def handle_response(self, db: Session,
+                        action: dict,
+                        properties: dict,
+    ):
+        coolness_id = self.get_args(action, properties)
+        obj = coolness_service.get_by_id(db, coolness_id).type
+        return obj
+
 
 handler = ConfirmCoolnessHandler()

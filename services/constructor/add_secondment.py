@@ -56,5 +56,11 @@ class AddSecondmentHandler(BaseHandler):
             raise ForbiddenException(f"Secondment is not defined for this action: {self.__handler__}")
         return secondment_id, date_from, date_to
 
+    def handle_response(self, db: Session,
+                        action: dict,
+                        properties: dict,
+                        ):
+        pass
+
 
 handler = AddSecondmentHandler()
