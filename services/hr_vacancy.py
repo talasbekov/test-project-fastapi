@@ -3,10 +3,11 @@ from sqlalchemy.orm import Session
 
 from exceptions.client import ForbiddenException, NotFoundException
 from models import (HrVacancy, StaffUnit, StaffDivision,
-                    User, PositionNameEnum)
+                    User, PositionNameEnum, HrVacancyCandidate)
 from models.hr_vacancy import HrVacancy
 from schemas import (HrVacancyCreate, HrVacancyUpdate,
-                     HrVacancyRead, HrVacancyStaffDivisionRead, HrVacancyUpdate)
+                     HrVacancyRead, HrVacancyStaffDivisionRead, HrVacancyUpdate,
+                     HrVacancyCandidateRead)
 from .base import ServiceBase
 from .hr_vacancy_requirements import hr_vacancy_requirement_service
 from .position import position_service
@@ -104,7 +105,7 @@ class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate])
         return vacancy
     
     
-    def get_candidates(self, db: Session, id: str, role_id: str) -> List[User]:
+    def get_candidates(self, db: Session, id: str, role_id: str) -> List[HrVacancyCandidateRead]:
         
         if not self._check_by_role(db, role_id):
             raise ForbiddenException("You don't have permission to manage vacancy!")
@@ -114,7 +115,7 @@ class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate])
         if vacancy.is_active is False:
             raise ForbiddenException(f"Vacancy with id {id} is not active!")
         
-        return vacancy.hr_vacancy_candidates
+        return vacancy.candidates
     
     
     def respond_to_vacancy(self, db: Session, id: str, user_id: str):
@@ -126,9 +127,15 @@ class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate])
         if vacancy.is_active is False:
             raise ForbiddenException(f"Vacancy with id {id} is not active!")
         
-        if current_user not in vacancy.hr_vacancy_candidates:
-            vacancy.hr_vacancy_candidates.append(current_user)
+        hr_vacancy_candidate = HrVacancyCandidate(
+            user_id=current_user.id,
+            hr_vacancy_id=vacancy.id
+        )
         
+        db.add(hr_vacancy_candidate)
+        db.flush()
+        
+        vacancy.candidates.append(hr_vacancy_candidate)
         return vacancy
 
 

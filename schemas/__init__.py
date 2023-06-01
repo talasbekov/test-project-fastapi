@@ -58,6 +58,8 @@ from .education import *
 from .personal import *
 from .medical import *
 from .family import *
+from .hr_vacancy_requirements import *
+from .hr_vacancy_candidate import *
 from .hr_vacancy import *
 from .archive import *
 from .user_candidates import *
@@ -65,4 +67,3 @@ from .penalty import *
 from .contract import *
 from .secondment import *
 from .history import *
-from .hr_vacancy_requirements import *
