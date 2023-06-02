@@ -1,10 +1,10 @@
 from typing import Any
 
 from sqlalchemy import and_
-from sqlalchemy.orm import Session, Query
+from sqlalchemy.orm import Session, Query, aliased
 
 from core import configs
-from models import User, HrDocument, Rank, Position
+from models import User, HrDocument, Rank, Position, StaffUnit
 from .base import BaseHandler
 from services import rank_service, history_service
 from exceptions import ForbiddenException
@@ -36,7 +36,7 @@ class IncreaseRankHandler(BaseHandler):
         db.flush()
 
         return user
-    
+
     def handle_validation(
         self,
         db: Session,
@@ -49,9 +49,7 @@ class IncreaseRankHandler(BaseHandler):
         try:
             tagname = action["rank"]["tagname"]
         except:
-            raise ForbiddenException(
-                f"Rank is not defined for this action: {self.__handler__}"
-            )
+            raise ForbiddenException(f"Rank is not defined for this action: {self.__handler__}")
         rank = rank_service.get_by_id(db, props[tagname]["value"])
         user_rank = rank_service.get_by_id(db, user.rank_id)
         max_rank = user.staff_unit.position.max_rank
@@ -59,11 +57,17 @@ class IncreaseRankHandler(BaseHandler):
         if user_rank.order >= rank.order:
             raise ForbiddenException(detail=f"You can not increase rank to {rank.name}")
 
-
     def handle_filter(self, db: Session, user_query: Query[Any]):
         max_rank = rank_service.get_max_rank(db)
+        position_rank = aliased(Rank)
+        user_rank = aliased(Rank)
         return (
             user_query.filter(User.rank_id != max_rank.id)
+            .join(StaffUnit, User.staff_unit_id == StaffUnit.id)
+            .join(Position, StaffUnit.position_id == Position.id)
+            .join(Position.max_rank.of_type(position_rank))
+            .join(User.rank.of_type(user_rank))
+            .filter(position_rank.order > user_rank.order)
         )
 
 

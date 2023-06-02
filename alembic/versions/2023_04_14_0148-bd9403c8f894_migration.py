@@ -3193,6 +3193,11 @@ def upgrade() -> None:
     op.execute("UPDATE staff_divisions SET leader_id = '{}' WHERE id = '{}'".format(
         staff_unit4_id, group16_id))
 
+    op.execute("UPDATE staff_units SET curator_of_id = '{}' WHERE id = '{}'".format(
+        group14_id, staff_unit29_id))
+    op.execute("UPDATE staff_units SET curator_of_id = '{}' WHERE id = '{}'".format(
+        group1_id, staff_unit7_id))
+
     op.bulk_insert(
         Base.metadata.tables['staff_unit_functions'],
         [{
