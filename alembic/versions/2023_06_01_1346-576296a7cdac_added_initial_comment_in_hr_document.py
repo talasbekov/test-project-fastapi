@@ -1,8 +1,8 @@
 """added initial comment in hr_document
 
 Revision ID: 576296a7cdac
-Revises: archive_privelege_emergencies
-Create Date: 2023-06-01 05:46:21.341564
+Revises: 3e8266d38b99
+Create Date: 2023-06-01 13:46:21.341564
 
 """
 from alembic import op
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = "576296a7cdac"
-down_revision = "archive_privelege_emergencies"
+down_revision = "3e8266d38b99"
 branch_labels = None
 depends_on = None
 
