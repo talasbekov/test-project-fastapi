@@ -217,6 +217,7 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
                 .join(StaffUnit, HrVacancy.staff_unit_id == StaffUnit.id)
                 .join(StaffDivision, StaffUnit.staff_division_id == StaffDivision.id)
                 .filter(
+                    HrVacancy.is_active == True,
                     HrVacancy.staff_unit_id == StaffUnit.id,
                     StaffUnit.staff_division_id == staff_division.id
                 ).count()

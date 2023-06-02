@@ -15,31 +15,35 @@ class StaffUnitRequirements(Model):
     nameKZ: Optional[str]
     keys: Optional[List[Optional[dict]]]
 
-
 class StaffUnitBase(Model):
     position_id: uuid.UUID
     staff_division_id: uuid.UUID
     is_active: Optional[bool] = True
     requirements: Optional[List[StaffUnitRequirements]]
+    form: Optional[str]
 
 
 class StaffUnitCreate(StaffUnitBase):
     pass
+
 
 class StaffUnitCreateWithPosition(PositionCreate):
     staff_division_id: uuid.UUID
     is_active: Optional[bool] = True
     requirements: Optional[List[dict]]
 
+
 class StaffUnitUpdate(StaffUnitBase):
     user_replacing_id: Optional[uuid.UUID]
+
 
 class HrVacancyRead(ReadModel):
     is_active: Optional[bool]
     staff_unit_id: Optional[uuid.UUID]
-    
+
     class Config:
         orm_mode = True
+
 
 class UserRead(ReadModel):
     badges: Optional[List[BadgeRead]]
@@ -57,6 +61,7 @@ class UserRead(ReadModel):
     class Config:
         orm_mode = True
 
+
 class UserReplacingStaffUnitRead(StaffUnitBase, ReadModel):
     staff_division_id: Optional[uuid.UUID]
     staff_division: Optional[StaffUnitDivisionRead]
@@ -71,9 +76,10 @@ class UserReplacingStaffUnitRead(StaffUnitBase, ReadModel):
         orm_mode = True
         arbitrary_types_allowed = True
 
+
 class UserReplacingRead(UserRead):
     staff_unit: Optional[UserReplacingStaffUnitRead]
-    
+
     class Config:
         arbitrary_types_allowed = True
 
@@ -81,7 +87,7 @@ class UserReplacingRead(UserRead):
 class StaffUnitRead(UserReplacingStaffUnitRead):
     user_replacing: Optional[UserReplacingRead]
     user_replacing_id: Optional[uuid.UUID]
-    
+
 
 class UserStaffUnitRead(StaffUnitBase, ReadModel):
     staff_division_id: Optional[uuid.UUID]

@@ -45,12 +45,6 @@ hr_vacancy_hr_vacancy_requirements = Table(
     Column("hr_vacancy_requirement_id", ForeignKey("hr_vacancies_requirements.id"))
 )
 
-hr_vacancy_hr_vacancy_candidates = Table(
-    "hr_vacancy_hr_vacancy_candidates",
-    Base.metadata,
-    Column("hr_vacancy_id", ForeignKey("hr_vacancies.id")),
-    Column("user_id", ForeignKey("users.id"))
-)
 family_violation = Table(
     "family_violations",
     Base.metadata,

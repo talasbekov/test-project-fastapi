@@ -19,7 +19,7 @@ class ArchiveStaffDivision(NamedNestedModel):
     origin_id = Column(UUID(as_uuid=True), ForeignKey("staff_divisions.id"), nullable=True)
 
     # Relationships
-    children = relationship("ArchiveStaffDivision")
+    children = relationship("ArchiveStaffDivision", cascade="all, delete")
     staff_list = relationship('StaffList', back_populates='archive_staff_divisions')
-    staff_units = relationship("ArchiveStaffUnit", back_populates="staff_division", foreign_keys="ArchiveStaffUnit.staff_division_id", cascade="all, delete")
-    leader = relationship("ArchiveStaffUnit", foreign_keys=leader_id, post_update=True)
+    staff_units = relationship("ArchiveStaffUnit", foreign_keys="ArchiveStaffUnit.staff_division_id", cascade="all, delete")
+    leader = relationship("ArchiveStaffUnit", cascade="all, delete", foreign_keys=leader_id, post_update=True)
