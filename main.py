@@ -1,9 +1,9 @@
-import uuid
-import requests
 import time
 import socket
-from core import download_file_to_tempfile 
+
+import sentry_sdk
 from fastapi import Depends, FastAPI, Request, WebSocket, WebSocketDisconnect, Query, Header
+from fastapi.logger import logger as log
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -14,12 +14,10 @@ from pydantic import ValidationError
 from sqlalchemy.orm import Session
 from debug_toolbar.middleware import DebugToolbarMiddleware
 
-import sentry_sdk
 
 from api import router
-from core import configs, get_db
+from core import configs, get_db, download_file_to_tempfile
 from ws import notification_manager
-from services import categories
 
 
 socket.setdefaulttimeout(15)
@@ -28,7 +26,8 @@ app = FastAPI(
     title=configs.PROJECT_NAME,
     description=configs.DESCRIPTION,
     version=configs.VERSION,
-    openapi_url=f"{configs.API_V1_PREFIX}/openapi.json"
+    openapi_url=f"{configs.API_V1_PREFIX}/openapi.json",
+    debug=configs.DEBUG,
 )
 
 app.add_middleware(
@@ -39,63 +38,58 @@ app.add_middleware(
     allow_headers=["*"],
 )
 # sqlalchemy
-app.add_middleware(DebugToolbarMiddleware,
-                   panels=['debug_toolbar.panels.versions.VersionsPanel',
-                           'debug_toolbar.panels.timer.TimerPanel',
-                           'debug_toolbar.panels.settings.SettingsPanel',
-                           'debug_toolbar.panels.headers.HeadersPanel',
-                           'debug_toolbar.panels.request.RequestPanel',
-                           'debug_toolbar.panels.sqlalchemy.SQLAlchemyPanel']
-                   )
+app.add_middleware(
+    DebugToolbarMiddleware,
+    panels=[
+        "debug_toolbar.panels.versions.VersionsPanel",
+        "debug_toolbar.panels.timer.TimerPanel",
+        "debug_toolbar.panels.settings.SettingsPanel",
+        "debug_toolbar.panels.headers.HeadersPanel",
+        "debug_toolbar.panels.request.RequestPanel",
+        "debug_toolbar.panels.sqlalchemy.SQLAlchemyPanel",
+    ],
+)
 
 app.include_router(router)
 
-if configs.DEBUG:
-    sentry_sdk.init(dsn=configs.SENTRY_DSN,
-                    traces_sample_rate=1.0)
+if configs.SENTRY_ENABLED:
+    sentry_sdk.init(dsn=configs.SENTRY_DSN, traces_sample_rate=1.0)
 
 
 @AuthJWT.load_config
 def get_config():
     return configs
 
+
 @app.get("/test")
 async def test(db: Session = Depends(get_db)):
     return []
 
+
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):
-    print(f"Request: {request.method} {request.url} {request.client.host}")
+    log.debug(f"Request: {request.method} {request.url} {request.client.host}")
     start_time = time.time()
     response = await call_next(request)
     process_time = time.time() - start_time
     response.headers["X-Process-Time"] = str(process_time)
-    
+
     return response
 
 
 @app.exception_handler(ValidationError)
 def validation_error_handler(request: Request, exc: ValidationError):
-    return JSONResponse(
-        status_code=400,
-        content={'detail': exc.json()}
-    )
+    return JSONResponse(status_code=400, content={"detail": exc.json()})
 
 
 @app.exception_handler(JWTDecodeError)
 def jwt_decode_error_handler(request: Request, exc: JWTDecodeError):
-    return JSONResponse(
-        status_code=401,
-        content={'detail': exc.message}
-    )
+    return JSONResponse(status_code=401, content={"detail": exc.message})
 
 
 @app.exception_handler(AuthJWTException)
 def authjwt_exception_handler(request: Request, exc: AuthJWTException):
-    return JSONResponse(
-        status_code=exc.status_code,
-        content={"detail": exc.message}
-    )
+    return JSONResponse(status_code=exc.status_code, content={"detail": exc.message})
 
 
 @app.get("/", include_in_schema=False)
@@ -115,7 +109,7 @@ async def websocket_endpoint(
     Authorize: AuthJWT = Depends(),
 ):
     try:
-        Authorize.jwt_required('websocket', token=token)
+        Authorize.jwt_required("websocket", token=token)
         user_id = Authorize.get_jwt_subject()
         if user_id is None:
             raise AuthJWTException()

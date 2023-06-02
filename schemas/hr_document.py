@@ -15,9 +15,10 @@ from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 class HrDocumentBase(Model):
     hr_document_template_id: uuid.UUID
-    due_date: datetime
+    due_date: Optional[datetime] = None
     parent_id: Optional[uuid.UUID]
     properties: Optional[Dict[str, Any]]
+    initial_comment: Optional[str] = None
 
     @validator("properties")
     def properties_validator(cls, v):
@@ -83,6 +84,7 @@ class HrDocumentSign(Model):
 
 class HrDocumentCreate(HrDocumentBase):
     status_id: uuid.UUID
+    initialized_at: Optional[datetime]
 
 
 class HrDocumentUpdate(HrDocumentBase):

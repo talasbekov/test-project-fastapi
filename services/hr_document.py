@@ -139,7 +139,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         documents = (
             documents
-            .order_by(self.model.due_date.asc())
+            .order_by(self.model.updated_at.asc())
             .offset(skip)
             .limit(limit)
             .all()
@@ -151,9 +151,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
     ):
         user = user_service.get_by_id(db, user_id)
 
-        staff_unit = staff_unit_service.get_by_id(db, user.actual_staff_unit_id)
-
-        staff_function_ids = [i.id for i in staff_unit.staff_functions]
+        staff_unit_service.get_by_id(db, user.actual_staff_unit_id)
 
         draft_status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.DRAFT.value)
         revision_status = hr_document_status_service.get_by_name(db, HrDocumentStatusEnum.ON_REVISION.value)
@@ -196,7 +194,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         documents = (
             documents
-            .order_by(self.model.due_date.asc())
+            .order_by(self.model.updated_at.asc())
             .offset(skip)
             .limit(limit)
             .all()
@@ -222,7 +220,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         documents = (
             documents
-            .order_by(self.model.due_date.asc())
+            .order_by(self.model.created_at.asc())
             .offset(skip)
             .limit(limit)
             .all()
@@ -246,7 +244,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         documents = (
             documents
-            .order_by(self.model.due_date.asc())
+            .order_by(self.model.created_at.asc())
             .offset(skip)
             .limit(limit)
             .all()
@@ -275,6 +273,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 due_date=body.due_date,
                 properties=body.properties,
                 parent_id=None,
+                initial_comment=body.initial_comment,
             ),
         )
 
@@ -320,7 +319,9 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             due_date=body.due_date,
             hr_document_template_id=document.hr_document_template_id,
             user_ids=body.user_ids,
-            document_step_users_ids=step_from_template
+            document_step_users_ids=step_from_template,
+            initial_comment=body.initial_comment,
+            initialized_at=datetime.now(),
         )
 
         self._validate_document(db, hr_document_init, role=role, step=step, users=subject_users_ids)
@@ -369,6 +370,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 due_date=body.due_date,
                 properties=body.properties,
                 parent_id=parent_id,
+                initial_commit=body.initial_comment,
+                initialized_at=datetime.now(),
             ),
         )
 
@@ -507,7 +510,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         last_info = hr_document_info_service.find_by_document_id_and_step_id(db, document.id, last_step.id)
 
-        if last_info.signed_at is not None:
+        if last_info is not None and last_info.signed_at is not None:
             context['approving_rank'] = last_info.signed_by.rank.name
             context['approving_name'] = f"{last_info.signed_by.name} {last_info.signed_by.last_name} {last_info.signed_by.father_name}"
 
@@ -915,7 +918,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                         new_val[value["field_name"]] = val
                 else:
                     if val["value"] == None:
-                        raise BadRequestException(f"Обьект {key} должен иметь value!")
+                        raise BadRequestException(f"Объект {key} должен иметь value!")
                     obj = self._get_service(value["field_name"]).get_object(db, val["value"], value['type'])
                     new_val[value["field_name"]] = responses.get(
                         value["field_name"]
@@ -1128,7 +1131,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         )
 
         hr_document_info_service.sign(
-            db, document_info_initiator, current_user, None, True
+            db, document_info_initiator, current_user, document.initial_comment, True
         )
 
         return document_info_initiator

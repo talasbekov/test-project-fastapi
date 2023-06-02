@@ -21,9 +21,11 @@ class Settings(BaseSettings):
 
     DEBUG: bool = False
     SENTRY_DSN: str = None
-    
+
     GENERATE_IP: str = None
     SQLALCHEMY_ECHO: bool = False
+
+    SENTRY_ENABLED: bool = False
 
     class Config:
         env_file = ".env"

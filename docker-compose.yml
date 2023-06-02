@@ -22,16 +22,16 @@ services:
   
   sgo-erp:
     platform: linux/amd64
-    command: bash -c "alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8002 --log-config log.ini"
+    command: bash -c "alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8002 --log-config log.ini --workers 12"
     build: .
     container_name: sgo-erp-test
     restart: always
     ports:
         - "8002:8002"
     volumes:
-      - .:/app
+      - .:/app  
     networks:
-        - backend-dev
+      - backend-dev
     depends_on:
         postgres:
           condition: service_healthy
@@ -41,5 +41,5 @@ services:
           memory: 4g
 
 networks:
-    backend-dev:
-        driver: bridge
+  backend-dev:
+      driver: bridge
