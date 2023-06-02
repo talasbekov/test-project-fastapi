@@ -27,6 +27,7 @@ class SubjectType(enum.IntEnum):
 class HrDocumentTemplate(NamedModel, isActiveModel):
     __tablename__ = "hr_document_templates"
 
+    # Properties
     path = Column(String(255))
     pathKZ = Column(String(255))
     subject_type = Column(Enum(SubjectType))
@@ -35,10 +36,9 @@ class HrDocumentTemplate(NamedModel, isActiveModel):
     actions = Column(JSON(none_as_null=True))
     maintainer_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"))
     is_visible = Column(Boolean(), default=True)
+    is_due_date_required = Column(Boolean(), default=False)
+    is_initial_comment_required = Column(Boolean(), default=False)
 
-    documents = relationship(
-        "HrDocument", cascade="all,delete", back_populates="document_template"
-    )
-    maintainer = relationship(
-        'StaffUnit', foreign_keys=[maintainer_id]
-    )
+    # Relationships
+    documents = relationship("HrDocument", cascade="all,delete", back_populates="document_template")
+    maintainer = relationship("StaffUnit", foreign_keys=[maintainer_id])

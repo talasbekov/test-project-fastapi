@@ -3,6 +3,7 @@ import uuid
 from sqlalchemy import and_, func
 from sqlalchemy.orm import Session
 
+from schemas import UserShortRead
 from models import User, StaffUnit, Position, PositionNameEnum
 from .base import BaseCategory
 
@@ -18,9 +19,7 @@ class SupervisorCategory(BaseCategory):
                 Position,
                 and_(
                     StaffUnit.position_id == Position.id,
-                    func.lower(Position.name).contains(
-                        PositionNameEnum.SUPERVISOR.value.lower()
-                    ),
+                    func.lower(Position.name).contains(PositionNameEnum.SUPERVISOR.value.lower()),
                 ),
             )
             .all()

@@ -7,7 +7,6 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from models.position import CategoryCodeEnum
 from schemas import PositionCreate, PositionUpdate, PositionRead
 from services import position_service
 
@@ -18,11 +17,11 @@ router = APIRouter(prefix="/positions", tags=["Positions"], dependencies=[Depend
             response_model=List[PositionRead],
             summary="Get all Positions")
 async def get_all(*,
-                  db: Session = Depends(get_db),
-                  skip: int = 0,
-                  limit: int = 100,
-                  Authorize: AuthJWT = Depends()
-                  ):
+    db: Session = Depends(get_db),
+    skip: int = 0,
+    limit: int = 100,
+    Authorize: AuthJWT = Depends()
+):
     """
        Get all Positions
 
@@ -38,10 +37,10 @@ async def get_all(*,
              response_model=PositionRead,
              summary="Create Position")
 async def create(*,
-                 db: Session = Depends(get_db),
-                 body: PositionCreate,
-                 Authorize: AuthJWT = Depends()
-                 ):
+    db: Session = Depends(get_db),
+    body: PositionCreate,
+    Authorize: AuthJWT = Depends()
+):
     """
         Create Position
 
@@ -55,10 +54,10 @@ async def create(*,
             response_model=PositionRead,
             summary="Get Position by id")
 async def get_by_id(*,
-                    db: Session = Depends(get_db),
-                    id: uuid.UUID,
-                    Authorize: AuthJWT = Depends()
-                    ):
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
     """
         Get Position by id
 
@@ -72,11 +71,11 @@ async def get_by_id(*,
             response_model=PositionRead,
             summary="Update Position")
 async def update(*,
-                 db: Session = Depends(get_db),
-                 id: uuid.UUID,
-                 body: PositionUpdate,
-                 Authorize: AuthJWT = Depends()
-                 ):
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    body: PositionUpdate,
+    Authorize: AuthJWT = Depends()
+):
     """
         Update Position
 
@@ -89,15 +88,14 @@ async def update(*,
         db_obj=position_service.get_by_id(db, id),
         obj_in=body)
 
-
-@router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
+@router.delete("/{id}/",status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
                summary="Delete Position")
 async def delete(*,
-                 db: Session = Depends(get_db),
-                 id: uuid.UUID,
-                 Authorize: AuthJWT = Depends()
-                 ):
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
     """
         Delete position
 
@@ -105,8 +103,3 @@ async def delete(*,
     """
     Authorize.jwt_required()
     position_service.remove(db, id)
-
-
-@router.get("/category_codes")
-async def get_category_codes():
-    return [i.value for i in CategoryCodeEnum]
