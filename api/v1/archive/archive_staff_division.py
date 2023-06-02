@@ -72,6 +72,23 @@ async def create(*,
     return archive_staff_division_service.create_staff_division(db, body)
 
 
+@router.get("/duplicate/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=ArchiveStaffDivisionRead,
+            summary="Duplicate Staff Division by id")
+async def duplicate(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Get Staff Division by id
+
+        - **id**: UUID - required
+    """
+    Authorize.jwt_required()
+    return archive_staff_division_service.duplicate(db, id)
+
+
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=ArchiveStaffDivisionRead,
             summary="Get Staff Division by id")
