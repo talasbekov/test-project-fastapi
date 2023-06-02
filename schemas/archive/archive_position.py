@@ -22,7 +22,7 @@ class ArchivePositionUpdate(ArchivePositionBase):
 
 
 class ArchivePositionRead(ArchivePositionBase, ReadNamedModel):
-    category_code: CategoryCodeEnum
+    category_code: Optional[str]
     max_rank: Optional[RankRead]
 
     class Config:
