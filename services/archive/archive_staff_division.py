@@ -149,7 +149,7 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
 
     def _validate_parent(self, db: Session, parent_id: uuid.UUID):
         parent = super().get(db, parent_id)
-        if not parent and parent_id:
+        if parent is None and parent_id:
             raise BadRequestException(f"Parent ArchiveStaffDivision with id: {parent_id} is not found!")
 
 
