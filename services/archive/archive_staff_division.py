@@ -45,7 +45,7 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
             body: ArchiveStaffDivisionUpdateParentGroup
     ) -> ArchiveStaffDivisionRead:
         group = self.get_by_id(db, id)
-        self.get_by_id(db, body.parent_group_id)
+        self._validate_parent(db, body.parent_group_id)
         group.parent_group_id = body.parent_group_id
         db.add(group)
         db.flush()
@@ -84,6 +84,7 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
         return res
 
     def create_based_on_existing_staff_division(self, db: Session, staff_division: StaffDivision, staff_list_id: uuid.UUID, parent_group_id: uuid.UUID):
+        self._validate_parent(db, parent_group_id)
         return super().create(db, ArchiveStaffDivisionCreate(
             parent_group_id=parent_group_id,
             name=staff_division.name,
@@ -96,6 +97,7 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
         ))
 
     def create_staff_division(self, db: Session, body: NewArchiveStaffDivisionCreate):
+        self._validate_parent(db, body.parent_group_id)
         return super().create(db, ArchiveStaffDivisionCreate(
             parent_group_id=body.parent_group_id,
             name=body.name,
@@ -107,6 +109,7 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
         ))
 
     def update_staff_division(self, db: Session, archive_staff_division: ArchiveStaffDivision, body: NewArchiveStaffDivisionUpdate):
+        self._validate_parent(db, body.parent_group_id)
         return super().update(db, db_obj=archive_staff_division, obj_in=ArchiveStaffDivisionUpdate(
             parent_group_id=body.parent_group_id,
             name=body.name,
@@ -143,6 +146,11 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
         archive_staff_unit_service.duplicate_archive_staff_units_by_division_id(db, duplicate_division.id, id)
         # Return the duplicated division
         return duplicate_division
+
+    def _validate_parent(self, db: Session, parent_id: uuid.UUID):
+        parent = super().get(db, parent_id)
+        if parent is None and parent_id:
+            raise BadRequestException(f"Parent ArchiveStaffDivision with id: {parent_id} is not found!")
 
 
 archive_staff_division_service = ArchiveStaffDivisionService(ArchiveStaffDivision)
