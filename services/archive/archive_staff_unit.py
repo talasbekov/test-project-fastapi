@@ -158,6 +158,7 @@ class ArchiveStaffUnitService(
         ))
 
     def create_staff_unit(self, db: Session, body: NewArchiveStaffUnitCreate):
+        self._validate_archive_staff_poition(db, body.position_id)
         return super().create(db, ArchiveStaffUnitCreate(
             position_id=body.position_id,
             staff_division_id=body.staff_division_id,
@@ -173,6 +174,7 @@ class ArchiveStaffUnitService(
             db: Session,
             staff_unit: ArchiveStaffUnit,
             body: NewArchiveStaffUnitUpdate):
+        self._validate_archive_staff_poition(db, body.position_id)
         return super().update(
             db,
             db_obj=staff_unit,
@@ -184,6 +186,9 @@ class ArchiveStaffUnitService(
                 actual_user_id=body.actual_user_id,
                 user_replacing_id=body.user_replacing_id,
                 origin_id=staff_unit.origin_id))
+
+    def _validate_archive_staff_poition(self, db: Session, position_id: uuid.UUID):
+        archive_position_service.get_by_id(db, position_id)
 
     def get_service_staff_functions(
             self, db: Session, staff_unit_id: uuid.UUID):
