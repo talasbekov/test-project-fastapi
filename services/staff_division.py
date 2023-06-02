@@ -77,13 +77,10 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
             id: str,
             body: StaffDivisionUpdateParentGroup
     ) -> StaffDivisionRead:
-        group = super().get(db, id)
-        if group is None:
-            raise NotFoundException(f"StaffDivision with id: {id} is not found!")
+        group = self.get_by_id(db, id)
 
-        parent_group = super().get(db, body.parent_group_id)
-        if parent_group is None:
-            raise BadRequestException(f"Parent staffDivision with id: {body.parent_group_id} is not found!")
+        self._validate_parent(db, body.parent_group_id)
+
         group.parent_group_id = body.parent_group_id
         db.add(group)
         db.flush()
@@ -148,6 +145,7 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
         return {full_name, full_nameKZ}
 
     def create_from_archive(self, db: Session, archive_staff_division: ArchiveStaffDivision, parent_id: uuid.UUID, leader_id: uuid.UUID):
+        self._validate_parent(db, parent_id)
         res = super().create(
             db, StaffDivisionCreate(
                 name=archive_staff_division.name,
@@ -162,6 +160,7 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
         return res
 
     def update_from_archive(self, db: Session, archive_staff_division: ArchiveStaffDivision, parent_id: uuid.UUID, leader_id: uuid.UUID):
+        self._validate_parent(db, parent_id)
         staff_division = self.get_by_id(db, archive_staff_division.origin_id)
         res = super().update(
             db,
@@ -228,5 +227,10 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
             
         return count_vacancies
 
+
+    def _validate_parent(self, db: Session, parent_id: uuid.UUID):
+        parent = super().get(db, parent_id)
+        if not parent and parent_id:
+            raise BadRequestException(f"Parent staffDivision with id: {parent_id} is not found!")
 
 staff_division_service = StaffDivisionService(StaffDivision)
