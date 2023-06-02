@@ -7,7 +7,7 @@ from schemas import RankRead
 
 
 class ArchivePositionBase(NamedModel):
-    category_code: CategoryCodeEnum
+    category_code: Optional[str]
     max_rank_id: Optional[uuid.UUID]
 
 class ArchivePositionAutoCreate(ArchivePositionBase):
