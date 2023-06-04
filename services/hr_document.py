@@ -142,7 +142,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         documents = (
             documents
-            .order_by(self.model.updated_at.asc())
+            .order_by(self.model.initialized_at.desc())
             .offset(skip)
             .limit(limit)
             .all()
@@ -173,7 +173,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         documents = (
             documents
-            .order_by(self.model.due_date.asc())
+            .order_by(self.model.initialized_at.desc())
             .offset(skip)
             .limit(limit)
             .all()
@@ -198,7 +198,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         documents = (
             documents
-            .order_by(self.model.updated_at.asc())
+            .order_by(self.model.initialized_at.desc())
             .offset(skip)
             .limit(limit)
             .all()
@@ -248,7 +248,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         documents = (
             documents
-            .order_by(self.model.created_at.asc())
+            .order_by(self.model.created_at.desc())
             .offset(skip)
             .limit(limit)
             .all()
