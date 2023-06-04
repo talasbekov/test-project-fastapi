@@ -1,6 +1,7 @@
 import uuid
 from typing import Optional
 
+from models.position import CategoryCodeEnum
 from schemas import NamedModel, ReadNamedModel
 from schemas import RankRead
 
@@ -21,6 +22,7 @@ class ArchivePositionUpdate(ArchivePositionBase):
 
 
 class ArchivePositionRead(ArchivePositionBase, ReadNamedModel):
+    category_code: Optional[str]
     max_rank: Optional[RankRead]
 
     class Config:

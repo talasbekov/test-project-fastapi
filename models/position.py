@@ -31,6 +31,35 @@ class PositionNameEnum(str, enum.Enum):
     SUPERVISOR = "Начальник"
 
 
+class CategoryCodeEnum(str, enum.Enum):
+    C_S_1 = "C-S-1"
+    C_S_2 = "C-S-2"
+    C_S_3 = "C-S-3"
+    C_S_4 = "C-S-4"
+    C_S_5 = "C-S-5"
+    C_S_6 = "C-S-6"
+    C_S_7 = "C-S-7"
+    C_S_8 = "C-S-8"
+    C_S_9 = "C-S-9"
+    C_S_10 = "C-S-10"
+    C_S_11 = "C-S-11"
+    C_S_12 = "C-S-12"
+
+    C_RG_1 = "C-RG-1"
+    C_RG_2 = "C-RG-2"
+    C_RG_3 = "C-RG-3"
+    C_RG_4 = "C-RG-4"
+    C_RG_5 = "C-RG-5"
+    C_RG_6 = "C-RG-6"
+    C_RG_7 = "C-RG-7"
+    C_RG_8 = "C-RG-8"
+    C_RG_9 = "C-RG-9"
+    C_RG_10 = "C-RG-10"
+    C_RG_11 = "C-RG-11"
+    C_RG_12 = "C-RG-12"
+    C_RG_13 = "C-RG-13"
+
+
 class Position(NamedModel):
 
     __tablename__ = "positions"
@@ -38,5 +67,4 @@ class Position(NamedModel):
     max_rank_id = Column(UUID(as_uuid=True), ForeignKey("ranks.id"),
                          nullable=True)
     max_rank = relationship("Rank", cascade="all,delete")
-
-    category_code = Column(String, nullable=False)
+    category_code = Column(Enum(CategoryCodeEnum))

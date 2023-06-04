@@ -9,6 +9,7 @@ from schemas import (ArchiveStaffDivisionCreate, ArchiveStaffDivisionUpdate,
                      ArchiveStaffDivisionUpdateParentGroup, ArchiveStaffDivisionRead, NewArchiveStaffDivisionCreate,
                      NewArchiveStaffDivisionUpdate)
 from services.base import ServiceBase
+from .archive_staff_unit import archive_staff_unit_service
 
 
 class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaffDivisionCreate, ArchiveStaffDivisionUpdate]):
@@ -44,7 +45,7 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
             body: ArchiveStaffDivisionUpdateParentGroup
     ) -> ArchiveStaffDivisionRead:
         group = self.get_by_id(db, id)
-        self.get_by_id(db, body.parent_group_id)
+        self._validate_parent(db, body.parent_group_id)
         group.parent_group_id = body.parent_group_id
         db.add(group)
         db.flush()
@@ -83,6 +84,7 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
         return res
 
     def create_based_on_existing_staff_division(self, db: Session, staff_division: StaffDivision, staff_list_id: uuid.UUID, parent_group_id: uuid.UUID):
+        self._validate_parent(db, parent_group_id)
         return super().create(db, ArchiveStaffDivisionCreate(
             parent_group_id=parent_group_id,
             name=staff_division.name,
@@ -95,6 +97,7 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
         ))
 
     def create_staff_division(self, db: Session, body: NewArchiveStaffDivisionCreate):
+        self._validate_parent(db, body.parent_group_id)
         return super().create(db, ArchiveStaffDivisionCreate(
             parent_group_id=body.parent_group_id,
             name=body.name,
@@ -106,6 +109,7 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
         ))
 
     def update_staff_division(self, db: Session, archive_staff_division: ArchiveStaffDivision, body: NewArchiveStaffDivisionUpdate):
+        self._validate_parent(db, body.parent_group_id)
         return super().update(db, db_obj=archive_staff_division, obj_in=ArchiveStaffDivisionUpdate(
             parent_group_id=body.parent_group_id,
             name=body.name,
@@ -115,6 +119,38 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
             is_combat_unit=body.is_combat_unit,
             leader_id=body.leader_id,
         ))
+
+    def duplicate(self, db: Session, id: uuid.UUID):
+        archive_staff_division = archive_staff_division_service.get_by_id(db, str(id))
+
+        # Create a new instance of ArchiveStaffDivision
+        duplicate_division = ArchiveStaffDivision()
+
+        # Copy the properties
+        duplicate_division.parent_group_id = archive_staff_division.parent_group_id
+        duplicate_division.description = archive_staff_division.description
+        duplicate_division.is_combat_unit = archive_staff_division.is_combat_unit
+        duplicate_division.leader_id = None
+        duplicate_division.staff_list_id = archive_staff_division.staff_list_id
+        duplicate_division.origin_id = archive_staff_division.origin_id
+        duplicate_division.name = archive_staff_division.name+'_copy'
+        duplicate_division.nameKZ = archive_staff_division.nameKZ+'_copy'
+
+        # Copy the children
+        for child in archive_staff_division.children:
+            duplicate_child = self.duplicate(db, child.id)
+            duplicate_division.children.append(duplicate_child)
+
+        db.add(duplicate_division)
+        db.flush()
+        archive_staff_unit_service.duplicate_archive_staff_units_by_division_id(db, duplicate_division.id, id)
+        # Return the duplicated division
+        return duplicate_division
+
+    def _validate_parent(self, db: Session, parent_id: uuid.UUID):
+        parent = super().get(db, parent_id)
+        if parent is None and parent_id:
+            raise BadRequestException(f"Parent ArchiveStaffDivision with id: {parent_id} is not found!")
 
 
 archive_staff_division_service = ArchiveStaffDivisionService(ArchiveStaffDivision)

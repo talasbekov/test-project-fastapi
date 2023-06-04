@@ -1,6 +1,7 @@
 import uuid
 from typing import Optional
 
+from models.position import CategoryCodeEnum
 from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 from schemas import RankRead
 
