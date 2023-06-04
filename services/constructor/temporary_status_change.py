@@ -74,8 +74,9 @@ class TemporaryStatusChangeHandler(BaseHandler):
                         action: dict,
                         properties: dict,
                         ):
-        data = list(self.get_args(db, action, properties))
-        return data
+        status_id, date_from, date_to = self.get_args(db, action, properties)
+        status = status_service.get_object(db, status_id, 'write')
+        return {status, date_from, date_to}
 
 
 handler = TemporaryStatusChangeHandler()
