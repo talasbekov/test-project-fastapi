@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from .base import BaseAutoTagHandler
 from models import EmergencyServiceHistory
+from schemas import AutoTagRead
 from services import history_service
 from utils import convert_days
 
@@ -20,7 +21,7 @@ class ServiceYearAutoTagHandler(BaseAutoTagHandler):
         for i in histories:
             res = ((i.date_to - i.date_from).days * (i.coefficient - 1.0)) + res
         years, _, _ = convert_days(res)
-        return years
+        return AutoTagRead(name=years, nameKZ=years)
 
 
 handler = ServiceYearAutoTagHandler()

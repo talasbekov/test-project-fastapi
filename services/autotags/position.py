@@ -3,6 +3,7 @@ from uuid import UUID
 from sqlalchemy.orm import Session
 
 from .base import BaseAutoTagHandler
+from schemas import AutoTagRead
 from services import position_service, user_service, staff_division_service
 
 
@@ -16,7 +17,7 @@ class PositionAutoTagHandler(BaseAutoTagHandler):
         full_nameKZ = full_nameKZ.replace("/", "")
         res = f"{full_name} {user.staff_unit.position.name} ({user.staff_unit.position.category_code}) ({user.actual_staff_unit.position.name})"
         resKZ = f"{full_nameKZ} {user.staff_unit.position.nameKZ} ({user.staff_unit.position.category_code}) ({user.actual_staff_unit.position.name})"
-        return {res, resKZ}
+        return AutoTagRead(name=res, nameKZ=resKZ)
 
 
 handler = PositionAutoTagHandler()

@@ -49,7 +49,7 @@ class PositionChangeHandler(BaseHandler):
         document: HrDocument,
     ):
         position, percent = self.get_args(action, props)
-
+        print(position, percent)
         try:
             if staff_unit_service.exists_relation(db, user.id, position):
                 raise ForbiddenException(
@@ -57,7 +57,7 @@ class PositionChangeHandler(BaseHandler):
                 )
             if percent < 0 or percent > 100:
                 raise ForbiddenException(f"Percentage must be between 0 and 100: {percent}")
-        except:
+        except Exception as e:
             raise ForbiddenException(f"Args are  not defined for this action: {self.__handler__}")
 
     def get_args(self, action, properties):
@@ -66,7 +66,7 @@ class PositionChangeHandler(BaseHandler):
             percent = int(properties[action["percent"]["tagname"]]["name"])
         except:
             raise ForbiddenException(f"Position is not defined for this action: {self.__handler__}")
-        return {position, percent}
+        return position, percent
 
 
 handler = PositionChangeHandler()

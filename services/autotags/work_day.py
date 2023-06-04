@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from .base import BaseAutoTagHandler
 from models import EmergencyServiceHistory
+from schemas import AutoTagRead
 from services import history_service
 from utils import convert_days
 
@@ -26,9 +27,9 @@ class WorkDayAutoTagHandler(BaseAutoTagHandler):
         if min_date != datetime.min:
             res = max_date - min_date
         else:
-            return 0
+            return AutoTagRead(name=0, nameKZ=0)
         _, _, days = convert_days(res.days)
-        return days
+        return AutoTagRead(name=days, nameKZ=days)
 
 
 handler = WorkDayAutoTagHandler()

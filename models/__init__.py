@@ -17,6 +17,7 @@ from .staff_function import (DocumentFunctionType, DocumentStaffFunction,
                              JurisdictionEnum, DocumentFunctionTypeEnum)
 from .staff_list import StaffList
 from .staff_unit import StaffUnit
+from .state_body import StateBody
 from .service_id import ServiceID, ServiceIDStatus
 from .privelege_emergency import PrivilegeEmergency, FormEnum
 from .recommender_user import RecommenderUser

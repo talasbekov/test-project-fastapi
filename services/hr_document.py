@@ -76,7 +76,8 @@ from services import (
     notification_service,
     staff_list_service,
     archive_staff_unit_service,
-    status_leave_service
+    status_leave_service,
+    state_body_service,
 )
 from .base import ServiceBase
 from ws import notification_manager
@@ -93,7 +94,8 @@ options = {
     'penalties': penalty_service,
     'contracts': contract_service,
     'archive_staff_unit': archive_staff_unit_service,
-    'status_leave': status_leave_service
+    'status_leave': status_leave_service,
+    'state_body': state_body_service,
 }
 
 responses = {
@@ -473,46 +475,25 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         return document
 
+    async def generate_html(self, db: Session, id: str, language: LanguageEnum):
+        ans, name = await self._get_html(db, id, language)
+
+        # Write ans to tempfile and return it
+        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+            file_name = temp_file.name
+            temp_file.write(ans.encode("utf-8"))
+            return FileResponse(
+                path=file_name,
+                filename=name + ".html",
+            )
+
     async def generate(self, db: Session, id: str, language: LanguageEnum):
-        document = self.get_by_id(db, id)
-        document_template = hr_document_template_service.get_by_id(
-            db, document.hr_document_template_id
-        )
-
-        path = document_template.path if language == LanguageEnum.ru else document_template.pathKZ
-
-        if path is None:
-            raise BadRequestException(detail=f'Приказа нет на русском языке!')
-
-        temp_file_path = await download_file_to_tempfile(path)
-
-        template = jinja_env.get_template(temp_file_path.replace('/tmp/', ''))
-
-        context = {}
-
-        for i in list(document.properties):
-            if isinstance(document.properties[i], dict):
-                context[i] = document.properties[i]["name"] if language == LanguageEnum.ru else document.properties[i]["nameKZ"]
-            else:
-                context[i] = document.properties[i]
-        if document.reg_number is not None:
-            context["reg_number"] = document.reg_number
-        if document.signed_at is not None:
-            context["signed_at"] = document.signed_at.strftime("%Y-%m-%d")
-
-        ans = template.render(context)
+        ans, name = await self._get_html(db, id, language)
 
         opts = {
             'encoding': 'UTF-8',
             'enable-local-file-access': True
         }
-        last_step = hr_document_step_service.get_last_step_document_template_id(db, document.hr_document_template_id)
-
-        last_info = hr_document_info_service.find_by_document_id_and_step_id(db, document.id, last_step.id)
-
-        if last_info is not None and last_info.signed_at is not None:
-            context['approving_rank'] = last_info.signed_by.rank.name
-            context['approving_name'] = f"{last_info.signed_by.name} {last_info.signed_by.last_name} {last_info.signed_by.father_name}"
 
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
             file_name = temp_file.name + ".pdf"
@@ -520,7 +501,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         return FileResponse(
             path=file_name,
-            filename=document_template.name + ".pdf",
+            filename=name + ".pdf",
         )
 
     def get_all_by_option(
@@ -1196,6 +1177,43 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                     break
             if not had_step:
                 break
+
+    async def _get_html(self, db: Session, id: uuid.UUID, language: LanguageEnum):
+        document = self.get_by_id(db, id)
+        document_template = hr_document_template_service.get_by_id(
+            db, document.hr_document_template_id
+        )
+
+        path = document_template.path if language == LanguageEnum.ru else document_template.pathKZ
+
+        if path is None:
+            raise BadRequestException(detail=f'Приказа нет на русском языке!')
+
+        temp_file_path = await download_file_to_tempfile(path)
+
+        template = jinja_env.get_template(temp_file_path.replace('/tmp/', ''))
+
+        context = {}
+
+        for i in list(document.properties):
+            if isinstance(document.properties[i], dict):
+                context[i] = document.properties[i]["name"] if language == LanguageEnum.ru else document.properties[i]["nameKZ"]
+            else:
+                context[i] = document.properties[i]
+        if document.reg_number is not None:
+            context["reg_number"] = document.reg_number
+        if document.signed_at is not None:
+            context["signed_at"] = document.signed_at.strftime("%Y-%m-%d")
+
+        last_step = hr_document_step_service.get_last_step_document_template_id(db, document.hr_document_template_id)
+
+        last_info = hr_document_info_service.find_by_document_id_and_step_id(db, document.id, last_step.id)
+
+        if last_info is not None and last_info.signed_at is not None:
+            context['approving_rank'] = last_info.signed_by.rank.name
+            context['approving_name'] = f"{last_info.signed_by.name} {last_info.signed_by.last_name} {last_info.signed_by.father_name}"
+
+        return template.render(context), document_template.name
 
 
 hr_document_service = HrDocumentService(HrDocument)

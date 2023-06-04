@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from .base import BaseAutoTagHandler
 from models import EmergencyServiceHistory
+from schemas import AutoTagRead
 from services import history_service
 from utils import convert_days
 
@@ -20,7 +21,7 @@ class TotalDayAutoTagHandler(BaseAutoTagHandler):
         for i in histories:
             res = ((i.date_to - i.date_from).days * i.coefficient) + res
         _, _, days = convert_days(res)
-        return days
+        return AutoTagRead(name=days, nameKZ=days)
 
 
 handler = TotalDayAutoTagHandler()

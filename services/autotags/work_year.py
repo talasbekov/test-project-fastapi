@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from .base import BaseAutoTagHandler
 from models import EmergencyServiceHistory
+from schemas import AutoTagRead
 from services import history_service
 from utils import convert_days
 
@@ -26,10 +27,10 @@ class WorkYearAutoTagHandler(BaseAutoTagHandler):
         if min_date != datetime.min:
             res = max_date - min_date
         else:
-            return 0
+            return AutoTagRead(name=0, nameKZ=0)
         res = max_date - min_date
         years, _, _ = convert_days(res.days)
-        return years
+        return AutoTagRead(name=years, nameKZ=years)
 
 
 handler = WorkYearAutoTagHandler()
