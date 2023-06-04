@@ -7,7 +7,6 @@ from services import (
     secondment_service,
     history_service,
     staff_division_service,
-    state_body_service
 )
 from exceptions import ForbiddenException
 from utils import convert_str_to_datetime
@@ -25,9 +24,10 @@ class AddSecondmentHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        secondment_id, date_from, date_to = self.get_args(action, props)
+        staff_division_id, date_from, date_to = self.get_args(action, props)
         self.handle_validation(db, user, action, template_props, props, document)
-        res = secondment_service.create_relation(db, user.id, secondment_id)
+        staff_division = staff_division_service.get_by_id(db, staff_division_id)
+        res = secondment_service.create_relation(db, user.id, staff_division)
         history = history_service.create_timeline_history(
             db, user.id, res, date_from, date_to
         )
@@ -68,8 +68,9 @@ class AddSecondmentHandler(BaseHandler):
         action: dict,
         properties: dict,
     ):
-        pass
-        
+        secondment_id, date_from, date_to = self.get_args(action, properties)
+        staff_division = staff_division_service.get_by_id(db, secondment_id)
+        return {staff_division, date_from, date_to}
 
 
 handler = AddSecondmentHandler()

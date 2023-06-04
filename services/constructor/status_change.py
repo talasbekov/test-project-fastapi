@@ -85,9 +85,9 @@ class StatusChangeHandler(BaseHandler):
                         action: dict,
                         properties: dict,
                         ):
-        status_id = self.get_args(action, properties)
-        obj = status_service.get_by_id(db, status_id)
-        return obj
+        status_id = self.get_args(db, action, properties)
+        status = status_service.get_object(db, status_id, 'write')
+        return status
 
 
 handler = StatusChangeHandler()

@@ -70,8 +70,8 @@ class GrantLeaveHandler(BaseHandler):
                         properties: dict,
                         ):
         status_id, date_from, date_to = self.get_args(action, properties)
-        obj = status_service.get_by_id(db, status_id)
-        return [obj, date_from, date_to]
+        status = status_service.get_object(db, status_id, 'write')
+        return [status, date_from, date_to]
 
 
 handler = GrantLeaveHandler()
