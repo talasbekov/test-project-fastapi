@@ -20,14 +20,10 @@ class ApplyArchivePosition(BaseHandler):
                       template_props: dict,
                       props: dict,
                       document: HrDocument):
-        try:
-            position = action["staff_unit"]["tagname"]
-        except:
-            raise ForbiddenException(
-                f"Staff unit is not defined for this action: {self.__handler__}"
-            )
-        staff_unit_id = archive_staff_unit_service.get_by_id(db, props[position]["value"]).origin_id
-        self._handle_validation(db, user, staff_unit_id)
+
+        position_id = self.get_args(action, props)
+        staff_unit_id = archive_staff_unit_service.get_by_id(db, position_id).origin_id
+        self.handle_validation(db, user, action, template_props, props, document)
 
         old_history = staff_unit_service.get_last_history(db, user.id)
         if old_history is not None:
@@ -54,16 +50,26 @@ class ApplyArchivePosition(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        if staff_unit_service.exists_relation(db, user.id, props[action["staff_unit"]["tagname"]]['value']):
+        position_id = self.get_args(action, props)
+        if staff_unit_service.exists_relation(db, user.id, position_id):
             raise ForbiddenException(
                 f"This position is already assigned to this user: {user.first_name}, {user.last_name}"
             )
 
-    def _handle_validation(self, db: Session, user: User, staff_unit_id: uuid.UUID):
-        if staff_unit_service.exists_relation(db, user.id, staff_unit_id):
-            raise ForbiddenException(
-                f"This position is already assigned to this user: {user.first_name}, {user.last_name}"
-            )
+    def get_args(self, action, properties):
+        try:
+            position_id = properties[action["staff_unit"]["tagname"]]["value"]
+        except KeyError:
+            raise ForbiddenException(f"Position is not defined for this action: {self.__handler__}")
+        return position_id
+
+    def handle_response(self, db: Session,
+                        action: dict,
+                        properties: dict,
+                        ):
+        position_id = self.get_args(action, properties)
+        obj = staff_unit_service.get_by_id(db, position_id)
+        return obj
 
 
 handler = ApplyArchivePosition()

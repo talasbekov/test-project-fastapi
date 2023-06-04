@@ -36,15 +36,9 @@ class ApplyStaffListHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        try:
-            staff_list_tagname = action["staff_list"]["tagname"]
-        except:
-            raise ForbiddenException(
-                f"Staff list is not defined for this action: {self.__handler__}"
-            )
-        staff_list_id = props[staff_list_tagname]["value"]
-
+        staff_list_id = self.get_args(action, props)
         staff_list_service.get_by_id(db, staff_list_id)
+        self.handle_validation(db, user, action, template_props, props, document)
 
         staff_division_service.make_all_inactive(db)
         exclude_staff_division_ids = [i.id for i in staff_division_service.get_excluded_staff_divisions(db)]
@@ -61,10 +55,6 @@ class ApplyStaffListHandler(BaseHandler):
             new_staff_division = self._create_staff_division(db, staff_division, None)
             new_staff_divisions.append(new_staff_division)
 
-        
-        # staff_unit_service.delete_all_inactive(db, exclude_staff_division_ids)
-        # staff_division_service.delete_all_inactive(db)
-
         db.flush()
 
     def handle_validation(
@@ -79,7 +69,7 @@ class ApplyStaffListHandler(BaseHandler):
         pass
 
 
-    def _create_staff_division(self, db: Session, staff_division: ArchiveStaffDivision, parent_id: int) -> StaffDivision:
+    def _create_staff_division(self, db: Session, staff_division: ArchiveStaffDivision, parent_id: Optional[int]) -> StaffDivision:
         is_leader_needed = None
         leader_id = None
 
@@ -123,5 +113,21 @@ class ApplyStaffListHandler(BaseHandler):
 
     def _create_privelege_emergency(self, db: Session, privelege_emergency: PrivilegeEmergency):
         privelege_emergency_service.create_or_update_from_archive(db, privelege_emergency)
+
+    def get_args(self, action, properties):
+        try:
+            staff_list_id = properties[action["staff_list"]["tagname"]]["value"]
+        except KeyError:
+            raise ForbiddenException(f"Staff list is not defined for this action: {self.__handler__}")
+        return staff_list_id
+
+    def handle_response(self, db: Session,
+                        action: dict,
+                        properties: dict,
+                        ):
+        staff_list_id = self.get_args(action, properties)
+        staff_list = staff_list_service.get_by_id(db, staff_list_id)
+        return staff_list
+
 
 handler = ApplyStaffListHandler()

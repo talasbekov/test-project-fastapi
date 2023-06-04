@@ -1,5 +1,6 @@
 from .base import Model, NamedModel, ReadModel, ReadNamedModel
 from .badge import *
+from .autotag import *
 from .notification import *
 from .equipment import (EquipmentCreate, 
                         EquipmentRead, 
@@ -32,6 +33,7 @@ from .staff_division import (StaffDivisionCreate, StaffDivisionRead,
                              StaffDivisionUpdate, StaffDivisionUpdateParentGroup,
                              StaffDivisionOptionRead, StaffUnitDivisionRead)
 from .staff_unit import StaffUnitCreate, StaffUnitRead, StaffUnitUpdate, UserStaffUnitRead, StaffUnitCreateWithPosition
+from .state_body import StateBodyCreate, StateBodyRead, StateBodyUpdate
 from .hr_document_step import (HrDocumentStepCreate, HrDocumentStepRead,
                                HrDocumentStepUpdate)
 

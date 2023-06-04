@@ -23,7 +23,7 @@ def hr_document_templates_properties_validator(v: dict):
         if data_taken is None or not isinstance(data_taken, str) or data_taken not in data_takens:
             raise ValueError(prefix_msg + 'data_taken should be either "auto/manual/dropdown/date_picker"')
 
-        alias_name = value.get('alias_name')
+        alias_name = value.get('alias_nameKZ')
         if alias_name is None or not isinstance(alias_name, str):
             raise ValueError(prefix_msg + 'alias_name should be present')
 

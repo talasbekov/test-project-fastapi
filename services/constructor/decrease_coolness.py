@@ -23,30 +23,25 @@ class DecreaseCoolnessHandler(BaseHandler):
     __handler__ = "decrease_coolness"
 
     def handle_action(
-        self,
-        db: Session,
-        user: User,
-        action: dict,
-        template_props: dict,
-        props: dict,
-        document: HrDocument,
+            self,
+            db: Session,
+            user: User,
+            action: dict,
+            template_props: dict,
+            props: dict,
+            document: HrDocument,
     ):
-        try:
-            tagname = action["coolness"]["tagname"]
-        except:
-            raise ForbiddenException(
-                f"Coolness is not defined for this action: {self.__handler__}"
-            )
+        coolness_id = self.get_args(action, props)
 
         self.handle_validation(db, user, action, template_props, props, document)
 
-        coolness = coolness_service.get_by_id(db, props[tagname]["value"])
+        coolness = coolness_service.get_by_id(db, coolness_id)
         coolness_type = coolness.type
 
         history = (
             db.query(CoolnessHistory)
-                .filter(CoolnessHistory.user_id == user.id)
-                .filter(CoolnessHistory.coolness_id == coolness.id)
+            .filter(CoolnessHistory.user_id == user.id)
+            .filter(CoolnessHistory.coolness_id == coolness.id)
             .first()
         )
         history.cancel_document_link = configs.GENERATE_IP + str(document.id)
@@ -67,7 +62,7 @@ class DecreaseCoolnessHandler(BaseHandler):
         db.flush()
 
         return user
-    
+
     def handle_validation(
         self,
         db: Session,
@@ -77,16 +72,31 @@ class DecreaseCoolnessHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        tagname = action["coolness"]["tagname"]
-        coolness = coolness_service.get_by_id(db, props[tagname]["value"])
+        coolness_id = self.get_args(action, props)
+        coolness = coolness_service.get_by_id(db, coolness_id)
         coolness_type = coolness.type
 
         if (
-            coolness_type.order == 1
+                coolness_type.order == 1
         ):
             raise ForbiddenException(
                 detail=f"You can not decrease coolness to {coolness_type.name}"
             )
+
+    def get_args(self, action, properties):
+        try:
+            coolness_id = properties[action["coolness"]["tagname"]]["value"]
+        except KeyError:
+            raise ForbiddenException(f"Coolness is not defined for this action: {self.__handler__}")
+        return coolness_id
+
+    def handle_response(self, db: Session,
+                        action: dict,
+                        properties: dict,
+                        ):
+        args = self.get_args(action, properties)
+        obj = coolness_service.get_by_id(db, args).type
+        return obj
 
 
 handler = DecreaseCoolnessHandler()
