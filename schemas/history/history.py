@@ -562,6 +562,7 @@ class SecondmentRead(Model):
     date_to: Optional[datetime]
     staff_division: Optional[str]
     document_link: Optional[str]
+    state_body: Optional[str]
 
     class Config:
         orm_mode = True
@@ -572,8 +573,9 @@ class SecondmentRead(Model):
         return cls(
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
-            staff_division=orm_obj.secondment.staff_division.name,
+            staff_division=orm_obj.secondment.staff_division.name if orm_obj.secondment.staff_division else None,
             document_link=orm_obj.document_link,
+            state_body=orm_obj.secondment.state_body.name if orm_obj.secondment.state_body else None,
         )
 
 class TypeOfArmyEquipmentModelRead(ReadNamedModel):

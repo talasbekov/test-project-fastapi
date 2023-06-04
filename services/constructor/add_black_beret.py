@@ -1,9 +1,10 @@
+import uuid
 from typing import Any
 
 from sqlalchemy.orm import Session, Query
 
 from core import configs
-from models import User, HrDocument, Badge
+from models import User, HrDocument, Badge, BadgeType
 from exceptions import ForbiddenException
 from services import badge_service, history_service
 from .base import BaseHandler
@@ -21,9 +22,9 @@ class AddBlackBeretHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        badge_type = badge_service.get_black_beret(db)
+        badge = self.get_args(db)
         self.handle_validation(db, user, action, template_props, props, document)
-        res = badge_service.create_relation(db, user.id, badge_type.id)
+        res = badge_service.create_relation(db, user.id, badge.id)
         history = history_service.create_history(db, user.id, res)
         document.old_history_id = history.id
         history.document_link = configs.GENERATE_IP + str(document.id)
@@ -32,6 +33,7 @@ class AddBlackBeretHandler(BaseHandler):
         db.add(history)
         db.flush()
         return user
+
     def handle_validation(
         self,
         db: Session,
@@ -41,15 +43,28 @@ class AddBlackBeretHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        badge_type = badge_service.get_black_beret(db)
-        if badge_service.exists_relation(db, user.id, badge_type.id):
+        if badge_service.get_black_beret_by_user_id(db, user.id) != None:
             raise ForbiddenException(
                 f"Badge is already assigned to this user: {user.first_name} {user.last_name}"
             )
 
     def handle_filter(self, db: Session, user_query: Query[Any]):
+        badge = self.get_args(db)
+        return user_query.filter(User.badges.any(Badge.type_id != badge.id) | ~User.badges.any())
+
+    def get_args(self, db: Session):
         badge_type = badge_service.get_black_beret(db)
-        return user_query.filter(User.badges.any(Badge.type_id != badge_type.id) | ~User.badges.any())
+        if badge_type:
+            return badge_type
+        else:
+            raise ForbiddenException(f"Black beret badge not found")
+
+    def handle_response(self, db: Session,
+                        action: dict,
+                        properties: dict,
+    ):
+        obj = badge_service.get_black_beret(db)
+        return obj
 
 
 handler = AddBlackBeretHandler()

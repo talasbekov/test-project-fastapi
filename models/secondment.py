@@ -12,5 +12,8 @@ class Secondment(NamedModel):
     staff_division_id = Column(UUID(as_uuid=True), ForeignKey("staff_divisions.id"))
     staff_division = relationship("StaffDivision")
 
+    state_body_id = Column(UUID(as_uuid=True), ForeignKey("state_bodies.id"))
+    state_body = relationship("StateBody")
+
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     user = relationship("User", back_populates="secondments")

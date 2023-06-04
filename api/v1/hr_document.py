@@ -294,7 +294,7 @@ async def generate(*,
     Authorize: AuthJWT = Depends()
 ):
     """
-        This endpoint generates a HR document based on the given document ID.
+        This endpoint generates a HR document based on the given document ID. (pdf)
 
         It takes a document ID as input, retrieves the corresponding HR document from the database, retrieves the HR document template associated with the document, renders the template with the document's properties, and saves the resulting Word document to a temporary file. It then returns a FileResponse containing the generated document as an attachment that can be downloaded by the user.
 
@@ -302,6 +302,24 @@ async def generate(*,
     """
     Authorize.jwt_required()
     return await hr_document_service.generate(db, id, LanguageEnum.kz)
+
+
+@router.get('/generate-html/{id}/', status_code=status.HTTP_200_OK,
+            summary="Generate HrDocument")
+async def generate_html(*,
+    db: Session = Depends(get_db),
+    id: uuid.UUID,
+    Authorize: AuthJWT = Depends()
+):
+    """
+        This endpoint generates a HR document based on the given document ID. (html)
+
+        It takes a document ID as input, retrieves the corresponding HR document from the database, retrieves the HR document template associated with the document, renders the template with the document's properties, and saves the resulting Word document to a temporary file. It then returns a FileResponse containing the generated document as an attachment that can be downloaded by the user.
+
+        - **id**: UUID - required.
+    """
+    Authorize.jwt_required()
+    return await hr_document_service.generate_html(db, id, LanguageEnum.kz)
 
 
 @router.get('/options', status_code=status.HTTP_200_OK,
