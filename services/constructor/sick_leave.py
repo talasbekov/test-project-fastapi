@@ -12,16 +12,18 @@ class SickLeaveHandler(BaseHandler):
     __handler__ = "sick_leave"
 
     def handle_action(
-        self,
-        db: Session,
-        user: User,
-        action: dict,
-        template_props: dict,
-        props: dict,
-        document: HrDocument,
+            self,
+            db: Session,
+            user: User,
+            action: dict,
+            template_props: dict,
+            props: dict,
+            document: HrDocument,
     ):
         date_from, date_to = self.get_args(props, action)
         type = status_service.get_by_name(db, StatusEnum.SICK_LEAVE.value)[0]
+
+        self.handle_validation(db, user, action, template_props, props, document)
 
         res = status_service.create_relation(db, user.id, type.id)
         history = history_service.create_timeline_history(db, user.id, res, date_from, date_to)
@@ -48,16 +50,23 @@ class SickLeaveHandler(BaseHandler):
             raise ForbiddenException(detail=f'Invalid props for action: {self.__handler__}')
 
     def get_args(
-        self,
-        props: dict,
-        action: dict
+            self,
+            props: dict,
+            action: dict
     ):
         try:
             date_from = convert_str_to_datetime(props[action['date_from']['tagname']]['name'])
             date_to = convert_str_to_datetime(props[action['date_to']['tagname']]['name'])
         except:
             raise ForbiddenException(detail=f'Invalid props for action: {self.__handler__}')
-        return (date_from, date_to)
+        return date_from, date_to
+
+    def handle_response(self, db: Session,
+                        action: dict,
+                        properties: dict,
+                        ):
+        date_range = list(self.get_args(action, properties))
+        return date_range
 
 
 handler = SickLeaveHandler()
