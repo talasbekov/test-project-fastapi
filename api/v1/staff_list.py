@@ -1,4 +1,5 @@
 import uuid
+import datetime
 from typing import List
 
 from fastapi import APIRouter, Depends, status
@@ -105,6 +106,28 @@ async def get_by_id(*,
     """
     Authorize.jwt_required()
     return staff_list_service.get_by_id(db, id)
+
+
+@router.post("/apply/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=StaffListRead,
+            summary="Apply Staff List")
+async def apply_staff_list(*,
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 signed_by: str,
+                 document_creation_date: datetime.date,
+                 Authorize: AuthJWT = Depends()
+                 ):
+    """
+        Update Staff List
+
+        - **id**: UUID - id of the Staff List.
+        - **signed_by**: required
+        - **document_creation_date**: required
+        - **date_from**: date - format (YYYY-MM-DD). This parameter is required.
+    """
+    Authorize.jwt_required()
+    return staff_list_service.apply_staff_list(db, id, signed_by, document_creation_date)
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],

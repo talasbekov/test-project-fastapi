@@ -1,3 +1,4 @@
+import datetime
 from typing import List, Optional
 import uuid
 
@@ -13,12 +14,13 @@ from models import (
     ArchiveStaffDivision,
     User,
     HrDocument,
+    ArchiveStaffUnit
 )
 from schemas import (
     StaffListCreate,
     StaffListUpdate,
     StaffListUserCreate,
-    StaffListStatusRead
+    StaffListStatusRead,
 )
 from services import (
     ServiceBase,
@@ -33,6 +35,7 @@ from services import (
     document_staff_function_type_service,
     service_staff_function_type_service,
     hr_document_template_service,
+    staff_unit_service,
 )
 
 options = {
@@ -88,6 +91,82 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         db.flush()
         return staff_list
 
+
+    def apply_staff_list(
+        self,
+        db: Session,
+        staff_list_id: uuid.UUID,
+        signed_by: str,
+        document_creation_date: datetime.date,
+    ):
+        staff_list = self.get_by_id(db, staff_list_id)
+
+        staff_division_service.make_all_inactive(db)
+        exclude_staff_division_ids = [i.id for i in staff_division_service.get_excluded_staff_divisions(db)]
+        staff_unit_service.make_all_inactive(db, exclude_staff_division_ids)
+
+        staff_divisions: list[ArchiveStaffDivision] = (
+            archive_staff_division_service.get_departments(db, staff_list_id, 0, 100)
+        )
+        new_staff_divisions = []
+        for staff_division in staff_divisions:
+            new_staff_division = self._create_staff_division(db, staff_division, None)
+            new_staff_divisions.append(new_staff_division)
+
+        staff_list.document_signed_by = signed_by
+        staff_list.document_signed_at = document_creation_date
+
+        db.add(staff_list)
+        db.flush()
+        return staff_list
+
+    def _create_staff_division(self, db: Session,
+                               staff_division: ArchiveStaffDivision,
+                               parent_id: Optional[uuid.UUID]
+                               ) -> StaffDivision:
+        is_leader_needed = None
+        leader_id = None
+        parent = archive_staff_division_service.get(db,
+                                                    staff_division.parent_group_id)
+        new_staff_division = staff_division_service.create_or_update_from_archive(
+            db,
+            staff_division,
+            parent.origin_id if parent else None,
+            None
+        )
+
+        if staff_division.children:
+            for child in staff_division.children:
+                child_staff_division = self._create_staff_division(
+                    db,
+                    child,
+                    new_staff_division.id
+                )
+                new_staff_division.children.append(child_staff_division)
+        staff_division.origin_id = new_staff_division.id
+
+        if staff_division.leader_id is not None:
+            is_leader_needed = True
+        staff_units: list[ArchiveStaffUnit] = staff_division.staff_units
+
+        for staff_unit in staff_units:
+            new_staff_unit = staff_unit_service.create_or_update_from_archive(
+                db, staff_unit, new_staff_division.id)
+            if is_leader_needed and staff_unit.id == staff_division.leader_id:
+                leader_id = new_staff_unit.id
+            staff_unit.origin_id = new_staff_unit.id
+            db.add(new_staff_unit)
+            db.add(staff_unit)
+
+
+        new_staff_division.leader_id = leader_id
+        db.add(new_staff_division)
+        db.add(staff_division)
+        db.flush()
+
+        return new_staff_division
+
+
     def _create_archive_staff_division(self, db: Session, staff_division: StaffDivision, staff_list_id: uuid.UUID,
                                        parent_group_id: Optional[uuid.UUID]):
 
@@ -113,13 +192,11 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
                 staff_unit_user_id = staff_unit.users[0].id if staff_unit.users else None
                 staff_unit_actual_user_id = staff_unit.actual_users[0].id if staff_unit.actual_users else None
                 staff_unit_user_replacing = staff_unit.user_replacing_id
-                staff_unit_form = getattr(staff_unit, "form ", None)
                 staff_unit_position = staff_unit.position_id
 
                 archive_staff_unit = archive_staff_unit_service.create_based_on_existing_staff_unit(db, staff_unit,
                                                                                                     staff_unit_user_id,
                                                                                                     staff_unit_position,
-                                                                                                    staff_unit_form,
                                                                                                     staff_unit_actual_user_id,
                                                                                                     staff_unit_user_replacing,
                                                                                                     archive_division)

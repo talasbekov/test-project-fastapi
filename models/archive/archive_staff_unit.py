@@ -25,7 +25,6 @@ class ArchiveStaffUnit(Model):
     )
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
     curator_of_id = Column(UUID(as_uuid=True), ForeignKey("staff_divisions.id"), nullable=True)
-    form = Column(Enum(FormEnum), nullable=True)
     actual_user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
     origin_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"), nullable=True)
     user_replacing_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
