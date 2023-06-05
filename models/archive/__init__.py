@@ -2,6 +2,4 @@ from .archive_staff_division import ArchiveStaffDivision
 from .archive_staff_function import ArchiveStaffFunction, ArchiveDocumentFunctionType, ArchiveServiceFunctionType, ArchiveDocumentStaffFunction, ArchiveServiceStaffFunction
 from .archive_staff_unit import ArchiveStaffUnit
 from .archive_position import ArchivePosition
-from .archive_privelege_emergency import ArchivePrivilegeEmergency 
-from .archive_privelege_emergency import ArchiveFormEnum
 from .association import archive_staff_unit_function

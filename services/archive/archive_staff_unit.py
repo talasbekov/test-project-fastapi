@@ -1,8 +1,6 @@
 import uuid
 
 from sqlalchemy.orm import Session
-from api.v1 import position
-
 
 from exceptions.client import NotFoundException, BadRequestException
 from models import ArchiveStaffUnit, StaffUnit, ArchiveStaffDivision

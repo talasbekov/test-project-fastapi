@@ -260,6 +260,7 @@ def upgrade() -> None:
     sa.Column('max_rank_id', sa.UUID(), nullable=True),
     sa.Column('category_code', sa.String(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
+    sa.Column('form', sa.String(), nullable=False),
     sa.Column('nameKZ', sa.String(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),

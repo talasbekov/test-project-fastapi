@@ -1,7 +1,7 @@
 """fix/hr-vacancy
 
 Revision ID: 5a1d234bea01
-Revises: archive_privelege_emergencies
+Revises: ID: b6c2329ba373
 Create Date: 2023-06-01 10:48:45.512943
 
 """
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = '5a1d234bea01'
-down_revision = 'archive_privelege_emergencies'
+down_revision = 'b6c2329ba373'
 branch_labels = None
 depends_on = None
 

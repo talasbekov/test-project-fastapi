@@ -1,4 +1,4 @@
-import enum
+from enum import Enum as EnumBase
 
 from sqlalchemy import Column, ForeignKey, Enum, String
 from sqlalchemy.dialects.postgresql import UUID
@@ -7,7 +7,7 @@ from sqlalchemy.orm import relationship
 from models import NamedModel
 
 
-class PositionNameEnum(str, enum.Enum):
+class PositionNameEnum(str, EnumBase):
     CONSCRIPT_SOLDIER = 'Военно-служащий срочной службы'
     SECUTIRY_OFFICER = 'Офицер охраны'
     SECURITY_OFFICER_1_LEVEL = 'Сотрудник охраны 1-категории'
@@ -31,7 +31,7 @@ class PositionNameEnum(str, enum.Enum):
     SUPERVISOR = "Начальник"
 
 
-class CategoryCodeEnum(str, enum.Enum):
+class CategoryCodeEnum(str, EnumBase):
     C_S_1 = "C-S-1"
     C_S_2 = "C-S-2"
     C_S_3 = "C-S-3"
@@ -59,6 +59,11 @@ class CategoryCodeEnum(str, enum.Enum):
     C_RG_12 = "C-RG-12"
     C_RG_13 = "C-RG-13"
 
+class FormEnum(EnumBase):
+    form1 = "Форма 1"
+    form2 = "Форма 2"
+    form3 = "Форма 3"
+
 
 class Position(NamedModel):
 
@@ -68,3 +73,4 @@ class Position(NamedModel):
                          nullable=True)
     max_rank = relationship("Rank", cascade="all,delete")
     category_code = Column(String()) # TODO: enum was deleted because of LookupError: "C-S-1" is not among the defined enum values pls fix it
+    form = Column(String(), nullable=True)
