@@ -6,4 +6,3 @@ from .archive_staff_division import archive_staff_division_service
 from .archive_staff_function import archive_staff_function_service
 from .archive_position import archive_position_service
 from .archive_staff_unit import archive_staff_unit_service
-from .archive_privelege_emergency import archive_privelege_emergency_service

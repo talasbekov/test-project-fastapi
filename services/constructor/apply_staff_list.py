@@ -1,16 +1,13 @@
 from typing import Any, Optional
 
-from charset_normalizer.md import List
 from sqlalchemy.orm import Query, Session
 
 from models import (
     ArchiveStaffDivision,
     StaffDivision,
-    StaffUnit,
     ArchiveStaffUnit,
     User,
     HrDocument,
-    PrivilegeEmergency
 )
 from exceptions import ForbiddenException
 from .base import BaseHandler
@@ -19,8 +16,6 @@ from .. import (
     staff_unit_service,
     staff_list_service,
     archive_staff_division_service,
-    archive_privelege_emergency_service,
-    privelege_emergency_service
 )
 
 
@@ -48,9 +43,6 @@ class ApplyStaffListHandler(BaseHandler):
             archive_staff_division_service.get_departments(db, staff_list_id, 0, 100)
         )
         new_staff_divisions = []
-        privelege_emergencies = archive_privelege_emergency_service.get_multi(db, 0, 100)
-        for privelege_emergency in privelege_emergencies:
-            self._create_privelege_emergency(db, privelege_emergency)
         for staff_division in staff_divisions:
             new_staff_division = self._create_staff_division(db, staff_division, None)
             new_staff_divisions.append(new_staff_division)
@@ -67,7 +59,6 @@ class ApplyStaffListHandler(BaseHandler):
         document: HrDocument,
     ):
         pass
-
 
     def _create_staff_division(self, db: Session, staff_division: ArchiveStaffDivision, parent_id: Optional[int]) -> StaffDivision:
         is_leader_needed = None
@@ -109,10 +100,6 @@ class ApplyStaffListHandler(BaseHandler):
         db.add(staff_division)
         db.flush()
         return new_staff_division
-    
-
-    def _create_privelege_emergency(self, db: Session, privelege_emergency: PrivilegeEmergency):
-        privelege_emergency_service.create_or_update_from_archive(db, privelege_emergency)
 
     def get_args(self, action, properties):
         try:

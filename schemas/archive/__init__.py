@@ -27,6 +27,3 @@ from .service_archive_staff_function_type import (ServiceArchiveStaffFunctionTyp
                                                   NewServiceArchiveStaffFunctionTypeUpdate)
 from .archive_position import(ArchivePositionBase,ArchivePositionCreate,ArchivePositionUpdate,
                               ArchivePositionRead, ArchivePositionAutoCreate)
-from .archive_privelege_emergency import (ArchivePrivelegeEmergency, ArchivePrivelegeEmergencyCreate,
-                                          ArchivePrivelegeEmergencyRead, ArchivePrivelegeEmergencyUpdate,
-                                          ArchivePrivelegeEmergencyAutoCreate)

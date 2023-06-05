@@ -7,11 +7,6 @@ from .association import staff_unit_function, staff_unit_candidate_stage_infos
 
 from enum import Enum as EnumBase
 
-class FormEnum(EnumBase):
-    form1 = "Форма 1"
-    form2 = "Форма 2"
-    form3 = "Форма 3"
-
 class StaffUnit(isActiveModel):
 
     __tablename__ = "staff_units"
@@ -22,7 +17,7 @@ class StaffUnit(isActiveModel):
     staff_division_id = Column(UUID(as_uuid=True), ForeignKey("staff_divisions.id"), nullable=False)
     user_replacing_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
     curator_of_id = Column(UUID(as_uuid=True), ForeignKey("staff_divisions.id"), nullable=True)
-    form = Column(Enum(FormEnum), nullable=True)
+    #form = Column(Enum(FormEnum), nullable=True)
     # Relationships
     position = relationship("Position", cascade="all,delete", foreign_keys=[position_id])
     staff_division = relationship(
