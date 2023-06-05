@@ -378,7 +378,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 due_date=body.due_date,
                 properties=body.properties,
                 parent_id=parent_id,
-                initial_commit=body.initial_comment,
+                initial_comment=body.initial_comment,
                 initialized_at=datetime.now(),
             ),
         )
