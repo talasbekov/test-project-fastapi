@@ -428,102 +428,119 @@ def upgrade() -> None:
             'name': 'Военно-служащий срочной службы',
             'nameKZ': 'Мерзімді қызмет әскери қызметшісі',
             'category_code': 'C-RG-10',
-            'max_rank_id': rank1_id
+            'form': 'Форма 1',
+            'max_rank_id': rank1_id,
         }, {
             'id': position2_id,
             'name': 'Сотрудник охраны 3-категории',
             'nameKZ': '3-санатты күзет қызметкері',
             'category_code': 'C-S-11',
+            'form': 'Форма 1',
             'max_rank_id': rank2_id
         }, {
             'id': position3_id,
             'name': 'Сотрудник охраны 2-категории',
             'nameKZ': '2-санатты күзет қызметкері',
             'category_code': 'C-S-10',
+            'form': 'Форма 1',
             'max_rank_id': rank3_id
         }, {
             'id': position4_id,
             'name': 'Сотрудник охраны 1-категории',
             'nameKZ': '1-санатты күзет қызметкері',
             'category_code': 'C-S-9',
+            'form': 'Форма 1',
             'max_rank_id': rank4_id
         }, {
             'id': position5_id,
             'name': 'Офицер охраны',
             'nameKZ': 'Күзет офицері',
             'category_code': 'C-S-8',
+            'form': 'Форма 1',
             'max_rank_id': rank7_id
         }, {
             'id': position6_id,
             'name': 'Старший офицер охраны',
             'nameKZ': 'Аға күзет офицері',
             'category_code': 'C-S-7',
+            'form': 'Форма 1',
             'max_rank_id': rank8_id
         }, {
             'id': position7_id,
             'name': 'Старший офицер',
             'nameKZ': 'Аға офицері',
             'category_code': 'C-S-7',
+            'form': 'Форма 1',
             'max_rank_id': rank8_id
         }, {
             'id': position8_id,
             'name': 'Инспектор',
             'nameKZ': 'Инспектор',
             'category_code': 'C-S-8',
+            'form': 'Форма 1',
             'max_rank_id': rank9_id
         }, {
             'id': position9_id,
             'name': 'Старший инспектор',
             'nameKZ': 'Аға инспектор',
             'category_code': 'C-S-7',
+            'form': 'Форма 1',
             'max_rank_id': rank9_id
         }, {
             'id': position10_id,
             'name': 'Начальник отдела',
             'nameKZ': 'Бөлім бастығы',
             'category_code': 'C-S-6',
+            'form': 'Форма 1',
             'max_rank_id': rank9_id
         }, {
             'id': position11_id,
             'name': 'Заместитель начальника управления - Начальник отдела',
             'nameKZ': 'Басқарма басытығының орынбасары - Бөлім бастығы',
             'category_code': 'C-S-6',
+            'form': 'Форма 1',
             'max_rank_id': rank10_id
         }, {
             'id': position12_id,
             'name': 'Главный инспектор',
             'nameKZ': 'Бас инспектор',
             'category_code': 'C-S-6',
+            'form': 'Форма 1',
             'max_rank_id': rank10_id
         }, {
             'id': position13_id,
             'name': 'Начальник управления',
             'nameKZ': 'Басқарма бастығы',
             'category_code': 'C-S-5',
+            'form': 'Форма 1',
             'max_rank_id': rank10_id
         }, {
             'id': position14_id,
             'name': 'Заместитель начальника департамента',
             'nameKZ': 'Департамент бастығының орынбасары',
             'category_code': 'C-S-5',
+            'form': 'Форма 1',
             'max_rank_id': rank10_id
         }, {
             'id': position15_id,
             'name': 'Начальник департамента',
             'nameKZ': 'Департамент бастығы',
             'category_code': 'C-S-4',
+            'form': 'Форма 1',
             'max_rank_id': rank10_id
         }, {
             'id': position16_id,
             'name': 'Заместитель начальника Службы',
             'nameKZ': 'Қызмет бастығының орынбасары',
             'category_code': 'C-S-3',
+            'form': 'Форма 1',
             'max_rank_id': rank12_id
         }, {
             'id': position17_id,
             'name': 'Начальник Службы',
             'nameKZ': 'Қызмет бастығы',
             'category_code': 'C-S-2',
+            'form': 'Форма 1',
             'max_rank_id': rank13_id
         },
             {
@@ -531,90 +548,105 @@ def upgrade() -> None:
                 'name': 'Начальник кадров',
                 'nameKZ': 'Кадрлар басқармасының бастығы',
                 'category_code': 'C-S-4',
+                'form': 'Форма 1',
                 'max_rank_id': rank10_id
             }, {
             'id': position19_id,
             'name': 'Заместители начальника кадров',
             'nameKZ': 'Кадр бастығының орынбасары',
             'category_code': 'C-S-5',
+            'form': 'Форма 1',
             'max_rank_id': rank10_id
         }, {
             'id': position20_id,
             'name': 'Начальник управления кандидатами',
             'nameKZ': 'Кандидаттар басқармасының бастығы',
             'category_code': 'C-S-4',
+            'form': 'Форма 1',
             'max_rank_id': rank10_id
         }, {
             'id': position21_id,
             'name': 'Политический гос. служащий',
             'nameKZ': 'Саяси мемлекеттік қызметші',
             'category_code': 'C-S-4',
+            'form': 'Форма 1',
             'max_rank_id': rank16_id
         }, {
             'id': position22_id,
             'name': 'Психолог',
             'nameKZ': 'Психолог',
             'category_code': 'C-S-10',
+            'form': 'Форма 1',
             'max_rank_id': rank9_id
         }, {
             'id': position23_id,
             'name': 'Представитель Управление собственной безопасности',
             'nameKZ': 'Өкіл жеке қауіпсіздік басқармасы',
             'category_code': 'C-S-6',
+            'form': 'Форма 1',
             'max_rank_id': rank9_id
         }, {
             'id': position24_id,
             'name': 'Полиграфолог',
             'nameKZ': 'Полиграфолог',
             'category_code': 'C-S-10',
+            'form': 'Форма 1',
             'max_rank_id': rank9_id
         }, {
             'id': position25_id,
             'name': 'Инструктор',
             'nameKZ': 'Инструктор',
             'category_code': 'C-S-10',
+            'form': 'Форма 1',
             'max_rank_id': rank9_id
         }, {
             'id': position26_id,
             'name': "Умер",
             'nameKZ': 'Өлі',
             'category_code': 'C-RG-10',
+            'form': 'Форма 1',
             'max_rank_id': rank9_id
         }, {
             'id': position27_id,
             'name': "В отставке",
             'nameKZ': 'Зейнеткер',
             'category_code': 'C-RG-10',
+            'form': 'Форма 1',
             'max_rank_id': rank9_id
         }, {
             'id': position28_id,
             'name': "В запасе",
             'nameKZ': 'Резервте',
             'category_code': 'C-RG-10',
+            'form': 'Форма 1',
             'max_rank_id': rank9_id
         }, {
             'id': position29_id,
             'name': "Исключен из списков личного состава",
             'nameKZ': 'Кадрлар тізімінен шығарылған',
             'category_code': 'C-RG-10',
+            'form': 'Форма 1',
             'max_rank_id': rank9_id
         }, {
             'id': position30_id,
             'name': "Откомандирован в другой гос. орган",
             'nameKZ': 'Басқа мемлекеттік органға жіберілді',
             'category_code': 'C-RG-10',
+            'form': 'Форма 1',
             'max_rank_id': rank9_id
         }, {
             'id': position31_id,
             'name': "Погиб",
             'nameKZ': 'Қайтыс болды',
             'category_code': 'C-RG-10',
+            'form': 'Форма 1',
             'max_rank_id': rank9_id
         }, {
             'id': position32_id,
             'name': "HR-менеджер",
             'nameKZ': 'HR-менеджері',
             'category_code': 'C-RG-10',
+            'form': 'Форма 1',
             'max_rank_id': rank9_id
         }]
     )
