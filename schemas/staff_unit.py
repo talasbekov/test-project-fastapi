@@ -20,7 +20,7 @@ class StaffUnitBase(Model):
     staff_division_id: uuid.UUID
     is_active: Optional[bool] = True
     requirements: Optional[List[StaffUnitRequirements]]
-    form: Optional[str]
+    
 
 
 class StaffUnitCreate(StaffUnitBase):
