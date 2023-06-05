@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 
 from core import configs
 from models import User, HrDocument, EmergencyServiceHistory
+from schemas import StaffUnitRead
 from .base import BaseHandler
 from services import staff_unit_service, history_service
 from exceptions import ForbiddenException
@@ -72,8 +73,8 @@ class PositionChangeHandler(BaseHandler):
                         properties: dict,
                         ):
         args, _ = self.get_args(action, properties)
-        obj = staff_unit_service.get_by_id(db, args).position
-        return obj
+        obj = staff_unit_service.get_by_id(db, args)
+        return StaffUnitRead.from_orm(obj)
 
 
 handler = PositionChangeHandler()
