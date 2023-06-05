@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 import uuid
 
 from sqlalchemy.orm import Session, joinedload
@@ -13,8 +13,6 @@ from models import (
     ArchiveStaffDivision,
     User,
     HrDocument,
-    PrivilegeEmergency,
-    ArchiveFormEnum
 )
 from schemas import (
     StaffListCreate,
@@ -27,7 +25,6 @@ from services import (
     archive_staff_division_service,
     archive_staff_function_service,
     archive_staff_unit_service,
-    archive_privelege_emergency_service,
     document_archive_staff_function_service,
     service_archive_staff_function_service,
     staff_division_service,
@@ -38,7 +35,6 @@ from services import (
     hr_document_template_service,
     position_service,
     archive_position_service,
-    privelege_emergency_service
 )
 
 options = {
@@ -73,8 +69,6 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         )
         staff_list = super().create(db, create_staff_list)
         staff_divisions = staff_division_service.get_departments(db, 0, 100)
-        privelege_emergencies = privelege_emergency_service.get_multi(db, 0, 100)
-        self._create_archive_privelege_emergency(db, privelege_emergencies)
         for staff_division in staff_divisions:
             self._create_archive_staff_division(db, staff_division, staff_list.id, None)
         db.add(staff_list)
@@ -97,7 +91,7 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         return staff_list
 
     def _create_archive_staff_division(self, db: Session, staff_division: StaffDivision, staff_list_id: uuid.UUID,
-                                       parent_group_id: uuid.UUID):
+                                       parent_group_id: Optional[uuid.UUID]):
 
         archive_division = archive_staff_division_service.create_based_on_existing_staff_division(db, staff_division,
                                                                                                   staff_list_id,
@@ -174,23 +168,11 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         db.flush()
 
         return archive_division
-    
-    def _create_archive_privelege_emergency(self, db: Session, privelege_emergencies: List[PrivilegeEmergency]):
-        for privelege_emergency in privelege_emergencies:
-            archive_privelege_emergency_service.create_based_on_existing_position(
-                db=db,
-                form=privelege_emergency.form.name,
-                date_from=privelege_emergency.date_from,
-                date_to=privelege_emergency.date_to,
-                origin_id=privelege_emergency.id,
-                user_id=privelege_emergency.user_id
-            )
-        
 
     def get_super_doc_by_staff_list_id(
-        self,
-        db: Session,
-        id: uuid.UUID
+            self,
+            db: Session,
+            id: uuid.UUID
     ):
         hr_document_template = hr_document_template_service.get_staff_list(db=db)
         hr_document_template_id = hr_document_template.id
@@ -207,26 +189,25 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
 
     def get_drafts(self, db: Session, skip: int = 0, limit: int = 100, filter: str = ''):
         staff_lists = (db.query(StaffList)
-                  .join(User)
-                  .options(joinedload(StaffList.user))
-                  .filter(StaffList.is_signed == False,
-                          StaffList.name.contains(filter))
-                  .offset(skip)
-                  .limit(limit)
-                  .all())
+                       .join(User)
+                       .options(joinedload(StaffList.user))
+                       .filter(StaffList.is_signed == False,
+                               StaffList.name.contains(filter))
+                       .offset(skip)
+                       .limit(limit)
+                       .all())
 
-        return [StaffListStatusRead.from_orm(staff_list)
-                            for staff_list in staff_lists]
+        return [StaffListStatusRead.from_orm(staff_list) for staff_list in staff_lists]
 
     def get_signed(self, db: Session, skip: int = 0, limit: int = 100, filter: str = ''):
         staff_lists = (db.query(StaffList)
-                  .join(User)
-                  .options(joinedload(StaffList.user))
-                  .filter(StaffList.is_signed == True,
-                          StaffList.name.contains(filter))
-                  .offset(skip)
-                  .limit(limit)
-                  .all())
+                       .join(User)
+                       .options(joinedload(StaffList.user))
+                       .filter(StaffList.is_signed == True,
+                               StaffList.name.contains(filter))
+                       .offset(skip)
+                       .limit(limit)
+                       .all())
         signed_staff_lists = []
         for staff_list in staff_lists:
             super_doc = self.get_super_doc_by_staff_list_id(db, staff_list.id)
@@ -239,8 +220,14 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
             }
             signed_staff_list.reg_number = reg_number
             signed_staff_lists.append(signed_staff_list)
-             
+
         return signed_staff_lists
+
+    def update(self, db: Session, staff_list_id: uuid.UUID, body: StaffListUpdate):
+        staff_list = self.get_by_id(db, staff_list_id)
+        return super().update(
+            db=db, db_obj=staff_list, obj_in=body
+        )
 
 
 staff_list_service = StaffListService(StaffList)
