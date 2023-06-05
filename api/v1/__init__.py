@@ -43,11 +43,13 @@ from .action import router as action_router
 from .hr_vacancy import router as hr_vacancy_router
 from .hr_vacancy_requirement import router as hr_vacancy_requirement_router
 from .position import router as position_router
+from .auto_tag import router as auto_tag_router
 
 router = APIRouter(prefix="/v1")
 
 router.include_router(auth_router)
 router.include_router(action_router)
+router.include_router(auto_tag_router)
 router.include_router(render_router)
 router.include_router(user_router)
 router.include_router(hr_document_status_router)

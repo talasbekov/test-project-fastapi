@@ -126,12 +126,15 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         return list_of_histories
 
     def get_all_by_type(self, db: Session, type: str, skip: int, limit: int):
-        histories = db.query(self.model).filter(self.model.type == type).offset(skip).limit(limit).all()
+        histories = self._get_all_by_type(db, type).offset(skip).limit(limit).all()
 
         list_of_histories = []
         for history in histories:
             list_of_histories.append(HistoryRead.from_orm(history).to_dict())
         return list_of_histories
+
+    def _get_all_by_type(self, db: Session, type: str):
+        return db.query(self.model).filter(self.model.type == type)
 
     def get_all_by_type_and_user_id(self, db: Session, type: str, user_id: uuid.UUID, skip: int, limit: int):
         if type == 'beret_history':
@@ -149,11 +152,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             )
         else:
             histories = (
-                db.query(self.model)
-                .filter(
-                    self.model.type == type,
-                    self.model.user_id == user_id
-                )
+                self._get_all_by_type_and_user_id(db, type, user_id)
                 .offset(skip)
                 .limit(limit)
                 .all()
@@ -163,6 +162,9 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         for history in histories:
             lis_of_histories.append(HistoryRead.from_orm(history).to_dict())
         return lis_of_histories
+
+    def _get_all_by_type_and_user_id(self, db: Session, type: str, user_id):
+        return db.query(self.model).filter(self.model.type == type, self.model.user_id == user_id)
 
     def create(self, db: Session, obj_in: HistoryCreate):
         cls = options.get(obj_in.type) 

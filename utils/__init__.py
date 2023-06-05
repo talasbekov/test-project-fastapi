@@ -6,3 +6,4 @@ from .checker import (
     convert_str_to_datetime,
 )
 from .templater import DocPart
+from .date import convert_days
