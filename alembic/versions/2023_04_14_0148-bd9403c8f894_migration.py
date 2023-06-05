@@ -248,8 +248,8 @@ def upgrade() -> None:
             "url": "http://192.168.0.169:8083/static/black_beret.jpg"
         }, {
             "id": badgetype2_id,
-            "name": "Даня",
-            "nameKZ": "Даня",
+            "name": "Службе 20 лет",
+            "nameKZ": "Қызметке 20 жыл",
             "url": "http://192.168.0.169:8083/static/danya.jpg"
         }]
     )
@@ -433,55 +433,55 @@ def upgrade() -> None:
             'id': position2_id,
             'name': 'Сотрудник охраны 3-категории',
             'nameKZ': '3-санатты күзет қызметкері',
-            'category_code': 'C-S-11',
+            'category_code': 'C-S-12',
             'max_rank_id': rank2_id
         }, {
             'id': position3_id,
             'name': 'Сотрудник охраны 2-категории',
             'nameKZ': '2-санатты күзет қызметкері',
-            'category_code': 'C-S-10',
+            'category_code': 'C-S-11',
             'max_rank_id': rank3_id
         }, {
             'id': position4_id,
             'name': 'Сотрудник охраны 1-категории',
             'nameKZ': '1-санатты күзет қызметкері',
-            'category_code': 'C-S-9',
+            'category_code': 'C-S-10',
             'max_rank_id': rank4_id
         }, {
             'id': position5_id,
             'name': 'Офицер охраны',
             'nameKZ': 'Күзет офицері',
-            'category_code': 'C-S-8',
+            'category_code': 'C-S-9',
             'max_rank_id': rank7_id
         }, {
             'id': position6_id,
             'name': 'Старший офицер охраны',
             'nameKZ': 'Аға күзет офицері',
-            'category_code': 'C-S-7',
+            'category_code': 'C-S-8',
             'max_rank_id': rank8_id
         }, {
             'id': position7_id,
             'name': 'Старший офицер',
             'nameKZ': 'Аға офицері',
-            'category_code': 'C-S-7',
+            'category_code': 'C-RG-7',
             'max_rank_id': rank8_id
         }, {
             'id': position8_id,
             'name': 'Инспектор',
             'nameKZ': 'Инспектор',
-            'category_code': 'C-S-8',
+            'category_code': 'C-S-6',
             'max_rank_id': rank9_id
         }, {
             'id': position9_id,
             'name': 'Старший инспектор',
             'nameKZ': 'Аға инспектор',
-            'category_code': 'C-S-7',
+            'category_code': 'C-S-5',
             'max_rank_id': rank9_id
         }, {
             'id': position10_id,
             'name': 'Начальник отдела',
             'nameKZ': 'Бөлім бастығы',
-            'category_code': 'C-S-6',
+            'category_code': 'C-S-5',
             'max_rank_id': rank9_id
         }, {
             'id': position11_id,
@@ -493,37 +493,37 @@ def upgrade() -> None:
             'id': position12_id,
             'name': 'Главный инспектор',
             'nameKZ': 'Бас инспектор',
-            'category_code': 'C-S-6',
+            'category_code': 'C-S-3',
             'max_rank_id': rank10_id
         }, {
             'id': position13_id,
             'name': 'Начальник управления',
             'nameKZ': 'Басқарма бастығы',
-            'category_code': 'C-S-5',
+            'category_code': 'C-S-3',
             'max_rank_id': rank10_id
         }, {
             'id': position14_id,
             'name': 'Заместитель начальника департамента',
             'nameKZ': 'Департамент бастығының орынбасары',
-            'category_code': 'C-S-5',
+            'category_code': 'C-S-2',
             'max_rank_id': rank10_id
         }, {
             'id': position15_id,
             'name': 'Начальник департамента',
             'nameKZ': 'Департамент бастығы',
-            'category_code': 'C-S-4',
+            'category_code': 'C-S-1',
             'max_rank_id': rank10_id
         }, {
             'id': position16_id,
             'name': 'Заместитель начальника Службы',
             'nameKZ': 'Қызмет бастығының орынбасары',
-            'category_code': 'C-S-3',
+            'category_code': 'C-RG-5',
             'max_rank_id': rank12_id
         }, {
             'id': position17_id,
             'name': 'Начальник Службы',
             'nameKZ': 'Қызмет бастығы',
-            'category_code': 'C-S-2',
+            'category_code': 'C-RG-5',
             'max_rank_id': rank13_id
         },
             {
