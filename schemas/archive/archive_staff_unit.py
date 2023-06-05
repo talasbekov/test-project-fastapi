@@ -25,7 +25,6 @@ class ArchiveStaffUnitBase(BaseModel):
     actual_user_id: Optional[uuid.UUID]
     user_replacing_id: Optional[uuid.UUID]
     requirements: Optional[List[StaffUnitRequirements]]
-    form: Optional[str]
 
 
 class ArchiveStaffUnitCreate(ArchiveStaffUnitBase):
@@ -51,7 +50,6 @@ class NewArchiveStaffUnitCreateWithStaffFunctions(ArchiveStaffUnitBase):
 
 
 class NewArchiveStaffUnitUpdate(ArchiveStaffUnitBase):
-    form: Optional[str]
     pass
 
 
@@ -99,4 +97,3 @@ class UserReplacingRead(UserRead):
 
 class ArchiveStaffUnitRead(UserReplacingArchiveStaffUnitRead):
     user_replacing: Optional[UserReplacingRead]
-    form: Optional[str]

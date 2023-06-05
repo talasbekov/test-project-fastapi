@@ -2,10 +2,9 @@ import uuid
 from typing import List, Dict, Any
 
 from sqlalchemy.orm import Session
-from sqlalchemy import and_
-from fastapi.logger import logger as log
 
-from exceptions import BadRequestException, NotFoundException, NotSupportedException
+
+from exceptions import BadRequestException, NotFoundException
 from models import (StaffDivision, StaffDivisionEnum, ArchiveStaffDivision,
                     StaffUnit, HrVacancy)
 from schemas import (
@@ -152,7 +151,6 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
                 nameKZ=archive_staff_division.nameKZ,
                 parent_group_id=parent_id,
                 description=archive_staff_division.description,
-                descriptionKZ=archive_staff_division.descriptionKZ,
                 is_combat_unit=archive_staff_division.is_combat_unit,
                 leader_id=leader_id
             )
@@ -170,7 +168,6 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
                 nameKZ=archive_staff_division.nameKZ,
                 parent_group_id=parent_id,
                 description=archive_staff_division.description,
-                descriptionKZ=archive_staff_division.descriptionKZ,
                 is_combat_unit=archive_staff_division.is_combat_unit,
                 leader_id=leader_id,
                 is_active=True

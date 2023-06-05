@@ -710,6 +710,8 @@ def upgrade() -> None:
     sa.Column('user_id', sa.UUID(), nullable=True),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('nameKZ', sa.String(), nullable=True),
+    sa.Column('document_signed_by', sa.String(), nullable=True),
+    sa.Column('document_signed_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
