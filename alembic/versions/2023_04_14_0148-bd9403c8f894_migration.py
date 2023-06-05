@@ -237,7 +237,6 @@ def create_candidate_stage_info(candidate_id,
 
 def upgrade() -> None:
     badgetype1_id = get_uuid()
-    badgetype2_id = get_uuid()
     badgetype3_id = get_uuid()
     badgetype4_id = get_uuid()
     badgetype5_id = get_uuid()
@@ -250,11 +249,6 @@ def upgrade() -> None:
             "name": "Черный Берет",
             "nameKZ": "Қара Берет",
             "url": "http://192.168.0.169:8083/static/black_beret.jpg"
-        }, {
-            "id": badgetype2_id,
-            "name": "Службе 20 лет",
-            "nameKZ": "Қызметке 20 жыл",
-            "url": "http://192.168.0.169:8083/static/danya.jpg"
         }, {
             "id": badgetype3_id,
             "name": "Нагрудный знак 'Ұлттық ұлан қызметінің үздігі'",
