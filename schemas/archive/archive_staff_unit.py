@@ -4,9 +4,8 @@ from typing import List, Optional, Union
 
 from pydantic import BaseModel, EmailStr
 
-from schemas import BadgeRead, RankRead, ReadModel, HrVacancyRead, Model
-
-from .archive_position import ArchivePositionRead
+from schemas import (BadgeRead, RankRead, ReadModel, 
+                     HrVacancyRead, Model, PositionRead)
 
 from .archive_staff_function import ArchiveStaffFunctionRead
 
@@ -81,7 +80,7 @@ class UserReplacingArchiveStaffUnitRead(ArchiveStaffUnitBase, ReadModel):
     staff_division_id: Optional[uuid.UUID]
     staff_functions: Optional[List]
     position_id: Optional[uuid.UUID]
-    position: Optional[ArchivePositionRead]
+    position: Optional[PositionRead]
     user: Optional[UserRead]
     actual_user: Optional[UserRead]
     hr_vacancy: Optional[List[Optional[HrVacancyRead]]]

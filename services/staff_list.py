@@ -33,8 +33,6 @@ from services import (
     document_staff_function_type_service,
     service_staff_function_type_service,
     hr_document_template_service,
-    position_service,
-    archive_position_service,
 )
 
 options = {
@@ -108,14 +106,6 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         if staff_division.leader_id is not None:
             is_leader_needed = True
 
-        positions = position_service.get_multi(db, 0, 100)
-        for position in positions:
-            archive_position_service.create_based_on_existing_position(db,
-                                                                       position.name,
-                                                                       position.nameKZ,
-                                                                       position.category_code,
-                                                                       position.max_rank_id,
-                                                                       position.id)
         if staff_division.staff_units:
             for staff_unit in staff_division.staff_units:
                 staff_unit: StaffUnit
@@ -124,9 +114,11 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
                 staff_unit_actual_user_id = staff_unit.actual_users[0].id if staff_unit.actual_users else None
                 staff_unit_user_replacing = staff_unit.user_replacing_id
                 staff_unit_form = getattr(staff_unit, "form ", None)
+                staff_unit_position = staff_unit.position_id
 
                 archive_staff_unit = archive_staff_unit_service.create_based_on_existing_staff_unit(db, staff_unit,
                                                                                                     staff_unit_user_id,
+                                                                                                    staff_unit_position,
                                                                                                     staff_unit_form,
                                                                                                     staff_unit_actual_user_id,
                                                                                                     staff_unit_user_replacing,
