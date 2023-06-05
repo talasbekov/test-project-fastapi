@@ -12,9 +12,7 @@ from schemas import (StaffUnitCreate, StaffUnitUpdate,
                     )
 from services import (service_staff_function_service,
                       document_staff_function_service, 
-                      staff_division_service,
-                      archive_position_service,
-                      position_service)
+                      staff_division_service)
 from .base import ServiceBase
 
 
@@ -22,7 +20,7 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
     def get_by_id(self, db: Session, id: uuid.UUID):
         position = super().get(db, id)
         if position is None:
-            raise NotFoundException(detail=f"StaffUnit  with id: {id} is not found!")
+            raise NotFoundException(detail=f"StaffUnit  with position id: {id} is not found!")
         return position
 
 
@@ -193,9 +191,6 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
         return res
 
     def create_or_update_from_archive(self, db: Session, archive_staff_unit: ArchiveStaffUnit, staff_division_id: uuid.UUID):
-        archive_position = archive_position_service.get_by_id(db, archive_staff_unit.position_id)
-        position = position_service.create_or_update_from_archive(db, archive_position)
-        archive_staff_unit.position_id = position.id
         if archive_staff_unit.origin_id is None:
             return self.create_from_archive(db, archive_staff_unit, staff_division_id)
         return self.update_from_archive(db, archive_staff_unit, staff_division_id)

@@ -3953,13 +3953,7 @@ def upgrade() -> None:
                 }
             },
             'actions': {'args': [
-                {
-                    'apply_archive_position': {
-                        'staff_unit': {
-                            'tagname': 'staff_unit'
-                        }
-                    }
-                }
+
             ]},
             'id': template9_id
         }]
