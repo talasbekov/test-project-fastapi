@@ -19,7 +19,7 @@ class ArchiveStaffUnit(Model):
     requirements = Column(ARRAY(JSON(none_as_null=True)))
 
     # Properties
-    position_id = Column(UUID(as_uuid=True), ForeignKey("archive_positions.id"), nullable=False)
+    position_id = Column(UUID(as_uuid=True), ForeignKey("positions.id"), nullable=False)
     staff_division_id = Column(
         UUID(as_uuid=True), ForeignKey("archive_staff_divisions.id"), nullable=False
     )
@@ -31,7 +31,7 @@ class ArchiveStaffUnit(Model):
     user_replacing_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
     user_replacing = relationship("User", back_populates="archive_staff_unit_replacing", foreign_keys=user_replacing_id)
     # Relationships
-    position = relationship("ArchivePosition", cascade="all,delete", foreign_keys=[position_id], passive_deletes=True)
+    position = relationship("Position", cascade="all,delete", foreign_keys=[position_id], passive_deletes=True)
     user = relationship("User", foreign_keys=user_id)
     actual_user = relationship("User", foreign_keys=actual_user_id)
     staff_division = relationship(

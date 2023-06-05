@@ -25,5 +25,3 @@ from .service_archive_staff_function_type import (ServiceArchiveStaffFunctionTyp
                                                   ServiceArchiveStaffFunctionTypeRead,
                                                   NewServiceArchiveStaffFunctionTypeCreate,
                                                   NewServiceArchiveStaffFunctionTypeUpdate)
-from .archive_position import(ArchivePositionBase,ArchivePositionCreate,ArchivePositionUpdate,
-                              ArchivePositionRead, ArchivePositionAutoCreate)

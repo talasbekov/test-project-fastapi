@@ -961,19 +961,6 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['profile_id'], ['medical_profiles.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('archive_positions',
-    sa.Column('max_rank_id', sa.UUID(), nullable=True),
-    sa.Column('category_code', sa.String(), nullable=False),
-    sa.Column('name', sa.String(), nullable=False),
-    sa.Column('nameKZ', sa.String(), nullable=True),
-    sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('origin_id', sa.UUID(), nullable=True),
-    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.ForeignKeyConstraint(['origin_id'], ['positions.id'], ),
-    sa.ForeignKeyConstraint(['max_rank_id'], ['ranks.id'], ),
-    sa.PrimaryKeyConstraint('id')
-    )
     op.create_table('archive_staff_units',
     sa.Column('position_id', sa.UUID(), nullable=False),
     sa.Column('staff_division_id', sa.UUID(), nullable=False),
@@ -987,7 +974,7 @@ def upgrade() -> None:
     sa.Column('requirements', sa.ARRAY(postgresql.JSON(none_as_null=True, astext_type=sa.Text())), nullable=True, default=''),
     sa.ForeignKeyConstraint(['actual_user_id'], ['users.id'], ),
     sa.ForeignKeyConstraint(['origin_id'], ['staff_units.id'], ),
-    sa.ForeignKeyConstraint(['position_id'], ['archive_positions.id'], ),
+    sa.ForeignKeyConstraint(['position_id'], ['positions.id'], ),
     sa.ForeignKeyConstraint(['staff_division_id'], ['archive_staff_divisions.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
