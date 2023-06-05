@@ -4982,6 +4982,17 @@ def upgrade() -> None:
     history15_id = get_uuid()
     history16_id = get_uuid()
     history17_id = get_uuid()
+    
+    history18_id = get_uuid()
+    history19_id = get_uuid()
+    history20_id = get_uuid()
+    history21_id = get_uuid()
+    history22_id = get_uuid()
+    history23_id = get_uuid()
+    history24_id = get_uuid()
+    history25_id = get_uuid()
+    history26_id = get_uuid()
+    history27_id = get_uuid()
 
     military_unit_id = get_uuid()
     military_unit2_id = get_uuid()
@@ -5561,6 +5572,363 @@ def upgrade() -> None:
                 'staff_division_id': None,
                 'name_of_organization': None,
                 'badge_id': None,
+                'is_credited': None,
+                'document_style': None,
+                'date_credited': None,
+                'emergency_rank_id': None,
+                'contractor_signer_name': None,
+                'contractor_signer_nameKZ': None,
+            },
+            {
+                'id': history18_id,
+                'date_from': datetime.datetime(2020, 3, 1),
+                'date_to': datetime.datetime(2021, 3, 31),
+                'user_id': user1_id,
+                'document_link': 'https://www.google.com',
+                'document_number': '№ 12421',
+                'type': "badge_history",
+                'penalty_id': None,
+                'name': '3 history',
+                'position_id': None,  # Add the missing parameter here
+                'rank_id': None,  # Add the missing parameter here
+                'emergency_service_id': None,  # Add the missing parameter here
+                'work_experience_id': None,  # Add the missing parameter here
+                'secondment_id': None,  # Add the missing parameter here
+                'name_change_id': None,  # Add the missing parameter here
+                'attestation_id': None,  # Add the missing parameter here
+                'service_characteristic_id': None,  # Add the missing parameter here
+                'status_id': None,  # Add the missing parameter here
+                'coolness_id': None,  # Add the missing parameter here
+                'contract_id': None,  # МЕНЯТЬ НА contract_id
+                'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+                'experience_years': 5,
+                'characteristic_initiator_id': None,  # МЕНЯТЬ НА characteristic_initiator_id
+                'coefficient': None,
+                'percentage': None,
+                'staff_division_id': None,
+                'name_of_organization': None,
+                'badge_id': badge_id,
+                'is_credited': None,
+                'document_style': None,
+                'date_credited': None,
+                'emergency_rank_id': None,
+                'contractor_signer_name': None,
+                'contractor_signer_nameKZ': None,
+            },
+            {
+                'id': history19_id,
+                'date_from': datetime.datetime(2020, 3, 1),
+                'date_to': datetime.datetime(2021, 3, 31),
+                'user_id': user1_id,
+                'document_link': 'https://www.google.com',
+                'document_number': '№ 12421',
+                'type': "badge_history",
+                'penalty_id': None,
+                'name': '3 history',
+                'position_id': None,  # Add the missing parameter here
+                'rank_id': None,  # Add the missing parameter here
+                'emergency_service_id': None,  # Add the missing parameter here
+                'work_experience_id': None,  # Add the missing parameter here
+                'secondment_id': None,  # Add the missing parameter here
+                'name_change_id': None,  # Add the missing parameter here
+                'attestation_id': None,  # Add the missing parameter here
+                'service_characteristic_id': None,  # Add the missing parameter here
+                'status_id': None,  # Add the missing parameter here
+                'coolness_id': None,  # Add the missing parameter here
+                'contract_id': None,  # МЕНЯТЬ НА contract_id
+                'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+                'experience_years': 5,
+                'characteristic_initiator_id': None,  # МЕНЯТЬ НА characteristic_initiator_id
+                'coefficient': None,
+                'percentage': None,
+                'staff_division_id': None,
+                'name_of_organization': None,
+                'badge_id': badge1_1_id,
+                'is_credited': None,
+                'document_style': None,
+                'date_credited': None,
+                'emergency_rank_id': None,
+                'contractor_signer_name': None,
+                'contractor_signer_nameKZ': None,
+            },
+            {
+                'id': history20_id,
+                'date_from': datetime.datetime(2020, 3, 1),
+                'date_to': datetime.datetime(2021, 3, 31),
+                'user_id': user1_id,
+                'document_link': 'https://www.google.com',
+                'document_number': '№ 12421',
+                'type': "badge_history",
+                'penalty_id': None,
+                'name': '3 history',
+                'position_id': None,  # Add the missing parameter here
+                'rank_id': None,  # Add the missing parameter here
+                'emergency_service_id': None,  # Add the missing parameter here
+                'work_experience_id': None,  # Add the missing parameter here
+                'secondment_id': None,  # Add the missing parameter here
+                'name_change_id': None,  # Add the missing parameter here
+                'attestation_id': None,  # Add the missing parameter here
+                'service_characteristic_id': None,  # Add the missing parameter here
+                'status_id': None,  # Add the missing parameter here
+                'coolness_id': None,  # Add the missing parameter here
+                'contract_id': None,  # МЕНЯТЬ НА contract_id
+                'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+                'experience_years': 5,
+                'characteristic_initiator_id': None,  # МЕНЯТЬ НА characteristic_initiator_id
+                'coefficient': None,
+                'percentage': None,
+                'staff_division_id': None,
+                'name_of_organization': None,
+                'badge_id': badge1_2_id,
+                'is_credited': None,
+                'document_style': None,
+                'date_credited': None,
+                'emergency_rank_id': None,
+                'contractor_signer_name': None,
+                'contractor_signer_nameKZ': None,
+            },
+            {
+                'id': history21_id,
+                'date_from': datetime.datetime(2020, 3, 1),
+                'date_to': datetime.datetime(2021, 3, 31),
+                'user_id': user1_id,
+                'document_link': 'https://www.google.com',
+                'document_number': '№ 12421',
+                'type': "badge_history",
+                'penalty_id': None,
+                'name': '3 history',
+                'position_id': None,  # Add the missing parameter here
+                'rank_id': None,  # Add the missing parameter here
+                'emergency_service_id': None,  # Add the missing parameter here
+                'work_experience_id': None,  # Add the missing parameter here
+                'secondment_id': None,  # Add the missing parameter here
+                'name_change_id': None,  # Add the missing parameter here
+                'attestation_id': None,  # Add the missing parameter here
+                'service_characteristic_id': None,  # Add the missing parameter here
+                'status_id': None,  # Add the missing parameter here
+                'coolness_id': None,  # Add the missing parameter here
+                'contract_id': None,  # МЕНЯТЬ НА contract_id
+                'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+                'experience_years': 5,
+                'characteristic_initiator_id': None,  # МЕНЯТЬ НА characteristic_initiator_id
+                'coefficient': None,
+                'percentage': None,
+                'staff_division_id': None,
+                'name_of_organization': None,
+                'badge_id': badge1_3_id,
+                'is_credited': None,
+                'document_style': None,
+                'date_credited': None,
+                'emergency_rank_id': None,
+                'contractor_signer_name': None,
+                'contractor_signer_nameKZ': None,
+            },
+            {
+                'id': history22_id,
+                'date_from': datetime.datetime(2020, 3, 1),
+                'date_to': datetime.datetime(2021, 3, 31),
+                'user_id': user2_id,
+                'document_link': 'https://www.google.com',
+                'document_number': '№ 12421',
+                'type': "badge_history",
+                'penalty_id': None,
+                'name': '3 history',
+                'position_id': None,  # Add the missing parameter here
+                'rank_id': None,  # Add the missing parameter here
+                'emergency_service_id': None,  # Add the missing parameter here
+                'work_experience_id': None,  # Add the missing parameter here
+                'secondment_id': None,  # Add the missing parameter here
+                'name_change_id': None,  # Add the missing parameter here
+                'attestation_id': None,  # Add the missing parameter here
+                'service_characteristic_id': None,  # Add the missing parameter here
+                'status_id': None,  # Add the missing parameter here
+                'coolness_id': None,  # Add the missing parameter here
+                'contract_id': None,  # МЕНЯТЬ НА contract_id
+                'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+                'experience_years': 5,
+                'characteristic_initiator_id': None,  # МЕНЯТЬ НА characteristic_initiator_id
+                'coefficient': None,
+                'percentage': None,
+                'staff_division_id': None,
+                'name_of_organization': None,
+                'badge_id': badge2_1_id,
+                'is_credited': None,
+                'document_style': None,
+                'date_credited': None,
+                'emergency_rank_id': None,
+                'contractor_signer_name': None,
+                'contractor_signer_nameKZ': None,
+            },
+            {
+                'id': history23_id,
+                'date_from': datetime.datetime(2020, 3, 1),
+                'date_to': datetime.datetime(2021, 3, 31),
+                'user_id': user2_id,
+                'document_link': 'https://www.google.com',
+                'document_number': '№ 12421',
+                'type': "badge_history",
+                'penalty_id': None,
+                'name': '3 history',
+                'position_id': None,  # Add the missing parameter here
+                'rank_id': None,  # Add the missing parameter here
+                'emergency_service_id': None,  # Add the missing parameter here
+                'work_experience_id': None,  # Add the missing parameter here
+                'secondment_id': None,  # Add the missing parameter here
+                'name_change_id': None,  # Add the missing parameter here
+                'attestation_id': None,  # Add the missing parameter here
+                'service_characteristic_id': None,  # Add the missing parameter here
+                'status_id': None,  # Add the missing parameter here
+                'coolness_id': None,  # Add the missing parameter here
+                'contract_id': None,  # МЕНЯТЬ НА contract_id
+                'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+                'experience_years': 5,
+                'characteristic_initiator_id': None,  # МЕНЯТЬ НА characteristic_initiator_id
+                'coefficient': None,
+                'percentage': None,
+                'staff_division_id': None,
+                'name_of_organization': None,
+                'badge_id': badge2_2_id,
+                'is_credited': None,
+                'document_style': None,
+                'date_credited': None,
+                'emergency_rank_id': None,
+                'contractor_signer_name': None,
+                'contractor_signer_nameKZ': None,
+            },
+            {
+                'id': history24_id,
+                'date_from': datetime.datetime(2020, 3, 1),
+                'date_to': datetime.datetime(2021, 3, 31),
+                'user_id': user2_id,
+                'document_link': 'https://www.google.com',
+                'document_number': '№ 12421',
+                'type': "badge_history",
+                'penalty_id': None,
+                'name': '3 history',
+                'position_id': None,  # Add the missing parameter here
+                'rank_id': None,  # Add the missing parameter here
+                'emergency_service_id': None,  # Add the missing parameter here
+                'work_experience_id': None,  # Add the missing parameter here
+                'secondment_id': None,  # Add the missing parameter here
+                'name_change_id': None,  # Add the missing parameter here
+                'attestation_id': None,  # Add the missing parameter here
+                'service_characteristic_id': None,  # Add the missing parameter here
+                'status_id': None,  # Add the missing parameter here
+                'coolness_id': None,  # Add the missing parameter here
+                'contract_id': None,  # МЕНЯТЬ НА contract_id
+                'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+                'experience_years': 5,
+                'characteristic_initiator_id': None,  # МЕНЯТЬ НА characteristic_initiator_id
+                'coefficient': None,
+                'percentage': None,
+                'staff_division_id': None,
+                'name_of_organization': None,
+                'badge_id': badge2_3_id,
+                'is_credited': None,
+                'document_style': None,
+                'date_credited': None,
+                'emergency_rank_id': None,
+                'contractor_signer_name': None,
+                'contractor_signer_nameKZ': None,
+            },{
+                'id': history25_id,
+                'date_from': datetime.datetime(2020, 3, 1),
+                'date_to': datetime.datetime(2021, 3, 31),
+                'user_id': user3_id,
+                'document_link': 'https://www.google.com',
+                'document_number': '№ 12421',
+                'type': "badge_history",
+                'penalty_id': None,
+                'name': '3 history',
+                'position_id': None,  # Add the missing parameter here
+                'rank_id': None,  # Add the missing parameter here
+                'emergency_service_id': None,  # Add the missing parameter here
+                'work_experience_id': None,  # Add the missing parameter here
+                'secondment_id': None,  # Add the missing parameter here
+                'name_change_id': None,  # Add the missing parameter here
+                'attestation_id': None,  # Add the missing parameter here
+                'service_characteristic_id': None,  # Add the missing parameter here
+                'status_id': None,  # Add the missing parameter here
+                'coolness_id': None,  # Add the missing parameter here
+                'contract_id': None,  # МЕНЯТЬ НА contract_id
+                'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+                'experience_years': 5,
+                'characteristic_initiator_id': None,  # МЕНЯТЬ НА characteristic_initiator_id
+                'coefficient': None,
+                'percentage': None,
+                'staff_division_id': None,
+                'name_of_organization': None,
+                'badge_id': badge3_1_id,
+                'is_credited': None,
+                'document_style': None,
+                'date_credited': None,
+                'emergency_rank_id': None,
+                'contractor_signer_name': None,
+                'contractor_signer_nameKZ': None,
+            },{
+                'id': history26_id,
+                'date_from': datetime.datetime(2020, 3, 1),
+                'date_to': datetime.datetime(2021, 3, 31),
+                'user_id': user3_id,
+                'document_link': 'https://www.google.com',
+                'document_number': '№ 12421',
+                'type': "badge_history",
+                'penalty_id': None,
+                'name': '3 history',
+                'position_id': None,  # Add the missing parameter here
+                'rank_id': None,  # Add the missing parameter here
+                'emergency_service_id': None,  # Add the missing parameter here
+                'work_experience_id': None,  # Add the missing parameter here
+                'secondment_id': None,  # Add the missing parameter here
+                'name_change_id': None,  # Add the missing parameter here
+                'attestation_id': None,  # Add the missing parameter here
+                'service_characteristic_id': None,  # Add the missing parameter here
+                'status_id': None,  # Add the missing parameter here
+                'coolness_id': None,  # Add the missing parameter here
+                'contract_id': None,  # МЕНЯТЬ НА contract_id
+                'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+                'experience_years': 5,
+                'characteristic_initiator_id': None,  # МЕНЯТЬ НА characteristic_initiator_id
+                'coefficient': None,
+                'percentage': None,
+                'staff_division_id': None,
+                'name_of_organization': None,
+                'badge_id': badge3_2_id,
+                'is_credited': None,
+                'document_style': None,
+                'date_credited': None,
+                'emergency_rank_id': None,
+                'contractor_signer_name': None,
+                'contractor_signer_nameKZ': None,
+            },{
+                'id': history27_id,
+                'date_from': datetime.datetime(2020, 3, 1),
+                'date_to': datetime.datetime(2021, 3, 31),
+                'user_id': user3_id,
+                'document_link': 'https://www.google.com',
+                'document_number': '№ 12421',
+                'type': "badge_history",
+                'penalty_id': None,
+                'name': '3 history',
+                'position_id': None,  # Add the missing parameter here
+                'rank_id': None,  # Add the missing parameter here
+                'emergency_service_id': None,  # Add the missing parameter here
+                'work_experience_id': None,  # Add the missing parameter here
+                'secondment_id': None,  # Add the missing parameter here
+                'name_change_id': None,  # Add the missing parameter here
+                'attestation_id': None,  # Add the missing parameter here
+                'service_characteristic_id': None,  # Add the missing parameter here
+                'status_id': None,  # Add the missing parameter here
+                'coolness_id': None,  # Add the missing parameter here
+                'contract_id': None,  # МЕНЯТЬ НА contract_id
+                'attestation_status': None,  # МЕНЯТЬ НА attestation_status
+                'experience_years': 5,
+                'characteristic_initiator_id': None,  # МЕНЯТЬ НА characteristic_initiator_id
+                'coefficient': None,
+                'percentage': None,
+                'staff_division_id': None,
+                'name_of_organization': None,
+                'badge_id': badge3_3_id,
                 'is_credited': None,
                 'document_style': None,
                 'date_credited': None,
