@@ -238,6 +238,10 @@ def create_candidate_stage_info(candidate_id,
 def upgrade() -> None:
     badgetype1_id = get_uuid()
     badgetype2_id = get_uuid()
+    badgetype3_id = get_uuid()
+    badgetype4_id = get_uuid()
+    badgetype5_id = get_uuid()
+    badgetype6_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['badge_types'],
@@ -251,6 +255,26 @@ def upgrade() -> None:
             "name": "Службе 20 лет",
             "nameKZ": "Қызметке 20 жыл",
             "url": "http://192.168.0.169:8083/static/danya.jpg"
+        }, {
+            "id": badgetype3_id,
+            "name": "Нагрудный знак 'Ұлттық ұлан қызметінің үздігі'",
+            "nameKZ": "'Ұлттық ұлан қызметінің үздігі' төсбелгісі",
+            "url": "http://192.168.0.169:8083/static/badge1.png"
+        }, {
+            "id": badgetype4_id,
+            "name": "Нагрудный знак 'Құрметті шекарашы'",
+            "nameKZ": "'Құрметті шекарашы' төсбелгісі",
+            "url": "http://192.168.0.169:8083/static/badge2.png"
+        }, {
+            "id": badgetype5_id,
+            "name": "'Отличник Пограничной службы' 2 степени",
+            "nameKZ": "2 дәрежелі 'Шекара қызметінің үздігі'",
+            "url": "http://192.168.0.169:8083/static/badge3.png"
+        }, {
+            "id": badgetype6_id,
+            "name": "МЕДАЛЬ 'МВД РК'",
+            "nameKZ": "МЕДАЛЬ 'МВД РК'",
+            "url": "http://192.168.0.169:8083/static/badge4.png"
         }]
     )
 
@@ -3935,13 +3959,7 @@ def upgrade() -> None:
                 }
             },
             'actions': {'args': [
-                {
-                    'apply_archive_position': {
-                        'staff_unit': {
-                            'tagname': 'staff_unit'
-                        }
-                    }
-                }
+
             ]},
             'id': template9_id
         }]
@@ -4246,13 +4264,62 @@ def upgrade() -> None:
     )
 
     badge_id = get_uuid()
+    badge1_1_id = get_uuid()
+    badge1_2_id = get_uuid()
+    badge1_3_id = get_uuid()
+    
+    badge2_1_id = get_uuid()
+    badge2_2_id = get_uuid()
+    badge2_3_id = get_uuid()
+    
+    badge3_1_id = get_uuid()
+    badge3_2_id = get_uuid()
+    badge3_3_id = get_uuid()
+    
     op.bulk_insert(
         Base.metadata.tables['badges'],
         [{
             'id': badge_id,
             'user_id': user1_id,
             'type_id': badgetype1_id
-        }])
+        }, {
+            'id': badge1_1_id,
+            'user_id': user1_id,
+            'type_id': badgetype3_id
+        }, {
+            'id': badge1_2_id,
+            'user_id': user1_id,
+            'type_id': badgetype4_id
+        }, {
+            'id': badge1_3_id,
+            'user_id': user1_id,
+            'type_id': badgetype5_id
+        }, {
+            'id': badge2_1_id,
+            'user_id': user2_id,
+            'type_id': badgetype4_id
+        }, {
+            'id': badge2_2_id,
+            'user_id': user2_id,
+            'type_id': badgetype5_id
+        }, {
+            'id': badge2_3_id,
+            'user_id': user2_id,
+            'type_id': badgetype6_id
+        }, {
+            'id': badge3_1_id,
+            'user_id': user3_id,
+            'type_id': badgetype3_id
+        }, {
+            'id': badge3_2_id,
+            'user_id': user3_id,
+            'type_id': badgetype4_id
+        }, {
+            'id': badge3_3_id,
+            'user_id': user3_id,
+            'type_id': badgetype6_id
+        }, ]
+    )
 
     type_army_equipment_id = get_uuid()
     type_army_equipment2_id = get_uuid()

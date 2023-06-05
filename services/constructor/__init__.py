@@ -25,7 +25,6 @@ from .position_change import handler as position_change_handler
 from .confirm_coolness import handler as confirm_coolness_handler
 from .apply_staff_list import handler as apply_staff_list_handler
 from .superdoc import handler as superdoc_handler
-from .apply_archive_position import handler as apply_archive_position_handler
 from .grant_leave import handler as grant_leave_handler
 from .sick_leave import handler as sick_leave_handler
 from .stop_leave import handler as stop_leave_handler

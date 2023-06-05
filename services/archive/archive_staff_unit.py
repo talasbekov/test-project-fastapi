@@ -8,9 +8,9 @@ from schemas import ArchiveStaffUnitCreate, ArchiveStaffUnitUpdate, ArchiveStaff
     NewArchiveStaffUnitCreate, NewArchiveStaffUnitUpdate
 from services import (
     service_staff_function_service,
-    document_staff_function_service
+    document_staff_function_service,
+    position_service
 )
-from .archive_position import archive_position_service
 
 from services.base import ServiceBase
 
@@ -139,14 +139,13 @@ class ArchiveStaffUnitService(
             db: Session,
             staff_unit: StaffUnit,
             user_id: uuid.UUID,
+            position_id: uuid.UUID,
             staff_unit_form: str,
             actual_user_id: uuid.UUID,
             user_replacing_id: uuid.UUID,
             archive_staff_division: ArchiveStaffDivision):
-        position = archive_position_service.get_by_origin_id(
-            db, staff_unit.position_id)
         return super().create(db, ArchiveStaffUnitCreate(
-            position_id=position.id,
+            position_id=position_id,
             staff_division_id=archive_staff_division.id,
             user_id=user_id,
             form=staff_unit_form,
@@ -186,7 +185,7 @@ class ArchiveStaffUnitService(
                 origin_id=staff_unit.origin_id))
 
     def _validate_archive_staff_poition(self, db: Session, position_id: uuid.UUID):
-        archive_position_service.get_by_id(db, position_id)
+        position_service.get_by_id(db, position_id)
 
     def get_service_staff_functions(
             self, db: Session, staff_unit_id: uuid.UUID):
