@@ -11,7 +11,7 @@ class PolygraphCheckBase(Model):
     number: str
     issued_by: str
     date_of_issue: datetime
-    document_link: AnyUrl
+    document_link: Optional[AnyUrl]
     
     class Config:
         orm_mode = True

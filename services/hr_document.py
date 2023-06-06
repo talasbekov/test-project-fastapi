@@ -147,6 +147,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             .limit(limit)
             .all()
         )
+        
         return self._return_correctly(db, documents, user)
 
     def get_not_signed_documents(
@@ -378,7 +379,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 due_date=body.due_date,
                 properties=body.properties,
                 parent_id=parent_id,
-                initial_commit=body.initial_comment,
+                initial_comment=body.initial_comment,
                 initialized_at=datetime.now(),
             ),
         )
@@ -881,7 +882,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             for action_name in list(action.keys()):
                 new_val.append({f'{action_name}': handlers[action_name].handle_response(db, action[action_name],
                                                                                         properties)})
-
         response.new_value = new_val
 
         return response
@@ -931,9 +931,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             if i.id not in s:
                 s.add(i.id)
                 if len(i.users) > 0:
-                    subject = i.users[0]
-                    if self._check_for_department(db, user, subject):
-                        l.append(self._to_response(db, i))
+                    l.append(self._to_response(db, i))
                 else:
                     l.append(self._to_response_super_doc(db, i))
 

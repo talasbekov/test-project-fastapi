@@ -13,7 +13,7 @@ class AcademicTitleBase(BaseModel):
     degree_id: Optional[uuid.UUID]
     specialty_id: Optional[uuid.UUID]
     document_number: str
-    document_link: AnyUrl
+    document_link: Optional[AnyUrl]
     assignment_date: Optional[datetime.date]
 
 

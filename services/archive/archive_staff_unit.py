@@ -140,7 +140,6 @@ class ArchiveStaffUnitService(
             staff_unit: StaffUnit,
             user_id: uuid.UUID,
             position_id: uuid.UUID,
-            staff_unit_form: str,
             actual_user_id: uuid.UUID,
             user_replacing_id: uuid.UUID,
             archive_staff_division: ArchiveStaffDivision):
@@ -148,8 +147,7 @@ class ArchiveStaffUnitService(
             position_id=position_id,
             staff_division_id=archive_staff_division.id,
             user_id=user_id,
-            form=staff_unit_form,
-            actual_user_id=user_id,
+            actual_user_id=actual_user_id,
             user_replacing_id=user_replacing_id,
             origin_id=staff_unit.id
         ))
@@ -160,7 +158,6 @@ class ArchiveStaffUnitService(
             position_id=body.position_id,
             staff_division_id=body.staff_division_id,
             user_id=body.user_id,
-            form=body.form,
             actual_user_id=body.actual_user_id,
             user_replacing_id=body.user_replacing_id,
             origin_id=None
@@ -179,7 +176,6 @@ class ArchiveStaffUnitService(
                 position_id=body.position_id,
                 staff_division_id=body.staff_division_id,
                 user_id=body.user_id,
-                form=body.form,
                 actual_user_id=body.actual_user_id,
                 user_replacing_id=body.user_replacing_id,
                 origin_id=staff_unit.origin_id))
