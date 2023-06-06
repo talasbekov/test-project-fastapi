@@ -931,9 +931,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             if i.id not in s:
                 s.add(i.id)
                 if len(i.users) > 0:
-                    subject = i.users[0]
-                    if self._check_for_department(db, user, subject):
-                        l.append(self._to_response(db, i))
+                    l.append(self._to_response(db, i))
                 else:
                     l.append(self._to_response_super_doc(db, i))
 
