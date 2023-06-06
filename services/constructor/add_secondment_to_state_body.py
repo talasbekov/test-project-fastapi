@@ -51,12 +51,12 @@ class AddSecondmentToStateBody(BaseHandler):
 
     def get_args(self, action, properties):
         try:
-            secondment_id = properties[action["secondment"]["tagname"]]["value"]
+            state_body_id = properties[action["state_body"]["tagname"]]["value"]
             date_from = convert_str_to_datetime(properties[action["date_from"]["tagname"]]['name'])
             date_to = convert_str_to_datetime(properties[action["date_to"]["tagname"]]['name'])
         except KeyError:
-            raise ForbiddenException(f"Secondment is not defined for this action: {self.__handler__}")
-        return secondment_id, date_from, date_to
+            raise ForbiddenException(f"StateBody is not defined for this action: {self.__handler__}")
+        return state_body_id, date_from, date_to
 
     def handle_response(
         self,
@@ -65,8 +65,8 @@ class AddSecondmentToStateBody(BaseHandler):
         action: dict,
         properties: dict
     ):
-        secondment_id, date_from, date_to = self.get_args(action, properties)
-        state_body = state_body_service.get_by_id(db, secondment_id)
+        state_body_id, date_from, date_to = self.get_args(action, properties)
+        state_body = state_body_service.get_by_id(db, state_body_id)
         return {state_body, date_from, date_to}
 
 
