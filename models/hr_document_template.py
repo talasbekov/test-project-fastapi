@@ -36,8 +36,8 @@ class HrDocumentTemplate(NamedModel, isActiveModel):
     actions = Column(JSON(none_as_null=True))
     maintainer_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"))
     is_visible = Column(Boolean(), default=True)
-    # is_due_date_required = Column(Boolean(), default=False)
-    # is_initial_comment_required = Column(Boolean(), default=False)
+    is_due_date_required = Column(Boolean(), default=False)
+    is_initial_comment_required = Column(Boolean(), default=False)
 
     # Relationships
     documents = relationship("HrDocument", cascade="all,delete", back_populates="document_template")

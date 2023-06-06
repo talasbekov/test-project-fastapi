@@ -82,10 +82,13 @@ class StopLeaveHandler(BaseHandler):
         )
 
     def handle_response(self, db: Session,
+                        user: User,
                         action: dict,
                         properties: dict,
                         ):
-        return None
+        statuses = status_service.get_active_status_of_user(db, user.id, StatusEnum.ROOT.value)
+        status = statuses[0]
+        return status
 
 
 handler = StopLeaveHandler()

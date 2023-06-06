@@ -62,6 +62,7 @@ class SickLeaveHandler(BaseHandler):
         return date_from, date_to
 
     def handle_response(self, db: Session,
+                        user: User,
                         action: dict,
                         properties: dict,
                         ):
