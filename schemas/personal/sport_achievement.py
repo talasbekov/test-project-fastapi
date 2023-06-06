@@ -11,7 +11,7 @@ from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 class SportAchievementBase(NamedModel):
     assignment_date: datetime.date
     sport_type_id: uuid.UUID
-    document_link: AnyUrl
+    document_link: Optional[AnyUrl]
     profile_id: uuid.UUID
 
     class Config:

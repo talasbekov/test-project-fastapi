@@ -14,7 +14,7 @@ class DrivingLicenseBase(BaseModel):
     category: List[str]
     date_of_issue: datetime.date
     date_to: datetime.date
-    document_link: AnyUrl
+    document_link: Optional[AnyUrl]
     profile_id: uuid.UUID
 
 

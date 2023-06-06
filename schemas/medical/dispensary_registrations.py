@@ -11,7 +11,7 @@ class DispensaryRegistrationBase(NamedModel):
     initiator: str
     start_date: datetime.datetime
     end_date: datetime.datetime
-    document_link: AnyUrl
+    document_link: Optional[AnyUrl]
     profile_id: uuid.UUID
 
 
