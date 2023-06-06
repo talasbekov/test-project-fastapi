@@ -495,7 +495,7 @@ async def get_all_actions():
         },
     },
     {
-        'action_name': "Добавление Откомандирования",
+        'action_name': "Добавление откомандирования",
         'action_nameKZ': "Іссапарды қосу",
         'action_type': 'add_secondment_to_state_body',
         'children': [
