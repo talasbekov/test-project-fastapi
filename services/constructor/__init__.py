@@ -5,6 +5,7 @@ from .add_black_beret import handler as add_black_beret_handler
 from .add_coolness import handler as add_coolness_handler
 from .add_penalty import handler as add_penalty_handler
 from .add_secondment import handler as add_secondment_handler
+from .add_secondment_to_state_body import handler as add_secondment_to_state_body
 
 from .decrease_coolness import handler as decrease_coolness_handler
 from .decrease_rank import handler as decrease_rank_handler
