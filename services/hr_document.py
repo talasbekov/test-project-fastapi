@@ -147,6 +147,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             .limit(limit)
             .all()
         )
+        
         return self._return_correctly(db, documents, user)
 
     def get_not_signed_documents(
@@ -881,7 +882,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             for action_name in list(action.keys()):
                 new_val.append({f'{action_name}': handlers[action_name].handle_response(db, action[action_name],
                                                                                         properties)})
-
         response.new_value = new_val
 
         return response
