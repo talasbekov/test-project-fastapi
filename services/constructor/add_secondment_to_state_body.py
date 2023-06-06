@@ -61,6 +61,7 @@ class AddSecondmentToStateBody(BaseHandler):
     def handle_response(
         self,
         db: Session,
+        user: User,
         action: dict,
         properties: dict
     ):
