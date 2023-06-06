@@ -178,7 +178,8 @@ class ArchiveStaffUnitService(
                 user_id=body.user_id,
                 actual_user_id=body.actual_user_id,
                 user_replacing_id=body.user_replacing_id,
-                origin_id=staff_unit.origin_id))
+                origin_id=staff_unit.origin_id,
+                requirements=body.requirements))
 
     def _validate_archive_staff_poition(self, db: Session, position_id: uuid.UUID):
         position_service.get_by_id(db, position_id)
