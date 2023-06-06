@@ -124,6 +124,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
     def get_initialized_documents(self, db: Session, user_id: uuid.UUID, parent_id: uuid.UUID, filter: str, skip: int,
                                   limit: int):
+        print('get_initialized_documents')
         user = user_service.get_by_id(db, user_id)
         documents = (
             db.query(self.model)
@@ -147,6 +148,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             .limit(limit)
             .all()
         )
+        
+        print(f"documents: {documents}")
         return self._return_correctly(db, documents, user)
 
     def get_not_signed_documents(
@@ -869,6 +872,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
     # TODO
     def _to_response(self, db: Session, document: HrDocument) -> HrDocumentRead:
         response = HrDocumentRead.from_orm(document)
+        print(f"document.last_step.staff_function.role.can_cancel: {document.last_step.staff_function.role.can_cancel}")
         if document.last_step_id is not None:
             response.can_cancel = document.last_step.staff_function.role.can_cancel
 
@@ -876,12 +880,13 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         properties = document.properties
         actions = document.document_template.actions['args']
+        print(f"actions: {actions}")
 
         for action in actions:
             for action_name in list(action.keys()):
                 new_val.append({f'{action_name}': handlers[action_name].handle_response(db, action[action_name],
                                                                                         properties)})
-
+        print(f"new_val: {new_val}")
         response.new_value = new_val
 
         return response
@@ -931,6 +936,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             if i.id not in s:
                 s.add(i.id)
                 if len(i.users) > 0:
+                    print(f"i.users", i.users)
                     l.append(self._to_response(db, i))
                 else:
                     l.append(self._to_response_super_doc(db, i))
