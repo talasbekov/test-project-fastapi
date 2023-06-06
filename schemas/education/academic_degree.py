@@ -15,7 +15,7 @@ class AcademicDegreeBase(BaseModel):
     science_id: uuid.UUID
     specialty_id: uuid.UUID
     document_number: str
-    document_link: AnyUrl
+    document_link: Optional[AnyUrl]
     assignment_date: date
 
     class Config:

@@ -13,7 +13,7 @@ class CourseBase(NamedModel):
     course_provider_id: Optional[uuid.UUID]
     start_date: Optional[datetime.date]
     end_date: Optional[datetime.date]
-    document_link: AnyUrl
+    document_link: Optional[AnyUrl]
 
     class Config:
         orm_mode = True
