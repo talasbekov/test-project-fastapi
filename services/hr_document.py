@@ -147,7 +147,6 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             .limit(limit)
             .all()
         )
-        
         return self._return_correctly(db, documents, user)
 
     def get_not_signed_documents(
