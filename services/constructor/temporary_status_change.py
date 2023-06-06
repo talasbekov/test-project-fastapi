@@ -71,6 +71,7 @@ class TemporaryStatusChangeHandler(BaseHandler):
         return status_id, date_from, date_to
 
     def handle_response(self, db: Session,
+                        user: User,
                         action: dict,
                         properties: dict,
                         ):

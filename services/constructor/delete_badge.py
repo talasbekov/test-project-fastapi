@@ -59,6 +59,7 @@ class DeleteBadgeHandler(BaseHandler):
         return badge_id
 
     def handle_response(self, db: Session,
+                        user: User,
                         action: dict,
                         properties: dict,
                         ):

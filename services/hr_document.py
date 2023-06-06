@@ -880,8 +880,9 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         for action in actions:
             for action_name in list(action.keys()):
-                new_val.append({f'{action_name}': handlers[action_name].handle_response(db, action[action_name],
-                                                                                        properties)})
+                new_val.append({f'{action_name}': handlers[action_name].handle_response(
+                    db, document.users[0], action[action_name], properties)})
+
         response.new_value = new_val
 
         return response
