@@ -6,7 +6,7 @@ from pydantic import AnyUrl, BaseModel
 
 from .institution import InstitutionRead
 from .institution_degree_type import InstitutionDegreeTypeRead
- 
+
 from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 
@@ -16,7 +16,7 @@ class EducationBase(Model):
     degree_id: Optional[uuid.UUID]
     start_date: Optional[datetime.date]
     end_date: Optional[datetime.date]
-    document_link: AnyUrl
+    document_link: Optional[AnyUrl]
     is_military_school: Optional[bool]
     specialty_id: Optional[uuid.UUID]
     type_of_top: Optional[str]

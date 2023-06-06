@@ -10,7 +10,7 @@ class IdentificationCardBase(BaseModel):
     date_of_issue: datetime.date
     date_to: datetime.date
     issued_by: str
-    document_link: AnyUrl
+    document_link: Optional[AnyUrl]
     profile_id: uuid.UUID
 
 

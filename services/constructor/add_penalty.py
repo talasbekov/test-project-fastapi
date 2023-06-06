@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from core import configs
 from models import User, HrDocument
 from .base import BaseHandler
-from services import penalty_service, history_service
+from services import penalty_service, history_service, penalty_type_service
 from exceptions import ForbiddenException
 
 from utils import convert_str_to_datetime
@@ -62,7 +62,7 @@ class AddPenaltyHandler(BaseHandler):
                         properties: dict,
     ):
         args = self.get_args(action, properties)
-        obj = penalty_service.get_by_id(db, args).type
+        obj = penalty_type_service.get_by_id(db, args).name
         return obj
 
 
