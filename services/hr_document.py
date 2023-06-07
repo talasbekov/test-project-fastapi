@@ -165,8 +165,11 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                     self.model.status_id != revision_status.id,
                     self.model.parent_id == parent_id)
             .join(HrDocumentStep)
-            .join(HrDocumentInfo, and_(HrDocumentInfo.hr_document_step_id == HrDocumentStep.id,
-                                       HrDocumentInfo.assigned_to_id == user_id, HrDocumentInfo.signed_by_id == None))
+            .join(self.model.hr_document_infos)
+            .filter(
+                HrDocumentInfo.hr_document_step_id == HrDocumentStep.id,
+                HrDocumentInfo.assigned_to_id == user_id,
+                HrDocumentInfo.signed_by_id == None)
         )
 
         if filter != '':
