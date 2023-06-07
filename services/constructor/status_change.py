@@ -33,7 +33,8 @@ class StatusChangeHandler(BaseHandler):
     ):
         status_id = self.get_args(action, props)
 
-        self.handle_validation(db, user, action, template_props, props, document)
+        self.handle_validation(
+            db, user, action, template_props, props, document)
 
         if status_id in archive_status:
             staff_unit = staff_unit_service.existing_or_create(db, status_id)
@@ -78,7 +79,8 @@ class StatusChangeHandler(BaseHandler):
         try:
             status_id = props[action['status']['tagname']]['value']
         except Exception as e:
-            raise ForbiddenException(detail=f'Invalid props for action: {self.__handler__}')
+            raise ForbiddenException(
+                detail=f'Invalid props for action: {self.__handler__}')
         return status_id
 
     def handle_response(self, db: Session,
@@ -86,7 +88,7 @@ class StatusChangeHandler(BaseHandler):
                         action: dict,
                         properties: dict,
                         ):
-        status_id = self.get_args(db, action, properties)
+        status_id = self.get_args(action, properties)
         status = status_service.get_object(db, status_id, 'write')
         return status
 
