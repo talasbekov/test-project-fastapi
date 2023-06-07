@@ -94,13 +94,13 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
         return users
 
-    def get_all_active(self, db: Session, filter: str, skip: int, limit: int) -> List[User]:
-        users = self._get_users_by_filter_is_active(db, filter, skip, limit, True)
+    def get_all_active(self, db: Session, filter: str, skip: int, limit: int, user_id: str) -> List[User]:
+        users = self._get_users_by_filter_is_active(db, filter, skip, limit, True, user_id)
 
         return users
 
-    def get_all_archived(self, db: Session, filter: str, skip: int, limit: int) -> List[User]:
-        users = self._get_users_by_filter_is_active(db, filter, skip, limit, False)
+    def get_all_archived(self, db: Session, filter: str, skip: int, limit: int, user_id: str) -> List[User]:
+        users = self._get_users_by_filter_is_active(db, filter, skip, limit, False, user_id)
 
         return users
 
@@ -312,11 +312,18 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
         return users
 
-    def _get_users_by_filter_is_active(self, db: Session, filter: Optional[str], skip: int, limit: int, is_active: bool)\
-            -> List[User]:
+    def _get_users_by_filter_is_active(self, 
+                                        db: Session,
+                                        filter: Optional[str], 
+                                        skip: int,
+                                        limit: int, 
+                                        is_active: bool,
+                                        user_id: str) -> List[User]:
         users = (
             db.query(self.model)
-            .filter(self.model.is_active.is_(is_active))
+            .filter(self.model.is_active.is_(is_active),
+                    self.model.id != user_id
+            )
         )
 
         if filter != '':

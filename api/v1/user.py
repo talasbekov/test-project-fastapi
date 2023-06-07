@@ -24,8 +24,9 @@ async def get_all(
     limit: int = 10
 ):
     """
-     Get all Users
-     - **hr_document_template_id**: str - The value which returns filtered results by hr_document_template_id. This parameter is optional and defaults to None
+    Get all Users
+    
+    - **hr_document_template_id**: str - The value which returns filtered results by hr_document_template_id. This parameter is optional and defaults to None
     - **filter**: str - The value which returns filtered results. This parameter is optional and defaults to None
     - **skip**: int - The number of users to skip before returning the results. This parameter is optional and defaults to 0.
     - **limit**: int - The maximum number of users to return in response. This parameter is optional and defaults to 10.
@@ -45,7 +46,8 @@ async def get_all_archived(
     - **limit**: int - The maximum number of users to return in response. This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
-    return user_service.get_all_archived(db, filter.lstrip().rstrip(), skip, limit)
+    user_id = Authorize.get_jwt_subject()
+    return user_service.get_all_archived(db, filter.lstrip().rstrip(), skip, limit, user_id)
 
 
 @router.get("/active", dependencies=[Depends(HTTPBearer())], response_model=List[UserRead], summary="Get all Users")
@@ -59,7 +61,8 @@ async def get_all_active(
     - **limit**: int - The maximum number of users to return in response. This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
-    return user_service.get_all_active(db, filter.lstrip().rstrip(), skip, limit)
+    user_id = Authorize.get_jwt_subject()
+    return user_service.get_all_active(db, filter.lstrip().rstrip(), skip, limit, user_id)
 
 
 @router.get(
