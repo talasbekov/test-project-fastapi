@@ -369,10 +369,12 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         document_ids = [function.hr_document_step.hr_document_template_id for function in functions]
         return hr_document_template_service.get_all_skip(db, document_ids, skip, limit)
 
-    def _validate_call_sign(self,db: Session, call_sign: str):
+    def _validate_call_sign(self, db: Session, call_sign: str):
         user = db.query(User).filter(User.call_sign == call_sign).first()
         if user:
-            user_name = user.first_name + " " + user.last_name + " " + user.father_name
+            user_name = (getattr(user, 'first_name', '') + " " +
+                         getattr(user, 'last_name', '') + " " +
+                         getattr(user, 'father_name', ''))
             raise InvalidOperationException(
                 f"call_sign {call_sign} is already assigned to {user_name}!"
             )
