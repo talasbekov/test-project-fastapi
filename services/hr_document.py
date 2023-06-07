@@ -123,30 +123,34 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
     def get_initialized_documents(self, db: Session, user_id: uuid.UUID, parent_id: uuid.UUID, filter: str, skip: int,
                                   limit: int):
-        user = user_service.get_by_id(db, user_id)
-        documents = (
-            db.query(self.model)
-            .join(self.model.hr_document_infos)
-            .join(HrDocumentStep)
-            .join(DocumentStaffFunction)
-            .filter(
-                HrDocumentInfo.assigned_to_id == user_id,
-                DocumentStaffFunction.priority == 1,
-                self.model.parent_id == parent_id,
+        try:
+            user = user_service.get_by_id(db, user_id)
+            documents = (
+                db.query(self.model)
+                .join(self.model.hr_document_infos)
+                .join(HrDocumentStep)
+                .join(DocumentStaffFunction)
+                .filter(
+                    HrDocumentInfo.assigned_to_id == user_id,
+                    DocumentStaffFunction.priority == 1,
+                    self.model.parent_id == parent_id,
+                )
             )
-        )
 
-        if filter != '':
-            documents = self._add_filter_to_query(documents, filter)
+            if filter != '':
+                documents = self._add_filter_to_query(documents, filter)
 
-        documents = (
-            documents
-            .order_by(self.model.initialized_at.desc())
-            .offset(skip)
-            .limit(limit)
-            .all()
-        )
-        return self._return_correctly(db, documents, user)
+            documents = (
+                documents
+                .order_by(self.model.initialized_at.desc())
+                .offset(skip)
+                .limit(limit)
+                .all()
+            )
+            return self._return_correctly(db, documents, user)
+        except Exception as e:
+            logging.exception(e)
+            raise e
 
     def get_not_signed_documents(
             self, db: Session, user_id: str, parent_id: uuid.UUID, filter: str, skip: int, limit: int
