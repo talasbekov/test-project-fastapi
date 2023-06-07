@@ -19,7 +19,7 @@ class ArchiveDocumentStaffFunctionBase(ArchiveStaffFunctionBase):
 
 class ArchiveServiceStaffFunctionBase(ArchiveStaffFunctionBase):
 
-    type_id: uuid.UUID
+    type_id: Optional[uuid.UUID]
 
 
 class ArchiveStaffFunctionCreate(ArchiveStaffFunctionBase):

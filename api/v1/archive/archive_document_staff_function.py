@@ -12,13 +12,13 @@ from schemas import (ArchiveDocumentStaffFunctionRead, ArchiveDocumentStaffFunct
 from services import document_archive_staff_function_service
 
 
-router = APIRouter(prefix="/document_staff_function",
-                   tags=["DocumentStaffFunction"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(prefix="/archive_document_staff_function",
+                   tags=["ArchiveDocumentStaffFunction"], dependencies=[Depends(HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[ArchiveDocumentStaffFunctionRead],
-            summary="Get all DocumentStaffFunction")
+            summary="Get all ArchiveDocumentStaffFunction")
 async def get_all(*,
     db: Session = Depends(get_db),
     skip: int = 0,
@@ -37,7 +37,7 @@ async def get_all(*,
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=ArchiveDocumentStaffFunctionRead,
-            summary="Get DocumentStaffFunction by id")
+            summary="Get ArchiveDocumentStaffFunction by id")
 async def get_by_id(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
@@ -54,7 +54,7 @@ async def get_by_id(*,
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=ArchiveDocumentStaffFunctionRead,
-            summary="Update DocumentStaffFunction")
+            summary="Update ArchiveDocumentStaffFunction")
 async def update(*,
     db: Session = Depends(get_db),
     id: uuid.UUID,
