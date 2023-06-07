@@ -193,6 +193,7 @@ class EmergencyServiceHistory(History):
     
     position_id = Column(UUID(as_uuid=True), ForeignKey("positions.id"), nullable=True)
     position = relationship("Position", foreign_keys=[position_id])
+    reason = Column(String, nullable=True)
 
     staff_division_id = Column(UUID(as_uuid=True), ForeignKey("staff_divisions.id"), nullable=True)
     staff_division = relationship("StaffDivision", foreign_keys=[staff_division_id])
