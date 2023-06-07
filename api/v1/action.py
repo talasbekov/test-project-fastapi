@@ -692,6 +692,12 @@ async def get_all_actions():
                 'tagname': 'percent',
                 'data_taken': 'manual',
                 'data_type': 'number'
+            }, {
+                'alias_name': 'Причина надбавки',
+                'alias_nameKZ': 'Қосымша пайыздың себебі',
+                'tagname': 'reason',
+                'data_taken': 'manual',
+                'data_type': 'string'
             }
         ],
         'properties': {
@@ -708,6 +714,13 @@ async def get_all_actions():
                 'type': 'read',
                 'data_taken': 'manual',
                 'data_type': 'number',
+            },
+            'reason': {
+                'alias_name': 'Причина надбавки',
+                'alias_nameKZ': 'Қосымша пайыздың себебі',
+                'type': 'read',
+                'data_taken': 'manual',
+                'data_type': 'string',
             }
         },
         'actions': {
@@ -719,10 +732,15 @@ async def get_all_actions():
                             'alias_name': 'Новая должность',
                             'alias_nameKZ': 'Жаңа қызмет атауы',
                         },
-                        'percent':{
+                        'percent': {
                             'tagname': 'percent',
                             'alias_name': 'Процент надбавки',
                             'alias_nameKZ': 'Қосымша пайыз',
+                        },
+                        'reason': {
+                            'tagname': 'reason',
+                            'alias_name': 'Причина надбавки',
+                            'alias_nameKZ': 'Қосымша пайыздың себебі',
                         }
                     },
                 },

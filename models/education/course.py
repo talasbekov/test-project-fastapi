@@ -17,4 +17,4 @@ class Course(NamedModel):
 
     start_date = Column(DATE)
     end_date = Column(DATE)
-    document_link = Column(TEXT)
+    document_link = Column(TEXT, nullable=True)
