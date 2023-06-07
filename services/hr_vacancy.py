@@ -1,7 +1,7 @@
 from typing import List
 from sqlalchemy.orm import Session
 
-from exceptions.client import ForbiddenException, NotFoundException
+from exceptions.client import BadRequestException, ForbiddenException, NotFoundException
 from models import (HrVacancy, StaffUnit, StaffDivision,
                     User, PositionNameEnum, HrVacancyCandidate)
 from models.hr_vacancy import HrVacancy
@@ -10,7 +10,6 @@ from schemas import (HrVacancyCreate, HrVacancyUpdate,
                      HrVacancyCandidateRead)
 from .base import ServiceBase
 from .hr_vacancy_requirements import hr_vacancy_requirement_service
-from .position import position_service
 from .staff_unit import staff_unit_service
 from .user import user_service
 from .staff_division import staff_division_service
@@ -128,6 +127,9 @@ class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate])
         if vacancy.is_active is False:
             raise ForbiddenException(f"Vacancy with id {id} is not active!")
         
+        if self._check_exists_respond(db, id, user_id):
+            raise BadRequestException(f"User with id {user_id} already responded to vacancy with id {id}!")
+        
         hr_vacancy_candidate = HrVacancyCandidate(
             user_id=current_user.id,
             hr_vacancy_id=vacancy.id
@@ -136,7 +138,6 @@ class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate])
         db.add(hr_vacancy_candidate)
         db.flush()
         
-        vacancy.candidates.append(hr_vacancy_candidate)
         return vacancy
 
 
@@ -236,5 +237,16 @@ class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate])
         
         return vacancies
     
+    def _check_exists_respond(self, db: Session, id: str, user_id: str) -> bool:
+        respond = (
+            db.query(self.model)\
+            .join(HrVacancyCandidate, HrVacancyCandidate.hr_vacancy_id == self.model.id)\
+            .filter(
+                HrVacancyCandidate.user_id == user_id,
+                HrVacancyCandidate.hr_vacancy_id == id
+            ).first()
+        )
+        
+        return True if respond else False
 
 hr_vacancy_service = HrVacancyService(HrVacancy)
