@@ -1234,12 +1234,12 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         last_step = hr_document_step_service.get_last_step_document_template_id(
             db, document.hr_document_template_id)
 
-        last_info = hr_document_info_service.find_by_document_id_and_step_id(
+        last_info = hr_document_info_service.find_by_document_id_and_step_id_signed(
             db, document.id, last_step.id)
 
         if last_info is not None and last_info.signed_at is not None:
             context['approving_rank'] = last_info.signed_by.rank.name
-            context['approving_name'] = f"{last_info.signed_by.name} {last_info.signed_by.last_name} {last_info.signed_by.father_name}"
+            context['approving_name'] = f"{last_info.signed_by.first_name} {last_info.signed_by.last_name} {last_info.signed_by.father_name}"
 
         return template.render(context), document_template.name
 
