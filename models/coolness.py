@@ -8,9 +8,9 @@ from enum import Enum as EnumBase
 
 
 class SpecialtyEnum(EnumBase):
-    specialty1 = "Специалист 1 класса - наставник (мастер)"
-    specialty2 = "Специалист 2 класса - наставник (мастер)"
-    specialty3 = "Специалист 3 класса - наставник (мастер)"
+    specialty1 = "Специалист 1 класса"
+    specialty2 = "Специалист 2 класса"
+    specialty3 = "Специалист 3 класса"
 
 class CoolnessStatusEnum(EnumBase):
     granted = "Выдан"

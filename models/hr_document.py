@@ -34,8 +34,6 @@ class HrDocument(Model):
     initial_comment = Column(TEXT(), nullable=True)
     status_id = Column(UUID(as_uuid=True), ForeignKey("hr_document_statuses.id"))
 
-    
-
     last_step_id = Column(UUID(as_uuid=True), ForeignKey("hr_document_steps.id"))
     old_history_id = Column(UUID(as_uuid=True), ForeignKey("histories.id"))
 
