@@ -22,7 +22,8 @@ class DeleteBadgeHandler(BaseHandler):
             document: HrDocument,
     ):
         badge_id = self.get_args(action, props)
-        self.handle_validation(db, user, action, template_props, props, document)
+        self.handle_validation(
+            db, user, action, template_props, props, document)
         res = badge_service.stop_relation(db, user.id, badge_id)
         document.old_history_id = res.id
         res.cancel_document_link = configs.GENERATE_IP + str(document.id)
@@ -55,7 +56,8 @@ class DeleteBadgeHandler(BaseHandler):
         try:
             badge_id = properties[action["badge"]["tagname"]]["value"]
         except KeyError:
-            raise ForbiddenException(f"Badge is not defined for this action: {self.__handler__}")
+            raise ForbiddenException(
+                f"Badge is not defined for this action: {self.__handler__}")
         return badge_id
 
     def handle_response(self, db: Session,
@@ -63,7 +65,10 @@ class DeleteBadgeHandler(BaseHandler):
                         action: dict,
                         properties: dict,
                         ):
-        return None
+        badge_id = self.get_args(action, properties)
+        badge_type_id = badge_service.get_by_id(db, badge_id).type_id
+        badge_type = badge_service.get_badge_by_id(db, badge_type_id)
+        return badge_type
 
 
 handler = DeleteBadgeHandler()

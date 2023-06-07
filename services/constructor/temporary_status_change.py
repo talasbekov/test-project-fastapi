@@ -24,12 +24,14 @@ class TemporaryStatusChangeHandler(BaseHandler):
     ):
         status_id, date_from, date_to = self.get_args(db, action, props)
 
-        self.handle_validation(db, user, action, template_props, props, document)
+        self.handle_validation(
+            db, user, action, template_props, props, document)
 
         res = status_service.create_relation(db, user.id, status_id)
         history = history_service.create_timeline_history(
-            db, user.id, res, convert_str_to_datetime(props[date_from]['name']),
-            convert_str_to_datetime(props[date_to]['name'])
+            db, user.id, res, 
+            convert_str_to_datetime(props[action['date_from']['tagname']]['name']),
+            convert_str_to_datetime(props[action['date_to']['tagname']]['name'])
         )
 
         history.document_link = configs.GENERATE_IP + str(document.id)
@@ -61,8 +63,10 @@ class TemporaryStatusChangeHandler(BaseHandler):
     ):
         try:
             status_id = props[action["status"]["tagname"]]["value"]
-            date_from = action["date_from"]["tagname"]
-            date_to = action["date_to"]["tagname"]
+            date_from = convert_str_to_datetime(
+                props[action['date_from']['tagname']]['name'])
+            date_to = convert_str_to_datetime(
+                props[action['date_to']['tagname']]['name'])
         except Exception as e:
             logging.exception(e)
             raise ForbiddenException(
@@ -76,6 +80,7 @@ class TemporaryStatusChangeHandler(BaseHandler):
                         properties: dict,
                         ):
         status_id, date_from, date_to = self.get_args(db, action, properties)
+        print(self.get_args)
         status = status_service.get_object(db, status_id, 'write')
         return {status, date_from, date_to}
 

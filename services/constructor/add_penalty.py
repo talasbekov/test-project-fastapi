@@ -30,6 +30,7 @@ class AddPenaltyHandler(BaseHandler):
 
         history.document_link = configs.GENERATE_IP + str(document.id)
         document.old_history_id = history.id
+        history.document_number = document.reg_number
 
         db.add(user)
         db.add(history)
@@ -62,8 +63,8 @@ class AddPenaltyHandler(BaseHandler):
                         properties: dict,
     ):
         args = self.get_args(action, properties)
-        obj = penalty_type_service.get_by_id(db, args).name
-        return obj
+        obj = penalty_type_service.get_by_id(db, args)
+        return {'name': obj.name, 'nameKZ': obj.nameKZ}
 
 
 handler = AddPenaltyHandler()

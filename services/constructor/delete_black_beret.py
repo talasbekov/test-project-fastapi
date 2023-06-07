@@ -21,10 +21,12 @@ class DeleteBlackBeretHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        self.handle_validation(db, user, action, template_props, props, document)
+        self.handle_validation(
+            db, user, action, template_props, props, document)
         black_beret = self.get_args(db, user)
         res = badge_service.stop_relation(db, user.id, black_beret.id)
         res.cancel_document_link = configs.GENERATE_IP + str(document.id)
+        res.document_number = document.reg_number
 
         db.add(res)
         db.add(document)
@@ -57,8 +59,9 @@ class DeleteBlackBeretHandler(BaseHandler):
                         user: User,
                         action: dict,
                         properties: dict,
-    ):
-        return None
+                        ):
+        obj = badge_service.get_black_beret(db)
+        return obj
 
 
 handler = DeleteBlackBeretHandler()

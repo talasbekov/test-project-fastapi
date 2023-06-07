@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session, Query, aliased
 from core import configs
 from models import User, HrDocument, Rank, Position, StaffUnit
 from .base import BaseHandler
-from services import rank_service, history_service
+from services import rank_service, history_service, status_service
 from exceptions import ForbiddenException
 
 

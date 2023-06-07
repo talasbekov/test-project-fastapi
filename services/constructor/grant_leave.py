@@ -33,6 +33,9 @@ class GrantLeaveHandler(BaseHandler):
         history.document_link = configs.GENERATE_IP + str(document.id)
         history.document_number = document.reg_number
         document.old_history_id = history.id
+        history.document_number = document.reg_number
+        status = status_service.get_object(db, status_id, 'write')
+        history.status_name = status.name
 
         db.add(user)
         db.add(res)
