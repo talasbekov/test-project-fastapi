@@ -11,6 +11,7 @@ from services import (
     document_staff_function_service,
     position_service
 )
+from .service_archive_staff_function import service_archive_staff_function_service
 
 from services.base import ServiceBase
 
@@ -75,7 +76,7 @@ class ArchiveStaffUnitService(
         staff_unit = self.get_by_id(db, body.staff_unit_id)
 
         for id in body.staff_function_ids:
-            staff_function = service_staff_function_service.get_by_id(db, id)
+            staff_function = service_archive_staff_function_service.get_by_id(db, id)
             if staff_function not in staff_unit.staff_functions:
                 staff_unit.staff_functions.append(staff_function)
 
