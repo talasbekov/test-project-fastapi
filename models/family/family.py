@@ -24,6 +24,6 @@ class Family(Model):
     profile_id = Column(UUID(as_uuid=True), ForeignKey("family_profiles.id"))
 
     profile = relationship("FamilyProfile", back_populates="family")
-    relation = relationship("FamilyRelation", cascade="all, delete")
+    relation = relationship("FamilyRelation")
     violation = relationship("Violation", secondary=family_violation, cascade="all, delete")
     abroad_travel = relationship("AbroadTravel", secondary=family_abroad_travel, cascade="all, delete")
