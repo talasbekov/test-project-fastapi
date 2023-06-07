@@ -11,6 +11,8 @@ import uuid
 from alembic import op
 from core import Base
 
+from models import SpecialtyEnum
+
 # revision identifiers, used by Alembic.
 revision = 'bd9403c8f894'
 down_revision = '461e308e6b57'
@@ -4744,7 +4746,7 @@ def upgrade() -> None:
         {
             'id': status_type2,
             'name': 'В отпуске',
-            'nameKZ': 'Демалыста (Отпуск)'
+            'nameKZ': 'Демалыста'
         },
         {
             'id': status_type3,
@@ -4754,7 +4756,7 @@ def upgrade() -> None:
         {
             'id': status_type4,
             'name': "В отставке",
-            'nameKZ': 'Қызметін доғарды (Отставка)'
+            'nameKZ': 'Қызметін доғарды'
         },
         {
             'id': status_type5,
@@ -4911,8 +4913,8 @@ def upgrade() -> None:
         Base.metadata.tables['coolness_types'],
         [{
             'id': coolness_type_id,
-            'name': 'Специалист 1 класса',
-            'nameKZ': '1-сынып маманы',
+            'name': "Специалист I класса",
+            'nameKZ': 'I сыныпты маман',
             'order': 1
         },
         {
@@ -4956,7 +4958,7 @@ def upgrade() -> None:
         }, {
             'id': contract_type2_id,
             'name': 'Контракт на неопределенный срок',
-            'nameKZ': 'Тип 2',
+            'nameKZ': 'Белгісіз мерзімге келісімшарт',
             'years': -1,
             'is_finite': False
         }]
