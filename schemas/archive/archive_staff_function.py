@@ -3,11 +3,10 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-from schemas import JurisdictionRead, ServiceStaffFunctionTypeRead
+from schemas import JurisdictionRead, ServiceStaffFunctionTypeRead, NamedModel
 
 
-class ArchiveStaffFunctionBase(BaseModel):
-    name: str
+class ArchiveStaffFunctionBase(NamedModel):
     hours_per_week: int
 
 
