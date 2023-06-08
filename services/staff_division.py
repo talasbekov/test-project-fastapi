@@ -66,7 +66,6 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
         group = db.query(self.model).filter(
             StaffDivision.name == name
         ).first()
-
         if group is None:
             raise NotFoundException(f"StaffDivision with name: {name} is not found!")
         return group
@@ -160,6 +159,10 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
     def update_from_archive(self, db: Session, archive_staff_division: ArchiveStaffDivision, parent_id: uuid.UUID, leader_id: uuid.UUID):
         self._validate_parent(db, parent_id)
         staff_division = self.get_by_id(db, archive_staff_division.origin_id)
+        sgo_id = self.get_by_name(db, 'СГО РК').id
+        # hardcode
+        if staff_division.parent_group_id == sgo_id:
+            parent_id = sgo_id
         res = super().update(
             db,
             db_obj=staff_division,
