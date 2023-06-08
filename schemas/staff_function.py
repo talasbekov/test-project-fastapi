@@ -18,7 +18,7 @@ class DocumentStaffFunctionBase(StaffFunctionBase):
 
 class ServiceStaffFunctionBase(StaffFunctionBase):
 
-    type_id: uuid.UUID
+    type_id: Optional[uuid.UUID]
 
 
 class StaffFunctionCreate(StaffFunctionBase):

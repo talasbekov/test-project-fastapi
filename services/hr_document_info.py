@@ -66,6 +66,12 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
             self.model.hr_document_step_id == step_id,
             self.model.is_signed == None
         ).order_by(self.model.order).first()
+    
+    def find_by_document_id_and_step_id_signed(self, db: Session, document_id: str, step_id: str) -> HrDocumentInfo:
+        return db.query(self.model).filter(
+            self.model.hr_document_id == document_id,
+            self.model.hr_document_step_id == step_id,
+        ).order_by(self.model.order).first()
 
     def sign(self, db: Session, info: HrDocumentInfo, user: User, comment: str, is_signed: bool):
 

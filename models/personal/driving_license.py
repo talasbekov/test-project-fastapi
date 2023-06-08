@@ -13,7 +13,7 @@ class DrivingLicense(Model):
     category = Column(ARRAY(String))
     date_of_issue = Column(TIMESTAMP(timezone=True))
     date_to = Column(TIMESTAMP(timezone=True))
-    document_link = Column(TEXT)
+    document_link = Column(TEXT, nullable=True)
     profile_id = Column(UUID(as_uuid=True), ForeignKey("personal_profiles.id"), nullable=False)
 
     profile = relationship("PersonalProfile", back_populates="driving_license")

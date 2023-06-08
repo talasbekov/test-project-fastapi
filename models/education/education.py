@@ -29,4 +29,4 @@ class Education(Model):
     degree_id = Column(UUID(as_uuid=True), ForeignKey("institution_degree_types.id"))
     degree = relationship("InstitutionDegreeType", back_populates="education", foreign_keys=degree_id)
 
-    document_link = Column(TEXT)
+    document_link = Column(TEXT, nullable=True)

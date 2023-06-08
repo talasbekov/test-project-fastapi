@@ -1217,29 +1217,32 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         temp_file_path = await download_file_to_tempfile(path)
 
-        template = jinja_env.get_template(temp_file_path.replace('/tmp/', ''))
-
-        context = {}
-
-        for i in list(document.properties):
-            if isinstance(document.properties[i], dict):
-                context[i] = document.properties[i]["name"] if language == LanguageEnum.ru else document.properties[i]["nameKZ"]
-            else:
-                context[i] = document.properties[i]
-        if document.reg_number is not None:
-            context["reg_number"] = document.reg_number
-        if document.signed_at is not None:
-            context["signed_at"] = document.signed_at.strftime("%Y-%m-%d")
+        try:
+            template = jinja_env.get_template(temp_file_path.replace('/tmp/', ''))
+            
+            context = {}
+            
+            for i in list(document.properties):
+                if isinstance(document.properties[i], dict):
+                    context[i] = document.properties[i]["name"] if language == LanguageEnum.ru else document.properties[i]["nameKZ"]
+                else:
+                    context[i] = document.properties[i]
+            if document.reg_number is not None:
+                context["reg_number"] = document.reg_number
+            if document.signed_at is not None:
+                context["signed_at"] = document.signed_at.strftime("%Y-%m-%d")
+        except:
+            raise BadRequestException(detail=f'Ошибка в шаблоне!')
 
         last_step = hr_document_step_service.get_last_step_document_template_id(
             db, document.hr_document_template_id)
 
-        last_info = hr_document_info_service.find_by_document_id_and_step_id(
+        last_info = hr_document_info_service.find_by_document_id_and_step_id_signed(
             db, document.id, last_step.id)
 
         if last_info is not None and last_info.signed_at is not None:
             context['approving_rank'] = last_info.signed_by.rank.name
-            context['approving_name'] = f"{last_info.signed_by.name} {last_info.signed_by.last_name} {last_info.signed_by.father_name}"
+            context['approving_name'] = f"{last_info.signed_by.first_name} {last_info.signed_by.last_name} {last_info.signed_by.father_name}"
 
         return template.render(context), document_template.name
 

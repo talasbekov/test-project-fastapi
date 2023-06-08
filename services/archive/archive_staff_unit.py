@@ -6,11 +6,10 @@ from exceptions.client import NotFoundException, BadRequestException
 from models import ArchiveStaffUnit, StaffUnit, ArchiveStaffDivision
 from schemas import ArchiveStaffUnitCreate, ArchiveStaffUnitUpdate, ArchiveStaffUnitFunctions, \
     NewArchiveStaffUnitCreate, NewArchiveStaffUnitUpdate
-from services import (
-    service_staff_function_service,
-    document_staff_function_service,
-    position_service
-)
+from services import position_service
+
+from .service_archive_staff_function import service_archive_staff_function_service
+from .document_archive_staff_function import document_archive_staff_function_service
 
 from services.base import ServiceBase
 
@@ -75,7 +74,7 @@ class ArchiveStaffUnitService(
         staff_unit = self.get_by_id(db, body.staff_unit_id)
 
         for id in body.staff_function_ids:
-            staff_function = service_staff_function_service.get_by_id(db, id)
+            staff_function = service_archive_staff_function_service.get_by_id(db, id)
             if staff_function not in staff_unit.staff_functions:
                 staff_unit.staff_functions.append(staff_function)
 
@@ -89,7 +88,7 @@ class ArchiveStaffUnitService(
         staff_unit = self.get_by_id(db, body.staff_unit_id)
 
         for id in body.staff_function_ids:
-            staff_function = service_staff_function_service.get_by_id(db, id)
+            staff_function = service_archive_staff_function_service.get_by_id(db, id)
             if staff_function is None:
                 continue
             try:
@@ -111,7 +110,7 @@ class ArchiveStaffUnitService(
         staff_unit = self.get_by_id(db, body.staff_unit_id)
 
         for id in body.staff_function_ids:
-            staff_function = document_staff_function_service.get_by_id(db, id)
+            staff_function = document_archive_staff_function_service.get_by_id(db, id)
             if staff_function not in staff_unit.staff_functions:
                 staff_unit.staff_functions.append(staff_function)
 
@@ -123,7 +122,7 @@ class ArchiveStaffUnitService(
         staff_unit = self.get_by_id(db, body.staff_unit_id)
 
         for id in body.staff_function_ids:
-            staff_function = document_staff_function_service.get_by_id(db, id)
+            staff_function = document_archive_staff_function_service.get_by_id(db, id)
             if staff_function is None:
                 continue
             try:

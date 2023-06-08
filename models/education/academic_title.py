@@ -19,5 +19,5 @@ class AcademicTitle(Model):
     specialty = relationship("Specialty", back_populates="academic_title")
 
     document_number = Column(String)
-    document_link = Column(TEXT)
+    document_link = Column(TEXT, nullable=True)
     assignment_date = Column(DATE)

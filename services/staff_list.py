@@ -14,7 +14,8 @@ from models import (
     ArchiveStaffDivision,
     User,
     HrDocument,
-    ArchiveStaffUnit
+    ArchiveStaffUnit,
+    ArchiveDocumentStaffFunction,
 )
 from schemas import (
     StaffListCreate,
@@ -36,6 +37,9 @@ from services import (
     service_staff_function_type_service,
     hr_document_template_service,
     staff_unit_service,
+    service_staff_function_service,
+    service_staff_function_type_service,
+    service_archive_staff_function_type_service,
 )
 
 options = {
@@ -115,7 +119,7 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
 
         staff_list.document_signed_by = signed_by
         staff_list.document_signed_at = document_creation_date
-
+        staff_list.is_signed = True
         db.add(staff_list)
         db.flush()
         return staff_list
@@ -155,6 +159,9 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
             if is_leader_needed and staff_unit.id == staff_division.leader_id:
                 leader_id = new_staff_unit.id
             staff_unit.origin_id = new_staff_unit.id
+            new_staff_unit = self._create_and_add_functions_to_new_unit(db,
+                                                                        staff_unit,
+                                                                        new_staff_unit)
             db.add(new_staff_unit)
             db.add(staff_unit)
 
@@ -165,6 +172,27 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         db.flush()
 
         return new_staff_division
+
+
+    def _create_and_add_functions_to_new_unit(self, db, staff_unit, new_staff_unit):
+        staff_functions = staff_unit.staff_functions
+        for staff_function in staff_functions:
+            if isinstance(staff_function, ArchiveDocumentStaffFunction):
+                continue
+
+            new_staff_function_type = None
+            if staff_function.type_id is not None:
+                new_staff_function_type = service_staff_function_type_service.create_or_update_from_archive(
+                    db, staff_function.type_id)
+
+            new_staff_function = service_staff_function_service.create_or_update_from_archive(
+                db, staff_function, getattr(new_staff_function_type, 'id', None))
+
+            staff_function.origin_id = new_staff_function.id
+            new_staff_unit.staff_functions.append(new_staff_function)
+            db.add(new_staff_function)
+            db.add(staff_function)
+        return new_staff_unit
 
 
     def _create_archive_staff_division(self, db: Session, staff_division: StaffDivision, staff_list_id: uuid.UUID,

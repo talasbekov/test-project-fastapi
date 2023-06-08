@@ -50,7 +50,6 @@ async def create(*,
         - **spend_hours_per_week**: int - optional.
     """
     Authorize.jwt_required()
-    service_archive_staff_function_service.get_by_id(body.type_id)
     return service_archive_staff_function_service.create_archive_staff_function(db, body)
 
 
@@ -88,6 +87,7 @@ async def update(*,
         - **spend_hours_per_week**: int - optional.
     """
     Authorize.jwt_required()
+    service_archive_staff_function_service.get_by_id(db, id)
     return service_archive_staff_function_service.update_archive_staff_function(
         db,
         staff_function=service_archive_staff_function_service.get_by_id(db, id),

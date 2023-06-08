@@ -76,7 +76,7 @@ class UserRead(BaseModel):
 class UserReplacingArchiveStaffUnitRead(ArchiveStaffUnitBase, ReadModel):
     id: Optional[uuid.UUID]
     staff_division_id: Optional[uuid.UUID]
-    staff_functions: Optional[List]
+    staff_functions: Optional[List[ArchiveStaffFunctionRead]]
     position_id: Optional[uuid.UUID]
     position: Optional[PositionRead]
     user: Optional[UserRead]

@@ -94,13 +94,13 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
         return users
 
-    def get_all_active(self, db: Session, filter: str, skip: int, limit: int) -> List[User]:
-        users = self._get_users_by_filter_is_active(db, filter, skip, limit, True)
+    def get_all_active(self, db: Session, filter: str, skip: int, limit: int, user_id: str) -> List[User]:
+        users = self._get_users_by_filter_is_active(db, filter, skip, limit, True, user_id)
 
         return users
 
-    def get_all_archived(self, db: Session, filter: str, skip: int, limit: int) -> List[User]:
-        users = self._get_users_by_filter_is_active(db, filter, skip, limit, False)
+    def get_all_archived(self, db: Session, filter: str, skip: int, limit: int, user_id: str) -> List[User]:
+        users = self._get_users_by_filter_is_active(db, filter, skip, limit, False, user_id)
 
         return users
 
@@ -312,11 +312,18 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
         return users
 
-    def _get_users_by_filter_is_active(self, db: Session, filter: Optional[str], skip: int, limit: int, is_active: bool)\
-            -> List[User]:
+    def _get_users_by_filter_is_active(self, 
+                                        db: Session,
+                                        filter: Optional[str], 
+                                        skip: int,
+                                        limit: int, 
+                                        is_active: bool,
+                                        user_id: str) -> List[User]:
         users = (
             db.query(self.model)
-            .filter(self.model.is_active.is_(is_active))
+            .filter(self.model.is_active.is_(is_active),
+                    self.model.id != user_id
+            )
         )
 
         if filter != '':
@@ -369,10 +376,12 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         document_ids = [function.hr_document_step.hr_document_template_id for function in functions]
         return hr_document_template_service.get_all_skip(db, document_ids, skip, limit)
 
-    def _validate_call_sign(self,db: Session, call_sign: str):
+    def _validate_call_sign(self, db: Session, call_sign: str):
         user = db.query(User).filter(User.call_sign == call_sign).first()
         if user:
-            user_name = user.first_name + " " + user.last_name + " " + user.father_name
+            user_name = (getattr(user, 'first_name', '') + " " +
+                         getattr(user, 'last_name', '') + " " +
+                         getattr(user, 'father_name', ''))
             raise InvalidOperationException(
                 f"call_sign {call_sign} is already assigned to {user_name}!"
             )

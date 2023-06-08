@@ -26,6 +26,7 @@ class ServiceArchiveStaffFunctionTypeService(ServiceBase[ArchiveServiceFunctionT
     def create_based_on_existing_archive_staff_function_type(self, db: Session, staff_function_type: ServiceFunctionType):
         return super().create(db, ServiceArchiveStaffFunctionTypeCreate(
                 name=staff_function_type.name,
+                nameKZ=staff_function_type.nameKZ,
                 origin_id=staff_function_type.id
             )
         )
@@ -33,6 +34,7 @@ class ServiceArchiveStaffFunctionTypeService(ServiceBase[ArchiveServiceFunctionT
     def create_archive_staff_function_type(self, db: Session, body: NewServiceArchiveStaffFunctionTypeCreate):
         return super().create(db, ServiceArchiveStaffFunctionTypeCreate(
                 name=body.name,
+                nameKZ=body.nameKZ,
                 origin_id=None
             )
         )
@@ -40,6 +42,7 @@ class ServiceArchiveStaffFunctionTypeService(ServiceBase[ArchiveServiceFunctionT
     def update_archive_staff_function_type(self, db: Session, type: ArchiveServiceFunctionType, body: NewServiceArchiveStaffFunctionTypeCreate):
         return super().update(db, db_obj=type, obj_in=ServiceArchiveStaffFunctionTypeCreate(
                 name=body.name,
+                nameKZ=body.nameKZ,
                 origin_id=None
             )
         )
