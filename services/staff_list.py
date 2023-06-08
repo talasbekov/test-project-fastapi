@@ -119,7 +119,7 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
 
         staff_list.document_signed_by = signed_by
         staff_list.document_signed_at = document_creation_date
-
+        staff_list.is_signed = True
         db.add(staff_list)
         db.flush()
         return staff_list
