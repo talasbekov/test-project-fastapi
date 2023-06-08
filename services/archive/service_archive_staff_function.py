@@ -32,6 +32,7 @@ class ArchiveServiceStaffFunctionService(ServiceBase[ArchiveServiceStaffFunction
         func = self.get_by_id(db, id)
         copy = super().create(db, ArchiveServiceStaffFunctionCreate(
             name=func.name,
+            nameKZ=func.nameKZ,
             hours_per_week=func.hours_per_week,
             type_id=func.type_id
         ))
@@ -41,6 +42,7 @@ class ArchiveServiceStaffFunctionService(ServiceBase[ArchiveServiceStaffFunction
     def create_based_on_existing_archive_staff_function(self, db: Session, staff_function: ServiceStaffFunction, type_id: uuid.UUID):
         return super().create(db, ArchiveServiceStaffFunctionCreate(
             name=staff_function.name,
+            nameKZ=staff_function.nameKZ,
             hours_per_week=staff_function.hours_per_week,
             type_id=type_id,
             origin_id=staff_function.id
@@ -49,6 +51,7 @@ class ArchiveServiceStaffFunctionService(ServiceBase[ArchiveServiceStaffFunction
     def create_archive_staff_function(self, db: Session, body: NewArchiveServiceStaffFunctionCreate):
         return super().create(db, ArchiveServiceStaffFunctionCreate(
             name=body.name,
+            nameKZ=body.nameKZ,
             hours_per_week=body.hours_per_week,
             type_id=body.type_id,
             origin_id=None
@@ -57,6 +60,7 @@ class ArchiveServiceStaffFunctionService(ServiceBase[ArchiveServiceStaffFunction
     def update_archive_staff_function(self, db: Session, staff_function: ArchiveServiceStaffFunction, body: NewArchiveServiceStaffFunctionCreate):
         return super().update(db, db_obj=staff_function, obj_in=ArchiveServiceStaffFunctionCreate(
             name=body.name,
+            nameKZ=body.nameKZ,
             hours_per_week=body.hours_per_week,
             type_id=body.type_id,
             origin_id=None
