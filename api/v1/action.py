@@ -567,114 +567,114 @@ async def get_all_actions():
             ]
         }
     },
-    {
-        'action_name': 'Добавление классной квалификации',
-        'action_nameKZ': 'Сыныптық квалификацияны қосу',
-        'action_type': 'add_coolness',
-        'children': [
-            {
-                'alias_name': 'Классная квалификация для добавления',
-                'alias_nameKZ': 'Қосу үшін сыныптық квалификация',
-                'tagname': 'coolness',
-                'data_taken': 'dropdown',
-                'field_name': 'coolnesses',
-            },
-        ],
-        'properties': {
-            'coolness': {
-                'alias_name': 'Классная квалификация для добавления',
-                'alias_nameKZ': 'Қосу үшін сыныптық квалификация',
-                'type': 'write',
-                'data_taken': 'dropdown',
-                'field_name': 'coolnesses',
-            },
-        },
-        'actions': {
-            'args': [
-                {
-                    'add_coolness': {
-                        'coolness': {
-                            'tagname': 'coolness',
-                            'alias_name': 'Классная квалификация для добавления',
-                            'alias_nameKZ': 'Қосу үшін сыныптық квалификация',
-                        },
-                    },
-                },
-            ],
-        },
-    },
-    {
-        'action_name': 'Понижение классной квалификации',
-        'action_nameKZ': 'Сыныптық квалификацияны төмендету',
-        'action_type': 'decrease_coolness',
-        'children': [
-            {
-                'alias_name': 'Классная квалификация для понижения',
-                'alias_nameKZ': 'Төмендету үшін сыныптық квалификация',
-                'tagname': 'coolness',
-                'data_taken': 'dropdown',
-                'field_name': 'coolnesses',
-            },
-        ],
-        'properties': {
-            'coolness': {
-                'alias_name': 'Классная квалификация для понижения',
-                'alias_nameKZ': 'Төмендету үшін сыныптық квалификация',
-                'type': 'delete',
-                'data_taken': 'dropdown',
-                'field_name': 'coolnesses',
-            },
-        },
-        'actions': {
-            'args': [
-                {
-                    'decrease_coolness': {
-                        'coolness': {
-                            'tagname': 'coolness',
-                            'alias_name': 'Классная квалификация для понижения',
-                            'alias_nameKZ': 'Төмендету үшін сыныптық квалификация',
-                        },
-                    },
-                },
-            ],
-        },
-    },
-    {
-        'action_name': 'Лишение классной квалификации',
-        'action_nameKZ': 'Сыныптық квалификациядан босату',
-        'action_type': 'delete_coolness',
-        'children': [
-            {
-                'alias_name': 'Классная квалификация для лишения',
-                'alias_nameKZ': 'Босату үшін сыныптық квалификация',
-                'tagname': 'coolness',
-                'data_taken': 'dropdown',
-                'field_name': 'coolnesses',
-            },
-        ],
-        'properties': {
-            'coolness': {
-                'alias_name': 'Классная квалификация для лишения',
-                'alias_nameKZ': 'Босату үшін сыныптық квалификация',
-                'type': 'delete',
-                'data_taken': 'dropdown',
-                'field_name': 'coolnesses',
-            },
-        },
-        'actions': {
-            'args': [
-                {
-                    'delete_coolness': {
-                        'coolness': {
-                            'tagname': 'coolness',
-                            'alias_name': 'Классная квалификация для лишения',
-                            'alias_nameKZ': 'Босату үшін сыныптық квалификация',
-                        },
-                    },
-                },
-            ],
-        },
-    },
+    # {
+    #     'action_name': 'Добавление классной квалификации',
+    #     'action_nameKZ': 'Сыныптық квалификацияны қосу',
+    #     'action_type': 'add_coolness',
+    #     'children': [
+    #         {
+    #             'alias_name': 'Классная квалификация для добавления',
+    #             'alias_nameKZ': 'Қосу үшін сыныптық квалификация',
+    #             'tagname': 'coolness',
+    #             'data_taken': 'dropdown',
+    #             'field_name': 'coolnesses',
+    #         },
+    #     ],
+    #     'properties': {
+    #         'coolness': {
+    #             'alias_name': 'Классная квалификация для добавления',
+    #             'alias_nameKZ': 'Қосу үшін сыныптық квалификация',
+    #             'type': 'write',
+    #             'data_taken': 'dropdown',
+    #             'field_name': 'coolnesses',
+    #         },
+    #     },
+    #     'actions': {
+    #         'args': [
+    #             {
+    #                 'add_coolness': {
+    #                     'coolness': {
+    #                         'tagname': 'coolness',
+    #                         'alias_name': 'Классная квалификация для добавления',
+    #                         'alias_nameKZ': 'Қосу үшін сыныптық квалификация',
+    #                     },
+    #                 },
+    #             },
+    #         ],
+    #     },
+    # },
+    # {
+    #     'action_name': 'Понижение классной квалификации',
+    #     'action_nameKZ': 'Сыныптық квалификацияны төмендету',
+    #     'action_type': 'decrease_coolness',
+    #     'children': [
+    #         {
+    #             'alias_name': 'Классная квалификация для понижения',
+    #             'alias_nameKZ': 'Төмендету үшін сыныптық квалификация',
+    #             'tagname': 'coolness',
+    #             'data_taken': 'dropdown',
+    #             'field_name': 'coolnesses',
+    #         },
+    #     ],
+    #     'properties': {
+    #         'coolness': {
+    #             'alias_name': 'Классная квалификация для понижения',
+    #             'alias_nameKZ': 'Төмендету үшін сыныптық квалификация',
+    #             'type': 'delete',
+    #             'data_taken': 'dropdown',
+    #             'field_name': 'coolnesses',
+    #         },
+    #     },
+    #     'actions': {
+    #         'args': [
+    #             {
+    #                 'decrease_coolness': {
+    #                     'coolness': {
+    #                         'tagname': 'coolness',
+    #                         'alias_name': 'Классная квалификация для понижения',
+    #                         'alias_nameKZ': 'Төмендету үшін сыныптық квалификация',
+    #                     },
+    #                 },
+    #             },
+    #         ],
+    #     },
+    # },
+    # {
+    #     'action_name': 'Лишение классной квалификации',
+    #     'action_nameKZ': 'Сыныптық квалификациядан босату',
+    #     'action_type': 'delete_coolness',
+    #     'children': [
+    #         {
+    #             'alias_name': 'Классная квалификация для лишения',
+    #             'alias_nameKZ': 'Босату үшін сыныптық квалификация',
+    #             'tagname': 'coolness',
+    #             'data_taken': 'dropdown',
+    #             'field_name': 'coolnesses',
+    #         },
+    #     ],
+    #     'properties': {
+    #         'coolness': {
+    #             'alias_name': 'Классная квалификация для лишения',
+    #             'alias_nameKZ': 'Босату үшін сыныптық квалификация',
+    #             'type': 'delete',
+    #             'data_taken': 'dropdown',
+    #             'field_name': 'coolnesses',
+    #         },
+    #     },
+    #     'actions': {
+    #         'args': [
+    #             {
+    #                 'delete_coolness': {
+    #                     'coolness': {
+    #                         'tagname': 'coolness',
+    #                         'alias_name': 'Классная квалификация для лишения',
+    #                         'alias_nameKZ': 'Босату үшін сыныптық квалификация',
+    #                     },
+    #                 },
+    #             },
+    #         ],
+    #     },
+    # },
     {
         'action_name': 'Смена должности',
         'action_nameKZ': 'қызмет атауын өзгерту',
