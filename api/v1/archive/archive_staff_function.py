@@ -50,8 +50,7 @@ async def create(*,
         - **spend_hours_per_week**: int - optional.
     """
     Authorize.jwt_required()
-    archive_staff_function_service.get_by_id(body.type_id)
-    return archive_staff_function_service.create_archive_staff_function(db, body)
+    return archive_staff_function_service.create_staff_function(db, body)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -88,7 +87,7 @@ async def update(*,
         - **spend_hours_per_week**: int - optional.
     """
     Authorize.jwt_required()
-    return archive_staff_function_service.update_archive_staff_function(
+    return archive_staff_function_service.update_staff_function(
         db,
         staff_function=archive_staff_function_service.get_by_id(db, id),
         body=body)
