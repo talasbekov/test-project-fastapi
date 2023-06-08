@@ -144,6 +144,8 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
 
     def create_from_archive(self, db: Session, archive_staff_division: ArchiveStaffDivision, parent_id: uuid.UUID, leader_id: uuid.UUID):
         self._validate_parent(db, parent_id)
+        if parent_id is None:
+            parent_id = self.get_by_name(db, 'СГО РК').id
         res = super().create(
             db, StaffDivisionCreate(
                 name=archive_staff_division.name,
