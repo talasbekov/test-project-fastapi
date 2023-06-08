@@ -8,6 +8,7 @@ from schemas import JurisdictionRead, ServiceStaffFunctionTypeRead
 
 class ArchiveStaffFunctionBase(BaseModel):
     name: str
+    nameKZ: Optional[str]
     hours_per_week: int
 
 
