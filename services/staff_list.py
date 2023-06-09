@@ -305,20 +305,8 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
                        .offset(skip)
                        .limit(limit)
                        .all())
-        signed_staff_lists = []
-        for staff_list in staff_lists:
-            super_doc = self.get_super_doc_by_staff_list_id(db, staff_list.id)
-            status = super_doc.status
-            reg_number = super_doc.reg_number
-            signed_staff_list = StaffListStatusRead.from_orm(staff_list)
-            signed_staff_list.status = {
-                "name": status.name,
-                "nameKZ": status.nameKZ,
-            }
-            signed_staff_list.reg_number = reg_number
-            signed_staff_lists.append(signed_staff_list)
 
-        return signed_staff_lists
+        return staff_lists
 
     def update(self, db: Session, staff_list_id: uuid.UUID, body: StaffListUpdate):
         staff_list = self.get_by_id(db, staff_list_id)
