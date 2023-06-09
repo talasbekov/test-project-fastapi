@@ -174,4 +174,5 @@ async def get_full_name_by_id(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return staff_division_service.get_full_name(db, id)
+    full_name, full_nameKZ = staff_division_service.get_full_name(db, id)
+    return {full_name, full_nameKZ}
