@@ -140,7 +140,7 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
             full_nameKZ = tmp.nameKZ + " / " + full_nameKZ
             parent_id = tmp.parent_group_id
         
-        return {full_name, full_nameKZ}
+        return full_name, full_nameKZ
 
     def create_from_archive(self, db: Session, archive_staff_division: ArchiveStaffDivision, parent_id: uuid.UUID, leader_id: uuid.UUID):
         self._validate_parent(db, parent_id)
