@@ -101,6 +101,7 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
         return super().create(db, ArchiveStaffDivisionCreate(
             parent_group_id=body.parent_group_id,
             name=body.name,
+            nameKZ=body.nameKZ,
             description=body.description,
             staff_list_id=body.staff_list_id,
             origin_id=None,
@@ -113,6 +114,7 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
         return super().update(db, db_obj=archive_staff_division, obj_in=ArchiveStaffDivisionUpdate(
             parent_group_id=body.parent_group_id,
             name=body.name,
+            nameKZ=body.nameKZ,
             description=body.description,
             staff_list_id=body.staff_list_id,
             origin_id=None,
