@@ -134,7 +134,8 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
         service = self.get_by_name(db, StaffDivisionEnum.SERVICE.value)
 
         while parent_id != service.id:
-            res_id = parent_id
+            if parent_id is None:
+                break
             tmp = self.get_by_id(db, parent_id)
             full_name = tmp.name + " / " + full_name
             full_nameKZ = tmp.nameKZ + " / " + full_nameKZ
