@@ -15,7 +15,7 @@ from .jurisdiction import Jurisdiction
 from .staff_function import (DocumentFunctionType, DocumentStaffFunction,
                              ServiceFunctionType, ServiceStaffFunction, StaffFunction,
                              JurisdictionEnum, DocumentFunctionTypeEnum)
-from .staff_list import StaffList
+from .staff_list import StaffList, StaffListStatusEnum
 from .staff_unit import StaffUnit
 from .state_body import StateBody
 from .service_id import ServiceID, ServiceIDStatus

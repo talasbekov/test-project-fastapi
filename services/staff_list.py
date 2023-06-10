@@ -16,6 +16,7 @@ from models import (
     HrDocument,
     ArchiveStaffUnit,
     ArchiveDocumentStaffFunction,
+    StaffListStatusEnum,
 )
 from schemas import (
     StaffListCreate,
@@ -76,6 +77,8 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         staff_divisions = staff_division_service.get_all_except_special(db, 0, 100)
         for staff_division in staff_divisions:
             self._create_archive_staff_division(db, staff_division, staff_list.id, None)
+
+        staff_list.status = StaffListStatusEnum.IN_PROGRESS.value
         db.add(staff_list)
         db.flush()
         return staff_list
@@ -119,7 +122,12 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
 
         staff_list.document_signed_by = signed_by
         staff_list.document_signed_at = document_creation_date
+        staff_list.status = StaffListStatusEnum.APPROVED.value
         staff_list.is_signed = True
+
+        staff_unit_service.delete_all_inactive(db)
+        staff_division_service.delete_all_inactive(db)
+
         db.add(staff_list)
         db.flush()
         return staff_list
@@ -147,7 +155,7 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
                     new_staff_division.id
                 )
                 new_staff_division.children.append(child_staff_division)
-        staff_division.origin_id = new_staff_division.id
+        staff_division.origin_id = None
 
         if staff_division.leader_id is not None:
             is_leader_needed = True
