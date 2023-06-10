@@ -6910,6 +6910,9 @@ def upgrade() -> None:
         }, {
             'hr_vacancy_id': hr_vacancy10_id,
             'hr_vacancy_requirement_id': hr_vacancy_requirement5_id
+        }, {
+            'hr_vacancy_id': hr_vacancy11_id,
+            'hr_vacancy_requirement_id': hr_vacancy_requirement_id
         }]
     )
 
