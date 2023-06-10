@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from core import get_db
 from schemas import (ArchiveStaffDivisionRead, ArchiveStaffDivisionUpdateParentGroup, NewArchiveStaffDivisionCreate,
                      NewArchiveStaffDivisionUpdate)
-from services import archive_staff_division_service, staff_list_service
+from services import archive_staff_division_service, staff_list_service, increment_changes_size
 
 router = APIRouter(prefix="/archive_staff_division", tags=["ArchiveStaffDivision"], dependencies=[Depends(HTTPBearer())])
 
@@ -162,4 +162,5 @@ async def delete(*,
         - **id**: UUID - required
     """
     Authrorize.jwt_required()
+    increment_changes_size(db, archive_staff_division_service.get_by_id(db, id).staff_list)
     archive_staff_division_service.remove(db, id)
