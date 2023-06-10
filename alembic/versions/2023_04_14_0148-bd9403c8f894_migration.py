@@ -6792,6 +6792,8 @@ def upgrade() -> None:
     hr_vacancy8_id = get_uuid()
     hr_vacancy9_id = get_uuid()
     hr_vacancy10_id = get_uuid()
+    hr_vacancy11_id = get_uuid()
+    
 
     op.bulk_insert(
         Base.metadata.tables['hr_vacancies'],
@@ -6822,6 +6824,9 @@ def upgrade() -> None:
         }, {
             'id': hr_vacancy10_id,
             'staff_unit_id': staff_unit29_id
+        }, {
+            'id': hr_vacancy11_id,
+            'staff_unit_id': staff_unit12_id
         }]
     )
 
