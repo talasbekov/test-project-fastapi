@@ -1,3 +1,5 @@
+import enum
+
 from sqlalchemy import Column, ForeignKey, String, TIMESTAMP, text
 from sqlalchemy.dialects.postgresql import JSON, UUID
 from sqlalchemy.orm import relationship
@@ -5,6 +7,11 @@ from sqlalchemy.sql.sqltypes import Boolean
 
 from models import NamedModel
 
+
+class StaffListStatusEnum(str, enum.Enum):
+    APPROVED = "Утвержден"
+    DIVERTED = "Отклонен"
+    IN_PROGRESS = "В процессе"
 
 class StaffList(NamedModel):
 
@@ -15,6 +22,7 @@ class StaffList(NamedModel):
     document_signed_by = Column(String, nullable=True)
     document_signed_at = Column(TIMESTAMP(timezone=True),
                         nullable=True, server_default=text("now()"))
+    status = Column(String, nullable=True)
 
     archive_staff_divisions = relationship("ArchiveStaffDivision", back_populates="staff_list", cascade="all, delete")
     user = relationship("User", back_populates="staff_list", uselist=False)

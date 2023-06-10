@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from exceptions import BadRequestException, NotFoundException
 from models import (StaffDivision, StaffDivisionEnum, ArchiveStaffDivision,
-                    StaffUnit, HrVacancy)
+                    StaffUnit, HrVacancy, Secondment)
 from schemas import (
     StaffDivisionCreate,
     StaffDivisionRead,
@@ -47,7 +47,8 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
     ) -> List[StaffDivision]:
         service_staff_function = self.get_by_name(db, StaffDivisionEnum.SERVICE.value)
         departments = db.query(self.model).filter(
-            StaffDivision.parent_group_id == service_staff_function.id
+            StaffDivision.parent_group_id == service_staff_function.id,
+            StaffDivision.is_active == True
         ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
         return departments
 
@@ -159,7 +160,8 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
                 parent_group_id=parent_id,
                 description=archive_staff_division.description,
                 is_combat_unit=archive_staff_division.is_combat_unit,
-                leader_id=leader_id
+                leader_id=leader_id,
+                is_active=True
             )
         )
         return res
@@ -199,8 +201,25 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
         ).all()
 
     def delete_all_inactive(self, db: Session):
-        pass
-    
+        staff_divisions = db.query(self.model).filter(
+            self.model.is_active == False
+        ).all()
+        for staff_division in staff_divisions:
+            self._replace_secondment_division_id_with_name(db, staff_division)
+            super().remove(db, staff_division.id)
+        db.flush()
+
+
+    def _replace_secondment_division_id_with_name(self, db, staff_division: StaffDivision):
+        (db.query(Secondment)
+            .filter(Secondment.staff_division_id == staff_division.id)
+            .update({Secondment.staff_division_id: None,
+                     Secondment.name: staff_division.name,
+                     Secondment.nameKZ: staff_division.nameKZ}
+                   )
+        )
+        db.flush()
+
     
     def _return_correctly(self, db: Session, staff_division: StaffDivision):
         
@@ -236,5 +255,6 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
         parent = super().get(db, parent_id)
         if parent is None and parent_id:
             raise BadRequestException(f"Parent staffDivision with id: {parent_id} is not found!")
+
 
 staff_division_service = StaffDivisionService(StaffDivision)
