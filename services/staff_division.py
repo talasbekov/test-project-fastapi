@@ -57,6 +57,13 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
         ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
         return parents
 
+    def get_all_except_special(self, db: Session, skip: int, limit: int) -> List[StaffDivision]:
+        parents = db.query(self.model).filter(
+            StaffDivision.parent_group_id == None,
+            self.model.name != StaffDivisionEnum.SPECIAL_GROUP.value
+        ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
+        return parents
+
     def get_child_groups(self, db: Session, id: str, skip: int, limit: int) -> List[StaffDivision]:
         return db.query(self.model).filter(
            StaffDivision.parent_group_id == id
@@ -145,8 +152,6 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
 
     def create_from_archive(self, db: Session, archive_staff_division: ArchiveStaffDivision, parent_id: uuid.UUID, leader_id: uuid.UUID):
         self._validate_parent(db, parent_id)
-        if parent_id is None:
-            parent_id = self.get_by_name(db, 'СГО РК').id
         res = super().create(
             db, StaffDivisionCreate(
                 name=archive_staff_division.name,
@@ -162,10 +167,6 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
     def update_from_archive(self, db: Session, archive_staff_division: ArchiveStaffDivision, parent_id: uuid.UUID, leader_id: uuid.UUID):
         self._validate_parent(db, parent_id)
         staff_division = self.get_by_id(db, archive_staff_division.origin_id)
-        sgo_id = self.get_by_name(db, 'СГО РК').id
-        # hardcode
-        if staff_division.parent_group_id == sgo_id:
-            parent_id = sgo_id
         res = super().update(
             db,
             db_obj=staff_division,

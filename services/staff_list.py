@@ -73,7 +73,7 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
             user_id=user_id
         )
         staff_list = super().create(db, create_staff_list)
-        staff_divisions = staff_division_service.get_departments(db, 0, 100)
+        staff_divisions = staff_division_service.get_all_except_special(db, 0, 100)
         for staff_division in staff_divisions:
             self._create_archive_staff_division(db, staff_division, staff_list.id, None)
         db.add(staff_list)
