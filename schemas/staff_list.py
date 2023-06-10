@@ -36,11 +36,13 @@ class StaffListRead(StaffListBase, ReadNamedModel):
 
 class StaffListStatusRead(StaffListBase):
     id: Optional[uuid.UUID]
-    status: Optional[dict]
+    status: Optional[str]
     updated_at: Optional[datetime]
     changes_count: Optional[int]
     user: Optional[UserShortRead]
     reg_number: Optional[str]
+    document_signed_by: Optional[str]
+    document_signed_at: Optional[date]
 
     class Config:
         orm_mode = True
