@@ -15,7 +15,7 @@ from schemas import (
     ArchiveServiceStaffFunctionRead,
     ArchiveDocumentStaffFunctionRead
 )
-from services import rank_service, archive_staff_unit_service
+from services import rank_service, archive_staff_unit_service, increment_changes_size
 
 router = APIRouter(prefix="/archive_staff_unit", tags=["ArchiveStaffUnit"], dependencies=[Depends(HTTPBearer())])
 
@@ -131,6 +131,7 @@ async def delete(*,
         - **id** - UUID - required
     """
     Authorize.jwt_required()
+    increment_changes_size(db, archive_staff_unit_service.get_by_id(db, id).staff_division.staff_list)
     archive_staff_unit_service.remove(db, id)
 
 

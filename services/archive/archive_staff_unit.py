@@ -10,7 +10,7 @@ from services import position_service
 
 from .service_archive_staff_function import service_archive_staff_function_service
 from .document_archive_staff_function import document_archive_staff_function_service
-
+from . import increment_changes_size
 from services.base import ServiceBase
 
 
@@ -28,16 +28,17 @@ class ArchiveStaffUnitService(
             db: Session,
             archive_staff_division_id: uuid.UUID) -> ArchiveStaffUnit:
         archive_staff_units = (db.query(ArchiveStaffUnit)
-                              .filter(ArchiveStaffUnit.staff_division_id == archive_staff_division_id)
-                              .all()
-                              )
+                               .filter(ArchiveStaffUnit.staff_division_id == archive_staff_division_id)
+                               .all()
+                               )
         if archive_staff_units is None:
             raise NotFoundException(
                 detail=f"ArchiveStaffUnit with id: {id} is not found!")
         return archive_staff_units
 
     def duplicate_archive_staff_units_by_division_id(self, db: Session, duplicate_division_id: uuid.UUID, division_id: uuid.UUID):
-        archive_staff_units = self.get_by_archive_staff_division_id(db, division_id)
+        archive_staff_units = self.get_by_archive_staff_division_id(
+            db, division_id)
 
         for archive_staff_unit in archive_staff_units:
             duplicate_unit = ArchiveStaffUnit()
@@ -54,7 +55,6 @@ class ArchiveStaffUnitService(
 
             db.add(duplicate_unit)
             db.flush()
-
 
     def get_by_user(self, db: Session, user_id: str) -> ArchiveStaffUnit:
         position = db.query(self.model).filter(
@@ -74,7 +74,8 @@ class ArchiveStaffUnitService(
         staff_unit = self.get_by_id(db, body.staff_unit_id)
 
         for id in body.staff_function_ids:
-            staff_function = service_archive_staff_function_service.get_by_id(db, id)
+            staff_function = service_archive_staff_function_service.get_by_id(
+                db, id)
             if staff_function not in staff_unit.staff_functions:
                 staff_unit.staff_functions.append(staff_function)
 
@@ -88,7 +89,8 @@ class ArchiveStaffUnitService(
         staff_unit = self.get_by_id(db, body.staff_unit_id)
 
         for id in body.staff_function_ids:
-            staff_function = service_archive_staff_function_service.get_by_id(db, id)
+            staff_function = service_archive_staff_function_service.get_by_id(
+                db, id)
             if staff_function is None:
                 continue
             try:
@@ -110,7 +112,8 @@ class ArchiveStaffUnitService(
         staff_unit = self.get_by_id(db, body.staff_unit_id)
 
         for id in body.staff_function_ids:
-            staff_function = document_archive_staff_function_service.get_by_id(db, id)
+            staff_function = document_archive_staff_function_service.get_by_id(
+                db, id)
             if staff_function not in staff_unit.staff_functions:
                 staff_unit.staff_functions.append(staff_function)
 
@@ -122,7 +125,8 @@ class ArchiveStaffUnitService(
         staff_unit = self.get_by_id(db, body.staff_unit_id)
 
         for id in body.staff_function_ids:
-            staff_function = document_archive_staff_function_service.get_by_id(db, id)
+            staff_function = document_archive_staff_function_service.get_by_id(
+                db, id)
             if staff_function is None:
                 continue
             try:
@@ -152,8 +156,8 @@ class ArchiveStaffUnitService(
         ))
 
     def create_staff_unit(self, db: Session, body: NewArchiveStaffUnitCreate):
-        self._validate_archive_staff_poition(db, body.position_id)
-        return super().create(db, ArchiveStaffUnitCreate(
+        self._validate_archive_staff_position(db, body.position_id)
+        res = super().create(db, ArchiveStaffUnitCreate(
             position_id=body.position_id,
             staff_division_id=body.staff_division_id,
             user_id=body.user_id,
@@ -161,14 +165,16 @@ class ArchiveStaffUnitService(
             user_replacing_id=body.user_replacing_id,
             origin_id=None
         ))
+        increment_changes_size(db, res.staff_division.staff_list)
+        return res
 
     def update_staff_unit(
             self,
             db: Session,
             staff_unit: ArchiveStaffUnit,
             body: NewArchiveStaffUnitUpdate):
-        self._validate_archive_staff_poition(db, body.position_id)
-        return super().update(
+        self._validate_archive_staff_position(db, body.position_id)
+        res = super().update(
             db,
             db_obj=staff_unit,
             obj_in=ArchiveStaffUnitUpdate(
@@ -179,8 +185,10 @@ class ArchiveStaffUnitService(
                 user_replacing_id=body.user_replacing_id,
                 origin_id=staff_unit.origin_id,
                 requirements=body.requirements))
+        increment_changes_size(db, res.staff_division.staff_list)
+        return res
 
-    def _validate_archive_staff_poition(self, db: Session, position_id: uuid.UUID):
+    def _validate_archive_staff_position(self, db: Session, position_id: uuid.UUID):
         position_service.get_by_id(db, position_id)
 
     def get_service_staff_functions(
