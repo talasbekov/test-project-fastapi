@@ -26,10 +26,13 @@ class StaffListUpdate(StaffListBase):
 class StaffListUserCreate(BaseModel):
     name: str
 
+
 class StaffListRead(StaffListBase, ReadNamedModel):
     user_id: Optional[uuid.UUID]
     document_signed_by: Optional[str]
     document_signed_at: Optional[date]
+    changes_size: Optional[int]
+
 
 class StaffListStatusRead(StaffListBase):
     id: Optional[uuid.UUID]
