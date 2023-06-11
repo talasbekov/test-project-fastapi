@@ -152,7 +152,8 @@ class ArchiveStaffUnitService(
             user_id=user_id,
             actual_user_id=actual_user_id,
             user_replacing_id=user_replacing_id,
-            origin_id=staff_unit.id
+            origin_id=staff_unit.id,
+            requirements=staff_unit.requirements
         ))
 
     def create_staff_unit(self, db: Session, body: NewArchiveStaffUnitCreate):
