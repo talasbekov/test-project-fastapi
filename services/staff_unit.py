@@ -173,6 +173,8 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
                 position_id=archive_staff_unit.position_id,
                 staff_division_id=staff_division_id,
                 is_active=True,
+                user_replacing_id=archive_staff_unit.user_replacing_id,
+                requirements=archive_staff_unit.requirements
                 )
             )
         return res
@@ -186,6 +188,8 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
                 position_id=archive_staff_unit.position_id,
                 staff_division_id=staff_division_id,
                 is_active=True,
+                user_replacing_id=archive_staff_unit.user_replacing_id,
+                requirements=archive_staff_unit.requirements
             )
         )
         return res
