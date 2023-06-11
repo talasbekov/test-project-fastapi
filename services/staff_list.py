@@ -167,9 +167,9 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
             if is_leader_needed and staff_unit.id == staff_division.leader_id:
                 leader_id = new_staff_unit.id
             staff_unit.origin_id = new_staff_unit.id
-            new_staff_unit = self._create_and_add_functions_to_new_unit(db,
-                                                                        staff_unit,
-                                                                        new_staff_unit)
+            # new_staff_unit = self._create_and_add_functions_to_new_unit(db,
+            #                                                             staff_unit,
+            #                                                             new_staff_unit)
             db.add(new_staff_unit)
             db.add(staff_unit)
 
