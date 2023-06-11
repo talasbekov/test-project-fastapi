@@ -19,6 +19,8 @@ class ServiceArchiveStaffFunctionTypeService(ServiceBase[ArchiveServiceFunctionT
         return type
 
     def get_by_origin_id(self, db: Session, origin_id: uuid.UUID) -> ArchiveServiceFunctionType:
+        if origin_id == None:
+            return None
         return db.query(self.model).filter(
             self.model.origin_id == origin_id
             ).first()
