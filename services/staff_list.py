@@ -255,11 +255,10 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
                                     db,
                                     service['origin'].get_by_id(db, getattr(staff_function, service['type_id']))
                                 )
-
                             archive_staff_function = service['service'].create_based_on_existing_archive_staff_function(
                                 db,
                                 staff_function,
-                                type.id
+                                type.id if type else None
                             )
 
                             archive_staff_unit.staff_functions.append(archive_staff_function)
