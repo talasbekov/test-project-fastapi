@@ -205,6 +205,12 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
             self.model.is_active == False
         ).all()
         for staff_division in staff_divisions:
+            archive_staff_divisions = (
+                db.query(ArchiveStaffDivision)
+                .filter(ArchiveStaffDivision.origin_id == staff_division.id)
+                .all())
+            for archive_staff_division in archive_staff_divisions:
+                archive_staff_division.origin_id = None
             self._replace_secondment_division_id_with_name(db, staff_division)
             super().remove(db, staff_division.id)
         db.flush()
