@@ -38,7 +38,7 @@ class StaffListStatusRead(StaffListBase):
     id: Optional[uuid.UUID]
     status: Optional[str]
     updated_at: Optional[datetime]
-    changes_count: Optional[int]
+    changes_size: Optional[int]
     user: Optional[UserShortRead]
     reg_number: Optional[str]
     document_signed_by: Optional[str]
