@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from exceptions import BadRequestException, NotFoundException
 from models import (StaffDivision, StaffDivisionEnum, ArchiveStaffDivision,
-                    StaffUnit, HrVacancy, Secondment)
+                    StaffUnit, HrVacancy, Secondment, EmergencyServiceHistory)
 from schemas import (
     StaffDivisionCreate,
     StaffDivisionRead,
@@ -211,6 +211,14 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
                 .all())
             for archive_staff_division in archive_staff_divisions:
                 archive_staff_division.origin_id = None
+            histories = (
+                db.query(EmergencyServiceHistory)
+                .filter(EmergencyServiceHistory.staff_division_id == staff_division.id)
+                .all())
+            for history in histories:
+                history.staff_division_id = None
+                history.staff_division_name = staff_division.name
+                history.staff_division_nameKZ = staff_division.nameKZ
             self._replace_secondment_division_id_with_name(db, staff_division)
             super().remove(db, staff_division.id)
         db.flush()
