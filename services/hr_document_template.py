@@ -106,7 +106,7 @@ class HrDocumentTemplateService(
                     raise NotFoundException(
                         detail=f"Category with id: {step.category} is not found!"
                     )
-                steps[str(function.priority)] = category.handle(db)
+                steps[str(function.priority)] = category.handle(db, user_id)
                 continue
             staff_units_ids = [unit.id for unit in function.staff_units]
             user = (
