@@ -5,7 +5,6 @@ from sqlalchemy.orm import Session
 from schemas import UserShortRead
 from models import StaffDivision, StaffDivisionEnum
 from services import staff_division_service
-from utils import is_valid_uuid
 from .base import BaseCategory
 
 
