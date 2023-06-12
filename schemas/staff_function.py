@@ -34,11 +34,14 @@ class DocumentStaffFunctionAdd(DocumentStaffFunctionBase):
     is_direct_supervisor: Optional[bool] = None
     category: Optional[int] = None
 
-class DocumentStaffFunctionConstructorAdd(DocumentStaffFunctionAdd):
-    staff_unit_id: uuid.UUID
 
 class DocumentStaffFunctionConstructorAdd(DocumentStaffFunctionAdd):
     staff_unit_id: uuid.UUID
+
+
+class DocumentStaffFunctionConstructorAdd(DocumentStaffFunctionAdd):
+    staff_unit_id: uuid.UUID
+
 
 class DocumentStaffFunctionAppendToStaffUnit(Model):
     staff_function_id: uuid.UUID
@@ -68,6 +71,7 @@ class StaffUnitFunctions(Model):
 
 class StaffFunctionRead(StaffFunctionBase, ReadNamedModel):
     hours_per_week: Optional[int]
+    discriminator: Optional[str]
 
     class Config:
         orm_mode = True
@@ -97,7 +101,7 @@ class DocumentStaffFunctionStep(ReadModel):
 
 
 class DocumentStaffFunctionRead(StaffFunctionRead, DocumentStaffFunctionBase):
-    
+
     priority: Optional[int]
     role_id: Optional[uuid.UUID]
     jurisdiction_id: Optional[uuid.UUID]

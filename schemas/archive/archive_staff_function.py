@@ -82,6 +82,7 @@ class ArchiveStaffFunctionRead(ArchiveStaffFunctionBase):
     id: Optional[uuid.UUID]
     name: Optional[str]
     hours_per_week: Optional[int]
+    discriminator: Optional[str]
 
     class Config:
         orm_mode = True

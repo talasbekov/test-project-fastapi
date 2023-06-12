@@ -4,8 +4,9 @@ from typing import List, Optional
 
 from pydantic import BaseModel, EmailStr
 
-from schemas import PositionRead, RankRead
-from schemas import Model, NamedModel, ReadModel, ReadNamedModel, BadgeRead, RankRead, StatusRead
+from schemas import (PositionRead, RankRead, StaffFunctionRead,
+                    Model, NamedModel, ReadModel, ReadNamedModel,
+                    BadgeRead, RankRead, StatusRead)
 
 
 
@@ -91,6 +92,7 @@ class StaffUnitRead(ReadModel):
     actual_users: Optional[List[Optional[UserRead]]]
     hr_vacancy: Optional[List[Optional[HrVacancyRead]]]
     requirements: Optional[List[dict]]
+    staff_functions: Optional[List[StaffFunctionRead]]
     user_replacing: Optional[UserReplacingRead]
     user_replacing_id: Optional[uuid.UUID]
 
