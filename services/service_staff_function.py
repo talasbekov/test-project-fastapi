@@ -61,6 +61,7 @@ class ServiceStaffFunctionService(
                 nameKZ=archive_staff_function.nameKZ,
                 hours_per_week=archive_staff_function.hours_per_week,
                 type_id=new_type_id,
+                is_active=True,
             )
         )
         return res
@@ -76,6 +77,7 @@ class ServiceStaffFunctionService(
                 nameKZ=archive_staff_function.nameKZ,
                 hours_per_week=archive_staff_function.hours_per_week,
                 type_id=new_type_id,
+                is_active=True,
             )
         )
         return res
@@ -88,6 +90,21 @@ class ServiceStaffFunctionService(
         if archive_service_staff_function.origin_id is None:
             return self._create_from_archive(db, archive_service_staff_function, new_type_id)
         return self._update_from_archive(db, archive_service_staff_function, new_type_id)
+
+    def make_all_inactive(self, db: Session):
+        db.query(self.model).update({self.model.is_active: False})
+        db.flush()
+
+    def delete_all_inactive(self, db: Session):
+        staff_functions = db.query(self.model).filter(
+            self.model.is_active == False
+        ).all()
+        for staff_function in staff_functions:
+            (db.query(ArchiveServiceStaffFunction)
+             .filter(ArchiveServiceStaffFunction.origin_id == staff_function.id)
+             .update({ArchiveServiceStaffFunction.origin_id: None}))
+            super().remove(db, staff_function.id)
+        db.flush()
 
 
 service_staff_function_service = ServiceStaffFunctionService(

@@ -204,7 +204,7 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
         return self.update_from_archive(db, archive_staff_unit, staff_division_id)
 
     def make_all_inactive(self, db: Session, exclude_ids: list[uuid.UUID] = []):
-        db.query(self.model).filter(
+        staff_units = db.query(self.model).filter(
             self.model.staff_division_id.not_in(exclude_ids)
         ).update({self.model.is_active: False})
         db.flush()
