@@ -10,6 +10,8 @@ from .base import ServiceBase
 class ServiceFunctionTypeService(ServiceBase[ServiceFunctionType, ServiceStaffFunctionTypeCreate, ServiceStaffFunctionTypeUpdate]):
 
     def get_by_id(self, db: Session, id: str):
+        if id is None:
+            return None
         service_function_type = super().get(db, id)
         if service_function_type is None:
             raise NotFoundException(detail=f"ServiceFunctionType with id: {id} is not found!")

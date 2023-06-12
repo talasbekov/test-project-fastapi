@@ -31,7 +31,7 @@ class ServiceArchiveStaffFunctionTypeService(ServiceBase[ArchiveServiceFunctionT
             ).first() is not None
 
     def create_based_on_existing_archive_staff_function_type(self, db: Session, staff_function_type: ServiceFunctionType):
-        if ServiceFunctionType is None:
+        if staff_function_type is None:
             return None
         return super().create(db, ServiceArchiveStaffFunctionTypeCreate(
                 name=staff_function_type.name,
