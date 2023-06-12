@@ -111,6 +111,7 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         staff_division_service.make_all_inactive(db)
         exclude_staff_division_ids = [i.id for i in staff_division_service.get_excluded_staff_divisions(db)]
         staff_unit_service.make_all_inactive(db, exclude_staff_division_ids)
+        service_staff_function_service.make_all_inactive(db)
 
         staff_divisions: list[ArchiveStaffDivision] = (
             archive_staff_division_service.get_departments(db, staff_list_id, 0, 100)
@@ -127,7 +128,7 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
 
         staff_unit_service.delete_all_inactive(db)
         staff_division_service.delete_all_inactive(db)
-
+        service_staff_function_service.delete_all_inactive(db)
         db.add(staff_list)
         db.flush()
         return staff_list
