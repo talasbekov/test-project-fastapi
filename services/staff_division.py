@@ -196,8 +196,9 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
         db.flush()
 
     def get_excluded_staff_divisions(self, db: Session):
+        except_service_divisions = list(filter(lambda x: x != StaffDivisionEnum.SERVICE, StaffDivisionEnum))
         return db.query(self.model).filter(
-            StaffDivision.name.in_([*StaffDivisionEnum])
+            StaffDivision.name.in_(except_service_divisions)
         ).all()
 
     def delete_all_inactive(self, db: Session):
