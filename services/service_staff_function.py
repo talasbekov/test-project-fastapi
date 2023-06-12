@@ -49,7 +49,8 @@ class ServiceStaffFunctionService(
     def _update_from_archive(
             self,
             db,
-            archive_staff_function: ArchiveServiceStaffFunction):
+            archive_staff_function: ArchiveServiceStaffFunction,
+            new_type_id: uuid.UUID):
         service_staff_function = self.get_by_id(db, archive_staff_function.origin_id)
 
         res = super().update(
@@ -59,7 +60,7 @@ class ServiceStaffFunctionService(
                 name=archive_staff_function.name,
                 nameKZ=archive_staff_function.nameKZ,
                 hours_per_week=archive_staff_function.hours_per_week,
-                type_id=None,
+                type_id=new_type_id,
             )
         )
         return res
@@ -67,13 +68,14 @@ class ServiceStaffFunctionService(
     def _create_from_archive(
             self,
             db,
-            archive_staff_function: ArchiveServiceStaffFunction):
+            archive_staff_function: ArchiveServiceStaffFunction,
+            new_type_id: uuid.UUID):
         res = super().create(
             db, ServiceStaffFunctionCreate(
                 name=archive_staff_function.name,
                 nameKZ=archive_staff_function.nameKZ,
                 hours_per_week=archive_staff_function.hours_per_week,
-                type_id=None,
+                type_id=new_type_id,
             )
         )
         return res
@@ -81,12 +83,11 @@ class ServiceStaffFunctionService(
     def create_or_update_from_archive(
             self,
             db: Session,
-            archive_service_staff_function: ArchiveServiceStaffFunction):
+            archive_service_staff_function: ArchiveServiceStaffFunction,
+            new_type_id: uuid.UUID):
         if archive_service_staff_function.origin_id is None:
-            return self._create_from_archive(db,
-                                             archive_service_staff_function)
-        return self._update_from_archive(db,
-                                         archive_service_staff_function)
+            return self._create_from_archive(db, archive_service_staff_function, new_type_id)
+        return self._update_from_archive(db, archive_service_staff_function, new_type_id)
 
 
 service_staff_function_service = ServiceStaffFunctionService(

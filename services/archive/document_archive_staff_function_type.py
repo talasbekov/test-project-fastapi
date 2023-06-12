@@ -24,6 +24,8 @@ class DocumentArchiveStaffFunctionTypeService(ServiceBase[ArchiveDocumentFunctio
             ).first()
     
     def create_based_on_existing_archive_staff_function_type(self, db: Session, staff_function_type: DocumentFunctionType):
+        if staff_function_type is None:
+            return None
         return super().create(db, DocumentArchiveStaffFunctionTypeCreate(
                 name=staff_function_type.name,
                 origin_id=staff_function_type.id,

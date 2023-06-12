@@ -28,6 +28,7 @@ class DocumentArchiveStaffFunction(ServiceBase[ArchiveDocumentStaffFunction, Arc
     def create_based_on_existing_archive_staff_function(self, db: Session, staff_function: DocumentStaffFunction, role_id: uuid.UUID):
         return super().create(db, ArchiveDocumentStaffFunctionCreate(
             name=staff_function.name,
+            nameKZ=staff_function.nameKZ,
             hours_per_week=staff_function.hours_per_week,
             role_id=role_id,
             jurisdiction_id=staff_function.jurisdiction_id,
@@ -38,6 +39,7 @@ class DocumentArchiveStaffFunction(ServiceBase[ArchiveDocumentStaffFunction, Arc
     def create_archive_staff_function(self, db: Session, body: NewArchiveDocumentStaffFunctionCreate):
         return super().create(db, ArchiveDocumentStaffFunctionCreate(
             name=body.name,
+            nameKZ=body.nameKZ,
             hours_per_week=body.hours_per_week,
             role_id=body.role_id,
             jurisdiction_id=body.jurisdiction_id,
@@ -48,6 +50,7 @@ class DocumentArchiveStaffFunction(ServiceBase[ArchiveDocumentStaffFunction, Arc
     def update_archive_staff_function(self, db: Session, staff_function: DocumentStaffFunction, body: NewArchiveDocumentStaffFunctionCreate):
         return super().update(db, db_obj=staff_function, obj_in=ArchiveDocumentStaffFunctionCreate(
             name=body.name,
+            nameKZ=body.nameKZ,
             hours_per_week=body.hours_per_week,
             role_id=body.role_id,
             jurisdiction_id=body.jurisdiction_id,

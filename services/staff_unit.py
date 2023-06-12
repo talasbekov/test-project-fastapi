@@ -13,7 +13,7 @@ from schemas import (StaffUnitCreate, StaffUnitUpdate,
                      StaffUnitCreateWithPosition, PositionCreate,
                     )
 from services import (service_staff_function_service,
-                      document_staff_function_service, 
+                      document_staff_function_service,
                       staff_division_service)
 from .base import ServiceBase
 
@@ -170,7 +170,7 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
         )
 
     def create_from_archive(self, db: Session, archive_staff_unit: ArchiveStaffUnit,
-                            staff_division_id: uuid.UUID, staff_functions_ids):
+                            staff_division_id: uuid.UUID):
         res = super().create(
             db, StaffUnitCreate(
                 position_id=archive_staff_unit.position_id,
@@ -180,13 +180,10 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
                 requirements=archive_staff_unit.requirements
                 )
             )
-        body = {'staff_unit_id': res.id,
-                'staff_function_ids': staff_functions_ids}
-        self.add_service_staff_function(db, StaffUnitFunctions(**body))
         return res
 
     def update_from_archive(self, db: Session, archive_staff_unit: ArchiveStaffUnit,
-                            staff_division_id: uuid.UUID, staff_functions_ids):
+                            staff_division_id: uuid.UUID):
         staff_unit = self.get_by_id(db, archive_staff_unit.origin_id)
         res = super().update(
             db,
@@ -199,20 +196,12 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
                 requirements=archive_staff_unit.requirements
             )
         )
-        body = {'staff_unit_id': res.id,
-                'staff_function_ids': staff_functions_ids}
-        self.add_service_staff_function(db, StaffUnitFunctions(**body))
         return res
 
     def create_or_update_from_archive(self, db: Session, archive_staff_unit: ArchiveStaffUnit, staff_division_id: uuid.UUID):
-        archive_staff_functions = archive_staff_unit.staff_functions
-        staff_functions_ids = []
-        for archive_staff_function in archive_staff_functions:
-            if isinstance(archive_staff_function, ArchiveServiceStaffFunction):
-                staff_functions_ids.append(service_staff_function_service.create_or_update_from_archive(db, archive_staff_function).id)
         if archive_staff_unit.origin_id is None:
-            return self.create_from_archive(db, archive_staff_unit, staff_division_id, staff_functions_ids)
-        return self.update_from_archive(db, archive_staff_unit, staff_division_id, staff_functions_ids)
+            return self.create_from_archive(db, archive_staff_unit, staff_division_id)
+        return self.update_from_archive(db, archive_staff_unit, staff_division_id)
 
     def make_all_inactive(self, db: Session, exclude_ids: list[uuid.UUID] = []):
         db.query(self.model).filter(

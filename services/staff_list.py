@@ -167,9 +167,9 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
             if is_leader_needed and staff_unit.id == staff_division.leader_id:
                 leader_id = new_staff_unit.id
             staff_unit.origin_id = new_staff_unit.id
-            # new_staff_unit = self._create_and_add_functions_to_new_unit(db,
-            #                                                             staff_unit,
-            #                                                             new_staff_unit)
+            new_staff_unit = self._create_and_add_functions_to_new_unit(db,
+                                                                        staff_unit,
+                                                                        new_staff_unit)
             db.add(new_staff_unit)
             db.add(staff_unit)
 
@@ -197,7 +197,8 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
                 db, staff_function, getattr(new_staff_function_type, 'id', None))
 
             staff_function.origin_id = new_staff_function.id
-            new_staff_unit.staff_functions.append(new_staff_function)
+            if new_staff_function not in new_staff_unit.staff_functions:
+                new_staff_unit.staff_functions.append(new_staff_function)
             db.add(new_staff_function)
             db.add(staff_function)
         return new_staff_unit
@@ -243,25 +244,21 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
 
                 if staff_unit.staff_functions:
                     for staff_function in staff_unit.staff_functions:
-                        if not archive_staff_function_service.exists_by_origin_id(db, staff_function.id):
-                            service = options.get(staff_function.discriminator)
-                            if service is None:
-                                raise NotSupportedException(detail="Staff function type is not supported!")
+                        service = options.get(staff_function.discriminator)
+                        if service is None:
+                            raise NotSupportedException(detail="Staff function type is not supported!")
+                        type = service['type'].create_based_on_existing_archive_staff_function_type(
+                            db,
+                            service['origin'].get_by_id(db, getattr(staff_function, service['type_id']))
+                        )
 
-                            type = service['type'].get_by_origin_id(db, staff_function.id)
+                        archive_staff_function = service['service'].create_based_on_existing_archive_staff_function(
+                            db,
+                            staff_function,
+                            type.id if type else None
+                        )
 
-                            if type is None:
-                                type = service['type'].create_based_on_existing_archive_staff_function_type(
-                                    db,
-                                    service['origin'].get_by_id(db, getattr(staff_function, service['type_id']))
-                                )
-                            archive_staff_function = service['service'].create_based_on_existing_archive_staff_function(
-                                db,
-                                staff_function,
-                                type.id if type else None
-                            )
-
-                            archive_staff_unit.staff_functions.append(archive_staff_function)
+                        archive_staff_unit.staff_functions.append(archive_staff_function)
 
                 archive_division.staff_units.append(archive_staff_unit)
 
