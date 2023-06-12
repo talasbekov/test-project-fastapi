@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from schemas import UserShortRead
 from models import StaffDivision, StaffDivisionEnum
 from services import staff_division_service
+from utils import is_valid_uuid
 from .base import BaseCategory
 
 
@@ -23,8 +24,11 @@ class CuratorCategory(BaseCategory):
         )
         res = set()
         for group in groups:
-            for user in group.curators:
-                res.add(user.users[0].id)
+            for staff_unit in group.staff_units:
+                if staff_unit.users:
+                    if staff_unit.users[0].supervised_by != None:
+                        res.add(staff_unit.users[0].supervised_by)
+        
         return list(res)
 
 
