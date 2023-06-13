@@ -67,7 +67,7 @@ async def get_all_personal(*,
     return history_service.get_all_personal(db, user_id, date_from, skip, limit)
 
 
-@router.get("/{user_id}", dependencies=[Depends(HTTPBearer())],
+@router.get("/user/{user_id}/", dependencies=[Depends(HTTPBearer())],
             response_model=HistoryServiceDetailRead,
             summary="Get all Service and Details by user id")
 async def get_all_by_user_id(*,
