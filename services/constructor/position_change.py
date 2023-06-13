@@ -26,9 +26,9 @@ class PositionChangeHandler(BaseHandler):
         old_history = staff_unit_service.get_last_history(db, user.id)
 
         if old_history is None:
-            staff_unit_id = user.staff_unit_id
+            staff_unit = user.staff_unit
             history: EmergencyServiceHistory = history_service.create_history(
-                db, user.id, staff_unit_id)
+                db, user.id, staff_unit)
             old_history = staff_unit_service.get_last_history(db, user.id)
 
         res = staff_unit_service.create_relation(db, user, position_id)
