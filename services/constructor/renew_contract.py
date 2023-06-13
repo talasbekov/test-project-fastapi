@@ -6,7 +6,7 @@ from core import configs
 from models import User, ContractType, ContractHistory, HrDocument
 from .base import BaseHandler
 from services import contract_service, history_service
-from exceptions import ForbiddenException, NotFoundException
+from exceptions import ForbiddenException, NotFoundException, BadRequestException
 from utils import convert_str_to_datetime
 
 
@@ -34,7 +34,8 @@ class RenewContractHandler(BaseHandler):
     ):
         contract_type, date_from, date_to = self.get_args(db, action, props)
 
-        self.handle_validation(db, user, action, template_props, props, document)
+        self.handle_validation(
+            db, user, action, template_props, props, document)
 
         res = contract_service.create_relation(db, user.id, contract_type.id)
         user.contracts.append(res)
@@ -54,7 +55,7 @@ class RenewContractHandler(BaseHandler):
         db.flush()
 
         return user
-    
+
     def handle_validation(
         self,
         db: Session,
@@ -85,7 +86,8 @@ class RenewContractHandler(BaseHandler):
             date_from = datetime.datetime.now()
             date_to = date_from.replace(date_from.year + contract_type.years)
         except:
-            raise ForbiddenException(detail=f'Invalid props for action: {self.__handler__}')
+            raise BadRequestException(
+                detail=f'Invalid props for action: {self.__handler__}')
         return contract_type, date_from, date_to
 
     def handle_response(self, db: Session,

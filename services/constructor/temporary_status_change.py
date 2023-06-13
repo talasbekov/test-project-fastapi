@@ -6,7 +6,7 @@ from core import configs
 from models import User, HrDocument
 from .base import BaseHandler
 from services import status_service, history_service
-from exceptions import ForbiddenException
+from exceptions import ForbiddenException, BadRequestException
 from utils import convert_str_to_datetime
 
 
@@ -29,9 +29,11 @@ class TemporaryStatusChangeHandler(BaseHandler):
 
         res = status_service.create_relation(db, user.id, status_id)
         history = history_service.create_timeline_history(
-            db, user.id, res, 
-            convert_str_to_datetime(props[action['date_from']['tagname']]['name']),
-            convert_str_to_datetime(props[action['date_to']['tagname']]['name'])
+            db, user.id, res,
+            convert_str_to_datetime(
+                props[action['date_from']['tagname']]['name']),
+            convert_str_to_datetime(
+                props[action['date_to']['tagname']]['name'])
         )
 
         history.document_link = configs.GENERATE_IP + str(document.id)
@@ -68,8 +70,7 @@ class TemporaryStatusChangeHandler(BaseHandler):
             date_to = convert_str_to_datetime(
                 props[action['date_to']['tagname']]['name'])
         except Exception as e:
-            logging.exception(e)
-            raise ForbiddenException(
+            raise BadRequestException(
                 f"Status is not defined for this action: {self.__handler__}"
             )
         return status_id, date_from, date_to
@@ -80,7 +81,6 @@ class TemporaryStatusChangeHandler(BaseHandler):
                         properties: dict,
                         ):
         status_id, date_from, date_to = self.get_args(db, action, properties)
-        print(self.get_args)
         status = status_service.get_object(db, status_id, 'write')
         return {status, date_from, date_to}
 
