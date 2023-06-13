@@ -198,8 +198,7 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
                 db, staff_function, getattr(new_staff_function_type, 'id', None))
 
             staff_function.origin_id = new_staff_function.id
-            if new_staff_function not in new_staff_unit.staff_functions:
-                new_staff_unit.staff_functions.append(new_staff_function)
+            new_staff_unit.staff_functions.append(new_staff_function)
             db.add(new_staff_function)
             db.add(staff_function)
         return new_staff_unit

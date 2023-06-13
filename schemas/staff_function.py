@@ -7,6 +7,7 @@ from schemas import (DocumentStaffFunctionTypeRead,
 
 
 class StaffFunctionBase(NamedModel):
+    is_active: Optional[bool]
     hours_per_week: int
 
 
