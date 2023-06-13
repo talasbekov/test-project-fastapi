@@ -74,9 +74,11 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
             user_id=user_id
         )
         staff_list = super().create(db, create_staff_list)
-        staff_divisions = staff_division_service.get_all_except_special(db, 0, 100)
+        staff_divisions = staff_division_service.get_all_except_special(
+            db, 0, 100)
         for staff_division in staff_divisions:
-            self._create_archive_staff_division(db, staff_division, staff_list.id, None)
+            self._create_archive_staff_division(
+                db, staff_division, staff_list.id, None)
 
         staff_list.status = StaffListStatusEnum.IN_PROGRESS.value
         db.add(staff_list)
@@ -91,13 +93,14 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         staff_list = super().create(db, create_staff_list)
         for archive_staff_division in db.query(ArchiveStaffDivision).filter(
                 ArchiveStaffDivision.staff_list_id == staff_list_id):
-            staff_division = staff_division_service.get_by_id(db, archive_staff_division.origin_id)
-            self._create_archive_staff_division(db, staff_division, staff_list.id, None)
+            staff_division = staff_division_service.get_by_id(
+                db, archive_staff_division.origin_id)
+            self._create_archive_staff_division(
+                db, staff_division, staff_list.id, None)
 
         db.add(staff_list)
         db.flush()
         return staff_list
-
 
     def apply_staff_list(
         self,
@@ -109,16 +112,19 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         staff_list = self.get_by_id(db, staff_list_id)
 
         staff_division_service.make_all_inactive(db)
-        exclude_staff_division_ids = [i.id for i in staff_division_service.get_excluded_staff_divisions(db)]
+        exclude_staff_division_ids = [
+            i.id for i in staff_division_service.get_excluded_staff_divisions(db)]
         staff_unit_service.make_all_inactive(db, exclude_staff_division_ids)
         service_staff_function_service.make_all_inactive(db)
 
         staff_divisions: list[ArchiveStaffDivision] = (
-            archive_staff_division_service.get_departments(db, staff_list_id, 0, 100)
+            archive_staff_division_service.get_departments(
+                db, staff_list_id, 0, 100)
         )
         new_staff_divisions = []
         for staff_division in staff_divisions:
-            new_staff_division = self._create_staff_division(db, staff_division, None)
+            new_staff_division = self._create_staff_division(
+                db, staff_division, None)
             new_staff_divisions.append(new_staff_division)
 
         staff_list.document_signed_by = signed_by
@@ -174,7 +180,6 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
             db.add(new_staff_unit)
             db.add(staff_unit)
 
-
         new_staff_division.leader_id = leader_id
         db.add(new_staff_division)
         db.add(staff_division)
@@ -182,27 +187,25 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
 
         return new_staff_division
 
-
-    def _create_and_add_functions_to_new_unit(self, db, staff_unit, new_staff_unit):
-        staff_functions = staff_unit.staff_functions
-        for staff_function in staff_functions:
-            if isinstance(staff_function, ArchiveDocumentStaffFunction):
+    def _create_and_add_functions_to_new_unit(self, db, archive_staff_unit, new_staff_unit):
+        archive_staff_functions = archive_staff_unit.staff_functions
+        for arhive_staff_function in archive_staff_functions:
+            if isinstance(arhive_staff_function, ArchiveDocumentStaffFunction):
                 continue
 
             new_staff_function_type = None
-            if staff_function.type_id is not None:
+            if arhive_staff_function.type_id is not None:
                 new_staff_function_type = service_staff_function_type_service.create_or_update_from_archive(
-                    db, staff_function.type_id)
+                    db, arhive_staff_function.type_id)
 
             new_staff_function = service_staff_function_service.create_or_update_from_archive(
-                db, staff_function, getattr(new_staff_function_type, 'id', None))
+                db, arhive_staff_function, getattr(new_staff_function_type, 'id', None))
 
-            staff_function.origin_id = new_staff_function.id
+            arhive_staff_function.origin_id = new_staff_function.id
             new_staff_unit.staff_functions.append(new_staff_function)
             db.add(new_staff_function)
-            db.add(staff_function)
+            db.add(arhive_staff_function)
         return new_staff_unit
-
 
     def _create_archive_staff_division(self, db: Session, staff_division: StaffDivision, staff_list_id: uuid.UUID,
                                        parent_group_id: Optional[uuid.UUID]):
@@ -227,7 +230,8 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
                 staff_unit: StaffUnit
 
                 staff_unit_user_id = staff_unit.users[0].id if staff_unit.users else None
-                staff_unit_actual_user_id = staff_unit.actual_users[0].id if staff_unit.actual_users else None
+                staff_unit_actual_user_id = staff_unit.actual_users[
+                    0].id if staff_unit.actual_users else None
                 staff_unit_user_replacing = staff_unit.user_replacing_id
                 staff_unit_position = staff_unit.position_id
 
@@ -245,11 +249,17 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
                 if staff_unit.staff_functions:
                     for staff_function in staff_unit.staff_functions:
                         service = options.get(staff_function.discriminator)
+                        if isinstance(staff_function, ServiceStaffFunction):
+                            print(staff_function)
+                        if isinstance(staff_function, DocumentStaffFunction):
+                            print('Anime')
                         if service is None:
-                            raise NotSupportedException(detail="Staff function type is not supported!")
+                            raise NotSupportedException(
+                                detail="Staff function type is not supported!")
                         type = service['type'].create_based_on_existing_archive_staff_function_type(
                             db,
-                            service['origin'].get_by_id(db, getattr(staff_function, service['type_id']))
+                            service['origin'].get_by_id(db, getattr(
+                                staff_function, service['type_id']))
                         )
 
                         archive_staff_function = service['service'].create_based_on_existing_archive_staff_function(
@@ -258,7 +268,8 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
                             type.id if type else None
                         )
 
-                        archive_staff_unit.staff_functions.append(archive_staff_function)
+                        archive_staff_unit.staff_functions.append(
+                            archive_staff_function)
 
                 archive_division.staff_units.append(archive_staff_unit)
 
@@ -275,7 +286,8 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
             db: Session,
             id: uuid.UUID
     ):
-        hr_document_template = hr_document_template_service.get_staff_list(db=db)
+        hr_document_template = hr_document_template_service.get_staff_list(
+            db=db)
         hr_document_template_id = hr_document_template.id
         hr_documents = db.query(HrDocument).filter(
             HrDocument.hr_document_template_id == hr_document_template_id
