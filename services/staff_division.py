@@ -150,6 +150,18 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
             parent_id = tmp.parent_group_id
         
         return full_name, full_nameKZ
+    
+    def validate_staff_divisions(self, staff_divisions: List[StaffDivision]):
+        parents = [StaffDivisionRead.from_orm(staff_division).dict() for staff_division in staff_divisions]
+
+        # Remove candidate staff division into special group
+        for parent in parents:
+            if parent['name'] == StaffDivisionEnum.SPECIAL_GROUP.value:
+                parent['children'] = [child for child in parent['children'] if child['name'] != StaffDivisionEnum.CANDIDATES.value]
+
+                break
+
+        return parents
 
     def create_from_archive(self, db: Session, archive_staff_division: ArchiveStaffDivision, parent_id: uuid.UUID, leader_id: uuid.UUID):
         self._validate_parent(db, parent_id)
