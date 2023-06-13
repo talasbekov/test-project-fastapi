@@ -4,7 +4,7 @@ from core import configs
 from models import User, HrDocument
 from .base import BaseHandler
 from services import penalty_service, history_service, penalty_type_service
-from exceptions import ForbiddenException
+from exceptions import ForbiddenException, BadRequestException
 
 from utils import convert_str_to_datetime
 
@@ -22,7 +22,8 @@ class AddPenaltyHandler(BaseHandler):
         document: HrDocument,
     ):
         penalty_id = self.get_args(action, props)
-        self.handle_validation(db, user, action, template_props, props, document)
+        self.handle_validation(
+            db, user, action, template_props, props, document)
         res = penalty_service.create_relation(db, user.id, penalty_id)
         res.name = action["reason"]["tagname"]
         user.penalties.append(res)
@@ -54,14 +55,15 @@ class AddPenaltyHandler(BaseHandler):
         try:
             penalty_id = properties[action["penalty"]["tagname"]]["value"]
         except KeyError:
-            raise ForbiddenException(f"Penalty is not defined for this action: {self.__handler__}")
+            raise BadRequestException(
+                f"Penalty is not defined for this action: {self.__handler__}")
         return penalty_id
 
     def handle_response(self, db: Session,
                         user: User,
                         action: dict,
                         properties: dict,
-    ):
+                        ):
         args = self.get_args(action, properties)
         obj = penalty_type_service.get_by_id(db, args)
         return {'name': obj.name, 'nameKZ': obj.nameKZ}

@@ -6,7 +6,7 @@ from core import configs
 from models import User, CoolnessHistory, HrDocument
 from .base import BaseHandler
 from services import coolness_service, history_service
-from exceptions import ForbiddenException, NotSupportedException
+from exceptions import ForbiddenException, BadRequestException
 
 
 def get_last_by_user_id(db: Session, user_id: str):
@@ -33,7 +33,8 @@ class DecreaseCoolnessHandler(BaseHandler):
     ):
         coolness_id = self.get_args(action, props)
 
-        self.handle_validation(db, user, action, template_props, props, document)
+        self.handle_validation(
+            db, user, action, template_props, props, document)
 
         coolness = coolness_service.get_by_id(db, coolness_id)
         coolness_type = coolness.type
@@ -76,9 +77,7 @@ class DecreaseCoolnessHandler(BaseHandler):
         coolness = coolness_service.get_by_id(db, coolness_id)
         coolness_type = coolness.type
 
-        if (
-                coolness_type.order == 1
-        ):
+        if coolness_type.order == 1:
             raise ForbiddenException(
                 detail=f"You can not decrease coolness to {coolness_type.name}"
             )
@@ -87,7 +86,8 @@ class DecreaseCoolnessHandler(BaseHandler):
         try:
             coolness_id = properties[action["coolness"]["tagname"]]["value"]
         except KeyError:
-            raise ForbiddenException(f"Coolness is not defined for this action: {self.__handler__}")
+            raise BadRequestException(
+                f"Coolness is not defined for this action: {self.__handler__}")
         return coolness_id
 
     def handle_response(self, db: Session,

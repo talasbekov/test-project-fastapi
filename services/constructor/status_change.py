@@ -6,7 +6,7 @@ from core import configs
 from models import User, HrDocument, StaffDivisionEnum, StaffUnit
 from .base import BaseHandler
 from services import status_service, history_service, staff_unit_service, staff_division_service
-from exceptions import ForbiddenException
+from exceptions import ForbiddenException, BadRequestException
 from utils import convert_str_to_datetime
 
 archive_status = [
@@ -79,7 +79,7 @@ class StatusChangeHandler(BaseHandler):
         try:
             status_id = props[action['status']['tagname']]['value']
         except Exception as e:
-            raise ForbiddenException(
+            raise BadRequestException(
                 detail=f'Invalid props for action: {self.__handler__}')
         return status_id
 

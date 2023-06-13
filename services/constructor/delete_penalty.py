@@ -6,7 +6,7 @@ from core import configs
 from models import User, HrDocument, Penalty, PenaltyHistory
 from .base import BaseHandler
 from services import penalty_service, penalty_type_service
-from exceptions import ForbiddenException
+from exceptions import ForbiddenException, BadRequestException
 
 
 class DeletePenaltyHandler(BaseHandler):
@@ -52,7 +52,7 @@ class DeletePenaltyHandler(BaseHandler):
         try:
             penalty_id = properties[action["penalty"]["tagname"]]["value"]
         except KeyError:
-            raise ForbiddenException(
+            raise BadRequestException(
                 f"Penalty is not defined for this action: {self.__handler__}")
         return penalty_id
 
@@ -62,7 +62,8 @@ class DeletePenaltyHandler(BaseHandler):
                         properties: dict,
                         ):
         penalty_id = self.get_args(action, properties)
-        penalty_type_id = penalty_service.get_by_id(db=db, id=penalty_id).type_id
+        penalty_type_id = penalty_service.get_by_id(
+            db=db, id=penalty_id).type_id
         obj = penalty_type_service.get_by_id(db, penalty_type_id)
         penalty_type = {'name': obj.name, 'nameKZ': obj.nameKZ}
         history = (db.query(PenaltyHistory)

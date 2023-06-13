@@ -6,7 +6,7 @@ from core import configs
 from models import User, HrDocument, Badge, BadgeHistory
 from .base import BaseHandler
 from services import badge_service, history_service
-from exceptions import ForbiddenException
+from exceptions import ForbiddenException, BadRequestException
 
 
 class DeleteBadgeHandler(BaseHandler):
@@ -56,7 +56,7 @@ class DeleteBadgeHandler(BaseHandler):
         try:
             badge_id = properties[action["badge"]["tagname"]]["value"]
         except KeyError:
-            raise ForbiddenException(
+            raise BadRequestException(
                 f"Badge is not defined for this action: {self.__handler__}")
         return badge_id
 
