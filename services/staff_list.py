@@ -156,7 +156,7 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
                     new_staff_division.id
                 )
                 new_staff_division.children.append(child_staff_division)
-        staff_division.origin_id = None
+        staff_division.origin_id = new_staff_division.id
 
         if staff_division.leader_id is not None:
             is_leader_needed = True

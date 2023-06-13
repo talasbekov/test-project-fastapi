@@ -28,6 +28,7 @@ class DocumentArchiveStaffFunctionTypeService(ServiceBase[ArchiveDocumentFunctio
             return None
         return super().create(db, DocumentArchiveStaffFunctionTypeCreate(
                 name=staff_function_type.name,
+                nameKZ=staff_function_type.nameKZ,
                 origin_id=staff_function_type.id,
                 can_cancel=staff_function_type.can_cancel
             )
@@ -36,6 +37,7 @@ class DocumentArchiveStaffFunctionTypeService(ServiceBase[ArchiveDocumentFunctio
     def create_staff_function_type(self, db: Session, body: NewDocumentArchiveStaffFunctionTypeCreate):
         return super().create(db, DocumentArchiveStaffFunctionTypeCreate(
                 name=body.name,
+                nameKZ=body.nameKZ,
                 origin_id=None,
                 can_cancel=body.can_cancel
             )
@@ -44,6 +46,7 @@ class DocumentArchiveStaffFunctionTypeService(ServiceBase[ArchiveDocumentFunctio
     def create_staff_function_type(self, db: Session, type: ArchiveDocumentFunctionType, body: NewDocumentArchiveStaffFunctionTypeCreate):
         return super().update(db, db_obj=type, obj_in=DocumentArchiveStaffFunctionTypeCreate(
                 name=body.name,
+                nameKZ=body.nameKZ,
                 origin_id=None,
                 can_cancel=body.can_cancel
             )
