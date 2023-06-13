@@ -494,79 +494,79 @@ async def get_all_actions():
             ],
         },
     },
-    {
-        'action_name': "Добавление откомандирования",
-        'action_nameKZ': "Іссапарды қосу",
-        'action_type': 'add_secondment_to_state_body',
-        'children': [
-            {
-                'alias_name': 'Гос. орган для откомандирования',
-                'alias_nameKZ': 'Іссапарды қосу үшін мемлекеттік орган',
-                'tagname': 'state_body',
-                'data_taken': 'dropdown',
-                'field_name': 'state_body',
-            },
-            {
-                'alias_name': 'Дата начала',
-                'alias_nameKZ': 'Басталу күні',
-                'tagname': 'date_from',
-                'data_taken': 'manual',
-                'data_type': 'date',
-            },
-            {
-                'alias_name': 'Дата конца',
-                'alias_nameKZ': 'Аяқталу күні',
-                'tagname': 'date_to',
-                'data_taken': 'manual',
-                'data_type': 'date',
-            }],
-        'properties': {
-            'state_body': {
-                'alias_name': 'Гос. орган для откомандирования',
-                'alias_nameKZ': 'Іссапарды қосу үшін мемлекеттік орган',
-                'type': 'write',
-                'data_taken': 'dropdown',
-                'field_name': 'state_body',
-            },
-            'date_from': {
-                'alias_name': 'Дата начала',
-                'alias_nameKZ': 'Басталу күні',
-                'type': 'read',
-                'data_taken': 'manual',
-                'data_type': 'date',
-            },
-            'date_to': {
-                'alias_name': 'Дата конца',
-                'alias_nameKZ': 'Аяқталу күні',
-                'type': 'read',
-                'data_taken': 'manual',
-                'data_type': 'date',
-            },
-        },
-        'actions': {
-            'args': [
-                {
-                    'add_secondment_to_state_body': {
-                        'secondment': {
-                            'tagname': 'state_body',
-                            'alias_name': 'Гос. орган для откомандирования',
-                            'alias_nameKZ': 'Іссапарды қосу үшін мемлекеттік орган',
-                        },
-                        'date_from': {
-                            'tagname': 'date_from',
-                            'alias_name': 'Дата начала',
-                            'alias_nameKZ': 'Басталу күні',
-                        },
-                        'date_to': {
-                            'tagname': 'date_to',
-                            'alias_name': 'Дата конца',
-                            'alias_nameKZ': 'Аяқталу күні',
-                        },
-                    },
-                },
-            ]
-        }
-    },
+    # {
+    #     'action_name': "Добавление откомандирования",
+    #     'action_nameKZ': "Іссапарды қосу",
+    #     'action_type': 'add_secondment_to_state_body',
+    #     'children': [
+    #         {
+    #             'alias_name': 'Гос. орган для откомандирования',
+    #             'alias_nameKZ': 'Іссапарды қосу үшін мемлекеттік орган',
+    #             'tagname': 'state_body',
+    #             'data_taken': 'dropdown',
+    #             'field_name': 'state_body',
+    #         },
+    #         {
+    #             'alias_name': 'Дата начала',
+    #             'alias_nameKZ': 'Басталу күні',
+    #             'tagname': 'date_from',
+    #             'data_taken': 'manual',
+    #             'data_type': 'date',
+    #         },
+    #         {
+    #             'alias_name': 'Дата конца',
+    #             'alias_nameKZ': 'Аяқталу күні',
+    #             'tagname': 'date_to',
+    #             'data_taken': 'manual',
+    #             'data_type': 'date',
+    #         }],
+    #     'properties': {
+    #         'state_body': {
+    #             'alias_name': 'Гос. орган для откомандирования',
+    #             'alias_nameKZ': 'Іссапарды қосу үшін мемлекеттік орган',
+    #             'type': 'write',
+    #             'data_taken': 'dropdown',
+    #             'field_name': 'state_body',
+    #         },
+    #         'date_from': {
+    #             'alias_name': 'Дата начала',
+    #             'alias_nameKZ': 'Басталу күні',
+    #             'type': 'read',
+    #             'data_taken': 'manual',
+    #             'data_type': 'date',
+    #         },
+    #         'date_to': {
+    #             'alias_name': 'Дата конца',
+    #             'alias_nameKZ': 'Аяқталу күні',
+    #             'type': 'read',
+    #             'data_taken': 'manual',
+    #             'data_type': 'date',
+    #         },
+    #     },
+    #     'actions': {
+    #         'args': [
+    #             {
+    #                 'add_secondment_to_state_body': {
+    #                     'secondment': {
+    #                         'tagname': 'state_body',
+    #                         'alias_name': 'Гос. орган для откомандирования',
+    #                         'alias_nameKZ': 'Іссапарды қосу үшін мемлекеттік орган',
+    #                     },
+    #                     'date_from': {
+    #                         'tagname': 'date_from',
+    #                         'alias_name': 'Дата начала',
+    #                         'alias_nameKZ': 'Басталу күні',
+    #                     },
+    #                     'date_to': {
+    #                         'tagname': 'date_to',
+    #                         'alias_name': 'Дата конца',
+    #                         'alias_nameKZ': 'Аяқталу күні',
+    #                     },
+    #                 },
+    #             },
+    #         ]
+    #     }
+    # },
     # {
     #     'action_name': 'Добавление классной квалификации',
     #     'action_nameKZ': 'Сыныптық квалификацияны қосу',
