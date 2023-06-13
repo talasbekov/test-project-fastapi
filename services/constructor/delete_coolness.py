@@ -6,7 +6,7 @@ from core import configs
 from models import User, HrDocument, Coolness
 from .base import BaseHandler
 from services import coolness_service
-from exceptions import ForbiddenException
+from exceptions import ForbiddenException, BadRequestException
 
 
 class DeleteCoolnessHandler(BaseHandler):
@@ -22,7 +22,8 @@ class DeleteCoolnessHandler(BaseHandler):
         document: HrDocument,
     ):
         coolness_id = self.get_args(action, props)
-        self.handle_validation(db, user, action, template_props, props, document)
+        self.handle_validation(
+            db, user, action, template_props, props, document)
         res = coolness_service.stop_relation(db, user.id, coolness_id)
 
         res.cancel_document_link = configs.GENERATE_IP + str(document.id)
@@ -49,7 +50,8 @@ class DeleteCoolnessHandler(BaseHandler):
         try:
             coolness_id = properties[action["coolness"]["tagname"]]["value"]
         except KeyError:
-            raise ForbiddenException(f"Coolness is not defined for this action: {self.__handler__}")
+            raise BadRequestException(
+                f"Coolness is not defined for this action: {self.__handler__}")
         return coolness_id
 
     def handle_response(self, db: Session,

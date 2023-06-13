@@ -9,7 +9,7 @@ from models import (
     User,
     HrDocument,
 )
-from exceptions import ForbiddenException
+from exceptions import ForbiddenException, BadRequestException
 from .base import BaseHandler
 from .. import (
     staff_division_service,
@@ -33,18 +33,22 @@ class ApplyStaffListHandler(BaseHandler):
     ):
         staff_list_id = self.get_args(action, props)
         staff_list_service.get_by_id(db, staff_list_id)
-        self.handle_validation(db, user, action, template_props, props, document)
+        self.handle_validation(
+            db, user, action, template_props, props, document)
 
         staff_division_service.make_all_inactive(db)
-        exclude_staff_division_ids = [i.id for i in staff_division_service.get_excluded_staff_divisions(db)]
+        exclude_staff_division_ids = [
+            i.id for i in staff_division_service.get_excluded_staff_divisions(db)]
         staff_unit_service.make_all_inactive(db, exclude_staff_division_ids)
 
         staff_divisions: list[ArchiveStaffDivision] = (
-            archive_staff_division_service.get_departments(db, staff_list_id, 0, 100)
+            archive_staff_division_service.get_departments(
+                db, staff_list_id, 0, 100)
         )
         new_staff_divisions = []
         for staff_division in staff_divisions:
-            new_staff_division = self._create_staff_division(db, staff_division, None)
+            new_staff_division = self._create_staff_division(
+                db, staff_division, None)
             new_staff_divisions.append(new_staff_division)
 
         db.flush()
@@ -64,7 +68,8 @@ class ApplyStaffListHandler(BaseHandler):
         is_leader_needed = None
         leader_id = None
 
-        parent = archive_staff_division_service.get(db, staff_division.parent_group_id)
+        parent = archive_staff_division_service.get(
+            db, staff_division.parent_group_id)
 
         new_staff_division = staff_division_service.create_or_update_from_archive(
             db,
@@ -80,7 +85,7 @@ class ApplyStaffListHandler(BaseHandler):
                     new_staff_division.id
                 )
                 new_staff_division.children.append(child_staff_division)
-            
+
         staff_division.origin_id = new_staff_division.id
 
         if staff_division.leader_id is not None:
@@ -88,7 +93,8 @@ class ApplyStaffListHandler(BaseHandler):
         staff_units: list[ArchiveStaffUnit] = staff_division.staff_units
 
         for staff_unit in staff_units:
-            new_staff_unit = staff_unit_service.create_or_update_from_archive(db, staff_unit, new_staff_division.id)
+            new_staff_unit = staff_unit_service.create_or_update_from_archive(
+                db, staff_unit, new_staff_division.id)
             if is_leader_needed and staff_unit.id == staff_division.leader_id:
                 leader_id = new_staff_unit.id
             staff_unit.origin_id = new_staff_unit.id
@@ -103,9 +109,11 @@ class ApplyStaffListHandler(BaseHandler):
 
     def get_args(self, action, properties):
         try:
-            staff_list_id = properties[action["staff_list"]["tagname"]]["value"]
+            staff_list_id = properties[action["staff_list"]
+                                       ["tagname"]]["value"]
         except KeyError:
-            raise ForbiddenException(f"Staff list is not defined for this action: {self.__handler__}")
+            raise BadRequestException(
+                f"Staff list is not defined for this action: {self.__handler__}")
         return staff_list_id
 
     def handle_response(self, db: Session,

@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from core import configs
 from models import User, HrDocument, StatusEnum
 from services import status_service, history_service
-from exceptions import ForbiddenException
+from exceptions import ForbiddenException, BadRequestException
 from utils import convert_str_to_datetime
 from .base import BaseHandler
 
@@ -71,8 +71,7 @@ class GrantLeaveHandler(BaseHandler):
             date_to = convert_str_to_datetime(
                 props[action['date_to']['tagname']]['name'])
         except Exception as e:
-            logging.exception(e)
-            raise ForbiddenException(
+            raise BadRequestException(
                 detail=f'Invalid props for action: {self.__handler__}')
         return status_id, date_from, date_to
 
