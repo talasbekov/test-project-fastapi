@@ -56,16 +56,6 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
         parents = db.query(self.model).filter(
             StaffDivision.parent_group_id == None
         ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
-        
-        parents = [StaffDivisionRead.from_orm(parent).dict() for parent in parents]
-        
-        # Remove candidate staff division into special group
-        for parent in parents:
-            if parent['name'] == StaffDivisionEnum.SPECIAL_GROUP.value:
-                parent['children'] = [child for child in parent['children'] if child['name'] != StaffDivisionEnum.CANDIDATES.value]
-            
-                break
-        
         return parents
 
     def get_all_except_special(self, db: Session, skip: int, limit: int) -> List[StaffDivision]:
