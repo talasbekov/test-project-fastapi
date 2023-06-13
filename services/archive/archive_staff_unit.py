@@ -164,7 +164,8 @@ class ArchiveStaffUnitService(
             user_id=body.user_id,
             actual_user_id=body.actual_user_id,
             user_replacing_id=body.user_replacing_id,
-            origin_id=None
+            origin_id=None,
+            requirements=body.requirements,
         ))
         increment_changes_size(db, res.staff_division.staff_list)
         return res
