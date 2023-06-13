@@ -23,14 +23,17 @@ class PositionChangeHandler(BaseHandler):
         self.handle_validation(db, user, action, template_props, props, document)
         position_id, percent, reason = self.get_args(action, props)
         old_history = staff_unit_service.get_last_history(db, user.id)
-        if old_history is not None:
-            document.old_history_id = old_history.id
 
         res = staff_unit_service.create_relation(db, user, position_id)
         history: EmergencyServiceHistory = history_service.create_history(db, user.id, res)
         history.percentage = percent
         history.reason = reason
         history.document_link = configs.GENERATE_IP + str(document.id)
+        
+        if old_history is None:
+            document.old_history_id = history.id
+        else:
+            document.old_history_id = old_history.id
 
         db.add(user)
         db.add(history)
