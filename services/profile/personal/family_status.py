@@ -24,14 +24,17 @@ class FamilyStatusService(ServiceBase[FamilyStatus, FamilyStatusCreate, FamilySt
         except:
             return None
         
-        if profile.personal_profile.biographic_info.gender == 1:
-            res['name'] = res['name'].split(' / ')[0]
-            res['nameKZ'] = res['nameKZ'].split(' / ')[0]
+        return self._validate_gender(res, profile.personal_profile.biographic_info.gender)
+    
+    def _validate_gender(self, dict: dict, gender: bool):
+        if gender == 1:
+            dict['name'] = dict['name'].split(' / ')[0]
+            dict['nameKZ'] = dict['nameKZ'].split(' / ')[0]
         else:
-            res['name'] = res['name'].split(' / ')[1]
-            res['nameKZ'] = res['nameKZ'].split(' / ')[1]
+            dict['name'] = dict['name'].split(' / ')[1]
+            dict['nameKZ'] = dict['nameKZ'].split(' / ')[1]
         
-        return res
+        return dict
 
 
 family_status_service = FamilyStatusService(FamilyStatus)
