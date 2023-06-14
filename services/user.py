@@ -81,8 +81,10 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             users = self._add_filter_to_query(users, filter)
 
         if hr_document_template_id is not None:
-            excepted_users = self._get_excepted_users_by_document_in_progress(db, hr_document_template_id)
-            users = self._filter_for_eligible_actions(db, users, hr_document_template_id).except_(excepted_users)
+            excepted_users = self._get_excepted_users_by_document_in_progress(
+                db, hr_document_template_id)
+            users = self._filter_for_eligible_actions(
+                db, users, hr_document_template_id).except_(excepted_users)
 
         users = (
             users
@@ -95,12 +97,30 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         return users
 
     def get_all_active(self, db: Session, filter: str, skip: int, limit: int, user_id: str) -> List[User]:
-        users = self._get_users_by_filter_is_active(db, filter, skip, limit, True, user_id)
+        user_queue = self._get_users_by_filter_is_active(
+            db, filter, True, user_id)
+
+        users = (
+            user_queue
+            .order_by(self.model.created_at.asc())
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
 
         return users
 
     def get_all_archived(self, db: Session, filter: str, skip: int, limit: int, user_id: str) -> List[User]:
-        users = self._get_users_by_filter_is_active(db, filter, skip, limit, False, user_id)
+        user_queue = self._get_users_by_filter_is_active(
+            db, filter, False, user_id)
+
+        users = (
+            user_queue
+            .order_by(self.model.created_at.asc())
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
 
         return users
 
@@ -118,7 +138,8 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
     def get_by_id_number(self, db: Session, id_number: str):
 
-        user = db.query(self.model).filter(self.model.id_number == id_number).first()
+        user = db.query(self.model).filter(
+            self.model.id_number == id_number).first()
 
         return user
 
@@ -160,21 +181,22 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         if body.iin is not None:
             user.iin = body.iin
         if self._validate_id(db, body.id):
-            self.update_id(db, user.id, body.id)    
+            self.update_id(db, user.id, body.id)
 
         db.add(user)
         db.flush()
 
         return user
-    
+
     def _validate_id(self, db: Session, id: str):
         if id is None:
             return False
         user = db.query(self.model).filter(self.model.id == id).first()
         if user is not None:
-            raise BadRequestException(detail="User with this id already exists!")
+            raise BadRequestException(
+                detail="User with this id already exists!")
         return True
-    
+
     def get_fields(self):
         fields = [key for key, value in User.__dict__.items() if
                   (not 'id' in key and not isinstance(value, CALLABLES) and not key.startswith('_'))]
@@ -187,7 +209,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         ).all()
 
         return users
-    
+
     def get_by_iin(self, db: Session, iin: str):
 
         user = db.query(self.model).filter(
@@ -204,18 +226,22 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
     ):
         current_user = self.get_by_id(db, user_id)
 
-        staff_unit: StaffUnit = staff_unit_service.get_by_id(db, current_user.actual_staff_unit_id)
+        staff_unit: StaffUnit = staff_unit_service.get_by_id(
+            db, current_user.actual_staff_unit_id)
 
         document_staff_functions: List[DocumentStaffFunction] = []
 
         for i in staff_unit.staff_functions:
-            document_staff_functions.append(document_staff_function_service.get_by_id(db, i.id))
+            document_staff_functions.append(
+                document_staff_function_service.get_by_id(db, i.id))
 
         jurisdictions: List[Jurisdiction] = []
         for i in document_staff_functions:
-            jurisdictions.append(jurisdiction_service.get_by_id(db, i.jurisdiction_id))
+            jurisdictions.append(
+                jurisdiction_service.get_by_id(db, i.jurisdiction_id))
 
-        staff_division: StaffDivision = staff_division_service.get_by_id(db, staff_unit.staff_division_id)
+        staff_division: StaffDivision = staff_division_service.get_by_id(
+            db, staff_unit.staff_division_id)
 
         for i in jurisdictions:
             if i.name == JurisdictionEnum.ALL_SERVICE.value:
@@ -240,13 +266,15 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
     def _get_users_by_personnel_jurisdiction(self, db: Session, staff_division: StaffDivision) -> List[User]:
         # Получаем все дочерние штатные группы пользователя, включая саму группу
-        staff_divisions: List[StaffDivision] = staff_division_service.get_child_groups(db, staff_division.id)
+        staff_divisions: List[StaffDivision] = staff_division_service.get_child_groups(
+            db, staff_division.id)
         staff_divisions.append(staff_division)
 
         # Получаем все staff unit из staff divisions
         staff_units: List[StaffUnit] = []
         for i in staff_divisions:
-            staff_units.extend(staff_unit_service.get_by_staff_division_id(db, i.id))
+            staff_units.extend(
+                staff_unit_service.get_by_staff_division_id(db, i.id))
 
         users: List[User] = []
         for i in staff_units:
@@ -255,7 +283,8 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         return users
 
     def _get_excepted_users_by_document_in_progress(self, db: Session, hr_document_template_id: uuid.UUID):
-        forbidden_statuses = hr_document_status_service.get_by_names(db, ["Завершен", "Отменен"])
+        forbidden_statuses = hr_document_status_service.get_by_names(
+            db, ["Завершен", "Отменен"])
         excepted_users = (
             db.query(self.model)
             .distinct(self.model.id)
@@ -263,7 +292,8 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             .join(HrDocumentInfo, HrDocument.id == HrDocumentInfo.hr_document_id)
             .filter(HrDocument.hr_document_template_id == hr_document_template_id,
                     HrDocumentInfo.signed_by_id.is_(None),
-                    and_(*[HrDocument.status_id != status.id for status in forbidden_statuses])
+                    and_(*[HrDocument.status_id !=
+                         status.id for status in forbidden_statuses])
                     )
         )
         return excepted_users
@@ -312,39 +342,34 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
         return users
 
-    def _get_users_by_filter_is_active(self, 
-                                        db: Session,
-                                        filter: Optional[str], 
-                                        skip: int,
-                                        limit: int, 
-                                        is_active: bool,
-                                        user_id: str) -> List[User]:
+    def _get_users_by_filter_is_active(self,
+                                       db: Session,
+                                       filter: Optional[str],
+                                       is_active: bool,
+                                       user_id: str) -> Query[Any]:
         users = (
             db.query(self.model)
-            .filter(self.model.is_active.is_(is_active),
-                    self.model.id != user_id
+            .filter(
+                self.model.is_active.is_(is_active),
+                self.model.id != user_id
             )
         )
 
         if filter != '':
             users = self._add_filter_to_query(users, filter)
 
-        users = (
-            users
-            .order_by(self.model.created_at.asc())
-            .offset(skip)
-            .limit(limit)
-            .all()
-        )
         return users
 
     def _add_filter_to_query(self, user_query, filter):
         key_words = filter.lower().split()
-        users = (user_query
-                 .filter(and_(func.concat(func.lower(User.first_name), ' ',
-                              func.lower(User.last_name), ' ',
-                              func.lower(User.father_name)).contains(name) for name in key_words)
-                )
+        users = (
+            user_query
+            .filter(
+                and_(func.concat(
+                    func.lower(User.first_name), ' ',
+                    func.lower(User.last_name), ' ',
+                    func.lower(User.father_name)).contains(name) for name in key_words)
+            )
         )
         return users
 
@@ -369,11 +394,13 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         user = self.get_by_id(db, user_id)
         document_ids = []
         functions = db.query(DocumentStaffFunction).filter(
-            DocumentStaffFunction.staff_units.any(StaffUnit.id == user.staff_unit_id),
+            DocumentStaffFunction.staff_units.any(
+                StaffUnit.id == user.staff_unit_id),
             DocumentStaffFunction.role_id == initiator_role.id,
             DocumentStaffFunction.hr_document_step != None
         ).all()
-        document_ids = [function.hr_document_step.hr_document_template_id for function in functions]
+        document_ids = [
+            function.hr_document_step.hr_document_template_id for function in functions]
         return hr_document_template_service.get_all_skip(db, document_ids, skip, limit)
 
     def _validate_call_sign(self, db: Session, call_sign: str):
