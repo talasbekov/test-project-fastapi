@@ -30,8 +30,7 @@ async def get_all(*,
        - **limit**: int - The maximum number of staff divisions to return in the response. This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    parents = staff_division_service.get_all_parents(db, skip, limit)
-    return staff_division_service.validate_staff_divisions(parents)
+    return staff_division_service.get_all_except_special(db, skip, limit)
 
 
 @router.get("/departments/", dependencies=[Depends(HTTPBearer())],
