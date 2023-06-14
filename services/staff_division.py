@@ -100,10 +100,11 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
         staff_division = self.get_by_id(db, staff_division_id)
 
         parent_id = staff_division.parent_group_id
+        sgo_rk_staff_division = self.get_by_name(db, StaffDivisionEnum.SERVICE.value)
 
         res_id = staff_division.id
 
-        while parent_id != None:
+        while parent_id != sgo_rk_staff_division.id:
             res_id = parent_id
             tmp = self.get_by_id(db, parent_id)
             parent_id = tmp.parent_group_id
