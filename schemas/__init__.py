@@ -37,7 +37,7 @@ from .state_body import StateBodyCreate, StateBodyRead, StateBodyUpdate
 from .hr_document_step import (HrDocumentStepCreate, HrDocumentStepRead,
                                HrDocumentStepUpdate)
 
-from .user import UserCreate, UserRead, UserUpdate, UserGroupUpdate, UserShortRead
+from .user import UserCreate, UserRead, UserUpdate, UserGroupUpdate, UserShortRead, TableUserRead
 from .profile import ProfileCreate, ProfileUpdate, ProfileRead
 from .hr_document_status import HrDocumentStatusRead, HrDocumentStatusCreate, HrDocumentStatusUpdate
 from .hr_document import (HrDocumentCreate, HrDocumentInit, HrDocumentRead,

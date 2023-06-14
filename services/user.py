@@ -96,7 +96,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
         return users
 
-    def get_all_active(self, db: Session, filter: str, skip: int, limit: int, user_id: str) -> List[User]:
+    def get_all_active(self, db: Session, filter: str, skip: int, limit: int, user_id: str):
         user_queue = self._get_users_by_filter_is_active(
             db, filter, True, user_id)
 
@@ -108,9 +108,9 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             .all()
         )
 
-        return users
+        return users, user_queue.count()
 
-    def get_all_archived(self, db: Session, filter: str, skip: int, limit: int, user_id: str) -> List[User]:
+    def get_all_archived(self, db: Session, filter: str, skip: int, limit: int, user_id: str):
         user_queue = self._get_users_by_filter_is_active(
             db, filter, False, user_id)
 
@@ -122,7 +122,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             .all()
         )
 
-        return users
+        return users, user_queue.count()
 
     def get_by_email(self, db: Session, email: str):
 

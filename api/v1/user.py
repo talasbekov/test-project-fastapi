@@ -7,10 +7,11 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import UserRead, UserUpdate, UserShortRead
+from schemas import UserRead, UserUpdate, UserShortRead, TableUserRead
 from services import user_service
 
-router = APIRouter(prefix="/users", tags=["Users"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/users", tags=["Users"], dependencies=[Depends(HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())], response_model=List[UserRead], summary="Get all Users")
@@ -25,7 +26,7 @@ async def get_all(
 ):
     """
     Get all Users
-    
+
     - **hr_document_template_id**: str - The value which returns filtered results by hr_document_template_id. This parameter is optional and defaults to None
     - **filter**: str - The value which returns filtered results. This parameter is optional and defaults to None
     - **skip**: int - The number of users to skip before returning the results. This parameter is optional and defaults to 0.
@@ -35,7 +36,7 @@ async def get_all(
     return user_service.get_all(db, hr_document_template_id, filter.lstrip().rstrip(), skip, limit)
 
 
-@router.get("/archived", dependencies=[Depends(HTTPBearer())], response_model=List[UserRead], summary="Get all Users")
+@router.get("/archived", dependencies=[Depends(HTTPBearer())], response_model=TableUserRead, summary="Get all Users")
 async def get_all_archived(
     *, db: Session = Depends(get_db), Authorize: AuthJWT = Depends(), filter: str = "", skip: int = 0, limit: int = 10
 ):
@@ -47,10 +48,12 @@ async def get_all_archived(
     """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
-    return user_service.get_all_archived(db, filter.lstrip().rstrip(), skip, limit, user_id)
+    users, total = user_service.get_all_archived(
+        db, filter.lstrip().rstrip(), skip, limit, user_id)
+    return TableUserRead(total=total, users=users)
 
 
-@router.get("/active", dependencies=[Depends(HTTPBearer())], response_model=List[UserRead], summary="Get all Users")
+@router.get("/active", dependencies=[Depends(HTTPBearer())], response_model=TableUserRead, summary="Get all Users")
 async def get_all_active(
     *, db: Session = Depends(get_db), Authorize: AuthJWT = Depends(), filter: str = "", skip: int = 0, limit: int = 10
 ):
@@ -62,7 +65,9 @@ async def get_all_active(
     """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
-    return user_service.get_all_active(db, filter.lstrip().rstrip(), skip, limit, user_id)
+    users, total = user_service.get_all_active(
+        db, filter.lstrip().rstrip(), skip, limit, user_id)
+    return TableUserRead(total=total, users=users)
 
 
 @router.get(

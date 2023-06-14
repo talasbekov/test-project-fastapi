@@ -2,7 +2,7 @@ import datetime
 import uuid
 from typing import List, Optional
 
-from pydantic import BaseModel, EmailStr
+from pydantic import EmailStr
 
 from schemas import BadgeRead, RankRead, UserStaffUnitRead, StatusRead
 from schemas import Model, NamedModel, ReadModel, ReadNamedModel
@@ -72,7 +72,7 @@ class UserRead(UserBase, ReadModel):
         orm_mode = True
 
 
-class UserShortRead(BaseModel):
+class UserShortRead(Model):
     id: Optional[uuid.UUID]
     first_name: Optional[str]
     last_name: Optional[str]
@@ -82,3 +82,8 @@ class UserShortRead(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class TableUserRead(Model):
+    total: int
+    users: List[UserRead]
