@@ -27,7 +27,7 @@ from .staff_function_type import (DocumentStaffFunctionTypeCreate, DocumentStaff
 from .staff_function import (DocumentStaffFunctionCreate, DocumentStaffFunctionRead, DocumentStaffFunctionUpdate,
                              ServiceStaffFunctionCreate, ServiceStaffFunctionRead, ServiceStaffFunctionUpdate,
                              StaffUnitFunctions, StaffFunctionRead, DocumentStaffFunctionAdd,
-                             DocumentStaffFunctionConstructorAdd, DocumentStaffFunctionAppendToStaffUnit)
+                             DocumentStaffFunctionConstructorAdd, DocumentStaffFunctionAppendToStaffUnit, StaffUnitFunctionsByPosition)
 from .status import *
 from .staff_division import (StaffDivisionCreate, StaffDivisionRead,
                              StaffDivisionUpdate, StaffDivisionUpdateParentGroup,

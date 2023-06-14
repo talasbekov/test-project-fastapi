@@ -92,6 +92,18 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
             StaffDivision.parent_group_id == id
         ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
 
+    def get_all_child_groups(self, db: Session, id: str) -> List[StaffDivision]:        
+        child_groups = (
+            db.query(self.model).filter(
+                StaffDivision.parent_group_id == id
+            ).all()
+        )
+        
+        for child_group in child_groups:
+            child_groups.extend(self.get_all_child_groups(db, child_group.id))
+        
+        return child_groups
+
     def get_by_name(self, db: Session, name: str) -> StaffDivision:
         group = db.query(self.model).filter(
             StaffDivision.name == name
@@ -120,10 +132,11 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
         staff_division = self.get_by_id(db, staff_division_id)
 
         parent_id = staff_division.parent_group_id
+        sgo_rk_staff_division = self.get_by_name(db, StaffDivisionEnum.SERVICE.value)
 
         res_id = staff_division.id
 
-        while parent_id != None:
+        while parent_id != sgo_rk_staff_division.id:
             res_id = parent_id
             tmp = self.get_by_id(db, parent_id)
             parent_id = tmp.parent_group_id
