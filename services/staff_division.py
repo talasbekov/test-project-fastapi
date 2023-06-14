@@ -27,6 +27,26 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
                 f"StaffDivision with id: {id} is not found!")
         return group
 
+    def delete(self, db: Session, id: str) -> StaffDivision:
+        staff_division = self.get_by_id(db, id)
+        (db.query(ArchiveStaffDivision)
+         .filter(ArchiveStaffDivision.origin_id == staff_division.id)
+         .update({ArchiveStaffDivision.origin_id: None}))
+
+        histories = (
+            db.query(EmergencyServiceHistory)
+            .filter(
+                EmergencyServiceHistory.staff_division_id == staff_division.id)
+            .all())
+        for history in histories:
+            history.staff_division_id = None
+            history.staff_division_name = staff_division.name
+            history.staff_division_nameKZ = staff_division.nameKZ
+        self._replace_secondment_division_id_with_name(db,
+                                                       staff_division)
+        super().remove(db, staff_division.id)
+        db.flush()
+
     def get_all_departments(
             self,
             db: Session,
