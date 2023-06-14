@@ -53,7 +53,7 @@ async def get_all_archived(
     return TableUserRead(total=total, users=users)
 
 
-@router.get("/active", dependencies=[Depends(HTTPBearer())], response_model=List[UserRead], summary="Get all Users")
+@router.get("/active", dependencies=[Depends(HTTPBearer())], response_model=TableUserRead, summary="Get all Users")
 async def get_all_active(
     *, db: Session = Depends(get_db), Authorize: AuthJWT = Depends(), filter: str = "", skip: int = 0, limit: int = 10
 ):
