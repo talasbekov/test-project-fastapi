@@ -1,3 +1,4 @@
+import logging
 from .constructor import handlers
 import pdfkit
 import random
@@ -592,6 +593,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                             detail='Вы не можете инициализировать этот документ!'
                         )
         elif not staff_unit_service.has_staff_function(db, staff_unit.id, step.staff_function_id):
+            logging.error(f"User id: {staff_unit.users[0].id} tried to initialize document with staff function id: {step.staff_function_id}!")
             raise ForbiddenException(
                 detail=f"Вы не можете инициализировать этот документ из-за отсутствия прав!"
             )
