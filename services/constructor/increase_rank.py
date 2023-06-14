@@ -7,7 +7,7 @@ from core import configs
 from models import User, HrDocument, Rank, Position, StaffUnit
 from .base import BaseHandler
 from services import rank_service, history_service, status_service
-from exceptions import ForbiddenException
+from exceptions import ForbiddenException, BadRequestException
 
 
 class IncreaseRankHandler(BaseHandler):
@@ -25,7 +25,8 @@ class IncreaseRankHandler(BaseHandler):
         rank_id = self.get_args(action, props)
         rank = rank_service.get_by_id(db, rank_id)
 
-        self.handle_validation(db, user, action, template_props, props, document)
+        self.handle_validation(
+            db, user, action, template_props, props, document)
         user.rank = rank
         history = rank_service.find_last_history(db, user.id)
         res = history_service.create_history(db, user.id, rank)
@@ -52,7 +53,8 @@ class IncreaseRankHandler(BaseHandler):
         max_rank = user.staff_unit.position.max_rank
 
         if user_rank.order >= rank.order:
-            raise ForbiddenException(detail=f"You can not increase rank to {rank.name}")
+            raise ForbiddenException(
+                detail=f"You can not increase rank to {rank.name}")
 
     def handle_filter(self, db: Session, user_query: Query[Any]):
         max_rank = rank_service.get_max_rank(db)
@@ -71,7 +73,8 @@ class IncreaseRankHandler(BaseHandler):
         try:
             rank_id = properties[action["rank"]["tagname"]]["value"]
         except KeyError:
-            raise ForbiddenException(f"Rank is not defined for this action: {self.__handler__}")
+            raise BadRequestException(
+                f"Rank is not defined for this action: {self.__handler__}")
         return rank_id
 
     def handle_response(self, db: Session,

@@ -4,7 +4,7 @@ from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from models import NamedModel
+from models import NamedModel, NamedNestedModel, isActiveModel
 from .association import staff_unit_function
 
 
@@ -47,6 +47,7 @@ class StaffFunction(NamedModel):
 
     hours_per_week = Column(Integer())
     discriminator = Column(String(255))
+    is_active = Column(Boolean, nullable=True)
 
     staff_units = relationship("StaffUnit", secondary=staff_unit_function)
 

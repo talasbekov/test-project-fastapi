@@ -24,13 +24,14 @@ async def get_all(*,
     Authorize: AuthJWT = Depends()
 ):
     """
-       Get all Staff Divisions
+        Get all Staff Divisions
 
        - **skip**: int - The number of staff divisions to skip before returning the results. This parameter is optional and defaults to 0.
        - **limit**: int - The maximum number of staff divisions to return in the response. This parameter is optional and defaults to 100.
-   """
+    """
     Authorize.jwt_required()
-    return staff_division_service.get_all_parents(db, skip, limit)
+    parents = staff_division_service.get_all_parents(db, skip, limit)
+    return staff_division_service.validate_staff_divisions(parents)
 
 
 @router.get("/departments/", dependencies=[Depends(HTTPBearer())],
@@ -174,4 +175,5 @@ async def get_full_name_by_id(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return staff_division_service.get_full_name(db, id)
+    full_name, full_nameKZ = staff_division_service.get_full_name(db, id)
+    return {"name": full_name, "nameKZ": full_nameKZ}

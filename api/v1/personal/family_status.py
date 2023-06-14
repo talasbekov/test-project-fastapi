@@ -57,9 +57,4 @@ async def get_profile_by_id(*,
     Authorize: AuthJWT = Depends()
 ):   
     Authorize.jwt_required()
-    data = family_status_service.get_by_user_id(db, user_id)
-    
-    try:
-        return data.biographic_info.family_status
-    except:
-        return None
+    return family_status_service.get_by_user_id(db, user_id)

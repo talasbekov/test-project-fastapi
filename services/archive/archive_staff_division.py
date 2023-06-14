@@ -4,11 +4,12 @@ from typing import List
 from sqlalchemy.orm import Session
 
 from exceptions import BadRequestException, NotFoundException
-from models import ArchiveStaffDivision, StaffDivision, StaffDivisionEnum
+from models import ArchiveStaffDivision, StaffDivision, StaffDivisionEnum, StaffList
 from schemas import (ArchiveStaffDivisionCreate, ArchiveStaffDivisionUpdate,
                      ArchiveStaffDivisionUpdateParentGroup, ArchiveStaffDivisionRead, NewArchiveStaffDivisionCreate,
                      NewArchiveStaffDivisionUpdate)
 from services.base import ServiceBase
+from . import increment_changes_size
 from .archive_staff_unit import archive_staff_unit_service
 
 
@@ -17,7 +18,8 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
     def get_by_id(self, db: Session, id: str) -> ArchiveStaffDivision:
         group = super().get(db, id)
         if group is None:
-            raise NotFoundException(f"StaffDivision with id: {id} is not found!")
+            raise NotFoundException(
+                f"StaffDivision with id: {id} is not found!")
         return group
 
     def get_departments(
@@ -31,7 +33,7 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
             ArchiveStaffDivision.staff_list_id == staff_list_id,
             ArchiveStaffDivision.parent_group_id == None,
         ).offset(skip).limit(limit).all()
-    
+
     def get_parents(self, db: Session, staff_list_id: uuid.UUID) -> List[ArchiveStaffDivision]:
         return db.query(self.model).filter(
             ArchiveStaffDivision.staff_list_id == staff_list_id,
@@ -40,17 +42,18 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
         ).all()
 
     def change_parent_group(self,
-            db: Session,
-            id: str,
-            body: ArchiveStaffDivisionUpdateParentGroup
-    ) -> ArchiveStaffDivisionRead:
+                            db: Session,
+                            id: str,
+                            body: ArchiveStaffDivisionUpdateParentGroup
+                            ) -> ArchiveStaffDivisionRead:
         group = self.get_by_id(db, id)
         self._validate_parent(db, body.parent_group_id)
         group.parent_group_id = body.parent_group_id
         db.add(group)
+        increment_changes_size(db, group.staff_list)
         db.flush()
         return group
-    
+
     def get_department_id_from_staff_division_id(self, db: Session, staff_division_id: uuid.UUID):
 
         staff_division = self.get_by_id(db, staff_division_id)
@@ -63,7 +66,7 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
             res_id = parent_id
             tmp = self.get_by_id(db, parent_id)
             parent_id = tmp.parent_group_id
-        
+
         return res_id
 
     def get_division_parents_by_id(self, db: Session, archive_staff_division_id: uuid.UUID):
@@ -98,7 +101,7 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
 
     def create_staff_division(self, db: Session, body: NewArchiveStaffDivisionCreate):
         self._validate_parent(db, body.parent_group_id)
-        return super().create(db, ArchiveStaffDivisionCreate(
+        res = super().create(db, ArchiveStaffDivisionCreate(
             parent_group_id=body.parent_group_id,
             name=body.name,
             nameKZ=body.nameKZ,
@@ -108,10 +111,12 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
             is_combat_unit=body.is_combat_unit,
             leader_id=body.leader_id,
         ))
+        increment_changes_size(db, res.staff_list)
+        return res
 
     def update_staff_division(self, db: Session, archive_staff_division: ArchiveStaffDivision, body: NewArchiveStaffDivisionUpdate):
         self._validate_parent(db, body.parent_group_id)
-        return super().update(db, db_obj=archive_staff_division, obj_in=ArchiveStaffDivisionUpdate(
+        res = super().update(db, db_obj=archive_staff_division, obj_in=ArchiveStaffDivisionUpdate(
             parent_group_id=body.parent_group_id,
             name=body.name,
             nameKZ=body.nameKZ,
@@ -121,9 +126,12 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
             is_combat_unit=body.is_combat_unit,
             leader_id=body.leader_id,
         ))
+        increment_changes_size(db, res.staff_list)
+        return res
 
     def duplicate(self, db: Session, id: uuid.UUID):
-        archive_staff_division = archive_staff_division_service.get_by_id(db, str(id))
+        archive_staff_division = archive_staff_division_service.get_by_id(
+            db, str(id))
 
         # Create a new instance of ArchiveStaffDivision
         duplicate_division = ArchiveStaffDivision()
@@ -144,15 +152,19 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
             duplicate_division.children.append(duplicate_child)
 
         db.add(duplicate_division)
+        increment_changes_size(db, duplicate_division.staff_list)
         db.flush()
-        archive_staff_unit_service.duplicate_archive_staff_units_by_division_id(db, duplicate_division.id, id)
+        archive_staff_unit_service.duplicate_archive_staff_units_by_division_id(
+            db, duplicate_division.id, id)
         # Return the duplicated division
         return duplicate_division
 
     def _validate_parent(self, db: Session, parent_id: uuid.UUID):
         parent = super().get(db, parent_id)
         if parent is None and parent_id:
-            raise BadRequestException(f"Parent ArchiveStaffDivision with id: {parent_id} is not found!")
+            raise BadRequestException(
+                f"Parent ArchiveStaffDivision with id: {parent_id} is not found!")
 
 
-archive_staff_division_service = ArchiveStaffDivisionService(ArchiveStaffDivision)
+archive_staff_division_service = ArchiveStaffDivisionService(
+    ArchiveStaffDivision)

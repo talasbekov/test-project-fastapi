@@ -5,13 +5,15 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
-from models import StaffUnit, Position, User, StaffDivision, EmergencyServiceHistory, ArchiveStaffUnit, StaffDivisionEnum
+from models import (StaffUnit, Position, User, EmergencyServiceHistory,
+                    ArchiveStaffUnit, ArchiveServiceStaffFunction,
+                    ServiceStaffFunction)
 from schemas import (StaffUnitCreate, StaffUnitUpdate,
                      StaffUnitFunctions, StaffUnitRead,
                      StaffUnitCreateWithPosition, PositionCreate,
                     )
 from services import (service_staff_function_service,
-                      document_staff_function_service, 
+                      document_staff_function_service,
                       staff_division_service)
 from .base import ServiceBase
 
@@ -167,16 +169,21 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
             .first()
         )
 
-    def create_from_archive(self, db: Session, archive_staff_unit: ArchiveStaffUnit, staff_division_id: uuid.UUID):
+    def create_from_archive(self, db: Session, archive_staff_unit: ArchiveStaffUnit,
+                            staff_division_id: uuid.UUID):
         res = super().create(
             db, StaffUnitCreate(
                 position_id=archive_staff_unit.position_id,
                 staff_division_id=staff_division_id,
+                is_active=True,
+                user_replacing_id=archive_staff_unit.user_replacing_id,
+                requirements=archive_staff_unit.requirements
                 )
             )
         return res
 
-    def update_from_archive(self, db: Session, archive_staff_unit: ArchiveStaffUnit, staff_division_id: uuid.UUID):
+    def update_from_archive(self, db: Session, archive_staff_unit: ArchiveStaffUnit,
+                            staff_division_id: uuid.UUID):
         staff_unit = self.get_by_id(db, archive_staff_unit.origin_id)
         res = super().update(
             db,
@@ -184,6 +191,9 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
             obj_in=StaffUnitUpdate(
                 position_id=archive_staff_unit.position_id,
                 staff_division_id=staff_division_id,
+                is_active=True,
+                user_replacing_id=archive_staff_unit.user_replacing_id,
+                requirements=archive_staff_unit.requirements
             )
         )
         return res
@@ -194,7 +204,7 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
         return self.update_from_archive(db, archive_staff_unit, staff_division_id)
 
     def make_all_inactive(self, db: Session, exclude_ids: list[uuid.UUID] = []):
-        db.query(self.model).filter(
+        staff_units = db.query(self.model).filter(
             self.model.staff_division_id.not_in(exclude_ids)
         ).update({self.model.is_active: False})
         db.flush()

@@ -11,7 +11,7 @@ from .base import BaseCategory
 class SupervisorCategory(BaseCategory):
     __handler__ = 3
 
-    def handle(self, db: Session) -> list[uuid.UUID]:
+    def handle(self, db: Session, user_id: uuid.UUID) -> list[uuid.UUID]:
         users = (
             db.query(User)
             .join(User.staff_unit)

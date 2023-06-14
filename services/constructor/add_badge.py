@@ -4,7 +4,7 @@ from core import configs
 from models import User, HrDocument, History
 from .base import BaseHandler
 from services import badge_service, history_service
-from exceptions import ForbiddenException
+from exceptions import ForbiddenException, BadRequestException
 
 
 class AddBadgeHandler(BaseHandler):
@@ -20,7 +20,8 @@ class AddBadgeHandler(BaseHandler):
         document: HrDocument,
     ):
         badge_id = self.get_args(action, props)
-        self.handle_validation(db, user, action, template_props, props, document)
+        self.handle_validation(
+            db, user, action, template_props, props, document)
         res = badge_service.create_relation(db, user.id, badge_id)
         user.badges.append(res)
         history: History = history_service.create_history(db, user.id, res)
@@ -41,7 +42,7 @@ class AddBadgeHandler(BaseHandler):
     ):
         badge_id = self.get_args(action, props)
         if badge_service.exists_relation(db, user.id, badge_id):
-            raise ForbiddenException(
+            raise BadRequestException(
                 f"Badge is already assigned to this user: {user.first_name} {user.last_name}"
             )
 
@@ -49,14 +50,15 @@ class AddBadgeHandler(BaseHandler):
         try:
             badge_id = properties[action["badge"]["tagname"]]["value"]
         except KeyError:
-            raise ForbiddenException(f"Badge is not defined for this action: {self.__handler__}")
+            raise BadRequestException(
+                f"Badge is not defined for this action: {self.__handler__}")
         return badge_id
 
     def handle_response(self, db: Session,
                         user: User,
                         action: dict,
                         properties: dict,
-    ):
+                        ):
         badge_id = self.get_args(action, properties)
         obj = badge_service.get_badge_by_id(db, badge_id)
         return obj

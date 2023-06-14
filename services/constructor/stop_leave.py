@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session, Query
 from core import configs
 from models import User, HrDocument, StatusEnum, StatusHistory, Status
 from services import status_service, history_service
-from exceptions import ForbiddenException
+from exceptions import ForbiddenException, BadRequestException
 from utils import convert_str_to_datetime
 from .base import BaseHandler
 
@@ -26,9 +26,11 @@ class StopLeaveHandler(BaseHandler):
     ):
         reason = self.get_args(props, action)
 
-        self.handle_validation(db, user, action, template_props, props, document)
+        self.handle_validation(
+            db, user, action, template_props, props, document)
 
-        statuses = status_service.get_active_status_of_user(db, user.id, StatusEnum.ROOT.value)
+        statuses = status_service.get_active_status_of_user(
+            db, user.id, StatusEnum.ROOT.value)
         status = statuses[0]
         if status is None:
             return
@@ -55,11 +57,13 @@ class StopLeaveHandler(BaseHandler):
         try:
             reason = props[action['reason']['tagname']]['name']
         except:
-            raise ForbiddenException(detail=f'Invalid props for action: {self.__handler__}')
+            raise BadRequestException(
+                detail=f'Invalid props for action: {self.__handler__}')
         return (reason)
 
     def handle_filter(self, db: Session, query: Query[Any]):
-        statuses = [i.id for i in status_service.get_by_name(db, StatusEnum.ROOT.value)]
+        statuses = [i.id for i in status_service.get_by_name(
+            db, StatusEnum.ROOT.value)]
         return (
             query
             .join(
@@ -86,7 +90,8 @@ class StopLeaveHandler(BaseHandler):
                         action: dict,
                         properties: dict,
                         ):
-        statuses = status_service.get_active_status_of_user(db, user.id, StatusEnum.ROOT.value)
+        statuses = status_service.get_active_status_of_user(
+            db, user.id, StatusEnum.ROOT.value)
         status = statuses[0]
         return status
 

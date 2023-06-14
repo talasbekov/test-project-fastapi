@@ -5,5 +5,4 @@ from .checker import (
     is_valid_uuid,
     convert_str_to_datetime,
 )
-from .templater import DocPart
 from .date import convert_days

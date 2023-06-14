@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 
 from core import configs
 from models import User, HrDocument
-from exceptions import ForbiddenException
+from exceptions import BadRequestException
 from .base import BaseHandler
 from services import status_service
 
@@ -21,7 +21,8 @@ class StopStatusHandler(BaseHandler):
     ):
         status_id, reason_id = self.get_args(action, props)
 
-        self.handle_validation(db, user, action, template_props, props, document)
+        self.handle_validation(
+            db, user, action, template_props, props, document)
 
         res = status_service.stop_relation(db, user.id, status_id)
         res.cancel_document_link = configs.GENERATE_IP + str(document.id)
@@ -46,12 +47,13 @@ class StopStatusHandler(BaseHandler):
             status_id = props[action['status']['tagname']]['value']
             reason_id = props[action['reason']['tagname']]['value']
         except:
-            raise ForbiddenException(
+            raise BadRequestException(
                 f"Status is not defined for this action: {self.__handler__}"
             )
         return status_id, reason_id
 
-    def handle_response(self, db: Session,
+    def handle_response(self,
+                        db: Session,
                         user: User,
                         action: dict,
                         properties: dict,

@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session, Query
 
 from core import configs
 from models import User, HrDocument, Badge, BadgeType
-from exceptions import ForbiddenException
+from exceptions import ForbiddenException, BadRequestException
 from services import badge_service, history_service
 from .base import BaseHandler
 
@@ -23,7 +23,8 @@ class AddBlackBeretHandler(BaseHandler):
         document: HrDocument,
     ):
         badge = self.get_args(db)
-        self.handle_validation(db, user, action, template_props, props, document)
+        self.handle_validation(
+            db, user, action, template_props, props, document)
         res = badge_service.create_relation(db, user.id, badge.id)
         history = history_service.create_history(db, user.id, res)
         document.old_history_id = history.id
@@ -57,13 +58,13 @@ class AddBlackBeretHandler(BaseHandler):
         if badge_type:
             return badge_type
         else:
-            raise ForbiddenException(f"Black beret badge not found")
+            raise BadRequestException(f"Black beret badge not found")
 
     def handle_response(self, db: Session,
                         user: User,
                         action: dict,
                         properties: dict,
-    ):
+                        ):
         obj = badge_service.get_black_beret(db)
         return obj
 
