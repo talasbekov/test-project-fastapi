@@ -9,6 +9,7 @@ from models import (
     DocumentStaffFunction,
     ServiceStaffFunction,
     StaffDivision,
+    StaffDivisionEnum,
     StaffList,
     StaffUnit,
     ArchiveStaffDivision,
@@ -76,6 +77,10 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         staff_list = super().create(db, create_staff_list)
         staff_divisions = staff_division_service.get_all_except_special(
             db, 0, 100)
+
+        disposition_division = staff_division_service.get_by_name(db, StaffDivisionEnum.DISPOSITION.value)
+        staff_divisions.append(disposition_division)
+
         for staff_division in staff_divisions:
             self._create_archive_staff_division(
                 db, staff_division, staff_list.id, None)
@@ -221,6 +226,11 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
                 child_archive_staff_division = self._create_archive_staff_division(db, child, staff_list_id,
                                                                                    archive_division.id)
                 archive_division.children.append(child_archive_staff_division)
+
+        if staff_division.name == StaffDivisionEnum.DISPOSITION.value:
+            db.add(archive_division)
+            db.flush()
+            return archive_division
 
         is_leader_needed = False
         leader_id = None
