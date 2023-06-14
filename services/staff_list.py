@@ -4,7 +4,7 @@ import uuid
 
 from sqlalchemy.orm import Session, joinedload
 
-from exceptions import NotFoundException, NotSupportedException
+from exceptions import NotFoundException, NotSupportedException, ForbiddenException
 from models import (
     DocumentStaffFunction,
     ServiceStaffFunction,
@@ -110,6 +110,8 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         document_creation_date: datetime.date,
     ):
         staff_list = self.get_by_id(db, staff_list_id)
+
+        self._validate_status(staff_list)
 
         staff_division_service.make_all_inactive(db)
         exclude_staff_division_ids = [
@@ -249,10 +251,6 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
                 if staff_unit.staff_functions:
                     for staff_function in staff_unit.staff_functions:
                         service = options.get(staff_function.discriminator)
-                        if isinstance(staff_function, ServiceStaffFunction):
-                            print(staff_function)
-                        if isinstance(staff_function, DocumentStaffFunction):
-                            print('Anime')
                         if service is None:
                             raise NotSupportedException(
                                 detail="Staff function type is not supported!")
@@ -329,6 +327,14 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         return super().update(
             db=db, db_obj=staff_list, obj_in=body
         )
+
+    def _validate_status(self, staff_list):
+        if staff_list.status == StaffListStatusEnum.APPROVED.value:
+            raise ForbiddenException(
+                detail=f"StaffList with id: {staff_list.id} is already signed!")
+        if staff_list.status == StaffListStatusEnum.DIVERTED.value:
+            raise ForbiddenException(
+                detail=f"StaffList with id: {staff_list.id} is canceled!")
 
 
 staff_list_service = StaffListService(StaffList)
