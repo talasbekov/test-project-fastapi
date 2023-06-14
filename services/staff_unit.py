@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from exceptions.client import BadRequestException, NotFoundException
 from models import (StaffUnit, Position, User, EmergencyServiceHistory,
                     ArchiveStaffUnit, ArchiveServiceStaffFunction,
-                    ServiceStaffFunction, PositionNameEnum, StaffDivision)
+                    StaffDivision, PositionNameEnum, StaffDivisionEnum)
 from schemas import (StaffUnitCreate, StaffUnitUpdate,
                      StaffUnitFunctions, StaffUnitRead,
                      StaffUnitCreateWithPosition, PositionCreate, StaffUnitFunctionsByPosition
@@ -256,28 +256,24 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
         """
             Эта функция добавляет должностную функцию в штатную единицу по должности куратора
         """
-        # Получаем список пользователей имеющих кураторов
-        users = (
-            db.query(User)
-            .join(StaffUnit, User.staff_unit_id == StaffUnit.id)
+        staff_division = staff_division_service.get_by_name(db, StaffDivisionEnum.SERVICE.value)
+        
+        groups = (
+            db.query(StaffDivision)
             .filter(
-                User.supervised_by != None,
-                StaffUnit.staff_division_id == department
-            ).all()
+                StaffDivision.is_active == True,
+                StaffDivision.parent_group_id == staff_division.id,
+            )
+            .all()
         )
         
-        # Получаем список кураторов
-        curators = [user.supervised_by for user in users]
-        
-        if len(curators) == 0:
+        if len(groups) == 0:
             raise BadRequestException('В данном подразделении нет кураторов')
         
-        # Добавляем должностную функцию кураторам
-        for i in curators:
-            user = db.query(User).filter(User.id == i).first()
-            
-            self.add_document_staff_function(db, StaffUnitFunctions(staff_unit_id=user.staff_unit_id, staff_function_ids=staff_function_ids))
-        
+        for group in groups:
+            for staff_unit in group.curators:
+                self.add_document_staff_function(db, StaffUnitFunctions(staff_unit_id=staff_unit.id, staff_function_ids=staff_function_ids))
+
     def _add_document_staff_function_to_head_of_department(self, db: Session, department: uuid.UUID, staff_function_ids: list):
         """
             Эта функция добавляет должностную функцию в штатную единицу по должности прямого начальника
