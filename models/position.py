@@ -30,6 +30,8 @@ class PositionNameEnum(str, EnumBase):
     HR = "HR-менеджер"
     SUPERVISOR = "Начальник"
     HEAD_OF_DEPARTMENT = 'Начальник департамента'
+    MANAGEMENT_HEAD = 'Начальник управления'
+    HEAD_OF_OTDEL = 'Начальник отдела'
 
 
 class CategoryCodeEnum(str, EnumBase):

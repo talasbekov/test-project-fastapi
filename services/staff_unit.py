@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from exceptions.client import BadRequestException, NotFoundException
 from models import (StaffUnit, Position, User, EmergencyServiceHistory,
                     ArchiveStaffUnit, ArchiveServiceStaffFunction,
-                    ServiceStaffFunction, PositionNameEnum)
+                    ServiceStaffFunction, PositionNameEnum, StaffDivision)
 from schemas import (StaffUnitCreate, StaffUnitUpdate,
                      StaffUnitFunctions, StaffUnitRead,
                      StaffUnitCreateWithPosition, PositionCreate, StaffUnitFunctionsByPosition
@@ -235,7 +235,7 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
             StaffUnit.staff_functions.any(id=staff_function_id)
         ).first() is not None
 
-    # TODO Нужно закончить реализацию для должностей: непосредственный начальник, пгс, начальники
+    # TODO Нужно закончить реализацию для должностей: пгс, начальники
     def add_document_staff_function_by_position(self, db: Session, body: StaffUnitFunctionsByPosition, role_id: str):
         """
             Эта функция добавляет должностную функцию в штатную единицу по должности
@@ -248,7 +248,7 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
         elif body.position.lower() == 'прямой начальник':
             return self._add_document_staff_function_to_head_of_department(db, current_user_department, body.staff_function_ids)
         elif body.position.lower() == 'непосредственный начальник':
-            pass
+            return self._add_document_staff_function_to_irrelevant_head(db, current_user_department, body.staff_function_ids)
         else:
             raise BadRequestException('Должность не найдена')
 
@@ -276,7 +276,7 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
         for i in curators:
             user = db.query(User).filter(User.id == i).first()
             
-            return self.add_document_staff_function(db, StaffUnitFunctions(staff_unit_id=user.staff_unit_id, staff_function_ids=staff_function_ids))
+            self.add_document_staff_function(db, StaffUnitFunctions(staff_unit_id=user.staff_unit_id, staff_function_ids=staff_function_ids))
         
     def _add_document_staff_function_to_head_of_department(self, db: Session, department: uuid.UUID, staff_function_ids: list):
         """
@@ -295,4 +295,37 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
         # Добавляем должностную функцию прямому начальнику
         return self.add_document_staff_function(db, StaffUnitFunctions(staff_unit_id=staff_unit.id, staff_function_ids=staff_function_ids))
 
+    def _add_document_staff_function_to_irrelevant_head(self, db: Session, department: uuid.UUID, staff_function_ids: list):
+        """
+            Эта функция добавляет должностную функцию в штатную единицу по должности непосредственного начальника
+        """
+        
+        # Получаем список должностей непосредственных начальников
+        positions = [
+            position_service.get_by_name(db, PositionNameEnum.MANAGEMENT_HEAD.value),
+            position_service.get_by_name(db, PositionNameEnum.HEAD_OF_OTDEL.value)
+        ]
+        
+        staff_units = []
+        
+        # Получаем список всех дочерных групп
+        child_groups = staff_division_service.get_all_child_groups(db, department)
+        
+        # Получаем список staff unit непосредственных начальников
+        for child_group in child_groups:
+            staff_unit = db.query(self.model).filter(
+                self.model.position_id.in_(positions),
+                self.model.staff_division_id == child_group.id
+            ).first()
+            
+            if staff_unit is not None:
+                staff_units.append(staff_unit)
+        
+        if len(staff_units) == 0:
+            raise BadRequestException('В данном подразделении нет ни одного начальника')
+        
+        # Добавляем должностную функцию непосредственным начальникам
+        for staff_unit in staff_units:
+            self.add_document_staff_function(db, StaffUnitFunctions(staff_unit_id=staff_unit.id, staff_function_ids=staff_function_ids))
+    
 staff_unit_service = StaffUnitService(StaffUnit)
