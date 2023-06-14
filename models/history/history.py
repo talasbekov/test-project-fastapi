@@ -429,7 +429,7 @@ class ServiceCharacteristicHistory(History):
 class StatusHistory(History):
 
     status_id = Column(UUID(as_uuid=True), ForeignKey("statuses.id"), nullable=True)
-    status = relationship("Status")
+    status = relationship("Status", back_populates="history")
     status_name = Column(String, nullable=True)
 
     @classmethod

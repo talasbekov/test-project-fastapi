@@ -30,3 +30,5 @@ class Status(Model):
 
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     user = relationship("User", back_populates="statuses")
+
+    history = relationship("StatusHistory", back_populates="status", uselist=False)
