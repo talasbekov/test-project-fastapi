@@ -160,7 +160,7 @@ async def delete(*,
         - **id**: UUID - required
     """
     Authrorize.jwt_required()
-    staff_division_service.remove(db, id)
+    staff_division_service.delete(db, id)
 
 @router.get('/name/{id}', dependencies=[Depends(HTTPBearer())],
             summary="Get Staff Division by id")
