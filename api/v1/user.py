@@ -65,9 +65,9 @@ async def get_all_active(
     """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
-    users, _ = user_service.get_all_active(
+    users, total = user_service.get_all_active(
         db, filter.lstrip().rstrip(), skip, limit, user_id)
-    return users
+    return TableUserRead(total=total, users=users)
 
 
 @router.get(
