@@ -3,7 +3,7 @@ import uuid
 from sqlalchemy.orm import Session
 
 from schemas import UserShortRead
-from models import User
+from models import User, StaffDivisionEnum, StaffDivision
 from services import staff_division_service
 from .base import BaseCategory
 
@@ -12,12 +12,23 @@ class CuratorCategory(BaseCategory):
     __handler__ = 1
 
     def handle(self, db: Session, user_id: uuid.UUID) -> list[uuid.UUID]:
-        user = db.query(User).filter(User.id == user_id).first()
-        superviser = db.query(User).filter(
-            User.id == user.supervised_by).first()
-        if superviser is None:
-            return []
-        return [superviser.id]
+        staff_division = staff_division_service.get_by_name(db, StaffDivisionEnum.SERVICE.value)
+        groups = (
+            db.query(StaffDivision)
+            .filter(
+                StaffDivision.is_active == True,
+                StaffDivision.parent_group_id == staff_division.id,
+            )
+            .all()
+        )
+        res = set()
+        for group in groups:
+            for staff_unit in group.curators:
+                first_user = staff_unit.users[0]
+                if first_user is not None:
+                    res.add(first_user.id)
+        return list(res)
+
 
 
 handler = CuratorCategory()
