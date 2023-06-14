@@ -29,6 +29,7 @@ class PositionNameEnum(str, EnumBase):
     PERISHED = "Погиб"
     HR = "HR-менеджер"
     SUPERVISOR = "Начальник"
+    HEAD_OF_DEPARTMENT = 'Начальник департамента'
 
 
 class CategoryCodeEnum(str, EnumBase):

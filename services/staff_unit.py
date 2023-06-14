@@ -4,17 +4,17 @@ import uuid
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
-from exceptions.client import NotFoundException
+from exceptions.client import BadRequestException, NotFoundException
 from models import (StaffUnit, Position, User, EmergencyServiceHistory,
                     ArchiveStaffUnit, ArchiveServiceStaffFunction,
-                    ServiceStaffFunction)
+                    ServiceStaffFunction, PositionNameEnum)
 from schemas import (StaffUnitCreate, StaffUnitUpdate,
                      StaffUnitFunctions, StaffUnitRead,
-                     StaffUnitCreateWithPosition, PositionCreate,
+                     StaffUnitCreateWithPosition, PositionCreate, StaffUnitFunctionsByPosition
                     )
 from services import (service_staff_function_service,
                       document_staff_function_service,
-                      staff_division_service)
+                      staff_division_service, position_service)
 from .base import ServiceBase
 
 
@@ -235,5 +235,64 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
             StaffUnit.staff_functions.any(id=staff_function_id)
         ).first() is not None
 
+    # TODO Нужно закончить реализацию для должностей: непосредственный начальник, пгс, начальники
+    def add_document_staff_function_by_position(self, db: Session, body: StaffUnitFunctionsByPosition, role_id: str):
+        """
+            Эта функция добавляет должностную функцию в штатную единицу по должности
+        """
+        current_user_staff_unit = self.get_by_id(db, role_id)
+        current_user_department = staff_division_service.get_department_id_from_staff_division_id(db, current_user_staff_unit.staff_division_id)
+        
+        if body.position.lower() == 'куратор':
+            return self._add_document_staff_function_to_curator(db, current_user_department, body.staff_function_ids)
+        elif body.position.lower() == 'прямой начальник':
+            return self._add_document_staff_function_to_head_of_department(db, current_user_department, body.staff_function_ids)
+        elif body.position.lower() == 'непосредственный начальник':
+            pass
+        else:
+            raise BadRequestException('Должность не найдена')
+
+    def _add_document_staff_function_to_curator(self, db: Session, department: uuid.UUID, staff_function_ids: list):
+        """
+            Эта функция добавляет должностную функцию в штатную единицу по должности куратора
+        """
+        # Получаем список пользователей имеющих кураторов
+        users = (
+            db.query(User)
+            .join(StaffUnit, User.staff_unit_id == StaffUnit.id)
+            .filter(
+                User.supervised_by != None,
+                StaffUnit.staff_division_id == department
+            ).all()
+        )
+        
+        # Получаем список кураторов
+        curators = [user.supervised_by for user in users]
+        
+        if len(curators) == 0:
+            raise BadRequestException('В данном подразделении нет кураторов')
+        
+        # Добавляем должностную функцию кураторам
+        for i in curators:
+            user = db.query(User).filter(User.id == i).first()
+            
+            return self.add_document_staff_function(db, StaffUnitFunctions(staff_unit_id=user.staff_unit_id, staff_function_ids=staff_function_ids))
+        
+    def _add_document_staff_function_to_head_of_department(self, db: Session, department: uuid.UUID, staff_function_ids: list):
+        """
+            Эта функция добавляет должностную функцию в штатную единицу по должности прямого начальника
+        """
+        position = position_service.get_by_name(db, PositionNameEnum.HEAD_OF_DEPARTMENT.value)
+        # Получаем штатную единицу прямого начальника
+        staff_unit = db.query(self.model).filter(
+            self.model.position_id == position,
+            self.model.staff_division_id == department
+        ).first()
+        
+        if staff_unit is None:
+            raise BadRequestException('В данном подразделении нет прямого начальника')
+        
+        # Добавляем должностную функцию прямому начальнику
+        return self.add_document_staff_function(db, StaffUnitFunctions(staff_unit_id=staff_unit.id, staff_function_ids=staff_function_ids))
 
 staff_unit_service = StaffUnitService(StaffUnit)
