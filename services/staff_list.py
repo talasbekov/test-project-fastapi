@@ -2,6 +2,7 @@ import datetime
 from typing import List, Optional
 import uuid
 
+from sqlalchemy import desc
 from sqlalchemy.orm import Session, joinedload
 
 from exceptions import NotFoundException, NotSupportedException
@@ -345,6 +346,7 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
                        .options(joinedload(StaffList.user))
                        .filter(StaffList.is_signed == True,
                                StaffList.name.contains(filter))
+                       .order_by(desc(StaffList.updated_at))
                        .offset(skip)
                        .limit(limit)
                        .all())
