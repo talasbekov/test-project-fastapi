@@ -7,7 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from models import ServiceID, ServiceIDStatus
+from models import ServiceIDStatus
 from schemas import ServiceIDCreate, ServiceIDUpdate, ServiceIDRead
 from services import service_id_service
 

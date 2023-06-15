@@ -7,7 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import CoolnessCreate, CoolnessUpdate, CoolnessRead
+from schemas import CoolnessCreate, CoolnessRead
 from services import coolness_service
 from models import SpecialtyEnum
 

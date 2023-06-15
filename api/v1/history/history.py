@@ -8,7 +8,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import HistoryCreate, HistoryUpdate, HistoryRead, HistoryServiceDetailRead, HistoryPersonalRead
+from schemas import HistoryCreate, HistoryUpdate, HistoryRead, HistoryServiceDetailRead
 from services import history_service
 from models import HistoryEnum
 

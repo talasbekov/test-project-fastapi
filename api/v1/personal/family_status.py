@@ -3,12 +3,11 @@ from typing import List
 
 from fastapi import APIRouter, Depends
 from fastapi.security import HTTPBearer
-from fastapi.encoders import jsonable_encoder
 from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import FamilyStatusRead, PersonalProfileRead
+from schemas import FamilyStatusRead
 from services import family_status_service
 
 router = APIRouter(prefix="/family_status", tags=["FamilyStatus"], dependencies=[Depends(HTTPBearer())])

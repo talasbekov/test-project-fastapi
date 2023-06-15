@@ -7,9 +7,9 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from exceptions import SgoErpException
+
 from schemas import PsychologicalCheckCreate, PsychologicalCheckRead, PsychologicalCheckUpdate
-from services import psychological_check_service, profile_service
+from services import psychological_check_service
 
 router = APIRouter(prefix="/psychological-check",
                    tags=["Psychological Check"], dependencies=[Depends(HTTPBearer())])

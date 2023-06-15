@@ -10,7 +10,7 @@ from core import get_db
 from models import LanguageEnum
 from schemas import (HrDocumentInit, HrDocumentRead,
                      HrDocumentSign, HrDocumentUpdate,
-                     DraftHrDocumentCreate, DraftHrDocumentInit,
+                     DraftHrDocumentCreate, 
                      UserRead)
 from services import hr_document_service
 

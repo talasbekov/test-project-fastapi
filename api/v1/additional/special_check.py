@@ -7,7 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from exceptions import SgoErpException
+
 from schemas import SpecialCheckCreate, SpecialCheckRead, SpecialCheckUpdate
 from services import special_check_service, profile_service
 

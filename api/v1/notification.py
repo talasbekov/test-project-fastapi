@@ -1,13 +1,12 @@
-import uuid
 from typing import List
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends
 from fastapi.security import HTTPBearer
 from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import NotificationCreate, NotificationRead, NotificationUpdate
+from schemas import NotificationRead
 from services import notification_service
 
 router = APIRouter(prefix="/notifications", tags=["Notifications"], dependencies=[Depends(HTTPBearer())])

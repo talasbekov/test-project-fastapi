@@ -8,8 +8,8 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import StaffListCreate, StaffListRead, StaffListUpdate, StaffListUserCreate, StaffListStatusRead
-from services import staff_list_service, hr_document_service
+from schemas import StaffListRead, StaffListUpdate, StaffListUserCreate, StaffListStatusRead
+from services import staff_list_service
 
 router = APIRouter(prefix="/staff_list", tags=["StaffList"], dependencies=[Depends(HTTPBearer())])
 

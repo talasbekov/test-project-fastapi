@@ -7,9 +7,9 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from exceptions import SgoErpException
+
 from schemas import VehicleCreate, VehicleRead, VehicleUpdate
-from services import vehicle_service, profile_service
+from services import vehicle_service
 
 router = APIRouter(prefix="/vehicle", tags=["Vehicle"], dependencies=[Depends(HTTPBearer())])
 

@@ -17,7 +17,7 @@ from schemas import (
     StaffUnitCreateWithPosition,
     StaffUnitFunctionsByPosition
 )
-from services import rank_service, staff_unit_service
+from services import staff_unit_service
 
 router = APIRouter(prefix="/staff_unit", tags=["StaffUnit"], dependencies=[Depends(HTTPBearer())])
 

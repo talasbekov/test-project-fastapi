@@ -15,7 +15,7 @@ from schemas import (
     ArchiveServiceStaffFunctionRead,
     ArchiveDocumentStaffFunctionRead
 )
-from services import rank_service, archive_staff_unit_service, increment_changes_size
+from services import archive_staff_unit_service, increment_changes_size
 
 router = APIRouter(prefix="/archive_staff_unit", tags=["ArchiveStaffUnit"], dependencies=[Depends(HTTPBearer())])
 

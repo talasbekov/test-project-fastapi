@@ -1,9 +1,7 @@
 from fastapi import APIRouter, Depends
 from fastapi.security import HTTPBearer
 from fastapi_jwt_auth import AuthJWT
-from sqlalchemy.orm import Session
 
-from core import get_db
 from models import AgeGroup
 
 router = APIRouter(prefix="/age_group", tags=["AgeGroup"], dependencies=[Depends(HTTPBearer())])

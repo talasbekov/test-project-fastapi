@@ -7,9 +7,9 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from exceptions import SgoErpException
+
 from schemas import PolygraphCheckCreate, PolygraphCheckRead, PolygraphCheckUpdate
-from services import polyhraph_check_service, profile_service
+from services import polyhraph_check_service
 
 router = APIRouter(prefix="/polygraph-check", tags=["Polygraph Check"], dependencies=[Depends(HTTPBearer())])
 

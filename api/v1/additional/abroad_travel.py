@@ -7,7 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from exceptions import SgoErpException
+
 from schemas import AbroadTravelCreate, AbroadTravelRead, AbroadTravelUpdate
 from services import abroad_travel_service, profile_service
 

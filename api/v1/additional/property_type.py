@@ -7,7 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from exceptions import ForbiddenException
+
 from schemas import PropertyTypeCreate, PropertyTypeRead, PropertyTypeUpdate
 from services import property_type_service, profile_service
 

@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, status
 from fastapi.security import HTTPBearer
 from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
-from typing import List, Optional
+from typing import List
 
 from core import get_db
 from schemas import (CandidateStageInfoCreate, CandidateStageInfoRead, CandidateStageInfoUpdate,
