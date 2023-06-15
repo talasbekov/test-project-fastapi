@@ -43,7 +43,7 @@ class DocumentArchiveStaffFunctionTypeService(ServiceBase[ArchiveDocumentFunctio
             )
         )
 
-    def create_staff_function_type(self, db: Session, type: ArchiveDocumentFunctionType, body: NewDocumentArchiveStaffFunctionTypeCreate):
+    def update_staff_function_type(self, db: Session, type: ArchiveDocumentFunctionType, body: NewDocumentArchiveStaffFunctionTypeCreate):
         return super().update(db, db_obj=type, obj_in=DocumentArchiveStaffFunctionTypeCreate(
                 name=body.name,
                 nameKZ=body.nameKZ,

@@ -103,7 +103,7 @@ async def get_by_id(*,
 @router.get("user/{user_id}/", dependencies=[Depends(HTTPBearer())],
             response_model=ArchiveStaffUnitRead,
             summary="Get Staff Unit by id")
-async def get_by_id(*,
+async def get_by_user_id(*,
     db: Session = Depends(get_db),
     user_id: uuid.UUID,
     Authorize: AuthJWT = Depends()

@@ -4,9 +4,9 @@ from sqlalchemy.orm import Session
 from exceptions.client import BadRequestException, ForbiddenException, NotFoundException
 from models import (HrVacancy, StaffUnit, StaffDivision,
                      PositionNameEnum, HrVacancyCandidate)
-from models.hr_vacancy import HrVacancy
+
 from schemas import (HrVacancyCreate, HrVacancyUpdate,
-                     HrVacancyRead, HrVacancyStaffDivisionRead, HrVacancyUpdate,
+                     HrVacancyRead, HrVacancyStaffDivisionRead, 
                      HrVacancyCandidateRead)
 from .base import ServiceBase
 from .hr_vacancy_requirements import hr_vacancy_requirement_service

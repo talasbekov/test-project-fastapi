@@ -29,7 +29,6 @@ from services import (
     document_staff_function_type_service,
     hr_document_status_service,
     hr_document_template_service,
-    staff_unit_service,
 )
 from .base import ServiceBase
 

@@ -12,8 +12,8 @@ from schemas import (EquipmentCreate,
                      EquipmentRead,
                      TypeClothingEquipmentRead, 
                      TypeArmyEquipmentRead, 
-                     TypeOtherEquipmentRead,
-                     EquipmentCreate)
+                     TypeOtherEquipmentRead
+                     )
 from services import equipment_service
 
 router = APIRouter(prefix="/equipments", tags=["Equipments"], dependencies=[Depends(HTTPBearer())])

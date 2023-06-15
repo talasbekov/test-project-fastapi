@@ -39,8 +39,6 @@ from services import (
     hr_document_template_service,
     staff_unit_service,
     service_staff_function_service,
-    service_staff_function_type_service,
-    service_archive_staff_function_type_service,
     hr_vacancy_service,
 )
 

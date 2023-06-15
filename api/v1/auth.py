@@ -48,7 +48,7 @@ async def register(form: RegistrationForm, db: Session = Depends(get_db)):
 
 
 @router.post("/register/candidate", summary="Register Candidate", dependencies=[Depends(HTTPBearer())])
-async def register(form: CandidateRegistrationForm,
+async def register_candidate(form: CandidateRegistrationForm,
                    Authorize: AuthJWT = Depends(),
                    db: Session = Depends(get_db)):
     """

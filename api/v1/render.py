@@ -22,7 +22,7 @@ router = APIRouter(prefix="/render", tags=["Render Jinja"], dependencies=[Depend
 
 @router.post("/render", dependencies=[Depends(HTTPBearer())],
              summary="Генерация документа 'Заключение спец. проверки'")
-async def convert(*,
+async def generate(*,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
     body: ConvertCandidateTemplate

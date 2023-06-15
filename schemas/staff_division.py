@@ -6,7 +6,7 @@ from pydantic import BaseModel, EmailStr
 
 from schemas import (PositionRead, RankRead, StaffFunctionRead,
                     NamedModel, ReadModel, ReadNamedModel,
-                    BadgeRead, RankRead, StatusRead)
+                    BadgeRead, StatusRead)
 
 
 

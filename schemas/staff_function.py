@@ -40,10 +40,6 @@ class DocumentStaffFunctionConstructorAdd(DocumentStaffFunctionAdd):
     staff_unit_id: uuid.UUID
 
 
-class DocumentStaffFunctionConstructorAdd(DocumentStaffFunctionAdd):
-    staff_unit_id: uuid.UUID
-
-
 class DocumentStaffFunctionAppendToStaffUnit(Model):
     staff_function_id: uuid.UUID
     staff_unit_ids: list[uuid.UUID]

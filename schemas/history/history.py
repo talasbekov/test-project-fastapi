@@ -3,14 +3,13 @@ from enum import Enum
 from decimal import Decimal
 from datetime import datetime, timezone, timedelta
 from typing import Optional, List
-from decimal import Decimal
-import uuid
 from .general_information import GeneralInformationRead
-from schemas import PositionRead, RankRead
-from enum import Enum
 from pydantic import BaseModel
 
 from schemas import (
+    Model,
+    ReadModel,
+    ReadNamedModel,
     PositionRead,
     RankRead,
     UserRead,
@@ -22,9 +21,8 @@ from schemas import (
     BadgeRead,
     StaffDivisionRead,
 )
-from schemas import Model, ReadModel, ReadNamedModel
 
-from .general_information import GeneralInformationRead
+
 from .history_personal import (
     PenaltyReadHistory,
     WorkExperienceRead,

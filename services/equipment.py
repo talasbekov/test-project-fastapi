@@ -118,13 +118,7 @@ class EquipmentService(ServiceBase[Equipment, EquipmentCreate, EquipmentUpdate])
             )
         )
 
-    def create(self, db: Session, body: EquipmentCreate):
-        cls = equipment[body.type_of_equipment]
-        equipment1 = cls(**body.dict(exclude_none=True))
-        db.add(equipment1)
-        db.flush()
-        return equipment1
-    
+
     def update(self, db: Session, id: str, body: EquipmentUpdate):
         equipment = self.get_by_id(db, id)
         if not equipment:

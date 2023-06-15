@@ -2,9 +2,8 @@ from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import HrVacancyRequirements
-from models.hr_vacancy_requirements import HrVacancyRequirements
+
 from schemas import HrVacancyRequirementsCreate, HrVacancyRequirementsUpdate
-from schemas.hr_vacancy_requirements import HrVacancyRequirementsUpdate
 from .base import ServiceBase
 
 

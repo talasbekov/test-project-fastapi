@@ -19,8 +19,6 @@ from models import (
     Secondment,
     Attestation,
     Status,
-    Coolness,
-    Contract,
     Badge
 )
 
