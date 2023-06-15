@@ -3,17 +3,13 @@ import uuid
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
-from models import ArchiveDocumentStaffFunction, DocumentStaffFunction, User
+from models import ArchiveDocumentStaffFunction, DocumentStaffFunction
 from schemas import (
-    ArchiveDocumentStaffFunctionCreate, ArchiveDocumentStaffFunctionUpdate,
-    DocumentArchiveStaffFunctionTypeCreate, DocumentArchiveStaffFunctionTypeUpdate,
-    NewArchiveDocumentStaffFunctionCreate, ArchiveStaffUnitFunctions,
+    ArchiveDocumentStaffFunctionCreate, 
+    ArchiveDocumentStaffFunctionUpdate,
+    NewArchiveDocumentStaffFunctionCreate
 )
 from services import ServiceBase
-
-from .document_archive_staff_function_type import (
-    document_archive_staff_function_type_service,
-)
 
 
 class DocumentArchiveStaffFunction(ServiceBase[ArchiveDocumentStaffFunction, ArchiveDocumentStaffFunctionCreate, ArchiveDocumentStaffFunctionUpdate]):

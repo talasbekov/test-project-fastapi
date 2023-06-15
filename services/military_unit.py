@@ -1,5 +1,3 @@
-from sqlalchemy.orm import Session
-
 from models import MilitaryUnit
 from schemas import MilitaryUnitCreate, MilitaryUnitUpdate
 from .base import ServiceBase

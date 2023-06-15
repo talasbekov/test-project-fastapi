@@ -9,8 +9,6 @@ from schemas import ArchiveStaffFunctionCreate, ArchiveStaffFunctionUpdate, NewA
 
 from services.base import ServiceBase
 
-from .service_archive_staff_function_type import service_archive_staff_function_type_service
-
 
 class ArchiveStaffFunctionService(ServiceBase[ArchiveStaffFunction, ArchiveStaffFunctionCreate, ArchiveStaffFunctionUpdate]):
 

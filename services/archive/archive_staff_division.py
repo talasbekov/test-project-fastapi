@@ -4,7 +4,7 @@ from typing import List
 from sqlalchemy.orm import Session
 
 from exceptions import BadRequestException, NotFoundException
-from models import ArchiveStaffDivision, StaffDivision, StaffDivisionEnum, StaffList
+from models import ArchiveStaffDivision, StaffDivision, StaffDivisionEnum
 from schemas import (ArchiveStaffDivisionCreate, ArchiveStaffDivisionUpdate,
                      ArchiveStaffDivisionUpdateParentGroup, ArchiveStaffDivisionRead, NewArchiveStaffDivisionCreate,
                      NewArchiveStaffDivisionUpdate)
