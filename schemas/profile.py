@@ -1,10 +1,8 @@
 import uuid
 from typing import Optional
 
-from pydantic import BaseModel
-
 from schemas import UserRead
-from schemas import Model, NamedModel, ReadModel, ReadNamedModel
+from schemas import Model, ReadModel
 
 
 class ProfileBase(Model):

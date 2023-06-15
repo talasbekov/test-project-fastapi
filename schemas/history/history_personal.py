@@ -1,8 +1,5 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from typing import Optional
-from decimal import Decimal
-import uuid
-
 
 class PenaltyReadHistory(BaseModel):
     name: Optional[str]

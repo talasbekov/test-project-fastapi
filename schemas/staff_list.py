@@ -1,10 +1,9 @@
 import uuid
 from datetime import datetime, date
-from typing import Optional, List
-
+from typing import Optional
 from pydantic import BaseModel
 
-from schemas import Model, NamedModel, ReadModel, ReadNamedModel, UserShortRead
+from schemas import NamedModel, ReadNamedModel, UserShortRead
 
 
 class StaffListBase(NamedModel):

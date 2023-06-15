@@ -1,6 +1,6 @@
 import datetime
 import uuid
-from typing import List, Optional, Union
+from typing import List, Optional
 
 from pydantic import BaseModel, EmailStr
 
@@ -8,8 +8,6 @@ from schemas import (BadgeRead, RankRead, ReadModel,
                      HrVacancyRead, Model, PositionRead)
 
 from .archive_staff_function import ArchiveStaffFunctionRead
-
-from enum import Enum
 
 
 class StaffUnitRequirements(Model):

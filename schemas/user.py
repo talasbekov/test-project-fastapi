@@ -5,7 +5,7 @@ from typing import List, Optional
 from pydantic import EmailStr
 
 from schemas import BadgeRead, RankRead, UserStaffUnitRead, StatusRead
-from schemas import Model, NamedModel, ReadModel, ReadNamedModel
+from schemas import Model, ReadModel
 
 
 class UserBase(Model):

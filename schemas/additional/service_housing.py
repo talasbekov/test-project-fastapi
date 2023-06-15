@@ -2,9 +2,7 @@ import datetime
 import uuid
 from typing import Optional
 
-from pydantic import BaseModel
-
-from schemas import Model, NamedModel, ReadModel, ReadNamedModel
+from schemas import Model, ReadModel
 from .property_type import PropertyTypeRead
 
 

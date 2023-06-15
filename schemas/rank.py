@@ -1,9 +1,8 @@
-import uuid
 from typing import Optional
 
 from pydantic import AnyUrl
 
-from schemas import Model, NamedModel, ReadModel, ReadNamedModel
+from schemas import NamedModel, ReadNamedModel
 
 
 

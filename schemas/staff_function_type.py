@@ -1,7 +1,6 @@
-import uuid
 from typing import Optional
 
-from schemas import Model, NamedModel, ReadModel, ReadNamedModel
+from schemas import NamedModel, ReadNamedModel
 
 
 class StaffFunctionTypeBase(NamedModel):

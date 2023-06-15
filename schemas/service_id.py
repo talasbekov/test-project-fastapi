@@ -2,11 +2,8 @@ import uuid
 from typing import Optional
 from datetime import datetime
 
-from pydantic import BaseModel
-
 from models import ServiceIDStatus
-from schemas import Model, NamedModel, ReadModel, ReadNamedModel
-
+from schemas import Model, ReadModel
 
 class ServiceIDBase(Model):
     number: Optional[str]

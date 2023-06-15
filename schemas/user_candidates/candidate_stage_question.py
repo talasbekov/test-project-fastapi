@@ -3,7 +3,7 @@ from typing import Optional, List
 
 from pydantic import BaseModel
 from .candidate_stage_answer import CandidateStageAnswerRead
-from schemas import Model, NamedModel, ReadModel, ReadNamedModel
+from schemas import ReadNamedModel
 
 
 class CandidateStageQuestionBase(BaseModel):

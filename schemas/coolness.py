@@ -1,8 +1,5 @@
 import uuid
-from typing import Optional, Union
-
-from pydantic import BaseModel
-from datetime import datetime
+from typing import Optional
 
 from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 

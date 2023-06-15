@@ -2,8 +2,8 @@ import uuid
 from datetime import datetime
 from typing import Optional
 
-from pydantic import AnyUrl, BaseModel
-from schemas import Model, NamedModel, ReadModel, ReadNamedModel
+from pydantic import AnyUrl
+from schemas import Model, ReadModel
 
 
 class PsychologicalCheckBase(Model):

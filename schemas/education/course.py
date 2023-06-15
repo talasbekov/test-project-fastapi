@@ -2,9 +2,9 @@ import datetime
 import uuid
 from typing import Optional
 
-from pydantic import AnyUrl, BaseModel
+from pydantic import AnyUrl
 
-from schemas import Model, NamedModel, ReadModel, ReadNamedModel
+from schemas import NamedModel, ReadNamedModel
 from .course_provider import CourseProviderRead
 
 

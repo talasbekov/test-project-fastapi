@@ -1,9 +1,8 @@
-import math
 import uuid
 from enum import Enum
 from decimal import Decimal
 from datetime import datetime, timezone, timedelta
-from typing import Optional, List, Union
+from typing import Optional, List
 from decimal import Decimal
 import uuid
 from .general_information import GeneralInformationRead
@@ -23,8 +22,7 @@ from schemas import (
     BadgeRead,
     StaffDivisionRead,
 )
-from schemas import Model, NamedModel, ReadModel, ReadNamedModel
-from models import CoolnessStatusEnum
+from schemas import Model, ReadModel, ReadNamedModel
 
 from .general_information import GeneralInformationRead
 from .history_personal import (

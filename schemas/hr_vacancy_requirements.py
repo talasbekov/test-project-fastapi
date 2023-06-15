@@ -1,6 +1,3 @@
-import uuid
-from typing import Optional
-
 from schemas import NamedModel, ReadNamedModel
 
 

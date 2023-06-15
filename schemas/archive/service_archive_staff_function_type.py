@@ -1,8 +1,8 @@
 import datetime
 import uuid
-from typing import Any, List, Optional
+from typing import Optional
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 
 
 class ServiceArchiveStaffFunctionTypeBase(BaseModel):

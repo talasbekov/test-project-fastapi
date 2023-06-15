@@ -2,12 +2,12 @@ import datetime
 import uuid
 from typing import Optional
 
-from pydantic import AnyUrl, BaseModel
+from pydantic import AnyUrl
 
 from .institution import InstitutionRead
 from .institution_degree_type import InstitutionDegreeTypeRead
 
-from schemas import Model, NamedModel, ReadModel, ReadNamedModel
+from schemas import Model
 
 
 class EducationBase(Model):

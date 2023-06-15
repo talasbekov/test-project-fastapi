@@ -4,8 +4,8 @@ from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel
 
-from schemas import Model, NamedModel, ReadModel, ReadNamedModel
-from schemas import PrivelegeEmergencyRead, PersonnalReserveRead, CoolnessRead, RecommenderUserRead
+from schemas import ReadModel
+from schemas import PrivelegeEmergencyRead, PersonnalReserveRead, CoolnessRead
 
 class OathRead(ReadModel):
     date: Optional[datetime]

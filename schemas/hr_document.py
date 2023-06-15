@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Union
 
-from pydantic import BaseModel, validator
+from pydantic import validator
 
 from schemas import (
     HrDocumentTemplateRead,
@@ -10,7 +10,7 @@ from schemas import (
     HrDocumentStatusRead,
     HrDocumentStepRead,
 )
-from schemas import Model, NamedModel, ReadModel, ReadNamedModel
+from schemas import Model, ReadModel
 
 
 class HrDocumentBase(Model):
