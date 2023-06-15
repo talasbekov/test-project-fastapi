@@ -1,12 +1,7 @@
-import json
 import uuid
-from datetime import datetime
 
-from typing import List
-from fastapi import WebSocket, WebSocketDisconnect, Depends, Query, Header
+from fastapi import WebSocket
 from fastapi.logger import logger as log
-from fastapi_jwt_auth import AuthJWT
-from fastapi_jwt_auth.exceptions import AuthJWTException 
 
 
 class ConnectionManager:

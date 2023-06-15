@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from models import (
     CandidateStageAnswer, CandidateStageAnswerChoice,
     CandidateStageAnswerDocument, CandidateStageAnswerText,
-    CandidateEssayAnswer, CandidateStageAnswerDefault, CandidateSportAnswer, Candidate, CandidateStageType,
+    CandidateEssayAnswer, CandidateStageAnswerDefault, CandidateSportAnswer, CandidateStageType,
     CandidateStageQuestion, CandidateStageInfo, CandidateStageInfoStatusEnum
 )
 from models.user_candidates import CandidateStageQuestionTypeEnum

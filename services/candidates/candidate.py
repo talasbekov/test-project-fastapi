@@ -1,12 +1,11 @@
-from fastapi.logger import logger as log
 from sqlalchemy import func, and_
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException, ForbiddenException, BadRequestException
 from models import (Candidate, CandidateStageInfo, StaffUnit, User,
-                    CandidateStatusEnum, Position, CandidateStageType,
+                    CandidateStatusEnum, CandidateStageType,
                     PositionNameEnum, CandidateStageInfoStatusEnum)
-from schemas import CandidateCreate, CandidateUpdate, CandidateRead, CandidateStageInfoCreate, UserCreate, CandidateEssayUpdate, CandidateEssayTypeCreate
+from schemas import CandidateCreate, CandidateUpdate, CandidateRead, CandidateStageInfoCreate, CandidateEssayUpdate, CandidateEssayTypeCreate
 from services import ServiceBase, staff_unit_service, user_service, position_service
 from .candidate_essay_type import candidate_essay_type_service
 from .candidate_stage_info import candidate_stage_info_service

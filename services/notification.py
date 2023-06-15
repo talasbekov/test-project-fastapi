@@ -1,6 +1,5 @@
 from sqlalchemy.orm import Session
 
-from exceptions.client import NotFoundException
 from models import Notification
 from schemas import NotificationCreate, NotificationUpdate
 from .base import ServiceBase

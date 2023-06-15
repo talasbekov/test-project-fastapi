@@ -2,8 +2,7 @@ import uuid
 
 from sqlalchemy.orm import Session
 
-from schemas import UserShortRead
-from models import User, StaffDivisionEnum, StaffDivision
+from models import StaffDivisionEnum, StaffDivision
 from services import staff_division_service
 from .base import BaseCategory
 

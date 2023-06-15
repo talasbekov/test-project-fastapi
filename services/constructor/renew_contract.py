@@ -6,8 +6,7 @@ from core import configs
 from models import User, ContractType, ContractHistory, HrDocument
 from .base import BaseHandler
 from services import contract_service, history_service
-from exceptions import ForbiddenException, NotFoundException, BadRequestException
-from utils import convert_str_to_datetime
+from exceptions import NotFoundException, BadRequestException
 
 
 def get_last_by_user_id(db: Session, user_id: str):

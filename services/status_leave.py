@@ -3,9 +3,8 @@ import uuid
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from models import StatusType, Status, User, StatusEnum
+from models import StatusType, StatusEnum
 from schemas import StatusTypeRead
-from services import status_service, user_service
 
 class StatusLeaveService:
     def get_by_option(self, db: Session, type: str, id: uuid.UUID, skip: int, limit: int):

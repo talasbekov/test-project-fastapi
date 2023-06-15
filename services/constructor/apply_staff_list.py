@@ -1,6 +1,6 @@
-from typing import Any, Optional
+from typing import Optional
 
-from sqlalchemy.orm import Query, Session
+from sqlalchemy.orm import  Session
 
 from models import (
     ArchiveStaffDivision,
@@ -9,7 +9,7 @@ from models import (
     User,
     HrDocument,
 )
-from exceptions import ForbiddenException, BadRequestException
+from exceptions import  BadRequestException
 from .base import BaseHandler
 from .. import (
     staff_division_service,

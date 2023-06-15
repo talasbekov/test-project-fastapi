@@ -4,10 +4,9 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 
 from core import Base
-from models import Secondment, StaffDivision, SecondmentHistory, StateBody
+from models import Secondment, StaffDivision, SecondmentHistory
 from schemas import SecondmentCreate, SecondmentUpdate, StaffDivisionOptionRead
-from services import staff_division_service, state_body_service
-from exceptions.client import NotFoundException, NotSupportedException
+from services import staff_division_service
 from utils import is_valid_uuid
 
 from .base import ServiceBase

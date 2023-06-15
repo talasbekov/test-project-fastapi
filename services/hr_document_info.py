@@ -1,17 +1,15 @@
 import uuid
 from datetime import datetime
-from typing import List, Union, Any, Type
+from typing import List
 
-from sqlalchemy import Subquery
-from sqlalchemy.orm import Query
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
+
 from models import (
     HrDocumentInfo,
     HrDocumentStep,
     DocumentStaffFunction,
-    HrDocument,
     User,
 )
 from schemas import (HrDocumentInfoCreate, HrDocumentInfoUpdate)

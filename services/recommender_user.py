@@ -1,10 +1,8 @@
-import uuid
-
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import RecommenderUser
-from schemas import RecommenderUserCreate, RecommenderUserUpdate, RecommenderUserRead
+from schemas import RecommenderUserCreate, RecommenderUserUpdate
 from .base import ServiceBase
 
 

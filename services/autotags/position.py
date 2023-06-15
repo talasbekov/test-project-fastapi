@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from .base import BaseAutoTagHandler
 from schemas import AutoTagRead
-from services import position_service, user_service, staff_division_service
+from services import user_service, staff_division_service
 
 
 class PositionAutoTagHandler(BaseAutoTagHandler):

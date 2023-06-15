@@ -4,7 +4,7 @@ from core import configs
 from models import User, HrDocument, History
 from .base import BaseHandler
 from services import badge_service, history_service
-from exceptions import ForbiddenException, BadRequestException
+from exceptions import BadRequestException
 
 
 class AddBadgeHandler(BaseHandler):

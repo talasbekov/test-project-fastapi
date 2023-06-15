@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session, Query
 from core import configs
 from models import User, HrDocument, Badge, BadgeHistory
 from .base import BaseHandler
-from services import badge_service, history_service
+from services import badge_service
 from exceptions import ForbiddenException, BadRequestException
 
 

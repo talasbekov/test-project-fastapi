@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from models import (Position)
+from models import Position
 from schemas import PositionCreate, PositionUpdate
 from services import ServiceBase
 

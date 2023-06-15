@@ -2,8 +2,6 @@ import tempfile
 import urllib.parse
 import urllib.request
 import datetime
-import aiohttp
-from api.v1.additional import psychological_check
 
 import pdfkit
 import docx2python
@@ -11,24 +9,21 @@ from docx import Document
 import lxml.etree as etree
 from docx.shared import Inches
 from bs4 import BeautifulSoup
-from docxtpl import DocxTemplate
 from fastapi.responses import FileResponse
-from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from core import wkhtmltopdf_path, download_file_to_tempfile
 
 
 from core import jinja_env
-from exceptions.client import BadRequestException
+
 from services import (hr_document_template_service, candidate_service, staff_unit_service,
                       profile_service, family_profile_service, family_relation_service,
-                      family_service, user_service)
-from models import (User, Profile, CandidateStageInfo, CandidateStageAnswer,
+                      family_service)
+from models import (User, Profile, 
                     CandidateStageAnswerDefault, CandidateStageAnswerText, CandidateStageType,
                     CandidateStageQuestion, CandidateStageAnswerChoice)
 from exceptions import NotFoundException
-from services.candidates import candidate_stage_type
 
 
 class RenderService:

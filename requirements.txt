@@ -56,4 +56,5 @@ docx2python==2.6.0
 pdfkit==1.0.0
 aiohttp==3.8.4
 pymorphy2==0.9.1
+ruff==0.0.272
 requests

@@ -10,11 +10,10 @@ from models import (
     HrDocumentStep,
     DocumentStaffFunction,
     User,
-    Notification,
     HrDocumentTemplateEnum,
     StaffDivisionEnum,
 )
-from models.association import staff_unit_function
+
 from schemas import (
     HrDocumentTemplateCreate,
     HrDocumentTemplateUpdate,

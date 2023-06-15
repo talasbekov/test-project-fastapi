@@ -1,16 +1,15 @@
 import datetime
 import uuid
 
-from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
 from exceptions.client import BadRequestException, NotFoundException
 from models import (StaffUnit, Position, User, EmergencyServiceHistory,
-                    ArchiveStaffUnit, ArchiveServiceStaffFunction,
+                    ArchiveStaffUnit, 
                     StaffDivision, PositionNameEnum, StaffDivisionEnum)
 from schemas import (StaffUnitCreate, StaffUnitUpdate,
                      StaffUnitFunctions, StaffUnitRead,
-                     StaffUnitCreateWithPosition, PositionCreate, StaffUnitFunctionsByPosition
+                     StaffUnitCreateWithPosition, StaffUnitFunctionsByPosition
                     )
 from services import (service_staff_function_service,
                       document_staff_function_service,

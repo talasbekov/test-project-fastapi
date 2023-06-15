@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from core import configs
-from models import User, HrDocument, CoolnessHistory
+from models import User, HrDocument
 from .base import BaseHandler
 from services import coolness_service, history_service
 from exceptions import ForbiddenException, BadRequestException

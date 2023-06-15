@@ -1,6 +1,5 @@
 from sqlalchemy.orm import Session
 
-from exceptions import NotFoundException, NotSupportedException
 from models import NameChange
 from schemas import HistoryNameChangeCreate, HistoryNameChangeUpdate
 from services import ServiceBase

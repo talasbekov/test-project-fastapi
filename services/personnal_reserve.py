@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import PersonalReserve
-from schemas import PersonnalReserveCreate, PersonnalReserveRead, PersonnalReserveUpdate
+from schemas import PersonnalReserveCreate, PersonnalReserveUpdate
 from .base import ServiceBase
 
 

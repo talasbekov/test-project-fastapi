@@ -1,13 +1,10 @@
-import datetime
-
 from sqlalchemy.orm import Session
 
 from core import configs
-from models import User, HrDocument, StaffDivisionEnum, StaffUnit
+from models import User, HrDocument, StaffDivisionEnum
 from .base import BaseHandler
-from services import status_service, history_service, staff_unit_service, staff_division_service
+from services import status_service, history_service, staff_unit_service
 from exceptions import ForbiddenException, BadRequestException
-from utils import convert_str_to_datetime
 
 archive_status = [
     StaffDivisionEnum.DEAD,

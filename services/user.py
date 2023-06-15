@@ -1,9 +1,8 @@
 import types
 import uuid
 from typing import List, Optional, Any
-from sqlalchemy.orm import make_transient
 from sqlalchemy.orm import Session, Query
-from sqlalchemy import func, or_, and_
+from sqlalchemy import func, and_
 
 from exceptions import NotFoundException, InvalidOperationException, BadRequestException
 from models import (
@@ -16,36 +15,11 @@ from models import (
     StaffDivisionEnum,
     HrDocument,
     HrDocumentInfo,
-    HrDocumentTemplate,
-    Attestation,
-    Badge,
-    Rank,
-    Contract,
-    Coolness,
-    Equipment,
-    Event,
-    History,
-    Notification,
-    Penalty,
-    PersonalReserve,
-    PrivilegeEmergency,
-    Profile,
-    RecommenderUser,
-    Secondment,
-    ServiceID,
-    StaffList,
-    Status,
-    UserOath,
-    UserStat,
-    ArchiveStaffUnit,
-    NameChangeHistory,
-    Candidate,
-    ServiceCharacteristicHistory,
+    HrDocumentTemplate
 )
 from schemas import (
     UserCreate,
     UserUpdate,
-    HrDocumentTemplateRead,
 )
 from services import (
     staff_division_service,

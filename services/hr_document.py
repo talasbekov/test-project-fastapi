@@ -1,4 +1,3 @@
-import logging
 from .constructor import handlers
 import pdfkit
 import random
@@ -12,7 +11,7 @@ from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import func, and_
 
-from core import Base, jinja_env, download_file_to_tempfile, wkhtmltopdf_path
+from core import jinja_env, download_file_to_tempfile, wkhtmltopdf_path
 from exceptions import (
     BadRequestException,
     ForbiddenException,
@@ -38,7 +37,6 @@ from models import (
     ArchiveStaffUnit,
 )
 from schemas import (
-    BadgeRead,
     HrDocumentCreate,
     HrDocumentInit,
     HrDocumentRead,
@@ -48,13 +46,11 @@ from schemas import (
     StaffDivisionOptionRead,
     StaffUnitRead,
     DraftHrDocumentCreate,
-    DraftHrDocumentInit,
     BadgeTypeRead,
     StatusTypeRead,
     CoolnessTypeRead,
     PenaltyTypeRead,
     ContractTypeRead,
-    NotificationCreate,
     ArchiveStaffUnitRead,
 )
 from services import (
@@ -69,20 +65,17 @@ from services import (
     user_service,
     jurisdiction_service,
     hr_document_status_service,
-    history_service,
     status_service,
     secondment_service,
     coolness_service,
     penalty_service,
     contract_service,
-    notification_service,
     staff_list_service,
     archive_staff_unit_service,
     status_leave_service,
     state_body_service,
 )
 from .base import ServiceBase
-from ws import notification_manager
 
 options = {
     "staff_unit": staff_unit_service,

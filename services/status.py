@@ -5,7 +5,7 @@ from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
-from models import Status, StatusHistory, StatusType, User
+from models import Status, StatusHistory, StatusType
 from schemas import StatusRead, StatusCreate, StatusUpdate, StatusTypeRead
 from services import user_service
 from .base import ServiceBase

@@ -1,10 +1,9 @@
-import uuid
 from typing import Any
 
 from sqlalchemy.orm import Session, Query
 
 from core import configs
-from models import User, HrDocument, Badge, BadgeType
+from models import User, HrDocument, Badge
 from exceptions import ForbiddenException, BadRequestException
 from services import badge_service, history_service
 from .base import BaseHandler

@@ -1,5 +1,5 @@
 import datetime
-from typing import List, Optional
+from typing import Optional
 import uuid
 
 from sqlalchemy.orm import Session, joinedload
@@ -27,7 +27,6 @@ from schemas import (
 from services import (
     ServiceBase,
     archive_staff_division_service,
-    archive_staff_function_service,
     archive_staff_unit_service,
     document_archive_staff_function_service,
     service_archive_staff_function_service,

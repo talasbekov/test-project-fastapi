@@ -1,11 +1,10 @@
 from uuid import UUID
-from datetime import datetime, timedelta
 
 from sqlalchemy.orm import Session
 
 from .base import BaseAutoTagHandler
 from models import Family
-from schemas import FamilyRead, AutoTagRead
+from schemas import  AutoTagRead
 from services import family_profile_service
 
 

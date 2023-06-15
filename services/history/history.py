@@ -2,7 +2,6 @@ import uuid
 from datetime import datetime, timedelta
 
 from sqlalchemy.orm import Session
-from fastapi.logger import logger as log
 
 from exceptions import NotFoundException, NotSupportedException
 from models import (
@@ -30,12 +29,10 @@ from models import (
     Status,
     Badge,
     Coolness,
-    PersonalReserve,
-    PrivilegeEmergency,
     User
 )
 from schemas import HistoryCreate, HistoryUpdate
-from schemas.history.history import EquipmentRead, EmergencyContactRead
+from schemas.history.history import EquipmentRead
 from services import ServiceBase
 
 
@@ -46,7 +43,6 @@ from schemas import (
     GeneralInformationRead,
     CoolnessRead,
     AttendanceRead,
-    ServiceIDRead,
     HistoryRead,
     HistoryServiceDetailRead,
     HistoryPersonalRead,

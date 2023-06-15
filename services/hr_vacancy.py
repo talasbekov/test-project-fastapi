@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from exceptions.client import BadRequestException, ForbiddenException, NotFoundException
 from models import (HrVacancy, StaffUnit, StaffDivision,
-                    User, PositionNameEnum, HrVacancyCandidate)
+                     PositionNameEnum, HrVacancyCandidate)
 from models.hr_vacancy import HrVacancy
 from schemas import (HrVacancyCreate, HrVacancyUpdate,
                      HrVacancyRead, HrVacancyStaffDivisionRead, HrVacancyUpdate,

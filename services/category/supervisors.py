@@ -3,7 +3,6 @@ import uuid
 from sqlalchemy import and_, func
 from sqlalchemy.orm import Session
 
-from schemas import UserShortRead
 from models import User, StaffUnit, Position, PositionNameEnum
 from .base import BaseCategory
 

@@ -1,5 +1,3 @@
-from ast import Pass
-from math import e
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException

@@ -5,10 +5,9 @@ from sqlalchemy import and_, or_
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
-from models import Penalty, PenaltyType, User, PenaltyHistory
+from models import Penalty, PenaltyType, PenaltyHistory
 from schemas import PenaltyRead, PenaltyCreate, PenaltyUpdate, PenaltyTypeRead
 from .base import ServiceBase
-from utils import is_valid_uuid
 
 
 class PenaltyService(ServiceBase[Penalty, PenaltyCreate, PenaltyUpdate]):

@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from exceptions.client import NotFoundException
 from models import Rank, RankHistory, User
 from schemas import RankCreate, RankUpdate, RankRead
-from services import staff_unit_service, position_service
+
 from .base import ServiceBase
 
 

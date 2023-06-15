@@ -1,12 +1,12 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import func, and_, text
+from sqlalchemy import func, and_
 from sqlalchemy.orm import Session
 
 from exceptions import ForbiddenException, BadRequestException
 from models import (CandidateStageInfo, Candidate, StaffUnit, User,
-                    CandidateStageInfoStatusEnum, PositionNameEnum, Position, CandidateStageType)
+                    CandidateStageInfoStatusEnum, PositionNameEnum, CandidateStageType)
 from models.association import staff_unit_candidate_stage_infos
 from schemas import (CandidateStageInfoRead, CandidateStageInfoCreate, CandidateStageInfoUpdate,
                      CandidateStageInfoSendToApproval)

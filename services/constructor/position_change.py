@@ -5,7 +5,7 @@ from models import User, HrDocument, EmergencyServiceHistory
 from schemas import StaffUnitRead
 from .base import BaseHandler
 from services import staff_unit_service, history_service
-from exceptions import ForbiddenException, BadRequestException
+from exceptions import BadRequestException
 
 
 class PositionChangeHandler(BaseHandler):

@@ -6,7 +6,7 @@ from core import configs
 from models import User, HrDocument, Penalty, PenaltyHistory
 from .base import BaseHandler
 from services import penalty_service, penalty_type_service
-from exceptions import ForbiddenException, BadRequestException
+from exceptions import BadRequestException
 
 
 class DeletePenaltyHandler(BaseHandler):
