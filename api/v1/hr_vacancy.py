@@ -160,7 +160,8 @@ async def update(*,
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
-    return hr_vacancy_service.update(db, id, body, role)
+    hr_vacancy = hr_vacancy_service.get_by_id(db, id)
+    return hr_vacancy_service.update(db, hr_vacancy, body, role)
 
 
 @router.put("/{id}/archieve-staff-unit", dependencies=[Depends(HTTPBearer())],

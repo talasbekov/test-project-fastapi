@@ -127,7 +127,8 @@ async def apply_staff_list(*,
         - **date_from**: date - format (YYYY-MM-DD). This parameter is required.
     """
     Authorize.jwt_required()
-    return staff_list_service.apply_staff_list(db, id, signed_by, document_creation_date)
+    role = Authorize.get_raw_jwt()['role']
+    return staff_list_service.apply_staff_list(db, id, signed_by, document_creation_date, role)
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
