@@ -1,11 +1,9 @@
-from sqlalchemy import Column, ForeignKey, ARRAY, Enum
+from sqlalchemy import Column, ForeignKey, ARRAY
 from sqlalchemy.dialects.postgresql import UUID, JSON
 from sqlalchemy.orm import relationship
 
 from models import isActiveModel
 from .association import staff_unit_function, staff_unit_candidate_stage_infos
-
-from enum import Enum as EnumBase
 
 class StaffUnit(isActiveModel):
 

@@ -10,26 +10,20 @@ from sqlalchemy.orm import relationship, Session
 
 from exceptions import NotSupportedException, NotFoundException
 from models import (
-    NamedModel,
     Model,
     StaffUnit,
     Rank, 
     Penalty,
     Coolness,
     Contract,
-    ContractType,
     Secondment,
-    # NameChange,
     Attestation,
     Status,
     Coolness,
-    CoolnessType,
     Contract,
-    StaffDivision,
     Badge
 )
-from utils import is_valid_uuid
-from docx import Document
+
 
 class HistoryEnum(BaseEnum):
 

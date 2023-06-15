@@ -4,7 +4,7 @@ from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from models import NamedModel, NamedNestedModel, isActiveModel
+from models import NamedModel
 from .association import staff_unit_function
 
 

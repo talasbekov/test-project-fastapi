@@ -2,7 +2,7 @@ import os
 import tempfile
 
 import aiohttp
-from pydantic import AnyUrl
+
 from fastapi import HTTPException
 
 

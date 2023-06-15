@@ -1,4 +1,4 @@
-from sqlalchemy import TEXT, Column, Integer, ForeignKey, UUID
+from sqlalchemy import TEXT, Column, ForeignKey, UUID
 from sqlalchemy.orm import relationship
 from models import Model
 

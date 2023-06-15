@@ -1,7 +1,7 @@
 import enum
 
-from sqlalchemy import Column, ForeignKey, Boolean, Integer
-from sqlalchemy.dialects.postgresql import TEXT, UUID, JSON
+from sqlalchemy import Column, ForeignKey, Boolean
+from sqlalchemy.dialects.postgresql import UUID, JSON
 from sqlalchemy.orm import relationship
 
 from models import NamedNestedModel, isActiveModel

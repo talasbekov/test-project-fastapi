@@ -2,7 +2,7 @@ from sqlalchemy import Column, String, Column, ForeignKey, UUID
 from sqlalchemy.orm import relationship
 
 from models import Model
-# model which contains may be name, or last_name, or father_name
+
 
 
 class NameChange(Model):

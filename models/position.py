@@ -1,6 +1,6 @@
 from enum import Enum as EnumBase
 
-from sqlalchemy import Column, ForeignKey, Enum, String
+from sqlalchemy import Column, ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 

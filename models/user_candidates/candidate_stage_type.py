@@ -1,4 +1,3 @@
-from sqlalchemy import Column, Boolean
 from sqlalchemy.orm import relationship
 
 from models import NamedModel
