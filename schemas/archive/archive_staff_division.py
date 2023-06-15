@@ -1,18 +1,18 @@
 import uuid
 from typing import List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from schemas import NamedModel
 from .archive_staff_unit import ArchiveStaffUnitRead
 
 
 
 class ArchiveStaffDivisionBase(NamedModel):
-    parent_group_id: Optional[uuid.UUID]
+    parent_group_id: Optional[uuid.UUID] = Field(None, nullable=True)
     description: Optional[NamedModel]
     staff_list_id: uuid.UUID
-    is_combat_unit: Optional[bool]
-    leader_id: Optional[uuid.UUID]
+    is_combat_unit: Optional[bool] = Field(None, nullable=True)
+    leader_id: Optional[uuid.UUID] = Field(None, nullable=True)
 
 
 class ArchiveStaffDivisionCreate(ArchiveStaffDivisionBase):

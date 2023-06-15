@@ -2,7 +2,7 @@ import datetime
 import uuid
 from typing import List, Optional
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 
 from schemas import (PositionRead, RankRead, StaffFunctionRead,
                     Model, NamedModel, ReadModel, ReadNamedModel,
@@ -11,11 +11,11 @@ from schemas import (PositionRead, RankRead, StaffFunctionRead,
 
 
 class StaffDivisionBase(NamedModel):
-    parent_group_id: Optional[uuid.UUID]
+    parent_group_id: Optional[uuid.UUID] = Field(None, nullable=True)
     description: Optional[NamedModel]
-    is_combat_unit: Optional[bool]
-    leader_id: Optional[uuid.UUID]
-    is_active: Optional[bool] = True
+    is_combat_unit: Optional[bool] = Field(None, nullable=True)
+    leader_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    is_active: bool = True
 
 
 class StaffDivisionCreate(StaffDivisionBase):
@@ -31,8 +31,8 @@ class StaffDivisionUpdateParentGroup(BaseModel):
 
 class UserRead(ReadModel):
     badges: Optional[List[BadgeRead]]
-    icon: Optional[str]
-    address: Optional[str]
+    icon: Optional[str] = Field(None, nullable=True)
+    address: Optional[str] = Field(None, nullable=True)
     cabinet: Optional[str]
     service_phone_number: Optional[str]
     supervised_by: Optional[uuid.UUID]
@@ -101,7 +101,7 @@ class StaffUnitRead(ReadModel):
         arbitrary_types_allowed = True
 
 class StaffDivisionRead(StaffDivisionBase, ReadNamedModel):
-    is_combat_unit: Optional[bool]
+    is_combat_unit: Optional[bool] = Field(None, nullable=True)
     count_vacancies: Optional[int]
     children: Optional[List['StaffDivisionRead']]
     staff_units: Optional[List['StaffUnitRead']]
@@ -111,7 +111,7 @@ class StaffDivisionRead(StaffDivisionBase, ReadNamedModel):
 
 
 class StaffDivisionOptionRead(StaffDivisionBase, ReadNamedModel):
-    is_combat_unit: Optional[bool]
+    is_combat_unit: Optional[bool] = Field(None, nullable=True)
     staff_units: Optional[List[StaffUnitRead]]
     children: Optional[List['StaffDivisionOptionRead']]
 
@@ -121,7 +121,7 @@ class StaffDivisionOptionRead(StaffDivisionBase, ReadNamedModel):
 
 
 class StaffUnitDivisionRead(StaffDivisionBase, ReadNamedModel):
-    is_combat_unit: Optional[bool]
+    is_combat_unit: Optional[bool] = Field(None, nullable=True)
 
     class Config:
         orm_mode = True
