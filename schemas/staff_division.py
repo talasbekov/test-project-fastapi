@@ -5,9 +5,8 @@ from typing import List, Optional
 from pydantic import BaseModel, EmailStr, Field
 
 from schemas import (PositionRead, RankRead, StaffFunctionRead,
-                    Model, NamedModel, ReadModel, ReadNamedModel,
-                    BadgeRead, RankRead, StatusRead)
-
+                     Model, NamedModel, ReadModel, ReadNamedModel,
+                     BadgeRead, RankRead, StatusRead)
 
 
 class StaffDivisionBase(NamedModel):
@@ -15,7 +14,7 @@ class StaffDivisionBase(NamedModel):
     description: Optional[NamedModel]
     is_combat_unit: Optional[bool] = Field(None, nullable=True)
     leader_id: Optional[uuid.UUID] = Field(None, nullable=True)
-    is_active: bool = True
+    is_active: Optional[bool] = True
 
 
 class StaffDivisionCreate(StaffDivisionBase):
@@ -28,6 +27,7 @@ class StaffDivisionUpdate(StaffDivisionBase):
 
 class StaffDivisionUpdateParentGroup(BaseModel):
     parent_group_id: uuid.UUID
+
 
 class UserRead(ReadModel):
     badges: Optional[List[BadgeRead]]
@@ -51,16 +51,18 @@ class UserRead(ReadModel):
     iin: Optional[str]
     statuses: Optional[List[StatusRead]]
     status_till: Optional[datetime.datetime]
+
     class Config:
         orm_mode = True
-        
-        
+
+
 class HrVacancyRead(ReadModel):
     is_active: Optional[bool]
     staff_unit_id: Optional[uuid.UUID]
-    
+
     class Config:
         orm_mode = True
+
 
 class UserReplacingStaffUnitRead(ReadModel):
     position_id: uuid.UUID
@@ -78,11 +80,13 @@ class UserReplacingStaffUnitRead(ReadModel):
         orm_mode = True
         arbitrary_types_allowed = True
 
+
 class UserReplacingRead(UserRead):
     staff_unit: Optional[UserReplacingStaffUnitRead]
-    
+
     class Config:
         arbitrary_types_allowed = True
+
 
 class StaffUnitRead(ReadModel):
     staff_division_id: Optional[uuid.UUID]
@@ -99,6 +103,7 @@ class StaffUnitRead(ReadModel):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
+
 
 class StaffDivisionRead(StaffDivisionBase, ReadNamedModel):
     is_combat_unit: Optional[bool] = Field(None, nullable=True)

@@ -17,7 +17,7 @@ class StaffUnitRequirements(NamedModel):
 class StaffUnitBase(Model):
     position_id: uuid.UUID
     staff_division_id: Optional[uuid.UUID] = Field(None, nullable=True)
-    is_active: bool = True
+    is_active: Optional[bool] = True
     requirements: Optional[List[StaffUnitRequirements]] = Field(None, nullable=True)
 
 
@@ -27,7 +27,7 @@ class StaffUnitCreate(StaffUnitBase):
 
 class StaffUnitCreateWithPosition(PositionCreate):
     staff_division_id: uuid.UUID
-    is_active: bool = True
+    is_active: Optional[bool] = True
     requirements: Optional[List[dict]] = Field(None, nullable=True)
 
 
@@ -36,7 +36,7 @@ class StaffUnitUpdate(StaffUnitBase):
 
 
 class HrVacancyRead(ReadModel):
-    is_active: bool = True
+    is_active: Optional[bool] = True
     staff_unit_id: Optional[uuid.UUID]
 
     class Config:

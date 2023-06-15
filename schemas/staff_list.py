@@ -8,7 +8,7 @@ from schemas import Model, NamedModel, ReadModel, ReadNamedModel, UserShortRead
 
 
 class StaffListBase(NamedModel):
-    user_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    user_id: Optional[uuid.UUID]
 
     class Config:
         orm_mode = True
@@ -37,7 +37,7 @@ class StaffListRead(StaffListBase, ReadNamedModel):
 class StaffListStatusRead(StaffListBase):
     id: Optional[uuid.UUID]
     status: Optional[str] = Field(None, nullable=True)
-    updated_at: datetime
+    updated_at: Optional[datetime]
     changes_size: Optional[int] = Field(None, nullable=True)
     user: Optional[UserShortRead] = Field(None, nullable=True)
     reg_number: Optional[str] = Field(None, nullable=True)
