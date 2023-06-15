@@ -8,8 +8,9 @@ from sqlalchemy.orm import Session
 
 from core import get_db
 from schemas import (StaffDivisionCreate, StaffDivisionRead,
-                     StaffDivisionUpdate, StaffDivisionUpdateParentGroup)
-from services import staff_division_service
+                     StaffDivisionUpdate, StaffDivisionUpdateParentGroup,
+                     StaffDivisionTypeRead)
+from services import staff_division_service, staff_division_type_service
 
 router = APIRouter(prefix="/staff_division", tags=["StaffDivision"], dependencies=[Depends(HTTPBearer())])
 
@@ -176,3 +177,18 @@ async def get_full_name_by_id(*,
     Authorize.jwt_required()
     full_name, full_nameKZ = staff_division_service.get_full_name(db, id)
     return {"name": full_name, "nameKZ": full_nameKZ}
+
+@router.get("/types/", dependencies=[Depends(HTTPBearer())],
+            response_model=StaffDivisionTypeRead,
+            summary="Get Staff Division types")
+async def get_division_types(*,
+    db: Session = Depends(get_db),
+    skip: int = 0,
+    limit: int = 100,
+    Authorize: AuthJWT = Depends()
+):
+    """
+       Get all Staff Division Types
+    """
+    Authorize.jwt_required()
+    return staff_division_type_service.get_multi(db,skip=skip, limit=limit)

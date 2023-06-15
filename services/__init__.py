@@ -7,6 +7,7 @@ from .profile import *
 from .notification import notification_service
 
 from .jurisdiction import jurisdiction_service
+from .staff_division_type import staff_division_type_service
 from .staff_division import staff_division_service
 from .service_staff_function_type import service_staff_function_type_service
 from .document_staff_function_type import document_staff_function_type_service
