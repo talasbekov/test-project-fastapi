@@ -22,17 +22,6 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
                 f"StaffDivision with id: {id} is not found!")
         return group
 
-
-    def get_by_name(self, db: Session, name: str, staff_list_id: uuid.UUID) -> ArchiveStaffDivision:
-        group = db.query(self.model).filter(
-            self.model.name == name,
-            self.model.staff_list_id == staff_list_id
-        ).first()
-        if group is None:
-            raise NotFoundException(
-                f"ArchiveStaffDivision with name: {name} is not found!")
-        return group
-
     def get_departments(
             self,
             db: Session,

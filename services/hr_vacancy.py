@@ -164,7 +164,6 @@ class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate])
         
         return vacancy
 
-
     def update(self, db: Session, hr_vacancy: HrVacancy, body: HrVacancyUpdate, role_id: str) -> HrVacancy:
         
         if not self._check_by_role(db, role_id):

@@ -2,11 +2,11 @@ import datetime
 import uuid
 from typing import Any, List, Optional
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 
 
 class ServiceArchiveStaffFunctionTypeBase(BaseModel):
-    nameKZ: Optional[str]
+    nameKZ: Optional[str] = Field(None, nullable=True)
     name: str
 
     class Config:

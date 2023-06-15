@@ -709,6 +709,37 @@ def upgrade() -> None:
             'nameKZ': 'Бастаулық'
         }]
     )
+    
+    staff_division_type_id = get_uuid()
+    staff_division_type2_id = get_uuid()
+    staff_division_type3_id = get_uuid()
+    staff_division_type4_id = get_uuid()
+    staff_division_type5_id = get_uuid()
+    
+    op.bulk_insert(
+        Base.metadata.tables['staff_division_types'],
+        [{
+            'id': staff_division_type_id,
+            'name': "Департамент",
+            'nameKZ': "Департамент",
+        }, {
+            'id': staff_division_type2_id,
+            'name': "Управление",
+            'nameKZ': 'Управление',
+        }, {
+            'id': staff_division_type3_id,
+            'name': "Отдел",
+            'nameKZ': 'Отдел',
+        }, {
+            'id': staff_division_type4_id,
+            'name': "Универсал",
+            'nameKZ': 'Универсал'
+        }, {
+            'id': staff_division_type5_id,
+            'name': "Группа",
+            'nameKZ': 'Группа'
+        }]
+    )
 
     staff_division_type_id = get_uuid()
     staff_division_type2_id = get_uuid()

@@ -2,14 +2,14 @@ import datetime
 from typing import List, Optional
 import uuid
 
+from sqlalchemy import desc
 from sqlalchemy.orm import Session, joinedload
 
-from exceptions import NotFoundException, NotSupportedException, ForbiddenException
+from exceptions import NotFoundException, NotSupportedException
 from models import (
     DocumentStaffFunction,
     ServiceStaffFunction,
     StaffDivision,
-    StaffDivisionEnum,
     StaffList,
     StaffUnit,
     ArchiveStaffDivision,
@@ -24,7 +24,6 @@ from schemas import (
     StaffListUpdate,
     StaffListUserCreate,
     StaffListStatusRead,
-    HrDocumentInit,
     HrVacancyUpdate,
 )
 from services import (
@@ -40,7 +39,6 @@ from services import (
     document_staff_function_type_service,
     service_staff_function_type_service,
     hr_document_template_service,
-    hr_document_service,
     staff_unit_service,
     service_staff_function_service,
     service_staff_function_type_service,
@@ -81,10 +79,6 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         staff_list = super().create(db, create_staff_list)
         staff_divisions = staff_division_service.get_all_except_special(
             db, 0, 100)
-
-        disposition_division = staff_division_service.get_by_name(db, StaffDivisionEnum.DISPOSITION.value)
-        staff_divisions.append(disposition_division)
-
         for staff_division in staff_divisions:
             self._create_archive_staff_division(
                 db, staff_division, staff_list.id, None, current_user_role_id)
@@ -243,11 +237,6 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
                                                                                    archive_division.id, current_user_role_id)
                 archive_division.children.append(child_archive_staff_division)
 
-        if staff_division.name == StaffDivisionEnum.DISPOSITION.value:
-            db.add(archive_division)
-            db.flush()
-            return archive_division
-
         is_leader_needed = False
         leader_id = None
         if staff_division.leader_id is not None:
@@ -277,6 +266,10 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
                 if staff_unit.staff_functions:
                     for staff_function in staff_unit.staff_functions:
                         service = options.get(staff_function.discriminator)
+                        if isinstance(staff_function, ServiceStaffFunction):
+                            print(staff_function)
+                        if isinstance(staff_function, DocumentStaffFunction):
+                            print('Anime')
                         if service is None:
                             raise NotSupportedException(
                                 detail="Staff function type is not supported!")
@@ -386,6 +379,7 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
                        .options(joinedload(StaffList.user))
                        .filter(StaffList.is_signed == True,
                                StaffList.name.contains(filter))
+                       .order_by(desc(StaffList.updated_at))
                        .offset(skip)
                        .limit(limit)
                        .all())
