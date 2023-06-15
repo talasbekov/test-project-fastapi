@@ -37,7 +37,7 @@ def hr_document_properties_validator(v: dict):
         if v is None:
             return v
         if not isinstance(v, dict):
-            raise ValueError(f'properties should be dictionary')
+            raise ValueError('properties should be dictionary')
         keys = list(v)
         for key in keys:
             value = v[key]

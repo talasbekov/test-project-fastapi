@@ -57,7 +57,7 @@ class AddBlackBeretHandler(BaseHandler):
         if badge_type:
             return badge_type
         else:
-            raise BadRequestException(f"Black beret badge not found")
+            raise BadRequestException("Black beret badge not found")
 
     def handle_response(self, db: Session,
                         user: User,

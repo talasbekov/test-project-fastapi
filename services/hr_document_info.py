@@ -54,7 +54,7 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
         ).order_by(self.model.order).first()
 
         if info is None:
-            raise NotFoundException(detail=f'Нет истории подписания!')
+            raise NotFoundException(detail='Нет истории подписания!')
 
         return info
 
@@ -148,7 +148,7 @@ class HrDocumentInfoService(ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, Hr
         ).order_by(HrDocumentInfo.signed_at.desc()).first()
 
         if info is None:
-            raise NotFoundException(detail=f'Нет истории подписания!')
+            raise NotFoundException(detail='Нет истории подписания!')
 
         return info
 

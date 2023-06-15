@@ -188,12 +188,12 @@ class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageIn
 
             if candidate.attempt_number >= 2:
                 raise BadRequestException(
-                    detail=f"Кандидат имеет только два шанса для прохождения физической подготовки!"
+                    detail="Кандидат имеет только два шанса для прохождения физической подготовки!"
                 )
 
         if position is None:
             raise BadRequestException(
-                detail=f"Введите staff_unit_coordinate_id"
+                detail="Введите staff_unit_coordinate_id"
             )
 
         staff_units = staff_unit_service.get_all_by_position(db, position)

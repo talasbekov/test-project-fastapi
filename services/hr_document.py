@@ -587,7 +587,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                         )
         elif not staff_unit_service.has_staff_function(db, staff_unit.id, step.staff_function_id):
             raise ForbiddenException(
-                detail=f"Вы не можете инициализировать этот документ из-за отсутствия прав!"
+                detail="Вы не можете инициализировать этот документ из-за отсутствия прав!"
             )
 
         forbidden_users = self._exists_user_document_in_progress(
@@ -605,7 +605,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         if not self._check_jurisdiction(db, staff_unit, document_staff_function, body.user_ids):
             raise ForbiddenException(
-                detail=f"Вы не можете инициализировать этот документ из-за юрисдикции!"
+                detail="Вы не можете инициализировать этот документ из-за юрисдикции!"
             )
 
     def _validate_document_for_steps(self, step: HrDocumentStep, all_steps: list, users: list):
@@ -1151,7 +1151,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         if document.last_step is None\
            and document.status_id is completed_status.id:
             raise InvalidOperationException(
-                detail=f'Document is already signed!')
+                detail='Document is already signed!')
 
     def _validate_document_for_user_step(self, info, current_user):
         if info.assigned_to_id != current_user.id:
@@ -1207,7 +1207,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         path = document_template.path if language == LanguageEnum.ru else document_template.pathKZ
 
         if path is None:
-            raise BadRequestException(detail=f'Приказа нет на русском языке!')
+            raise BadRequestException(detail='Приказа нет на русском языке!')
 
         temp_file_path = await download_file_to_tempfile(path)
 
@@ -1226,7 +1226,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             if document.signed_at is not None:
                 context["signed_at"] = document.signed_at.strftime("%Y-%m-%d")
         except:
-            raise BadRequestException(detail=f'Ошибка в шаблоне!')
+            raise BadRequestException(detail='Ошибка в шаблоне!')
 
         last_step = hr_document_step_service.get_last_step_document_template_id(
             db, document.hr_document_template_id)
