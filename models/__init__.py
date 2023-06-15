@@ -10,6 +10,7 @@ from .hr_document_step import HrDocumentStep
 from .hr_document_template import HrDocumentTemplate, SubjectType, LanguageEnum, HrDocumentTemplateEnum
 from .rank import Rank
 from .notification import Notification
+from .staff_division_type import StaffDivisionType
 from .staff_division import StaffDivision, StaffDivisionEnum
 from .jurisdiction import Jurisdiction
 from .staff_function import (DocumentFunctionType, DocumentStaffFunction,

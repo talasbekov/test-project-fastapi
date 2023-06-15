@@ -190,11 +190,15 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
 
     def create_from_archive(self, db: Session, archive_staff_division: ArchiveStaffDivision, parent_id: uuid.UUID, leader_id: uuid.UUID):
         self._validate_parent(db, parent_id)
+        if archive_staff_division.name == StaffDivisionEnum.DISPOSITION.value:
+            parent_id = self.get_by_name(db, StaffDivisionEnum.SPECIAL_GROUP.value).id
         res = super().create(
             db, StaffDivisionCreate(
                 name=archive_staff_division.name,
                 nameKZ=archive_staff_division.nameKZ,
                 parent_group_id=parent_id,
+                type_id=archive_staff_division.type_id,
+                staff_division_number=archive_staff_division.staff_division_number,
                 description=archive_staff_division.description,
                 is_combat_unit=archive_staff_division.is_combat_unit,
                 leader_id=leader_id,
@@ -206,6 +210,8 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
     def update_from_archive(self, db: Session, archive_staff_division: ArchiveStaffDivision, parent_id: uuid.UUID, leader_id: uuid.UUID):
         self._validate_parent(db, parent_id)
         staff_division = self.get_by_id(db, archive_staff_division.origin_id)
+        if archive_staff_division.name == StaffDivisionEnum.DISPOSITION.value:
+            parent_id = self.get_by_name(db, StaffDivisionEnum.SPECIAL_GROUP.value).id
         res = super().update(
             db,
             db_obj=staff_division,
@@ -213,6 +219,8 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
                 name=archive_staff_division.name,
                 nameKZ=archive_staff_division.nameKZ,
                 parent_group_id=parent_id,
+                type_id=archive_staff_division.type_id,
+                staff_division_number=archive_staff_division.staff_division_number,
                 description=archive_staff_division.description,
                 is_combat_unit=archive_staff_division.is_combat_unit,
                 leader_id=leader_id,

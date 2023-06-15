@@ -240,7 +240,7 @@ class HrDocumentTemplateService(
         )
         if res is None:
             raise NotFoundException(
-                detail=f"HrDocumentTemplate with name: {HrDocumentTemplateEnum.STAFF_LIST.value} is not found!"
+                detail=f"HrDocumentTemplate with name: {HrDocumentTemplateEnum.DISPOSITION.value} is not found!"
             )
         return res
 

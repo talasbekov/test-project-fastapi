@@ -2,11 +2,11 @@ import datetime
 import uuid
 from typing import List, Optional
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 
 from schemas import (PositionRead, RankRead, StaffFunctionRead,
                     Model, NamedModel, ReadModel, ReadNamedModel,
-                    BadgeRead, RankRead, StatusRead)
+                    BadgeRead, RankRead, StatusRead, StaffDivisionTypeRead)
 
 
 
@@ -16,6 +16,8 @@ class StaffDivisionBase(NamedModel):
     is_combat_unit: Optional[bool]
     leader_id: Optional[uuid.UUID]
     is_active: Optional[bool] = True
+    type_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    staff_division_number: Optional[int] = Field(None, nullable=True)
 
 
 class StaffDivisionCreate(StaffDivisionBase):
@@ -105,6 +107,7 @@ class StaffDivisionRead(StaffDivisionBase, ReadNamedModel):
     count_vacancies: Optional[int]
     children: Optional[List['StaffDivisionRead']]
     staff_units: Optional[List['StaffUnitRead']]
+    type: Optional[StaffDivisionTypeRead]
 
     class Config:
         orm_mode = True

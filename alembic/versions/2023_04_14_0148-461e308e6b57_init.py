@@ -242,17 +242,28 @@ def upgrade() -> None:
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('staff_division_types',
+    sa.Column('name', sa.String(), nullable=False),
+    sa.Column('nameKZ', sa.String(), nullable=True),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('staff_divisions',
     sa.Column('parent_group_id', sa.UUID(), nullable=True),
     sa.Column('description', postgresql.JSON(none_as_null=True, astext_type=sa.Text()), nullable=True),
     sa.Column('is_combat_unit', sa.Boolean(), nullable=True),
     sa.Column('leader_id', sa.UUID(), nullable=True),
+    sa.Column('staff_division_number', sa.Integer(), nullable=True),
+    sa.Column('type_id', sa.UUID(), nullable=True),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('nameKZ', sa.String(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('is_active', sa.Boolean(), nullable=False, default=True),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['type_id'], ['staff_division_types.id'], ),
     sa.ForeignKeyConstraint(['parent_group_id'], ['staff_divisions.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -779,6 +790,8 @@ def upgrade() -> None:
     sa.Column('description', postgresql.JSON(none_as_null=True, astext_type=sa.Text()), nullable=True),
     sa.Column('is_combat_unit', sa.Boolean(), nullable=True),
     sa.Column('leader_id', sa.UUID(), nullable=True),
+    sa.Column('staff_division_number', sa.Integer(), nullable=True),
+    sa.Column('type_id', sa.UUID(), nullable=True),
     sa.Column('staff_list_id', sa.UUID(), nullable=False),
     sa.Column('origin_id', sa.UUID(), nullable=True),
     sa.Column('name', sa.String(), nullable=False),
@@ -789,6 +802,7 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['origin_id'], ['staff_divisions.id'], ),
     sa.ForeignKeyConstraint(['parent_group_id'], ['archive_staff_divisions.id'], ),
     sa.ForeignKeyConstraint(['staff_list_id'], ['staff_lists.id'], ),
+    sa.ForeignKeyConstraint(['type_id'], ['staff_division_types.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('educational_profiles',

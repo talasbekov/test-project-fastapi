@@ -104,6 +104,8 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
             name=staff_division.name,
             nameKZ=staff_division.nameKZ,
             description=staff_division.description,
+            type_id=staff_division.type_id,
+            staff_division_number=staff_division.staff_division_number,
             staff_list_id=staff_list_id,
             origin_id=staff_division.id,
             is_combat_unit=staff_division.is_combat_unit,
@@ -118,6 +120,8 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
             nameKZ=body.nameKZ,
             description=body.description,
             staff_list_id=body.staff_list_id,
+            type_id=body.type_id,
+            staff_division_number=body.staff_division_number,
             origin_id=None,
             is_combat_unit=body.is_combat_unit,
             leader_id=body.leader_id,
@@ -133,6 +137,8 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
             nameKZ=body.nameKZ,
             description=body.description,
             staff_list_id=body.staff_list_id,
+            type_id=body.type_id,
+            staff_division_number=body.staff_division_number,
             origin_id=None,
             is_combat_unit=body.is_combat_unit,
             leader_id=body.leader_id,
@@ -152,6 +158,8 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
         duplicate_division.description = archive_staff_division.description
         duplicate_division.is_combat_unit = archive_staff_division.is_combat_unit
         duplicate_division.leader_id = None
+        duplicate_division.type_id=archive_staff_division.type_id,
+        duplicate_division.staff_division_number=archive_staff_division.staff_division_number,
         duplicate_division.staff_list_id = archive_staff_division.staff_list_id
         duplicate_division.origin_id = archive_staff_division.origin_id
         duplicate_division.name = archive_staff_division.name+'_copy'
