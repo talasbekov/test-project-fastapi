@@ -24,6 +24,8 @@ from schemas import (
     StaffListUpdate,
     StaffListUserCreate,
     StaffListStatusRead,
+    HrDocumentInit,
+    HrVacancyUpdate,
 )
 from services import (
     ServiceBase,
@@ -38,10 +40,12 @@ from services import (
     document_staff_function_type_service,
     service_staff_function_type_service,
     hr_document_template_service,
+    hr_document_service,
     staff_unit_service,
     service_staff_function_service,
     service_staff_function_type_service,
     service_archive_staff_function_type_service,
+    hr_vacancy_service,
 )
 
 options = {
@@ -113,6 +117,8 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         staff_list_id: uuid.UUID,
         signed_by: str,
         document_creation_date: datetime.date,
+        current_user_id: uuid.UUID,
+        current_user_role: str
     ):
         staff_list = self.get_by_id(db, staff_list_id)
 
@@ -144,6 +150,7 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         service_staff_function_service.delete_all_inactive(db)
         db.add(staff_list)
         db.flush()
+        hr_document = self.create_disposition_doc_by_staff_list_id(db, staff_list_id, current_user_id, current_user_role)
         return staff_list
 
     def _create_staff_division(self, db: Session,
@@ -184,6 +191,14 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
             new_staff_unit = self._create_and_add_functions_to_new_unit(db,
                                                                         staff_unit,
                                                                         new_staff_unit)
+
+            hr_vacancy = hr_vacancy_service.get_by_archieve_staff_unit(db, staff_unit.id)
+
+            body = HrVacancyUpdate
+            body.staff_unit_id = new_staff_unit.id
+
+            hr_vacancy_service.update(db, hr_vacancy)
+
             db.add(new_staff_unit)
             db.add(staff_unit)
 
@@ -288,6 +303,35 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         db.flush()
 
         return archive_division
+
+    def create_disposition_doc_by_staff_list_id(
+            self,
+            db: Session,
+            staff_list_id: uuid.UUID,
+            current_user_id: uuid.UUID,
+            current_user_role: str,
+    ):
+        hr_document_template = hr_document_template_service.get_disposition(
+            db=db)
+        hr_document_template_id = hr_document_template.id
+        body = HrDocumentInit
+        body.hr_document_template_id = hr_document_template_id
+        body.user_ids = self.get_disposition_user_ids_by_staff_list_id(db, staff_list_id)
+        body.properties = {}
+        body.document_step_users_ids = hr_document_template_service.get_steps_by_document_template_id(db, hr_document_template_id)
+        body.due_date = datetime.date.today()
+
+        hr_document = hr_document_service.initialize(db, body, current_user_id, current_user_role)
+
+        return hr_document
+
+    def get_disposition_user_ids_by_staff_list_id(self, db: Session, staff_list_id: uuid.UUID):
+        disposition_division = archive_staff_division_service.get_by_name(db, StaffDivisionEnum.DISPOSITION.value, staff_list_id)
+        archive_staff_units = archive_staff_unit_service.get_by_archive_staff_division_id(db, disposition_division.id)
+        user_ids = []
+        for archive_staff_unit in archive_staff_units:
+            user_ids.append(archive_staff_unit.user_id)
+        return user_ids
 
     def get_super_doc_by_staff_list_id(
             self,

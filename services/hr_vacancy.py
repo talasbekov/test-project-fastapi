@@ -154,15 +154,12 @@ class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate])
         db.flush()
         
         return vacancy
-    
-    
-    def update(self, db: Session, id: str, body: HrVacancyUpdate, role_id: str) -> HrVacancy:
+
+    def update(self, db: Session, hr_vacancy: HrVacancy, body: HrVacancyUpdate, role_id: str) -> HrVacancy:
         
         if not self._check_by_role(db, role_id):
             raise ForbiddenException("You don't have permission to manage vacancy!")
-        
-        hr_vacancy = self.get_by_id(db, id)
-        
+
         if body.hr_vacancy_requirements_ids is not None:
             hr_vacancy.hr_vacancy_requirements = self._set_requirements_to_vacancy(db, body.hr_vacancy_requirements_ids)
                 
