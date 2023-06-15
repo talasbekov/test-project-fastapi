@@ -2,17 +2,12 @@ import uuid
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel
-
 from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 
 class StatusTypeBase(NamedModel):
+    pass
 
-    class Config:
-        orm_mode = True
-        arbitrary_types_allowed = True
-        
 class StatusTypeCreate(StatusTypeBase):
     pass
 
@@ -24,14 +19,15 @@ class StatusTypeUpdate(StatusTypeBase):
 class StatusTypeRead(StatusTypeBase, ReadNamedModel):
     pass
 
+class History(Model):
+    date_from: Optional[datetime]
+    date_to: Optional[datetime]
+    status_name: Optional[str]
 
-class StatusBase(BaseModel):
+
+class StatusBase(Model):
     type_id: uuid.UUID
     user_id: uuid.UUID
-
-    class Config:
-        orm_mode = True
-        arbitrary_types_allowed = True
 
 
 class StatusCreate(StatusBase):
@@ -42,6 +38,6 @@ class StatusUpdate(StatusBase):
     pass
 
 
-class StatusRead(StatusBase):
-    id: uuid.UUID
+class StatusRead(StatusBase, ReadModel):
     type: Optional[StatusTypeRead]
+    history: Optional[History]

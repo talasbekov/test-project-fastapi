@@ -13,7 +13,6 @@ from schemas import (
     DocumentStaffFunctionConstructorAdd,
     DocumentStaffFunctionAppendToStaffUnit,
 )
-from services import document_staff_function_type_service
 from .base import ServiceBase
 
 
@@ -65,7 +64,8 @@ class DocumentStaffFunctionService(ServiceBase[DocumentStaffFunction, DocumentSt
             name=body.name,
             jurisdiction_id=body.jurisdiction_id,
             hours_per_week=body.hours_per_week,
-            priority=body.priority
+            priority=body.priority,
+            is_active=True
         ))
         new_step = HrDocumentStep(
             hr_document_template_id=body.hr_document_template_id,

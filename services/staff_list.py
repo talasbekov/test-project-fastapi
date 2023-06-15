@@ -118,7 +118,7 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         signed_by: str,
         document_creation_date: datetime.date,
         current_user_id: uuid.UUID,
-        current_user_role: str
+        current_user_role_id: str
     ):
         staff_list = self.get_by_id(db, staff_list_id)
 
@@ -137,7 +137,7 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         new_staff_divisions = []
         for staff_division in staff_divisions:
             new_staff_division = self._create_staff_division(
-                db, staff_division, None)
+                db, staff_division, None, current_user_role_id)
             new_staff_divisions.append(new_staff_division)
 
         staff_list.document_signed_by = signed_by
@@ -155,7 +155,8 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
 
     def _create_staff_division(self, db: Session,
                                staff_division: ArchiveStaffDivision,
-                               parent_id: Optional[uuid.UUID]
+                               parent_id: Optional[uuid.UUID],
+                               current_user_role_id: uuid.UUID,
                                ) -> StaffDivision:
         is_leader_needed = None
         leader_id = None
@@ -173,7 +174,8 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
                 child_staff_division = self._create_staff_division(
                     db,
                     child,
-                    new_staff_division.id
+                    new_staff_division.id,
+                    current_user_role_id
                 )
                 new_staff_division.children.append(child_staff_division)
         staff_division.origin_id = new_staff_division.id
@@ -201,6 +203,15 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
 
             db.add(new_staff_unit)
             db.add(staff_unit)
+            db.flush()
+            hr_vacancy = hr_vacancy_service.get_by_archieve_staff_unit(db, staff_unit.id)
+            if hr_vacancy:
+                body = HrVacancyUpdate()
+                body.staff_unit_id = new_staff_unit.id
+                body.is_active = None
+                body.hr_vacancy_requirements_ids = None
+
+                hr_vacancy_service.update(db, hr_vacancy, body, current_user_role_id)
 
         new_staff_division.leader_id = leader_id
         db.add(new_staff_division)

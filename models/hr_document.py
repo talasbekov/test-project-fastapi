@@ -24,7 +24,7 @@ class HrDocument(Model):
     parent_id = Column(UUID(as_uuid=True), ForeignKey("hr_documents.id"), nullable=True)
 
     hr_document_template_id = Column(UUID(as_uuid=True), ForeignKey("hr_document_templates.id"), nullable=True)
-    due_date = Column(TIMESTAMP(timezone=True), nullable=False)
+    due_date = Column(TIMESTAMP(timezone=True), nullable=True)
     properties = Column(JSON(none_as_null=True))
     reg_number = Column(String, unique=True)
     signed_at = Column(TIMESTAMP(timezone=True), nullable=True)

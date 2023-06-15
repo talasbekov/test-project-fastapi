@@ -1,3 +1,4 @@
+import logging
 from .constructor import handlers
 import pdfkit
 import random

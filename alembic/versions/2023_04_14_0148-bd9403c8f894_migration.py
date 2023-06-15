@@ -24,6 +24,9 @@ def get_uuid():
     return str(uuid.uuid4())
 
 
+# Base URL for s3
+base_s3_url = 'http://192.168.0.169:8083'
+
 # Personal
 sport_type1_id = get_uuid()
 sport_type2_id = get_uuid()
@@ -250,27 +253,27 @@ def upgrade() -> None:
             "id": badgetype1_id,
             "name": "Черный Берет",
             "nameKZ": "Қара Берет",
-            "url": "http://192.168.0.169:8083/static/black_beret.jpg"
+            "url": f"{base_s3_url}/static/black_beret.jpg"
         }, {
             "id": badgetype3_id,
             "name": "Нагрудный знак 'Ұлттық ұлан қызметінің үздігі'",
             "nameKZ": "'Ұлттық ұлан қызметінің үздігі' төсбелгісі",
-            "url": "http://192.168.0.169:8083/static/badge1.png"
+            "url": f"{base_s3_url}/static/badge1.png"
         }, {
             "id": badgetype4_id,
             "name": "Нагрудный знак 'Құрметті шекарашы'",
             "nameKZ": "'Құрметті шекарашы' төсбелгісі",
-            "url": "http://192.168.0.169:8083/static/badge2.png"
+            "url": f"{base_s3_url}/static/badge2.png"
         }, {
             "id": badgetype5_id,
             "name": "'Отличник Пограничной службы' 2 степени",
             "nameKZ": "2 дәрежелі 'Шекара қызметінің үздігі'",
-            "url": "http://192.168.0.169:8083/static/badge3.png"
+            "url": f"{base_s3_url}/static/badge3.png"
         }, {
             "id": badgetype6_id,
             "name": "МЕДАЛЬ 'МВД РК'",
             "nameKZ": "МЕДАЛЬ 'МВД РК'",
-            "url": "http://192.168.0.169:8083/static/badge4.png"
+            "url": f"{base_s3_url}/static/badge4.png"
         }]
     )
 
@@ -298,113 +301,113 @@ def upgrade() -> None:
             'name': 'Рядовой',
             'nameKZ': 'Қатардағы жауынгер',
             'order': 1,
-            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A0%D1%8F%D0%B4%D0%BE%D0%B2%D0%BE%D0%B9_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'military_url': f"{base_s3_url}/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A0%D1%8F%D0%B4%D0%BE%D0%B2%D0%BE%D0%B9_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': None
         }, {
             'id': rank2_id,
             'name': 'Младший сержант',
             'nameKZ': "Кіші сержант",
             'order': 2,
-            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9C%D0%BB%D0%B0%D0%B4%D1%88%D0%B8%D0%B9%20%D1%81%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
-            'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9C%D0%BB%D0%B0%D0%B4%D1%88%D0%B8%D0%B9%20%D1%81%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82.png"
+            'military_url': f"{base_s3_url}/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9C%D0%BB%D0%B0%D0%B4%D1%88%D0%B8%D0%B9%20%D1%81%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'employee_url': f"{base_s3_url}/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9C%D0%BB%D0%B0%D0%B4%D1%88%D0%B8%D0%B9%20%D1%81%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82.png"
         }, {
             'id': rank3_id,
             'name': 'Сержант',
             'nameKZ': 'Сержант',
             'order': 3,
-            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
-            'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82.png"
+            'military_url': f"{base_s3_url}/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'employee_url': f"{base_s3_url}/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82.png"
         }, {
             'id': rank14_id,
             'name': 'Сержант 1-го класса',
             'nameKZ': '1-сыныпты сержант',
             'order': 4,
-            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82%201-%D0%B3%D0%BE%20%D0%BA%D0%BB%D0%B0%D1%81%D1%81%D0%B0_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'military_url': f"{base_s3_url}/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82%201-%D0%B3%D0%BE%20%D0%BA%D0%BB%D0%B0%D1%81%D1%81%D0%B0_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': None
         }, {
             'id': rank15_id,
             'name': 'Сержант 2-го класса',
             'nameKZ': '2-сыныпты сержант',
             'order': 5,
-            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82%202-%D0%B3%D0%BE%20%D0%BA%D0%BB%D0%B0%D1%81%D1%81%D0%B0_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'military_url': f"{base_s3_url}/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82%202-%D0%B3%D0%BE%20%D0%BA%D0%BB%D0%B0%D1%81%D1%81%D0%B0_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': None
         }, {
             'id': rank16_id,
             'name': 'Сержант 3-го класса',
             'nameKZ': '3-сыныпты сержант',
             'order': 6,
-            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82%203-%D0%B3%D0%BE%20%D0%BA%D0%BB%D0%B0%D1%81%D1%81%D0%B0_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'military_url': f"{base_s3_url}/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82%203-%D0%B3%D0%BE%20%D0%BA%D0%BB%D0%B0%D1%81%D1%81%D0%B0_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
             'employee_url': None
         }, {
             'id': rank4_id,
             'name': 'Старший сержант',
             'nameKZ': 'Аға сержант',
             'order': 7,
-            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D1%82%D0%B0%D1%80%D1%88%D0%B8%D0%B9%20%D1%81%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
-            'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D1%82%D0%B0%D1%80%D1%88%D0%B8%D0%B9%20%D1%81%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82.png"
+            'military_url': f"{base_s3_url}/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D1%82%D0%B0%D1%80%D1%88%D0%B8%D0%B9%20%D1%81%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'employee_url': f"{base_s3_url}/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D1%82%D0%B0%D1%80%D1%88%D0%B8%D0%B9%20%D1%81%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D1%82.png"
         }, {
             'id': rank5_id,
             'name': 'Лейтенант',
             'nameKZ': 'Лейтенант',
             'order': 8,
-            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9B%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
-            'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9B%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82.png"
+            'military_url': f"{base_s3_url}/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9B%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'employee_url': f"{base_s3_url}/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9B%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82.png"
         }, {
             'id': rank6_id,
             'name': 'Старший лейтенант',
             'nameKZ': 'Аға лейтенант',
             'order': 9,
-            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D1%82%D0%B0%D1%80%D1%88%D0%B8%D0%B9%20%D0%BB%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
-            'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D1%82%D0%B0%D1%80%D1%88%D0%B8%D0%B9%20%D0%BB%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82.png"
+            'military_url': f"{base_s3_url}/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D1%82%D0%B0%D1%80%D1%88%D0%B8%D0%B9%20%D0%BB%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'employee_url': f"{base_s3_url}/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%A1%D1%82%D0%B0%D1%80%D1%88%D0%B8%D0%B9%20%D0%BB%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82.png"
         }, {
             'id': rank7_id,
             'name': 'Капитан',
             'nameKZ': 'Капитан',
             'order': 10,
-            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9A%D0%B0%D0%BF%D0%B8%D1%82%D0%B0%D0%BD_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
-            'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9A%D0%B0%D0%BF%D0%B8%D1%82%D0%B0%D0%BD.png"
+            'military_url': f"{base_s3_url}/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9A%D0%B0%D0%BF%D0%B8%D1%82%D0%B0%D0%BD_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'employee_url': f"{base_s3_url}/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9A%D0%B0%D0%BF%D0%B8%D1%82%D0%B0%D0%BD.png"
         }, {
             'id': rank8_id,
             'name': 'Майор',
             'nameKZ': 'Майор',
             'order': 11,
-            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9C%D0%B0%D0%B9%D0%BE%D1%80_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
-            'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9C%D0%B0%D0%B9%D0%BE%D1%80.png"
+            'military_url': f"{base_s3_url}/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9C%D0%B0%D0%B9%D0%BE%D1%80_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'employee_url': f"{base_s3_url}/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9C%D0%B0%D0%B9%D0%BE%D1%80.png"
         }, {
             'id': rank9_id,
             'name': 'Подполковник',
             'nameKZ': 'Подполковник',
             'order': 12,
-            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9F%D0%BE%D0%B4%D0%BF%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
-            'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9F%D0%BE%D0%B4%D0%BF%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA.png"
+            'military_url': f"{base_s3_url}/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9F%D0%BE%D0%B4%D0%BF%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'employee_url': f"{base_s3_url}/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9F%D0%BE%D0%B4%D0%BF%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA.png"
         }, {
             'id': rank10_id,
             'name': 'Полковник',
             'nameKZ': 'Полковник',
             'order': 13,
-            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9F%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
-            'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9F%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA.png"
+            'military_url': f"{base_s3_url}/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9F%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA_%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9.png",
+            'employee_url': f"{base_s3_url}/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%9F%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA.png"
         }, {
             'id': rank11_id,
             'name': 'Генерал-майор',
             'nameKZ': 'Генерал-майор',
             'order': 14,
-            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BC%D0%B0%D0%B9%D0%BE%D1%80.png",
-            'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BC%D0%B0%D0%B9%D0%BE%D1%80.png"
+            'military_url': f"{base_s3_url}/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BC%D0%B0%D0%B9%D0%BE%D1%80.png",
+            'employee_url': f"{base_s3_url}/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BC%D0%B0%D0%B9%D0%BE%D1%80.png"
         }, {
             'id': rank12_id,
             'name': 'Генерал-лейтенант',
             'nameKZ': 'Генерал-лейтенант',
             'order': 15,
-            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BB%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82.png",
-            'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BB%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82.png"
+            'military_url': f"{base_s3_url}/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BB%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82.png",
+            'employee_url': f"{base_s3_url}/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BB%D0%B5%D0%B9%D1%82%D0%B5%D0%BD%D0%B0%D0%BD%D1%82.png"
         }, {
             'id': rank13_id,
             'name': 'Генерал-полковник',
             'nameKZ': 'Генерал-полковник',
             'order': 16,
-            'military_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BF%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA.png",
-            'employee_url': "http://192.168.0.169:8083/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BF%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA.png"
+            'military_url': f"{base_s3_url}/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BF%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA.png",
+            'employee_url': f"{base_s3_url}/static/%D0%97%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%3D%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB-%D0%BF%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA.png"
         }]
     )
 
@@ -2708,7 +2711,7 @@ def upgrade() -> None:
         staff_unit10_id,
         rank11_id,
         staff_unit10_id,
-        "https://10.15.3.180/s3/static/isabekov.jpg",
+        f"{base_s3_url}/static/isabekov.jpg",
         position17_id,
         True,
         "А0201",
@@ -2726,7 +2729,7 @@ def upgrade() -> None:
         staff_unit1_id,
         rank1_id,
         staff_unit1_id,
-        "http://192.168.0.169:8083/static/placeholder.jpg",
+        f"{base_s3_url}/static/placeholder.jpg",
         position1_id,
         True,
         '1.2.213K',
@@ -2744,7 +2747,7 @@ def upgrade() -> None:
         staff_unit2_id,
         rank1_id,
         staff_unit2_id,
-        "http://192.168.0.169:8083/static/placeholder.jpg",
+        f"{base_s3_url}/static/placeholder.jpg",
         position1_id,
         True,
         '1.2.213K',
@@ -2762,7 +2765,7 @@ def upgrade() -> None:
         staff_unit3_id,
         rank1_id,
         staff_unit3_id,
-        "http://192.168.0.169:8083/static/placeholder.jpg",
+        f"{base_s3_url}/static/placeholder.jpg",
         position1_id,
         True,
         '1.2.214K',
@@ -2780,7 +2783,7 @@ def upgrade() -> None:
         staff_unit4_id,
         rank9_id,
         staff_unit4_id,
-        "https://10.15.3.180/s3/static/kibataev.png",
+        f"{base_s3_url}/static/kibataev.png",
         position11_id,
         False,
         "А0913",
@@ -2798,7 +2801,7 @@ def upgrade() -> None:
         staff_unit5_id,
         rank1_id,
         staff_unit5_id,
-        "http://192.168.0.169:8083/static/placeholder.jpg",
+        f"{base_s3_url}/static/placeholder.jpg",
         position1_id,
         True,
         "1.2.215K",
@@ -2816,7 +2819,7 @@ def upgrade() -> None:
         staff_unit6_id,
         rank8_id,
         staff_unit6_id,
-        "https://10.15.3.180/s3/static/amankeldiuly.jpg",
+        f"{base_s3_url}/static/amankeldiuly.jpg",
         position8_id,
         False,
         'B0412',
@@ -2834,7 +2837,7 @@ def upgrade() -> None:
         staff_unit7_id,
         rank1_id,
         staff_unit7_id,
-        "http://192.168.0.169:8083/static/placeholder.jpg",
+        f"{base_s3_url}/static/placeholder.jpg",
         position1_id,
         True,
         '1.2.215K',
@@ -2852,7 +2855,7 @@ def upgrade() -> None:
         staff_unit8_id,
         rank10_id,
         staff_unit8_id,
-        "http://192.168.0.169:8083/static/placeholder.jpg",
+        f"{base_s3_url}/static/placeholder.jpg",
         position13_id,
         True,
         "1.2.216K",
@@ -2870,7 +2873,7 @@ def upgrade() -> None:
         staff_unit9_id,
         rank10_id,
         staff_unit9_id,
-        "https://10.15.3.180/s3/static/abdyshev.jpg",
+        f"{base_s3_url}/static/abdyshev.jpg",
         position15_id,
         True,
         "А0915",
@@ -2888,7 +2891,7 @@ def upgrade() -> None:
         staff_unit15_id,
         rank5_id,
         staff_unit15_id,
-        "http://192.168.0.169:8083/static/placeholder.jpg",
+        f"{base_s3_url}/static/placeholder.jpg",
         position22_id,
         True,
         "1.2.217K",
@@ -2906,7 +2909,7 @@ def upgrade() -> None:
         staff_unit16_id,
         rank9_id,
         staff_unit16_id,
-        "http://192.168.0.169:8083/static/placeholder.jpg",
+        f"{base_s3_url}/static/placeholder.jpg",
         position13_id,
         True,
         "1.2.217K",
@@ -2924,7 +2927,7 @@ def upgrade() -> None:
         staff_unit17_id,
         rank5_id,
         staff_unit17_id,
-        "http://192.168.0.169:8083/static/placeholder.jpg",
+        f"{base_s3_url}/static/placeholder.jpg",
         position24_id,
         True,
         "1.2.217K",
@@ -2942,7 +2945,7 @@ def upgrade() -> None:
         staff_unit18_id,
         rank5_id,
         staff_unit18_id,
-        "http://192.168.0.169:8083/static/placeholder.jpg",
+        f"{base_s3_url}/static/placeholder.jpg",
         position21_id,
         True,
         "1.2.217K",
@@ -2960,7 +2963,7 @@ def upgrade() -> None:
         staff_unit19_id,
         rank5_id,
         staff_unit19_id,
-        "http://192.168.0.169:8083/static/placeholder.jpg",
+        f"{base_s3_url}/static/placeholder.jpg",
         position20_id,
         True,
         "1.2.217K",
@@ -2978,7 +2981,7 @@ def upgrade() -> None:
         staff_unit20_id,
         rank5_id,
         staff_unit20_id,
-        "http://192.168.0.169:8083/static/placeholder.jpg",
+        f"{base_s3_url}/static/placeholder.jpg",
         position19_id,
         True,
         "1.2.217K",
@@ -2996,7 +2999,7 @@ def upgrade() -> None:
         staff_unit21_id,
         rank5_id,
         staff_unit21_id,
-        "http://192.168.0.169:8083/static/placeholder.jpg",
+        f"{base_s3_url}/static/placeholder.jpg",
         position18_id,
         True,
         "1.2.217K",
@@ -3014,7 +3017,7 @@ def upgrade() -> None:
         staff_unit22_id,
         rank5_id,
         staff_unit22_id,
-        "http://192.168.0.169:8083/static/placeholder.jpg",
+        f"{base_s3_url}/static/placeholder.jpg",
         position25_id,
         True,
         "1.2.217K",
@@ -3032,7 +3035,7 @@ def upgrade() -> None:
         staff_unit23_id,
         rank5_id,
         staff_unit23_id,
-        "http://192.168.0.169:8083/static/placeholder.jpg",
+        f"{base_s3_url}/static/placeholder.jpg",
         position25_id,
         True,
         "1.2.217K",
@@ -3050,7 +3053,7 @@ def upgrade() -> None:
         staff_unit25_id,
         rank5_id,
         staff_unit25_id,
-        "http://192.168.0.169:8083/static/placeholder.jpg",
+        f"{base_s3_url}/static/placeholder.jpg",
         position32_id,
         True,
         "1.2.217K",
@@ -3069,7 +3072,7 @@ def upgrade() -> None:
         staff_unit11_id,
         rank3_id,
         staff_unit11_id,
-        "http://192.168.0.169:8083/static/placeholder.jpg",
+        f"{base_s3_url}/static/placeholder.jpg",
         position4_id,
         False,
         '1.2.100K',
@@ -3087,7 +3090,7 @@ def upgrade() -> None:
         staff_unit26_id,
         rank13_id,
         staff_unit26_id,
-        "http://192.168.0.169:8083/static/placeholder.jpg",
+        f"{base_s3_url}/static/placeholder.jpg",
         position12_id,
         True,
         '1.2.27K',
@@ -3105,7 +3108,7 @@ def upgrade() -> None:
         staff_unit27_id,
         rank10_id,
         staff_unit27_id,
-        "http://192.168.0.169:8083/static/placeholder.jpg",
+        f"{base_s3_url}/static/placeholder.jpg",
         position13_id,
         True,
         '1.2.216K',
@@ -3123,7 +3126,7 @@ def upgrade() -> None:
         staff_unit28_id,
         rank8_id,
         staff_unit28_id,
-        "http://192.168.0.169:8083/static/placeholder.jpg",
+        f"{base_s3_url}/static/placeholder.jpg",
         position10_id,
         True,
         '1.2.215K',
@@ -3141,7 +3144,7 @@ def upgrade() -> None:
         staff_unit29_id,
         rank13_id,
         staff_unit29_id,
-        "http://192.168.0.169:8083/static/placeholder.jpg",
+        f"{base_s3_url}/static/placeholder.jpg",
         position15_id,
         True,
         '1.2.27K',
@@ -3159,7 +3162,7 @@ def upgrade() -> None:
         staff_unit30_id,
         rank3_id,
         staff_unit30_id,
-        "http://192.168.0.169:8083/static/placeholder.jpg",
+        f"{base_s3_url}/static/placeholder.jpg",
         position11_id,
         True,
         '1.2.216K',
@@ -3177,7 +3180,7 @@ def upgrade() -> None:
         staff_unit31_id,
         rank6_id,
         staff_unit31_id,
-        "http://192.168.0.169:8083/static/placeholder.jpg",
+        f"{base_s3_url}/static/placeholder.jpg",
         position10_id,
         True,
         '1.2.215K',
@@ -3195,7 +3198,7 @@ def upgrade() -> None:
         staff_unit32_id,
         rank10_id,
         staff_unit32_id,
-        "http://192.168.0.169:8083/static/placeholder.jpg",
+        f"{base_s3_url}/static/placeholder.jpg",
         position13_id,
         True,
         '1.2.215K',
@@ -3215,7 +3218,7 @@ def upgrade() -> None:
         staff_unit34_id,
         rank10_id,
         staff_unit34_id,
-        "http://192.168.0.169:8083/static/placeholder.jpg",
+        f"{base_s3_url}/static/placeholder.jpg",
         position15_id,
         False,
         'А0415',
@@ -3327,8 +3330,8 @@ def upgrade() -> None:
         [{
             "name": "Запрос на наличие сведений для указанных граждан о причастности к религиозному экстремизму",
             "nameKZ": "Көрсетілген азаматтар үшін діни экстремизмге қатысы бар екендігі туралы мәліметтердің болуына сұрау салу",
-            "path": "http://192.168.0.169:8083/static/кандидаты1.html",
-            "pathKZ": "http://192.168.0.169:8083/static/кандидаты1.html",
+            "path": f"{base_s3_url}/static/кандидаты1.html",
+            "pathKZ": f"{base_s3_url}/static/кандидаты1.html",
             "subject_type": 1,
             'description': "",
             'maintainer_id': staff_unit4_id,
@@ -3452,8 +3455,8 @@ def upgrade() -> None:
             {
                 "name": "Заключение спец. проверки",
                 "nameKZ": "Арнайы қорытынды тексерулер",
-                "path": "http://192.168.0.169:8083/static/pre-finalv2.html",
-                "pathKZ": "http://192.168.0.169:8083/static/pre-finalv2.html",
+                "path": f"{base_s3_url}/static/pre-finalv2.html",
+                "pathKZ": f"{base_s3_url}/static/pre-finalv2.html",
                 "subject_type": 1,
                 'description': "",
                 'is_visible': False,
@@ -3633,7 +3636,7 @@ def upgrade() -> None:
                 "name": "Заключение на зачисление",
                 "nameKZ": "Қабылдау қорытындысы",
                 "path": None,
-                "pathKZ": "http://192.168.0.169:8083/static/finish_candidate.html",
+                "pathKZ": f"{base_s3_url}/static/finish_candidate.html",
                 "subject_type": 1,
                 'maintainer_id': staff_unit4_id,
                 'description': "",
@@ -4229,7 +4232,7 @@ def upgrade() -> None:
             'type_of_equipment': 'army_equipment',
             'clothing_equipment_types_models_id': None,
             'type_of_other_equipment_model_id': None,
-            'document_link': 'http://192.168.0.169:8083/static/example.txt',
+            'document_link': f'{base_s3_url}/static/example.txt',
             'document_number': '123456789',
             'date_from': '2023-04-11T19:43:02.556000',
             'date_to': None,
@@ -4245,7 +4248,7 @@ def upgrade() -> None:
                 'clothing_size': '56',
                 'type_of_army_equipment_model_id': None,
                 'type_of_other_equipment_model_id': None,
-                'document_link': 'http://192.168.0.169:8083/static/example.txt',
+                'document_link': f'{base_s3_url}/static/example.txt',
                 'document_number': '123456789',
                 'date_from': '2023-04-11T19:43:02.556000',
                 'date_to': None,
@@ -4261,7 +4264,7 @@ def upgrade() -> None:
                 'clothing_size': '56',
                 'type_of_army_equipment_model_id': None,
                 'type_of_other_equipment_model_id': None,
-                'document_link': 'http://192.168.0.169:8083/static/example.txt',
+                'document_link': f'{base_s3_url}/static/example.txt',
                 'document_number': '123456789',
                 'date_from': '2023-04-11T19:43:02.556000',
                 'date_to': None,
@@ -4277,7 +4280,7 @@ def upgrade() -> None:
                 'clothing_size': '56',
                 'type_of_army_equipment_model_id': None,
                 'type_of_other_equipment_model_id': None,
-                'document_link': 'http://192.168.0.169:8083/static/example.txt',
+                'document_link': f'{base_s3_url}/static/example.txt',
                 'document_number': '123456789',
                 'date_from': '2023-04-11T19:43:02.556000',
                 'date_to': None,
@@ -4293,7 +4296,7 @@ def upgrade() -> None:
                 'clothing_size': '56',
                 'type_of_army_equipment_model_id': None,
                 'type_of_other_equipment_model_id': None,
-                'document_link': 'http://192.168.0.169:8083/static/example.txt',
+                'document_link': f'{base_s3_url}/static/example.txt',
                 'document_number': '123456789',
                 'date_from': '2023-04-11T19:43:02.556000',
                 'date_to': None,
@@ -4309,7 +4312,7 @@ def upgrade() -> None:
                 'clothing_size': None,
                 'type_of_army_equipment_model_id': None,
                 'clothing_equipment_types_models_id': None,
-                'document_link': 'http://192.168.0.169:8083/static/example.txt',
+                'document_link': f'{base_s3_url}/static/example.txt',
                 'document_number': '123456789',
                 'date_from': '2023-04-11T19:43:02.556000',
                 'date_to': None,
@@ -4325,7 +4328,7 @@ def upgrade() -> None:
                 'clothing_size': None,
                 'type_of_army_equipment_model_id': None,
                 'clothing_equipment_types_models_id': None,
-                'document_link': 'http://192.168.0.169:8083/static/example.txt',
+                'document_link': f'{base_s3_url}/static/example.txt',
                 'document_number': '123456789',
                 'date_from': '2023-04-11T19:43:02.556000',
                 'date_to': None,
@@ -4464,120 +4467,6 @@ def upgrade() -> None:
             'name': "Ежегодный отпуск",
             'nameKZ': 'Жылдық демалыс',
         }]
-    )
-
-    status_id = get_uuid()
-    status2_id = get_uuid()
-    status3_id = get_uuid()
-    status4_id = get_uuid()
-    status5_id = get_uuid()
-    status6_id = get_uuid()
-    status7_id = get_uuid()
-    status8_id = get_uuid()
-    status9_id = get_uuid()
-    status10_id = get_uuid()
-    status11_id = get_uuid()
-    status12_id = get_uuid()
-    status13_id = get_uuid()
-    status14_id = get_uuid()
-    status15_id = get_uuid()
-    status16_id = get_uuid()
-    status17_id = get_uuid()
-    status18_id = get_uuid()
-
-    op.bulk_insert(
-        Base.metadata.tables['statuses'],
-        [{
-            'id': status_id,
-            'user_id': user1_id,
-            'type_id': status_type,
-        },
-            {
-                'id': status2_id,
-                'user_id': user2_id,
-                'type_id': status_type2,
-        },
-            {
-                'id': status3_id,
-                'user_id': user3_id,
-                'type_id': status_type,
-        },
-            {
-                'id': status4_id,
-                'user_id': user4_id,
-                'type_id': status_type,
-        },
-            {
-                'id': status5_id,
-                'user_id': user5_id,
-                'type_id': status_type,
-        },
-            {
-                'id': status6_id,
-                'user_id': user6_id,
-                'type_id': status_type,
-        },
-            {
-                'id': status7_id,
-                'user_id': user7_id,
-                'type_id': status_type,
-        },
-            {
-                'id': status8_id,
-                'user_id': user8_id,
-                'type_id': status_type,
-        },
-            {
-                'id': status9_id,
-                'user_id': user9_id,
-                'type_id': status_type,
-        },
-            {
-                'id': status10_id,
-                'user_id': user10_id,
-                'type_id': status_type,
-        },
-            {
-                'id': status11_id,
-                'user_id': user11_id,
-                'type_id': status_type,
-        },
-            {
-                'id': status12_id,
-                'user_id': user12_id,
-                'type_id': status_type,
-        },
-            {
-                'id': status13_id,
-                'user_id': user13_id,
-                'type_id': status_type,
-        },
-            {
-                'id': status14_id,
-                'user_id': user14_id,
-                'type_id': status_type,
-        },
-            {
-                'id': status15_id,
-                'user_id': user15_id,
-                'type_id': status_type,
-        },
-            {
-                'id': status16_id,
-                'user_id': user16_id,
-                'type_id': status_type,
-        },
-            {
-                'id': status17_id,
-                'user_id': user17_id,
-                'type_id': status_type,
-        },
-            {
-                'id': status18_id,
-                'user_id': user18_id,
-                'type_id': status_type3,
-        }
-        ]
     )
 
     coolness_type_id = get_uuid()
@@ -4744,7 +4633,7 @@ def upgrade() -> None:
             'date_from': datetime.datetime.now() - datetime.timedelta(days=365),
             'date_to': datetime.datetime.now() + datetime.timedelta(days=365),
             'user_id': user1_id,
-            'document_link': 'https://www.google.com',
+            'document_link': f'{base_s3_url}/static/example.txt',
             'document_number': '№ 59124',
         },
         ]
@@ -4773,7 +4662,7 @@ def upgrade() -> None:
                 'date_from': datetime.datetime(2012, 3, 1),
                 'date_to': datetime.datetime(2014, 3, 31),
                 'user_id': user1_id,
-                'document_link': 'https://www.google.com',
+                'document_link': f'{base_s3_url}/static/example.txt',
                 'document_number': '№ 12421',
                 'type': 'badge_history',
                 'penalty_id': None,
@@ -4809,7 +4698,7 @@ def upgrade() -> None:
                 'date_from': datetime.datetime(2012, 3, 1),
                 'date_to': datetime.datetime(2015, 3, 12),
                 'user_id': user1_id,
-                'document_link': 'https://www.google.com',
+                'document_link': f'{base_s3_url}/static/example.txt',
                 'document_number': '№ 12421',
                 'type': 'emergency_history',
                 'penalty_id': None,
@@ -4846,7 +4735,7 @@ def upgrade() -> None:
             #     'date_from': str(datetime.datetime(2019, 2, 1)),
             #     'date_to': str(datetime.datetime(2019, 2, 28)),
             #     'user_id': user1_id,
-            #     'document_link': 'https://www.google.com',
+            #     'document_link': f'{base_s3_url}/static/example.txt',
             #     'document_number': '№ 59124',
             #     'type': type_of_histories[3],
             #     'rank_id': None,  # Add the missing parameter here
@@ -4873,7 +4762,7 @@ def upgrade() -> None:
             #     'date_from': str(datetime.datetime(2019, 2, 1)),
             #     'date_to': str(datetime.datetime(2019, 2, 28)),
             #     'user_id': user1_id,
-            #     'document_link': 'https://www.google.com',
+            #     'document_link': f'{base_s3_url}/static/example.txt',
             #     'document_number': '№ 59124',
             #     'type': type_of_histories[1],
             #     'rank_id': rank1_id,
@@ -4908,7 +4797,7 @@ def upgrade() -> None:
                 'date_from': datetime.datetime(2019, 3, 1),
                 'date_to': datetime.datetime(2019, 3, 31),
                 'user_id': user1_id,
-                'document_link': 'https://www.google.com',
+                'document_link': f'{base_s3_url}/static/example.txt',
                 'document_number': '№ 59124',
                 'type': type_of_histories[2],
                 'penalty_id': penalty_id,
@@ -4945,7 +4834,7 @@ def upgrade() -> None:
                 'date_from': datetime.datetime(2020, 3, 1),
                 'date_to': datetime.datetime(2021, 3, 31),
                 'user_id': user1_id,
-                'document_link': 'https://www.google.com',
+                'document_link': f'{base_s3_url}/static/example.txt',
                 'document_number': '№ 12421',
                 'type': type_of_histories[5],
                 'penalty_id': None,
@@ -4981,7 +4870,7 @@ def upgrade() -> None:
                 'date_from': datetime.datetime(2012, 3, 1),
                 'date_to': None,
                 'user_id': user1_id,
-                'document_link': 'https://www.google.com',
+                'document_link': f'{base_s3_url}/static/example.txt',
                 'document_number': '№ 12421',
                 'type': type_of_histories[6],
                 'penalty_id': None,
@@ -5017,7 +4906,7 @@ def upgrade() -> None:
                 'date_from': datetime.datetime(2012, 3, 1),
                 'date_to': datetime.datetime(2014, 3, 31),
                 'user_id': user1_id,
-                'document_link': 'https://www.google.com',
+                'document_link': f'{base_s3_url}/static/example.txt',
                 'document_number': '№ 12421',
                 'type': 'work_experience_history',
                 'penalty_id': None,
@@ -5053,7 +4942,7 @@ def upgrade() -> None:
                 'date_from': datetime.datetime(2015, 5, 5),
                 'date_to': None,
                 'user_id': user1_id,
-                'document_link': 'https://www.google.com',
+                'document_link': f'{base_s3_url}/static/example.txt',
                 'document_number': '№ 12421',
                 'type': type_of_histories[6],
                 'penalty_id': None,
@@ -5089,7 +4978,7 @@ def upgrade() -> None:
                 'date_from': datetime.datetime(2012, 3, 1),
                 'date_to': datetime.datetime(2021, 3, 31),
                 'user_id': user1_id,
-                'document_link': 'https://www.google.com',
+                'document_link': f'{base_s3_url}/static/example.txt',
                 'document_number': '№ 12421',
                 'type': type_of_histories[7],
                 # МЕНЯТЬ НА attestation_status
@@ -5121,49 +5010,12 @@ def upgrade() -> None:
                 'contractor_signer_name': None,
                 'contractor_signer_nameKZ': None,
             },
-
-            {
-                'id': history10_id,
-                'date_from': datetime.datetime(2020, 3, 1),
-                'date_to': datetime.datetime(2021, 3, 31),
-                'user_id': user1_id,
-                'document_link': 'https://www.google.com',
-                'document_number': '№ 12421',
-                'type': type_of_histories[9],
-                'penalty_id': None,
-                'name': '3 history',
-                'position_id': None,  # Add the missing parameter here
-                'rank_id': None,  # Add the missing parameter here
-                'emergency_service_id': None,  # Add the missing parameter here
-                'work_experience_id': None,  # Add the missing parameter here
-                'secondment_id': None,  # Add the missing parameter here
-                'name_change_id': None,  # Add the missing parameter here
-                'attestation_id': None,  # Add the missing parameter here
-                'service_characteristic_id': None,  # Add the missing parameter here
-                'status_id': status_id,  # МЕНЯТЬ НА status_id
-                'coolness_id': None,  # Add the missing parameter here
-                'contract_id': None,  # Add the missing parameter here
-                'attestation_status': None,  # МЕНЯТЬ НА attestation_status
-                'experience_years': None,  # Add the missing parameter here
-                'characteristic_initiator_id': None,  # Add the missing parameter here
-                'coefficient': None,
-                'percentage': None,
-                'staff_division_id': None,
-                'name_of_organization': None,
-                'badge_id': None,
-                'is_credited': None,
-                'document_style': None,
-                'date_credited': None,
-                'emergency_rank_id': None,
-                'contractor_signer_name': None,
-                'contractor_signer_nameKZ': None,
-            },
             {
                 'id': history11_id,
                 'date_from': datetime.datetime(2020, 3, 1),
                 'date_to': datetime.datetime(2021, 3, 31),
                 'user_id': user1_id,
-                'document_link': 'https://www.google.com',
+                'document_link': f'{base_s3_url}/static/example.txt',
                 'document_number': '№ 12421',
                 'type': type_of_histories[10],
                 'penalty_id': None,
@@ -5199,7 +5051,7 @@ def upgrade() -> None:
                 'date_from': datetime.datetime(2020, 3, 1),
                 'date_to': datetime.datetime(2021, 3, 31),
                 'user_id': user1_id,
-                'document_link': 'https://www.google.com',
+                'document_link': f'{base_s3_url}/static/example.txt',
                 'document_number': '№ 12421',
                 'type': type_of_histories[11],
                 'penalty_id': None,
@@ -5235,7 +5087,7 @@ def upgrade() -> None:
                 'date_from': datetime.datetime(2020, 3, 1),
                 'date_to': datetime.datetime(2021, 3, 31),
                 'user_id': user1_id,
-                'document_link': 'https://www.google.com',
+                'document_link': f'{base_s3_url}/static/example.txt',
                 'document_number': '№ 12421',
                 'type': type_of_histories[8],
                 'penalty_id': None,
@@ -5272,7 +5124,7 @@ def upgrade() -> None:
                 'date_from': datetime.datetime(2020, 3, 1),
                 'date_to': datetime.datetime(2021, 3, 31),
                 'user_id': user1_id,
-                'document_link': 'https://www.google.com',
+                'document_link': f'{base_s3_url}/static/example.txt',
                 'document_number': '№ 12421',
                 'type': "badge_history",
                 'penalty_id': None,
@@ -5308,7 +5160,7 @@ def upgrade() -> None:
                 'date_from': datetime.datetime(2020, 3, 1),
                 'date_to': datetime.datetime(2021, 3, 31),
                 'user_id': user1_id,
-                'document_link': 'https://www.google.com',
+                'document_link': f'{base_s3_url}/static/example.txt',
                 'document_number': '№ 12421',
                 'type': "badge_history",
                 'penalty_id': None,
@@ -5344,7 +5196,7 @@ def upgrade() -> None:
                 'date_from': datetime.datetime(2020, 3, 1),
                 'date_to': datetime.datetime(2021, 3, 31),
                 'user_id': user1_id,
-                'document_link': 'https://www.google.com',
+                'document_link': f'{base_s3_url}/static/example.txt',
                 'document_number': '№ 12421',
                 'type': "badge_history",
                 'penalty_id': None,
@@ -5380,7 +5232,7 @@ def upgrade() -> None:
                 'date_from': datetime.datetime(2020, 3, 1),
                 'date_to': datetime.datetime(2021, 3, 31),
                 'user_id': user1_id,
-                'document_link': 'https://www.google.com',
+                'document_link': f'{base_s3_url}/static/example.txt',
                 'document_number': '№ 12421',
                 'type': "badge_history",
                 'penalty_id': None,
@@ -5416,7 +5268,7 @@ def upgrade() -> None:
                 'date_from': datetime.datetime(2020, 3, 1),
                 'date_to': datetime.datetime(2021, 3, 31),
                 'user_id': user2_id,
-                'document_link': 'https://www.google.com',
+                'document_link': f'{base_s3_url}/static/example.txt',
                 'document_number': '№ 12421',
                 'type': "badge_history",
                 'penalty_id': None,
@@ -5452,7 +5304,7 @@ def upgrade() -> None:
                 'date_from': datetime.datetime(2020, 3, 1),
                 'date_to': datetime.datetime(2021, 3, 31),
                 'user_id': user2_id,
-                'document_link': 'https://www.google.com',
+                'document_link': f'{base_s3_url}/static/example.txt',
                 'document_number': '№ 12421',
                 'type': "badge_history",
                 'penalty_id': None,
@@ -5488,7 +5340,7 @@ def upgrade() -> None:
                 'date_from': datetime.datetime(2020, 3, 1),
                 'date_to': datetime.datetime(2021, 3, 31),
                 'user_id': user2_id,
-                'document_link': 'https://www.google.com',
+                'document_link': f'{base_s3_url}/static/example.txt',
                 'document_number': '№ 12421',
                 'type': "badge_history",
                 'penalty_id': None,
@@ -5523,7 +5375,7 @@ def upgrade() -> None:
                 'date_from': datetime.datetime(2020, 3, 1),
                 'date_to': datetime.datetime(2021, 3, 31),
                 'user_id': user3_id,
-                'document_link': 'https://www.google.com',
+                'document_link': f'{base_s3_url}/static/example.txt',
                 'document_number': '№ 12421',
                 'type': "badge_history",
                 'penalty_id': None,
@@ -5558,7 +5410,7 @@ def upgrade() -> None:
                 'date_from': datetime.datetime(2020, 3, 1),
                 'date_to': datetime.datetime(2021, 3, 31),
                 'user_id': user3_id,
-                'document_link': 'https://www.google.com',
+                'document_link': f'{base_s3_url}/static/example.txt',
                 'document_number': '№ 12421',
                 'type': "badge_history",
                 'penalty_id': None,
@@ -5593,7 +5445,7 @@ def upgrade() -> None:
                 'date_from': datetime.datetime(2020, 3, 1),
                 'date_to': datetime.datetime(2021, 3, 31),
                 'user_id': user3_id,
-                'document_link': 'https://www.google.com',
+                'document_link': f'{base_s3_url}/static/example.txt',
                 'document_number': '№ 12421',
                 'type': "badge_history",
                 'penalty_id': None,
@@ -6737,7 +6589,7 @@ def create_user(id,
                 'date_from': str(datetime.datetime(2019, 2, 1)),
                 'date_to': None,
                 'user_id': id,
-                'document_link': 'https://www.google.com',
+                'document_link': f'{base_s3_url}/static/example.txt',
                 'document_number': '№ 59124',
                 'type': type_of_histories[1],
                 'rank_id': rank_id,
@@ -6831,7 +6683,7 @@ def create_user(id,
             'vin_code': 'JN1WNYD21U0000001',
             'date_from': '2021-02-25',
             'number': '021 AMS 01',
-            'document_link': 'https://www.google.com',
+            'document_link': f'{base_s3_url}/static/example.txt',
             'name': 'Toyota Camry ACV50(2020)',
             'nameKZ': 'Toyota Camry ACV50(2020)'
         }]
@@ -6861,7 +6713,7 @@ def create_user(id,
             'science_id': science1_id,
             'specialty_id': specialty1_id,
             'document_number': "1231262",
-            'document_link': "http://192.168.0.169:8083/static/example.txt",
+            'document_link': f"{base_s3_url}/static/example.txt",
             'assignment_date': "2022-10-07"
         }, {
             'id': academic_degree2_id,
@@ -6870,7 +6722,7 @@ def create_user(id,
             'science_id': science2_id,
             'specialty_id': specialty2_id,
             'document_number': 2,
-            'document_link': "http://192.168.0.169:8083/static/example.txt",
+            'document_link': f"{base_s3_url}/static/example.txt",
             'assignment_date': "2022-10-08"
         }]
     )
@@ -6910,7 +6762,7 @@ def create_user(id,
             'degree_id': academic_title_degree1_id,
             'specialty_id': specialty1_id,
             'document_number': '123123',
-            'document_link': "http://192.168.0.169:8083/static/example.txt",
+            'document_link': f"{base_s3_url}/static/example.txt",
             'assignment_date': "2022-12-12"
         }, {
             'id': academic_title2_id,
@@ -6918,7 +6770,7 @@ def create_user(id,
             'degree_id': academic_title_degree2_id,
             'specialty_id': specialty2_id,
             'document_number': '123123',
-            'document_link': "http://192.168.0.169:8083/static/example.txt",
+            'document_link': f"{base_s3_url}/static/example.txt",
             'assignment_date': "2022-12-13"
         }]
     )
@@ -6937,7 +6789,7 @@ def create_user(id,
             'course_provider_id': course_provider1_id,
             'specialty_id': specialty1_id,
             'document_number': 1,
-            'document_link': "http://192.168.0.169:8083/static/example.txt",
+            'document_link': f"{base_s3_url}/static/example.txt",
             'assignment_date': "2022-12-12",
             'start_date': '2019-10-12',
             'end_date': '2019-12-10'
@@ -6949,7 +6801,7 @@ def create_user(id,
             'course_provider_id': course_provider2_id,
             'specialty_id': specialty2_id,
             'document_number': 2,
-            'document_link': "http://192.168.0.169:8083/static/example.txt",
+            'document_link': f"{base_s3_url}/static/example.txt",
             'assignment_date': "2022-12-13",
             'start_date': '2020-11-25',
             'end_date': '2020-12-15'
@@ -6961,7 +6813,7 @@ def create_user(id,
             'course_provider_id': course_provider3_id,
             'specialty_id': specialty3_id,
             'document_number': 3,
-            'document_link': "http://192.168.0.169:8083/static/example.txt",
+            'document_link': f"{base_s3_url}/static/example.txt",
             'assignment_date': "2022-12-14",
             'start_date': '2021-11-12',
             'end_date': '2022-02-05'
@@ -7005,7 +6857,7 @@ def create_user(id,
             'name': "Мастер спорта по боксу",
             'nameKZ': 'Бокстан спорт шебері',
             'assignment_date': '2022-10-09',
-            'document_link': 'http://192.168.0.169:8083/static/example.txt',
+            'document_link': f'{base_s3_url}/static/example.txt',
             'sport_type_id': sport_type1_id
         }, {
             'id': sport_degree2_id,
@@ -7013,7 +6865,7 @@ def create_user(id,
             'name': "Мастер спорта по карате",
             'nameKZ': 'Каратэден спорт шебері',
             'assignment_date': '2022-10-10',
-            'document_link': 'http://192.168.0.169:8083/static/example.txt',
+            'document_link': f'{base_s3_url}/static/example.txt',
             'sport_type_id': sport_type2_id
         }, {
             'id': sport_degree3_id,
@@ -7021,7 +6873,7 @@ def create_user(id,
             'name': "Кандидат мастер спорта по джиу-джитсу",
             'nameKZ': 'Джиу-джитсудан спорт шеберілігінен үміткер',
             'assignment_date': '2022-10-11',
-            'document_link': 'http://192.168.0.169:8083/static/example.txt',
+            'document_link': f'{base_s3_url}/static/example.txt',
             'sport_type_id': sport_type3_id
         }]
     )
@@ -7038,7 +6890,7 @@ def create_user(id,
             'name': "III место на Токийском съезде джиу-джитсу",
             'nameKZ': 'Токио джиу-джитсу конгресінде III орын',
             'assignment_date': '2022-10-09',
-            'document_link': 'http://192.168.0.169:8083/static/example.txt',
+            'document_link': f'{base_s3_url}/static/example.txt',
             'sport_type_id': sport_type3_id
         }, {
             'id': sport_achievement2_id,
@@ -7046,7 +6898,7 @@ def create_user(id,
             'name': "I место в Чемпионате Мира по боксу",
             'nameKZ': 'Бокстан Әлем чемпионатында I орын',
             'assignment_date': '2022-10-10',
-            'document_link': 'http://192.168.0.169:8083/static/example.txt',
+            'document_link': f'{base_s3_url}/static/example.txt',
             'sport_type_id': sport_type1_id
         }, {
             'id': sport_achievement3_id,
@@ -7054,7 +6906,7 @@ def create_user(id,
             'name': "II место в Чемпионате города Астаны по карате",
             'nameKZ': 'II место в Чемпионате города Астаны по карате',
             'assignment_date': '2022-10-11',
-            'document_link': 'http://192.168.0.169:8083/static/example.txt',
+            'document_link': f'{base_s3_url}/static/example.txt',
             'sport_type_id': sport_type2_id
         }]
     )
@@ -7147,7 +6999,7 @@ def create_user(id,
             'date_of_issue': "2022-09-11",
             'date_to': "2025-09-12",
             'issued_by': "МВД РК",
-            'document_link': "http://192.168.0.169:8083/static/example.txt",
+            'document_link': f"{base_s3_url}/static/example.txt",
             'profile_id': personal_profile_id
         }]
     )
@@ -7162,7 +7014,7 @@ def create_user(id,
             'category': ["A", "B", "C"],
             'date_of_issue': "2022-09-11",
             'date_to': "2022-09-12",
-            'document_link': "http://192.168.0.169:8083/static/example.txt",
+            'document_link': f"{base_s3_url}/static/example.txt",
             'profile_id': personal_profile_id
         }]
     )
@@ -7176,7 +7028,7 @@ def create_user(id,
             'document_number': "95909558",
             'date_of_issue': "2022-09-11",
             'date_to': "2022-09-12",
-            'document_link': "http://192.168.0.169:8083/static/example.txt",
+            'document_link': f"{base_s3_url}/static/example.txt",
             'profile_id': personal_profile_id
         }]
     )
@@ -7222,7 +7074,7 @@ def create_user(id,
             'initiator': 'Республиканская больница',
             'start_date': "2022-09-12",
             'profile_id': medical_profile_id,
-            'document_link': "http://192.168.0.169:8083/static/example.txt"
+            'document_link': f"{base_s3_url}/static/example.txt"
         }, {
             'id': dispensary_registrations1_id,
             'name': "Сахарный Диабет",
@@ -7230,7 +7082,7 @@ def create_user(id,
             'initiator': 'Клиника "Нурсултан"',
             'start_date': "2022-12-15",
             'profile_id': medical_profile_id,
-            'document_link': "http://192.168.0.169:8083/static/example.txt"
+            'document_link': f"{base_s3_url}/static/example.txt"
         }]
     )
 
@@ -7261,7 +7113,7 @@ def create_user(id,
             'start_date': "2022-09-12",
             'end_date': "2022-10-12",
             'profile_id': medical_profile_id,
-            'document_link': "http://192.168.0.169:8083/static/example.txt",
+            'document_link': f"{base_s3_url}/static/example.txt",
             'code': 'код-829121'
         }, {
             'id': hospital_datas1_id,
@@ -7270,7 +7122,7 @@ def create_user(id,
             'start_date': "2022-12-15",
             'end_date': "2022-12-16",
             'profile_id': medical_profile_id,
-            'document_link': "http://192.168.0.169:8083/static/example.txt",
+            'document_link': f"{base_s3_url}/static/example.txt",
             'code': None
         }]
     )
@@ -7332,7 +7184,7 @@ def create_user(id,
             'date_from': "2022-05-10",
             'date_to': "2022-05-11",
             'reason': "Служебная командировка",
-            'document_link': "http://192.168.0.169:8083/static/example.txt",
+            'document_link': f"{base_s3_url}/static/example.txt",
             'profile_id': additional_profile_id
 
         }]
@@ -7347,7 +7199,7 @@ def create_user(id,
             'date_from': "2022-05-10",
             'date_to': "2022-05-11",
             'reason': "Праздничная командировка",
-            'document_link': "http://192.168.0.169:8083/static/example.txt",
+            'document_link': f"{base_s3_url}/static/example.txt",
             'profile_id': None
 
         }]
@@ -7373,7 +7225,7 @@ def create_user(id,
             'number': "4584908",
             'issued_by': "Иманов А.Е.",
             'date_of_issue': "2022-01-15",
-            'document_link': "http://192.168.0.169:8083/static/example.txt",
+            'document_link': f"{base_s3_url}/static/example.txt",
             "profile_id": additional_profile_id
 
         }]
@@ -7387,7 +7239,7 @@ def create_user(id,
             'id': psychological_checks_id,
             'issued_by': "Назаров К.С.",
             'date_of_issue': "2022-03-25",
-            'document_link': "http://192.168.0.169:8083/static/example.txt",
+            'document_link': f"{base_s3_url}/static/example.txt",
             'profile_id': additional_profile_id
         }]
     )
@@ -7401,7 +7253,7 @@ def create_user(id,
             'number': "84088880",
             "issued_by": "Жапаров Е.С.",
             "date_of_issue": "2021-02-03",
-            "document_link": "http://192.168.0.169:8083/static/example.txt",
+            "document_link": f"{base_s3_url}/static/example.txt",
             'profile_id': additional_profile_id
         }]
     )

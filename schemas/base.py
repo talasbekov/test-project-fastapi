@@ -9,6 +9,7 @@ class Model(BaseModel):
 
     class Config:
         orm_mode = True
+        arbitrary_types_allowed = True
 
 
 class NamedModel(Model):

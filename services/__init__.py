@@ -42,6 +42,7 @@ from .service_id import service_id_service
 from .military_unit import military_unit_service
 from .user_oath import user_oath_service
 from .history import *
+from .hr_vacancy import hr_vacancy_service
 from .hr_document import hr_document_service
 from .staff_list import staff_list_service
 from .additional import *
@@ -53,5 +54,4 @@ from .candidates import *
 from .render import render_service
 from .auth import auth_service
 
-from .hr_vacancy import hr_vacancy_service
 from .hr_vacancy_requirements import hr_vacancy_requirement_service

@@ -15,6 +15,7 @@ from schemas import (
     DocumentStaffFunctionRead,
     ServiceStaffFunctionRead,
     StaffUnitCreateWithPosition,
+    StaffUnitFunctionsByPosition
 )
 from services import rank_service, staff_unit_service
 
@@ -212,6 +213,22 @@ async def add_document_staff_function(*,
     """
     Authorize.jwt_required()
     staff_unit_service.add_document_staff_function(db, body)
+    
+
+@router.post("/add-document-staff-function/position", dependencies=[Depends(HTTPBearer())],
+             summary="Add DocumentStaffFunction")
+async def add_document_staff_function_by_position(*,
+     db: Session = Depends(get_db),
+     body: StaffUnitFunctionsByPosition,
+     Authorize: AuthJWT = Depends()
+):
+    """
+        Add DocumentStaffFunction to StaffUnit
+
+    """
+    Authorize.jwt_required()
+    role = Authorize.get_raw_jwt()['role']
+    staff_unit_service.add_document_staff_function_by_position(db, body, role)
 
 
 @router.post("/remove-document-staff-function", dependencies=[Depends(HTTPBearer())],
