@@ -69,7 +69,7 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
             raise NotFoundException(detail="Staff list is not found!")
         return staff_list
 
-    def create_by_user_id(self, db: Session, user_id: uuid.UUID, obj_in: StaffListUserCreate):
+    def create_by_user_id(self, db: Session, user_id: uuid.UUID, obj_in: StaffListUserCreate, current_user_role_id: str):
 
         create_staff_list = StaffListCreate(
             name=obj_in.name,
@@ -80,14 +80,14 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
             db, 0, 100)
         for staff_division in staff_divisions:
             self._create_archive_staff_division(
-                db, staff_division, staff_list.id, None)
+                db, staff_division, staff_list.id, None, current_user_role_id)
 
         staff_list.status = StaffListStatusEnum.IN_PROGRESS.value
         db.add(staff_list)
         db.flush()
         return staff_list
 
-    def duplicate(self, db: Session, staff_list_id: uuid.UUID, user_id: uuid.UUID, obj_in: StaffListUserCreate):
+    def duplicate(self, db: Session, staff_list_id: uuid.UUID, user_id: uuid.UUID, obj_in: StaffListUserCreate, current_user_role_id: str):
         create_staff_list = StaffListCreate(
             name=obj_in.name,
             user_id=user_id
@@ -98,7 +98,7 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
             staff_division = staff_division_service.get_by_id(
                 db, archive_staff_division.origin_id)
             self._create_archive_staff_division(
-                db, staff_division, staff_list.id, None)
+                db, staff_division, staff_list.id, None, current_user_role_id)
 
         db.add(staff_list)
         db.flush()
@@ -222,7 +222,7 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         return new_staff_unit
 
     def _create_archive_staff_division(self, db: Session, staff_division: StaffDivision, staff_list_id: uuid.UUID,
-                                       parent_group_id: Optional[uuid.UUID]):
+                                       parent_group_id: Optional[uuid.UUID], current_user_role_id: str):
 
         archive_division = archive_staff_division_service.create_based_on_existing_staff_division(db, staff_division,
                                                                                                   staff_list_id,
@@ -231,7 +231,7 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         if staff_division.children:
             for child in staff_division.children:
                 child_archive_staff_division = self._create_archive_staff_division(db, child, staff_list_id,
-                                                                                   archive_division.id)
+                                                                                   archive_division.id, current_user_role_id)
                 archive_division.children.append(child_archive_staff_division)
 
         is_leader_needed = False
@@ -263,10 +263,6 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
                 if staff_unit.staff_functions:
                     for staff_function in staff_unit.staff_functions:
                         service = options.get(staff_function.discriminator)
-                        if isinstance(staff_function, ServiceStaffFunction):
-                            print(staff_function)
-                        if isinstance(staff_function, DocumentStaffFunction):
-                            print('Anime')
                         if service is None:
                             raise NotSupportedException(
                                 detail="Staff function type is not supported!")
@@ -284,7 +280,20 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
 
                         archive_staff_unit.staff_functions.append(
                             archive_staff_function)
+                db.add(archive_staff_unit)
+                db.flush()
+                hr_vacancy = hr_vacancy_service.get_by_staff_unit(
+                    db, staff_unit.id)
 
+                if hr_vacancy:
+                    body = HrVacancyUpdate()
+                    body.archive_staff_unit_id = archive_staff_unit.id
+                    body.is_active = None
+                    body.hr_vacancy_requirements_ids = None
+                    body.staff_unit_id = None
+
+                    hr_vacancy_service.update(db, hr_vacancy, body,
+                                              current_user_role_id)
                 archive_division.staff_units.append(archive_staff_unit)
 
         if is_leader_needed:
