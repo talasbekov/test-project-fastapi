@@ -13,7 +13,7 @@ from .archive_staff_function import (ArchiveStaffFunctionCreate, ArchiveStaffFun
                                      NewArchiveServiceStaffFunctionUpdate, AllArchiveStaffFunctionsRead)
 from .archive_staff_unit import (ArchiveStaffUnitCreate, ArchiveStaffUnitUpdate, ArchiveStaffUnitRead,
                                  ArchiveStaffUnitCreateWithStaffFunctions, NewArchiveStaffUnitCreate,
-                                 NewArchiveStaffUnitUpdate,
+                                 NewArchiveStaffUnitUpdate,ArchiveStaffUnitUpdateDispose,
                                  NewArchiveStaffUnitCreateWithStaffFunctions)
 from .document_archive_staff_function_type import (DocumentArchiveStaffFunctionTypeCreate,
                                                    DocumentArchiveStaffFunctionTypeUpdate,

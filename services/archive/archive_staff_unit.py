@@ -1,15 +1,17 @@
 import uuid
+from typing import List
 
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException, BadRequestException
-from models import ArchiveStaffUnit, StaffUnit, ArchiveStaffDivision
+from models import ArchiveStaffUnit, StaffUnit, ArchiveStaffDivision, StaffDivisionEnum
 from schemas import ArchiveStaffUnitCreate, ArchiveStaffUnitUpdate, ArchiveStaffUnitFunctions, \
     NewArchiveStaffUnitCreate, NewArchiveStaffUnitUpdate
 from services import position_service
 
 from .service_archive_staff_function import service_archive_staff_function_service
 from .document_archive_staff_function import document_archive_staff_function_service
+
 from . import increment_changes_size
 from services.base import ServiceBase
 
@@ -22,6 +24,17 @@ class ArchiveStaffUnitService(
             raise NotFoundException(
                 detail=f"ArchiveStaffUnit with id: {id} is not found!")
         return position
+
+
+    def dispose_all_units(self, db: Session, archive_staff_unit_ids: List[uuid.UUID], archive_staff_division_id: uuid.UUID):
+        (db.query(self.model)
+            .filter(self.model.id.in_(archive_staff_unit_ids))
+            .update(
+                {self.model.staff_division_id: archive_staff_division_id}
+            )
+        )
+        return db.query(self.model).filter(self.model.id.in_(archive_staff_unit_ids)).all()
+
 
     def get_by_archive_staff_division_id(
             self,
