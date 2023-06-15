@@ -4,12 +4,11 @@ import uuid
 
 from sqlalchemy.orm import Session, joinedload
 
-from exceptions import NotFoundException, NotSupportedException, ForbiddenException
+from exceptions import NotFoundException, NotSupportedException
 from models import (
     DocumentStaffFunction,
     ServiceStaffFunction,
     StaffDivision,
-    StaffDivisionEnum,
     StaffList,
     StaffUnit,
     ArchiveStaffDivision,
@@ -24,7 +23,6 @@ from schemas import (
     StaffListUpdate,
     StaffListUserCreate,
     StaffListStatusRead,
-    HrDocumentInit,
     HrVacancyUpdate,
 )
 from services import (
@@ -40,7 +38,6 @@ from services import (
     document_staff_function_type_service,
     service_staff_function_type_service,
     hr_document_template_service,
-    hr_document_service,
     staff_unit_service,
     service_staff_function_service,
     service_staff_function_type_service,
@@ -81,10 +78,6 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         staff_list = super().create(db, create_staff_list)
         staff_divisions = staff_division_service.get_all_except_special(
             db, 0, 100)
-
-        disposition_division = staff_division_service.get_by_name(db, StaffDivisionEnum.DISPOSITION.value)
-        staff_divisions.append(disposition_division)
-
         for staff_division in staff_divisions:
             self._create_archive_staff_division(
                 db, staff_division, staff_list.id, None)
@@ -117,12 +110,9 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         staff_list_id: uuid.UUID,
         signed_by: str,
         document_creation_date: datetime.date,
-        current_user_id: uuid.UUID,
-        current_user_role_id: str
+        current_user_role_id: uuid.UUID
     ):
         staff_list = self.get_by_id(db, staff_list_id)
-
-        self._validate_status(staff_list)
 
         staff_division_service.make_all_inactive(db)
         exclude_staff_division_ids = [
@@ -150,7 +140,6 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         service_staff_function_service.delete_all_inactive(db)
         db.add(staff_list)
         db.flush()
-        hr_document = self.create_disposition_doc_by_staff_list_id(db, staff_list_id, current_user_id, current_user_role)
         return staff_list
 
     def _create_staff_division(self, db: Session,
@@ -193,14 +182,6 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
             new_staff_unit = self._create_and_add_functions_to_new_unit(db,
                                                                         staff_unit,
                                                                         new_staff_unit)
-
-            hr_vacancy = hr_vacancy_service.get_by_archieve_staff_unit(db, staff_unit.id)
-
-            body = HrVacancyUpdate
-            body.staff_unit_id = new_staff_unit.id
-
-            hr_vacancy_service.update(db, hr_vacancy)
-
             db.add(new_staff_unit)
             db.add(staff_unit)
             db.flush()
@@ -253,11 +234,6 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
                                                                                    archive_division.id)
                 archive_division.children.append(child_archive_staff_division)
 
-        if staff_division.name == StaffDivisionEnum.DISPOSITION.value:
-            db.add(archive_division)
-            db.flush()
-            return archive_division
-
         is_leader_needed = False
         leader_id = None
         if staff_division.leader_id is not None:
@@ -287,6 +263,10 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
                 if staff_unit.staff_functions:
                     for staff_function in staff_unit.staff_functions:
                         service = options.get(staff_function.discriminator)
+                        if isinstance(staff_function, ServiceStaffFunction):
+                            print(staff_function)
+                        if isinstance(staff_function, DocumentStaffFunction):
+                            print('Anime')
                         if service is None:
                             raise NotSupportedException(
                                 detail="Staff function type is not supported!")
@@ -314,35 +294,6 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         db.flush()
 
         return archive_division
-
-    def create_disposition_doc_by_staff_list_id(
-            self,
-            db: Session,
-            staff_list_id: uuid.UUID,
-            current_user_id: uuid.UUID,
-            current_user_role: str,
-    ):
-        hr_document_template = hr_document_template_service.get_disposition(
-            db=db)
-        hr_document_template_id = hr_document_template.id
-        body = HrDocumentInit
-        body.hr_document_template_id = hr_document_template_id
-        body.user_ids = self.get_disposition_user_ids_by_staff_list_id(db, staff_list_id)
-        body.properties = {}
-        body.document_step_users_ids = hr_document_template_service.get_steps_by_document_template_id(db, hr_document_template_id)
-        body.due_date = datetime.date.today()
-
-        hr_document = hr_document_service.initialize(db, body, current_user_id, current_user_role)
-
-        return hr_document
-
-    def get_disposition_user_ids_by_staff_list_id(self, db: Session, staff_list_id: uuid.UUID):
-        disposition_division = archive_staff_division_service.get_by_name(db, StaffDivisionEnum.DISPOSITION.value, staff_list_id)
-        archive_staff_units = archive_staff_unit_service.get_by_archive_staff_division_id(db, disposition_division.id)
-        user_ids = []
-        for archive_staff_unit in archive_staff_units:
-            user_ids.append(archive_staff_unit.user_id)
-        return user_ids
 
     def get_super_doc_by_staff_list_id(
             self,
@@ -392,14 +343,6 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         return super().update(
             db=db, db_obj=staff_list, obj_in=body
         )
-
-    def _validate_status(self, staff_list):
-        if staff_list.status == StaffListStatusEnum.APPROVED.value:
-            raise ForbiddenException(
-                detail=f"StaffList with id: {staff_list.id} is already signed!")
-        if staff_list.status == StaffListStatusEnum.DIVERTED.value:
-            raise ForbiddenException(
-                detail=f"StaffList with id: {staff_list.id} is canceled!")
 
 
 staff_list_service = StaffListService(StaffList)

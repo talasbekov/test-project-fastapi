@@ -17,7 +17,6 @@ class StaffDivisionEnum(str, enum.Enum):
     SECONDMENT_OTHER = "Откомандирован в другой гос. орган"
     PERISHED = "Погиб"
     SERVICE = 'СГО РК'
-    DISPOSITION = 'В распоряжении'
 
 
 class StaffDivision(NamedNestedModel, isActiveModel):

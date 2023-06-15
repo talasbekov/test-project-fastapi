@@ -232,18 +232,6 @@ class HrDocumentTemplateService(
             )
         return res
 
-    def get_disposition(self, db: Session):
-        res = (
-            db.query(self.model)
-            .filter(self.model.name == HrDocumentTemplateEnum.DISPOSITION.value)
-            .first()
-        )
-        if res is None:
-            raise NotFoundException(
-                detail=f"HrDocumentTemplate with name: {HrDocumentTemplateEnum.STAFF_LIST.value} is not found!"
-            )
-        return res
-
     def get_staff_unit(self, db: Session):
         res = (
             db.query(self.model)
