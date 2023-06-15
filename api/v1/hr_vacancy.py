@@ -154,7 +154,8 @@ async def update(*,
         Update HrVacancy
         
         - **id**: uuid - required
-        - **staff_unit_id**: uuid - optional
+        - **archive_staff_unit_id**: uuid - optional. The id of ArchiveStaffUnit
+        - **staff_unit_id**: uuid - optional. The id of StaffUnit
         - **is_active**: bool - optional
         - **hr_vacancy_requirements_ids**: List of uuid - optional
     """
@@ -177,13 +178,14 @@ async def update_by_archieve_staff_unit(*,
         Update HrVacancy
         
         - **id**: uuid - required
-        - **staff_unit_id**: uuid - optional. The id of ArchieveStaffUnit
+        - **archive_staff_unit_id**: uuid - optional. The id of ArchiveStaffUnit
+        - **staff_unit_id**: uuid - optional. The id of StaffUnit
         - **is_active**: bool - optional
         - **hr_vacancy_requirements_ids**: List of uuid - optional
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
-    return hr_vacancy_service.update_by_archieve_staff_unit(db, id, body, role)
+    return hr_vacancy_service.update(db, id, body, role)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],

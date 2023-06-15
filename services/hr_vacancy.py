@@ -1,3 +1,4 @@
+import uuid
 from typing import List
 from sqlalchemy.orm import Session
 
@@ -61,6 +62,14 @@ class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate])
             self.model.archive_staff_unit_id == archieve_staff_unit_id
         ).first()
         
+        return hr_vacancy
+
+    def get_by_staff_unit(self, db: Session,
+                                   staff_unit_id: uuid.UUID) -> HrVacancy:
+        hr_vacancy = db.query(self.model).filter(
+            self.model.staff_unit_id == staff_unit_id
+        ).first()
+
         return hr_vacancy
 
 
@@ -154,12 +163,13 @@ class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate])
         db.flush()
         
         return vacancy
-
+    
+    
     def update(self, db: Session, hr_vacancy: HrVacancy, body: HrVacancyUpdate, role_id: str) -> HrVacancy:
         
         if not self._check_by_role(db, role_id):
             raise ForbiddenException("You don't have permission to manage vacancy!")
-
+        
         if body.hr_vacancy_requirements_ids is not None:
             hr_vacancy.hr_vacancy_requirements = self._set_requirements_to_vacancy(db, body.hr_vacancy_requirements_ids)
                 
@@ -168,28 +178,10 @@ class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate])
             
         if body.is_active is not None:
             hr_vacancy.is_active = body.is_active
-                        
-        db.add(hr_vacancy)
-        db.flush()
-        
-        return hr_vacancy
-    
-    
-    def update_by_archieve_staff_unit(self, db: Session, id: str, body: HrVacancyUpdate, role_id: str) -> HrVacancy:
-        
-        if not self._check_by_role(db, role_id):
-            raise ForbiddenException("You don't have permission to manage vacancy!")
-        
-        hr_vacancy = self.get_by_id(db, id)
-        
-        if body.hr_vacancy_requirements_ids is not None:
-            hr_vacancy.hr_vacancy_requirements = self._set_requirements_to_vacancy(db, body.hr_vacancy_requirements_ids)
-                
-        if body.staff_unit_id is not None:
-            hr_vacancy.staff_unit_id = archive_staff_unit_service.get_by_id(db, body.staff_unit_id).id
-            
-        if body.is_active is not None:
-            hr_vacancy.is_active = body.is_active
+
+        if body.archive_staff_unit_id is not None:
+            hr_vacancy.archive_staff_unit_id = archive_staff_unit_service.get_by_id(
+                db, body.archive_staff_unit_id).id
                         
         db.add(hr_vacancy)
         db.flush()

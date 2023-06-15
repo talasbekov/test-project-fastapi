@@ -29,6 +29,7 @@ from .staff_function import (DocumentStaffFunctionCreate, DocumentStaffFunctionR
                              StaffUnitFunctions, StaffFunctionRead, DocumentStaffFunctionAdd,
                              DocumentStaffFunctionConstructorAdd, DocumentStaffFunctionAppendToStaffUnit, StaffUnitFunctionsByPosition)
 from .status import *
+from .staff_division_type import (StaffDivisionTypeBase, StaffDivisionTypeCreate, StaffDivisionTypeRead, StaffDivisionTypeUpdate)
 from .staff_division import (StaffDivisionCreate, StaffDivisionRead,
                              StaffDivisionUpdate, StaffDivisionUpdateParentGroup,
                              StaffDivisionOptionRead, StaffUnitDivisionRead)
