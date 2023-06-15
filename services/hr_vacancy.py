@@ -163,32 +163,28 @@ class HrVacancyService(ServiceBase[HrVacancy, HrVacancyCreate, HrVacancyUpdate])
         db.flush()
         
         return vacancy
-    
-    
-    def update(self, db: Session, hr_vacancy: HrVacancy, body: HrVacancyUpdate, role_id: str) -> HrVacancy:
 
+    def update(self, db: Session, hr_vacancy: HrVacancy, body: HrVacancyUpdate, role_id: str) -> HrVacancy:
+        
         if not self._check_by_role(db, role_id):
-            raise ForbiddenException(
-                "You don't have permission to manage vacancy!")
+            raise ForbiddenException("You don't have permission to manage vacancy!")
 
         if body.hr_vacancy_requirements_ids is not None:
-            hr_vacancy.hr_vacancy_requirements = self._set_requirements_to_vacancy(
-                db, body.hr_vacancy_requirements_ids)
-
+            hr_vacancy.hr_vacancy_requirements = self._set_requirements_to_vacancy(db, body.hr_vacancy_requirements_ids)
+                
         if body.staff_unit_id is not None:
-            hr_vacancy.staff_unit_id = staff_unit_service.get_by_id(db,
-                                                                    body.staff_unit_id).id
-
+            hr_vacancy.staff_unit_id = staff_unit_service.get_by_id(db, body.staff_unit_id).id
+            
         if body.is_active is not None:
             hr_vacancy.is_active = body.is_active
 
         if body.archive_staff_unit_id is not None:
             hr_vacancy.archive_staff_unit_id = archive_staff_unit_service.get_by_id(
                 db, body.archive_staff_unit_id).id
-
+                        
         db.add(hr_vacancy)
         db.flush()
-
+        
         return hr_vacancy
 
 
