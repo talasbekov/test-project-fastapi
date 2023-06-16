@@ -32,3 +32,5 @@ class Status(Model):
     user = relationship("User", back_populates="statuses")
 
     history = relationship("StatusHistory", back_populates="status", uselist=False)
+
+    history = relationship("StatusHistory", back_populates="status", uselist=False)
