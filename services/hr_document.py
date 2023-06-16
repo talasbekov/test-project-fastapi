@@ -70,6 +70,7 @@ from services import (
     coolness_service,
     penalty_service,
     contract_service,
+    notification_service,
     # staff_list_service,
     archive_staff_unit_service,
     status_leave_service,

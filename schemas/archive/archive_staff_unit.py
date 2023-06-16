@@ -50,6 +50,10 @@ class NewArchiveStaffUnitCreateWithStaffFunctions(ArchiveStaffUnitBase):
 class NewArchiveStaffUnitUpdate(ArchiveStaffUnitBase):
     pass
 
+class ArchiveStaffUnitUpdateDispose(BaseModel):
+    staff_unit_ids: List[uuid.UUID]
+    staff_list_id: uuid.UUID
+
 
 class UserRead(BaseModel):
     id: Optional[uuid.UUID]
