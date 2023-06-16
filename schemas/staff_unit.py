@@ -2,12 +2,12 @@ import datetime
 import uuid
 from typing import List, Optional
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import EmailStr, Field
 
 from schemas import (BadgeRead, PositionRead, PositionCreate,
                      RankRead, StaffUnitDivisionRead,
                      StaffFunctionRead)
-from schemas import Model, ReadModel
+from schemas import Model, ReadModel, NamedModel
 
 
 class StaffUnitRequirements(NamedModel):
