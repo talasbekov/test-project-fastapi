@@ -7,7 +7,12 @@ from models import StatusType, StatusEnum
 from schemas import StatusTypeRead
 
 class StatusLeaveService:
-    def get_by_option(self, db: Session, type: str, id: uuid.UUID, skip: int, limit: int):
+    def get_by_option(self, 
+                      db: Session, 
+                      type: str, 
+                      id: uuid.UUID, 
+                      skip: int, 
+                      limit: int):
         res = (
             db.query(StatusType)
                 .filter(func.lower(StatusType.name).contains(StatusEnum.ROOT.value))

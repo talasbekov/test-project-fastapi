@@ -23,7 +23,12 @@ class StatusService(ServiceBase[Status, StatusCreate, StatusUpdate]):
         else:
             return db.query(Status).filter(Status.id == id).first().type
 
-    def get_by_option(self, db: Session, type: str, id: uuid.UUID, skip: int, limit: int):
+    def get_by_option(self, 
+                      db: Session, 
+                      type: str, 
+                      id: uuid.UUID, 
+                      skip: int, 
+                      limit: int):
         user = user_service.get_by_id(db, id)
         if type == 'write':
             return [StatusTypeRead.from_orm(status).dict() for status in
@@ -48,14 +53,21 @@ class StatusService(ServiceBase[Status, StatusCreate, StatusUpdate]):
             .filter(Status.user_id == user_id)
             .filter(Status.type_id == badge_type_id)
             .join(StatusHistory)
-            .filter(or_(StatusHistory.date_to == None, StatusHistory.date_to > datetime.now()))
+            .filter(or_(StatusHistory.date_to == None, 
+                        StatusHistory.date_to > datetime.now()))
             .first()
         ) is not None
 
     def get_by_name(self, db: Session, name: str):
-        return db.query(StatusType).filter(func.lower(StatusType.name).contains(name.lower())).all()
+        return (db.query(StatusType)
+                .filter(func.lower(StatusType.name)
+                .contains(name.lower()))
+                .all())
 
-    def get_active_status_of_user(self, db: Session, user_id: uuid.UUID, status_name: str):
+    def get_active_status_of_user(self, 
+                                  db: Session, 
+                                  user_id: uuid.UUID, 
+                                  status_name: str):
         return (
             db.query(StatusHistory)
             .filter(

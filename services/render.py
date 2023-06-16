@@ -23,8 +23,11 @@ from services import (hr_document_template_service,
                        family_relation_service,
                       family_service)
 from models import (User,  
-                    CandidateStageAnswerDefault, CandidateStageAnswerText, CandidateStageType,
-                    CandidateStageQuestion, CandidateStageAnswerChoice)
+                    CandidateStageAnswerDefault, 
+                    CandidateStageAnswerText, 
+                    CandidateStageType,
+                    CandidateStageQuestion, 
+                    CandidateStageAnswerChoice)
 from exceptions import NotFoundException
 
 
@@ -68,7 +71,10 @@ class RenderService:
         month_num = now.month
 
         month_names = [
-            'Қаңтар', 'Ақпан', 'Наурыз', 'Сәуір', 'Мамыр', 'Маусым', 'Шілде', 'Тамыз', 'Қыркүйек', 'Қазан', 'Қараша', 'Желтоқсан'
+            'Қаңтар', 'Ақпан', 'Наурыз', 
+            'Сәуір', 'Мамыр', 'Маусым', 
+            'Шілде', 'Тамыз', 'Қыркүйек', 
+            'Қазан', 'Қараша', 'Желтоқсан'
         ]
 
         month_name = month_names[month_num - 1]
@@ -95,7 +101,10 @@ class RenderService:
             filename=document_template.name + "." + extension,
         )
     
-    async def generate_finish_candidate(self, db: Session, candidate_id: str, template_id: str):
+    async def generate_finish_candidate(self, 
+                                        db: Session, 
+                                        candidate_id: str, 
+                                        template_id: str):
         hr_document_template = hr_document_template_service.get_by_id(db, template_id)
         candidate = candidate_service.get_by_id(db, candidate_id)
         
@@ -116,7 +125,9 @@ class RenderService:
         ).first()
         
         # essay
-        essay_stage_type = db.query(CandidateStageType).filter(CandidateStageType.name == 'Рецензия на эссе').first()
+        essay_stage_type = (db.query(CandidateStageType)
+                            .filter(CandidateStageType.name == 'Рецензия на эссе')
+                            .first())
         
         essay_stage_question = db.query(CandidateStageQuestion).filter(
             CandidateStageQuestion.candidate_stage_type_id == essay_stage_type.id
@@ -128,7 +139,9 @@ class RenderService:
         ).first()
         
         # military medical commision
-        military_medical_commision_stage = db.query(CandidateStageType).filter(CandidateStageType.name == 'Военно-врачебная комиссия').first()
+        military_medical_commision_stage = (db.query(CandidateStageType)
+                                            .filter(CandidateStageType.name == 'Военно-врачебная комиссия')
+                                            .first())
         
         military_medical_commision_question = db.query(CandidateStageQuestion).filter(
             CandidateStageQuestion.candidate_stage_type_id == military_medical_commision_stage.id
@@ -140,7 +153,9 @@ class RenderService:
         ).first()
         
         # psychological stage
-        psychological_stage_type = db.query(CandidateStageType).filter(CandidateStageType.name == 'Беседа с психологом').first()
+        psychological_stage_type = (db.query(CandidateStageType)
+                            .filter(CandidateStageType.name == 'Беседа с психологом')
+                            .first())
         
         psychological_stage_question = db.query(CandidateStageQuestion).filter(
             CandidateStageQuestion.candidate_stage_type_id == psychological_stage_type.id
@@ -152,7 +167,9 @@ class RenderService:
         ).first()
         
         # polygraph stage
-        polygraph_stage_type = db.query(CandidateStageType).filter(CandidateStageType.name == 'Результаты полиграфологического исследования').first()
+        polygraph_stage_type = (db.query(CandidateStageType)
+                        .filter(CandidateStageType.name == 'Результаты полиграфологического исследования')
+                        .first())
         
         polygraph_stage_question = db.query(CandidateStageQuestion).filter(
             CandidateStageQuestion.candidate_stage_type_id == polygraph_stage_type.id
@@ -164,7 +181,9 @@ class RenderService:
         ).first()
         
         # sport stage
-        sport_stage_type = db.query(CandidateStageType).filter(CandidateStageType.name == 'Результаты физической подготовки').first()
+        sport_stage_type = (db.query(CandidateStageType)
+                            .filter(CandidateStageType.name == 'Результаты физической подготовки')
+                            .first())
         
         sport_stage_question = db.query(CandidateStageQuestion).filter(
             CandidateStageQuestion.candidate_stage_type_id == sport_stage_type.id
@@ -176,7 +195,9 @@ class RenderService:
         ).first()
         
         # legislation stage
-        legislation_stage_type = db.query(CandidateStageType).filter(CandidateStageType.name == 'Результаты тестирования на знание законодательства РК').first()
+        legislation_stage_type = (db.query(CandidateStageType)
+                                  .filter(CandidateStageType.name == 'Результаты тестирования на знание законодательства РК')
+                                  .first())
         
         legislation_stage_question = db.query(CandidateStageQuestion).filter(
             CandidateStageQuestion.candidate_stage_type_id == legislation_stage_type.id
@@ -234,11 +255,14 @@ class RenderService:
         
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
             file_name = temp_file.name + ".pdf"
-            pdfkit.from_string(ans, file_name, options=opts, configuration=pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path))
+            pdfkit.from_string(ans, 
+                               file_name, 
+                               options=opts, 
+                               configuration=pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path))
 
         return FileResponse(
             path=file_name,
-            filename="Заключение о зачислении кандидата " + user.last_name + " " + user.first_name + ".pdf",
+            filename=f"Заключение о зачислении кандидата {user.last_name} {user.first_name}.pdf",
         )
     
     def convert_html_to_docx(self, html: str):
@@ -280,7 +304,8 @@ class RenderService:
         etree.register_namespace('wp', 'http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing')
 
         # Create an XSLT stylesheet to transform the XML to HTML
-        xslt = etree.XML('''<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing">
+        xslt = etree.XML(
+    '''<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing">
         <xsl:output method="html"/>
 
         <!-- Map Word styles to HTML styles -->
@@ -355,7 +380,10 @@ class RenderService:
                 'encoding': 'UTF-8',
                 'enable-local-file-access': True
             }
-            pdfkit.from_string(html, file_name, options=options, configuration=pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path))
+            pdfkit.from_string(html, 
+                               file_name, 
+                               options=options, 
+                               configuration=pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path))
 
         return FileResponse(
             path=file_name,

@@ -22,7 +22,7 @@ services:
   
   sgo-erp:
     platform: linux/amd64
-    command: bash -c "ruff check . --ignore E501,E711,E712 --exclude ./alembic,__init__.py  && alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8002 --log-config log.ini --workers ${NUMBER_OF_WORKERS}"
+    command: bash -c "alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8002 --log-config log.ini --workers ${NUMBER_OF_WORKERS}"
     build: .
     container_name: sgo-erp-test
     restart: always
