@@ -149,7 +149,9 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         service_staff_function_service.delete_all_inactive(db)
         db.add(staff_list)
         db.flush()
-        await self.create_disposition_doc_by_staff_list_id(db, staff_list_id, current_user_id, current_user_role_id)
+        user_ids = self.get_disposition_user_ids_by_staff_list_id(db, staff_list_id)
+        if user_ids:
+            await self.create_disposition_doc_by_staff_list_id(db, staff_list_id, user_ids, current_user_id, current_user_role_id)
         return staff_list
 
     def _create_staff_division(self, db: Session,
@@ -323,12 +325,12 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
             self,
             db: Session,
             staff_list_id: uuid.UUID,
+            user_ids: uuid.UUID,
             current_user_id: uuid.UUID,
             current_user_role_id: str,
     ):
         hr_document_template = hr_document_template_service.get_disposition(
             db=db)
-        user_ids = self.get_disposition_user_ids_by_staff_list_id(db, staff_list_id)
         steps = hr_document_template_service.get_steps_by_document_template_id(db, hr_document_template.id, user_ids[0])
         body = HrDocumentInit(
             hr_document_template_id=hr_document_template.id,
