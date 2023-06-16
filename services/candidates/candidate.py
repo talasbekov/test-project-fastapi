@@ -178,7 +178,7 @@ class CandidateService(ServiceBase[Candidate, CandidateCreate, CandidateUpdate])
         """
         staff_unit = staff_unit_service.get_by_id(db, role_id)
 
-        available_all_roles = [position_service.get_by_name(db, name) for name in self.ALL_CANDIDATE_VIEWERS]
+        available_all_roles = [position_service.get_id_by_name(db, name) for name in self.ALL_CANDIDATE_VIEWERS]
 
         return any(staff_unit.position_id == i for i in available_all_roles)
 
