@@ -18,6 +18,7 @@ from models import (
     ArchiveStaffUnit,
     ArchiveDocumentStaffFunction,
     StaffListStatusEnum,
+    StaffDivisionEnum
 )
 from schemas import (
     StaffListCreate,
@@ -25,6 +26,7 @@ from schemas import (
     StaffListUserCreate,
     StaffListStatusRead,
     HrVacancyUpdate,
+    HrDocumentInit,
 )
 from services import (
     ServiceBase,
@@ -41,6 +43,7 @@ from services import (
     staff_unit_service,
     service_staff_function_service,
     hr_vacancy_service,
+    hr_document_service
 )
 
 options = {
