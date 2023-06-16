@@ -24,7 +24,7 @@ from .temporary_status_change import handler as temporary_status_change_handler
 from .status_change import handler as status_change_handler
 from .position_change import handler as position_change_handler
 from .confirm_coolness import handler as confirm_coolness_handler
-from .apply_staff_list import handler as apply_staff_list_handler
+# from .apply_staff_list import handler as apply_staff_list_handler
 from .superdoc import handler as superdoc_handler
 from .grant_leave import handler as grant_leave_handler
 from .sick_leave import handler as sick_leave_handler

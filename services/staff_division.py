@@ -190,6 +190,8 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
 
     def create_from_archive(self, db: Session, archive_staff_division: ArchiveStaffDivision, parent_id: uuid.UUID, leader_id: uuid.UUID):
         self._validate_parent(db, parent_id)
+        if archive_staff_division.name == StaffDivisionEnum.DISPOSITION.value:
+            parent_id = self.get_by_name(db, StaffDivisionEnum.SPECIAL_GROUP.value).id
         res = super().create(
             db, StaffDivisionCreate(
                 name=archive_staff_division.name,
@@ -208,6 +210,8 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
     def update_from_archive(self, db: Session, archive_staff_division: ArchiveStaffDivision, parent_id: uuid.UUID, leader_id: uuid.UUID):
         self._validate_parent(db, parent_id)
         staff_division = self.get_by_id(db, archive_staff_division.origin_id)
+        if archive_staff_division.name == StaffDivisionEnum.DISPOSITION.value:
+            parent_id = self.get_by_name(db, StaffDivisionEnum.SPECIAL_GROUP.value).id
         res = super().update(
             db,
             db_obj=staff_division,
