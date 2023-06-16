@@ -10,18 +10,23 @@ from core import get_db
 from schemas import MilitaryUnitCreate, MilitaryUnitRead, MilitaryUnitUpdate
 from services import military_unit_service
 
-router = APIRouter(prefix="/military_units", tags=["MilitaryUnit"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/military_units",
+    tags=["MilitaryUnit"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[MilitaryUnitRead],
             summary="Get all Military Units")
 async def get_all(*,
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends(),
-    skip: int = 0,
-    limit: int = 10
-):
+                  db: Session = Depends(get_db),
+                  Authorize: AuthJWT = Depends(),
+                  skip: int = 0,
+                  limit: int = 10
+                  ):
     """
        Get all Military Units
 
@@ -37,10 +42,10 @@ async def get_all(*,
              response_model=MilitaryUnitRead,
              summary="Create Military Unit")
 async def create(*,
-    db: Session = Depends(get_db),
-    body: MilitaryUnitCreate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 body: MilitaryUnitCreate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Create Military Unit
 
@@ -54,11 +59,11 @@ async def create(*,
             response_model=MilitaryUnitRead,
             summary="Update Military Unit")
 async def update(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    body: MilitaryUnitUpdate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 body: MilitaryUnitUpdate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Update Military Unit
 
@@ -75,10 +80,10 @@ async def update(*,
             response_model=MilitaryUnitRead,
             summary="Get Military Unit by id")
 async def get_by_id(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                    db: Session = Depends(get_db),
+                    id: uuid.UUID,
+                    Authorize: AuthJWT = Depends()
+                    ):
     """
         Get Military Unit by id
 
@@ -92,10 +97,10 @@ async def get_by_id(*,
                dependencies=[Depends(HTTPBearer())],
                summary="Delete Military Unit")
 async def delete(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Delete Military Unit
 

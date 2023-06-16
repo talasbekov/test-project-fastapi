@@ -6,7 +6,12 @@ from sqlalchemy.orm import Session
 from core import get_db
 from services import candidate_category_service
 
-router = APIRouter(prefix="/candidate_categories", tags=["CandidateCategory"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/candidate_categories",
+    tags=["CandidateCategory"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],

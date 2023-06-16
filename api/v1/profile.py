@@ -48,7 +48,9 @@ async def get_all(*,
 #     Authorize.jwt_required()
 #     generated_file_data = profile_service.generate_profile_doc(db, user_id)
 
-#     return FileResponse(path=generated_file_data["file_location"], media_type='application/octet-stream', filename=generated_file_data["file_name"])
+# return FileResponse(path=generated_file_data["file_location"],
+# media_type='application/octet-stream',
+# filename=generated_file_data["file_name"])
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,

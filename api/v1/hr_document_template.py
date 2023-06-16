@@ -10,19 +10,24 @@ from core import get_db
 from schemas import HrDocumentTemplateCreate, HrDocumentTemplateUpdate, HrDocumentTemplateRead, SuggestCorrections
 from services import hr_document_template_service
 
-router = APIRouter(prefix="/hr-documents-template", tags=["HrDocumentTemplates"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/hr-documents-template",
+    tags=["HrDocumentTemplates"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[HrDocumentTemplateRead],
             summary="Get all HrDocumentTemplate")
 async def get_all(*,
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends(),
-    skip: int = 0,
-    name: str = None,
-    limit: int = 10
-):
+                  db: Session = Depends(get_db),
+                  Authorize: AuthJWT = Depends(),
+                  skip: int = 0,
+                  name: str = None,
+                  limit: int = 10
+                  ):
     """
         Get all HrDocumentTemplate
 
@@ -35,11 +40,11 @@ async def get_all(*,
 
 @router.get('/archive')
 async def get_all_archived(*,
-    db: Session = Depends(get_db),
-    skip: int = 0,
-    limit: int = 10,
-    Authorize: AuthJWT = Depends(),
-):
+                           db: Session = Depends(get_db),
+                           skip: int = 0,
+                           limit: int = 10,
+                           Authorize: AuthJWT = Depends(),
+                           ):
     Authorize.jwt_required()
     return hr_document_template_service.get_all_archived(db, skip, limit)
 
@@ -49,10 +54,10 @@ async def get_all_archived(*,
              response_model=HrDocumentTemplateRead,
              summary="Create HrDocumentTemplate")
 async def create(*,
-    db: Session = Depends(get_db),
-    body: HrDocumentTemplateCreate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 body: HrDocumentTemplateCreate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Create HrDocumentTemplate
 
@@ -75,10 +80,10 @@ async def create(*,
             response_model=HrDocumentTemplateRead,
             summary="Get HrDocumentTemplate by id")
 async def get_by_id(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                    db: Session = Depends(get_db),
+                    id: uuid.UUID,
+                    Authorize: AuthJWT = Depends()
+                    ):
     """
         Get HrDocumentTemplate by id
 
@@ -91,29 +96,30 @@ async def get_by_id(*,
 @router.get("/steps/{id}", dependencies=[Depends(HTTPBearer())],
             summary="Get HrDocumentTemplate by step id")
 async def get_steps_by_document_template_id(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    user_id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                                            db: Session = Depends(get_db),
+                                            id: uuid.UUID,
+                                            user_id: uuid.UUID,
+                                            Authorize: AuthJWT = Depends()
+                                            ):
     """
         Get HrDocumentTemplate by step id
 
         - **id**: UUID - required.
     """
     Authorize.jwt_required()
-    return hr_document_template_service.get_steps_by_document_template_id(db, id, user_id)
+    return hr_document_template_service.get_steps_by_document_template_id(
+        db, id, user_id)
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=HrDocumentTemplateRead,
             summary="Update HrDocumentTemplate")
 async def update(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    body: HrDocumentTemplateUpdate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 body: HrDocumentTemplateUpdate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Update HrDocumentTeplate
 
@@ -139,10 +145,10 @@ async def update(*,
                dependencies=[Depends(HTTPBearer())],
                summary="Delete HrDocumentTemplate")
 async def delete(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Delete HrDocumentTemplate
 
@@ -154,19 +160,20 @@ async def delete(*,
 
 @router.get('/duplicate/{id}', status_code=status.HTTP_201_CREATED)
 async def duplicate(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                    db: Session = Depends(get_db),
+                    id: uuid.UUID,
+                    Authorize: AuthJWT = Depends()
+                    ):
     Authorize.jwt_required()
     hr_document_template_service.duplicate(db, id)
 
+
 @router.post('/corrections/')
 async def suggest_corrections(*,
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends(),
-    body: SuggestCorrections
-):
+                              db: Session = Depends(get_db),
+                              Authorize: AuthJWT = Depends(),
+                              body: SuggestCorrections
+                              ):
     Authorize.jwt_required()
     current_user_id = Authorize.get_jwt_subject()
     await hr_document_template_service.suggest_corrections(db, body, current_user_id)

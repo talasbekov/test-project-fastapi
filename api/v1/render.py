@@ -17,16 +17,21 @@ class ConvertCandidateTemplate(BaseModel):
     candidate_id: uuid.UUID
 
 
-router = APIRouter(prefix="/render", tags=["Render Jinja"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/render",
+    tags=["Render Jinja"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.post("/render", dependencies=[Depends(HTTPBearer())],
              summary="Генерация документа 'Заключение спец. проверки'")
 async def generate(*,
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends(),
-    body: ConvertCandidateTemplate
-):
+                   db: Session = Depends(get_db),
+                   Authorize: AuthJWT = Depends(),
+                   body: ConvertCandidateTemplate
+                   ):
     """
         Генерация документа "Заключение спец. проверки"
 
@@ -34,15 +39,17 @@ async def generate(*,
         - **candidate_id**: UUID - required
     """
     Authorize.jwt_required()
-    return render_service.generate(db, candidate_id=body.candidate_id, template_id=body.hr_document_template_id)
+    return render_service.generate(
+        db, candidate_id=body.candidate_id, template_id=body.hr_document_template_id)
+
 
 @router.post("/render/finish-candidate", dependencies=[Depends(HTTPBearer())],
              summary="Генерация документа 'Заключение на зачисление'")
 async def render_finish_candidate(*,
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends(),
-    body: ConvertCandidateTemplate
-):
+                                  db: Session = Depends(get_db),
+                                  Authorize: AuthJWT = Depends(),
+                                  body: ConvertCandidateTemplate
+                                  ):
     """
         Генерация документа "Заключение на зачисление"
 
@@ -56,30 +63,31 @@ async def render_finish_candidate(*,
 class HTML(BaseModel):
     html: str
 
+
 @router.post('/convert', dependencies=[Depends(HTTPBearer())])
 async def convert(*,
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends(),
-    body: HTML
-):
+                  db: Session = Depends(get_db),
+                  Authorize: AuthJWT = Depends(),
+                  body: HTML
+                  ):
     Authorize.jwt_required()
     return render_service.convert_html_to_docx(body.html)
 
 
 @router.post('/convert_docx_to_html', dependencies=[Depends(HTTPBearer())])
 async def convert_docx_to_html(*,
-    Authorize: AuthJWT = Depends(),
-):
+                               Authorize: AuthJWT = Depends(),
+                               ):
     Authorize.jwt_required()
     return render_service.convert_docx_to_xml_to_html()
 
 
 @router.post('/convert/pdf')
 async def convert_html_to_pdf(*,
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends(),
-    body: HTML
-):
+                              db: Session = Depends(get_db),
+                              Authorize: AuthJWT = Depends(),
+                              body: HTML
+                              ):
     Authorize.jwt_required()
     return render_service.convert_html_to_pdf(body.html)
 
@@ -102,8 +110,11 @@ def septik(text, septik):
     consonants = 'жзкқлмнңпрстфхцчшщ'
     deaf = 'кқпстфхцчшщбвгдғ'
     last_char = text[-1]
-    last_vowel = next((char for char in reversed(text) if char in vowels), None)
-    last_consonant = next((char for char in reversed(text) if char in consonants), None)
+    last_vowel = next(
+        (char for char in reversed(text) if char in vowels),
+        None)
+    last_consonant = next(
+        (char for char in reversed(text) if char in consonants), None)
     last_is_vowel = last_char in vowels
     if septik == 1:
         if last_is_vowel:
@@ -142,11 +153,27 @@ def septik(text, septik):
     else:
         end = ''
     if 'кАЕ' in end:
-        end = end.replace('кАЕ', 'қа') if last_vowel in hard else end.replace('АЕ', 'е')
+        end = end.replace(
+            'кАЕ',
+            'қа') if last_vowel in hard else end.replace(
+            'АЕ',
+            'е')
     elif 'гАЕ' in end:
-        end = end.replace('гАЕ', 'ға') if last_vowel in hard else end.replace('АЕ', 'е')
+        end = end.replace(
+            'гАЕ',
+            'ға') if last_vowel in hard else end.replace(
+            'АЕ',
+            'е')
     elif 'АЕ' in end:
-        end = end.replace('АЕ', 'а') if last_vowel in hard else end.replace('АЕ', 'е')
+        end = end.replace(
+            'АЕ',
+            'а') if last_vowel in hard else end.replace(
+            'АЕ',
+            'е')
     elif 'ЫІ' in end:
-        end = end.replace('ЫІ', 'ы') if last_vowel in hard else end.replace('ЫІ', 'і')
+        end = end.replace(
+            'ЫІ',
+            'ы') if last_vowel in hard else end.replace(
+            'ЫІ',
+            'і')
     return text + end

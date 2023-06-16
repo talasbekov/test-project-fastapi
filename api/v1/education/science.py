@@ -21,11 +21,11 @@ router = APIRouter(prefix="/sciences",
             response_model=List[ScienceRead],
             summary="Get all Sciences")
 async def get_all(*,
-    db: Session = Depends(get_db),
-    skip: int = 0,
-    limit: int = 100,
-    Authorize: AuthJWT = Depends()
-):
+                  db: Session = Depends(get_db),
+                  skip: int = 0,
+                  limit: int = 100,
+                  Authorize: AuthJWT = Depends()
+                  ):
     """
         Get all Sciences
 
@@ -41,10 +41,10 @@ async def get_all(*,
              response_model=ScienceRead,
              summary="Create")
 async def create(*,
-    db: Session = Depends(get_db),
-    body: ScienceCreate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 body: ScienceCreate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Create new Science
 
@@ -58,10 +58,10 @@ async def create(*,
             response_model=ScienceRead,
             summary="Get Science by id")
 async def get_by_id(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                    db: Session = Depends(get_db),
+                    id: uuid.UUID,
+                    Authorize: AuthJWT = Depends()
+                    ):
     """
         Get Science by id
 
@@ -75,11 +75,11 @@ async def get_by_id(*,
             response_model=ScienceRead,
             summary="Update Science")
 async def update(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    body: ScienceUpdate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 body: ScienceUpdate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Update Science
 
@@ -93,14 +93,14 @@ async def update(*,
         obj_in=body)
 
 
-@router.delete("/{id}/",status_code=status.HTTP_204_NO_CONTENT,
+@router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
                summary="Delete Science")
 async def delete(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Delete Science
 

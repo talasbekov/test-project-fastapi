@@ -10,18 +10,23 @@ from core import get_db
 from schemas import SportDegreeCreate, SportDegreeUpdate, SportDegreeRead
 from services import sport_degree_service
 
-router = APIRouter(prefix="/sport_degree", tags=["SportDegree"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/sport_degree",
+    tags=["SportDegree"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[SportDegreeRead],
             summary="Get all SportDegree")
 async def get_all(*,
-    db: Session = Depends(get_db),
-    skip: int = 0,
-    limit: int = 100,
-    Authorize: AuthJWT = Depends()
-):
+                  db: Session = Depends(get_db),
+                  skip: int = 0,
+                  limit: int = 100,
+                  Authorize: AuthJWT = Depends()
+                  ):
     """
         Get all SportDegree
 
@@ -37,10 +42,10 @@ async def get_all(*,
              response_model=SportDegreeRead,
              summary="Create SportDegree")
 async def create(*,
-    db: Session = Depends(get_db),
-    body: SportDegreeCreate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 body: SportDegreeCreate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Create new SportDegree
 
@@ -52,14 +57,15 @@ async def create(*,
     Authorize.jwt_required()
     return sport_degree_service.create(db, body)
 
+
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=SportDegreeRead,
             summary="Get SportDegree by id")
 async def get_by_id(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                    db: Session = Depends(get_db),
+                    id: uuid.UUID,
+                    Authorize: AuthJWT = Depends()
+                    ):
     """
         Get SportDegree by id
 
@@ -73,11 +79,11 @@ async def get_by_id(*,
             response_model=SportDegreeRead,
             summary="Update SportDegree")
 async def update(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    body: SportDegreeUpdate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 body: SportDegreeUpdate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Update SportDegree
 
@@ -94,14 +100,14 @@ async def update(*,
         obj_in=body)
 
 
-@router.delete("/{id}/",status_code=status.HTTP_204_NO_CONTENT,
+@router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
                summary="Delete SportDegree")
 async def delete(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Delete SportDegree
 

@@ -10,18 +10,23 @@ from core import get_db
 from schemas import HrVacancyRequirementsRead, HrVacancyRequirementsCreate, HrVacancyRequirementsUpdate
 from services import hr_vacancy_requirement_service
 
-router = APIRouter(prefix="/hr_vacancy_requirements", tags=["HrVacancyRequirements"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/hr_vacancy_requirements",
+    tags=["HrVacancyRequirements"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[HrVacancyRequirementsRead],
             summary="Get all HrVacancyRequirements")
 async def get_all(*,
-    db: Session = Depends(get_db),
-    skip: int = 0,
-    limit: int = 100,
-    Authorize: AuthJWT = Depends()
-):
+                  db: Session = Depends(get_db),
+                  skip: int = 0,
+                  limit: int = 100,
+                  Authorize: AuthJWT = Depends()
+                  ):
     """
         Get all HrVacancyRequirements
 
@@ -33,14 +38,14 @@ async def get_all(*,
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
-            dependencies=[Depends(HTTPBearer())],
-            response_model=HrVacancyRequirementsRead,
-            summary="Create HrVacancyRequirements")
+             dependencies=[Depends(HTTPBearer())],
+             response_model=HrVacancyRequirementsRead,
+             summary="Create HrVacancyRequirements")
 async def create(*,
-    body: HrVacancyRequirementsCreate,
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends()
-):
+                 body: HrVacancyRequirementsCreate,
+                 db: Session = Depends(get_db),
+                 Authorize: AuthJWT = Depends()
+                 ):
     Authorize.jwt_required()
     return hr_vacancy_requirement_service.create(db, body)
 
@@ -49,10 +54,10 @@ async def create(*,
             response_model=HrVacancyRequirementsRead,
             summary="Get HrVacancyRequirements by id")
 async def get_by_id(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                    db: Session = Depends(get_db),
+                    id: uuid.UUID,
+                    Authorize: AuthJWT = Depends()
+                    ):
     """
         Get HrVacancyRequirements by id
 
@@ -66,23 +71,24 @@ async def get_by_id(*,
             response_model=HrVacancyRequirementsRead,
             summary="Update HrVacancyRequirements")
 async def update(*,
-    id: uuid.UUID,
-    body: HrVacancyRequirementsUpdate,
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends()
-):
+                 id: uuid.UUID,
+                 body: HrVacancyRequirementsUpdate,
+                 db: Session = Depends(get_db),
+                 Authorize: AuthJWT = Depends()
+                 ):
     Authorize.jwt_required()
     hr_vacancy_requirement = hr_vacancy_requirement_service.get_by_id(db, id)
-    return hr_vacancy_requirement_service.update(db, db_obj=hr_vacancy_requirement, obj_in=body)
+    return hr_vacancy_requirement_service.update(
+        db, db_obj=hr_vacancy_requirement, obj_in=body)
 
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
-            dependencies=[Depends(HTTPBearer())],
-            summary="Delete HrVacancyRequirements")
+               dependencies=[Depends(HTTPBearer())],
+               summary="Delete HrVacancyRequirements")
 async def delete(*,
-    id: uuid.UUID,
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends()
-):
+                 id: uuid.UUID,
+                 db: Session = Depends(get_db),
+                 Authorize: AuthJWT = Depends()
+                 ):
     Authorize.jwt_required()
     hr_vacancy_requirement_service.remove(db, id)

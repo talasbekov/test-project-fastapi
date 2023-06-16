@@ -10,18 +10,23 @@ from core import get_db
 from schemas import BadgeCreate, BadgeRead, BadgeUpdate, BadgeTypeRead
 from services import badge_service
 
-router = APIRouter(prefix="/badges", tags=["Badges"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/badges",
+    tags=["Badges"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[BadgeTypeRead],
             summary="Get all Badges")
 async def get_all(*,
-    db: Session = Depends(get_db),
-    skip: int = 0,
-    limit: int = 100,
-    Authorize: AuthJWT = Depends()
-):
+                  db: Session = Depends(get_db),
+                  skip: int = 0,
+                  limit: int = 100,
+                  Authorize: AuthJWT = Depends()
+                  ):
     """
         Get all Badges
 
@@ -31,15 +36,16 @@ async def get_all(*,
     Authorize.jwt_required()
     return badge_service.get_multiple(db, skip, limit)
 
+
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=BadgeRead,
              summary="Create")
 async def create(*,
-    db: Session = Depends(get_db),
-    body: BadgeCreate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 body: BadgeCreate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Create new badge
 
@@ -49,14 +55,15 @@ async def create(*,
     Authorize.jwt_required()
     return badge_service.create_badge(db, body)
 
+
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=BadgeTypeRead,
             summary="Get Badge by id")
 async def get_by_id(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                    db: Session = Depends(get_db),
+                    id: uuid.UUID,
+                    Authorize: AuthJWT = Depends()
+                    ):
     """
         Get badge by id
 
@@ -70,11 +77,11 @@ async def get_by_id(*,
             response_model=BadgeTypeRead,
             summary="Update Badge")
 async def update(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    body: BadgeUpdate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 body: BadgeUpdate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Update badge
 
@@ -86,14 +93,14 @@ async def update(*,
     return badge_service.update_badge(db, id, body)
 
 
-@router.delete("/{id}/",status_code=status.HTTP_204_NO_CONTENT,
+@router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
                summary="Delete Badge")
 async def delete(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Delete badge
 
@@ -105,9 +112,9 @@ async def delete(*,
 
 @router.get('/black-beret', dependencies=[Depends(HTTPBearer())])
 async def black_beret(*,
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends()
-):
+                      db: Session = Depends(get_db),
+                      Authorize: AuthJWT = Depends()
+                      ):
     """
         Get black beret badge
     """

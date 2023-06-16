@@ -10,7 +10,12 @@ from core import get_db
 from schemas import CandidateStageTypeCreate, CandidateStageTypeRead, CandidateStageTypeUpdate
 from services import candidate_stage_type_service
 
-router = APIRouter(prefix="/candidate_stage_type", tags=["CandidateStageType"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/candidate_stage_type",
+    tags=["CandidateStageType"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
@@ -84,7 +89,8 @@ async def update(
     """
     Authorize.jwt_required()
     return candidate_stage_type_service.update(db,
-                                               db_obj=candidate_stage_type_service.get_by_id(db, id),
+                                               db_obj=candidate_stage_type_service.get_by_id(
+                                                   db, id),
                                                obj_in=body)
 
 

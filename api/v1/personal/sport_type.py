@@ -10,18 +10,23 @@ from core import get_db
 from schemas import SportTypeCreate, SportTypeRead, SportTypeUpdate
 from services import sport_type_service
 
-router = APIRouter(prefix="/sport_type", tags=["SportType"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/sport_type",
+    tags=["SportType"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[SportTypeRead],
             summary="Get all SportType")
 async def get_all(*,
-    db: Session = Depends(get_db),
-    skip: int = 0,
-    limit: int = 100,
-    Authorize: AuthJWT = Depends()
-):
+                  db: Session = Depends(get_db),
+                  skip: int = 0,
+                  limit: int = 100,
+                  Authorize: AuthJWT = Depends()
+                  ):
     """
         Get all SportType
 
@@ -33,14 +38,14 @@ async def get_all(*,
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
-                dependencies=[Depends(HTTPBearer())],
-                response_model=SportTypeRead,
-                summary="Create SportType")
+             dependencies=[Depends(HTTPBearer())],
+             response_model=SportTypeRead,
+             summary="Create SportType")
 async def create(*,
-    db: Session = Depends(get_db),
-    body: SportTypeCreate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 body: SportTypeCreate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Create new SportType
 
@@ -54,10 +59,10 @@ async def create(*,
             response_model=SportTypeRead,
             summary="Get SportType by id")
 async def get_by_id(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                    db: Session = Depends(get_db),
+                    id: uuid.UUID,
+                    Authorize: AuthJWT = Depends()
+                    ):
     """
         Get SportType by id
     """
@@ -69,28 +74,29 @@ async def get_by_id(*,
             response_model=SportTypeRead,
             summary="Update SportType by id")
 async def update(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    body: SportTypeUpdate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 body: SportTypeUpdate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Update SportType by id
 
         - **name**: str
     """
     Authorize.jwt_required()
-    return sport_type_service.update(db, db_obj=sport_type_service.get_by_id(db, id), obj_in=body)
+    return sport_type_service.update(
+        db, db_obj=sport_type_service.get_by_id(db, id), obj_in=body)
 
 
 @router.delete("/{id}/", dependencies=[Depends(HTTPBearer())],
-                response_model=SportTypeRead,
-                summary="Delete SportType by id")
+               response_model=SportTypeRead,
+               summary="Delete SportType by id")
 async def delete(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Delete SportType by id
     """

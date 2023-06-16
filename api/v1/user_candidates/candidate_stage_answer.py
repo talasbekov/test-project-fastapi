@@ -56,7 +56,7 @@ async def get_by_id(
 
 
 @router.get("/all/candidate/{candidate_id}", dependencies=[Depends(HTTPBearer())],
-            
+
             summary="Get all CandidateStageAnswer by candidate_id")
 async def get_all_by_candidate_id(
         db: Session = Depends(get_db),
@@ -69,7 +69,8 @@ async def get_all_by_candidate_id(
         - **candidate_id**: required and should exist in the database.
     """
     Authorize.jwt_required()
-    return candidate_stage_answer_service.get_all_by_candidate_id(db, candidate_id)
+    return candidate_stage_answer_service.get_all_by_candidate_id(
+        db, candidate_id)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
@@ -154,7 +155,8 @@ async def update(
     """
     Authorize.jwt_required()
     return candidate_stage_answer_service.update(db,
-                                                 db_obj=candidate_stage_answer_service.get_by_id(db, id),
+                                                 db_obj=candidate_stage_answer_service.get_by_id(
+                                                     db, id),
                                                  obj_in=body)
 
 

@@ -11,7 +11,12 @@ from schemas import (CandidateStageInfoCreate, CandidateStageInfoRead, Candidate
                      CandidateStageInfoSendToApproval)
 from services import candidate_stage_info_service
 
-router = APIRouter(prefix="/candidate_stage_info", tags=["CandidateStageInfo"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/candidate_stage_info",
+    tags=["CandidateStageInfo"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
@@ -32,7 +37,8 @@ async def get_all(
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
-    return candidate_stage_info_service.get_all_by_staff_unit_id(db, filter.lstrip().rstrip(), skip, limit, role)
+    return candidate_stage_info_service.get_all_by_staff_unit_id(
+        db, filter.lstrip().rstrip(), skip, limit, role)
 
 
 @router.get("/{id}", dependencies=[Depends(HTTPBearer())],
@@ -69,7 +75,8 @@ async def get_all_by_candidate_id(
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
-    return candidate_stage_info_service.get_all_by_candidate_id(db, skip, limit, candidate_id, role)
+    return candidate_stage_info_service.get_all_by_candidate_id(
+        db, skip, limit, candidate_id, role)
 
 
 @router.post("", dependencies=[Depends(HTTPBearer())],
@@ -111,7 +118,8 @@ async def send_to_approval(
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
-    return candidate_stage_info_service.send_to_approval(db=db, id=id, body=body, staff_unit_id=role)
+    return candidate_stage_info_service.send_to_approval(
+        db=db, id=id, body=body, staff_unit_id=role)
 
 
 @router.put("/{id}/sign", dependencies=[Depends(HTTPBearer())],
@@ -171,5 +179,6 @@ async def update(
     """
     Authorize.jwt_required()
     return candidate_stage_info_service.update(db,
-                                               db_obj=candidate_stage_info_service.get_by_id(db, id),
+                                               db_obj=candidate_stage_info_service.get_by_id(
+                                                   db, id),
                                                obj_in=body)

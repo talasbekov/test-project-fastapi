@@ -4,14 +4,19 @@ from fastapi_jwt_auth import AuthJWT
 
 from models import AgeGroup
 
-router = APIRouter(prefix="/age_group", tags=["AgeGroup"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/age_group",
+    tags=["AgeGroup"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             summary="Get all AgeGroup")
 async def get_all(*,
-    Authorize: AuthJWT = Depends()
-):
+                  Authorize: AuthJWT = Depends()
+                  ):
     """
         Get all AgeGroupEnum
 

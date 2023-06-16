@@ -21,11 +21,11 @@ router = APIRouter(prefix="/academic_degrees",
             response_model=List[AcademicDegreeRead],
             summary="Get all AcademicDegrees")
 async def get_all(*,
-    db: Session = Depends(get_db),
-    skip: int = 0,
-    limit: int = 100,
-    Authorize: AuthJWT = Depends()
-):
+                  db: Session = Depends(get_db),
+                  skip: int = 0,
+                  limit: int = 100,
+                  Authorize: AuthJWT = Depends()
+                  ):
     """
         Get all AcademicDegrees
 
@@ -41,10 +41,10 @@ async def get_all(*,
              response_model=AcademicDegreeRead,
              summary="Create")
 async def create(*,
-    db: Session = Depends(get_db),
-    body: AcademicDegreeCreate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 body: AcademicDegreeCreate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Create new AcademicDegree
 
@@ -58,10 +58,10 @@ async def create(*,
             response_model=AcademicDegreeRead,
             summary="Get AcademicDegree by id")
 async def get_by_id(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                    db: Session = Depends(get_db),
+                    id: uuid.UUID,
+                    Authorize: AuthJWT = Depends()
+                    ):
     """
         Get AcademicDegree by id
 
@@ -75,11 +75,11 @@ async def get_by_id(*,
             response_model=AcademicDegreeRead,
             summary="Update AcademicDegree")
 async def update(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    body: AcademicDegreeUpdate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 body: AcademicDegreeUpdate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Update AcademicDegree
 
@@ -93,14 +93,14 @@ async def update(*,
         obj_in=body)
 
 
-@router.delete("/{id}/",status_code=status.HTTP_204_NO_CONTENT,
+@router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
                summary="Delete AcademicDegree")
 async def delete(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Delete AcademicDegree
 

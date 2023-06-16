@@ -11,18 +11,23 @@ from schemas import (DrivingLicenseCreate, DrivingLicenseRead,
                      DrivingLicenseUpdate, DrivingLicenseLinkUpdate)
 from services import driving_license_service
 
-router = APIRouter(prefix="/driving_license", tags=["DrivingLicense"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/driving_license",
+    tags=["DrivingLicense"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[DrivingLicenseRead],
             summary="Get all DrivingLicense")
 async def get_all(*,
-    db: Session = Depends(get_db),
-    skip: int = 0,
-    limit: int = 100,
-    Authorize: AuthJWT = Depends()
-):
+                  db: Session = Depends(get_db),
+                  skip: int = 0,
+                  limit: int = 100,
+                  Authorize: AuthJWT = Depends()
+                  ):
     """
         Get all DrivingLicense
 
@@ -38,10 +43,10 @@ async def get_all(*,
              response_model=DrivingLicenseRead,
              summary="Create DrivingLicense")
 async def create(*,
-    db: Session = Depends(get_db),
-    body: DrivingLicenseCreate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 body: DrivingLicenseCreate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Create new DrivingLicense
 
@@ -60,10 +65,10 @@ async def create(*,
             response_model=DrivingLicenseRead,
             summary="Get DrivingLicense by id")
 async def get_by_id(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                    db: Session = Depends(get_db),
+                    id: uuid.UUID,
+                    Authorize: AuthJWT = Depends()
+                    ):
     """
         Get DrivingLicense by id
 
@@ -77,11 +82,11 @@ async def get_by_id(*,
             response_model=DrivingLicenseRead,
             summary="Update DrivingLicense")
 async def update(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    body: DrivingLicenseUpdate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 body: DrivingLicenseUpdate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Update DrivingLicense
 
@@ -95,14 +100,14 @@ async def update(*,
         obj_in=body)
 
 
-@router.delete("/{id}/",status_code=status.HTTP_204_NO_CONTENT,
+@router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
                summary="Delete DrivingLicense")
 async def delete(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Delete DrivingLicense
 
@@ -116,11 +121,11 @@ async def delete(*,
             status_code=status.HTTP_202_ACCEPTED,
             summary='Update DrivingLicense document_link')
 async def update_document_link(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    body: DrivingLicenseLinkUpdate,
-    Authorize: AuthJWT = Depends()
-):
+                               db: Session = Depends(get_db),
+                               id: uuid.UUID,
+                               body: DrivingLicenseLinkUpdate,
+                               Authorize: AuthJWT = Depends()
+                               ):
     """
         Update DrivingLicense document_link
 

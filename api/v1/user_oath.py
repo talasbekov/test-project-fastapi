@@ -10,18 +10,23 @@ from core import get_db
 from schemas import UserOathCreate, UserOathRead, UserOathUpdate
 from services import user_oath_service
 
-router = APIRouter(prefix="/user_oaths", tags=["UserOath"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/user_oaths",
+    tags=["UserOath"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[UserOathRead],
             summary="Get all User Oaths")
 async def get_all(*,
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends(),
-    skip: int = 0,
-    limit: int = 10
-):
+                  db: Session = Depends(get_db),
+                  Authorize: AuthJWT = Depends(),
+                  skip: int = 0,
+                  limit: int = 10
+                  ):
     """
        Get all User Oaths
 
@@ -37,10 +42,10 @@ async def get_all(*,
              response_model=UserOathRead,
              summary="Create User Oath")
 async def create(*,
-    db: Session = Depends(get_db),
-    body: UserOathCreate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 body: UserOathCreate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Create User Oath
 
@@ -57,11 +62,11 @@ async def create(*,
             response_model=UserOathRead,
             summary="Update User Oath")
 async def update(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    body: UserOathUpdate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 body: UserOathUpdate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Update User Oath
 
@@ -80,10 +85,10 @@ async def update(*,
             response_model=UserOathRead,
             summary="Get User Oath by id")
 async def get_by_id(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                    db: Session = Depends(get_db),
+                    id: uuid.UUID,
+                    Authorize: AuthJWT = Depends()
+                    ):
     """
         Get User Oath by id
 
@@ -97,10 +102,10 @@ async def get_by_id(*,
                dependencies=[Depends(HTTPBearer())],
                summary="Delete User Oath")
 async def delete(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Delete User Oath
 

@@ -10,17 +10,22 @@ from core import get_db
 from schemas import (HrDocumentStatusRead)
 from services import hr_document_status_service
 
-router = APIRouter(prefix="/hr-document-status", tags=["HrDocumentStatus"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/hr-document-status",
+    tags=["HrDocumentStatus"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", response_model=List[HrDocumentStatusRead],
             summary="Get all HrDocumentStatus")
 async def get_all(*,
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends(),
-    skip: int = 0,
-    limit: int = 10
-):
+                  db: Session = Depends(get_db),
+                  Authorize: AuthJWT = Depends(),
+                  skip: int = 0,
+                  limit: int = 10
+                  ):
     """
         Get all HrDocumentStatus
 
@@ -34,10 +39,10 @@ async def get_all(*,
 @router.get("/{id}/", status_code=status.HTTP_200_OK,
             summary="Get HrDocumentStatus by id")
 async def get_by_id(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                    db: Session = Depends(get_db),
+                    id: uuid.UUID,
+                    Authorize: AuthJWT = Depends()
+                    ):
     """
         Get HrDocumentStatus by id
 

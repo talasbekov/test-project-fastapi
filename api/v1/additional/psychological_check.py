@@ -32,7 +32,8 @@ async def get_all(*,
     """
     Authorize.jwt_required()
     credentials = Authorize.get_jwt_subject()
-    return psychological_check_service.get_multi_by_user_id(db, credentials, skip, limit)
+    return psychological_check_service.get_multi_by_user_id(
+        db, credentials, skip, limit)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,

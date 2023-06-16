@@ -10,18 +10,23 @@ from core import get_db
 from schemas import FamilyStatusRead
 from services import family_status_service
 
-router = APIRouter(prefix="/family_status", tags=["FamilyStatus"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/family_status",
+    tags=["FamilyStatus"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[FamilyStatusRead],
             summary="Get all FamilyStatus")
 async def get_all(*,
-    db: Session = Depends(get_db),
-    skip: int = 0,
-    limit: int = 100,
-    Authorize: AuthJWT = Depends()
-):
+                  db: Session = Depends(get_db),
+                  skip: int = 0,
+                  limit: int = 100,
+                  Authorize: AuthJWT = Depends()
+                  ):
     """
         Get all FamilyStatus
 
@@ -36,10 +41,10 @@ async def get_all(*,
             response_model=FamilyStatusRead,
             summary="Get FamilyStatus by id")
 async def get_by_id(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                    db: Session = Depends(get_db),
+                    id: uuid.UUID,
+                    Authorize: AuthJWT = Depends()
+                    ):
     """
         Get FamilyStatus by id
 
@@ -48,12 +53,13 @@ async def get_by_id(*,
     Authorize.jwt_required()
     return family_status_service.get_by_id(db, id)
 
+
 @router.get('/user/{user_id}', dependencies=[Depends(HTTPBearer())],
             response_model=FamilyStatusRead)
 async def get_profile_by_id(*,
-    db: Session = Depends(get_db),
-    user_id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):   
+                            db: Session = Depends(get_db),
+                            user_id: uuid.UUID,
+                            Authorize: AuthJWT = Depends()
+                            ):
     Authorize.jwt_required()
     return family_status_service.get_by_user_id(db, user_id)

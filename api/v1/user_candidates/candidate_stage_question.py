@@ -89,7 +89,8 @@ async def update(
     """
     Authorize.jwt_required()
     return candidate_stage_question_service.update(db,
-                                                   db_obj=candidate_stage_question_service.get_by_id(db, id),
+                                                   db_obj=candidate_stage_question_service.get_by_id(
+                                                       db, id),
                                                    obj_in=body)
 
 

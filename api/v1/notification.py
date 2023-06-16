@@ -9,18 +9,23 @@ from core import get_db
 from schemas import NotificationRead
 from services import notification_service
 
-router = APIRouter(prefix="/notifications", tags=["Notifications"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/notifications",
+    tags=["Notifications"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[NotificationRead],
             summary="Get all Notifications")
 async def get_all(*,
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends(),
-    skip: int = 0,
-    limit: int = 10
-):
+                  db: Session = Depends(get_db),
+                  Authorize: AuthJWT = Depends(),
+                  skip: int = 0,
+                  limit: int = 10
+                  ):
     """
        Get all Notifications
 
@@ -29,4 +34,5 @@ async def get_all(*,
    """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
-    return notification_service.get_received_by_user_id(db, user_id, skip, limit)
+    return notification_service.get_received_by_user_id(
+        db, user_id, skip, limit)

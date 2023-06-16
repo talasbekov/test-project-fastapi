@@ -11,7 +11,12 @@ from models.position import CategoryCodeEnum
 from schemas import PositionCreate, PositionUpdate, PositionRead
 from services import position_service
 
-router = APIRouter(prefix="/positions", tags=["Positions"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/positions",
+    tags=["Positions"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],

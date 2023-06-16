@@ -7,7 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import (ArchiveDocumentStaffFunctionRead, 
+from schemas import (ArchiveDocumentStaffFunctionRead,
                      ArchiveDocumentStaffFunctionUpdate)
 from services import document_archive_staff_function_service
 
@@ -20,11 +20,11 @@ router = APIRouter(prefix="/archive_document_staff_function",
             response_model=List[ArchiveDocumentStaffFunctionRead],
             summary="Get all ArchiveDocumentStaffFunction")
 async def get_all(*,
-    db: Session = Depends(get_db),
-    skip: int = 0,
-    limit: int = 100,
-    Authorize: AuthJWT = Depends()
-):
+                  db: Session = Depends(get_db),
+                  skip: int = 0,
+                  limit: int = 100,
+                  Authorize: AuthJWT = Depends()
+                  ):
     """
        Get all DocumentStaffFunction
 
@@ -39,10 +39,10 @@ async def get_all(*,
             response_model=ArchiveDocumentStaffFunctionRead,
             summary="Get ArchiveDocumentStaffFunction by id")
 async def get_by_id(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                    db: Session = Depends(get_db),
+                    id: uuid.UUID,
+                    Authorize: AuthJWT = Depends()
+                    ):
     """
         Get DocumentStaffFunction by id
 
@@ -56,11 +56,11 @@ async def get_by_id(*,
             response_model=ArchiveDocumentStaffFunctionRead,
             summary="Update ArchiveDocumentStaffFunction")
 async def update(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    body: ArchiveDocumentStaffFunctionUpdate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 body: ArchiveDocumentStaffFunctionUpdate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Update DocumentStaffFunction
 
@@ -70,4 +70,3 @@ async def update(*,
         db,
         db_obj=document_archive_staff_function_service.get_by_id(db, id),
         obj_in=body)
-

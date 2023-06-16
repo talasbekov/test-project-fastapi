@@ -10,17 +10,22 @@ from core import get_db
 from schemas import UserStatCreate, UserStatUpdate, UserStatRead
 from services import user_stat_service, user_service
 
-router = APIRouter(prefix="/user-stats", tags=["UserStats"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/user-stats",
+    tags=["UserStats"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", response_model=List[UserStatRead], dependencies=[Depends(HTTPBearer())],
             summary="Get all UserStats")
 async def get_all(*,
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends(),
-    skip: int = 0,
-    limit: int = 10
-):
+                  db: Session = Depends(get_db),
+                  Authorize: AuthJWT = Depends(),
+                  skip: int = 0,
+                  limit: int = 10
+                  ):
     """
         Get all UserStats
 
@@ -36,10 +41,10 @@ async def get_all(*,
              response_model=UserStatRead,
              summary="Create UserStat")
 async def create(*,
-    db: Session = Depends(get_db),
-    body: UserStatCreate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 body: UserStatCreate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Create UserStat
 
@@ -59,10 +64,10 @@ async def create(*,
             response_model=UserStatRead,
             summary="Get UserStat by id")
 async def get_by_id(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                    db: Session = Depends(get_db),
+                    id: uuid.UUID,
+                    Authorize: AuthJWT = Depends()
+                    ):
     """
         Get UserStat by id
 
@@ -76,11 +81,11 @@ async def get_by_id(*,
             response_model=UserStatRead,
             summary="Update UserStat")
 async def update(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    body: UserStatUpdate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 body: UserStatUpdate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Update UserStat
 
@@ -105,10 +110,10 @@ async def update(*,
                dependencies=[Depends(HTTPBearer())],
                summary="Delete UserStat")
 async def delete(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Delete UserStat
 

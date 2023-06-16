@@ -47,10 +47,11 @@ async def register(form: RegistrationForm, db: Session = Depends(get_db)):
     return auth_service.register(form, db)
 
 
-@router.post("/register/candidate", summary="Register Candidate", dependencies=[Depends(HTTPBearer())])
+@router.post("/register/candidate", summary="Register Candidate",
+             dependencies=[Depends(HTTPBearer())])
 async def register_candidate(form: CandidateRegistrationForm,
-                   Authorize: AuthJWT = Depends(),
-                   db: Session = Depends(get_db)):
+                             Authorize: AuthJWT = Depends(),
+                             db: Session = Depends(get_db)):
     """
         Register new candidate to the system.
 
@@ -58,14 +59,18 @@ async def register_candidate(form: CandidateRegistrationForm,
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
-    return auth_service.register_candidate(form=form, db=db, staff_unit_id=role)
+    return auth_service.register_candidate(
+        form=form, db=db, staff_unit_id=role)
 
 
 @router.get('/refresh', dependencies=[Depends(HTTPBearer())])
-def refresh_token(Authorize: AuthJWT = Depends(), db: Session = Depends(get_db)):
+def refresh_token(Authorize: AuthJWT = Depends(),
+                  db: Session = Depends(get_db)):
     try:
         Authorize.jwt_refresh_token_required()
     except Exception:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Invalid token")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token")
 
     return auth_service.refresh_token(db, Authorize)

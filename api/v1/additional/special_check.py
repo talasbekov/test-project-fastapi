@@ -11,18 +11,23 @@ from core import get_db
 from schemas import SpecialCheckCreate, SpecialCheckRead, SpecialCheckUpdate
 from services import special_check_service, profile_service
 
-router = APIRouter(prefix="/special-check", tags=["Special Check"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/special-check",
+    tags=["Special Check"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[SpecialCheckRead],
             summary="Get all Polygraph Check")
 async def get_all(*,
-    db: Session = Depends(get_db),
-    skip: int = 0,
-    limit: int = 100,
-    Authorize: AuthJWT = Depends()
-):
+                  db: Session = Depends(get_db),
+                  skip: int = 0,
+                  limit: int = 100,
+                  Authorize: AuthJWT = Depends()
+                  ):
     """
         Get all Abroad Travel
 
@@ -30,19 +35,20 @@ async def get_all(*,
         - **limit**: int - The maximum number of abroad travel to return in the response. This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    credentials = Authorize.get_jwt_subject() 
-    return special_check_service.get_multi_by_user_id(db, credentials, skip, limit)
+    credentials = Authorize.get_jwt_subject()
+    return special_check_service.get_multi_by_user_id(
+        db, credentials, skip, limit)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
-                dependencies=[Depends(HTTPBearer())],
-                response_model=SpecialCheckRead,
-                summary="Create")
+             dependencies=[Depends(HTTPBearer())],
+             response_model=SpecialCheckRead,
+             summary="Create")
 async def create(*,
-    db: Session = Depends(get_db),
-    body: SpecialCheckCreate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 body: SpecialCheckCreate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Create new abroad travel
 
@@ -50,7 +56,7 @@ async def create(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    credentials = Authorize.get_jwt_subject()  
+    credentials = Authorize.get_jwt_subject()
     profile = profile_service.get_by_user_id(db, credentials)
     body.profile_id = profile.additional_profile.id
     return special_check_service.create(db, body)
@@ -60,11 +66,11 @@ async def create(*,
             response_model=SpecialCheckRead,
             summary="Update Abroad Travel by id")
 async def update(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    body: SpecialCheckUpdate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 body: SpecialCheckUpdate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Update abroad travel by id
 
@@ -77,13 +83,13 @@ async def update(*,
 
 
 @router.delete("/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=SpecialCheckRead,
-            summary="Delete Abroad Travel by id")
+               response_model=SpecialCheckRead,
+               summary="Delete Abroad Travel by id")
 async def delete(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Delete abroad travel by id
 

@@ -12,17 +12,23 @@ from services import privelege_emergency_service
 from models import FormEnum
 
 
-router = APIRouter(prefix="/privelege_emergencies", tags=["PrivelegeEmergency"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/privelege_emergencies",
+    tags=["PrivelegeEmergency"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
+
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[PrivelegeEmergencyRead],
             summary="Get all Privelege Emergencies")
 async def get_all(*,
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends(),
-    skip: int = 0,
-    limit: int = 10
-):
+                  db: Session = Depends(get_db),
+                  Authorize: AuthJWT = Depends(),
+                  skip: int = 0,
+                  limit: int = 10
+                  ):
     """
        Get all Military Units
 
@@ -38,10 +44,10 @@ async def get_all(*,
              response_model=PrivelegeEmergencyRead,
              summary="Create Military Unit")
 async def create(*,
-    db: Session = Depends(get_db),
-    body: PrivelegeEmergencyCreate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 body: PrivelegeEmergencyCreate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Create Military Unit
 
@@ -54,24 +60,25 @@ async def create(*,
 @router.get("/forms/", dependencies=[Depends(HTTPBearer())],
             summary="Get all Privelege Emergency Forms")
 async def get_all_forms(*,
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends(),
-):
+                        db: Session = Depends(get_db),
+                        Authorize: AuthJWT = Depends(),
+                        ):
     """
        Get all Privelege Emergency Forms
    """
     Authorize.jwt_required()
     return [form.value for form in FormEnum]
 
+
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=PrivelegeEmergencyRead,
             summary="Update Privelege Emergency")
 async def update(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    body: PrivelegeEmergencyUpdate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 body: PrivelegeEmergencyUpdate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Update Privelege Emergency
 
@@ -81,14 +88,15 @@ async def update(*,
     privelege_emergency = privelege_emergency_service.get_by_id(db, id)
     return privelege_emergency_service.update(db, privelege_emergency, body)
 
+
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=PrivelegeEmergencyRead,
             summary="Get Privelege Emergency Unit by id")
 async def get_by_id(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                    db: Session = Depends(get_db),
+                    id: uuid.UUID,
+                    Authorize: AuthJWT = Depends()
+                    ):
     """
         Get Privelege Emergency by id
 
@@ -97,14 +105,15 @@ async def get_by_id(*,
     Authorize.jwt_required()
     return privelege_emergency_service.get_by_id(db, id)
 
+
 @router.get("/user/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=PrivelegeEmergencyRead,
             summary="Get Privelege Emergency Unit by user id")
 async def get_by_user_id(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                         db: Session = Depends(get_db),
+                         id: uuid.UUID,
+                         Authorize: AuthJWT = Depends()
+                         ):
     """
         Get Privelege Emergency by user id
 
@@ -113,14 +122,15 @@ async def get_by_user_id(*,
     Authorize.jwt_required()
     return privelege_emergency_service.get_by_user_id(db, id)
 
+
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
                summary="Delete Privelege Emergency ")
 async def delete(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Delete Military Unit
 

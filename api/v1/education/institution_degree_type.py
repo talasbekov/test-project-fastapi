@@ -21,11 +21,11 @@ router = APIRouter(prefix="/institution_degree_types",
             response_model=List[InstitutionDegreeTypeRead],
             summary="Get all InstitutionDegreeTypes")
 async def get_all(*,
-    db: Session = Depends(get_db),
-    skip: int = 0,
-    limit: int = 100,
-    Authorize: AuthJWT = Depends()
-):
+                  db: Session = Depends(get_db),
+                  skip: int = 0,
+                  limit: int = 100,
+                  Authorize: AuthJWT = Depends()
+                  ):
     """
         Get all InstitutionDegreeTypes
 
@@ -41,10 +41,10 @@ async def get_all(*,
              response_model=InstitutionDegreeTypeRead,
              summary="Create")
 async def create(*,
-    db: Session = Depends(get_db),
-    body: InstitutionDegreeTypeCreate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 body: InstitutionDegreeTypeCreate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Create new InstitutionDegreeType
 
@@ -58,10 +58,10 @@ async def create(*,
             response_model=InstitutionDegreeTypeRead,
             summary="Get InstitutionDegreeType by id")
 async def get_by_id(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                    db: Session = Depends(get_db),
+                    id: uuid.UUID,
+                    Authorize: AuthJWT = Depends()
+                    ):
     """
         Get InstitutionDegreeType by id
 
@@ -75,11 +75,11 @@ async def get_by_id(*,
             response_model=InstitutionDegreeTypeRead,
             summary="Update InstitutionDegreeType")
 async def update(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    body: InstitutionDegreeTypeUpdate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 body: InstitutionDegreeTypeUpdate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Update InstitutionDegreeType
 
@@ -93,14 +93,14 @@ async def update(*,
         obj_in=body)
 
 
-@router.delete("/{id}/",status_code=status.HTTP_204_NO_CONTENT,
+@router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
                summary="Delete InstitutionDegreeType")
 async def delete(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Delete InstitutionDegreeType
 

@@ -11,7 +11,12 @@ from schemas import (CandidateEssayTypeCreate, CandidateEssayTypeRead, Candidate
                      CandidateEssayTypeSetToCandidate)
 from services import candidate_essay_type_service
 
-router = APIRouter(prefix="/candidate_essay_type", tags=["CandidateEssayType"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/candidate_essay_type",
+    tags=["CandidateEssayType"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
@@ -88,7 +93,8 @@ async def create_and_set_to_candidate(
         2. If candidate creates a new essay you can send name of the new essay to create
     """
     Authorize.jwt_required()
-    return candidate_essay_type_service.set_to_candidate(db, body, candidate_id)
+    return candidate_essay_type_service.set_to_candidate(
+        db, body, candidate_id)
 
 
 @router.put("/{id}", status_code=status.HTTP_201_CREATED,
@@ -109,7 +115,8 @@ async def update(
     """
     Authorize.jwt_required()
     return candidate_essay_type_service.update(db,
-                                               db_obj=candidate_essay_type_service.get_by_id(db, id),
+                                               db_obj=candidate_essay_type_service.get_by_id(
+                                                   db, id),
                                                obj_in=body)
 
 

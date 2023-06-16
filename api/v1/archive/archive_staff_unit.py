@@ -18,23 +18,28 @@ from schemas import (
     ArchiveStaffUnitUpdateDispose,
 )
 from services import (
-                      archive_staff_unit_service,
-                      increment_changes_size,
-                      archive_staff_division_service,
-                      )
+    archive_staff_unit_service,
+    increment_changes_size,
+    archive_staff_division_service,
+)
 
-router = APIRouter(prefix="/archive_staff_unit", tags=["ArchiveStaffUnit"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/archive_staff_unit",
+    tags=["ArchiveStaffUnit"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[ArchiveStaffUnitRead],
             summary="Get all Staff Units")
 async def get_all(*,
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends(),
-    skip: int = 0,
-    limit: int = 10
-):
+                  db: Session = Depends(get_db),
+                  Authorize: AuthJWT = Depends(),
+                  skip: int = 0,
+                  limit: int = 10
+                  ):
     """
        Get all Staff Units
 
@@ -50,10 +55,10 @@ async def get_all(*,
              response_model=ArchiveStaffUnitRead,
              summary="Create Staff Unit")
 async def create(*,
-    db: Session = Depends(get_db),
-    body: NewArchiveStaffUnitCreate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 body: NewArchiveStaffUnitCreate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Create Staff Unit
 
@@ -69,11 +74,11 @@ async def create(*,
             response_model=ArchiveStaffUnitRead,
             summary="Update Staff Unit")
 async def update(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    body: NewArchiveStaffUnitUpdate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 body: NewArchiveStaffUnitUpdate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Update Staff Unit
 
@@ -93,10 +98,10 @@ async def update(*,
             response_model=list[ArchiveStaffUnitRead],
             summary="Dispose all Staff Units by ids")
 async def send_to_disposition(*,
-    db: Session = Depends(get_db),
-    body: ArchiveStaffUnitUpdateDispose,
-    Authorize: AuthJWT = Depends()
-):
+                              db: Session = Depends(get_db),
+                              body: ArchiveStaffUnitUpdateDispose,
+                              Authorize: AuthJWT = Depends()
+                              ):
     """
         Update Archive Staff Unit
 
@@ -106,19 +111,18 @@ async def send_to_disposition(*,
     Authorize.jwt_required()
     archive_staff_division_id = archive_staff_division_service.get_by_name(
         db, StaffDivisionEnum.DISPOSITION.value, body.staff_list_id).id
-    return archive_staff_unit_service.dispose_all_units(db, body.staff_unit_ids, archive_staff_division_id)
-
-
+    return archive_staff_unit_service.dispose_all_units(
+        db, body.staff_unit_ids, archive_staff_division_id)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=ArchiveStaffUnitRead,
             summary="Get Staff Unit by id")
 async def get_by_id(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                    db: Session = Depends(get_db),
+                    id: uuid.UUID,
+                    Authorize: AuthJWT = Depends()
+                    ):
     """
         Get Staff Unit by id
 
@@ -132,10 +136,10 @@ async def get_by_id(*,
             response_model=ArchiveStaffUnitRead,
             summary="Get Staff Unit by id")
 async def get_by_user_id(*,
-    db: Session = Depends(get_db),
-    user_id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                         db: Session = Depends(get_db),
+                         user_id: uuid.UUID,
+                         Authorize: AuthJWT = Depends()
+                         ):
     """
         Get Staff Unit by user
 
@@ -149,17 +153,19 @@ async def get_by_user_id(*,
                dependencies=[Depends(HTTPBearer())],
                summary="Delete Staff Unit")
 async def delete(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Delete Staff Unit
 
         - **id** - UUID - required
     """
     Authorize.jwt_required()
-    increment_changes_size(db, archive_staff_unit_service.get_by_id(db, id).staff_division.staff_list)
+    increment_changes_size(
+        db, archive_staff_unit_service.get_by_id(
+            db, id).staff_division.staff_list)
     archive_staff_unit_service.remove(db, id)
 
 
@@ -167,10 +173,10 @@ async def delete(*,
             response_model=List[ArchiveServiceStaffFunctionRead],
             summary="Get ServiceStaffFunctions by StaffUnit id")
 async def get_service_staff_functions(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                                      db: Session = Depends(get_db),
+                                      id: uuid.UUID,
+                                      Authorize: AuthJWT = Depends()
+                                      ):
     """
         Get ServiceStaffFunctions by StaffUnit id
 
@@ -183,10 +189,10 @@ async def get_service_staff_functions(*,
 @router.post("/add-service-staff-function", dependencies=[Depends(HTTPBearer())],
              summary="Add ServiceStaffFunction")
 async def add_service_staff_function(*,
-    db: Session = Depends(get_db),
-    body: ArchiveStaffUnitFunctions,
-    Authorize: AuthJWT = Depends()
-):
+                                     db: Session = Depends(get_db),
+                                     body: ArchiveStaffUnitFunctions,
+                                     Authorize: AuthJWT = Depends()
+                                     ):
     """
         Add ServiceStaffFunction to StaffUnit
 
@@ -198,10 +204,10 @@ async def add_service_staff_function(*,
 @router.post("/remove-service-staff-function", dependencies=[Depends(HTTPBearer())],
              summary="Remove ServiceStaffFunction")
 async def remove_service_staff_function(*,
-    db: Session = Depends(get_db),
-    body: ArchiveStaffUnitFunctions,
-    Authorize: AuthJWT = Depends()
-):
+                                        db: Session = Depends(get_db),
+                                        body: ArchiveStaffUnitFunctions,
+                                        Authorize: AuthJWT = Depends()
+                                        ):
     """
         Remove ServiceStaffFunction from StaffUnit
 
@@ -214,10 +220,10 @@ async def remove_service_staff_function(*,
             response_model=List[ArchiveDocumentStaffFunctionRead],
             summary="Get DocumentStaffFunctions by StaffUnit id")
 async def get_document_staff_functions(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                                       db: Session = Depends(get_db),
+                                       id: uuid.UUID,
+                                       Authorize: AuthJWT = Depends()
+                                       ):
     """
         Get DocumentStaffFunctions by StaffUnit id
 
@@ -230,10 +236,10 @@ async def get_document_staff_functions(*,
 @router.post("/add-document-staff-function", dependencies=[Depends(HTTPBearer())],
              summary="Add DocumentStaffFunction")
 async def add_document_staff_function(*,
-    db: Session = Depends(get_db),
-    body: ArchiveStaffUnitFunctions,
-    Authorize: AuthJWT = Depends()
-):
+                                      db: Session = Depends(get_db),
+                                      body: ArchiveStaffUnitFunctions,
+                                      Authorize: AuthJWT = Depends()
+                                      ):
     """
         Add DocumentStaffFunction to StaffUnit
 
@@ -245,10 +251,10 @@ async def add_document_staff_function(*,
 @router.post("/remove-document-staff-function", dependencies=[Depends(HTTPBearer())],
              summary="Remove DocumentStaffFunction")
 async def remove_document_staff_function(*,
-    db: Session = Depends(get_db),
-    body: ArchiveStaffUnitFunctions,
-    Authorize: AuthJWT = Depends()
-):
+                                         db: Session = Depends(get_db),
+                                         body: ArchiveStaffUnitFunctions,
+                                         Authorize: AuthJWT = Depends()
+                                         ):
     """
         Remove DocumentStaffFunction from StaffUnit
 

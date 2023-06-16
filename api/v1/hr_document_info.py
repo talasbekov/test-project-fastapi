@@ -11,17 +11,22 @@ from schemas import (HrDocumentInfoCreate, HrDocumentInfoRead,
                      HrDocumentInfoUpdate, HrDocumentHistoryRead)
 from services import hr_document_info_service
 
-router = APIRouter(prefix="/hr-documents-info", tags=["HrDocumentInfos"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/hr-documents-info",
+    tags=["HrDocumentInfos"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", response_model=List[HrDocumentInfoRead],
             summary="Get all HrDocumentInfo")
 async def get_all(*,
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends(),
-    skip: int = 0,
-    limit: int = 10
-):
+                  db: Session = Depends(get_db),
+                  Authorize: AuthJWT = Depends(),
+                  skip: int = 0,
+                  limit: int = 10
+                  ):
     """
         Get all HrDocumentInfo
 
@@ -36,10 +41,10 @@ async def get_all(*,
              response_model=HrDocumentInfoRead,
              summary="Create HrDocumentInfo")
 async def create(*,
-    db: Session = Depends(get_db),
-    body: HrDocumentInfoCreate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 body: HrDocumentInfoCreate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Create HrDocumentInfo
 
@@ -57,11 +62,11 @@ async def create(*,
 @router.put("/{id}/", response_model=HrDocumentInfoRead,
             summary="Update HrDocumentInfo")
 async def update(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    body: HrDocumentInfoUpdate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 body: HrDocumentInfoUpdate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Update HrDocumentInfo
 
@@ -83,10 +88,10 @@ async def update(*,
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
                summary="Delete HrDocumentInfo")
 async def delete(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Delete HrDocumentInfo
 
@@ -99,10 +104,10 @@ async def delete(*,
 @router.get("/{id}/", status_code=status.HTTP_200_OK,
             summary="Get HrDocumentInfo by id")
 async def get_by_id(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                    db: Session = Depends(get_db),
+                    id: uuid.UUID,
+                    Authorize: AuthJWT = Depends()
+                    ):
     """
         Get HrDocumentInfo by id
 
@@ -112,13 +117,13 @@ async def get_by_id(*,
     return hr_document_info_service.get_by_id(db, id)
 
 
-@router.get('/history/{id}/', response_model= List[HrDocumentHistoryRead],
+@router.get('/history/{id}/', response_model=List[HrDocumentHistoryRead],
             summary="Get History by document id")
 async def get_history_by_document_id(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                                     db: Session = Depends(get_db),
+                                     id: uuid.UUID,
+                                     Authorize: AuthJWT = Depends()
+                                     ):
     """
         Get History by document id
 

@@ -6,7 +6,12 @@ from fastapi_jwt_auth import AuthJWT
 from core import get_db
 from services.autotags import auto_tags
 
-router = APIRouter(prefix="/auto-tags", tags=["AutoTag"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/auto-tags",
+    tags=["AutoTag"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("/{user_id}/")

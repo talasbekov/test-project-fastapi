@@ -10,18 +10,23 @@ from core import get_db
 from schemas.medical import HospitalDataCreate, HospitalDataRead, HospitalDataUpdate
 from services.medical import hospital_data_service
 
-router = APIRouter(prefix="/hospital_data", tags=["HospitalData"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/hospital_data",
+    tags=["HospitalData"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[HospitalDataRead],
             summary="Get all HospitalData")
 async def get_all(*,
-    db: Session = Depends(get_db),
-    skip: int = 0,
-    limit: int = 100,
-    Authorize: AuthJWT = Depends()
-):
+                  db: Session = Depends(get_db),
+                  skip: int = 0,
+                  limit: int = 100,
+                  Authorize: AuthJWT = Depends()
+                  ):
     """
         Get all HospitalData
 
@@ -37,10 +42,10 @@ async def get_all(*,
              response_model=HospitalDataRead,
              summary="Create HospitalData")
 async def create(*,
-    db: Session = Depends(get_db),
-    body: HospitalDataCreate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 body: HospitalDataCreate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Create new HospitalData
 
@@ -60,10 +65,10 @@ async def create(*,
             response_model=HospitalDataRead,
             summary="Get HospitalData by id")
 async def get_by_id(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                    db: Session = Depends(get_db),
+                    id: uuid.UUID,
+                    Authorize: AuthJWT = Depends()
+                    ):
     """
         Get Hospital Data by id
 
@@ -74,14 +79,14 @@ async def get_by_id(*,
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model= HospitalDataRead,
+            response_model=HospitalDataRead,
             summary="Update HospitalData")
 async def update(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    body: HospitalDataUpdate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 body: HospitalDataUpdate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Update HospitalData
 
@@ -101,14 +106,14 @@ async def update(*,
         obj_in=body)
 
 
-@router.delete("/{id}/",status_code=status.HTTP_204_NO_CONTENT,
+@router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
                summary="Delete HospitalData")
 async def delete(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Delete a HospitalData
 

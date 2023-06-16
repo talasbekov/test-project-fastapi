@@ -10,17 +10,22 @@ from core import get_db
 from schemas import HrDocumentStepCreate, HrDocumentStepUpdate, HrDocumentStepRead
 from services import hr_document_step_service
 
-router = APIRouter(prefix="/hr-documents-step", tags=["HrDocumentSteps"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/hr-documents-step",
+    tags=["HrDocumentSteps"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[HrDocumentStepRead],
             summary="Get all HrDocumentStep")
 async def get_all(*,
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends(),
-    id: uuid.UUID
-):
+                  db: Session = Depends(get_db),
+                  Authorize: AuthJWT = Depends(),
+                  id: uuid.UUID
+                  ):
     """
         Get all HrDocumentStep
 
@@ -35,10 +40,10 @@ async def get_all(*,
              response_model=HrDocumentStepRead,
              summary="Create HrDocumentStep")
 async def create(*,
-    db: Session = Depends(get_db),
-    body: HrDocumentStepCreate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 body: HrDocumentStepCreate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Crete HrDocumentStep
 
@@ -50,14 +55,15 @@ async def create(*,
     Authorize.jwt_required()
     return hr_document_step_service.create(db, body)
 
+
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=HrDocumentStepRead,
             summary="Get HrDocumentStep by id")
 async def get_by_id(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                    db: Session = Depends(get_db),
+                    id: uuid.UUID,
+                    Authorize: AuthJWT = Depends()
+                    ):
     """
         Get HrDocumentStep by id
 
@@ -71,11 +77,11 @@ async def get_by_id(*,
             response_model=HrDocumentStepRead,
             summary="Update HrDocumentStep")
 async def update(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    body: HrDocumentStepUpdate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 body: HrDocumentStepUpdate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Update HrDocumentStep
 
@@ -89,17 +95,18 @@ async def update(*,
         > and **template will be changed for every child steps** if you want to change template for parent step
     """
     Authorize.jwt_required()
-    return hr_document_step_service.update(db=db, db_obj=hr_document_step_service.get_by_id(id), obj_in=body)
+    return hr_document_step_service.update(
+        db=db, db_obj=hr_document_step_service.get_by_id(id), obj_in=body)
 
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
                summary="Delete HrDocumentStep")
 async def delete(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Delete HrDocumentStep
 

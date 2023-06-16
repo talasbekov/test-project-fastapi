@@ -10,18 +10,23 @@ from core import get_db
 from schemas import UserFinancialInfoCreate, UserFinancialInfoUpdate, UserFinancialInfoRead
 from services import user_financial_info_service
 
-router = APIRouter(prefix="/user_financial_info", tags=["UserFinancialInfo"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/user_financial_info",
+    tags=["UserFinancialInfo"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[UserFinancialInfoRead],
             summary="Get all UserFinancialInfo")
 async def get_all(*,
-    db: Session = Depends(get_db),
-    skip: int = 0,
-    limit: int = 100,
-    Authorize: AuthJWT = Depends()
-):
+                  db: Session = Depends(get_db),
+                  skip: int = 0,
+                  limit: int = 100,
+                  Authorize: AuthJWT = Depends()
+                  ):
     """
         Get all UserFinancialInfo
 
@@ -37,10 +42,10 @@ async def get_all(*,
              response_model=UserFinancialInfoRead,
              summary="Create UserFinancialInfo")
 async def create(*,
-    db: Session = Depends(get_db),
-    body: UserFinancialInfoCreate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 body: UserFinancialInfoCreate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Create new UserFinancialInfo
 
@@ -56,10 +61,10 @@ async def create(*,
             response_model=UserFinancialInfoRead,
             summary="Get UserFinancialInfo by id")
 async def get_by_id(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                    db: Session = Depends(get_db),
+                    id: uuid.UUID,
+                    Authorize: AuthJWT = Depends()
+                    ):
     """
         Get UserFinancialInfo by id
 
@@ -73,11 +78,11 @@ async def get_by_id(*,
             response_model=UserFinancialInfoRead,
             summary="Update UserFinancialInfo")
 async def update(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    body: UserFinancialInfoUpdate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 body: UserFinancialInfoUpdate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Update UserFinancialInfo
 
@@ -93,14 +98,14 @@ async def update(*,
         obj_in=body)
 
 
-@router.delete("/{id}/",status_code=status.HTTP_204_NO_CONTENT,
+@router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
                summary="Delete UserFinancialInfo")
 async def delete(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Delete UserFinancialInfo
 

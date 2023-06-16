@@ -11,7 +11,12 @@ from core import get_db
 from schemas import StaffListRead, StaffListUpdate, StaffListUserCreate, StaffListStatusRead
 from services import staff_list_service
 
-router = APIRouter(prefix="/staff_list", tags=["StaffList"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/staff_list",
+    tags=["StaffList"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
@@ -32,16 +37,17 @@ async def get_all(*,
     Authorize.jwt_required()
     return staff_list_service.get_multi(db, skip, limit)
 
+
 @router.get("/drafts/", dependencies=[Depends(HTTPBearer())],
             response_model=List[StaffListStatusRead],
             summary="Get Staff List history")
 async def get_drafts(*,
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends(),
-    skip: int = 0,
-    limit: int = 100,
-    filter: str = '',
-):
+                     db: Session = Depends(get_db),
+                     Authorize: AuthJWT = Depends(),
+                     skip: int = 0,
+                     limit: int = 100,
+                     filter: str = '',
+                     ):
     """
        Get Staff Lists drafts
 
@@ -51,16 +57,17 @@ async def get_drafts(*,
     Authorize.jwt_required()
     return staff_list_service.get_drafts(db, skip, limit, filter)
 
+
 @router.get("/signed/", dependencies=[Depends(HTTPBearer())],
             response_model=List[StaffListStatusRead],
             summary="Get Staff List history")
 async def get_signed(*,
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends(),
-    skip: int = 0,
-    limit: int = 100,
-    filter: str = ''
-):
+                     db: Session = Depends(get_db),
+                     Authorize: AuthJWT = Depends(),
+                     skip: int = 0,
+                     limit: int = 100,
+                     filter: str = ''
+                     ):
     """
        Get Staff Lists signed
 
@@ -89,7 +96,8 @@ async def create(*,
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
-    return staff_list_service.create_by_user_id(db, user_id=Authorize.get_jwt_subject(), obj_in=body, current_user_role_id=role)
+    return staff_list_service.create_by_user_id(
+        db, user_id=Authorize.get_jwt_subject(), obj_in=body, current_user_role_id=role)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -110,15 +118,15 @@ async def get_by_id(*,
 
 
 @router.post("/apply/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=StaffListRead,
-            summary="Apply Staff List")
+             response_model=StaffListRead,
+             summary="Apply Staff List")
 async def apply_staff_list(*,
-                 db: Session = Depends(get_db),
-                 id: uuid.UUID,
-                 signed_by: str,
-                 document_creation_date: datetime.date,
-                 Authorize: AuthJWT = Depends()
-                 ):
+                           db: Session = Depends(get_db),
+                           id: uuid.UUID,
+                           signed_by: str,
+                           document_creation_date: datetime.date,
+                           Authorize: AuthJWT = Depends()
+                           ):
     """
         Update Staff List
 
@@ -188,4 +196,5 @@ async def duplicate(*,
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
-    return staff_list_service.duplicate(db, staff_list_id=id, user_id=Authorize.get_jwt_subject(), obj_in=body, current_user_role_id=role)
+    return staff_list_service.duplicate(
+        db, staff_list_id=id, user_id=Authorize.get_jwt_subject(), obj_in=body, current_user_role_id=role)

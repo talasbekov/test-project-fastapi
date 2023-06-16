@@ -12,18 +12,23 @@ from schemas import (DocumentStaffFunctionAdd, DocumentStaffFunctionRead,
                      DocumentStaffFunctionAppendToStaffUnit)
 from services import document_staff_function_service
 
-router = APIRouter(prefix="/document_staff_function", tags=["DocumentStaffFunction"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/document_staff_function",
+    tags=["DocumentStaffFunction"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[DocumentStaffFunctionRead],
             summary="Get all DocumentStaffFunction")
 async def get_all(*,
-    db: Session = Depends(get_db),
-    skip: int = 0,
-    limit: int = 100,
-    Authorize: AuthJWT = Depends()
-):
+                  db: Session = Depends(get_db),
+                  skip: int = 0,
+                  limit: int = 100,
+                  Authorize: AuthJWT = Depends()
+                  ):
     """
        Get all DocumentStaffFunction
 
@@ -38,10 +43,10 @@ async def get_all(*,
             response_model=DocumentStaffFunctionRead,
             summary="Get DocumentStaffFunction by id")
 async def get_by_id(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                    db: Session = Depends(get_db),
+                    id: uuid.UUID,
+                    Authorize: AuthJWT = Depends()
+                    ):
     """
         Get DocumentStaffFunction by id
 
@@ -55,11 +60,11 @@ async def get_by_id(*,
             response_model=DocumentStaffFunctionRead,
             summary="Update DocumentStaffFunction")
 async def update(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    body: DocumentStaffFunctionUpdate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 body: DocumentStaffFunctionUpdate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Update DocumentStaffFunction
 
@@ -75,10 +80,10 @@ async def update(*,
                dependencies=[Depends(HTTPBearer())],
                summary="Delete DocumentStaffFunction")
 async def delete(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Delete DocumentStaffFunction
 
@@ -89,23 +94,23 @@ async def delete(*,
 
 
 @router.post('/duplicate/{id}/', status_code=status.HTTP_201_CREATED,
-            response_model=DocumentStaffFunctionRead)
+             response_model=DocumentStaffFunctionRead)
 def duplicate(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+              db: Session = Depends(get_db),
+              id: uuid.UUID,
+              Authorize: AuthJWT = Depends()
+              ):
     Authorize.jwt_required()
     return document_staff_function_service.duplicate(db, id)
 
 
 @router.post('', status_code=status.HTTP_201_CREATED,
-            response_model=DocumentStaffFunctionRead)
+             response_model=DocumentStaffFunctionRead)
 async def create_function(*,
-    db: Session = Depends(get_db),
-    body: DocumentStaffFunctionAdd,
-    Authorize: AuthJWT = Depends()
-):
+                          db: Session = Depends(get_db),
+                          body: DocumentStaffFunctionAdd,
+                          Authorize: AuthJWT = Depends()
+                          ):
     Authorize.jwt_required()
     return document_staff_function_service.create_function(db, body)
 
@@ -113,29 +118,30 @@ async def create_function(*,
 @router.post("/constructor/", status_code=status.HTTP_201_CREATED,
              response_model=DocumentStaffFunctionRead)
 async def create_function_for_constructor(*,
-    db: Session = Depends(get_db),
-    body: DocumentStaffFunctionConstructorAdd,
-    Authorize: AuthJWT = Depends()
-):
+                                          db: Session = Depends(get_db),
+                                          body: DocumentStaffFunctionConstructorAdd,
+                                          Authorize: AuthJWT = Depends()
+                                          ):
     Authorize.jwt_required()
-    return document_staff_function_service.create_function_for_constructor(db, body)
+    return document_staff_function_service.create_function_for_constructor(
+        db, body)
 
 
 @router.get('/staff_unit/{id}')
 async def get_staff_units_by_id(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                                db: Session = Depends(get_db),
+                                id: uuid.UUID,
+                                Authorize: AuthJWT = Depends()
+                                ):
     Authorize.jwt_required()
     return document_staff_function_service.get_staff_units_by_id(db, id)
 
 
 @router.post('/append_to_staff_unit/', status_code=status.HTTP_201_CREATED)
 async def append_to_staff_unit(*,
-    db: Session = Depends(get_db),
-    body: DocumentStaffFunctionAppendToStaffUnit,
-    Authorize: AuthJWT = Depends()
-):
+                               db: Session = Depends(get_db),
+                               body: DocumentStaffFunctionAppendToStaffUnit,
+                               Authorize: AuthJWT = Depends()
+                               ):
     Authorize.jwt_required()
     return document_staff_function_service.append_to_staff_unit(db, body)

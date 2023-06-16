@@ -10,7 +10,12 @@ from core import get_db
 from schemas import CandidateRead, CandidateCreate, CandidateUpdate, CandidateEssayUpdate
 from services import candidate_service
 
-router = APIRouter(prefix="/candidates", tags=["Candidates"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/candidates",
+    tags=["Candidates"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
@@ -32,7 +37,8 @@ async def get_all(
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
     role = Authorize.get_raw_jwt()['role']
-    return candidate_service.get_multiple(db, filter=filter.lstrip().rstrip(), user_id=user_id, role_id=role, skip=skip, limit=limit)
+    return candidate_service.get_multiple(db, filter=filter.lstrip(
+    ).rstrip(), user_id=user_id, role_id=role, skip=skip, limit=limit)
 
 
 @router.get("/drafts", dependencies=[Depends(HTTPBearer())],
@@ -54,7 +60,8 @@ async def get_all_draft_candidates(
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
     role = Authorize.get_raw_jwt()['role']
-    return candidate_service.get_draft_candidates(db, filter=filter.lstrip().rstrip(), user_id=user_id, role_id=role, skip=skip, limit=limit)
+    return candidate_service.get_draft_candidates(db, filter=filter.lstrip(
+    ).rstrip(), user_id=user_id, role_id=role, skip=skip, limit=limit)
 
 
 @router.get("/{id}", dependencies=[Depends(HTTPBearer())],
@@ -116,8 +123,8 @@ async def update(
 
 
 @router.patch("/{id}", dependencies=[Depends(HTTPBearer())],
-            response_model=CandidateRead,
-            summary="Update Essay for Candidate")
+              response_model=CandidateRead,
+              summary="Update Essay for Candidate")
 async def update_essay(
         db: Session = Depends(get_db),
         Authorize: AuthJWT = Depends(),
@@ -135,7 +142,7 @@ async def update_essay(
 
 
 @router.post("/{id}/finish/", dependencies=[Depends(HTTPBearer())],
-            summary="Finish studying the candidate")
+             summary="Finish studying the candidate")
 async def finish_candidate(
         db: Session = Depends(get_db),
         Authorize: AuthJWT = Depends(),

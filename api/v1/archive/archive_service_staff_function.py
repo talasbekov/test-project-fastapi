@@ -11,18 +11,23 @@ from schemas import (ArchiveServiceStaffFunctionRead, NewArchiveServiceStaffFunc
                      NewArchiveServiceStaffFunctionUpdate)
 from services import service_archive_staff_function_service
 
-router = APIRouter(prefix="/archive_service_staff_function", tags=["ArchiveServiceStaffFunction"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/archive_service_staff_function",
+    tags=["ArchiveServiceStaffFunction"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[ArchiveServiceStaffFunctionRead],
             summary="Get all ServiceStaffFunction")
 async def get_all(*,
-    db: Session = Depends(get_db),
-    skip: int = 0,
-    limit: int = 100,
-    Authorize: AuthJWT = Depends()
-):
+                  db: Session = Depends(get_db),
+                  skip: int = 0,
+                  limit: int = 100,
+                  Authorize: AuthJWT = Depends()
+                  ):
     """
        Get all ServiceStaffFunction
 
@@ -38,10 +43,10 @@ async def get_all(*,
              response_model=ArchiveServiceStaffFunctionRead,
              summary="Create ServiceStaffFunction")
 async def create(*,
-    db: Session = Depends(get_db),
-    body: NewArchiveServiceStaffFunctionCreate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 body: NewArchiveServiceStaffFunctionCreate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Create ServiceStaffFunction
 
@@ -50,17 +55,18 @@ async def create(*,
         - **spend_hours_per_week**: int - optional.
     """
     Authorize.jwt_required()
-    return service_archive_staff_function_service.create_archive_staff_function(db, body)
+    return service_archive_staff_function_service.create_archive_staff_function(
+        db, body)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=ArchiveServiceStaffFunctionRead,
             summary="Get ServiceStaffFunction by id")
 async def get_by_id(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                    db: Session = Depends(get_db),
+                    id: uuid.UUID,
+                    Authorize: AuthJWT = Depends()
+                    ):
     """
         Get ServiceStaffFunction by id
 
@@ -74,11 +80,11 @@ async def get_by_id(*,
             response_model=ArchiveServiceStaffFunctionRead,
             summary="Update ServiceStaffFunction")
 async def update(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    body: NewArchiveServiceStaffFunctionUpdate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 body: NewArchiveServiceStaffFunctionUpdate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Update ServiceStaffFunction
 
@@ -90,7 +96,8 @@ async def update(*,
     service_archive_staff_function_service.get_by_id(db, id)
     return service_archive_staff_function_service.update_archive_staff_function(
         db,
-        staff_function=service_archive_staff_function_service.get_by_id(db, id),
+        staff_function=service_archive_staff_function_service.get_by_id(
+            db, id),
         body=body)
 
 
@@ -98,10 +105,10 @@ async def update(*,
                dependencies=[Depends(HTTPBearer())],
                summary="Delete ServiceStaffFunction")
 async def delete(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Delete ServiceStaffFunction
 
@@ -112,12 +119,12 @@ async def delete(*,
 
 
 @router.post('/duplicate/{id}/', status_code=status.HTTP_201_CREATED,
-            response_model=ArchiveServiceStaffFunctionRead)
+             response_model=ArchiveServiceStaffFunctionRead)
 async def duplicate(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                    db: Session = Depends(get_db),
+                    id: uuid.UUID,
+                    Authorize: AuthJWT = Depends()
+                    ):
     """
         Duplicate ServiceStaffFunction
 

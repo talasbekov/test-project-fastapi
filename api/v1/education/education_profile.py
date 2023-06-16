@@ -21,11 +21,11 @@ router = APIRouter(prefix="/educational_profiles",
             response_model=None,
             summary="Get all EducationalProfiles")
 async def get_all(*,
-    db: Session = Depends(get_db),
-    skip: int = 0,
-    limit: int = 100,
-    Authorize: AuthJWT = Depends()
-):
+                  db: Session = Depends(get_db),
+                  skip: int = 0,
+                  limit: int = 100,
+                  Authorize: AuthJWT = Depends()
+                  ):
     """
         Get all EducationalProfiles
 
@@ -41,10 +41,10 @@ async def get_all(*,
              response_model=EducationalProfileRead,
              summary="Create")
 async def create(*,
-    db: Session = Depends(get_db),
-    body: EducationalProfileCreate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 body: EducationalProfileCreate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Create new EducationalProfile
 
@@ -58,10 +58,10 @@ async def create(*,
             response_model=EducationalProfileRead,
             summary="Get EducationalProfile by id")
 async def get_by_id(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                    db: Session = Depends(get_db),
+                    id: uuid.UUID,
+                    Authorize: AuthJWT = Depends()
+                    ):
     """
         Get EducationalProfile by id
 
@@ -75,11 +75,11 @@ async def get_by_id(*,
             response_model=EducationalProfileRead,
             summary="Update EducationalProfile")
 async def update(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    body: EducationalProfileUpdate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 body: EducationalProfileUpdate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Update EducationalProfile
 
@@ -93,14 +93,14 @@ async def update(*,
         obj_in=body)
 
 
-@router.delete("/{id}/",status_code=status.HTTP_204_NO_CONTENT,
+@router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
                summary="Delete EducationalProfile")
 async def delete(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Delete EducationalProfile
 
@@ -113,20 +113,21 @@ async def delete(*,
 @router.get("/profile", dependencies=[Depends(HTTPBearer())],
             response_model=EducationalProfileRead)
 async def get_profile(*,
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends()
-):
+                      db: Session = Depends(get_db),
+                      Authorize: AuthJWT = Depends()
+                      ):
     Authorize.jwt_required()
     profile = profile_service.get_by_user_id(db, Authorize.get_jwt_subject())
-    return educational_profile_service.get_by_id(db, profile.educational_profile.id)
+    return educational_profile_service.get_by_id(
+        db, profile.educational_profile.id)
 
 
 @router.get("/profile/{id}", dependencies=[Depends(HTTPBearer())],
             response_model=EducationalProfileRead)
 async def get_profile_by_id(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                            db: Session = Depends(get_db),
+                            id: uuid.UUID,
+                            Authorize: AuthJWT = Depends()
+                            ):
     Authorize.jwt_required()
     return profile_service.get_by_user_id(db, id).educational_profile
