@@ -7220,7 +7220,8 @@ def create_user(id,
             'issued_by': "Районный суд Сарыаркинского района г.Астана",
             'article_number': "122.12(УК РК)",
             'consequence': "Штраф 40МРП",
-            'profile_id': additional_profile_id
+            'profile_id': additional_profile_id,
+            'document_link': f"{base_s3_url}/static/example.txt"
         }]
     )
     op.bulk_insert(
@@ -7233,7 +7234,8 @@ def create_user(id,
             'issued_by': "Районный суд Сарыаркинского района г.Астана",
             'article_number': "122.12(УК РК)",
             'consequence': "Штраф 400МРП",
-            'profile_id': None
+            'profile_id': None,
+            'document_link': f"{base_s3_url}/static/example.txt",
         }]
     )
 
@@ -7292,7 +7294,8 @@ def create_user(id,
             'type_id': property_type2_id,
             'address': "ул. Достық 5",
             'issue_date': "2022-09-12",
-            'profile_id': additional_profile_id
+            'profile_id': additional_profile_id,
+            'document_link': f"{base_s3_url}/static/example.txt",
         }]
     )
 
