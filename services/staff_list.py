@@ -5,7 +5,7 @@ import uuid
 from sqlalchemy import desc
 from sqlalchemy.orm import Session, joinedload
 
-from exceptions import NotFoundException, NotSupportedException, ForbiddenException
+from exceptions import NotFoundException, NotSupportedException
 from models import (
     DocumentStaffFunction,
     ServiceStaffFunction,
@@ -19,7 +19,6 @@ from models import (
     ArchiveStaffUnit,
     ArchiveDocumentStaffFunction,
     StaffListStatusEnum,
-    StaffDivisionEnum
 )
 from schemas import (
     StaffListCreate,
@@ -27,8 +26,7 @@ from schemas import (
     StaffListUserCreate,
     StaffListStatusRead,
     HrDocumentInit,
-    HrVacancyUpdate,
-    HrDocumentInit,
+    HrVacancyUpdate
 )
 from services import (
     ServiceBase,
@@ -45,8 +43,7 @@ from services import (
     hr_document_service,
     staff_unit_service,
     service_staff_function_service,
-    hr_vacancy_service,
-    hr_document_service
+    hr_vacancy_service
 )
 
 options = {

@@ -4,7 +4,7 @@ from typing import List
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException, BadRequestException
-from models import ArchiveStaffUnit, StaffUnit, ArchiveStaffDivision, StaffDivisionEnum
+from models import ArchiveStaffUnit, StaffUnit, ArchiveStaffDivision
 from schemas import ArchiveStaffUnitCreate, ArchiveStaffUnitUpdate, ArchiveStaffUnitFunctions, \
     NewArchiveStaffUnitCreate, NewArchiveStaffUnitUpdate
 from services import position_service

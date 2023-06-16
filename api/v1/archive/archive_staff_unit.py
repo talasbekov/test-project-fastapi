@@ -17,7 +17,7 @@ from schemas import (
     ArchiveDocumentStaffFunctionRead,
     ArchiveStaffUnitUpdateDispose,
 )
-from services import (rank_service,
+from services import (
                       archive_staff_unit_service,
                       increment_changes_size,
                       archive_staff_division_service,

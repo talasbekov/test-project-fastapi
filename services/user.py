@@ -254,9 +254,10 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             if i.name == JurisdictionEnum.CANDIDATES.value:
                 return self._get_users_by_candidates_jurisdiction(db)
 
-    def _get_users_by_personnel_jurisdiction(self, 
-                                             db: Session, 
-                                             staff_division: StaffDivision) -> List[User]:
+    def _get_users_by_personnel_jurisdiction(
+            self, 
+            db: Session, 
+            staff_division: StaffDivision) -> List[User]:
         # Получаем все дочерние штатные группы пользователя, включая саму группу
         staff_divisions: List[StaffDivision] = staff_division_service.get_child_groups(
             db, staff_division.id)
@@ -386,7 +387,11 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
         return user_query
 
-    def get_available_templates(self, db: Session, user_id: uuid.UUID, skip: int, limit: int) -> List[HrDocumentTemplate]:
+    def get_available_templates(self, 
+                                db: Session, 
+                                user_id: uuid.UUID, 
+                                skip: int, 
+                                limit: int) -> List[HrDocumentTemplate]:
         initiator_role = document_staff_function_type_service.get_initiator(db)
         user = self.get_by_id(db, user_id)
         document_ids = []
