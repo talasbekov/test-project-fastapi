@@ -41,5 +41,8 @@ class HrDocumentTemplate(NamedModel, isActiveModel):
     is_initial_comment_required = Column(Boolean(), default=False)
 
     # Relationships
-    documents = relationship("HrDocument", cascade="all,delete", back_populates="document_template")
+    documents = relationship(
+        "HrDocument",
+        cascade="all,delete",
+        back_populates="document_template")
     maintainer = relationship("StaffUnit", foreign_keys=[maintainer_id])

@@ -20,8 +20,20 @@ hr_documents_users = Table(
 staff_unit_function = Table(
     "staff_unit_functions",
     Base.metadata,
-    Column("staff_unit_id", ForeignKey("staff_units.id", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True),
-    Column("staff_function_id", ForeignKey("staff_functions.id", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)
+    Column(
+        "staff_unit_id",
+        ForeignKey(
+            "staff_units.id",
+            ondelete="CASCADE",
+            onupdate="CASCADE"),
+        primary_key=True),
+    Column(
+        "staff_function_id",
+        ForeignKey(
+            "staff_functions.id",
+            ondelete="CASCADE",
+            onupdate="CASCADE"),
+        primary_key=True)
 )
 
 user_liberations_liberations = Table(
@@ -42,7 +54,8 @@ hr_vacancy_hr_vacancy_requirements = Table(
     "hr_vacancy_hr_vacancy_requirements",
     Base.metadata,
     Column("hr_vacancy_id", ForeignKey("hr_vacancies.id")),
-    Column("hr_vacancy_requirement_id", ForeignKey("hr_vacancies_requirements.id"))
+    Column("hr_vacancy_requirement_id",
+           ForeignKey("hr_vacancies_requirements.id"))
 )
 
 family_violation = Table(

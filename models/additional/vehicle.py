@@ -15,5 +15,6 @@ class Vehicle(NamedModel):
     document_link = Column(TEXT, nullable=True)
     vin_code = Column(String, nullable=False)
 
-    profile_id = Column(UUID(as_uuid=True), ForeignKey("additional_profiles.id"), nullable=False)
+    profile_id = Column(UUID(as_uuid=True), ForeignKey(
+        "additional_profiles.id"), nullable=False)
     profile = relationship("AdditionalProfile", back_populates="user_vehicles")

@@ -7,7 +7,7 @@ from sqlalchemy.sql.sqltypes import Boolean
 from core import Base
 
 """
-    This class is abstract entity class, 
+    This class is abstract entity class,
     which provides following columns to all inherited entities:
     - **id** : UUID - clustered index of table
     - **created_at**: datetime - Creation timestamp of entity
@@ -29,7 +29,7 @@ class Model(Base):
 
 
 """
-    This class is abstract entity class, 
+    This class is abstract entity class,
     which provides following columns to all inherited entities:
     - **name** : str - required
 """
@@ -44,8 +44,8 @@ class NamedModel(Model):
 
 
 """
-    This class is abstract entity class, which can be nested. 
-    This is merely markdown of nested classes. 
+    This class is abstract entity class, which can be nested.
+    This is merely markdown of nested classes.
     This Model doesn't do anything except marking all nested classes
 """
 
@@ -67,10 +67,11 @@ class NamedNestedModel(NamedModel):
 
 
 """
-    This class is abstract entity class, 
+    This class is abstract entity class,
     which provides following columns to all inherited entities:
     - **is_active** : bool - required
 """
+
 
 class isActiveModel(Model):
 

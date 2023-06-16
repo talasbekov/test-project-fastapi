@@ -12,10 +12,12 @@ class SpecialtyEnum(EnumBase):
     specialty2 = "Специалист 2 класса"
     specialty3 = "Специалист 3 класса"
 
+
 class CoolnessStatusEnum(EnumBase):
     granted = "Выдан"
     confirmed = "Подтвержден"
     removed = "Изъят"
+
 
 class CoolnessType(NamedModel):
 
@@ -23,6 +25,7 @@ class CoolnessType(NamedModel):
     order = Column(Integer, nullable=False)
 
     coolnesses = relationship("Coolness", back_populates="type")
+
 
 class Coolness(Model):
 
@@ -33,4 +36,7 @@ class Coolness(Model):
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     user = relationship("User", back_populates="coolnesses")
 
-    history = relationship("CoolnessHistory", back_populates="coolness", uselist=False)
+    history = relationship(
+        "CoolnessHistory",
+        back_populates="coolness",
+        uselist=False)

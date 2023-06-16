@@ -13,6 +13,7 @@ class StaffListStatusEnum(str, enum.Enum):
     DIVERTED = "Отклонен"
     IN_PROGRESS = "В процессе"
 
+
 class StaffList(NamedModel):
 
     __tablename__ = "staff_lists"

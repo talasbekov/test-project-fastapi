@@ -14,6 +14,12 @@ class IdentificationCard(Model):
     date_to = Column(TIMESTAMP(timezone=True))
     issued_by = Column(String)
     document_link = Column(TEXT, nullable=True)
-    profile_id = Column(UUID(as_uuid=True), ForeignKey("personal_profiles.id"), nullable=False)
+    profile_id = Column(
+        UUID(
+            as_uuid=True),
+        ForeignKey("personal_profiles.id"),
+        nullable=False)
 
-    profile = relationship("PersonalProfile", back_populates="identification_card")
+    profile = relationship(
+        "PersonalProfile",
+        back_populates="identification_card")

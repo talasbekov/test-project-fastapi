@@ -62,6 +62,7 @@ class CategoryCodeEnum(str, EnumBase):
     C_RG_12 = "C-RG-12"
     C_RG_13 = "C-RG-13"
 
+
 class FormEnum(EnumBase):
     form1 = "Форма 1"
     form2 = "Форма 2"
@@ -75,5 +76,7 @@ class Position(NamedModel):
     max_rank_id = Column(UUID(as_uuid=True), ForeignKey("ranks.id"),
                          nullable=True)
     max_rank = relationship("Rank", cascade="all,delete")
-    category_code = Column(String()) # TODO: enum was deleted because of LookupError: "C-S-1" is not among the defined enum values pls fix it
+    # TODO: enum was deleted because of LookupError: "C-S-1" is not among the
+    # defined enum values pls fix it
+    category_code = Column(String())
     form = Column(String(), nullable=True)

@@ -9,10 +9,15 @@ class Course(NamedModel):
 
     __tablename__ = "courses"
 
-    profile_id = Column(UUID(as_uuid=True), ForeignKey("educational_profiles.id"), nullable=True)
+    profile_id = Column(UUID(as_uuid=True), ForeignKey(
+        "educational_profiles.id"), nullable=True)
     profile = relationship("EducationalProfile", back_populates="course")
 
-    course_provider_id = Column(UUID(as_uuid=True), ForeignKey("course_providers.id"), nullable=True)
+    course_provider_id = Column(
+        UUID(
+            as_uuid=True),
+        ForeignKey("course_providers.id"),
+        nullable=True)
     course_provider = relationship("CourseProvider", back_populates="course")
 
     start_date = Column(DATE)

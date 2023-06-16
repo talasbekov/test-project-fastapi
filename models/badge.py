@@ -4,6 +4,7 @@ from sqlalchemy.orm import relationship
 
 from models import Model, NamedModel
 
+
 class BadgeType(NamedModel):
     __tablename__ = "badge_types"
 
@@ -21,4 +22,7 @@ class Badge(Model):
     type = relationship("BadgeType", back_populates="badges")
     user = relationship("User", back_populates='badges')
 
-    history = relationship("BadgeHistory", back_populates="badge", uselist=False)
+    history = relationship(
+        "BadgeHistory",
+        back_populates="badge",
+        uselist=False)
