@@ -7,15 +7,21 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
+from models import StaffDivisionEnum
 from schemas import (
     NewArchiveStaffUnitCreate,
     ArchiveStaffUnitRead,
     ArchiveStaffUnitFunctions,
     NewArchiveStaffUnitUpdate,
     ArchiveServiceStaffFunctionRead,
-    ArchiveDocumentStaffFunctionRead
+    ArchiveDocumentStaffFunctionRead,
+    ArchiveStaffUnitUpdateDispose,
 )
-from services import rank_service, archive_staff_unit_service, increment_changes_size
+from services import (rank_service,
+                      archive_staff_unit_service,
+                      increment_changes_size,
+                      archive_staff_division_service,
+                      )
 
 router = APIRouter(prefix="/archive_staff_unit", tags=["ArchiveStaffUnit"], dependencies=[Depends(HTTPBearer())])
 
@@ -81,6 +87,28 @@ async def update(*,
         db,
         archive_staff_unit_service.get_by_id(db, id),
         body)
+
+
+@router.put("/disposition/all/", dependencies=[Depends(HTTPBearer())],
+            response_model=list[ArchiveStaffUnitRead],
+            summary="Dispose all Staff Units by ids")
+async def send_to_disposition(*,
+    db: Session = Depends(get_db),
+    body: ArchiveStaffUnitUpdateDispose,
+    Authorize: AuthJWT = Depends()
+):
+    """
+        Update Archive Staff Unit
+
+        - **staff_unit_ids**: List of the UUIDs - required
+        - **staff_list_id**: UUID - required
+    """
+    Authorize.jwt_required()
+    archive_staff_division_id = archive_staff_division_service.get_by_name(
+        db, StaffDivisionEnum.DISPOSITION.value, body.staff_list_id).id
+    return archive_staff_unit_service.dispose_all_units(db, body.staff_unit_ids, archive_staff_division_id)
+
+
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],

@@ -173,6 +173,7 @@ async def delete(*,
 
 @router.post("/duplicate/{id}/", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
+             response_model=StaffListRead,
              summary="Duplicate Staff List")
 async def duplicate(*,
                     db: Session = Depends(get_db),
