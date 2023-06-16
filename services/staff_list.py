@@ -119,7 +119,10 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         signed_by: str,
         document_creation_date: datetime.date,
         current_user_id: uuid.UUID,
-        current_user_role_id: uuid.UUID
+        current_user_role_id: uuid.UUID,
+        rank: str,
+        document_number: str,
+        document_link: str
     ):
         staff_list = self.get_by_id(db, staff_list_id)
 
@@ -142,6 +145,9 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         staff_list.document_signed_by = signed_by
         staff_list.document_signed_at = document_creation_date
         staff_list.status = StaffListStatusEnum.APPROVED.value
+        staff_list.document_link = document_link
+        staff_list.document_number = document_number
+        staff_list.rank = rank
         staff_list.is_signed = True
 
         staff_unit_service.delete_all_inactive(db)
@@ -151,7 +157,12 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         db.flush()
         user_ids = self.get_disposition_user_ids_by_staff_list_id(db, staff_list_id)
         if user_ids:
-            await self.create_disposition_doc_by_staff_list_id(db, staff_list_id, user_ids, current_user_id, current_user_role_id)
+            await self.create_disposition_doc_by_staff_list_id(
+                db,
+                staff_list_id, 
+                user_ids, 
+                current_user_id, 
+                current_user_role_id)
         return staff_list
 
     def _create_staff_division(self, db: Session,
