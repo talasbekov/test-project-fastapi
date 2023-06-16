@@ -26,8 +26,10 @@ async def get_all(*,
     """
         Get all Histories
 
-        - **skip**: int - The number of equipments to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of equipments to return in the response. This parameter is optional and defaults to 10.
+        - **skip**: int - The number of equipments to skip before returning the results. 
+            This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of equipments to return in the response. 
+            This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
     return history_service.get_all(db, skip, limit)
@@ -132,8 +134,10 @@ async def get_all_by_type(*,
         Get all Histories by type
 
         - **type**: str - required
-        - **skip**: int - The number of equipments to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of equipments to return in the response. This parameter is optional and defaults to 10.
+        - **skip**: int - The number of equipments to skip before returning the results. 
+            This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of equipments to return in the response. 
+            This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
     return history_service.get_all_by_type(db, type, skip, limit)
@@ -192,8 +196,10 @@ async def get_all_by_type_and_user_id(*,
 
         - **type**: str - required
         - **user_id**: UUID - required
-        - **skip**: int - The number of equipments to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of equipments to return in the response. This parameter is optional and defaults to 10.
+        - **skip**: int - The number of equipments to skip before returning the results. 
+            This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of equipments to return in the response. 
+            This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
     return history_service.get_all_by_type_and_user_id(db, type, user_id, skip, limit)

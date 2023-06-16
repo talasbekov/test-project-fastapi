@@ -132,11 +132,15 @@ class HistoryRead(HistoryBase, ReadNamedModel):
 
     @property
     def coolness_status(self) -> Optional[dict]:
-        return get_status(self.coolness, self.confirm_document_link, self.cancel_document_link)
+        return get_status(self.coolness, 
+                self.confirm_document_link, 
+                self.cancel_document_link)
 
     @property
     def badge_status(self) -> Optional[dict]:
-        return get_status(self.badge, self.confirm_document_link, self.cancel_document_link)
+        return get_status(self.badge, 
+                self.confirm_document_link, 
+                self.cancel_document_link)
 
 
     def to_dict(self) -> dict:
@@ -246,7 +250,9 @@ class HistoryPersonalRead(ReadModel):
 
     @property
     def coolness_status(self) -> Optional[dict]:
-        return get_status(self.coolness, self.confirm_document_link, self.cancel_document_link)
+        return get_status(self.coolness, 
+                    self.confirm_document_link, 
+                    self.cancel_document_link)
 
 
     def to_dict(self) -> dict:
@@ -566,12 +572,14 @@ class SecondmentRead(Model):
 
     @classmethod
     def from_orm(cls, orm_obj):
+        staff_division = orm_obj.secondment.staff_division.name if orm_obj.secondment.staff_division else None
+        body = orm_obj.secondment.state_body.name if orm_obj.secondment.state_body else None
         return cls(
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
-            staff_division=orm_obj.secondment.staff_division.name if orm_obj.secondment.staff_division else None,
+            staff_division=staff_division,
             document_link=orm_obj.document_link,
-            state_body=orm_obj.secondment.state_body.name if orm_obj.secondment.state_body else None,
+            state_body=body
         )
 
 class TypeOfArmyEquipmentModelRead(ReadNamedModel):

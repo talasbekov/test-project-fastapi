@@ -7,10 +7,14 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import HistoryNameChangeCreate, HistoryNameChangeUpdate, HistoryNameChangeRead
+from schemas import (HistoryNameChangeCreate, 
+                     HistoryNameChangeUpdate, 
+                     HistoryNameChangeRead)
 from services import history_name_change_service
 
-router = APIRouter(prefix="/history/name_change", tags=["History Name Change"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(prefix="/history/name_change", 
+                   tags=["History Name Change"], 
+                   dependencies=[Depends(HTTPBearer())])
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[HistoryNameChangeRead],
@@ -24,8 +28,10 @@ async def get_all(*,
     """
         Get all History Name Changes
 
-        - **skip**: int - The number of equipments to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of equipments to return in the response. This parameter is optional and defaults to 10.
+        - **skip**: int - The number of equipments to skip before returning the results. 
+            This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of equipments to return in the response. 
+            This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
     return history_name_change_service.get_multi(db, skip, limit)
@@ -100,7 +106,9 @@ async def update(*,
     """
     Authorize.jwt_required()
     history_name_change = history_name_change_service.get_by_id(db, id)
-    return history_name_change_service.update(db, db_obj=history_name_change, obj_in=body)
+    return history_name_change_service.update(db, 
+                                              db_obj=history_name_change, 
+                                              obj_in=body)
 
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
