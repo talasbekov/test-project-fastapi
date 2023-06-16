@@ -1287,6 +1287,7 @@ def upgrade() -> None:
         }, {
             'parent_group_id': all_service_id,
             'id': group1_id,
+            'staff_division_number': 5,
             'name': "Пятый департамент",
             'nameKZ': "Бесінші департаменті",
             'description': {
@@ -1309,6 +1310,7 @@ def upgrade() -> None:
         }, {
             'parent_group_id': group1_id,
             'id': group2_id,
+            'staff_division_number': 1,
             'name': "1 управление",
             'nameKZ': '1 басқару',
             'description': {
@@ -1331,6 +1333,7 @@ def upgrade() -> None:
         }, {
             'parent_group_id': group1_id,
             'id': group3_id,
+            'staff_division_number': 2,
             'name': "2 управление",
             'nameKZ': '2 басқару',
             'description': {
@@ -1353,6 +1356,7 @@ def upgrade() -> None:
         }, {
             'parent_group_id': group1_id,
             'id': group4_id,
+            'staff_division_number': 3,
             'name': "3 управление",
             'nameKZ': '3 басқару',
             'description': {
@@ -1375,6 +1379,7 @@ def upgrade() -> None:
         }, {
             'parent_group_id': group1_id,
             'id': group5_id,
+            'staff_division_number': 4,
             'name': "4 управление",
             'nameKZ': '4 басқару',
             'description': {
@@ -1565,6 +1570,7 @@ def upgrade() -> None:
         }, {
             'parent_group_id': all_service_id,
             'id': group14_id,
+            'staff_division_number': 7,
             'name': "Седьмой департамент",
             'nameKZ': "Жетінші департаменті",
             'description': {
@@ -1587,6 +1593,7 @@ def upgrade() -> None:
         }, {
             'parent_group_id': group14_id,
             'id': group15_id,
+            'staff_division_number': 3,
             'name': "3 управление",
             'nameKZ': '3 басқару',
             'description': {
@@ -1609,6 +1616,7 @@ def upgrade() -> None:
         }, {
             'parent_group_id': group15_id,
             'id': group16_id,
+            'staff_division_number': 1,
             'name': "1 отдел",
             'nameKZ': '1 бөлім',
             'description': {
@@ -1631,6 +1639,7 @@ def upgrade() -> None:
         },  {
             'parent_group_id': group15_id,
             'id': group2_1_id,
+            'staff_division_number': 2,
             'name': "2 отдел",
             'nameKZ': '2 бөлім',
             'description': {
