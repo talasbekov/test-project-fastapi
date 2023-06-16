@@ -46,5 +46,5 @@ class ContractUpdate(ContractBase):
 
 class ContractRead(ContractBase):
     id: uuid.UUID
-    
+
     type: Optional[ContractTypeRead]

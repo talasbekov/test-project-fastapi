@@ -10,9 +10,9 @@ class ViolationBase(NamedModel):
     date: datetime
     issued_by: str
     article_number: str
-    consequence: str 
+    consequence: str
     profile_id: Optional[uuid.UUID]
-    
+
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True

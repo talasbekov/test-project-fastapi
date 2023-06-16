@@ -5,8 +5,8 @@ from typing import List, Optional
 from pydantic import BaseModel, EmailStr, Field
 
 from schemas import (PositionRead, RankRead, StaffFunctionRead,
-                    NamedModel, ReadModel, ReadNamedModel,
-                    BadgeRead, StatusRead, StaffDivisionTypeRead)
+                     NamedModel, ReadModel, ReadNamedModel,
+                     BadgeRead, StatusRead, StaffDivisionTypeRead)
 
 
 class StaffDivisionBase(NamedModel):

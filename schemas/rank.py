@@ -5,7 +5,6 @@ from pydantic import AnyUrl
 from schemas import NamedModel, ReadNamedModel
 
 
-
 class RankBase(NamedModel):
     order: int
     military_url: AnyUrl

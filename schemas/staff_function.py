@@ -66,7 +66,7 @@ class DocumentStaffFunctionUpdate(DocumentStaffFunctionBase):
 class StaffUnitFunctions(Model):
     staff_unit_id: uuid.UUID
     staff_function_ids: List[uuid.UUID]
-    
+
 
 class StaffUnitFunctionsByPosition(Model):
     position: str

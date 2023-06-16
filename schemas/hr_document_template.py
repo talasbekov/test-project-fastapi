@@ -25,7 +25,8 @@ class HrDocumentTemplateBase(NamedModel):
     is_due_date_required: Optional[bool] = False
     is_initial_comment_required: Optional[bool] = False
 
-    _check_properties = validator("properties", allow_reuse=True)(hr_document_templates_properties_validator)
+    _check_properties = validator("properties", allow_reuse=True)(
+        hr_document_templates_properties_validator)
 
 
 class HrDocumentTemplateCreate(HrDocumentTemplateBase):

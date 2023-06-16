@@ -14,6 +14,7 @@ class HistoryNameChangeBase(Model):
         orm_mode = True
         arbitrary_types_allowed = True
 
+
 class HistoryNameChangeCreate(HistoryNameChangeBase):
     pass
 

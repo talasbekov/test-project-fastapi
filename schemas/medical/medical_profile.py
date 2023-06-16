@@ -20,7 +20,7 @@ class MedicalProfileCreate(MedicalProfileBase):
 
 
 class MedicalProfileUpdate(MedicalProfileBase):
-    pass 
+    pass
 
 
 class MedicalProfileRead(MedicalProfileBase):

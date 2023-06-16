@@ -18,7 +18,7 @@ class PersonnalReserveBase(Model):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
- 
+
 
 class PersonnalReserveCreate(PersonnalReserveBase):
     pass

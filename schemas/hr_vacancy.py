@@ -5,6 +5,7 @@ from schemas import (Model, ReadModel, HrVacancyRequirementsRead,
                      HrVacancyCandidateRead)
 from .staff_unit import StaffUnitRead
 
+
 class HrVacancyBase(Model):
     staff_unit_id: uuid.UUID
     is_active: bool
@@ -29,7 +30,7 @@ class HrVacancyRead(HrVacancyBase, ReadModel):
     staff_unit: Optional[StaffUnitRead]
     archive_staff_unit: Optional[StaffUnitRead]
     candidates: Optional[List[HrVacancyCandidateRead]]
-    
+
     class Config:
         orm_mode = True
 

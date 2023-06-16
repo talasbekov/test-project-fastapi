@@ -107,8 +107,8 @@ class ArchiveDocumentStaffFunctionStep(BaseModel):
         orm_mode = True
 
 
-class ArchiveDocumentStaffFunctionRead(ArchiveStaffFunctionRead, 
-                                ArchiveDocumentStaffFunctionBase):
+class ArchiveDocumentStaffFunctionRead(ArchiveStaffFunctionRead,
+                                       ArchiveDocumentStaffFunctionBase):
 
     priority: Optional[int]
     role_id: Optional[uuid.UUID]
@@ -120,8 +120,8 @@ class ArchiveDocumentStaffFunctionRead(ArchiveStaffFunctionRead,
     hr_document_step: Optional[ArchiveDocumentStaffFunctionStep]
 
 
-class ArchiveServiceStaffFunctionRead(ArchiveStaffFunctionRead, 
-                            ArchiveServiceStaffFunctionBase):
+class ArchiveServiceStaffFunctionRead(ArchiveStaffFunctionRead,
+                                      ArchiveServiceStaffFunctionBase):
 
     type_id: Optional[uuid.UUID]
     type: Optional[ServiceStaffFunctionTypeRead]
@@ -131,4 +131,3 @@ class AllArchiveStaffFunctionsRead(ArchiveServiceStaffFunctionRead,
                                    ArchiveDocumentStaffFunctionRead,
                                    ArchiveServiceStaffFunctionBase):
     pass
-

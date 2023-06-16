@@ -19,7 +19,6 @@ class SportAchievementBase(NamedModel):
         arbitrary_types_allowed = True
 
 
-
 class SportAchievementCreate(SportAchievementBase):
     pass
 

@@ -5,6 +5,7 @@ from datetime import datetime
 from models import ServiceIDStatus
 from schemas import Model, ReadModel
 
+
 class ServiceIDBase(Model):
     number: Optional[str]
     date_to: Optional[datetime]

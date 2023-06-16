@@ -38,10 +38,12 @@ from .history_personal import (
 # Set time_zone to UTC(+06:00)
 time_zone = timezone(timedelta(hours=6))
 
+
 class StatusEnum(Enum):
     granted = "Присвоен"
     confirmed = "Подтвержден"
     canceled = "Отменен"
+
 
 def get_date_difference(date1, date2):
     # Calculate the difference
@@ -68,6 +70,7 @@ def get_status(obj, confirm_document_link, cancel_document_link):
         return dict_coolness
     else:
         return None
+
 
 class HistoryBase(BaseModel):
     document_link: Optional[str]
@@ -107,6 +110,7 @@ class HistoryBase(BaseModel):
         orm_mode = True
         arbitrary_types_allowed = True
 
+
 class HistoryCreate(HistoryBase):
     pass
 
@@ -132,16 +136,15 @@ class HistoryRead(HistoryBase, ReadNamedModel):
 
     @property
     def coolness_status(self) -> Optional[dict]:
-        return get_status(self.coolness, 
-                self.confirm_document_link, 
-                self.cancel_document_link)
+        return get_status(self.coolness,
+                          self.confirm_document_link,
+                          self.cancel_document_link)
 
     @property
     def badge_status(self) -> Optional[dict]:
-        return get_status(self.badge, 
-                self.confirm_document_link, 
-                self.cancel_document_link)
-
+        return get_status(self.badge,
+                          self.confirm_document_link,
+                          self.cancel_document_link)
 
     def to_dict(self) -> dict:
         return {
@@ -191,7 +194,6 @@ class HistoryRead(HistoryBase, ReadNamedModel):
         }
 
 
-
 class HistoryPersonalRead(ReadModel):
     date_from: Optional[datetime]
     coefficient: Optional[Decimal]
@@ -218,11 +220,9 @@ class HistoryPersonalRead(ReadModel):
     type: str
     coefficent: Optional[Decimal]
 
-
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
-
 
     @property
     def service_characteristic(self) -> Optional[dict]:
@@ -250,10 +250,9 @@ class HistoryPersonalRead(ReadModel):
 
     @property
     def coolness_status(self) -> Optional[dict]:
-        return get_status(self.coolness, 
-                    self.confirm_document_link, 
-                    self.cancel_document_link)
-
+        return get_status(self.coolness,
+                          self.confirm_document_link,
+                          self.cancel_document_link)
 
     def to_dict(self) -> dict:
         return {
@@ -279,6 +278,7 @@ class HistoryPersonalRead(ReadModel):
             "service_characteristic": self.service_characteristic,
             "work_experience": self.work_experience,
         }
+
 
 class AttendanceRead(Model):
     physical_training: Optional[int]
@@ -315,6 +315,7 @@ class BadgeServiceDetailRead(ReadNamedModel):
             url=orm_obj.badge.type.url
         )
 
+
 class RankServiceDetailRead(ReadNamedModel):
     rank_assigned_by: Optional[str]
     document_link: Optional[str]
@@ -331,7 +332,7 @@ class RankServiceDetailRead(ReadNamedModel):
     @classmethod
     def from_orm(cls, orm_obj):
         return cls(
-            id= orm_obj.id,
+            id=orm_obj.id,
             name=orm_obj.rank.name,
             nameKZ=orm_obj.rank.nameKZ,
             rank_id=orm_obj.rank.id,
@@ -368,6 +369,7 @@ class PenaltyRead(Model):
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
         )
+
 
 class ContractRead(ReadNamedModel):
     date_from: Optional[datetime]
@@ -408,16 +410,14 @@ class AttestationRead(Model):
         arbitrary_types_allowed = True
 
 
-
-
 class CharacteristicRead(ReadModel):
-    date_from : Optional[datetime]
-    date_to : Optional[datetime]
-    document_link : Optional[str]
+    date_from: Optional[datetime]
+    date_to: Optional[datetime]
+    document_link: Optional[str]
     cancel_document_link: Optional[str]
-    document_number : Optional[str]
-    characteristic_initiator : Optional[str]
-    characteristic_initiator_id : Optional[uuid.UUID]
+    document_number: Optional[str]
+    characteristic_initiator: Optional[str]
+    characteristic_initiator_id: Optional[uuid.UUID]
 
     class Config:
         orm_mode = True
@@ -465,12 +465,13 @@ class HolidayRead(Model):
             status=orm_obj.status.type.name,
         )
 
+
 class EmergencyContactRead(ReadModel):
     date_from: Optional[datetime]
     date_to: Optional[datetime]
-    length_of_service: Optional[dict] # ВЫСЛУГА ЛЕТ
-    coefficient: Optional[Decimal] # КОЭФФИЦИЕНТ
-    percentage: Optional[int] # ПРОЦЕНТ
+    length_of_service: Optional[dict]  # ВЫСЛУГА ЛЕТ
+    coefficient: Optional[Decimal]  # КОЭФФИЦИЕНТ
+    percentage: Optional[int]  # ПРОЦЕНТ
     staff_division: Optional[dict]
     position: Optional[dict]
     position_id: Optional[uuid.UUID]
@@ -480,6 +481,7 @@ class EmergencyContactRead(ReadModel):
     staff_division_id: Optional[uuid.UUID]
     document_style: Optional[str]
     contractor_signer_name: Optional[dict]
+
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
@@ -515,21 +517,19 @@ class EmergencyContactRead(ReadModel):
 
 
 class ExperienceRead(ReadModel):
-    date_from : Optional[datetime]
-    date_to : Optional[datetime]
-    document_link : Optional[str]
-    document_number : Optional[str]
-    name_of_organization : Optional[str]
-    is_credited : Optional[bool]
-    document_style : Optional[str]
-    date_credited : Optional[datetime]
-    position_work_experience : Optional[str]
-
+    date_from: Optional[datetime]
+    date_to: Optional[datetime]
+    document_link: Optional[str]
+    document_number: Optional[str]
+    name_of_organization: Optional[str]
+    is_credited: Optional[bool]
+    document_style: Optional[str]
+    date_credited: Optional[datetime]
+    position_work_experience: Optional[str]
 
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
-
 
     @classmethod
     def from_orm(cls, orm_obj):
@@ -582,6 +582,7 @@ class SecondmentRead(Model):
             state_body=body
         )
 
+
 class TypeOfArmyEquipmentModelRead(ReadNamedModel):
     type_of_equipment: Optional[dict]
 
@@ -603,6 +604,7 @@ class TypeOfArmyEquipmentModelRead(ReadNamedModel):
 class TypeOfClothingEquipmentModelRead(ReadModel):
     type_of_equipment: Optional[dict]
     model_of_equipment: Optional[dict]
+
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
@@ -616,6 +618,7 @@ class TypeOfClothingEquipmentModelRead(ReadModel):
             model_of_equipment={"name": orm_obj.type_clothing_equipment_models.name,
                                 "nameKZ": orm_obj.type_clothing_equipment_models.nameKZ}
         )
+
 
 class TypeOfOtherEquipmentModelRead(ReadNamedModel):
     type_of_equipment: Optional[dict]
@@ -653,11 +656,9 @@ class EquipmentRead(ReadModel):
     clothing_equipment_types_models: Optional[TypeOfClothingEquipmentModelRead]
     type_of_other_equipment_model: Optional[TypeOfOtherEquipmentModelRead]
 
-
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
-
 
 
 class HistoryServiceDetailRead(Model):

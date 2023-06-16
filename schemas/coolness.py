@@ -26,7 +26,7 @@ class CoolnessTypeRead(CoolnessTypeBase, ReadNamedModel):
 class CoolnessBase(Model):
     type_id: Optional[uuid.UUID]
     user_id: Optional[uuid.UUID]
-    
+
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True

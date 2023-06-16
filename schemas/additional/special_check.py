@@ -21,6 +21,7 @@ class SpecialCheckBase(Model):
 class SpecialCheckCreate(SpecialCheckBase):
     pass
 
+
 class SpecialCheckUpdate(SpecialCheckBase):
     id: uuid.UUID
 

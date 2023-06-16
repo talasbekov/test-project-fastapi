@@ -4,6 +4,7 @@ from datetime import datetime
 
 from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
+
 class BadgeTypeBase(NamedModel):
     url: str
 
@@ -40,6 +41,7 @@ class BadgeUpdate(BadgeBase):
 class History(Model):
     date_from: Optional[datetime]
     date_to: Optional[datetime]
+
 
 class BadgeRead(BadgeBase, ReadModel):
     type: Optional[BadgeTypeRead]

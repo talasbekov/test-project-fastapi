@@ -1,4 +1,4 @@
-from schemas import  NamedModel, ReadNamedModel
+from schemas import NamedModel, ReadNamedModel
 
 
 class AcademicDegreeDegreeBase(NamedModel):

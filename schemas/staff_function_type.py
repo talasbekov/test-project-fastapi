@@ -6,6 +6,7 @@ from schemas import NamedModel, ReadNamedModel
 class StaffFunctionTypeBase(NamedModel):
     pass
 
+
 class DocumentStaffFunctionTypeBase(StaffFunctionTypeBase):
     can_cancel: bool
 
@@ -33,7 +34,7 @@ class ServiceStaffFunctionTypeUpdate(ServiceStaffFunctionTypeBase):
 class StaffFunctionTypeRead(StaffFunctionTypeBase, ReadNamedModel):
 
     class Config:
-        orm_mode=True
+        orm_mode = True
         arbitrary_types_allowed = True
 
 

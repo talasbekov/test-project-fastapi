@@ -13,6 +13,7 @@ class RecommenderUserBase(Model):
         orm_mode = True
         arbitrary_types_allowed = True
 
+
 class RecommenderUserCreate(RecommenderUserBase):
     pass
 

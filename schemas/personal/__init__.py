@@ -12,7 +12,7 @@ from .sport_achievement import (SportAchievementCreate, SportAchievementRead,
                                 SportAchievementUpdate)
 from .sport_degree import SportDegreeCreate, SportDegreeRead, SportDegreeUpdate
 from .tax_declaration import (TaxDeclarationCreate, TaxDeclarationRead,
-                             TaxDeclarationUpdate)
+                              TaxDeclarationUpdate)
 from .user_financial_info import (UserFinancialInfoCreate,
                                   UserFinancialInfoRead,
                                   UserFinancialInfoUpdate)

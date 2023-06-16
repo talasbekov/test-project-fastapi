@@ -17,11 +17,14 @@ class PsychologicalCheckBase(Model):
         orm_mode = True
         arbitrary_types_allowed = True
 
+
 class PsychologicalCheckCreate(PsychologicalCheckBase):
     pass
 
+
 class PsychologicalCheckUpdate(PsychologicalCheckBase):
     pass
+
 
 class PsychologicalCheckRead(PsychologicalCheckBase, ReadModel):
     document_link: Optional[str]

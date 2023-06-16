@@ -9,7 +9,7 @@ class CandidateStageTypeBase(NamedModel):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
-        
+
 
 class CandidateStageTypeCreate(CandidateStageTypeBase):
     pass

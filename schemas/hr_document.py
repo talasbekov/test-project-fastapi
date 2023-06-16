@@ -58,7 +58,8 @@ class DraftHrDocumentInit(Model):
                     raise ValueError("document_step_users_ids should be list")
                 for user_id in value:
                     if not isinstance(user_id, uuid.UUID):
-                        raise ValueError("document_step_users_ids should be uuid.UUID")
+                        raise ValueError(
+                            "document_step_users_ids should be uuid.UUID")
             elif key == 1:
                 raise ValueError("Don't add initiator")
             else:
@@ -66,7 +67,8 @@ class DraftHrDocumentInit(Model):
                     continue
                 value_to_uuid = uuid.UUID(value)
                 if not isinstance(value_to_uuid, uuid.UUID):
-                    raise ValueError("document_step_users_ids should be uuid.UUID")
+                    raise ValueError(
+                        "document_step_users_ids should be uuid.UUID")
 
         sorted(v, key=lambda x: keys.index(x))
 

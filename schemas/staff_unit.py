@@ -18,7 +18,8 @@ class StaffUnitBase(Model):
     position_id: uuid.UUID
     staff_division_id: Optional[uuid.UUID] = Field(None, nullable=True)
     is_active: Optional[bool] = True
-    requirements: Optional[List[StaffUnitRequirements]] = Field(None, nullable=True)
+    requirements: Optional[List[StaffUnitRequirements]
+                           ] = Field(None, nullable=True)
 
 
 class StaffUnitCreate(StaffUnitBase):

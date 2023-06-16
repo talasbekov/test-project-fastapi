@@ -23,7 +23,6 @@ class EducationBase(Model):
     document_number: Optional[str]
     date_of_issue: Optional[datetime.date]
 
-
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True

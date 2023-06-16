@@ -14,7 +14,7 @@ class PropertiesBase(Model):
     purchase_typeKZ: str
     address: str
     profile_id: uuid.UUID
-    
+
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True

@@ -7,6 +7,7 @@ from pydantic import BaseModel
 from schemas import ReadModel
 from schemas import PrivelegeEmergencyRead, PersonnalReserveRead, CoolnessRead
 
+
 class OathRead(ReadModel):
     date: Optional[datetime]
     military_id: Optional[uuid.UUID]
@@ -15,7 +16,7 @@ class OathRead(ReadModel):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
-    
+
     @classmethod
     def from_orm(cls, orm_obj):
         return cls(
