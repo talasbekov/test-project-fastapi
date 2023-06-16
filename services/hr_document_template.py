@@ -37,7 +37,9 @@ from ws import notification_manager
 
 
 class HrDocumentTemplateService(
-    ServiceBase[HrDocumentTemplate, HrDocumentTemplateCreate, HrDocumentTemplateUpdate]
+    ServiceBase[HrDocumentTemplate,
+                HrDocumentTemplateCreate,
+                HrDocumentTemplateUpdate]
 ):
     def create_template(
         self, db: Session, body: HrDocumentTemplateCreate, role: str
@@ -67,7 +69,8 @@ class HrDocumentTemplateService(
     ) -> dict[str, Union[Union[uuid.UUID, Dict[int, uuid.UUID]], list[uuid.UUID]]]:
         user = db.query(User).filter(User.id == user_id).first()
         if user is None:
-            raise NotFoundException(detail=f"User with id: {user_id} is not found!")
+            raise NotFoundException(
+                detail=f"User with id: {user_id} is not found!")
 
         initial_step = hr_document_step_service.get_initial_step_for_template(
             db, document_template_id
@@ -109,7 +112,8 @@ class HrDocumentTemplateService(
                 continue
             staff_units_ids = [unit.id for unit in function.staff_units]
             user = (
-                db.query(User).filter(User.staff_unit_id.in_(staff_units_ids)).first()
+                db.query(User).filter(
+                    User.staff_unit_id.in_(staff_units_ids)).first()
             )
             steps[str(function.priority)] = str(user.id)
         return steps
@@ -258,7 +262,8 @@ class HrDocumentTemplateService(
     def get_all(self, db: Session, ids: List[uuid.UUID]):
         return self._get_all(db, ids).all()
 
-    def get_all_skip(self, db: Session, ids: List[uuid.UUID], skip: int, limit: int):
+    def get_all_skip(self, db: Session,
+                     ids: List[uuid.UUID], skip: int, limit: int):
         return self._get_all(db, ids).offset(skip).limit(limit).all()
 
     def _get_all(self, db: Session, ids: List[uuid.UUID]):

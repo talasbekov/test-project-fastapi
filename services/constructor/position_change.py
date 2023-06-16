@@ -77,7 +77,8 @@ class PositionChangeHandler(BaseHandler):
             percent = int(properties[action["percent"]["tagname"]]["name"])
             reason = properties[action["reason"]["tagname"]]["name"]
         except KeyError:
-            raise BadRequestException(f"Position is not defined for this action: {self.__handler__}")
+            raise BadRequestException(
+                f"Position is not defined for this action: {self.__handler__}")
         return position_id, percent, reason
 
     def handle_response(self, db: Session,

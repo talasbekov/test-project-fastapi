@@ -10,47 +10,54 @@ from schemas import DocumentArchiveStaffFunctionTypeCreate, DocumentArchiveStaff
 from services.base import ServiceBase
 
 
-class DocumentArchiveStaffFunctionTypeService(ServiceBase[ArchiveDocumentFunctionType, DocumentArchiveStaffFunctionTypeCreate, DocumentArchiveStaffFunctionTypeUpdate]):
+class DocumentArchiveStaffFunctionTypeService(
+        ServiceBase[ArchiveDocumentFunctionType, DocumentArchiveStaffFunctionTypeCreate, DocumentArchiveStaffFunctionTypeUpdate]):
 
     def get_by_id(self, db: Session, id: str) -> ArchiveDocumentFunctionType:
         type = super().get(db, id)
         if type is None:
-            raise NotFoundException(detail="DocumentArchiveStaffFunctionType is not found!")
+            raise NotFoundException(
+                detail="DocumentArchiveStaffFunctionType is not found!")
         return type
-    
-    def get_by_origin_id(self, db: Session, origin_id: uuid.UUID) -> ArchiveDocumentFunctionType:
+
+    def get_by_origin_id(self, db: Session,
+                         origin_id: uuid.UUID) -> ArchiveDocumentFunctionType:
         return db.query(self.model).filter(
             self.model.origin_id == origin_id
-            ).first()
-    
-    def create_based_on_existing_archive_staff_function_type(self, db: Session, staff_function_type: DocumentFunctionType):
+        ).first()
+
+    def create_based_on_existing_archive_staff_function_type(
+            self, db: Session, staff_function_type: DocumentFunctionType):
         if staff_function_type is None:
             return None
         return super().create(db, DocumentArchiveStaffFunctionTypeCreate(
-                name=staff_function_type.name,
-                nameKZ=staff_function_type.nameKZ,
-                origin_id=staff_function_type.id,
-                can_cancel=staff_function_type.can_cancel
-            )
+            name=staff_function_type.name,
+            nameKZ=staff_function_type.nameKZ,
+            origin_id=staff_function_type.id,
+            can_cancel=staff_function_type.can_cancel
+        )
         )
 
-    def create_staff_function_type(self, db: Session, body: NewDocumentArchiveStaffFunctionTypeCreate):
+    def create_staff_function_type(
+            self, db: Session, body: NewDocumentArchiveStaffFunctionTypeCreate):
         return super().create(db, DocumentArchiveStaffFunctionTypeCreate(
-                name=body.name,
-                nameKZ=body.nameKZ,
-                origin_id=None,
-                can_cancel=body.can_cancel
-            )
+            name=body.name,
+            nameKZ=body.nameKZ,
+            origin_id=None,
+            can_cancel=body.can_cancel
+        )
         )
 
-    def update_staff_function_type(self, db: Session, type: ArchiveDocumentFunctionType, body: NewDocumentArchiveStaffFunctionTypeCreate):
+    def update_staff_function_type(
+            self, db: Session, type: ArchiveDocumentFunctionType, body: NewDocumentArchiveStaffFunctionTypeCreate):
         return super().update(db, db_obj=type, obj_in=DocumentArchiveStaffFunctionTypeCreate(
-                name=body.name,
-                nameKZ=body.nameKZ,
-                origin_id=None,
-                can_cancel=body.can_cancel
-            )
+            name=body.name,
+            nameKZ=body.nameKZ,
+            origin_id=None,
+            can_cancel=body.can_cancel
+        )
         )
 
 
-document_archive_staff_function_type_service = DocumentArchiveStaffFunctionTypeService(ArchiveDocumentFunctionType)
+document_archive_staff_function_type_service = DocumentArchiveStaffFunctionTypeService(
+    ArchiveDocumentFunctionType)

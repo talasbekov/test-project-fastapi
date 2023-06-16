@@ -108,7 +108,8 @@ responses = {
 }
 
 
-class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpdate]):
+class HrDocumentService(
+        ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpdate]):
     def get_by_id(self, db: Session, id: str) -> HrDocument:
         document = super().get(db, id)
         if document is None:
@@ -163,7 +164,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             .filter(
                 HrDocumentInfo.hr_document_step_id == HrDocumentStep.id,
                 HrDocumentInfo.assigned_to_id == user_id,
-                HrDocumentInfo.signed_by_id == None)
+                HrDocumentInfo.signed_by_id is None)
         )
 
         if filter != '':
@@ -255,7 +256,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         return self._return_correctly(db, documents, user)
 
-    def save_to_draft(self, db: Session, user_id: str, body: DraftHrDocumentCreate, role: str):
+    def save_to_draft(self, db: Session, user_id: str,
+                      body: DraftHrDocumentCreate, role: str):
         template = hr_document_template_service.get_by_id(
             db, body.hr_document_template_id
         )
@@ -603,12 +605,14 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         document_staff_function: DocumentStaffFunction = document_staff_function_service.get_by_id(db,
                                                                                                    step.staff_function_id)
 
-        if not self._check_jurisdiction(db, staff_unit, document_staff_function, body.user_ids):
+        if not self._check_jurisdiction(
+                db, staff_unit, document_staff_function, body.user_ids):
             raise ForbiddenException(
                 detail="Вы не можете инициализировать этот документ из-за юрисдикции!"
             )
 
-    def _validate_document_for_steps(self, step: HrDocumentStep, all_steps: list, users: list):
+    def _validate_document_for_steps(
+            self, step: HrDocumentStep, all_steps: list, users: list):
 
         all_steps.remove(step)
 
@@ -832,7 +836,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 raise InvalidOperationException(
                     f"Action {action_name} is not supported!"
                 )
-            if super_document.users is not None and len(super_document.users) > 0:
+            if super_document.users is not None and len(
+                    super_document.users) > 0:
                 for user in super_document.users:
                     handlers[action_name].handle_action(db, user, action, super_template.properties,
                                                         super_document.properties, super_document)
@@ -899,7 +904,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         return service
 
     # TODO
-    def _to_response(self, db: Session, document: HrDocument) -> HrDocumentRead:
+    def _to_response(self, db: Session,
+                     document: HrDocument) -> HrDocumentRead:
         response = HrDocumentRead.from_orm(document)
         if document.last_step_id is not None:
             response.can_cancel = document.last_step.staff_function.role.can_cancel
@@ -931,7 +937,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         return response
 
-    def _check_for_department(self, db: Session, user: User, subject: User) -> bool:
+    def _check_for_department(
+            self, db: Session, user: User, subject: User) -> bool:
         department_id = staff_division_service.get_department_id_from_staff_division_id(
             db, user.staff_unit.staff_division_id
         )
@@ -1010,7 +1017,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
     def _check_personnel_jurisdiction(self, db: Session, staff_unit: StaffUnit, staff_division: StaffDivision,
                                       subject_users: List[User]) -> bool:
-        # Получаем все дочерние штатные группы пользователя, включая саму группу
+        # Получаем все дочерние штатные группы пользователя, включая саму
+        # группу
         staff_divisions: List[StaffDivision] = staff_division_service.get_child_groups(
             db, staff_unit.staff_division_id)
         staff_divisions.append(staff_division)
@@ -1023,21 +1031,24 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         # Проверка субъекта на присутствие в штатной единице
         # Метод возвращает True если все из субъектов относятся к штатной единице
-        # Если один из субъектов не относится к штатной единице то метод выбрасывает False
+        # Если один из субъектов не относится к штатной единице то метод
+        # выбрасывает False
         for i in subject_users:
             if i.actual_staff_unit not in staff_units:
                 return False
 
         return True
 
-    def _check_supervised_jurisdiction(self, subject_users: List[User]) -> bool:
+    def _check_supervised_jurisdiction(
+            self, subject_users: List[User]) -> bool:
         for i in subject_users:
             if i.supervised_by is None:
                 return False
 
         return True
 
-    def _check_candidates_jurisdiction(self, db: Session, subject_users: List[User]):
+    def _check_candidates_jurisdiction(
+            self, db: Session, subject_users: List[User]):
         staff_units: List[StaffUnit] = []
         for i in subject_users:
             staff_units.append(i.staff_unit)
@@ -1104,7 +1115,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             db, id, last_step.id)
         return info.signed_by
 
-    def _create_hr_document_info_for_all_steps(self, db: Session, document: HrDocument, users: List[User], all_steps: List[HrDocumentStep]):
+    def _create_hr_document_info_for_all_steps(
+            self, db: Session, document: HrDocument, users: List[User], all_steps: List[HrDocumentStep]):
         for step, user_id in zip(all_steps, users):
             if step.is_direct_supervisor is not None:
                 if not isinstance(user_id, dict):
@@ -1120,7 +1132,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 db, document.id, step.id, user_id, None, None, None
             )
 
-    def _create_hr_document_info_for_initiator(self, db: Session, document: HrDocument, current_user: User, step: HrDocumentStep):
+    def _create_hr_document_info_for_initiator(
+            self, db: Session, document: HrDocument, current_user: User, step: HrDocumentStep):
         document_info_initiator = hr_document_info_service.create_info_for_step(
             db, document.id, step.id, current_user.id, True, None,
             datetime.now()
@@ -1167,7 +1180,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         db.flush()
         return document
 
-    def _set_next_step(self, db: Session, document_id: str, info: HrDocumentInfo):
+    def _set_next_step(self, db: Session, document_id: str,
+                       info: HrDocumentInfo):
         try:
             next_step = hr_document_info_service.get_by_document_id_and_step_id(
                 db, document_id, info.hr_document_step.id).hr_document_step
@@ -1177,7 +1191,8 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             )
         return next_step
 
-    def _create_info_for_document_steps(self, db: Session, document: HrDocument, steps):
+    def _create_info_for_document_steps(
+            self, db: Session, document: HrDocument, steps):
         for step in steps:
             had_step = False
             count = 1
@@ -1212,10 +1227,11 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
         temp_file_path = await download_file_to_tempfile(path)
 
         try:
-            template = jinja_env.get_template(temp_file_path.replace('/tmp/', ''))
-            
+            template = jinja_env.get_template(
+                temp_file_path.replace('/tmp/', ''))
+
             context = {}
-            
+
             for i in list(document.properties):
                 if isinstance(document.properties[i], dict):
                     context[i] = document.properties[i]["name"] if language == LanguageEnum.ru else document.properties[i]["nameKZ"]

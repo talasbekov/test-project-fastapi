@@ -11,7 +11,8 @@ class CountryService(ServiceBase[Country, CountryCreate, CountryUpdate]):
     def get_by_id(self, db: Session, id: str):
         rank = super().get(db, id)
         if rank is None:
-            raise NotFoundException(detail=f"Violation with id: {id} is not found!")
+            raise NotFoundException(
+                detail=f"Violation with id: {id} is not found!")
         return rank
 
 

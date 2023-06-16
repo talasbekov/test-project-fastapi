@@ -44,7 +44,8 @@ class DeleteCoolnessHandler(BaseHandler):
             )
 
     def handle_filter(self, db: Session, user_query: Query[Any]):
-        return user_query.filter(User.coolnesses.any(User.id == Coolness.user_id))
+        return user_query.filter(
+            User.coolnesses.any(User.id == Coolness.user_id))
 
     def get_args(self, action, properties):
         try:

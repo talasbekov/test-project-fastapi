@@ -6,12 +6,15 @@ from schemas.medical import DispensaryRegistrationUpdate
 from services import ServiceBase
 
 
-class DispensaryRegistrationService(ServiceBase[DispensaryRegistration,DispensaryRegistrationUpdate,DispensaryRegistrationUpdate]):
-    def get_by_id(self,db: Session,id: str):
-        dispensary_registration = super().get(db,id)
+class DispensaryRegistrationService(
+        ServiceBase[DispensaryRegistration, DispensaryRegistrationUpdate, DispensaryRegistrationUpdate]):
+    def get_by_id(self, db: Session, id: str):
+        dispensary_registration = super().get(db, id)
         if dispensary_registration is None:
-            raise client.NotFoundException(detail="Dispensary registration is not found!")
+            raise client.NotFoundException(
+                detail="Dispensary registration is not found!")
         return dispensary_registration
-        
 
-dispensary_registration_service = DispensaryRegistrationService(DispensaryRegistration)
+
+dispensary_registration_service = DispensaryRegistrationService(
+    DispensaryRegistration)

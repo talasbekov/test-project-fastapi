@@ -22,7 +22,7 @@ from utils import hash_password, is_valid_phone_number, verify_password
 
 
 class AuthService():
-    
+
     def login(self, form: LoginForm, db: Session, Authorize: AuthJWT):
         user = user_service.get_by_email(db, EmailStr(form.email).lower())
 
@@ -32,7 +32,7 @@ class AuthService():
             raise BadRequestException(detail='Incorrect email or password')
 
         self._set_last_signed_at(db, user)
-        
+
         access_token, refresh_token = self._generate_tokens(Authorize, user)
 
         return {"access_token": access_token, "refresh_token": refresh_token}
@@ -40,11 +40,14 @@ class AuthService():
     def register(self, form: RegistrationForm, db: Session):
 
         if user_service.get_by_email(db, EmailStr(form.email).lower()):
-            raise BadRequestException(detail="User with this email already exists!")
+            raise BadRequestException(
+                detail="User with this email already exists!")
         if user_service.get_by_call_sign(db, form.call_sign):
-            raise BadRequestException(detail="User with this call_sign already exists!")
+            raise BadRequestException(
+                detail="User with this call_sign already exists!")
         if user_service.get_by_id_number(db, form.id_number):
-            raise BadRequestException(detail="User with this id_number already exists!")
+            raise BadRequestException(
+                detail="User with this id_number already exists!")
         if not is_valid_phone_number(form.phone_number):
             raise BadRequestException(detail="Invalid phone number!")
         if form.password != form.re_password:
@@ -79,36 +82,72 @@ class AuthService():
 
         return user
 
-    def register_candidate(self, form: CandidateRegistrationForm, db: Session, staff_unit_id: str):
-        
+    def register_candidate(
+            self, form: CandidateRegistrationForm, db: Session, staff_unit_id: str):
+
         if user_service.get_by_iin(db, form.iin):
-            raise BadRequestException(detail="User with this iin already exists!")
-        
+            raise BadRequestException(
+                detail="User with this iin already exists!")
+
         birth_date = self._extract_birth_date_from_iin(form.iin)
 
         # Get current user and staff unit
-        current_user_staff_unit: StaffUnit = staff_unit_service.get_by_id(db, staff_unit_id)
+        current_user_staff_unit: StaffUnit = staff_unit_service.get_by_id(
+            db, staff_unit_id)
         current_user: User = current_user_staff_unit.actual_users[0]
 
         # Create new staff unit for candidate
-        special_candidate_group = staff_division_service.get_by_name(db, StaffDivisionEnum.CANDIDATES.value)
+        special_candidate_group = staff_division_service.get_by_name(
+            db, StaffDivisionEnum.CANDIDATES.value)
         staff_unit = staff_unit_service.create(db, obj_in=StaffUnitCreate(
             position_id=current_user_staff_unit.position_id,
             staff_division_id=special_candidate_group.id
         ))
-        
+
         # Generate fake personal information for candidate
-        first_names = ["Канат", "Мади", "Алибек", "Абдулла", "Аскар", "Хабдулла", "Азамат", "Бахыт", "Дамир", "Дастан"]
-        last_names = ["Алибеков", "Қанатов", "Қенжебаев", "Құдайбергенов", "Нұрғалиев", "Омаров", "Оспанов", "Султанов", "Турсынбаев", "Жақыпов"]
-        father_names = ["Әбдулович", "Айбекович", "Әлишерович", "Әрманович", "Бекзатович", "Дәулетович", "Нұрлыбекович", "Русланович", "Санжарович", "Ержанович"]
-        
+        first_names = [
+            "Канат",
+            "Мади",
+            "Алибек",
+            "Абдулла",
+            "Аскар",
+            "Хабдулла",
+            "Азамат",
+            "Бахыт",
+            "Дамир",
+            "Дастан"]
+        last_names = [
+            "Алибеков",
+            "Қанатов",
+            "Қенжебаев",
+            "Құдайбергенов",
+            "Нұрғалиев",
+            "Омаров",
+            "Оспанов",
+            "Султанов",
+            "Турсынбаев",
+            "Жақыпов"]
+        father_names = [
+            "Әбдулович",
+            "Айбекович",
+            "Әлишерович",
+            "Әрманович",
+            "Бекзатович",
+            "Дәулетович",
+            "Нұрлыбекович",
+            "Русланович",
+            "Санжарович",
+            "Ержанович"]
+
         first_name = random.choice(first_names)
         last_name = random.choice(last_names)
         father_name = random.choice(father_names)
 
         random_int = random.randint(10000000, 99999999)
-        call_sign = f"{current_user.call_sign}{random_int}"  # concatenate random int to call_sign
-        id_number = f"{current_user.id_number}{random_int}"  # concatenate random int to id_number
+        # concatenate random int to call_sign
+        call_sign = f"{current_user.call_sign}{random_int}"
+        # concatenate random int to id_number
+        id_number = f"{current_user.id_number}{random_int}"
 
         # Create new user and candidate
         user_obj_in = UserCreate(
@@ -148,12 +187,12 @@ class AuthService():
     def refresh_token(self, db: Session, Authorize: AuthJWT):
         if not Authorize.get_jwt_subject():
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                    detail='Could not refresh access token')
+                                detail='Could not refresh access token')
         user = user_service.get(db, Authorize.get_jwt_subject())
         if not user:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                                 detail='The user belonging to this token no longer exist')
-        
+
         access_token, refresh_token = self._generate_tokens(Authorize, user)
 
         return {"access_token": access_token, "refresh_token": refresh_token}
@@ -206,18 +245,19 @@ class AuthService():
 
         db.add(user)
         db.flush()
-        
+
     def _extract_birth_date_from_iin(self, iin: str):
         try:
             date_str = iin[:6]
             birth_date = datetime.strptime(date_str, '%y%m%d')
         except ValueError:
             raise BadRequestException(detail="Invalid date in iin parameter!")
-        
+
         # ensure date of birth is in the past
         if birth_date > datetime.today():
-            raise BadRequestException(detail="Date of birth in iin parameter is in the future!")
-        
+            raise BadRequestException(
+                detail="Date of birth in iin parameter is in the future!")
+
         return birth_date
 
 

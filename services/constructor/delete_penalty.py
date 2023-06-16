@@ -46,7 +46,8 @@ class DeletePenaltyHandler(BaseHandler):
         pass
 
     def handle_filter(self, db: Session, user_query: Query[Any]):
-        return user_query.filter(User.penalties.any(User.id == Penalty.user_id))
+        return user_query.filter(
+            User.penalties.any(User.id == Penalty.user_id))
 
     def get_args(self, action, properties):
         try:

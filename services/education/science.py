@@ -11,7 +11,8 @@ class ScienceService(ServiceBase[Science, ScienceCreate, ScienceUpdate]):
     def get_by_id(self, db: Session, id: str):
         science = super().get(db, id)
         if science is None:
-            raise NotFoundException(detail=f"Science with id: {id} is not found!")
+            raise NotFoundException(
+                detail=f"Science with id: {id} is not found!")
         return science
 
 

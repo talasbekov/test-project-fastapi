@@ -3,7 +3,8 @@ from schemas import MilitaryUnitCreate, MilitaryUnitUpdate
 from .base import ServiceBase
 
 
-class MilitaryUnitService(ServiceBase[MilitaryUnit, MilitaryUnitCreate, MilitaryUnitUpdate]):
+class MilitaryUnitService(
+        ServiceBase[MilitaryUnit, MilitaryUnitCreate, MilitaryUnitUpdate]):
     pass
 
 

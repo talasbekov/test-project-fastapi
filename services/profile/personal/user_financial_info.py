@@ -6,12 +6,14 @@ from schemas import UserFinancialInfoCreate, UserFinancialInfoUpdate
 from services.base import ServiceBase
 
 
-class UserFinancialInfoService(ServiceBase[UserFinancialInfo, UserFinancialInfoCreate, UserFinancialInfoUpdate]):
+class UserFinancialInfoService(
+        ServiceBase[UserFinancialInfo, UserFinancialInfoCreate, UserFinancialInfoUpdate]):
 
     def get_by_id(self, db: Session, id: str):
         user_financial_info = super().get(db, id)
         if user_financial_info is None:
-            raise NotFoundException(detail=f"UserFinancialInfo with id: {id} is not found!")
+            raise NotFoundException(
+                detail=f"UserFinancialInfo with id: {id} is not found!")
         return user_financial_info
 
 

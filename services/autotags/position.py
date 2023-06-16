@@ -12,7 +12,8 @@ class PositionAutoTagHandler(BaseAutoTagHandler):
 
     def handle(self, db: Session, user_id: UUID):
         user = user_service.get_by_id(db, user_id)
-        full_name, full_nameKZ = staff_division_service.get_full_name(db, user.staff_unit.staff_division_id)
+        full_name, full_nameKZ = staff_division_service.get_full_name(
+            db, user.staff_unit.staff_division_id)
         full_name = full_name.replace("/", "")
         full_nameKZ = full_nameKZ.replace("/", "")
         res = f"{full_name} {user.staff_unit.position.name} ({user.staff_unit.position.category_code}) ({user.actual_staff_unit.position.name})"

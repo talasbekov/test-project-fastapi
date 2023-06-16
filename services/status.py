@@ -23,37 +23,41 @@ class StatusService(ServiceBase[Status, StatusCreate, StatusUpdate]):
         else:
             return db.query(Status).filter(Status.id == id).first().type
 
-    def get_by_option(self, 
-                      db: Session, 
-                      type: str, 
-                      id: uuid.UUID, 
-                      skip: int, 
+    def get_by_option(self,
+                      db: Session,
+                      type: str,
+                      id: uuid.UUID,
+                      skip: int,
                       limit: int):
         user = user_service.get_by_id(db, id)
         if type == 'write':
             return [StatusTypeRead.from_orm(status).dict() for status in
                     db.query(StatusType).offset(skip).limit(limit).all()]
         else:
-            return [StatusRead.from_orm(status).dict() for status in user.statuses]
+            return [StatusRead.from_orm(status).dict()
+                    for status in user.statuses]
 
-    def stop_relation(self, db: Session, user_id: uuid.UUID, status_id: uuid.UUID):
+    def stop_relation(self, db: Session, user_id: uuid.UUID,
+                      status_id: uuid.UUID):
         history = (db.query(StatusHistory)
                    .filter(StatusHistory.status_id == status_id)
                    .order_by(StatusHistory.created_at.desc()).first())
         if history is None:
-            raise NotFoundException(detail=f"Status with id: {status_id} is not found!")
+            raise NotFoundException(
+                detail=f"Status with id: {status_id} is not found!")
         history.date_to = datetime.now()
         db.add(history)
         db.flush()
         return history
 
-    def exists_relation(self, db: Session, user_id: str, badge_type_id: uuid.UUID):
+    def exists_relation(self, db: Session, user_id: str,
+                        badge_type_id: uuid.UUID):
         return (
             db.query(Status)
             .filter(Status.user_id == user_id)
             .filter(Status.type_id == badge_type_id)
             .join(StatusHistory)
-            .filter(or_(StatusHistory.date_to == None, 
+            .filter(or_(StatusHistory.date_to is None,
                         StatusHistory.date_to > datetime.now()))
             .first()
         ) is not None
@@ -64,15 +68,15 @@ class StatusService(ServiceBase[Status, StatusCreate, StatusUpdate]):
                 .contains(name.lower()))
                 .all())
 
-    def get_active_status_of_user(self, 
-                                  db: Session, 
-                                  user_id: uuid.UUID, 
+    def get_active_status_of_user(self,
+                                  db: Session,
+                                  user_id: uuid.UUID,
                                   status_name: str):
         return (
             db.query(StatusHistory)
             .filter(
                 or_(
-                    StatusHistory.date_to == None,
+                    StatusHistory.date_to is None,
                     StatusHistory.date_to > datetime.now(),
                 ),
             )

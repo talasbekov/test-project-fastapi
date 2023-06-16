@@ -18,7 +18,9 @@ class SupervisorCategory(BaseCategory):
                 Position,
                 and_(
                     StaffUnit.position_id == Position.id,
-                    func.lower(Position.name).contains(PositionNameEnum.SUPERVISOR.value.lower()),
+                    func.lower(
+                        Position.name).contains(
+                        PositionNameEnum.SUPERVISOR.value.lower()),
                 ),
             )
             .all()

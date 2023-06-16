@@ -31,8 +31,10 @@ async def get_all(*,
     """
         Get all Equipments
 
-        - **skip**: int - The number of equipments to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of equipments to return in the response. This parameter is optional and defaults to 10.
+        - **skip**: int - The number of equipments to skip before returning the results. 
+            This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of equipments to return in the response. 
+            This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
     return equipment_service.get_multi(db, skip, limit)
@@ -125,8 +127,10 @@ async def get_all_clothing(*,
     """
         Get all Clothing Equipments
 
-        - **skip**: int - The number of equipments to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of equipments to return in the response. This parameter is optional and defaults to 10.
+        - **skip**: int - The number of equipments to skip before returning the results. 
+            This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of equipments to return in the response. 
+            This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
     return equipment_service.get_all_clothing_equipments(db, skip, limit)
@@ -144,8 +148,10 @@ async def get_all_army(*,
     """
         Get all Army Equipments
 
-        - **skip**: int - The number of equipments to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of equipments to return in the response. This parameter is optional and defaults to 10.
+        - **skip**: int - The number of equipments to skip before returning the results. 
+            This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of equipments to return in the response. 
+            This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
     return equipment_service.get_all_army_equipments(db, skip, limit)
@@ -163,8 +169,10 @@ async def get_all_other(*,
     """
         Get all Other Equipments
 
-        - **skip**: int - The number of equipments to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of equipments to return in the response. This parameter is optional and defaults to 10.
+        - **skip**: int - The number of equipments to skip before returning the results. 
+            This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of equipments to return in the response. 
+            This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
     return equipment_service.get_all_other_equipments(db, skip, limit)
@@ -182,8 +190,10 @@ async def get_all_types(*,
     """
         Get all Types of Equipments
 
-        - **skip**: int - The number of equipments to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of equipments to return in the response. This parameter is optional and defaults to 10.
+        - **skip**: int - The number of equipments to skip before returning the results. 
+            This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of equipments to return in the response. 
+            This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
     return ["other_equipment", "clothing_equipment", "army_equipment"]
@@ -200,8 +210,10 @@ async def get_all_available(*,
     """
         Get all available Equipments for user
 
-        - **skip**: int - The number of equipments to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of equipments to return in the response. This parameter is optional and defaults to 10.
+        - **skip**: int - The number of equipments to skip before returning the results. 
+            This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of equipments to return in the response. 
+            This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
     return equipment_service.get_all_available_equipments(db, user_id, skip, limit)

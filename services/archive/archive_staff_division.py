@@ -13,7 +13,8 @@ from . import increment_changes_size
 from .archive_staff_unit import archive_staff_unit_service
 
 
-class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaffDivisionCreate, ArchiveStaffDivisionUpdate]):
+class ArchiveStaffDivisionService(
+        ServiceBase[ArchiveStaffDivision, ArchiveStaffDivisionCreate, ArchiveStaffDivisionUpdate]):
 
     def get_by_id(self, db: Session, id: str) -> ArchiveStaffDivision:
         group = super().get(db, id)
@@ -22,8 +23,8 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
                 f"StaffDivision with id: {id} is not found!")
         return group
 
-
-    def get_by_name(self, db: Session, name: str, staff_list_id: uuid.UUID) -> ArchiveStaffDivision:
+    def get_by_name(self, db: Session, name: str,
+                    staff_list_id: uuid.UUID) -> ArchiveStaffDivision:
         group = db.query(self.model).filter(
             self.model.name == name,
             self.model.staff_list_id == staff_list_id
@@ -42,13 +43,14 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
     ) -> List[ArchiveStaffDivision]:
         return db.query(self.model).filter(
             ArchiveStaffDivision.staff_list_id == staff_list_id,
-            ArchiveStaffDivision.parent_group_id == None,
+            ArchiveStaffDivision.parent_group_id is None,
         ).offset(skip).limit(limit).all()
 
-    def get_parents(self, db: Session, staff_list_id: uuid.UUID) -> List[ArchiveStaffDivision]:
+    def get_parents(self, db: Session,
+                    staff_list_id: uuid.UUID) -> List[ArchiveStaffDivision]:
         return db.query(self.model).filter(
             ArchiveStaffDivision.staff_list_id == staff_list_id,
-            ArchiveStaffDivision.parent_group_id == None,
+            ArchiveStaffDivision.parent_group_id is None,
             StaffDivision.name.not_in([*StaffDivisionEnum])
         ).all()
 
@@ -65,7 +67,8 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
         db.flush()
         return group
 
-    def get_department_id_from_staff_division_id(self, db: Session, staff_division_id: uuid.UUID):
+    def get_department_id_from_staff_division_id(
+            self, db: Session, staff_division_id: uuid.UUID):
 
         staff_division = self.get_by_id(db, staff_division_id)
 
@@ -73,14 +76,15 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
 
         res_id = staff_division.id
 
-        while parent_id != None:
+        while parent_id is not None:
             res_id = parent_id
             tmp = self.get_by_id(db, parent_id)
             parent_id = tmp.parent_group_id
 
         return res_id
 
-    def get_division_parents_by_id(self, db: Session, archive_staff_division_id: uuid.UUID):
+    def get_division_parents_by_id(
+            self, db: Session, archive_staff_division_id: uuid.UUID):
 
         archive_staff_division = self.get_by_id(db, archive_staff_division_id)
 
@@ -97,7 +101,8 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
         db.rollback()
         return res
 
-    def create_based_on_existing_staff_division(self, db: Session, staff_division: StaffDivision, staff_list_id: uuid.UUID, parent_group_id: uuid.UUID):
+    def create_based_on_existing_staff_division(
+            self, db: Session, staff_division: StaffDivision, staff_list_id: uuid.UUID, parent_group_id: uuid.UUID):
         self._validate_parent(db, parent_group_id)
         return super().create(db, ArchiveStaffDivisionCreate(
             parent_group_id=parent_group_id,
@@ -112,7 +117,8 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
             leader_id=None,
         ))
 
-    def create_staff_division(self, db: Session, body: NewArchiveStaffDivisionCreate):
+    def create_staff_division(self, db: Session,
+                              body: NewArchiveStaffDivisionCreate):
         self._validate_parent(db, body.parent_group_id)
         res = super().create(db, ArchiveStaffDivisionCreate(
             parent_group_id=body.parent_group_id,
@@ -129,7 +135,8 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
         increment_changes_size(db, res.staff_list)
         return res
 
-    def update_staff_division(self, db: Session, archive_staff_division: ArchiveStaffDivision, body: NewArchiveStaffDivisionUpdate):
+    def update_staff_division(
+            self, db: Session, archive_staff_division: ArchiveStaffDivision, body: NewArchiveStaffDivisionUpdate):
         self._validate_parent(db, body.parent_group_id)
         res = super().update(db, db_obj=archive_staff_division, obj_in=ArchiveStaffDivisionUpdate(
             parent_group_id=body.parent_group_id,
@@ -158,12 +165,12 @@ class ArchiveStaffDivisionService(ServiceBase[ArchiveStaffDivision, ArchiveStaff
         duplicate_division.description = archive_staff_division.description
         duplicate_division.is_combat_unit = archive_staff_division.is_combat_unit
         duplicate_division.leader_id = None
-        duplicate_division.type_id=archive_staff_division.type_id,
-        duplicate_division.staff_division_number=archive_staff_division.staff_division_number,
+        duplicate_division.type_id = archive_staff_division.type_id,
+        duplicate_division.staff_division_number = archive_staff_division.staff_division_number,
         duplicate_division.staff_list_id = archive_staff_division.staff_list_id
         duplicate_division.origin_id = archive_staff_division.origin_id
-        duplicate_division.name = archive_staff_division.name+'_copy'
-        duplicate_division.nameKZ = archive_staff_division.nameKZ+'_copy'
+        duplicate_division.name = archive_staff_division.name + '_copy'
+        duplicate_division.nameKZ = archive_staff_division.nameKZ + '_copy'
 
         # Copy the children
         for child in archive_staff_division.children:

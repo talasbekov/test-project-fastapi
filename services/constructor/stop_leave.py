@@ -77,7 +77,7 @@ class StopLeaveHandler(BaseHandler):
                 and_(
                     Status.id == StatusHistory.status_id,
                     or_(
-                        StatusHistory.date_to == None,
+                        StatusHistory.date_to is None,
                         StatusHistory.date_to > datetime.now(),
                     ),
                 ),

@@ -17,4 +17,5 @@ class PositionService(ServiceBase[Position, PositionCreate, PositionUpdate]):
         else:
             return None
 
+
 position_service = PositionService(Position)  # type: ignore

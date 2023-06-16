@@ -37,7 +37,7 @@ class ProfileService(ServiceBase[Profile, ProfileCreate, ProfileUpdate]):
     #     language_proficiencies = (LanguageProficiencyRead.from_orm(language_proficiency).dict()
     #                               for language_proficiency in profile.educational_profile.language_proficiency)
     #     sport_degrees = (SportDegreeRead.from_orm(sport_degree).dict()
-    #                      for sport_degree in profile.personal_profile.sport_degrees)
+    # for sport_degree in profile.personal_profile.sport_degrees)
 
     #     docx_context_data = {
     #         "last_name": profile.user.last_name,

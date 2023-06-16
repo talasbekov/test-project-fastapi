@@ -1,6 +1,6 @@
 from typing import Optional
 
-from sqlalchemy.orm import  Session
+from sqlalchemy.orm import Session
 
 from models import (
     ArchiveStaffDivision,
@@ -9,7 +9,7 @@ from models import (
     User,
     HrDocument,
 )
-from exceptions import  BadRequestException
+from exceptions import BadRequestException
 from .base import BaseHandler
 from .. import (
     staff_division_service,
@@ -64,7 +64,8 @@ class ApplyStaffListHandler(BaseHandler):
     ):
         pass
 
-    def _create_staff_division(self, db: Session, staff_division: ArchiveStaffDivision, parent_id: Optional[int]) -> StaffDivision:
+    def _create_staff_division(
+            self, db: Session, staff_division: ArchiveStaffDivision, parent_id: Optional[int]) -> StaffDivision:
         is_leader_needed = None
         leader_id = None
 

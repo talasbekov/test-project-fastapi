@@ -17,12 +17,14 @@ class RankService(ServiceBase[Rank, RankCreate, RankUpdate]):
             raise NotFoundException(detail=f"Rank with id: {id} is not found!")
         return rank
 
-    def get_by_option(self, db: Session, type: str, id: uuid.UUID, skip: int, limit: int):
+    def get_by_option(self, db: Session, type: str,
+                      id: uuid.UUID, skip: int, limit: int):
         user = db.query(User).filter(User.id == id).first()
         if user is None:
             raise NotFoundException(detail=f"User with id: {id} is not found!")
         if type == "write":
-            return [RankRead.from_orm(rank).dict() for rank in db.query(Rank).filter(Rank.order <= user.staff_unit.position.max_rank.order).all()]
+            return [RankRead.from_orm(rank).dict() for rank in db.query(Rank).filter(
+                Rank.order <= user.staff_unit.position.max_rank.order).all()]
         else:
             if user.rank.order == 1:
                 return []
@@ -37,7 +39,7 @@ class RankService(ServiceBase[Rank, RankCreate, RankUpdate]):
             db.query(RankHistory)
             .filter(
                 RankHistory.user_id == user_id,
-                RankHistory.date_to == None,
+                RankHistory.date_to is None,
             )
             .order_by(RankHistory.date_from.desc())
             .first()

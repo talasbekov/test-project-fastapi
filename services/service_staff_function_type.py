@@ -7,21 +7,24 @@ from .archive.service_archive_staff_function_type import service_archive_staff_f
 from .base import ServiceBase
 
 
-class ServiceFunctionTypeService(ServiceBase[ServiceFunctionType, ServiceStaffFunctionTypeCreate, ServiceStaffFunctionTypeUpdate]):
+class ServiceFunctionTypeService(
+        ServiceBase[ServiceFunctionType, ServiceStaffFunctionTypeCreate, ServiceStaffFunctionTypeUpdate]):
 
     def get_by_id(self, db: Session, id: str):
         if id is None:
             return None
         service_function_type = super().get(db, id)
         if service_function_type is None:
-            raise NotFoundException(detail=f"ServiceFunctionType with id: {id} is not found!")
+            raise NotFoundException(
+                detail=f"ServiceFunctionType with id: {id} is not found!")
         return service_function_type
 
     def _update_from_archive(
             self,
             db,
             archive_staff_function_type: ArchiveServiceFunctionType):
-        service_function_type = self.get_by_id(db, archive_staff_function_type.origin_id)
+        service_function_type = self.get_by_id(
+            db, archive_staff_function_type.origin_id)
 
         res = super().update(
             db,
@@ -49,12 +52,14 @@ class ServiceFunctionTypeService(ServiceBase[ServiceFunctionType, ServiceStaffFu
             self,
             db: Session,
             type_id: ArchiveServiceFunctionType):
-        type = service_archive_staff_function_type_service.get_by_id(db, type_id)
+        type = service_archive_staff_function_type_service.get_by_id(
+            db, type_id)
         if type.origin_id is None:
             return self._create_from_archive(db,
-                                            type)
+                                             type)
         return self._update_from_archive(db,
-                                        type)
+                                         type)
 
 
-service_staff_function_type_service = ServiceFunctionTypeService(ServiceFunctionType)
+service_staff_function_type_service = ServiceFunctionTypeService(
+    ServiceFunctionType)

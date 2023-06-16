@@ -11,7 +11,8 @@ from .base import ServiceBase
 
 
 class PenaltyService(ServiceBase[Penalty, PenaltyCreate, PenaltyUpdate]):
-    def create_relation(self, db: Session, user_id: uuid.UUID, type_id: uuid.UUID):
+    def create_relation(self, db: Session, user_id: uuid.UUID,
+                        type_id: uuid.UUID):
         penalty = super().create(db, PenaltyCreate(type_id=type_id, user_id=user_id))
         return penalty
 
@@ -26,10 +27,11 @@ class PenaltyService(ServiceBase[Penalty, PenaltyCreate, PenaltyUpdate]):
         else:
             penalties = (
                 db.query(Penalty)
-                    .filter(Penalty.user_id == id)
-                    .join(PenaltyHistory, and_(PenaltyHistory.user_id == id, or_(PenaltyHistory.date_to < datetime.now(), PenaltyHistory.date_to == None)))
+                .filter(Penalty.user_id == id)
+                .join(PenaltyHistory, and_(PenaltyHistory.user_id == id, or_(PenaltyHistory.date_to < datetime.now(), PenaltyHistory.date_to is None)))
             )
-            return [PenaltyRead.from_orm(penalty).dict() for penalty in penalties]
+            return [PenaltyRead.from_orm(penalty).dict()
+                    for penalty in penalties]
 
     def get_object(self, db: Session, id: str, type: str):
         if type == "write":
@@ -40,13 +42,14 @@ class PenaltyService(ServiceBase[Penalty, PenaltyCreate, PenaltyUpdate]):
     def stop_relation(self, db: Session, user_id: uuid.UUID, id: uuid.UUID):
         penalty = (
             db.query(PenaltyHistory)
-                .filter(
-                    PenaltyHistory.penalty_id == id,
-                    PenaltyHistory.user_id == user_id
-                ).first()
+            .filter(
+                PenaltyHistory.penalty_id == id,
+                PenaltyHistory.user_id == user_id
+            ).first()
         )
         if penalty is None:
-            raise NotFoundException(detail=f"Penalty with id: {id} is not found!")
+            raise NotFoundException(
+                detail=f"Penalty with id: {id} is not found!")
         penalty.date_to = datetime.now()
         db.add(penalty)
         db.flush()

@@ -3,7 +3,8 @@ from schemas.user_candidates import CandidateCategoryCreate, CandidateCategoryUp
 from services import ServiceBase
 
 
-class CandidateCategoryService(ServiceBase[CandidateCategory, CandidateCategoryCreate, CandidateCategoryUpdate]):
+class CandidateCategoryService(
+        ServiceBase[CandidateCategory, CandidateCategoryCreate, CandidateCategoryUpdate]):
     pass
 
 

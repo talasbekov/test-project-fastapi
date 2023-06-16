@@ -8,14 +8,16 @@ from schemas import HrDocumentStepCreate, HrDocumentStepUpdate
 from .base import ServiceBase
 
 
-class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, HrDocumentStepUpdate]):
+class HrDocumentStepService(
+        ServiceBase[HrDocumentStep, HrDocumentStepCreate, HrDocumentStepUpdate]):
 
     def get_by_id(self, db: Session, id: str) -> HrDocumentStep:
 
         hr_document_step = super().get(db, id)
 
         if hr_document_step is None:
-            raise NotFoundException(detail=f"Document Step with id: {id} is not found!")
+            raise NotFoundException(
+                detail=f"Document Step with id: {id} is not found!")
 
         return hr_document_step
 
@@ -27,7 +29,8 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
         ).order_by(DocumentStaffFunction.priority.asc()).first()
 
         if step is None:
-            raise NotFoundException(detail=f'Initial step for template id: {template_id} is not found!')
+            raise NotFoundException(
+                detail=f'Initial step for template id: {template_id} is not found!')
 
         return step
 
@@ -38,11 +41,12 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
             .filter(DocumentStaffFunction.priority == 1)\
             .offset(skip)\
             .limit(limit)\
-        .all()
+            .all()
 
         return steps
 
-    def get_all_by_document_template_id(self, db: Session, template_id: uuid.UUID, notifiers: bool = True):
+    def get_all_by_document_template_id(
+            self, db: Session, template_id: uuid.UUID, notifiers: bool = True):
 
         steps_query = db.query(self.model)\
             .filter(self.model.hr_document_template_id == template_id)\
@@ -50,11 +54,13 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
             .order_by(DocumentStaffFunction.priority.asc())
 
         if not notifiers:
-            steps_query = steps_query.filter(DocumentStaffFunction.priority != -1)
+            steps_query = steps_query.filter(
+                DocumentStaffFunction.priority != -1)
 
         return steps_query.all()
 
-    def get_next_step_from_previous_step(self, db: Session, previous_step: HrDocumentStep):
+    def get_next_step_from_previous_step(
+            self, db: Session, previous_step: HrDocumentStep):
         priority = previous_step.staff_function.priority
 
         step = db.query(self.model).join(DocumentStaffFunction).filter(
@@ -64,7 +70,8 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
 
         return step
 
-    def get_all_notifiers_by_template_id(self, db: Session, template_id: uuid.UUID):
+    def get_all_notifiers_by_template_id(
+            self, db: Session, template_id: uuid.UUID):
         return (
             db.query(self.model)
             .join(DocumentStaffFunction)
@@ -75,7 +82,8 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
             .all()
         )
 
-    def get_all_by_document_template_id_without_notifiers(self, db: Session, template_id: uuid.UUID):
+    def get_all_by_document_template_id_without_notifiers(
+            self, db: Session, template_id: uuid.UUID):
         return (
             db.query(self.model)
             .join(DocumentStaffFunction)
@@ -86,7 +94,8 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
             .all()
         )
 
-    def get_last_step_document_template_id(self, db: Session, template_id: uuid.UUID):
+    def get_last_step_document_template_id(
+            self, db: Session, template_id: uuid.UUID):
         res = (
             db.query(self.model)
             .join(DocumentStaffFunction)
@@ -96,7 +105,8 @@ class HrDocumentStepService(ServiceBase[HrDocumentStep, HrDocumentStepCreate, Hr
             ).first()
         )
         if res is None:
-            raise NotFoundException(detail=f'Last step for template id: {template_id} is not found!')
+            raise NotFoundException(
+                detail=f'Last step for template id: {template_id} is not found!')
         return res
 
 

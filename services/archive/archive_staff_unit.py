@@ -25,16 +25,16 @@ class ArchiveStaffUnitService(
                 detail=f"ArchiveStaffUnit with id: {id} is not found!")
         return position
 
-
-    def dispose_all_units(self, db: Session, archive_staff_unit_ids: List[uuid.UUID], archive_staff_division_id: uuid.UUID):
+    def dispose_all_units(
+            self, db: Session, archive_staff_unit_ids: List[uuid.UUID], archive_staff_division_id: uuid.UUID):
         (db.query(self.model)
             .filter(self.model.id.in_(archive_staff_unit_ids))
             .update(
                 {self.model.staff_division_id: archive_staff_division_id}
-            )
         )
-        return db.query(self.model).filter(self.model.id.in_(archive_staff_unit_ids)).all()
-
+        )
+        return db.query(self.model).filter(
+            self.model.id.in_(archive_staff_unit_ids)).all()
 
     def get_by_archive_staff_division_id(
             self,
@@ -49,7 +49,8 @@ class ArchiveStaffUnitService(
                 detail=f"ArchiveStaffUnit with id: {id} is not found!")
         return archive_staff_units
 
-    def duplicate_archive_staff_units_by_division_id(self, db: Session, duplicate_division_id: uuid.UUID, division_id: uuid.UUID):
+    def duplicate_archive_staff_units_by_division_id(
+            self, db: Session, duplicate_division_id: uuid.UUID, division_id: uuid.UUID):
         archive_staff_units = self.get_by_archive_staff_division_id(
             db, division_id)
 
@@ -203,7 +204,8 @@ class ArchiveStaffUnitService(
         increment_changes_size(db, res.staff_division.staff_list)
         return res
 
-    def _validate_archive_staff_position(self, db: Session, position_id: uuid.UUID):
+    def _validate_archive_staff_position(
+            self, db: Session, position_id: uuid.UUID):
         position_service.get_by_id(db, position_id)
 
     def get_service_staff_functions(

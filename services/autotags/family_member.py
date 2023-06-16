@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from .base import BaseAutoTagHandler
 from models import Family
-from schemas import  AutoTagRead
+from schemas import AutoTagRead
 from services import family_profile_service
 
 
@@ -14,7 +14,7 @@ class FamilyMemberAutoTagHandler(BaseAutoTagHandler):
     def handle(self, db: Session, user_id: UUID):
         profile = family_profile_service.get_by_user_id(db, user_id)
         {
-            
+
         }
         profile.family: list[Family]
         return [

@@ -10,7 +10,8 @@ from schemas import ArchiveStaffFunctionCreate, ArchiveStaffFunctionUpdate, NewA
 from services.base import ServiceBase
 
 
-class ArchiveStaffFunctionService(ServiceBase[ArchiveStaffFunction, ArchiveStaffFunctionCreate, ArchiveStaffFunctionUpdate]):
+class ArchiveStaffFunctionService(
+        ServiceBase[ArchiveStaffFunction, ArchiveStaffFunctionCreate, ArchiveStaffFunctionUpdate]):
 
     def get_all_staff_functions(self, db: Session, skip: int, limit: int):
         staff_functions = (
@@ -26,15 +27,17 @@ class ArchiveStaffFunctionService(ServiceBase[ArchiveStaffFunction, ArchiveStaff
     def get_by_id(self, db: Session, id: str):
         service_staff_function = super().get(db, id)
         if service_staff_function is None:
-            raise NotFoundException(detail=f"ArchiveStaffFunction with id: {id} is not found!")
+            raise NotFoundException(
+                detail=f"ArchiveStaffFunction with id: {id} is not found!")
         return service_staff_function
 
     def exists_by_origin_id(self, db: Session, origin_id: uuid.UUID):
         return db.query(self.model).filter(
             self.model.origin_id == origin_id
-            ).first() is not None
+        ).first() is not None
 
-    def create_based_on_existing_staff_function(self, db: Session, staff_function: StaffFunction):
+    def create_based_on_existing_staff_function(
+            self, db: Session, staff_function: StaffFunction):
         return super().create(db, ArchiveStaffFunctionCreate(
             name=staff_function.name,
             nameKZ=staff_function.nameKZ,
@@ -42,7 +45,8 @@ class ArchiveStaffFunctionService(ServiceBase[ArchiveStaffFunction, ArchiveStaff
             origin_id=staff_function.id
         ))
 
-    def create_staff_function(self, db: Session, body: NewArchiveStaffFunctionCreate):
+    def create_staff_function(self, db: Session,
+                              body: NewArchiveStaffFunctionCreate):
         return super().create(db, ArchiveStaffFunctionCreate(
             name=body.name,
             nameKZ=body.nameKZ,
@@ -50,7 +54,8 @@ class ArchiveStaffFunctionService(ServiceBase[ArchiveStaffFunction, ArchiveStaff
             origin_id=None
         ))
 
-    def update_staff_function(self, db: Session, staff_function: ArchiveStaffFunction, body: NewArchiveStaffFunctionUpdate):
+    def update_staff_function(
+            self, db: Session, staff_function: ArchiveStaffFunction, body: NewArchiveStaffFunctionUpdate):
         return super().update(db, db_obj=staff_function, obj_in=ArchiveStaffFunctionUpdate(
             name=body.name,
             nameKZ=body.nameKZ,
@@ -59,4 +64,5 @@ class ArchiveStaffFunctionService(ServiceBase[ArchiveStaffFunction, ArchiveStaff
         ))
 
 
-archive_staff_function_service = ArchiveStaffFunctionService(ArchiveStaffFunction)
+archive_staff_function_service = ArchiveStaffFunctionService(
+    ArchiveStaffFunction)

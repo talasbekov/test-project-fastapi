@@ -14,7 +14,8 @@ class TotalDayAutoTagHandler(BaseAutoTagHandler):
 
     def handle(self, db: Session, user_id: UUID):
         histories = history_service._get_all_by_type_and_user_id(
-            db, EmergencyServiceHistory.__mapper_args__["polymorphic_identity"], user_id
+            db, EmergencyServiceHistory.__mapper_args__[
+                "polymorphic_identity"], user_id
         ).all()
         res = 0
         for i in histories:

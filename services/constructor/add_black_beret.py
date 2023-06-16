@@ -43,14 +43,15 @@ class AddBlackBeretHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        if badge_service.get_black_beret_by_user_id(db, user.id) != None:
+        if badge_service.get_black_beret_by_user_id(db, user.id) is not None:
             raise ForbiddenException(
                 f"Badge is already assigned to this user: {user.first_name} {user.last_name}"
             )
 
     def handle_filter(self, db: Session, user_query: Query[Any]):
         badge = self.get_args(db)
-        return user_query.filter(User.badges.any(Badge.type_id != badge.id) | ~User.badges.any())
+        return user_query.filter(User.badges.any(
+            Badge.type_id != badge.id) | ~User.badges.any())
 
     def get_args(self, db: Session):
         badge_type = badge_service.get_black_beret(db)
