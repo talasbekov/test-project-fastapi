@@ -279,7 +279,7 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
         """
             Эта функция добавляет должностную функцию в штатную единицу по должности прямого начальника
         """
-        position = position_service.get_by_name(db, PositionNameEnum.HEAD_OF_DEPARTMENT.value)
+        position = position_service.get_id_by_name(db, PositionNameEnum.HEAD_OF_DEPARTMENT.value)
         # Получаем штатную единицу прямого начальника
         staff_unit = db.query(self.model).filter(
             self.model.position_id == position,
@@ -299,8 +299,8 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
         
         # Получаем список должностей непосредственных начальников
         positions = [
-            position_service.get_by_name(db, PositionNameEnum.MANAGEMENT_HEAD.value),
-            position_service.get_by_name(db, PositionNameEnum.HEAD_OF_OTDEL.value)
+            position_service.get_id_by_name(db, PositionNameEnum.MANAGEMENT_HEAD.value),
+            position_service.get_id_by_name(db, PositionNameEnum.HEAD_OF_OTDEL.value)
         ]
         
         staff_units = []

@@ -129,7 +129,8 @@ async def apply_staff_list(*,
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
-    return staff_list_service.apply_staff_list(db, id, signed_by, document_creation_date, role)
+    current_user_id = Authorize.get_jwt_subject()
+    return await staff_list_service.apply_staff_list(db, id, signed_by, document_creation_date, current_user_id, role)
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],

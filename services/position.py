@@ -7,7 +7,7 @@ from services import ServiceBase
 
 class PositionService(ServiceBase[Position, PositionCreate, PositionUpdate]):
 
-    def get_by_name(self, db: Session, name: str):
+    def get_id_by_name(self, db: Session, name: str):
         role = db.query(Position).filter(
             Position.name == name
         ).first()
