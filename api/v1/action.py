@@ -191,13 +191,13 @@ async def get_all_actions():
         },
     },
     {
-        'action_name': 'Продление контракта',
-        'action_nameKZ': 'Контракт ұзарту',
+        'action_name': 'Контракт',
+        'action_nameKZ': 'Контракт',
         'action_type': 'renew_contract',
         'children': [
             {
-                'alias_name': 'Контракты для продления',
-                'alias_nameKZ': 'Ұзартуға арналған контракт',
+                'alias_name': 'Контракт',
+                'alias_nameKZ': 'Контракт',
                 'tagname': 'contract_type',
                 'data_taken': 'dropdown',
                 'field_name': 'contracts',
@@ -205,8 +205,8 @@ async def get_all_actions():
         ],
         'properties': {
             'contract_type': {
-                'alias_name': 'Контракты для продления',
-                'alias_nameKZ': 'Ұзартуға арналған контракт',
+                'alias_name': 'Контракт',
+                'alias_nameKZ': 'Контракт',
                 'type': 'write',
                 'data_taken': 'dropdown',
                 'field_name': 'contracts',
@@ -218,8 +218,8 @@ async def get_all_actions():
                     'renew_contract': {
                         'contract': {
                             'tagname': 'contract_type',
-                            'alias_name': 'Контракты для продления',
-                            'alias_nameKZ': 'Ұзартуға арналған контракт',
+                            'alias_name': 'Контракт',
+                            'alias_nameKZ': 'Контракт',
                         },
                     },
                 },

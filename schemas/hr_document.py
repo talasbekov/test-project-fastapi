@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Union
 
-from pydantic import validator
+from pydantic import BaseModel, validator, Field
 
 from schemas import (
     HrDocumentTemplateRead,
@@ -16,7 +16,7 @@ from schemas import Model, ReadModel
 class HrDocumentBase(Model):
     hr_document_template_id: uuid.UUID
     due_date: Optional[datetime] = None
-    parent_id: Optional[uuid.UUID]
+    parent_id: Optional[uuid.UUID] = Field(None, nullable=True)
     properties: Optional[Dict[str, Any]]
     initial_comment: Optional[str] = None
 

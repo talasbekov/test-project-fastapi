@@ -1,13 +1,15 @@
 import uuid
 from typing import List, Optional
 
+from pydantic import Field
+
 from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 from schemas import (DocumentStaffFunctionTypeRead,
                      ServiceStaffFunctionTypeRead, JurisdictionRead)
 
 
 class StaffFunctionBase(NamedModel):
-    is_active: Optional[bool]
+    is_active: Optional[bool] = Field(None, nullable=True)
     hours_per_week: int
 
 
@@ -19,7 +21,7 @@ class DocumentStaffFunctionBase(StaffFunctionBase):
 
 class ServiceStaffFunctionBase(StaffFunctionBase):
 
-    type_id: Optional[uuid.UUID]
+    type_id: Optional[uuid.UUID] = Field(None, nullable=True)
 
 
 class StaffFunctionCreate(StaffFunctionBase):
@@ -32,8 +34,8 @@ class DocumentStaffFunctionCreate(DocumentStaffFunctionBase):
 
 class DocumentStaffFunctionAdd(DocumentStaffFunctionBase):
     hr_document_template_id: uuid.UUID
-    is_direct_supervisor: Optional[bool] = None
-    category: Optional[int] = None
+    is_direct_supervisor: Optional[bool] = Field(None, nullable=True)
+    category: Optional[int] = Field(None, nullable=True)
 
 
 class DocumentStaffFunctionConstructorAdd(DocumentStaffFunctionAdd):
@@ -72,8 +74,8 @@ class StaffUnitFunctionsByPosition(Model):
 
 
 class StaffFunctionRead(StaffFunctionBase, ReadNamedModel):
-    hours_per_week: Optional[int]
-    discriminator: Optional[str]
+    hours_per_week: Optional[int] = Field(None, nullable=True)
+    discriminator: Optional[str] = Field(None, nullable=True)
 
     class Config:
         orm_mode = True
@@ -104,9 +106,9 @@ class DocumentStaffFunctionStep(ReadModel):
 
 class DocumentStaffFunctionRead(StaffFunctionRead, DocumentStaffFunctionBase):
 
-    priority: Optional[int]
-    role_id: Optional[uuid.UUID]
-    jurisdiction_id: Optional[uuid.UUID]
+    priority: Optional[int] = Field(None, nullable=True)
+    role_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    jurisdiction_id: Optional[uuid.UUID] = Field(None, nullable=True)
 
     role: Optional[DocumentStaffFunctionTypeRead]
     hr_document_step: Optional[DocumentStaffFunctionStep]

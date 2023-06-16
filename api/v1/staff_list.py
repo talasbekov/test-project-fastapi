@@ -88,7 +88,8 @@ async def create(*,
         - **description**: a long description. This parameter is optional.
     """
     Authorize.jwt_required()
-    return staff_list_service.create_by_user_id(db, user_id=Authorize.get_jwt_subject(), obj_in=body)
+    role = Authorize.get_raw_jwt()['role']
+    return staff_list_service.create_by_user_id(db, user_id=Authorize.get_jwt_subject(), obj_in=body, current_user_role_id=role)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -184,4 +185,5 @@ async def duplicate(*,
         - **id**: UUID - id of the Staff List.
     """
     Authorize.jwt_required()
-    return staff_list_service.duplicate(db, staff_list_id=id, user_id=Authorize.get_jwt_subject(), obj_in=body)
+    role = Authorize.get_raw_jwt()['role']
+    return staff_list_service.duplicate(db, staff_list_id=id, user_id=Authorize.get_jwt_subject(), obj_in=body, current_user_role_id=role)

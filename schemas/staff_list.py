@@ -1,13 +1,14 @@
 import uuid
 from datetime import datetime, date
-from typing import Optional
-from pydantic import BaseModel
+from typing import Optional, List
+
+from pydantic import BaseModel, Field
 
 from schemas import NamedModel, ReadNamedModel, UserShortRead
 
 
 class StaffListBase(NamedModel):
-    user_id: uuid.UUID
+    user_id: Optional[uuid.UUID]
 
     class Config:
         orm_mode = True
@@ -27,21 +28,21 @@ class StaffListUserCreate(BaseModel):
 
 
 class StaffListRead(StaffListBase, ReadNamedModel):
-    user_id: Optional[uuid.UUID]
-    document_signed_by: Optional[str]
-    document_signed_at: Optional[date]
-    changes_size: Optional[int]
+    user_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    document_signed_by: Optional[str] = Field(None, nullable=True)
+    document_signed_at: Optional[date] = Field(None, nullable=True)
+    changes_size: Optional[int] = Field(None, nullable=True)
 
 
 class StaffListStatusRead(StaffListBase):
     id: Optional[uuid.UUID]
-    status: Optional[str]
+    status: Optional[str] = Field(None, nullable=True)
     updated_at: Optional[datetime]
-    changes_size: Optional[int]
-    user: Optional[UserShortRead]
-    reg_number: Optional[str]
-    document_signed_by: Optional[str]
-    document_signed_at: Optional[date]
+    changes_size: Optional[int] = Field(None, nullable=True)
+    user: Optional[UserShortRead] = Field(None, nullable=True)
+    reg_number: Optional[str] = Field(None, nullable=True)
+    document_signed_by: Optional[str] = Field(None, nullable=True)
+    document_signed_at: Optional[date] = Field(None, nullable=True)
 
     class Config:
         orm_mode = True

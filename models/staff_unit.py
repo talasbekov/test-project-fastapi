@@ -10,7 +10,7 @@ class StaffUnit(isActiveModel):
     __tablename__ = "staff_units"
 
     # Properties
-    requirements = Column(ARRAY(JSON(none_as_null=True)))
+    requirements = Column(ARRAY(JSON(none_as_null=True)), nullable=True)
     position_id = Column(UUID(as_uuid=True), ForeignKey("positions.id"), nullable=False)
     staff_division_id = Column(UUID(as_uuid=True), ForeignKey("staff_divisions.id"), nullable=True)
     user_replacing_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)

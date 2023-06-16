@@ -2,7 +2,7 @@ import datetime
 import uuid
 from typing import List, Optional
 
-from pydantic import EmailStr
+from pydantic import BaseModel, EmailStr, Field
 
 from schemas import (BadgeRead, PositionRead, PositionCreate,
                      RankRead, StaffUnitDivisionRead,
@@ -10,17 +10,15 @@ from schemas import (BadgeRead, PositionRead, PositionCreate,
 from schemas import Model, ReadModel
 
 
-class StaffUnitRequirements(Model):
-    name: Optional[str]
-    nameKZ: Optional[str]
-    keys: Optional[List[Optional[dict]]]
+class StaffUnitRequirements(NamedModel):
+    keys: Optional[List[Optional[dict]]] = Field(None, nullable=True)
+
 
 class StaffUnitBase(Model):
     position_id: uuid.UUID
-    staff_division_id: uuid.UUID
+    staff_division_id: Optional[uuid.UUID] = Field(None, nullable=True)
     is_active: Optional[bool] = True
-    requirements: Optional[List[StaffUnitRequirements]]
-    
+    requirements: Optional[List[StaffUnitRequirements]] = Field(None, nullable=True)
 
 
 class StaffUnitCreate(StaffUnitBase):
@@ -30,15 +28,15 @@ class StaffUnitCreate(StaffUnitBase):
 class StaffUnitCreateWithPosition(PositionCreate):
     staff_division_id: uuid.UUID
     is_active: Optional[bool] = True
-    requirements: Optional[List[dict]]
+    requirements: Optional[List[dict]] = Field(None, nullable=True)
 
 
 class StaffUnitUpdate(StaffUnitBase):
-    user_replacing_id: Optional[uuid.UUID]
+    user_replacing_id: Optional[uuid.UUID] = Field(None, nullable=True)
 
 
 class HrVacancyRead(ReadModel):
-    is_active: Optional[bool]
+    is_active: Optional[bool] = True
     staff_unit_id: Optional[uuid.UUID]
 
     class Config:
@@ -48,13 +46,13 @@ class HrVacancyRead(ReadModel):
 class UserRead(ReadModel):
     badges: Optional[List[BadgeRead]]
     rank: Optional[RankRead]
-    email: Optional[EmailStr]
-    first_name: Optional[str]
-    last_name: Optional[str]
+    email: Optional[EmailStr] = Field(None, nullable=True)
+    first_name: Optional[str] = Field(None, nullable=True)
+    last_name: Optional[str] = Field(None, nullable=True)
     staff_unit_id: Optional[uuid.UUID]
     call_sign: Optional[str]
     id_number: Optional[str]
-    icon: Optional[str]
+    icon: Optional[str] = Field(None, nullable=True)
     status: Optional[str]
     status_till: Optional[datetime.datetime]
 
@@ -85,8 +83,8 @@ class UserReplacingRead(UserRead):
 
 
 class StaffUnitRead(UserReplacingStaffUnitRead):
-    user_replacing: Optional[UserReplacingRead]
-    user_replacing_id: Optional[uuid.UUID]
+    user_replacing: Optional[UserReplacingRead] = Field(None, nullable=True)
+    user_replacing_id: Optional[uuid.UUID] = Field(None, nullable=True)
 
 
 class UserStaffUnitRead(StaffUnitBase, ReadModel):

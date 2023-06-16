@@ -4,7 +4,8 @@ from sqlalchemy.orm import relationship
 
 from models import isActiveModel, History
 from .association import hr_documents_users
- 
+
+
 class User(isActiveModel):
     __tablename__ = "users"
 
