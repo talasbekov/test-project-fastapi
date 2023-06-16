@@ -2,7 +2,7 @@ import datetime
 import uuid
 from typing import List, Optional, Union
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 
 from schemas import (BadgeRead, RankRead, ReadModel, 
                      HrVacancyRead, Model, PositionRead)
@@ -21,9 +21,9 @@ class StaffUnitRequirements(Model):
 class ArchiveStaffUnitBase(BaseModel):
     position_id: uuid.UUID
     staff_division_id: uuid.UUID
-    user_id: Optional[uuid.UUID]
-    actual_user_id: Optional[uuid.UUID]
-    user_replacing_id: Optional[uuid.UUID]
+    user_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    actual_user_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    user_replacing_id: Optional[uuid.UUID] = Field(None, nullable=True)
     requirements: Optional[List[StaffUnitRequirements]]
 
 
@@ -38,7 +38,7 @@ class ArchiveStaffUnitCreateWithStaffFunctions(ArchiveStaffUnitBase):
 
 class ArchiveStaffUnitUpdate(ArchiveStaffUnitBase):
     origin_id: Optional[uuid.UUID]
-    user_replacing: Optional[uuid.UUID]
+    user_replacing: Optional[uuid.UUID] = Field(None, nullable=True)
 
 
 class NewArchiveStaffUnitCreate(ArchiveStaffUnitBase):
@@ -83,8 +83,8 @@ class UserReplacingArchiveStaffUnitRead(ArchiveStaffUnitBase, ReadModel):
     staff_functions: Optional[List[ArchiveStaffFunctionRead]]
     position_id: Optional[uuid.UUID]
     position: Optional[PositionRead]
-    user: Optional[UserRead]
-    actual_user: Optional[UserRead]
+    user: Optional[UserRead] = Field(None, nullable=True)
+    actual_user: Optional[UserRead] = Field(None, nullable=True)
     hr_vacancy: Optional[List[Optional[HrVacancyRead]]]
 
     class Config:
@@ -100,4 +100,4 @@ class UserReplacingRead(UserRead):
 
 
 class ArchiveStaffUnitRead(UserReplacingArchiveStaffUnitRead):
-    user_replacing: Optional[UserReplacingRead]
+    user_replacing: Optional[UserReplacingRead] = Field(None, nullable=True)
