@@ -15,7 +15,7 @@ from models import SpecialtyEnum
 
 # revision identifiers, used by Alembic.
 revision = 'bd9403c8f894'
-down_revision = '461e308e6b57'
+down_revision = '576296a7cdac'
 branch_labels = None
 depends_on = None
 
