@@ -45,7 +45,12 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
         return user
 
-    def get_all(self, db: Session, hr_document_template_id: uuid.UUID, filter: str, skip: int, limit: int) -> List[User]:
+    def get_all(self, 
+                db: Session, 
+                hr_document_template_id: uuid.UUID, 
+                filter: str, 
+                skip: int, 
+                limit: int) -> List[User]:
         users = (
             db.query(self.model)
         )
@@ -69,7 +74,12 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
         return users
 
-    def get_all_active(self, db: Session, filter: str, skip: int, limit: int, user_id: str):
+    def get_all_active(self, 
+                       db: Session, 
+                       filter: str, 
+                       skip: int, 
+                       limit: int, 
+                       user_id: str):
         user_queue = self._get_users_by_filter_is_active(
             db, filter, True, user_id)
 
@@ -83,7 +93,12 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
         return users, user_queue.count()
 
-    def get_all_archived(self, db: Session, filter: str, skip: int, limit: int, user_id: str):
+    def get_all_archived(self, 
+                         db: Session, 
+                         filter: str, 
+                         skip: int, 
+                         limit: int, 
+                         user_id: str):
         user_queue = self._get_users_by_filter_is_active(
             db, filter, False, user_id)
 
@@ -172,7 +187,9 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
     def get_fields(self):
         fields = [key for key, value in User.__dict__.items() if
-                  ('id' not in key and not isinstance(value, CALLABLES) and not key.startswith('_'))]
+                  ('id' not in key 
+                   and not isinstance(value, CALLABLES) 
+                   and not key.startswith('_'))]
         return fields
 
     def get_by_staff_unit(self, db: Session, staff_unit_id):
@@ -237,7 +254,9 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             if i.name == JurisdictionEnum.CANDIDATES.value:
                 return self._get_users_by_candidates_jurisdiction(db)
 
-    def _get_users_by_personnel_jurisdiction(self, db: Session, staff_division: StaffDivision) -> List[User]:
+    def _get_users_by_personnel_jurisdiction(self, 
+                                             db: Session, 
+                                             staff_division: StaffDivision) -> List[User]:
         # Получаем все дочерние штатные группы пользователя, включая саму группу
         staff_divisions: List[StaffDivision] = staff_division_service.get_child_groups(
             db, staff_division.id)
@@ -255,7 +274,9 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
         return users
 
-    def _get_excepted_users_by_document_in_progress(self, db: Session, hr_document_template_id: uuid.UUID):
+    def _get_excepted_users_by_document_in_progress(self, 
+                                                    db: Session, 
+                                                    hr_document_template_id: uuid.UUID):
         forbidden_statuses = hr_document_status_service.get_by_names(
             db, ["Завершен", "Отменен"])
         excepted_users = (
@@ -346,7 +367,10 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         )
         return users
 
-    def _filter_for_eligible_actions(self, db: Session, user_query: Query[Any], hr_document_template_id: uuid.UUID):
+    def _filter_for_eligible_actions(self, 
+                                     db: Session, 
+                                     user_query: Query[Any], 
+                                     hr_document_template_id: uuid.UUID):
         from .constructor import handlers
         template = hr_document_template_service.get_by_id(
             db, hr_document_template_id
@@ -366,12 +390,12 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         initiator_role = document_staff_function_type_service.get_initiator(db)
         user = self.get_by_id(db, user_id)
         document_ids = []
-        functions = db.query(DocumentStaffFunction).filter(
-            DocumentStaffFunction.staff_units.any(
-                StaffUnit.id == user.staff_unit_id),
+        functions = (db.query(DocumentStaffFunction)
+            .filter(
+            DocumentStaffFunction.staff_units.any(StaffUnit.id == user.staff_unit_id),
             DocumentStaffFunction.role_id == initiator_role.id,
             DocumentStaffFunction.hr_document_step != None
-        ).all()
+        ).all())
         document_ids = [
             function.hr_document_step.hr_document_template_id for function in functions]
         return hr_document_template_service.get_all_skip(db, document_ids, skip, limit)
