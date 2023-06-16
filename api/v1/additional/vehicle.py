@@ -29,7 +29,6 @@ async def get_all(*,
         - **limit**: int - The maximum number of abroad travel to return in the response. This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    credentials = Authorize.get_jwt_subject() 
     return vehicle_service.get_multi(db, skip, limit)
 
 

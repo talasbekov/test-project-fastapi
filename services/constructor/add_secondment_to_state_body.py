@@ -58,7 +58,7 @@ class AddSecondmentToStateBody(BaseHandler):
                 properties[action["date_from"]["tagname"]]['name'])
             date_to = convert_str_to_datetime(
                 properties[action["date_to"]["tagname"]]['name'])
-        except KeyError as e:
+        except KeyError:
             raise BadRequestException(
                 f"StateBody is not defined for this action: {self.__handler__}")
         return state_body_id, date_from, date_to

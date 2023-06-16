@@ -93,6 +93,6 @@ async def websocket_endpoint(
     await notification_manager.connect(websocket, user_id)
     try:
         while True:
-            data = await websocket.receive_text()
+            await websocket.receive_text()
     except WebSocketDisconnect:
         notification_manager.disconnect(user_id, websocket)

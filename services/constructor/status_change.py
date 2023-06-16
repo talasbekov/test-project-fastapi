@@ -75,7 +75,7 @@ class StatusChangeHandler(BaseHandler):
     ):
         try:
             status_id = props[action['status']['tagname']]['value']
-        except Exception as e:
+        except Exception:
             raise BadRequestException(
                 detail=f'Invalid props for action: {self.__handler__}')
         return status_id

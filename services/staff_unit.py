@@ -68,7 +68,7 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
                 continue
             try:
                 staff_unit.staff_functions.remove(staff_function)
-            except ValueError as e:
+            except ValueError:
                 continue
 
         db.add(staff_unit)
@@ -95,7 +95,7 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
             staff_function = document_staff_function_service.get_by_id(db, id)
             try:
                 staff_unit.staff_functions.remove(staff_function)
-            except ValueError as e:
+            except ValueError:
                 continue
 
         db.add(staff_unit)
@@ -203,9 +203,11 @@ class StaffUnitService(ServiceBase[StaffUnit, StaffUnitCreate, StaffUnitUpdate])
         return self.update_from_archive(db, archive_staff_unit, staff_division_id)
 
     def make_all_inactive(self, db: Session, exclude_ids: list[uuid.UUID] = []):
-        staff_units = db.query(self.model).filter(
+        (db.query(self.model)
+         .filter(
             self.model.staff_division_id.not_in(exclude_ids)
-        ).update({self.model.is_active: False})
+        )
+        .update({self.model.is_active: False}))
         db.flush()
 
     def delete_all_inactive(self, db: Session, exclude_ids: list[uuid.UUID] = []):

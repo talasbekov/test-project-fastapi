@@ -99,11 +99,8 @@ def septik(text, septik):
     text = text.lower()
     vowels = 'аәеэёоөұүыіуияю'
     hard = 'аоыұуияюё'
-    soft = 'әеэіөүуи'
     consonants = 'жзкқлмнңпрстфхцчшщ'
     deaf = 'кқпстфхцчшщбвгдғ'
-    voiced = 'бвгғджз'
-    sonor = 'рлймнң'
     last_char = text[-1]
     last_vowel = next((char for char in reversed(text) if char in vowels), None)
     last_consonant = next((char for char in reversed(text) if char in consonants), None)

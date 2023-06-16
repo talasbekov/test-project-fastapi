@@ -68,7 +68,7 @@ class GrantLeaveHandler(BaseHandler):
                 props[action['date_from']['tagname']]['name'])
             date_to = convert_str_to_datetime(
                 props[action['date_to']['tagname']]['name'])
-        except Exception as e:
+        except Exception:
             raise BadRequestException(
                 detail=f'Invalid props for action: {self.__handler__}')
         return status_id, date_from, date_to

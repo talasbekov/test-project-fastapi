@@ -65,7 +65,7 @@ async def register_candidate(form: CandidateRegistrationForm,
 def refresh_token(Authorize: AuthJWT = Depends(), db: Session = Depends(get_db)):
     try:
         Authorize.jwt_refresh_token_required()
-    except Exception as e:
+    except Exception:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Invalid token")
 
     return auth_service.refresh_token(db, Authorize)

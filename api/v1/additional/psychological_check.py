@@ -51,7 +51,6 @@ async def create(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    credentials = Authorize.get_jwt_subject()
     return psychological_check_service.create(db, body)
 
 

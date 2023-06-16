@@ -24,7 +24,6 @@ class StopLeaveHandler(BaseHandler):
             props: dict,
             document: HrDocument,
     ):
-        reason = self.get_args(props, action)
 
         self.handle_validation(
             db, user, action, template_props, props, document)

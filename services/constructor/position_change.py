@@ -67,7 +67,7 @@ class PositionChangeHandler(BaseHandler):
             if percent < 0 or percent > 100:
                 raise BadRequestException(
                     f"Percentage must be between 0 and 100: {percent}")
-        except Exception as e:
+        except Exception:
             raise BadRequestException(
                 f"Args are  not defined for this action: {self.__handler__}")
 

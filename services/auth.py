@@ -38,7 +38,6 @@ class AuthService():
         return {"access_token": access_token, "refresh_token": refresh_token}
 
     def register(self, form: RegistrationForm, db: Session):
-        position_obj = staff_unit_service.get_by_id(db, form.staff_unit_id)
 
         if user_service.get_by_email(db, EmailStr(form.email).lower()):
             raise BadRequestException(detail="User with this email already exists!")

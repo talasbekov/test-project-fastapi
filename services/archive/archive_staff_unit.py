@@ -95,7 +95,7 @@ class ArchiveStaffUnitService(
                 continue
             try:
                 staff_unit.staff_functions.remove(staff_function)
-            except ValueError as e:
+            except ValueError:
                 continue
 
         db.add(staff_unit)
@@ -131,7 +131,7 @@ class ArchiveStaffUnitService(
                 continue
             try:
                 staff_unit.staff_functions.remove(staff_function)
-            except ValueError as e:
+            except ValueError:
                 continue
 
         db.add(staff_unit)

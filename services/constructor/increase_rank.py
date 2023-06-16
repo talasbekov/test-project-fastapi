@@ -49,7 +49,6 @@ class IncreaseRankHandler(BaseHandler):
         rank_id = self.get_args(action, props)
         rank = rank_service.get_by_id(db, rank_id)
         user_rank = rank_service.get_by_id(db, user.rank_id)
-        max_rank = user.staff_unit.position.max_rank
 
         if user_rank.order >= rank.order:
             raise ForbiddenException(

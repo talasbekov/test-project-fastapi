@@ -170,8 +170,6 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
 
         parent_id = staff_division.parent_group_id
 
-        res_id = staff_division.id
-
         full_name = staff_division.name
         full_nameKZ = staff_division.nameKZ
 

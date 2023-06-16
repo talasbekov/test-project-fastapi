@@ -67,7 +67,7 @@ class TemporaryStatusChangeHandler(BaseHandler):
                 props[action['date_from']['tagname']]['name'])
             date_to = convert_str_to_datetime(
                 props[action['date_to']['tagname']]['name'])
-        except Exception as e:
+        except Exception:
             raise BadRequestException(
                 f"Status is not defined for this action: {self.__handler__}"
             )

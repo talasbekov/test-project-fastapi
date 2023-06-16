@@ -39,10 +39,6 @@ class RenderService:
 
         curator_user: User = curator_staff_unit.users[0]
 
-        profile: Profile = profile_service.get_by_user_id(db, candidate_user.id)
-
-        family_profile = family_profile_service.get_by_profile_id(db, profile.id)
-
         father_relation = family_relation_service.get_by_name(db, "Отец")
         mother_relation = family_relation_service.get_by_name(db, "Мать")
 
