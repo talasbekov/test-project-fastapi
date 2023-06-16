@@ -2829,7 +2829,7 @@ def upgrade() -> None:
         "Султанов",
         'Асланович',
         'aset@mail.ru',
-        all_service_id,
+        group2_id,
         user10_id,
         "Альфа 3",
         '3',
