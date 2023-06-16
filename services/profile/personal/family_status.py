@@ -19,7 +19,7 @@ class FamilyStatusService(ServiceBase[FamilyStatus, FamilyStatusCreate, FamilySt
         
         try:        
             res = FamilyStatusRead.from_orm(profile.personal_profile.biographic_info.family_status).dict()
-        except:
+        except Exception:
             return None
         
         return self._validate_gender(res, profile.personal_profile.biographic_info.gender)

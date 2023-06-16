@@ -55,7 +55,7 @@ class StopLeaveHandler(BaseHandler):
     ):
         try:
             reason = props[action['reason']['tagname']]['name']
-        except:
+        except Exception:
             raise BadRequestException(
                 detail=f'Invalid props for action: {self.__handler__}')
         return (reason)

@@ -951,7 +951,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
     ) -> List[HrDocumentRead]:
         s = set()
 
-        l = []
+        hr_documents = []
 
         for i in documents:
             if i is None:
@@ -959,11 +959,11 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
             if i.id not in s:
                 s.add(i.id)
                 if len(i.users) > 0:
-                    l.append(self._to_response(db, i))
+                    hr_documents.append(self._to_response(db, i))
                 else:
-                    l.append(self._to_response_super_doc(db, i))
+                    hr_documents.append(self._to_response_super_doc(db, i))
 
-        return l
+        return hr_documents
 
     def _check_jurisdiction(
             self, db: Session, staff_unit: StaffUnit, document_staff_function: DocumentStaffFunction,
@@ -1225,7 +1225,7 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
                 context["reg_number"] = document.reg_number
             if document.signed_at is not None:
                 context["signed_at"] = document.signed_at.strftime("%Y-%m-%d")
-        except:
+        except Exception:
             raise BadRequestException(detail='Ошибка в шаблоне!')
 
         last_step = hr_document_step_service.get_last_step_document_template_id(

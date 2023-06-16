@@ -25,15 +25,14 @@ class ServiceStaffFunctionService(
             self.model.staff_units.contains(staff_unit)).all()
 
     def get_by_user(self, db: Session, user: User):
-        l = []
+        staff_functions = []
 
         for func in user.actual_staff_unit.staff_functions:
 
-            if func.discriminator == self.model.__mapper_args__[
-                    'polymorphic_identity']:
-                l.append(func)
+            if func.discriminator == self.model.__mapper_args__['polymorphic_identity']:
+                staff_functions.append(func)
 
-        return l
+        return staff_functions
 
     def duplicate(self, db: Session, id: uuid.UUID):
         func = self.get_by_id(db, id)

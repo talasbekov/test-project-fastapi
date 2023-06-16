@@ -172,7 +172,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
     def get_fields(self):
         fields = [key for key, value in User.__dict__.items() if
-                  (not 'id' in key and not isinstance(value, CALLABLES) and not key.startswith('_'))]
+                  ('id' not in key and not isinstance(value, CALLABLES) and not key.startswith('_'))]
         return fields
 
     def get_by_staff_unit(self, db: Session, staff_unit_id):

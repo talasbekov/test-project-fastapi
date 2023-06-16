@@ -19,14 +19,14 @@ class ArchiveServiceStaffFunctionService(ServiceBase[ArchiveServiceStaffFunction
         return service_staff_function
 
     def get_by_user(self, db: Session, user: User):
-        l = []
+        staff_funcions = []
 
         for func in user.actual_staff_unit.staff_functions:
 
             if func.discriminator == self.model.__mapper_args__['polymorphic_identity']:
-                l.append(func)
+                staff_funcions.append(func)
 
-        return l
+        return staff_funcions
 
     def duplicate(self, db: Session, id: uuid.UUID):
         func = self.get_by_id(db, id)

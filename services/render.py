@@ -17,10 +17,12 @@ from core import wkhtmltopdf_path, download_file_to_tempfile
 
 from core import jinja_env
 
-from services import (hr_document_template_service, candidate_service, staff_unit_service,
-                      profile_service, family_profile_service, family_relation_service,
+from services import (hr_document_template_service, 
+                      candidate_service, 
+                      staff_unit_service,
+                       family_relation_service,
                       family_service)
-from models import (User, Profile, 
+from models import (User,  
                     CandidateStageAnswerDefault, CandidateStageAnswerText, CandidateStageType,
                     CandidateStageQuestion, CandidateStageAnswerChoice)
 from exceptions import NotFoundException
