@@ -138,8 +138,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
 
     def get_all_by_type_and_user_id(self, db: Session, type: str, user_id: uuid.UUID, skip: int, limit: int):
         if type == 'beret_history':
-            black_beret_type = badge_service.get_black_beret(db)
-            black_beret = badge_service.get_badge_by_type(db, black_beret_type.id)
+            black_beret = badge_service.get_black_beret_by_user_id(db, user_id)
             histories = (
                 db.query(BadgeHistory)
                 .filter(
