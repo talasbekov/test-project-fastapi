@@ -15,7 +15,7 @@ from models import SpecialtyEnum
 
 # revision identifiers, used by Alembic.
 revision = 'bd9403c8f894'
-down_revision = '461e308e6b57'
+down_revision = '576296a7cdac'
 branch_labels = None
 depends_on = None
 
@@ -1287,6 +1287,7 @@ def upgrade() -> None:
         }, {
             'parent_group_id': all_service_id,
             'id': group1_id,
+            'staff_division_number': 5,
             'name': "Пятый департамент",
             'nameKZ': "Бесінші департаменті",
             'description': {
@@ -1309,6 +1310,7 @@ def upgrade() -> None:
         }, {
             'parent_group_id': group1_id,
             'id': group2_id,
+            'staff_division_number': 1,
             'name': "1 управление",
             'nameKZ': '1 басқару',
             'description': {
@@ -1331,6 +1333,7 @@ def upgrade() -> None:
         }, {
             'parent_group_id': group1_id,
             'id': group3_id,
+            'staff_division_number': 2,
             'name': "2 управление",
             'nameKZ': '2 басқару',
             'description': {
@@ -1353,6 +1356,7 @@ def upgrade() -> None:
         }, {
             'parent_group_id': group1_id,
             'id': group4_id,
+            'staff_division_number': 3,
             'name': "3 управление",
             'nameKZ': '3 басқару',
             'description': {
@@ -1375,6 +1379,7 @@ def upgrade() -> None:
         }, {
             'parent_group_id': group1_id,
             'id': group5_id,
+            'staff_division_number': 4,
             'name': "4 управление",
             'nameKZ': '4 басқару',
             'description': {
@@ -1565,6 +1570,7 @@ def upgrade() -> None:
         }, {
             'parent_group_id': all_service_id,
             'id': group14_id,
+            'staff_division_number': 7,
             'name': "Седьмой департамент",
             'nameKZ': "Жетінші департаменті",
             'description': {
@@ -1587,6 +1593,7 @@ def upgrade() -> None:
         }, {
             'parent_group_id': group14_id,
             'id': group15_id,
+            'staff_division_number': 3,
             'name': "3 управление",
             'nameKZ': '3 басқару',
             'description': {
@@ -1609,6 +1616,7 @@ def upgrade() -> None:
         }, {
             'parent_group_id': group15_id,
             'id': group16_id,
+            'staff_division_number': 1,
             'name': "1 отдел",
             'nameKZ': '1 бөлім',
             'description': {
@@ -1631,6 +1639,7 @@ def upgrade() -> None:
         },  {
             'parent_group_id': group15_id,
             'id': group2_1_id,
+            'staff_division_number': 2,
             'name': "2 отдел",
             'nameKZ': '2 бөлім',
             'description': {
@@ -2829,7 +2838,7 @@ def upgrade() -> None:
         "Султанов",
         'Асланович',
         'aset@mail.ru',
-        all_service_id,
+        group2_id,
         user10_id,
         "Альфа 3",
         '3',
@@ -7211,7 +7220,8 @@ def create_user(id,
             'issued_by': "Районный суд Сарыаркинского района г.Астана",
             'article_number': "122.12(УК РК)",
             'consequence': "Штраф 40МРП",
-            'profile_id': additional_profile_id
+            'profile_id': additional_profile_id,
+            'document_link': f"{base_s3_url}/static/example.txt"
         }]
     )
     op.bulk_insert(
@@ -7224,7 +7234,8 @@ def create_user(id,
             'issued_by': "Районный суд Сарыаркинского района г.Астана",
             'article_number': "122.12(УК РК)",
             'consequence': "Штраф 400МРП",
-            'profile_id': None
+            'profile_id': None,
+            'document_link': f"{base_s3_url}/static/example.txt",
         }]
     )
 
@@ -7283,7 +7294,8 @@ def create_user(id,
             'type_id': property_type2_id,
             'address': "ул. Достық 5",
             'issue_date': "2022-09-12",
-            'profile_id': additional_profile_id
+            'profile_id': additional_profile_id,
+            'document_link': f"{base_s3_url}/static/example.txt",
         }]
     )
 

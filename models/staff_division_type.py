@@ -1,5 +1,4 @@
-from models import NamedModel
-
+from models import NamedModel, Model
 
 class StaffDivisionType(NamedModel):
 

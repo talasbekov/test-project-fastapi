@@ -2,7 +2,7 @@ import datetime
 import uuid
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, AnyUrl
 
 from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 from .property_type import PropertyTypeRead
@@ -12,6 +12,7 @@ class ServiceHousingBase(Model):
 
     type_id: uuid.UUID
     address: str
+    document_link: Optional[AnyUrl]
     issue_date: datetime.datetime
 
     class Config:
