@@ -41,6 +41,8 @@ class ArchiveStaffFunction(NamedModel):
 
     origin_id = Column(UUID(as_uuid=True), ForeignKey("staff_functions.id"), nullable=True)
 
+    origin = relationship("StaffFunction", back_populates="archived")
+
     __mapper_args__ = {
         "polymorphic_on": discriminator,
         "polymorphic_identity": "staff_function",
