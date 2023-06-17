@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, AnyUrl
 
 from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
@@ -11,7 +11,8 @@ class ViolationBase(NamedModel):
     date: datetime
     issued_by: str
     article_number: str
-    consequence: str 
+    consequence: str
+    document_link: Optional[AnyUrl]
     profile_id: Optional[uuid.UUID]
     
     class Config:

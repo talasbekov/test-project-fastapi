@@ -9,12 +9,11 @@ from schemas import (PositionRead, RankRead, StaffFunctionRead,
                     BadgeRead, RankRead, StatusRead, StaffDivisionTypeRead)
 
 
-
 class StaffDivisionBase(NamedModel):
-    parent_group_id: Optional[uuid.UUID]
+    parent_group_id: Optional[uuid.UUID] = Field(None, nullable=True)
     description: Optional[NamedModel]
-    is_combat_unit: Optional[bool]
-    leader_id: Optional[uuid.UUID]
+    is_combat_unit: Optional[bool] = Field(None, nullable=True)
+    leader_id: Optional[uuid.UUID] = Field(None, nullable=True)
     is_active: Optional[bool] = True
     type_id: Optional[uuid.UUID] = Field(None, nullable=True)
     staff_division_number: Optional[int] = Field(None, nullable=True)
@@ -31,10 +30,11 @@ class StaffDivisionUpdate(StaffDivisionBase):
 class StaffDivisionUpdateParentGroup(BaseModel):
     parent_group_id: uuid.UUID
 
+
 class UserRead(ReadModel):
     badges: Optional[List[BadgeRead]]
-    icon: Optional[str]
-    address: Optional[str]
+    icon: Optional[str] = Field(None, nullable=True)
+    address: Optional[str] = Field(None, nullable=True)
     cabinet: Optional[str]
     service_phone_number: Optional[str]
     supervised_by: Optional[uuid.UUID]
@@ -53,16 +53,18 @@ class UserRead(ReadModel):
     iin: Optional[str]
     statuses: Optional[List[StatusRead]]
     status_till: Optional[datetime.datetime]
+
     class Config:
         orm_mode = True
-        
-        
+
+
 class HrVacancyRead(ReadModel):
     is_active: Optional[bool]
     staff_unit_id: Optional[uuid.UUID]
-    
+
     class Config:
         orm_mode = True
+
 
 class UserReplacingStaffUnitRead(ReadModel):
     position_id: uuid.UUID
@@ -80,11 +82,13 @@ class UserReplacingStaffUnitRead(ReadModel):
         orm_mode = True
         arbitrary_types_allowed = True
 
+
 class UserReplacingRead(UserRead):
     staff_unit: Optional[UserReplacingStaffUnitRead]
-    
+
     class Config:
         arbitrary_types_allowed = True
+
 
 class StaffUnitRead(ReadModel):
     staff_division_id: Optional[uuid.UUID]
@@ -102,8 +106,9 @@ class StaffUnitRead(ReadModel):
         orm_mode = True
         arbitrary_types_allowed = True
 
+
 class StaffDivisionRead(StaffDivisionBase, ReadNamedModel):
-    is_combat_unit: Optional[bool]
+    is_combat_unit: Optional[bool] = Field(None, nullable=True)
     count_vacancies: Optional[int]
     children: Optional[List['StaffDivisionRead']]
     staff_units: Optional[List['StaffUnitRead']]
@@ -114,7 +119,7 @@ class StaffDivisionRead(StaffDivisionBase, ReadNamedModel):
 
 
 class StaffDivisionOptionRead(StaffDivisionBase, ReadNamedModel):
-    is_combat_unit: Optional[bool]
+    is_combat_unit: Optional[bool] = Field(None, nullable=True)
     staff_units: Optional[List[StaffUnitRead]]
     children: Optional[List['StaffDivisionOptionRead']]
 
@@ -124,7 +129,7 @@ class StaffDivisionOptionRead(StaffDivisionBase, ReadNamedModel):
 
 
 class StaffUnitDivisionRead(StaffDivisionBase, ReadNamedModel):
-    is_combat_unit: Optional[bool]
+    is_combat_unit: Optional[bool] = Field(None, nullable=True)
 
     class Config:
         orm_mode = True

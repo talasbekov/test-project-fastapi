@@ -2,7 +2,7 @@ import uuid
 import datetime
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class Model(BaseModel):
@@ -14,7 +14,7 @@ class Model(BaseModel):
 
 class NamedModel(Model):
     name: str
-    nameKZ: Optional[str]
+    nameKZ: Optional[str] = Field(None, nullable=True)
 
     class Config:
         orm_mode = True

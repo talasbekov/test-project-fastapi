@@ -9,6 +9,7 @@ from models import NamedModel, isActiveModel
 
 class HrDocumentTemplateEnum(str, enum.Enum):
     STAFF_LIST = "Приказ об изменении штатного расписания"
+    DISPOSITION = "Приказ о выводе в распоряжение"
     STAFF_UNIT = "Приказ о назначении на должность (штатное расписание)"
 
 

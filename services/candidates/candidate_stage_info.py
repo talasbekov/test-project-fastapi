@@ -182,9 +182,9 @@ class CandidateStageInfoService(ServiceBase[CandidateStageInfo, CandidateStageIn
         position = None
 
         if candidate_stage_type.name == 'Результаты полиграфологического исследования':
-            position = position_service.get_by_name(db, PositionNameEnum.POLYGRAPH_EXAMINER.value)
+            position = position_service.get_id_by_name(db, PositionNameEnum.POLYGRAPH_EXAMINER.value)
         if candidate_stage_type.name == 'Результаты физической подготовки':
-            position = position_service.get_by_name(db, PositionNameEnum.INSTRUCTOR.value)
+            position = position_service.get_id_by_name(db, PositionNameEnum.INSTRUCTOR.value)
 
             if candidate.attempt_number >= 2:
                 raise BadRequestException(

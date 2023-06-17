@@ -2,13 +2,15 @@ import datetime
 from typing import List, Optional
 import uuid
 
+from sqlalchemy import desc
 from sqlalchemy.orm import Session, joinedload
 
-from exceptions import NotFoundException, NotSupportedException
+from exceptions import NotFoundException, NotSupportedException, ForbiddenException
 from models import (
     DocumentStaffFunction,
     ServiceStaffFunction,
     StaffDivision,
+    StaffDivisionEnum,
     StaffList,
     StaffUnit,
     ArchiveStaffDivision,
@@ -23,6 +25,7 @@ from schemas import (
     StaffListUpdate,
     StaffListUserCreate,
     StaffListStatusRead,
+    HrDocumentInit,
     HrVacancyUpdate,
 )
 from services import (
@@ -38,6 +41,7 @@ from services import (
     document_staff_function_type_service,
     service_staff_function_type_service,
     hr_document_template_service,
+    hr_document_service,
     staff_unit_service,
     service_staff_function_service,
     service_staff_function_type_service,
@@ -78,6 +82,10 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         staff_list = super().create(db, create_staff_list)
         staff_divisions = staff_division_service.get_all_except_special(
             db, 0, 100)
+
+        disposition_division = staff_division_service.get_by_name(db, StaffDivisionEnum.DISPOSITION.value)
+        staff_divisions.append(disposition_division)
+
         for staff_division in staff_divisions:
             self._create_archive_staff_division(
                 db, staff_division, staff_list.id, None, current_user_role_id)
@@ -104,13 +112,17 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         db.flush()
         return staff_list
 
-    def apply_staff_list(
+    async def apply_staff_list(
         self,
         db: Session,
         staff_list_id: uuid.UUID,
         signed_by: str,
         document_creation_date: datetime.date,
-        current_user_role_id: uuid.UUID
+        current_user_id: uuid.UUID,
+        current_user_role_id: uuid.UUID,
+        rank: str,
+        document_number: str,
+        document_link: str
     ):
         staff_list = self.get_by_id(db, staff_list_id)
 
@@ -133,6 +145,9 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         staff_list.document_signed_by = signed_by
         staff_list.document_signed_at = document_creation_date
         staff_list.status = StaffListStatusEnum.APPROVED.value
+        staff_list.document_link = document_link
+        staff_list.document_number = document_number
+        staff_list.rank = rank
         staff_list.is_signed = True
 
         staff_unit_service.delete_all_inactive(db)
@@ -140,6 +155,14 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         service_staff_function_service.delete_all_inactive(db)
         db.add(staff_list)
         db.flush()
+        user_ids = self.get_disposition_user_ids_by_staff_list_id(db, staff_list_id)
+        if user_ids:
+            await self.create_disposition_doc_by_staff_list_id(
+                db,
+                staff_list_id, 
+                user_ids, 
+                current_user_id, 
+                current_user_role_id)
         return staff_list
 
     def _create_staff_division(self, db: Session,
@@ -234,6 +257,11 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
                                                                                    archive_division.id, current_user_role_id)
                 archive_division.children.append(child_archive_staff_division)
 
+        if staff_division.name == StaffDivisionEnum.DISPOSITION.value:
+            db.add(archive_division)
+            db.flush()
+            return archive_division
+
         is_leader_needed = False
         leader_id = None
         if staff_division.leader_id is not None:
@@ -263,10 +291,6 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
                 if staff_unit.staff_functions:
                     for staff_function in staff_unit.staff_functions:
                         service = options.get(staff_function.discriminator)
-                        if isinstance(staff_function, ServiceStaffFunction):
-                            print(staff_function)
-                        if isinstance(staff_function, DocumentStaffFunction):
-                            print('Anime')
                         if service is None:
                             raise NotSupportedException(
                                 detail="Staff function type is not supported!")
@@ -308,6 +332,37 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
 
         return archive_division
 
+    async def create_disposition_doc_by_staff_list_id(
+            self,
+            db: Session,
+            staff_list_id: uuid.UUID,
+            user_ids: uuid.UUID,
+            current_user_id: uuid.UUID,
+            current_user_role_id: str,
+    ):
+        hr_document_template = hr_document_template_service.get_disposition(
+            db=db)
+        steps = hr_document_template_service.get_steps_by_document_template_id(db, hr_document_template.id, user_ids[0])
+        body = HrDocumentInit(
+            hr_document_template_id=hr_document_template.id,
+            user_ids=user_ids,
+            document_step_users_ids=steps,
+            parent_id=None,
+            due_date=datetime.datetime.now() + datetime.timedelta(days=7),
+            properties={}
+        )
+        hr_document = await hr_document_service.initialize(db, body, current_user_id, current_user_role_id)
+        print(hr_document)
+        return hr_document
+
+    def get_disposition_user_ids_by_staff_list_id(self, db: Session, staff_list_id: uuid.UUID):
+        disposition_division = archive_staff_division_service.get_by_name(db, StaffDivisionEnum.DISPOSITION.value, staff_list_id)
+        archive_staff_units = archive_staff_unit_service.get_by_archive_staff_division_id(db, disposition_division.id)
+        user_ids = []
+        for archive_staff_unit in archive_staff_units:
+            user_ids.append(archive_staff_unit.user_id)
+        return user_ids
+
     def get_super_doc_by_staff_list_id(
             self,
             db: Session,
@@ -333,6 +388,7 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
                        .options(joinedload(StaffList.user))
                        .filter(StaffList.is_signed == False,
                                StaffList.name.contains(filter))
+                       .order_by(desc(StaffList.created_at))
                        .offset(skip)
                        .limit(limit)
                        .all())
@@ -345,6 +401,7 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
                        .options(joinedload(StaffList.user))
                        .filter(StaffList.is_signed == True,
                                StaffList.name.contains(filter))
+                       .order_by(desc(StaffList.updated_at))
                        .offset(skip)
                        .limit(limit)
                        .all())

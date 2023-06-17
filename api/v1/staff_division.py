@@ -178,8 +178,8 @@ async def get_full_name_by_id(*,
     full_name, full_nameKZ = staff_division_service.get_full_name(db, id)
     return {"name": full_name, "nameKZ": full_nameKZ}
 
-@router.get("/types/", dependencies=[Depends(HTTPBearer())],
-            response_model=StaffDivisionTypeRead,
+@router.get("/types", dependencies=[Depends(HTTPBearer())],
+            response_model=List[StaffDivisionTypeRead],
             summary="Get Staff Division types")
 async def get_division_types(*,
     db: Session = Depends(get_db),

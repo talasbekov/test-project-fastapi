@@ -76,7 +76,7 @@ from services import (
     penalty_service,
     contract_service,
     notification_service,
-    staff_list_service,
+    # staff_list_service,
     archive_staff_unit_service,
     status_leave_service,
     state_body_service,
@@ -707,36 +707,36 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         return document
 
-    async def initialize_super_document(self, db: Session, staff_list_id: uuid.UUID, user_id: str, role: str):
-        template = hr_document_template_service.get_staff_list(db)
-        child_template = hr_document_template_service.get_staff_unit(db)
-        body: HrDocumentInit = HrDocumentInit(
-            hr_document_template_id=template.id,
-            user_ids=[],
-            parent_id=None,
-            due_date=datetime.now() + timedelta(days=7),
-            document_step_users_ids=hr_document_template_service.get_steps_by_document_template_id(db, template.id,
-                                                                                                   user_id=user_id),
-            properties={
-                'staff_list': {
-                    'name': 'staff_list',
-                    'nameKZ': "Штатный список",
-                    'value': str(staff_list_id)
-                },
-            },
-        )
-        document = await self.initialize(db, body, user_id, role)
-        staff_list = staff_list_service.get_by_id(db, staff_list_id)
-        staff_list.is_signed = True
-        for archive_staff_division in staff_list.archive_staff_divisions:
-            for archive_staff_unit in archive_staff_division.staff_units:
-                if not staff_unit_service.exists_relation(db, archive_staff_unit.user_id, archive_staff_unit.origin_id):
-                    if archive_staff_unit.user_id is not None:
-                        child_body = self._create_staff_unit_document_body(db, archive_staff_unit.user_id,
-                                                                           archive_staff_unit, child_template.id,
-                                                                           document.id)
-                        await self.initialize(db, child_body, user_id, role, parent_id=document.id)
-        return document
+    # async def initialize_super_document(self, db: Session, staff_list_id: uuid.UUID, user_id: str, role: str):
+    #     template = hr_document_template_service.get_staff_list(db)
+    #     child_template = hr_document_template_service.get_staff_unit(db)
+    #     body: HrDocumentInit = HrDocumentInit(
+    #         hr_document_template_id=template.id,
+    #         user_ids=[],
+    #         parent_id=None,
+    #         due_date=datetime.now() + timedelta(days=7),
+    #         document_step_users_ids=hr_document_template_service.get_steps_by_document_template_id(db, template.id,
+    #                                                                                                user_id=user_id),
+    #         properties={
+    #             'staff_list': {
+    #                 'name': 'staff_list',
+    #                 'nameKZ': "Штатный список",
+    #                 'value': str(staff_list_id)
+    #             },
+    #         },
+    #     )
+    #     document = await self.initialize(db, body, user_id, role)
+    #     staff_list = staff_list_service.get_by_id(db, staff_list_id)
+    #     staff_list.is_signed = True
+    #     for archive_staff_division in staff_list.archive_staff_divisions:
+    #         for archive_staff_unit in archive_staff_division.staff_units:
+    #             if not staff_unit_service.exists_relation(db, archive_staff_unit.user_id, archive_staff_unit.origin_id):
+    #                 if archive_staff_unit.user_id is not None:
+    #                     child_body = self._create_staff_unit_document_body(db, archive_staff_unit.user_id,
+    #                                                                        archive_staff_unit, child_template.id,
+    #                                                                        document.id)
+    #                     await self.initialize(db, child_body, user_id, role, parent_id=document.id)
+    #     return document
 
     async def _sign_super_document(self,
                                    db: Session,
@@ -915,11 +915,14 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         properties = document.properties
         actions = document.document_template.actions['args']
-
-        for action in actions:
-            for action_name in list(action.keys()):
-                new_val.append({f'{action_name}': handlers[action_name].handle_response(
-                    db, document.users[0], action[action_name], properties)})
+        if document.status_id == hr_document_status_service.get_by_name(
+                                    db, HrDocumentStatusEnum.DRAFT.value).id:
+            new_val.append(properties)
+        else:
+            for action in actions:
+                for action_name in list(action.keys()):
+                    new_val.append({f'{action_name}': handlers[action_name].handle_response(
+                        db, document.users[0], action[action_name], properties)})
 
         response.new_value = new_val
 
