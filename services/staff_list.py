@@ -388,6 +388,7 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
                        .options(joinedload(StaffList.user))
                        .filter(StaffList.is_signed == False,
                                StaffList.name.contains(filter))
+                       .order_by(desc(StaffList.created_at))
                        .offset(skip)
                        .limit(limit)
                        .all())
