@@ -58,3 +58,10 @@ family_abroad_travel = Table(
     Column("family_id", ForeignKey("families.id")),
     Column("abroad_travel_id", ForeignKey("abroad_travels.id"))
 )
+
+answers_options = Table(
+    "answers_options",
+    Base.metadata,
+    Column("option_id", ForeignKey("options.id")),
+    Column("answer_id", ForeignKey("answers.id"))
+)
