@@ -54,7 +54,7 @@ def upgrade() -> None:
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.ForeignKeyConstraint(['juisdiction_id'], ['jurisdictions.id'], ),
+    sa.ForeignKeyConstraint(['jurisdiction_id'], ['jurisdictions.id'], ),
     sa.ForeignKeyConstraint(['owner_id'], ['users.id'], ),
     sa.ForeignKeyConstraint(['type_id'], ['survey_types.id'], ),
     sa.PrimaryKeyConstraint('id')
