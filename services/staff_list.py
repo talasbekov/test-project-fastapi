@@ -107,7 +107,7 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
                 db, archive_staff_division.origin_id)
             self._create_archive_staff_division(
                 db, staff_division, staff_list.id, None, current_user_role_id)
-
+        staff_list.is_signed = False
         db.add(staff_list)
         db.flush()
         return staff_list
