@@ -16,7 +16,7 @@ router = APIRouter(prefix="/staff_list", tags=["StaffList"], dependencies=[Depen
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[StaffListRead],
-            summary="Get all Staff Divisions")
+            summary="Get all Staff Lists")
 async def get_all(*,
                   db: Session = Depends(get_db),
                   skip: int = 0,

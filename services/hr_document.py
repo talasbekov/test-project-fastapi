@@ -915,11 +915,14 @@ class HrDocumentService(ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpda
 
         properties = document.properties
         actions = document.document_template.actions['args']
-
-        for action in actions:
-            for action_name in list(action.keys()):
-                new_val.append({f'{action_name}': handlers[action_name].handle_response(
-                    db, document.users[0], action[action_name], properties)})
+        if document.status_id == hr_document_status_service.get_by_name(
+                                    db, HrDocumentStatusEnum.DRAFT.value).id:
+            new_val.append(properties)
+        else:
+            for action in actions:
+                for action_name in list(action.keys()):
+                    new_val.append({f'{action_name}': handlers[action_name].handle_response(
+                        db, document.users[0], action[action_name], properties)})
 
         response.new_value = new_val
 
