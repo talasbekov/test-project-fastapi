@@ -155,6 +155,7 @@ class ArchiveStaffUnitService(
             self,
             db: Session,
             staff_unit: StaffUnit,
+            curator_of_id: uuid.UUID,
             user_id: uuid.UUID,
             position_id: uuid.UUID,
             actual_user_id: uuid.UUID,
@@ -163,6 +164,7 @@ class ArchiveStaffUnitService(
         return super().create(db, ArchiveStaffUnitCreate(
             position_id=position_id,
             staff_division_id=archive_staff_division.id,
+            curator_of_id=curator_of_id,
             user_id=user_id,
             actual_user_id=actual_user_id,
             user_replacing_id=user_replacing_id,
@@ -196,6 +198,7 @@ class ArchiveStaffUnitService(
             obj_in=ArchiveStaffUnitUpdate(
                 position_id=body.position_id,
                 staff_division_id=body.staff_division_id,
+                curator_of_id=body.curator_of_id,
                 user_id=body.user_id,
                 actual_user_id=body.actual_user_id,
                 user_replacing_id=body.user_replacing_id,

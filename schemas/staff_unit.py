@@ -23,7 +23,7 @@ class StaffUnitBase(Model):
 
 
 class StaffUnitCreate(StaffUnitBase):
-    pass
+    curator_of_id: Optional[uuid.UUID] = Field(None, nullable=True)
 
 
 class StaffUnitCreateWithPosition(PositionCreate):
@@ -33,6 +33,7 @@ class StaffUnitCreateWithPosition(PositionCreate):
 
 
 class StaffUnitUpdate(StaffUnitBase):
+    curator_of_id: Optional[uuid.UUID] = Field(None, nullable=True)
     user_replacing_id: Optional[uuid.UUID] = Field(None, nullable=True)
 
 

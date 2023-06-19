@@ -26,7 +26,8 @@ class ArchiveStaffUnitBase(BaseModel):
 
 
 class ArchiveStaffUnitCreate(ArchiveStaffUnitBase):
-    origin_id: Optional[uuid.UUID]
+    curator_of_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    origin_id: Optional[uuid.UUID] = Field(None, nullable=True)
 
 
 class ArchiveStaffUnitCreateWithStaffFunctions(ArchiveStaffUnitBase):
@@ -37,6 +38,7 @@ class ArchiveStaffUnitCreateWithStaffFunctions(ArchiveStaffUnitBase):
 class ArchiveStaffUnitUpdate(ArchiveStaffUnitBase):
     origin_id: Optional[uuid.UUID]
     user_replacing: Optional[uuid.UUID] = Field(None, nullable=True)
+    curator_of_id: Optional[uuid.UUID] = Field(None, nullable=True)
 
 
 class NewArchiveStaffUnitCreate(ArchiveStaffUnitBase):
