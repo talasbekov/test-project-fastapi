@@ -1,16 +1,17 @@
 import uuid
 import datetime
 
-from typing import Optional
+from typing import Optional, List
 
 from schemas import NamedModel, ReadNamedModel
+from .question import QuestionRead
 
 
 class SurveyBase(NamedModel):
     description: Optional[str]
     start_date: datetime.datetime
     end_date: datetime.datetime
-    type_id: uuid.UUID
+    type: str
     jurisdiction_id: Optional[uuid.UUID]
 
 
@@ -21,13 +22,15 @@ class SurveyCreate(SurveyBase):
 class SurveyUpdate(SurveyBase):
     start_date: Optional[datetime.datetime]
     end_date: Optional[datetime.datetime]
-    type_id: Optional[uuid.UUID]
+    type: Optional[str]
 
 
 class SurveyRead(SurveyBase, ReadNamedModel):
     start_date: Optional[datetime.datetime]
     end_date: Optional[datetime.datetime]
-    type_id: Optional[uuid.UUID]
+    type: Optional[str]
+    
+    questions: Optional[List[QuestionRead]]
 
     class Config:
         orm_mode = True
