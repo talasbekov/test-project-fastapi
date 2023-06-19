@@ -9,7 +9,9 @@ from .base import ServiceBase
 
 
 class StaffDivisionTypeService(
-        ServiceBase[StaffDivisionType, StaffDivisionTypeCreate, StaffDivisionTypeUpdate]):
+        ServiceBase[StaffDivisionType,
+                    StaffDivisionTypeCreate,
+                    StaffDivisionTypeUpdate]):
 
     def get_by_id(self, db: Session, id: str) -> StaffDivisionType:
         type = super().get(db, id)

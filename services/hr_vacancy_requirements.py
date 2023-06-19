@@ -8,7 +8,9 @@ from .base import ServiceBase
 
 
 class HrVacancyRequirementService(
-        ServiceBase[HrVacancyRequirements, HrVacancyRequirementsCreate, HrVacancyRequirementsUpdate]):
+        ServiceBase[HrVacancyRequirements,
+                    HrVacancyRequirementsCreate,
+                    HrVacancyRequirementsUpdate]):
 
     def get_by_id(self, db: Session, id: str):
 

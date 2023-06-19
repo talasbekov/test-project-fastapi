@@ -27,7 +27,9 @@ class FamilyProfileService(
     def get_by_user_id(self, db: Session, user_id: str):
         profile = (
             db.query(self.model)
-            .join(Profile, and_(Profile.id == self.model.profile_id, Profile.user_id == user_id))
+            .join(Profile, 
+                  and_(Profile.id == self.model.profile_id, 
+                       Profile.user_id == user_id))
             .first()
         )
         return profile

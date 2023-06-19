@@ -31,8 +31,15 @@ class HrDocumentInfoService(
 
         return hr_document_info
 
-    def create_info_for_step(self, db: Session, document_id: str, step_id: str, user_id: str, is_signed: bool,
-                             comment: str, signed_at: datetime, order: int = 1):
+    def create_info_for_step(self,
+                             db: Session,
+                             document_id: str,
+                             step_id: str,
+                             user_id: str,
+                             is_signed: bool,
+                             comment: str,
+                             signed_at: datetime,
+                             order: int = 1):
 
         document_info = HrDocumentInfoCreate(
             hr_document_id=document_id,
@@ -108,7 +115,9 @@ class HrDocumentInfoService(
                 self.model.hr_document_id == id,
                 self.model.signed_by_id is not None
         )\
-            .order_by(self.model.created_at.asc(), DocumentStaffFunction.priority.asc(), self.model.order)\
+            .order_by(self.model.created_at.asc(),
+                      DocumentStaffFunction.priority.asc(),
+                      self.model.order)\
             .all()
 
         additional_infos = db.query(self.model)\
@@ -126,14 +135,25 @@ class HrDocumentInfoService(
         return infos
 
     def get_initialized_by_user_id(
-            self, db: Session, user_id: str, skip: int, limit: int) -> List[HrDocumentInfo]:
+            self,
+            db: Session,
+            user_id: str,
+            skip: int,
+            limit: int) -> List[HrDocumentInfo]:
 
-        infos = db.query(HrDocumentInfo).join(HrDocumentStep).join(DocumentStaffFunction).filter(
-            HrDocumentInfo.assigned_to_id == user_id,
-            DocumentStaffFunction.priority == 1
-        ).order_by(
-            HrDocumentInfo.created_at.desc()
-        ).offset(skip).limit(limit).all()
+        infos = (
+            db
+            .query(HrDocumentInfo)
+            .join(HrDocumentStep)
+            .join(DocumentStaffFunction)
+            .filter(
+                HrDocumentInfo.assigned_to_id == user_id,
+                DocumentStaffFunction.priority == 1
+            ).order_by(
+                HrDocumentInfo.created_at.desc()
+            ).offset(skip)
+            .limit(limit).all()
+        )
 
         return infos
 
@@ -148,7 +168,12 @@ class HrDocumentInfoService(
         return infos
 
     def get_signed_by_document_id_and_step_id(
-            self, db: Session, document_id: str, step_id: str, order: int = 1) -> HrDocumentInfo:
+            self,
+            db: Session,
+            document_id: str,
+            step_id: str,
+            order: int = 1) -> HrDocumentInfo:
+
         info = db.query(HrDocumentInfo).filter(
             HrDocumentInfo.hr_document_id == document_id,
             HrDocumentInfo.hr_document_step_id == step_id,

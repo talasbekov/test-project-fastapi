@@ -7,7 +7,9 @@ from services.base import ServiceBase
 
 
 class UserFinancialInfoService(
-        ServiceBase[UserFinancialInfo, UserFinancialInfoCreate, UserFinancialInfoUpdate]):
+        ServiceBase[UserFinancialInfo,
+                    UserFinancialInfoCreate,
+                    UserFinancialInfoUpdate]):
 
     def get_by_id(self, db: Session, id: str):
         user_financial_info = super().get(db, id)

@@ -7,7 +7,9 @@ from services import ServiceBase
 
 
 class DispensaryRegistrationService(
-        ServiceBase[DispensaryRegistration, DispensaryRegistrationUpdate, DispensaryRegistrationUpdate]):
+        ServiceBase[DispensaryRegistration,
+                    DispensaryRegistrationUpdate,
+                    DispensaryRegistrationUpdate]):
     def get_by_id(self, db: Session, id: str):
         dispensary_registration = super().get(db, id)
         if dispensary_registration is None:

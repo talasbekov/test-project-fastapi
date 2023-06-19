@@ -27,15 +27,19 @@ class ProfileService(ServiceBase[Profile, ProfileCreate, ProfileUpdate]):
     #     education = max(profile.educational_profile.education,
     #                     key=lambda obj: obj.end_date)
     #     institutions = (
-    #         education.institution.name for education in profile.educational_profile.education if not education.is_military_school)
+    #     education.institution.name
+    #     for education in profile.educational_profile.education
+    #     if not education.is_military_school)
     #     military_institutions = (
-    #         education.institution.name for education in profile.educational_profile.education if education.is_military_school)
+    #     education.institution.name for education
+    #     in profile.educational_profile.education if education.is_military_school)
     #     academic_degrees = (AcademicDegreeRead.from_orm(academic_degree).dict()
-    #                         for academic_degree in profile.educational_profile.academic_degree)
+    #     for academic_degree in profile.educational_profile.academic_degree)
     #     abroad_travels = (AbroadTravelRead.from_orm(abroad_travel).dict()
-    #                       for abroad_travel in profile.additional_profile.abroad_travels)
-    #     language_proficiencies = (LanguageProficiencyRead.from_orm(language_proficiency).dict()
-    #                               for language_proficiency in profile.educational_profile.language_proficiency)
+    #     for abroad_travel in profile.additional_profile.abroad_travels)
+    #    language_proficiencies = (
+    #    LanguageProficiencyRead.from_orm(language_proficiency).dict()
+    #    for language_proficiency in profile.educational_profile.language_proficiency)
     #     sport_degrees = (SportDegreeRead.from_orm(sport_degree).dict()
     # for sport_degree in profile.personal_profile.sport_degrees)
 
@@ -58,7 +62,8 @@ class ProfileService(ServiceBase[Profile, ProfileCreate, ProfileUpdate]):
     #         "language_proficiencies": list(language_proficiencies),
     #         "sport_degrees": list(sport_degrees),
     #         "categories": list(profile.personal_profile.driving_license.category),
-    #         "blood_group": profile.medical_profile.general_user_informations[0].blood_group.value
+    #         "blood_group":
+    #           profile.medical_profile.general_user_informations[0].blood_group.value
     #     }
 
     #     template_path = configs.TEMPLATE_FILE_PATH+"Послужной список.docx"

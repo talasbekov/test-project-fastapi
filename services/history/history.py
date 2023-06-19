@@ -215,10 +215,18 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             SecondmentHistory.user_id == user_id).all()
         equipments = user.equipments
 
-        clothing_equipments_type_count = equipment_service.get_clothing_equipments_type_count(
-            db)
-        equipment_models_count = equipment_service.get_clothing_equipment_models_count_by_user(
-            db, user_id)
+        clothing_equipments_type_count = (
+            equipment_service
+            .get_clothing_equipments_type_count(db)
+        )
+        
+        equipment_models_count = (
+            equipment_service
+            .get_clothing_equipment_models_count_by_user(
+                db, 
+                user_id
+            )
+        )
         percentage = {}
         if equipment_models_count:
             for equipment_model in equipment_models_count:
@@ -278,7 +286,10 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         else:
             user_oath_read = OathRead(
                 id=oauth_user.id,
-                date=oauth_user.date, military_name=oauth_user.military_unit.name, military_id=oauth_user.military_unit_id)
+                date=oauth_user.date, 
+                military_name=oauth_user.military_unit.name, 
+                military_id=oauth_user.military_unit_id
+            )
 
         privelege_emergency = privelege_emergency_service.get_by_user_id(
             db, user_id)
@@ -326,13 +337,15 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             )
         recommender = recommender_user_service.get_by_user_id(db, user_id)
         if recommender:
-            recommender_user = {"name": f"{recommender.user_by.last_name} {recommender.user_by.first_name[0]}{' ' + recommender.user_by.father_name[0] + '.' if recommender.user_by.father_name is not None else ''}",
+            recommender_user = {"name": (f"{recommender.user_by.last_name} {recommender.user_by.first_name[0]}"
+        f"{' ' + recommender.user_by.father_name[0] + '.' if recommender.user_by.father_name is not None else ''}"),
                                 "id": str(user.id)
                                 }
         else:
             recommender_user = None
         if user:
-            researcher = {"name": f"{user.last_name} {user.first_name[0]} {' ' + user.father_name[0] + '.' if user.father_name is not None else ''}",
+            researcher = {"name": (f"{user.last_name} {user.first_name[0]} "
+                    f"{' ' + user.father_name[0] + '.' if user.father_name is not None else ''}"),
                           "id": str(user.id)
                           }
         else:
@@ -379,7 +392,8 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                 detail=f"In options: {diff} is not present!")
         if getattr(cls, "create_timeline_history", None) is None:
             raise NotSupportedException(
-                detail=f"Class: {cls.__name__} does not support date_from, date_to format!"
+                detail= (f"Class: {cls.__name__} "
+                         "does not support date_from, date_to format!")
             )
         return cls.create_timeline_history(
             db, user_id, object.id, finish_last, date_from, date_to
@@ -414,7 +428,9 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             end_date = next_month - timedelta(days=next_month.day)
             histories = (
                 db.query(self.model)
-                .filter(self.model.user_id == user_id, self.model.date_from >= start_date, self.model.date_from <= end_date)
+                .filter(self.model.user_id == user_id, 
+                        self.model.date_from >= start_date, 
+                        self.model.date_from <= end_date)
                 # add secondary sort order
                 .order_by(self.model.date_from.desc(), self.model.id.asc())
                 .offset(skip)

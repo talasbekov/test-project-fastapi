@@ -5,7 +5,14 @@ from sqlalchemy import and_
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
-from models import PersonalProfile, DrivingLicense, IdentificationCard, Passport, TaxDeclaration, Profile
+from models import (
+    PersonalProfile,
+    DrivingLicense,
+    IdentificationCard,
+    Passport,
+    TaxDeclaration,
+    Profile
+)
 from schemas import PersonalProfileCreate, PersonalProfileUpdate
 from services.base import ServiceBase
 
@@ -38,7 +45,9 @@ class PersonalProfileService(
     def get_by_user_id(self, db: Session, user_id: uuid.UUID):
         personal_profile = (
             db.query(PersonalProfile)
-            .join(Profile, and_(PersonalProfile.profile_id == Profile.id, Profile.user_id == user_id))
+            .join(Profile,
+                  and_(PersonalProfile.profile_id == Profile.id,
+                       Profile.user_id == user_id))
             .first()
         )
         if personal_profile is None:

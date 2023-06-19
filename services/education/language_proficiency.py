@@ -7,7 +7,9 @@ from services import ServiceBase
 
 
 class LanguageProficiencyService(
-        ServiceBase[LanguageProficiency, LanguageProficiencyCreate, LanguageProficiencyUpdate]):
+        ServiceBase[LanguageProficiency, 
+                    LanguageProficiencyCreate, 
+                    LanguageProficiencyUpdate]):
 
     def get_by_id(self, db: Session, id: str):
         language_proficiency = super().get(db, id)

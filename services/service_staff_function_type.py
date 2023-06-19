@@ -3,12 +3,16 @@ from sqlalchemy.orm import Session
 from exceptions.client import NotFoundException
 from models import ServiceFunctionType, ArchiveServiceFunctionType
 from schemas import ServiceStaffFunctionTypeCreate, ServiceStaffFunctionTypeUpdate
-from .archive.service_archive_staff_function_type import service_archive_staff_function_type_service
+from .archive.service_archive_staff_function_type import (
+    service_archive_staff_function_type_service
+)
 from .base import ServiceBase
 
 
 class ServiceFunctionTypeService(
-        ServiceBase[ServiceFunctionType, ServiceStaffFunctionTypeCreate, ServiceStaffFunctionTypeUpdate]):
+        ServiceBase[ServiceFunctionType,
+                    ServiceStaffFunctionTypeCreate,
+                    ServiceStaffFunctionTypeUpdate]):
 
     def get_by_id(self, db: Session, id: str):
         if id is None:

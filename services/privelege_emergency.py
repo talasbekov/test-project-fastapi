@@ -7,7 +7,9 @@ from .base import ServiceBase
 
 
 class PrivelegeEmergencyService(
-        ServiceBase[PrivilegeEmergency, PrivelegeEmergencyCreate, PrivelegeEmergencyUpdate]):
+        ServiceBase[PrivilegeEmergency,
+                    PrivelegeEmergencyCreate,
+                    PrivelegeEmergencyUpdate]):
 
     def get_by_id(self, db: Session, id: str):
         rank = super().get(db, id)

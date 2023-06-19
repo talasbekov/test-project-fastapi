@@ -161,9 +161,9 @@ class StaffListService(
         if user_ids:
             await self.create_disposition_doc_by_staff_list_id(
                 db,
-                staff_list_id, 
-                user_ids, 
-                current_user_id, 
+                staff_list_id,
+                user_ids,
+                current_user_id,
                 current_user_role_id)
         return staff_list
 
@@ -239,11 +239,18 @@ class StaffListService(
 
             new_staff_function_type = None
             if arhive_staff_function.type_id is not None:
-                new_staff_function_type = service_staff_function_type_service.create_or_update_from_archive(
-                    db, arhive_staff_function.type_id)
+                new_staff_function_type = (
+                    service_staff_function_type_service
+                    .create_or_update_from_archive(
+                        db,
+                        arhive_staff_function.type_id)
+                )
 
-            new_staff_function = service_staff_function_service.create_or_update_from_archive(
-                db, arhive_staff_function, getattr(new_staff_function_type, 'id', None))
+            new_staff_function = (service_staff_function_service
+                                  .create_or_update_from_archive(
+                                      db,
+                                      arhive_staff_function,
+                                      getattr(new_staff_function_type, 'id', None)))
 
             arhive_staff_function.origin_id = new_staff_function.id
             new_staff_unit.staff_functions.append(new_staff_function)
@@ -257,10 +264,13 @@ class StaffListService(
                                        parent_group_id: Optional[uuid.UUID],
                                        current_user_role_id: str):
 
-        archive_division = archive_staff_division_service.create_based_on_existing_staff_division(db,
-                                                                                                  staff_division,
-                                                                                                  staff_list_id,
-                                                                                                  parent_group_id)
+        archive_division = (archive_staff_division_service
+                            .create_based_on_existing_staff_division(
+                                db,
+                                staff_division,
+                                staff_list_id,
+                                parent_group_id)
+                            )
 
         if staff_division.children:
             for child in staff_division.children:
@@ -291,13 +301,16 @@ class StaffListService(
                 staff_unit_user_replacing = staff_unit.user_replacing_id
                 staff_unit_position = staff_unit.position_id
 
-                archive_staff_unit = archive_staff_unit_service.create_based_on_existing_staff_unit(db,
-                                                                                                    staff_unit,
-                                                                                                    staff_unit_user_id,
-                                                                                                    staff_unit_position,
-                                                                                                    staff_unit_actual_user_id,
-                                                                                                    staff_unit_user_replacing,
-                                                                                                    archive_division)
+                archive_staff_unit = (archive_staff_unit_service
+                                      .create_based_on_existing_staff_unit(
+                                          db,
+                                          staff_unit,
+                                          staff_unit_user_id,
+                                          staff_unit_position,
+                                          staff_unit_actual_user_id,
+                                          staff_unit_user_replacing,
+                                          archive_division)
+                                      )
 
                 if is_leader_needed:
                     if staff_division.leader_id == staff_unit.id:
@@ -309,16 +322,19 @@ class StaffListService(
                         if service is None:
                             raise NotSupportedException(
                                 detail="Staff function type is not supported!")
-                        type = service['type'].create_based_on_existing_archive_staff_function_type(
-                            db,
-                            service['origin'].get_by_id(db, getattr(
-                                staff_function, service['type_id']))
-                        )
+                        type = (service['type']
+                                .create_based_on_existing_archive_staff_function_type(
+                                db,
+                                service['origin'].get_by_id(db, getattr(
+                                    staff_function, service['type_id']))
+                                ))
 
-                        archive_staff_function = service['service'].create_based_on_existing_archive_staff_function(
+                        archive_staff_function = (service['service']
+                                                  .create_based_on_existing_archive_staff_function(
                             db,
                             staff_function,
                             type.id if type else None
+                        )
                         )
 
                         archive_staff_unit.staff_functions.append(
@@ -379,8 +395,13 @@ class StaffListService(
                                                   staff_list_id: uuid.UUID):
         disposition_division = archive_staff_division_service.get_by_name(
             db, StaffDivisionEnum.DISPOSITION.value, staff_list_id)
-        archive_staff_units = archive_staff_unit_service.get_by_archive_staff_division_id(
-            db, disposition_division.id)
+
+        archive_staff_units = (archive_staff_unit_service
+                               .get_by_archive_staff_division_id(
+                                   db,
+                                   disposition_division.id)
+                               )
+
         user_ids = []
         for archive_staff_unit in archive_staff_units:
             user_ids.append(archive_staff_unit.user_id)

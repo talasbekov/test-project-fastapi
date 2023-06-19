@@ -126,7 +126,8 @@ class RenderService:
 
         autobiography_answer = db.query(CandidateStageAnswerDefault).filter(
             CandidateStageAnswerDefault.candidate_id == candidate_id,
-            CandidateStageAnswerDefault.candidate_stage_question_id == autobigoraphy_question.id
+            CandidateStageAnswerDefault.candidate_stage_question_id
+            == autobigoraphy_question.id
         ).first()
 
         # essay
@@ -140,41 +141,50 @@ class RenderService:
 
         essay_answer = db.query(CandidateStageAnswerText).filter(
             CandidateStageAnswerText.candidate_id == candidate_id,
-            CandidateStageAnswerText.candidate_stage_question_id == essay_stage_question.id
+            CandidateStageAnswerText.candidate_stage_question_id
+            == essay_stage_question.id
         ).first()
 
         # military medical commision
         military_medical_commision_stage = (db.query(CandidateStageType)
-                                            .filter(CandidateStageType.name == 'Военно-врачебная комиссия')
+                                            .filter(CandidateStageType.name
+                                                    == 'Военно-врачебная комиссия')
                                             .first())
 
         military_medical_commision_question = db.query(CandidateStageQuestion).filter(
-            CandidateStageQuestion.candidate_stage_type_id == military_medical_commision_stage.id
+            CandidateStageQuestion.candidate_stage_type_id
+            == military_medical_commision_stage.id
         ).first()
 
         military_medical_commision_answer = db.query(CandidateStageAnswerChoice).filter(
             CandidateStageAnswerText.candidate_id == candidate_id,
-            CandidateStageAnswerText.candidate_stage_question_id == military_medical_commision_question.id
+            CandidateStageAnswerText.candidate_stage_question_id
+            == military_medical_commision_question.id
         ).first()
 
         # psychological stage
         psychological_stage_type = (db.query(CandidateStageType)
-                                    .filter(CandidateStageType.name == 'Беседа с психологом')
+                                    .filter(CandidateStageType.name
+                                            == 'Беседа с психологом')
                                     .first())
 
         psychological_stage_question = db.query(CandidateStageQuestion).filter(
-            CandidateStageQuestion.candidate_stage_type_id == psychological_stage_type.id
+            CandidateStageQuestion.candidate_stage_type_id
+            == psychological_stage_type.id
         ).first()
 
         psychological_stage_answer = db.query(CandidateStageAnswerText).filter(
             CandidateStageAnswerText.candidate_id == candidate_id,
-            CandidateStageAnswerText.candidate_stage_question_id == psychological_stage_question.id
+            CandidateStageAnswerText.candidate_stage_question_id
+            == psychological_stage_question.id
         ).first()
 
         # polygraph stage
-        polygraph_stage_type = (db.query(CandidateStageType)
-                                .filter(CandidateStageType.name == 'Результаты полиграфологического исследования')
-                                .first())
+        polygraph_stage_type = (db
+                    .query(CandidateStageType)
+                    .filter(CandidateStageType.name
+                    == 'Результаты полиграфологического исследования')
+                    .first())
 
         polygraph_stage_question = db.query(CandidateStageQuestion).filter(
             CandidateStageQuestion.candidate_stage_type_id == polygraph_stage_type.id
@@ -182,12 +192,14 @@ class RenderService:
 
         polygraph_stage_answer = db.query(CandidateStageAnswerChoice).filter(
             CandidateStageAnswerChoice.candidate_id == candidate_id,
-            CandidateStageAnswerChoice.candidate_stage_question_id == polygraph_stage_question.id
+            CandidateStageAnswerChoice.candidate_stage_question_id
+            == polygraph_stage_question.id
         ).first()
 
         # sport stage
         sport_stage_type = (db.query(CandidateStageType)
-                            .filter(CandidateStageType.name == 'Результаты физической подготовки')
+                            .filter(CandidateStageType.name
+                                    == 'Результаты физической подготовки')
                             .first())
 
         sport_stage_question = db.query(CandidateStageQuestion).filter(
@@ -196,13 +208,16 @@ class RenderService:
 
         sport_stage_answer = db.query(CandidateStageAnswerChoice).filter(
             CandidateStageAnswerChoice.candidate_id == candidate_id,
-            CandidateStageAnswerChoice.candidate_stage_question_id == sport_stage_question.id
+            CandidateStageAnswerChoice.candidate_stage_question_id
+            == sport_stage_question.id
         ).first()
 
         # legislation stage
-        legislation_stage_type = (db.query(CandidateStageType)
-                                  .filter(CandidateStageType.name == 'Результаты тестирования на знание законодательства РК')
-                                  .first())
+        legislation_stage_type = (db
+                    .query(CandidateStageType)
+                    .filter(CandidateStageType.name
+                    == 'Результаты тестирования на знание законодательства РК')
+                    .first())
 
         legislation_stage_question = db.query(CandidateStageQuestion).filter(
             CandidateStageQuestion.candidate_stage_type_id == legislation_stage_type.id
@@ -210,7 +225,8 @@ class RenderService:
 
         legislation_stage_answer = db.query(CandidateStageAnswerChoice).filter(
             CandidateStageAnswerChoice.candidate_id == candidate_id,
-            CandidateStageAnswerChoice.candidate_stage_question_id == legislation_stage_question.id
+            CandidateStageAnswerChoice.candidate_stage_question_id
+            == legislation_stage_question.id
         ).first()
 
         # Wife
@@ -267,7 +283,10 @@ class RenderService:
 
         return FileResponse(
             path=file_name,
-            filename=f"Заключение о зачислении кандидата {user.last_name} {user.first_name}.pdf",
+            filename=(
+                f"Заключение о зачислении кандидата {user.last_name} "
+                f"{user.first_name}.pdf"
+            ),
         )
 
     def convert_html_to_docx(self, html: str):
@@ -313,7 +332,13 @@ class RenderService:
 
         # Create an XSLT stylesheet to transform the XML to HTML
         xslt = etree.XML(
-            '''<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing">
+            '''
+        <xsl:stylesheet
+            version="1.0"
+            xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+            xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+            xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
+            xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing">
         <xsl:output method="html"/>
 
         <!-- Map Word styles to HTML styles -->

@@ -17,7 +17,9 @@ from .base import ServiceBase
 
 
 class DocumentStaffFunctionService(
-        ServiceBase[DocumentStaffFunction, DocumentStaffFunctionCreate, DocumentStaffFunctionUpdate]):
+        ServiceBase[DocumentStaffFunction, 
+                    DocumentStaffFunctionCreate, 
+                    DocumentStaffFunctionUpdate]):
 
     def get_by_id(self, db: Session, id: str) -> DocumentStaffFunction:
         service_staff_function = super().get(db, id)
@@ -62,14 +64,18 @@ class DocumentStaffFunctionService(
 
     def create_function(self, db: Session, body: DocumentStaffFunctionAdd):
 
-        function: DocumentStaffFunction = super().create(db, DocumentStaffFunctionCreate(
-            role_id=body.role_id,
-            name=body.name,
-            jurisdiction_id=body.jurisdiction_id,
-            hours_per_week=body.hours_per_week,
-            priority=body.priority,
-            is_active=True
-        ))
+        function: DocumentStaffFunction = super().create(
+            db, 
+            DocumentStaffFunctionCreate(
+                role_id=body.role_id,
+                name=body.name,
+                jurisdiction_id=body.jurisdiction_id,
+                hours_per_week=body.hours_per_week,
+                priority=body.priority,
+                is_active=True
+            )
+        )
+
         new_step = HrDocumentStep(
             hr_document_template_id=body.hr_document_template_id,
             staff_function_id=function.id,
@@ -98,9 +104,12 @@ class DocumentStaffFunctionService(
                 continue
             if staff_function.hr_document_step is None:
                 continue
-            if body.hr_document_template_id == staff_function.hr_document_step.hr_document_template_id:
+            if (body.hr_document_template_id 
+                == staff_function.hr_document_step.hr_document_template_id):
+
                 raise BadRequestException(
-                    detail=f"StaffFunction with template id: {body.hr_document_template_id} already exists!"
+                    detail=("StaffFunction with template id:"
+                            f" {body.hr_document_template_id} already exists!")
                 )
 
         staff_unit.staff_functions.append(res)

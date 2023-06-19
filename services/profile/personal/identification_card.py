@@ -7,7 +7,9 @@ from services.base import ServiceBase
 
 
 class IdentificationCardService(
-        ServiceBase[IdentificationCard, IdentificationCardCreate, IdentificationCardUpdate]):
+        ServiceBase[IdentificationCard,
+                    IdentificationCardCreate,
+                    IdentificationCardUpdate]):
 
     def get_by_id(self, db: Session, id: str):
         identification_card = super().get(db, id)

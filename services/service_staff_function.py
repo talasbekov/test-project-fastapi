@@ -10,7 +10,9 @@ from .base import ServiceBase
 
 
 class ServiceStaffFunctionService(
-        ServiceBase[ServiceStaffFunction, ServiceStaffFunctionCreate, ServiceStaffFunctionUpdate]):
+        ServiceBase[ServiceStaffFunction,
+                    ServiceStaffFunctionCreate,
+                    ServiceStaffFunctionUpdate]):
 
     def get_by_id(self, db: Session, id: str):
         service_staff_function = super().get(db, id)

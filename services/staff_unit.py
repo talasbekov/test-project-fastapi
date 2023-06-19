@@ -268,8 +268,9 @@ class StaffUnitService(
             Эта функция добавляет должностную функцию в штатную единицу по должности
         """
         current_user_staff_unit = self.get_by_id(db, role_id)
-        current_user_department = staff_division_service.get_department_id_from_staff_division_id(db,
-                                                                                                  current_user_staff_unit.staff_division_id)
+        current_user_department = (staff_division_service
+                                   .get_department_id_from_staff_division_id(db,
+                                                                             current_user_staff_unit.staff_division_id))
 
         if body.position.lower() == 'куратор':
             return self._add_document_staff_function_to_curator(db,
