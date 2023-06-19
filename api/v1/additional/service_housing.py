@@ -7,7 +7,10 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import ServiceHousingCreate, ServiceHousingUpdate, ServiceHousingRead
+from schemas import (ServiceHousingCreate, 
+                     ServiceHousingUpdate, 
+                     ServiceHousingRead)
+
 from services import service_housing_service
 
 router = APIRouter(
@@ -30,8 +33,11 @@ async def get_all(*,
     """
         Get all Service Housings
 
-        - **skip**: int - The number of Service Housings to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of Service Housings to return in the response. This parameter is optional and defaults to 100.
+    - **skip**: int - The number of Service Housings to skip before returning 
+                the results 
+        This parameter is optional and defaults to 0.
+    - **limit**: int - The maximum number of Service Housings to return in the response 
+        This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
     return service_housing_service.get_multi(db, skip, limit)

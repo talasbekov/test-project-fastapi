@@ -8,7 +8,10 @@ from sqlalchemy.orm import Session
 
 from core import get_db
 
-from schemas import AdditionalProfileCreate, AdditionalProfileRead, AdditionalProfileUpdate
+from schemas import (AdditionalProfileCreate, 
+                     AdditionalProfileRead, 
+                     AdditionalProfileUpdate)
+
 from services import additional_profile_service, profile_service
 
 router = APIRouter(
@@ -29,10 +32,12 @@ async def get_all(*,
                   Authorize: AuthJWT = Depends()
                   ):
     """
-        Get all Abroad Travel
+    Get all Abroad Travel
 
-        - **skip**: int - The number of abroad travel to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of abroad travel to return in the response. This parameter is optional and defaults to 100.
+    - **skip**: int - The number of abroad travel to skip before returning the results. 
+        This parameter is optional and defaults to 0.
+    - **limit**: int - The maximum number of abroad travel to return in the response. 
+        This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
     credentials = Authorize.get_jwt_subject()

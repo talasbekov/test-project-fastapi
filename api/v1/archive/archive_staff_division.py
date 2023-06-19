@@ -7,9 +7,15 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import (ArchiveStaffDivisionRead, ArchiveStaffDivisionUpdateParentGroup, NewArchiveStaffDivisionCreate,
+
+from schemas import (ArchiveStaffDivisionRead, 
+                     ArchiveStaffDivisionUpdateParentGroup, 
+                     NewArchiveStaffDivisionCreate,
                      NewArchiveStaffDivisionUpdate)
-from services import archive_staff_division_service, staff_list_service, increment_changes_size
+
+from services import (archive_staff_division_service, 
+                      staff_list_service, 
+                      increment_changes_size)
 
 router = APIRouter(
     prefix="/archive_staff_division",
@@ -32,8 +38,12 @@ async def get_all(*,
     """
        Get all Staff Divisions
 
-       - **skip**: int - The number of staff divisions to skip before returning the results. This parameter is optional and defaults to 0.
-       - **limit**: int - The maximum number of staff divisions to return in the response. This parameter is optional and defaults to 100.
+    - **skip**: int - The number of staff divisions 
+        to skip before returning the results. 
+        This parameter is optional and defaults to 0.
+    - **limit**: int - The maximum number of staff divisions 
+        to return in the response. 
+        This parameter is optional and defaults to 100.
    """
     Authorize.jwt_required()
     staff_list_service.get_by_id(db, staff_list_id)

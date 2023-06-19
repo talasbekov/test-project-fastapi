@@ -43,8 +43,10 @@ async def get_all(*,
     """
        Get all Staff Units
 
-       - **skip**: int - The number of staff units to skip before returning the results. This parameter is optional and defaults to 0.
-       - **limit**: int - The maximum number of staff units to return in the response. This parameter is optional and defaults to 10.
+       - **skip**: int - The number of staff units to skip before returning the results. 
+            This parameter is optional and defaults to 0.
+       - **limit**: int - The maximum number of staff units to return in the response. 
+            This parameter is optional and defaults to 10.
    """
     Authorize.jwt_required()
     return archive_staff_unit_service.get_multi(db, skip, limit)

@@ -555,7 +555,7 @@ async def get_all_actions():
         #                     'secondment': {
         #                         'tagname': 'state_body',
         #                         'alias_name': 'Гос. орган для откомандирования',
-        #                         'alias_nameKZ': 'Іссапарды қосу үшін мемлекеттік орган',
+        #                       'alias_nameKZ': 'Іссапарды қосу үшін мемлекеттік орган',
         #                     },
         #                     'date_from': {
         #                         'tagname': 'date_from',
@@ -637,7 +637,7 @@ async def get_all_actions():
         #                     'coolness': {
         #                         'tagname': 'coolness',
         #                         'alias_name': 'Классная квалификация для понижения',
-        #                         'alias_nameKZ': 'Төмендету үшін сыныптық квалификация',
+        #                        'alias_nameKZ': 'Төмендету үшін сыныптық квалификация',
         #                     },
         #                 },
         #             },

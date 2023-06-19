@@ -7,8 +7,11 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import (ArchiveStaffFunctionRead, NewArchiveStaffFunctionCreate,
-                     NewArchiveStaffFunctionUpdate, AllArchiveStaffFunctionsRead)
+from schemas import (ArchiveStaffFunctionRead, 
+                     NewArchiveStaffFunctionCreate,
+                     NewArchiveStaffFunctionUpdate, 
+                     AllArchiveStaffFunctionsRead)
+
 from services import archive_staff_function_service
 
 router = APIRouter(
@@ -31,8 +34,10 @@ async def get_all(*,
     """
        Get all StaffFunction
 
-       - **skip**: int - The number of StaffFunction to skip before returning the results. This parameter is optional and defaults to 0.
-       - **limit**: int - The maximum number of StaffFunction to return in the response. This parameter is optional and defaults to 100.
+    - **skip**: int - The number of StaffFunction to skip before returning the results.
+        This parameter is optional and defaults to 0.
+    - **limit**: int - The maximum number of StaffFunction to return in the response.
+        This parameter is optional and defaults to 100.
    """
     Authorize.jwt_required()
     return archive_staff_function_service.get_all_staff_functions(
@@ -51,9 +56,10 @@ async def create(*,
     """
         Create StaffFunction
 
-        - **name**: required
-        - **service_function_type_id**: UUID - required. The id of service function type.
-        - **spend_hours_per_week**: int - optional.
+    - **name**: required
+    - **service_function_type_id**: UUID - required. 
+        The id of service function type.
+    - **spend_hours_per_week**: int - optional.
     """
     Authorize.jwt_required()
     return archive_staff_function_service.create_staff_function(db, body)
@@ -88,9 +94,10 @@ async def update(*,
     """
         Update StaffFunction
 
-        - **name**: required
-        - **service_function_type_id**: UUID - required. The id of service function type.
-        - **spend_hours_per_week**: int - optional.
+    - **name**: required
+    - **service_function_type_id**: UUID - required. 
+        The id of service function type.
+    - **spend_hours_per_week**: int - optional.
     """
     Authorize.jwt_required()
     return archive_staff_function_service.update_staff_function(
