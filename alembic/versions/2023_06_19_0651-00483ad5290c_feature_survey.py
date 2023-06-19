@@ -1,8 +1,8 @@
 """feature: survey
 
-Revision ID: 6dd8b5e18854
+Revision ID: 00483ad5290c
 Revises: 3d09ba117ccc
-Create Date: 2023-06-18 08:20:05.023981
+Create Date: 2023-06-19 06:51:39.869256
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '6dd8b5e18854'
+revision = '00483ad5290c'
 down_revision = '3d09ba117ccc'
 branch_labels = None
 depends_on = None
@@ -26,19 +26,11 @@ def upgrade() -> None:
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('survey_types',
-    sa.Column('name', sa.String(), nullable=False),
-    sa.Column('nameKZ', sa.String(), nullable=True),
-    sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.PrimaryKeyConstraint('id')
-    )
     op.create_table('surveys',
     sa.Column('description', sa.TEXT(), nullable=True),
     sa.Column('start_date', sa.TIMESTAMP(timezone=True), nullable=False),
     sa.Column('end_date', sa.TIMESTAMP(timezone=True), nullable=False),
-    sa.Column('type_id', sa.UUID(), nullable=True),
+    sa.Column('type', sa.Enum('REGULAR', 'ANONYMOUS', name='surveytypeenum'), nullable=False),
     sa.Column('jurisdiction_id', sa.UUID(), nullable=True),
     sa.Column('owner_id', sa.UUID(), nullable=True),
     sa.Column('name', sa.String(), nullable=False),
@@ -48,7 +40,6 @@ def upgrade() -> None:
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['jurisdiction_id'], ['jurisdictions.id'], ),
     sa.ForeignKeyConstraint(['owner_id'], ['users.id'], ),
-    sa.ForeignKeyConstraint(['type_id'], ['survey_types.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('questions',
@@ -56,7 +47,6 @@ def upgrade() -> None:
     sa.Column('is_required', sa.Boolean(), nullable=False),
     sa.Column('survey_id', sa.UUID(), nullable=True),
     sa.Column('question_type_id', sa.UUID(), nullable=True),
-    sa.Column('discriminator', sa.String(length=255), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
@@ -82,16 +72,16 @@ def upgrade() -> None:
     op.create_table('answers',
     sa.Column('question_id', sa.UUID(), nullable=True),
     sa.Column('discriminator', sa.String(length=255), nullable=True),
+    sa.Column('text', sa.TEXT(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('text', sa.TEXT(), nullable=True),
     sa.Column('option_id', sa.UUID(), nullable=True),
     sa.Column('scale_value', sa.Integer(), nullable=True),
     sa.Column('grid_values', sa.JSON(), nullable=True),
     sa.Column('checkbox_grid_values', sa.JSON(), nullable=True),
     sa.ForeignKeyConstraint(['option_id'], ['options.id'], ),
-    sa.ForeignKeyConstraint(['question_id'], ['survey_types.id'], ),
+    sa.ForeignKeyConstraint(['question_id'], ['questions.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('answers_options',
@@ -110,6 +100,5 @@ def downgrade() -> None:
     op.drop_table('options')
     op.drop_table('questions')
     op.drop_table('surveys')
-    op.drop_table('survey_types')
     op.drop_table('question_types')
     # ### end Alembic commands ###

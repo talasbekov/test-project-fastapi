@@ -10,11 +10,12 @@ class Answer(Model):
 
     __tablename__ = "answers"
 
-    question_id = Column(UUID(as_uuid=True), ForeignKey("survey_types.id"))
+    question_id = Column(UUID(as_uuid=True), ForeignKey("questions.id"))
     discriminator = Column(String(255))
     text = Column(TEXT, nullable = True)
 
     question = relationship("Question", foreign_keys=[question_id], back_populates="answers")
+    options = relationship("Option", secondary=answers_options, back_populates="answers")
     
     __mapper_args__ = {
         "polymorphic_on": discriminator,
@@ -27,14 +28,6 @@ class AnswerSingleChoice(Answer):
     
     __mapper_args__ = {
         "polymorphic_identity": "answer_single_choice"
-    }
-
-
-class AnswerMultipleChoice(Answer):
-    options = relationship("Option", secondary=answers_options, back_populates="answers")
-    
-    __mapper_args__ = {
-        "polymorphic_identity": "answer_multiple_choice"
     }
     
 
