@@ -1,8 +1,19 @@
-from sqlalchemy import Column, ForeignKey, Boolean, String, TEXT
+import enum
+
+from sqlalchemy import Column, ForeignKey, Boolean, String, TEXT, Enum
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from models import Model
+
+
+class QuestionTypeEnum(str, enum.Enum):
+    TEXT = "Текст"
+    SINGLE_CHOICE = "Один из списка"
+    MULTIPLE_CHOICE = "Несколько из списка"
+    SCALE = "Шкала"
+    GRID = "Сетка"
+    CHECKBOX_GRID = "Сетка флажков"
 
 
 class Question(Model):
@@ -12,9 +23,8 @@ class Question(Model):
     text = Column(TEXT, nullable=False)
     is_required = Column(Boolean, nullable=False, default=True)
     survey_id = Column(UUID(as_uuid=True), ForeignKey("surveys.id"))
-    question_type_id = Column(UUID(as_uuid=True), ForeignKey("question_types.id"))
+    question_type = Column(Enum(QuestionTypeEnum), nullable=False)
 
     survey = relationship("Survey", foreign_keys=[survey_id], back_populates="questions")
-    question_type = relationship("QuestionType", foreign_keys=[question_type_id], back_populates="questions")
     options = relationship("Option", cascade="all,delete", back_populates="question")
     answers = relationship("Answer", cascade="all, delete", back_populates="question")
