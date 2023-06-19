@@ -276,8 +276,10 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
                     0].id if staff_unit.actual_users else None
                 staff_unit_user_replacing = staff_unit.user_replacing_id
                 staff_unit_position = staff_unit.position_id
+                staff_unit_curator_of_id = staff_unit.curator_of_id
 
                 archive_staff_unit = archive_staff_unit_service.create_based_on_existing_staff_unit(db, staff_unit,
+                                                                                                    staff_unit_curator_of_id,
                                                                                                     staff_unit_user_id,
                                                                                                     staff_unit_position,
                                                                                                     staff_unit_actual_user_id,
