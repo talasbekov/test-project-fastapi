@@ -12,7 +12,7 @@ class Option(Model):
 
     question_id = Column(UUID(as_uuid=True), ForeignKey("questions.id"))
     text = Column(TEXT, nullable = True)
-    discriminator = Column(String(255))
+    discriminator = Column(String(255), nullable=True)
 
     question = relationship("Question", foreign_keys=[question_id], back_populates="options")
     answers = relationship("Answer", secondary=answers_options, back_populates="options")
@@ -24,8 +24,8 @@ class Option(Model):
 
 
 class OptionScale(Option):
-    min_value = Column(Integer, nullable=False)
-    max_value = Column(Integer, nullable=False)
+    min_value = Column(Integer, nullable=True)
+    max_value = Column(Integer, nullable=True)
 
     __mapper_args__ = {
         "polymorphic_identity": "option_scale"
@@ -33,8 +33,8 @@ class OptionScale(Option):
 
 
 class OptionGrid(Option):
-    row_position = Column(Integer, nullable=False)
-    column_position = Column(Integer, nullable=False)
+    row_position = Column(Integer, nullable=True)
+    column_position = Column(Integer, nullable=True)
 
     __mapper_args__ = {
         "polymorphic_identity": "option_grid"
@@ -42,7 +42,7 @@ class OptionGrid(Option):
 
 
 class OptionCheckboxGrid(OptionGrid):
-    is_checked = Column(Boolean, default=False, nullable=False)
+    is_checked = Column(Boolean, default=False, nullable=True)
 
     __mapper_args__ = {
         "polymorphic_identity": "option_checkbox_grid"

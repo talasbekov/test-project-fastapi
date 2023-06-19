@@ -52,11 +52,11 @@ def upgrade() -> None:
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('min_value', sa.Integer(), nullable=False),
-    sa.Column('max_value', sa.Integer(), nullable=False),
-    sa.Column('row_position', sa.Integer(), nullable=False),
-    sa.Column('column_position', sa.Integer(), nullable=False),
-    sa.Column('is_checked', sa.Boolean(), nullable=False),
+    sa.Column('min_value', sa.Integer(), nullable=True),
+    sa.Column('max_value', sa.Integer(), nullable=True),
+    sa.Column('row_position', sa.Integer(), nullable=True),
+    sa.Column('column_position', sa.Integer(), nullable=True),
+    sa.Column('is_checked', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(['question_id'], ['questions.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
