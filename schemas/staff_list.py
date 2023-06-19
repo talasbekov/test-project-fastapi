@@ -32,6 +32,9 @@ class StaffListRead(StaffListBase, ReadNamedModel):
     document_signed_by: Optional[str] = Field(None, nullable=True)
     document_signed_at: Optional[date] = Field(None, nullable=True)
     changes_size: Optional[int] = Field(None, nullable=True)
+    rank: Optional[str] = Field(None, nullable=True)
+    document_number: Optional[str] = Field(None, nullable=True)
+    document_link: Optional[str] = Field(None, nullable=True)
 
 
 class StaffListStatusRead(StaffListBase):

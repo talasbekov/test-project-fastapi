@@ -53,6 +53,8 @@ class ArchiveStaffFunction(NamedModel):
         ForeignKey("staff_functions.id"),
         nullable=True)
 
+    origin = relationship("StaffFunction", back_populates="archived")
+
     __mapper_args__ = {
         "polymorphic_on": discriminator,
         "polymorphic_identity": "staff_function",

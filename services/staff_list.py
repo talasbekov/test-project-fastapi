@@ -108,7 +108,7 @@ class StaffListService(
                 db, archive_staff_division.origin_id)
             self._create_archive_staff_division(
                 db, staff_division, staff_list.id, None, current_user_role_id)
-
+        staff_list.is_signed = False
         db.add(staff_list)
         db.flush()
         return staff_list
@@ -120,7 +120,10 @@ class StaffListService(
         signed_by: str,
         document_creation_date: datetime.date,
         current_user_id: uuid.UUID,
-        current_user_role_id: uuid.UUID
+        current_user_role_id: uuid.UUID,
+        rank: str,
+        document_number: str,
+        document_link: str
     ):
         staff_list = self.get_by_id(db, staff_list_id)
 
@@ -143,6 +146,9 @@ class StaffListService(
         staff_list.document_signed_by = signed_by
         staff_list.document_signed_at = document_creation_date
         staff_list.status = StaffListStatusEnum.APPROVED.value
+        staff_list.document_link = document_link
+        staff_list.document_number = document_number
+        staff_list.rank = rank
         staff_list.is_signed = True
 
         staff_unit_service.delete_all_inactive(db)
@@ -153,7 +159,12 @@ class StaffListService(
         user_ids = self.get_disposition_user_ids_by_staff_list_id(
             db, staff_list_id)
         if user_ids:
-            await self.create_disposition_doc_by_staff_list_id(db, staff_list_id, user_ids, current_user_id, current_user_role_id)
+            await self.create_disposition_doc_by_staff_list_id(
+                db,
+                staff_list_id, 
+                user_ids, 
+                current_user_id, 
+                current_user_role_id)
         return staff_list
 
     def _create_staff_division(self, db: Session,
@@ -402,6 +413,7 @@ class StaffListService(
                        .options(joinedload(StaffList.user))
                        .filter(StaffList.is_signed == False,
                                StaffList.name.contains(filter))
+                       .order_by(desc(StaffList.created_at))
                        .offset(skip)
                        .limit(limit)
                        .all())
