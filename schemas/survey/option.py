@@ -77,21 +77,21 @@ class OptionCheckboxGridUpdate(OptionCheckboxGridBase):
 
 
 # read
-class OptionRead(OptionBase):
+class OptionRead(OptionBase, ReadModel):
     pass
 
     class Config:
         orm_mode = True
 
 
-class OptionMultipleChoiceRead(OptionMultipleChoiceBase):
+class OptionMultipleChoiceRead(OptionMultipleChoiceBase, ReadModel):
     answers: Optional[List[uuid.UUID]]
     
     class Config:
         orm_mode = True
 
 
-class OptionScaleRead(OptionScaleBase):
+class OptionScaleRead(OptionScaleBase, ReadModel):
     min_value: Optional[int]
     max_value: Optional[int]
     
@@ -99,7 +99,7 @@ class OptionScaleRead(OptionScaleBase):
         orm_mode = True
 
 
-class OptionGridRead(OptionGridBase):
+class OptionGridRead(OptionGridBase, ReadModel):
     row_position: Optional[int]
     column_position: Optional[int]
     
@@ -107,7 +107,7 @@ class OptionGridRead(OptionGridBase):
         orm_mode = True
 
 
-class OptionCheckboxGridRead(OptionCheckboxGridBase):
+class OptionCheckboxGridRead(OptionCheckboxGridBase, ReadModel):
     row_position: Optional[int]
     column_position: Optional[int]
     is_checked: Optional[bool]
