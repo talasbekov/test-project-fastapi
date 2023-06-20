@@ -30,8 +30,12 @@ async def get_all(*,
     """
         Get all HrDocumentInfo
 
-        - **skip**: int - The number of HrDocumentInfo to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of HrDocumentInfo to return in the response. This parameter is optional and defaults to 10.
+    - **skip**: int - The number of HrDocumentInfo 
+        to skip before returning the results. 
+        This parameter is optional and defaults to 0.
+    - **limit**: int - The maximum number of HrDocumentInfo 
+        to return in the response. 
+        This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
     return hr_document_info_service.get_multi(db, skip, limit)
@@ -48,12 +52,16 @@ async def create(*,
     """
         Create HrDocumentInfo
 
-        - **hr_document_step_id**: UUID - the id of HrDocumentStep associated with this document info. This is required.
-        - **signed_by**: UUID - the id of the user who signed this document info. This field is optional.
+        - **hr_document_step_id**: UUID - the id of HrDocumentStep associated 
+            with this document info. This is required.
+        - **signed_by**: UUID - the id of the user who signed this document info. 
+            This field is optional.
         - **comment**: a comment regarding this document info.
         - **is_signed**: bool - whether or not this document info has been signed.
-        - **hr_document_id**: UUID - the id of the HrDocument associated with this document info.
-        - **signed_at**: the datetime at which this document info was signed. This field is optional. Format (YYYY-MM-DD)
+        - **hr_document_id**: UUID - the id of the HrDocument associated 
+            with this document info.
+        - **signed_at**: the datetime at which this document info was signed. 
+            This field is optional. Format (YYYY-MM-DD)
     """
     Authorize.jwt_required()
     return hr_document_info_service.create(db, body)
@@ -70,13 +78,17 @@ async def update(*,
     """
         Update HrDocumentInfo
 
-        - **id**: UUID - the id of the HrDocumentInfo. This is required.
-        - **hr_document_step_id**: UUID - the id of HrDocumentStep associated with this document info. This is required.
-        - **signed_by**: UUID - the id of the user who signed this document info. This field is optional.
-        - **comment**: a comment regarding this document info.
-        - **is_signed**: bool - whether or not this document info has been signed.
-        - **hr_document_id**: UUID - the id of the HrDocument associated with this document info.
-        - **signed_at**: the datetime at which this document info was signed. This field is optional. Format (YYYY-MM-DD)
+    - **id**: UUID - the id of the HrDocumentInfo. This is required.
+    - **hr_document_step_id**: UUID - the id of HrDocumentStep associated 
+        with this document info. This is required.
+    - **signed_by**: UUID - the id of the user who signed this document info. 
+        This field is optional.
+    - **comment**: a comment regarding this document info.
+    - **is_signed**: bool - whether or not this document info has been signed.
+    - **hr_document_id**: UUID - the id of the HrDocument
+        associated with this document info.
+    - **signed_at**: the datetime at which this document info was signed. 
+        This field is optional. Format (YYYY-MM-DD)
     """
     Authorize.jwt_required()
     return hr_document_info_service.update(
@@ -127,7 +139,8 @@ async def get_history_by_document_id(*,
     """
         Get History by document id
 
-        The function returns a list of HrDocumentHistoryRead objects, which represent the history of the HR document.
+        The function returns a list of HrDocumentHistoryRead objects, 
+        which represent the history of the HR document.
 
         - **id**: UUID - required.
     """

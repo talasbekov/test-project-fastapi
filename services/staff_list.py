@@ -296,20 +296,25 @@ class StaffListService(
             for staff_unit in staff_division.staff_units:
                 staff_unit: StaffUnit
 
-                staff_unit_user_id = staff_unit.users[0].id if staff_unit.users else None
+                staff_unit_user_id = (staff_unit.users[0].id 
+                                      if staff_unit.users else None)
                 staff_unit_actual_user_id = staff_unit.actual_users[
                     0].id if staff_unit.actual_users else None
                 staff_unit_user_replacing = staff_unit.user_replacing_id
                 staff_unit_position = staff_unit.position_id
                 staff_unit_curator_of_id = staff_unit.curator_of_id
 
-                archive_staff_unit = archive_staff_unit_service.create_based_on_existing_staff_unit(db, staff_unit,
-                                                                                                    staff_unit_curator_of_id,
-                                                                                                    staff_unit_user_id,
-                                                                                                    staff_unit_position,
-                                                                                                    staff_unit_actual_user_id,
-                                                                                                    staff_unit_user_replacing,
-                                                                                                    archive_division)
+                archive_staff_unit = (archive_staff_unit_service
+                                      .create_based_on_existing_staff_unit(
+                                        db, 
+                                        staff_unit,
+                                        staff_unit_curator_of_id,
+                                        staff_unit_user_id,
+                                        staff_unit_position,
+                                        staff_unit_actual_user_id,
+                                        staff_unit_user_replacing,
+                                        archive_division)
+                )
 
                 if is_leader_needed:
                     if staff_division.leader_id == staff_unit.id:
