@@ -4,7 +4,7 @@ from typing import List, Optional, Union
 
 from pydantic import BaseModel, EmailStr, Field
 
-from schemas import (BadgeRead, RankRead, ReadModel, 
+from schemas import (BadgeRead, RankRead, ReadModel,
                      HrVacancyRead, Model, PositionRead)
 
 from .archive_staff_function import ArchiveStaffFunctionRead
@@ -52,7 +52,10 @@ class NewArchiveStaffUnitCreateWithStaffFunctions(ArchiveStaffUnitBase):
 
 
 class NewArchiveStaffUnitUpdate(ArchiveStaffUnitBase):
+    user_replacing: Optional[uuid.UUID] = Field(None, nullable=True)
+    curator_of_id: Optional[uuid.UUID] = Field(None, nullable=True)
     pass
+
 
 class ArchiveStaffUnitUpdateDispose(BaseModel):
     staff_unit_ids: List[uuid.UUID]
