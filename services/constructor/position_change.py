@@ -59,17 +59,13 @@ class PositionChangeHandler(BaseHandler):
     ):
         position_id, percent, reason = self.get_args(action, props)
 
-        try:
-            if staff_unit_service.exists_relation(db, user.id, position_id):
-                raise BadRequestException(
-                    f"This position is already assigned to this user: {user.first_name}, {user.last_name}"
-                )
-            if percent < 0 or percent > 100:
-                raise BadRequestException(
-                    f"Percentage must be between 0 and 100: {percent}")
-        except Exception:
+        if staff_unit_service.exists_relation(db, user.id, position_id):
             raise BadRequestException(
-                f"Args are  not defined for this action: {self.__handler__}")
+                f"This position is already assigned to this user: {user.first_name}, {user.last_name}"
+            )
+        if percent < 0 or percent > 100:
+            raise BadRequestException(
+                f"Percentage must be between 0 and 100: {percent}")
 
     def get_args(self, action, properties):
         try:
