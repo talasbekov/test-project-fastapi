@@ -31,8 +31,12 @@ async def get_all(*,
     """
         Get all DrivingLicense
 
-        - **skip**: int - The number of DrivingLicense to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of DrivingLicense to return in the response. This parameter is optional and defaults to 100.
+        - **skip**: int - The number of DrivingLicense 
+            to skip before returning the results. 
+            This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of DrivingLicense 
+            to return in the response. 
+            This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
     return driving_license_service.get_multi(db, skip, limit)

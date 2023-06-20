@@ -29,8 +29,12 @@ async def get_all(*,
     """
         Get all HrDocumentStatus
 
-        - **skip**: int - The number of HrDocumentStatus to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of HrDocumentStatus to return in the response. This parameter is optional and defaults to 10.
+        - **skip**: int - The number of HrDocumentStatus 
+            to skip before returning the results. 
+            This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of HrDocumentStatus 
+            to return in the response. 
+            This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
     return hr_document_status_service.get_multi(db, skip, limit)

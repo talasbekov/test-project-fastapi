@@ -30,8 +30,12 @@ async def get_all(*,
     """
        Get all Military Units
 
-       - **skip**: int - The number of Military Units to skip before returning the results. This parameter is optional and defaults to 0.
-       - **limit**: int - The maximum number of Military Units to return in the response. This parameter is optional and defaults to 10.
+       - **skip**: int - The number of Military Units 
+        to skip before returning the results. 
+        This parameter is optional and defaults to 0.
+       - **limit**: int - The maximum number of Military Units 
+        to return in the response. 
+        This parameter is optional and defaults to 10.
    """
     Authorize.jwt_required()
     return military_unit_service.get_multi(db, skip, limit)

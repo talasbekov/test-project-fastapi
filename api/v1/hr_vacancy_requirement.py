@@ -7,7 +7,11 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import HrVacancyRequirementsRead, HrVacancyRequirementsCreate, HrVacancyRequirementsUpdate
+from schemas import (
+    HrVacancyRequirementsRead, 
+    HrVacancyRequirementsCreate, 
+    HrVacancyRequirementsUpdate
+)
 from services import hr_vacancy_requirement_service
 
 router = APIRouter(
@@ -30,8 +34,12 @@ async def get_all(*,
     """
         Get all HrVacancyRequirements
 
-       - **skip**: int - The number of HrVacancyRequirements to skip before returning the results. This parameter is optional and defaults to 0.
-       - **limit**: int - The maximum number of HrVacancyRequirements to return in the response. This parameter is optional and defaults to 100.
+       - **skip**: int - The number of HrVacancyRequirements 
+        to skip before returning the results. 
+        This parameter is optional and defaults to 0.
+       - **limit**: int - The maximum number of HrVacancyRequirements 
+        to return in the response. 
+        This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
     return hr_vacancy_requirement_service.get_multi(db, skip, limit)

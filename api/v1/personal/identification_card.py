@@ -7,7 +7,11 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import IdentificationCardCreate, IdentificationCardUpdate, IdentificationCardRead
+from schemas import (
+    IdentificationCardCreate, 
+    IdentificationCardUpdate, 
+    IdentificationCardRead
+)
 from services import identification_card_service
 
 router = APIRouter(
@@ -30,8 +34,12 @@ async def get_all(*,
     """
         Get all IdentificationCard
 
-        - **skip**: int - The number of IdentificationCard to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of IdentificationCard to return in the response. This parameter is optional and defaults to 100.
+        - **skip**: int - The number of IdentificationCard 
+            to skip before returning the results. 
+            This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of IdentificationCard 
+            to return in the response. 
+            This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
     return identification_card_service.get_multi(db, skip, limit)

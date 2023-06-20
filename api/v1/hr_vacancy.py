@@ -170,15 +170,16 @@ async def update(*,
     return hr_vacancy_service.update(db, hr_vacancy, body, role)
 
 
-@router.put("/{id}/archieve-staff-unit", dependencies=[Depends(HTTPBearer())],
+@router.put("/{id}/archieve-staff-unit", 
+            dependencies=[Depends(HTTPBearer())],
             response_model=HrVacancyRead,
             summary="Update HrVacancy")
 async def update_by_archieve_staff_unit(*,
-                                        db: Session = Depends(get_db),
-                                        id: uuid.UUID,
-                                        body: HrVacancyUpdate,
-                                        Authorize: AuthJWT = Depends()
-                                        ):
+                            db: Session = Depends(get_db),
+                            id: uuid.UUID,
+                            body: HrVacancyUpdate,
+                            Authorize: AuthJWT = Depends()
+):
     """
         Update HrVacancy
 
@@ -210,14 +211,15 @@ async def get_by_id(*,
     return hr_vacancy_service.get_by_id(db, id)
 
 
-@router.get("/archieve-staff-unit/{archieve_staff_unit_id}/", dependencies=[Depends(HTTPBearer())],
+@router.get("/archieve-staff-unit/{archieve_staff_unit_id}/", 
+            dependencies=[Depends(HTTPBearer())],
             response_model=HrVacancyRead,
             summary="Get HrVacancy by archieve staff unit")
 async def get_by_archieve_staff_unit_id(*,
-                                        db: Session = Depends(get_db),
-                                        archieve_staff_unit_id: uuid.UUID,
-                                        Authorize: AuthJWT = Depends()
-                                        ):
+                            db: Session = Depends(get_db),
+                            archieve_staff_unit_id: uuid.UUID,
+                            Authorize: AuthJWT = Depends()
+):
     """
         Get HrVacancy by archieve staff unit
 

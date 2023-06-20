@@ -30,8 +30,12 @@ async def get_all(*,
     """
         Get all SportAchievement
 
-        - **skip**: int - The number of SportAchievement to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of SportAchievement to return in the response. This parameter is optional and defaults to 100.
+        - **skip**: int - The number of SportAchievement 
+            to skip before returning the results. 
+            This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of SportAchievement 
+            to return in the response. 
+            This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
     return sport_achievement_service.get_multi(db, skip, limit)

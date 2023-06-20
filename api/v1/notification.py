@@ -29,8 +29,12 @@ async def get_all(*,
     """
        Get all Notifications
 
-       - **skip**: int - The number of Notifications to skip before returning the results. This parameter is optional and defaults to 0.
-       - **limit**: int - The maximum number of Notifications to return in the response. This parameter is optional and defaults to 10.
+       - **skip**: int - The number of Notifications 
+        to skip before returning the results. 
+        This parameter is optional and defaults to 0.
+       - **limit**: int - The maximum number of Notifications 
+        to return in the response. 
+        This parameter is optional and defaults to 10.
    """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
