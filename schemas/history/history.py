@@ -227,8 +227,12 @@ class HistoryPersonalRead(ReadModel):
     @property
     def service_characteristic(self) -> Optional[dict]:
         if self.characteristic_initiator is not None:
-            return {"name": self.characteristic_initiator.last_name + ' ' + self.characteristic_initiator.first_name,
-                    "nameKZ": self.characteristic_initiator.last_name + ' ' + self.characteristic_initiator.first_name}
+            return {"name": (self.characteristic_initiator.last_name 
+                             + ' ' 
+                             + self.characteristic_initiator.first_name),
+                    "nameKZ": (self.characteristic_initiator.last_name 
+                               + ' ' 
+                               + self.characteristic_initiator.first_name)}
         else:
             return None
 
@@ -427,7 +431,8 @@ class CharacteristicRead(ReadModel):
     def from_orm(cls, orm_obj):
         crc_init = orm_obj.characteristic_initiator
         if crc_init:
-            full_name = f"{crc_init.last_name} {crc_init.first_name[0]}.{crc_init.father_name[0]}."
+            full_name = (f"{crc_init.last_name} {crc_init.first_name[0]}"
+                         f".{crc_init.father_name[0]}.")
         else:
             full_name = None
         return cls(
@@ -490,8 +495,10 @@ class EmergencyContactRead(ReadModel):
     def from_orm(cls, orm_obj):
         position_name = orm_obj.position.name if orm_obj.position else None
         position_nameKZ = orm_obj.position.nameKZ if orm_obj.position else None
-        staff_division_name = orm_obj.staff_division.name if orm_obj.staff_division else None
-        staff_division_nameKZ = orm_obj.staff_division.nameKZ if orm_obj.staff_division else None
+        staff_division_name =(orm_obj.staff_division.name 
+                              if orm_obj.staff_division else None)
+        staff_division_nameKZ = (orm_obj.staff_division.nameKZ 
+                                 if orm_obj.staff_division else None)
 
         date_to = orm_obj.date_to or datetime.now(orm_obj.date_from.tzinfo)
         length_of_service = get_date_difference(orm_obj.date_from, date_to)
@@ -572,8 +579,10 @@ class SecondmentRead(Model):
 
     @classmethod
     def from_orm(cls, orm_obj):
-        staff_division = orm_obj.secondment.staff_division.name if orm_obj.secondment.staff_division else None
-        body = orm_obj.secondment.state_body.name if orm_obj.secondment.state_body else None
+        staff_division = (orm_obj.secondment.staff_division.name 
+                        if orm_obj.secondment.staff_division else None)
+        body = (orm_obj.secondment.state_body.name 
+                if orm_obj.secondment.state_body else None)
         return cls(
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
