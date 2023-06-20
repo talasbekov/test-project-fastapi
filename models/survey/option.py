@@ -11,7 +11,6 @@ class Option(Model):
     __tablename__ = "options"
 
     question_id = Column(UUID(as_uuid=True), ForeignKey("questions.id"))
-    text = Column(TEXT, nullable = True)
     discriminator = Column(String(255), nullable=True)
 
     question = relationship("Question", foreign_keys=[question_id], back_populates="options")
@@ -20,6 +19,14 @@ class Option(Model):
     __mapper_args__ = {
         "polymorphic_on": discriminator,
         "polymorphic_identity": "options"
+    }
+    
+    
+class OptionText(Option):
+    text = Column(TEXT, nullable = True)
+    
+    __mapper_args__ = {
+        "polymorphic_identity": "option_text"
     }
 
 
@@ -42,7 +49,6 @@ class OptionGrid(Option):
 
 
 class OptionCheckboxGrid(OptionGrid):
-    is_checked = Column(Boolean, default=False, nullable=True)
 
     __mapper_args__ = {
         "polymorphic_identity": "option_checkbox_grid"

@@ -2,7 +2,8 @@ from typing import List
 from sqlalchemy.orm import Session
 
 from models import (Option, QuestionTypeEnum, OptionScale,
-                    OptionCheckboxGrid, OptionGrid, Question)
+                    OptionCheckboxGrid, OptionGrid, Question,
+                    OptionText)
 from schemas import (OptionCreate, OptionUpdate,
                      OptionRead)
 from exceptions import BadRequestException
@@ -13,9 +14,8 @@ from .question import question_service
 class OptionService(ServiceBase[Option, OptionCreate, OptionUpdate]):
     
     POSSIBLE_TYPES = {
-        QuestionTypeEnum.TEXT.value: Option,
-        QuestionTypeEnum.SINGLE_CHOICE.value: Option,
-        QuestionTypeEnum.MULTIPLE_CHOICE.value: Option,
+        QuestionTypeEnum.SINGLE_CHOICE.value: OptionText,
+        QuestionTypeEnum.MULTIPLE_CHOICE.value: OptionText,
         QuestionTypeEnum.SCALE.value: OptionScale,
         QuestionTypeEnum.GRID.value: OptionGrid,
         QuestionTypeEnum.CHECKBOX_GRID.value: OptionCheckboxGrid

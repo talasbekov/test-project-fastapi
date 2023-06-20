@@ -12,7 +12,6 @@ class Answer(Model):
 
     question_id = Column(UUID(as_uuid=True), ForeignKey("questions.id"))
     discriminator = Column(String(255))
-    text = Column(TEXT, nullable = True)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable = True)
 
     question = relationship("Question", foreign_keys=[question_id], back_populates="answers")
@@ -22,6 +21,14 @@ class Answer(Model):
     __mapper_args__ = {
         "polymorphic_on": discriminator,
         "polymorphic_identity": "answers"
+    }
+    
+
+class AnswerText(Answer):
+    text = Column(TEXT, nullable = True)
+    
+    __mapper_args__ = {
+        "polymorphic_identity": "answer_text"
     }
 
 

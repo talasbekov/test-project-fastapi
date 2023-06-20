@@ -2,7 +2,8 @@ from sqlalchemy.orm import Session
 
 from models import (Answer, QuestionTypeEnum, Answer,
                     AnswerSingleChoice, AnswerScale, AnswerGrid,
-                    AnswerCheckboxGrid, Question, Survey)
+                    AnswerCheckboxGrid, Question, Survey,
+                    AnswerText)
 from schemas import AnswerCreate, AnswerUpdate
 from exceptions import BadRequestException
 from services.base import ServiceBase
@@ -13,7 +14,7 @@ from .survey import survey_service
 class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
     
     POSSIBLE_TYPES = {
-        QuestionTypeEnum.TEXT.value: Answer,
+        QuestionTypeEnum.TEXT.value: AnswerText,
         QuestionTypeEnum.MULTIPLE_CHOICE.value: Answer,
         QuestionTypeEnum.SINGLE_CHOICE.value: AnswerSingleChoice,
         QuestionTypeEnum.SCALE.value: AnswerScale,

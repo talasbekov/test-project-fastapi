@@ -1,8 +1,8 @@
 """feature: survey
 
-Revision ID: ed4af7d9e1f1
+Revision ID: 363e359a19a9
 Revises: 3d09ba117ccc
-Create Date: 2023-06-19 10:25:43.574807
+Create Date: 2023-06-20 10:04:21.129097
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'ed4af7d9e1f1'
+revision = '363e359a19a9'
 down_revision = '3d09ba117ccc'
 branch_labels = None
 depends_on = None
@@ -22,8 +22,8 @@ def upgrade() -> None:
     sa.Column('description', sa.TEXT(), nullable=True),
     sa.Column('start_date', sa.TIMESTAMP(timezone=True), nullable=False),
     sa.Column('end_date', sa.TIMESTAMP(timezone=True), nullable=False),
-    sa.Column('type', sa.Enum('REGULAR', 'ANONYMOUS', name='surveytypeenum'), nullable=False),
     sa.Column('jurisdiction_id', sa.UUID(), nullable=True),
+    sa.Column('is_anonymous', sa.Boolean(), nullable=True),
     sa.Column('owner_id', sa.UUID(), nullable=True),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('nameKZ', sa.String(), nullable=True),
@@ -47,28 +47,27 @@ def upgrade() -> None:
     )
     op.create_table('options',
     sa.Column('question_id', sa.UUID(), nullable=True),
-    sa.Column('text', sa.TEXT(), nullable=True),
     sa.Column('discriminator', sa.String(length=255), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('text', sa.TEXT(), nullable=True),
     sa.Column('min_value', sa.Integer(), nullable=True),
     sa.Column('max_value', sa.Integer(), nullable=True),
     sa.Column('row_position', sa.Integer(), nullable=True),
     sa.Column('column_position', sa.Integer(), nullable=True),
-    sa.Column('is_checked', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(['question_id'], ['questions.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('answers',
     sa.Column('question_id', sa.UUID(), nullable=True),
     sa.Column('discriminator', sa.String(length=255), nullable=True),
-    sa.Column('text', sa.TEXT(), nullable=True),
+    sa.Column('user_id', sa.UUID(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('text', sa.TEXT(), nullable=True),
     sa.Column('option_id', sa.UUID(), nullable=True),
-    sa.Column('user_id', sa.UUID(), nullable=True),
     sa.Column('scale_value', sa.Integer(), nullable=True),
     sa.Column('grid_values', sa.JSON(), nullable=True),
     sa.Column('checkbox_grid_values', sa.JSON(), nullable=True),
