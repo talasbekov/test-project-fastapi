@@ -313,5 +313,10 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
             raise BadRequestException(
                 f"Parent staffDivision with id: {parent_id} is not found!")
 
+    def get_all_by_name(self, db: Session, name: str) -> List[StaffDivision]:
+        return db.query(self.model).filter(
+            self.model.name == name
+        ).all()
+
 
 staff_division_service = StaffDivisionService(StaffDivision)
