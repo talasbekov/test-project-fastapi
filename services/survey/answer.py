@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 
 from models import (Answer, QuestionTypeEnum, Answer,
                     AnswerSingleChoice, AnswerScale, AnswerGrid,
-                    AnswerCheckboxGrid, Question, SurveyTypeEnum, Survey)
+                    AnswerCheckboxGrid, Question, Survey)
 from schemas import AnswerCreate, AnswerUpdate
 from exceptions import BadRequestException
 from services.base import ServiceBase
@@ -72,10 +72,8 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
     def __validate_survey_type(self, db: Session, survey_id: str, user_id: str, answer):
         survey: Survey = survey_service.get_by_id(db, survey_id)
         
-        if survey.type == SurveyTypeEnum.REGULAR.value:
+        if not survey.is_anonymous:
             answer.user_id = user_id
-        else:
-            answer.user_id = None
             
         return answer
 

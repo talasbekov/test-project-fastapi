@@ -11,7 +11,7 @@ class SurveyBase(NamedModel):
     description: Optional[str]
     start_date: datetime.datetime
     end_date: datetime.datetime
-    type: str
+    is_anonymous: Optional[bool] = False
     jurisdiction_id: Optional[uuid.UUID]
 
 
@@ -22,13 +22,11 @@ class SurveyCreate(SurveyBase):
 class SurveyUpdate(SurveyBase):
     start_date: Optional[datetime.datetime]
     end_date: Optional[datetime.datetime]
-    type: Optional[str]
 
 
 class SurveyRead(SurveyBase, ReadNamedModel):
     start_date: Optional[datetime.datetime]
     end_date: Optional[datetime.datetime]
-    type: Optional[str]
     
     questions: Optional[List[QuestionRead]]
 
