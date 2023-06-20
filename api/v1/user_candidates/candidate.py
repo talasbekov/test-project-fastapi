@@ -7,7 +7,12 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from core import get_db
-from schemas import CandidateRead, CandidateCreate, CandidateUpdate, CandidateEssayUpdate
+from schemas import (
+    CandidateRead, 
+    CandidateCreate, 
+    CandidateUpdate, 
+    CandidateEssayUpdate
+)
 from services import candidate_service
 
 router = APIRouter(
@@ -31,8 +36,12 @@ async def get_all(
     """
         Get all Candidates.
 
-        - **skip**: int - The number of Candidate to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of Candidate to return in the response. This parameter is optional and defaults to 100.
+        - **skip**: int - The number of Candidate 
+            to skip before returning the results. 
+            This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of Candidate 
+            to return in the response. 
+            This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
@@ -54,8 +63,10 @@ async def get_all_draft_candidates(
     """
         Get all Draft Candidates.
 
-        - **skip**: int - The number of Candidate to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of Candidate to return in the response. This parameter is optional and defaults to 100.
+    - **skip**: int - The number of Candidate to skip before returning the results. 
+        This parameter is optional and defaults to 0.
+    - **limit**: int - The maximum number of Candidate to return in the response. 
+        This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
@@ -92,8 +103,9 @@ async def create(
     """
         Create a Candidate.
 
-        - **staff_unit_curator_id**: UUID - required and should exist in the database. This is a staff unit who is the supervisor of a certain candidate
-        - **staff_unit_id**: UUID - required and should exist in the database.
+    - **staff_unit_curator_id**: UUID - required and should exist in the database. 
+        This is a staff unit who is the supervisor of a certain candidate
+    - **staff_unit_id**: UUID - required and should exist in the database.
     """
     Authorize.jwt_required()
     return candidate_service.create(db, body)
@@ -111,7 +123,8 @@ async def update(
     """
         Update a Candidate.
 
-        - **staff_unit_curator_id**: UUID - optional and should exist in the database. This is a staff unit who is the supervisor of a certain candidate
+        - **staff_unit_curator_id**: UUID - optional and should exist in the database. 
+            This is a staff unit who is the supervisor of a certain candidate
         - **staff_unit_id**: UUID - optional and should exist in the database.
         - **status**: str - optional. Available statuses are provided below:
 

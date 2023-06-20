@@ -30,8 +30,12 @@ async def get_all(*,
     """
        Get all User Oaths
 
-       - **skip**: int - The number of User Oaths to skip before returning the results. This parameter is optional and defaults to 0.
-       - **limit**: int - The maximum number of User Oaths to return in the response. This parameter is optional and defaults to 10.
+       - **skip**: int - The number of User Oaths 
+        to skip before returning the results. 
+        This parameter is optional and defaults to 0.
+       - **limit**: int - The maximum number of User Oaths 
+        to return in the response. 
+        This parameter is optional and defaults to 10.
    """
     Authorize.jwt_required()
     return user_oath_service.get_multi(db, skip, limit)

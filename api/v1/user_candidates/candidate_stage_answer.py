@@ -15,11 +15,13 @@ from schemas import (
 )
 from services import candidate_stage_answer_service
 
-router = APIRouter(prefix="/candidate_stage_answer", tags=["CandidateStageAnswer"],
+router = APIRouter(prefix="/candidate_stage_answer", 
+                   tags=["CandidateStageAnswer"],
                    dependencies=[Depends(HTTPBearer())])
 
 
-@router.get("", dependencies=[Depends(HTTPBearer())],
+@router.get("", 
+            dependencies=[Depends(HTTPBearer())],
             response_model=List[CandidateStageAnswerRead],
             summary="Get all CandidateStageAnswer")
 async def get_all(
@@ -31,14 +33,19 @@ async def get_all(
     """
         Get all CandidateStageAnswer.
 
-        - **skip**: int - The number of CandidateStageAnswer to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of CandidateStageAnswer to return in the response. This parameter is optional and defaults to 100.
+        - **skip**: int - The number of CandidateStageAnswer 
+            to skip before returning the results. 
+            This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of CandidateStageAnswer 
+            to return in the response. 
+            This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
     return candidate_stage_answer_service.get_multiple(db, skip, limit)
 
 
-@router.get("/{id}", dependencies=[Depends(HTTPBearer())],
+@router.get("/{id}", 
+            dependencies=[Depends(HTTPBearer())],
             response_model=CandidateStageAnswerRead,
             summary="Get a CandidateStageAnswer by id")
 async def get_by_id(
@@ -55,8 +62,8 @@ async def get_by_id(
     return candidate_stage_answer_service.get_by_id(db, id)
 
 
-@router.get("/all/candidate/{candidate_id}", dependencies=[Depends(HTTPBearer())],
-
+@router.get("/all/candidate/{candidate_id}", 
+            dependencies=[Depends(HTTPBearer())],
             summary="Get all CandidateStageAnswer by candidate_id")
 async def get_all_by_candidate_id(
         db: Session = Depends(get_db),
@@ -85,16 +92,35 @@ async def create(
     """
         Create a CandidateStageAnswer for single question
 
-        - **candidate_stage_question_id**: UUID - required. Уникальный идентификатор для вопроса, на который дается ответ.
-        - **type**: str - optional. Тип данных ответа, который может быть String, Choice, Text, Document, Essay, Sport score, Dropdown
-        - **answer_str**: str - optional. Фактический ответ, предоставленный кандидатом, если тип ответа - строка.
-        - **answer_bool**: boolean - optional. Логическое значение, представляющее ответ, если тип ответа является логическим.
-        - **answer**: str - optional. Фактический ответ, предоставленный кандидатом, если тип ответа TEXT.
-        - **document_link**: str - optional. Ссылка на документ или ресурс, подтверждающий ответ, предоставленный кандидатом, если тип ответа Document.
-        - **document_number**: str - optional. Уникальный идентификатор документа или ресурса, на который ссылается поле document_link.
-        - **candidate_essay_type_id**: UUID - optional. Уникальный идентификатор для типа вопроса эссе, на который требуется ответить, если type Essay
-        - **candidate_id**: UUID - required. Уникальный идентификатор кандидата, который предоставляет ответ.
-        - **category_id**: UUID - optional. Уникальный идентификатор для категории dropdown вопроса, на который дается ответ.
+        - **candidate_stage_question_id**: UUID - required. 
+            Уникальный идентификатор для вопроса, на который дается ответ.
+        - **type**: str - optional. 
+            Тип данных ответа, который может быть:
+            String, Choice, Text, Document, Essay, Sport score, Dropdown
+        - **answer_str**: str - optional. 
+            Фактический ответ, предоставленный кандидатом, 
+            если тип ответа - строка.
+        - **answer_bool**: boolean - optional. 
+            Логическое значение, представляющее ответ, 
+            если тип ответа является логическим.
+        - **answer**: str - optional. 
+            Фактический ответ, предоставленный кандидатом, 
+            если тип ответа TEXT.
+        - **document_link**: str - optional. 
+            Ссылка на документ или ресурс, подтверждающий ответ, 
+            предоставленный кандидатом, если тип ответа Document.
+        - **document_number**: str - optional. 
+            Уникальный идентификатор документа или ресурса, 
+            на который ссылается поле document_link.
+        - **candidate_essay_type_id**: UUID - optional. 
+            Уникальный идентификатор для типа вопроса эссе, 
+            на который требуется ответить, если type Essay
+        - **candidate_id**: UUID - required. 
+            Уникальный идентификатор кандидата, 
+            который предоставляет ответ.
+        - **category_id**: UUID - optional. 
+            Уникальный идентификатор для категории dropdown вопроса, 
+            на который дается ответ.
         - **sport_score**: int - optional. Числовая оценка.
     """
     Authorize.jwt_required()
@@ -113,16 +139,38 @@ async def create_list(
     """
         Create CandidateStageAnswer for multiple questions
 
-        - **candidate_stage_question_id**: UUID - required. Уникальный идентификатор для вопроса, на который дается ответ.
-        - **type**: str - optional. Тип данных ответа, который может быть String, Choice, Text, Document, Essay, Sport score, Dropdown
-        - **answer_str**: str - optional. Фактический ответ, предоставленный кандидатом, если тип ответа - строка.
-        - **answer_bool**: boolean - optional. Логическое значение, представляющее ответ, если тип ответа является логическим.
-        - **answer**: str - optional. Фактический ответ, предоставленный кандидатом, если тип ответа TEXT.
-        - **document_link**: str - optional. Ссылка на документ или ресурс, подтверждающий ответ, предоставленный кандидатом, если тип ответа Document.
-        - **document_number**: str - optional. Уникальный идентификатор документа или ресурса, на который ссылается поле document_link.
-        - **candidate_essay_type_id**: UUID - optional. Уникальный идентификатор для типа вопроса эссе, на который требуется ответить, если type Essay
-        - **candidate_id**: UUID - required. Уникальный идентификатор кандидата, который предоставляет ответ.
-        - **category_id**: UUID - optional. Уникальный идентификатор для категории dropdown вопроса, на который дается ответ.
+        - **candidate_stage_question_id**: UUID - required. 
+            Уникальный идентификатор для вопроса, 
+            на который дается ответ.
+        - **type**: str - optional. 
+            Тип данных ответа, который может быть: 
+            String, Choice, Text, Document, Essay, 
+            Sport score, Dropdown
+        - **answer_str**: str - optional. 
+            Фактический ответ, предоставленный кандидатом, 
+            если тип ответа - строка.
+        - **answer_bool**: boolean - optional. 
+            Логическое значение, представляющее ответ, 
+            если тип ответа является логическим.
+        - **answer**: str - optional. 
+            Фактический ответ, 
+            предоставленный кандидатом, если тип ответа TEXT.
+        - **document_link**: str - optional. 
+            Ссылка на документ или ресурс, 
+            подтверждающий ответ, предоставленный кандидатом, 
+            если тип ответа Document.
+        - **document_number**: str - optional. 
+            Уникальный идентификатор документа или ресурса, 
+            на который ссылается поле document_link.
+        - **candidate_essay_type_id**: UUID - optional. 
+            Уникальный идентификатор для типа вопроса эссе, 
+            на который требуется ответить, если type Essay
+        - **candidate_id**: UUID - required. 
+            Уникальный идентификатор кандидата, 
+            который предоставляет ответ.
+        - **category_id**: UUID - optional. 
+            Уникальный идентификатор для категории dropdown вопроса, 
+            на который дается ответ.
         - **sport_score**: int - optional. Числовая оценка.
     """
     Authorize.jwt_required()
@@ -142,16 +190,39 @@ async def update(
         Update a CandidateStageAnswer.
 
         - **id**: required and should exist in the database.
-        - **candidate_stage_question_id**: UUID - required. Уникальный идентификатор для вопроса, на который дается ответ.
-        - **type**: str - optional. Тип данных ответа, который может быть String, Choice, Text, Document, Essay, Sport score, Dropdown
-        - **answer_str**: str - optional. Фактический ответ, предоставленный кандидатом, если тип ответа - строка.
-        - **answer_bool**: boolean - optional. Логическое значение, представляющее ответ, если тип ответа является логическим.
-        - **answer**: str - optional. Фактический ответ, предоставленный кандидатом, если тип ответа TEXT.
-        - **document_link**: str - optional. Ссылка на документ или ресурс, подтверждающий ответ, предоставленный кандидатом, если тип ответа Document.
-        - **document_number**: str - optional. Уникальный идентификатор документа или ресурса, на который ссылается поле document_link.
-        - **candidate_essay_type_id**: UUID - optional. Уникальный идентификатор для типа вопроса эссе, на который требуется ответить, если type Essay
-        - **candidate_id**: UUID - required. Уникальный идентификатор кандидата, который предоставляет ответ.
-        - **category_id**: UUID - optional. Уникальный идентификатор для категории dropdown вопроса, на который дается ответ.
+        - **candidate_stage_question_id**: UUID - required. 
+            Уникальный идентификатор для вопроса, 
+            на который дается ответ.
+        - **type**: str - optional. 
+            Тип данных ответа, который может быть: 
+            String, Choice, Text, Document, 
+            Essay, Sport score, Dropdown
+        - **answer_str**: str - optional. 
+            Фактический ответ, 
+            предоставленный кандидатом, 
+            если тип ответа - строка.
+        - **answer_bool**: boolean - optional. 
+            Логическое значение, представляющее ответ, 
+            если тип ответа является логическим.
+        - **answer**: str - optional. 
+            Фактический ответ, предоставленный кандидатом, 
+            если тип ответа TEXT.
+        - **document_link**: str - optional. 
+            Ссылка на документ или ресурс, 
+            подтверждающий ответ, предоставленный кандидатом, 
+            если тип ответа Document.
+        - **document_number**: str - optional. 
+            Уникальный идентификатор документа или ресурса, 
+            на который ссылается поле document_link.
+        - **candidate_essay_type_id**: UUID - optional. 
+            Уникальный идентификатор для типа вопроса эссе, 
+            на который требуется ответить, если type Essay
+        - **candidate_id**: UUID - required. 
+            Уникальный идентификатор кандидата, 
+            который предоставляет ответ.
+        - **category_id**: UUID - optional. 
+            Уникальный идентификатор для категории 
+            dropdown вопроса, на который дается ответ.
     """
     Authorize.jwt_required()
     return candidate_stage_answer_service.update(db,
@@ -160,7 +231,8 @@ async def update(
                                                  obj_in=body)
 
 
-@router.delete("/{id}", dependencies=[Depends(HTTPBearer())],
+@router.delete("/{id}", 
+               dependencies=[Depends(HTTPBearer())],
                status_code=status.HTTP_204_NO_CONTENT,
                summary="Delete a CandidateStageAnswer")
 async def delete(

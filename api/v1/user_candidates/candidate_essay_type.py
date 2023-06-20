@@ -7,8 +7,12 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from core import get_db
-from schemas import (CandidateEssayTypeCreate, CandidateEssayTypeRead, CandidateEssayTypeUpdate,
-                     CandidateEssayTypeSetToCandidate)
+from schemas import (
+    CandidateEssayTypeCreate, 
+    CandidateEssayTypeRead, 
+    CandidateEssayTypeUpdate,
+    CandidateEssayTypeSetToCandidate
+)
 from services import candidate_essay_type_service
 
 router = APIRouter(
@@ -31,8 +35,12 @@ async def get_all(
     """
         Get all CandidateEssayType.
 
-        - **skip**: int - The number of CandidateEssayType to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of CandidateEssayType to return in the response. This parameter is optional and defaults to 100.
+        - **skip**: int - The number of CandidateEssayType 
+            to skip before returning the results. 
+            This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of CandidateEssayType 
+            to return in the response. 
+            This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
     return candidate_essay_type_service.get_multi(db, skip, limit)

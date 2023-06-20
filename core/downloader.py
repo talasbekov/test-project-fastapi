@@ -28,7 +28,8 @@ async def download_file_to_tempfile(url: str) -> str:
                         status_code=404, detail="Failed to download file")
                 file_content = await response.read()
                 extension = url.split(".")[-1]
-                with tempfile.NamedTemporaryFile(suffix=f".{extension}", delete=False) as f:
+                with tempfile.NamedTemporaryFile(suffix=f".{extension}",
+                                                 delete=False) as f:
                     f.write(file_content)
                     return f.name
     except Exception:

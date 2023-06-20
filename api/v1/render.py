@@ -25,7 +25,8 @@ router = APIRouter(
             HTTPBearer())])
 
 
-@router.post("/render", dependencies=[Depends(HTTPBearer())],
+@router.post("/render", 
+             dependencies=[Depends(HTTPBearer())],
              summary="Генерация документа 'Заключение спец. проверки'")
 async def generate(*,
                    db: Session = Depends(get_db),
@@ -40,10 +41,13 @@ async def generate(*,
     """
     Authorize.jwt_required()
     return render_service.generate(
-        db, candidate_id=body.candidate_id, template_id=body.hr_document_template_id)
+        db, 
+        candidate_id=body.candidate_id, 
+        template_id=body.hr_document_template_id)
 
 
-@router.post("/render/finish-candidate", dependencies=[Depends(HTTPBearer())],
+@router.post("/render/finish-candidate", 
+             dependencies=[Depends(HTTPBearer())],
              summary="Генерация документа 'Заключение на зачисление'")
 async def render_finish_candidate(*,
                                   db: Session = Depends(get_db),
@@ -57,7 +61,10 @@ async def render_finish_candidate(*,
         - **candidate_id**: UUID - required
     """
     Authorize.jwt_required()
-    return await render_service.generate_finish_candidate(db=db, candidate_id=body.candidate_id, template_id=body.hr_document_template_id)
+    return await (render_service
+                  .generate_finish_candidate(db=db, 
+                                             candidate_id=body.candidate_id, 
+                                             template_id=body.hr_document_template_id))
 
 
 class HTML(BaseModel):
@@ -93,7 +100,10 @@ async def convert_html_to_pdf(*,
 
 
 @router.get('/inflect')
-async def inflect_word(word: str, septik_int: int, lang: LanguageEnum = LanguageEnum.ru):
+async def inflect_word(
+                    word: str, 
+                    septik_int: int, 
+                    lang: LanguageEnum = LanguageEnum.ru):
     if lang == LanguageEnum.ru:
         morph = pymorphy2.MorphAnalyzer()
         return [i.word for i in morph.parse(word)[0].lexeme][septik_int]

@@ -7,7 +7,11 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import PersonnalReserveRead, PersonnalReserveCreate, PersonnalReserveUpdate
+from schemas import (
+    PersonnalReserveRead, 
+    PersonnalReserveCreate, 
+    PersonnalReserveUpdate
+)
 from services import personnal_reserve_service
 from models import ReserveEnum
 
@@ -32,8 +36,12 @@ async def get_all(*,
     """
        Get all Military Units
 
-       - **skip**: int - The number of Military Units to skip before returning the results. This parameter is optional and defaults to 0.
-       - **limit**: int - The maximum number of Military Units to return in the response. This parameter is optional and defaults to 10.
+       - **skip**: int - The number of Military Units 
+            to skip before returning the results. 
+            This parameter is optional and defaults to 0.
+       - **limit**: int - The maximum number of Military Units 
+            to return in the response. 
+            This parameter is optional and defaults to 10.
    """
     Authorize.jwt_required()
     return personnal_reserve_service.get_multi(db, skip, limit)

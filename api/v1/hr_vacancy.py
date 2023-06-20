@@ -63,8 +63,12 @@ async def get_not_active(*,
     """
         Get all HrVacancies
 
-       - **skip**: int - The number of HrVacancies to skip before returning the results. This parameter is optional and defaults to 0.
-       - **limit**: int - The maximum number of HrVacancies to return in the response. This parameter is optional and defaults to 100.
+       - **skip**: int - The number of HrVacancies 
+            to skip before returning the results. 
+            This parameter is optional and defaults to 0.
+       - **limit**: int - The maximum number of HrVacancies 
+            to return in the response. 
+            This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
     return hr_vacancy_service.get_multi_not_active(db, skip, limit)

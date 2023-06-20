@@ -18,7 +18,9 @@ router = APIRouter(
             HTTPBearer())])
 
 
-@router.get("", response_model=List[UserStatRead], dependencies=[Depends(HTTPBearer())],
+@router.get("", 
+            response_model=List[UserStatRead], 
+            dependencies=[Depends(HTTPBearer())],
             summary="Get all UserStats")
 async def get_all(*,
                   db: Session = Depends(get_db),
@@ -29,14 +31,19 @@ async def get_all(*,
     """
         Get all UserStats
 
-       - **skip**: int - The number of UserStats to skip before returning the results. This parameter is optional and defaults to 0.
-       - **limit**: int - The maximum number of UserStats to return in the response. This parameter is optional and defaults to 10.
+       - **skip**: int - The number of UserStats 
+            to skip before returning the results. 
+            This parameter is optional and defaults to 0.
+       - **limit**: int - The maximum number of UserStats 
+            to return in the response. 
+            This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
     return user_stat_service.get_multi(db, skip, limit)
 
 
-@router.post("", status_code=status.HTTP_201_CREATED,
+@router.post("", 
+             status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=UserStatRead,
              summary="Create UserStat")
@@ -48,19 +55,24 @@ async def create(*,
     """
         Create UserStat
 
-        - **user_id**: UUID - the ID of the user. This parameter is required and should exist in database.
-        - **physical_training**: int - representing the user's physical training score.
-        - **fire_training**: int - representing the user's fire training score.
-        - **attendance**: int - representing the user's attendance score.
-        - **activity**: int - representing the user's activity score.
-        - **opinion_of_colleagues**: int - representing the user's opinion of colleagues score.
-        - **opinion_of_management**: int - representing the user's opinion of management score.
+    - **user_id**: UUID - the ID of the user. 
+        This parameter is required and should exist in database.
+    - **physical_training**: int - representing the user's 
+        physical training score.
+    - **fire_training**: int - representing the user's fire training score.
+    - **attendance**: int - representing the user's attendance score.
+    - **activity**: int - representing the user's activity score.
+    - **opinion_of_colleagues**: int - representing the user's opinion 
+        of colleagues score.
+    - **opinion_of_management**: int - representing the user's opinion 
+        of management score.
     """
     Authorize.jwt_required()
     return user_stat_service.create(db, body)
 
 
-@router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
+@router.get("/{id}/", 
+            dependencies=[Depends(HTTPBearer())],
             response_model=UserStatRead,
             summary="Get UserStat by id")
 async def get_by_id(*,
@@ -89,14 +101,26 @@ async def update(*,
     """
         Update UserStat
 
-        - **id**: UUID - the ID of the UserStat. This is required.
-        - **user_id**: UUID - the ID of the user. This parameter is required and should exist in database.
-        - **physical_training**: int - representing the user's physical training score. This is required.
-        - **fire_training**: int - representing the user's fire training score. This is required.
-        - **attendance**: int - representing the user's attendance score. This is required.
-        - **activity**: int - representing the user's activity score. This is required.
-        - **opinion_of_colleagues**: int - representing the user's opinion of colleagues score. This is required.
-        - **opinion_of_management**: int - representing the user's opinion of management score. This is required.
+        - **id**: UUID - the ID of the UserStat. 
+            This is required.
+        - **user_id**: UUID - the ID of the user. 
+            This parameter is required and should exist in database.
+        - **physical_training**: int - representing the user's 
+            physical training score. 
+            This is required.
+        - **fire_training**: int - representing the user's fire 
+            training score. 
+            This is required.
+        - **attendance**: int - representing the user's attendance score. 
+            This is required.
+        - **activity**: int - representing the user's activity score. 
+            This is required.
+        - **opinion_of_colleagues**: int - representing the user's 
+            opinion of colleagues score.
+             This is required.
+        - **opinion_of_management**: int - representing the user's 
+            opinion of management score. 
+            This is required.
     """
     Authorize.jwt_required()
     user_service.get_by_id(db, body.user_id)
