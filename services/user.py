@@ -61,8 +61,12 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         if hr_document_template_id is not None:
             excepted_users = self._get_excepted_users_by_document_in_progress(
                 db, hr_document_template_id)
-            users = self._filter_for_eligible_actions(
-                db, users, hr_document_template_id).except_(excepted_users).filter(self.model.is_active.is_(True))
+            users = (self
+                     ._filter_for_eligible_actions(db, 
+                                                users, 
+                                                hr_document_template_id)
+                    .except_(excepted_users)
+                    .filter(self.model.is_active.is_(True)))
 
         users = (
             users
