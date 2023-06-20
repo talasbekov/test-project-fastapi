@@ -167,6 +167,22 @@ class ContractReadHistory(BaseModel):
         )
 
 
+class BadgeReadHistory(BaseModel):
+    name: Optional[str]
+    nameKZ: Optional[str]
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
+
+    @classmethod
+    def from_orm(cls, orm_obj):
+
+        return cls(
+            name=orm_obj.type.name,
+            nameKZ=orm_obj.type.nameKZ,
+        )
+
 class SecondmentReadHistory(BaseModel):
     name: Optional[str]
     nameKZ: Optional[str]

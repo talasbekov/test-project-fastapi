@@ -33,6 +33,7 @@ from .history_personal import (
     CoolnessReadHistory,
     SecondmentReadHistory,
     ContractReadHistory,
+    BadgeReadHistory,
 )
 
 # Set time_zone to UTC(+06:00)
@@ -65,9 +66,9 @@ def get_status(obj, confirm_document_link, cancel_document_link):
             status = StatusEnum.confirmed
         if cancel_document_link is not None:
             status = StatusEnum.canceled
-        dict_coolness = obj.dict()
-        dict_coolness["status"] = status
-        return dict_coolness
+        dict_obj = obj.dict()
+        dict_obj["status"] = status
+        return dict_obj
     else:
         return None
 
@@ -211,6 +212,7 @@ class HistoryPersonalRead(ReadModel):
     status: Optional['StatusReadHistory']
     coolness: Optional['CoolnessReadHistory']
     contract: Optional['ContractReadHistory']
+    badge: Optional['BadgeReadHistory']
     document_link: Optional[str]
     confirm_document_link: Optional[str]
     cancel_document_link: Optional[str]
@@ -273,6 +275,7 @@ class HistoryPersonalRead(ReadModel):
             "status": self.status,
             "coolness": self.coolness_status,
             "contract": self.contract,
+            "badge": self.badge_status,
             "document_link": self.document_link,
             "confirm_document_link": self.confirm_document_link,
             "cancel_document_link": self.cancel_document_link,
@@ -282,6 +285,16 @@ class HistoryPersonalRead(ReadModel):
             "service_characteristic": self.service_characteristic,
             "work_experience": self.work_experience,
         }
+
+    @property
+    def badge_status(self) -> Optional[dict]:
+        if self.badge:
+            status = 'Добавление'
+            if self.cancel_document_link:
+                status = 'Лишение'
+            badge_dict = self.badge.dict()
+            badge_dict["status"] = status
+            return badge_dict
 
 
 class AttendanceRead(Model):
