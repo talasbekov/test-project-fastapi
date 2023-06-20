@@ -6,10 +6,10 @@ from sqlalchemy.orm import Session
 from exceptions import BadRequestException, NotFoundException
 from models import ArchiveStaffDivision, StaffDivision, StaffDivisionEnum
 from schemas import (
-    ArchiveStaffDivisionCreate, 
+    ArchiveStaffDivisionCreate,
     ArchiveStaffDivisionUpdate,
-    ArchiveStaffDivisionUpdateParentGroup, 
-    ArchiveStaffDivisionRead, 
+    ArchiveStaffDivisionUpdateParentGroup,
+    ArchiveStaffDivisionRead,
     NewArchiveStaffDivisionCreate,
     NewArchiveStaffDivisionUpdate)
 from services.base import ServiceBase
@@ -19,7 +19,7 @@ from .archive_staff_unit import archive_staff_unit_service
 
 class ArchiveStaffDivisionService(
         ServiceBase[ArchiveStaffDivision,
-                     ArchiveStaffDivisionCreate, 
+                     ArchiveStaffDivisionCreate,
                      ArchiveStaffDivisionUpdate]):
 
     def get_by_id(self, db: Session, id: str) -> ArchiveStaffDivision:
@@ -47,10 +47,14 @@ class ArchiveStaffDivisionService(
             skip: int = 0,
             limit: int = 100
     ) -> List[ArchiveStaffDivision]:
-        return db.query(self.model).filter(
+        archive_divisions = db.query(self.model).filter(
             ArchiveStaffDivision.staff_list_id == staff_list_id,
             ArchiveStaffDivision.parent_group_id is None,
+            ArchiveStaffDivision.name != StaffDivisionEnum.DISPOSITION.value
         ).offset(skip).limit(limit).all()
+        disposition_division = self.get_by_name(db, StaffDivisionEnum.DISPOSITION.value, staff_list_id)
+        archive_divisions.append(disposition_division)
+        return archive_divisions
 
     def get_parents(self, db: Session,
                     staff_list_id: uuid.UUID) -> List[ArchiveStaffDivision]:
@@ -108,10 +112,10 @@ class ArchiveStaffDivisionService(
         return res
 
     def create_based_on_existing_staff_division(
-            self, 
-            db: Session, 
-            staff_division: StaffDivision, 
-            staff_list_id: uuid.UUID, 
+            self,
+            db: Session,
+            staff_division: StaffDivision,
+            staff_list_id: uuid.UUID,
             parent_group_id: uuid.UUID):
         self._validate_parent(db, parent_group_id)
         return super().create(db, ArchiveStaffDivisionCreate(
@@ -146,14 +150,14 @@ class ArchiveStaffDivisionService(
         return res
 
     def update_staff_division(
-            self, 
-            db: Session, 
-            archive_staff_division: ArchiveStaffDivision, 
+            self,
+            db: Session,
+            archive_staff_division: ArchiveStaffDivision,
             body: NewArchiveStaffDivisionUpdate):
-        
+
         self._validate_parent(db, body.parent_group_id)
-        res = super().update(db, 
-                             db_obj=archive_staff_division, 
+        res = super().update(db,
+                             db_obj=archive_staff_division,
                              obj_in=ArchiveStaffDivisionUpdate(
             parent_group_id=body.parent_group_id,
             name=body.name,
