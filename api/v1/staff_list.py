@@ -141,15 +141,15 @@ async def get_by_id(*,
              response_model=StaffListRead,
              summary="Apply Staff List")
 async def apply_staff_list(*,
-                           db: Session = Depends(get_db),
-                           id: uuid.UUID,
-                           signed_by: str,
-                           document_creation_date: datetime.date,
-                           rank: str,
-                           document_number: str,
-                           document_link: str,
-                           Authorize: AuthJWT = Depends()
-                           ):
+                db: Session = Depends(get_db),
+                id: uuid.UUID,
+                signed_by: str,
+                document_creation_date: datetime.date,
+                rank: str,
+                document_number: str,
+                document_link: str = None,
+                Authorize: AuthJWT = Depends()
+            ):
     """
         Update Staff List
 
