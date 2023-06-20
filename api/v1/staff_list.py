@@ -119,7 +119,7 @@ async def apply_staff_list(*,
                 document_creation_date: datetime.date,
                 rank: str,
                 document_number: str,
-                document_link: str,
+                document_link: str = None,
                 Authorize: AuthJWT = Depends()
             ):
     """
