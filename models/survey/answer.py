@@ -32,7 +32,7 @@ class AnswerText(Answer):
     }
 
 
-class AnswerSingleChoice(Answer):
+class AnswerSingleSelection(Answer):
     option_id = Column(UUID(as_uuid=True), ForeignKey("options.id"), nullable = True)
     
     __mapper_args__ = {

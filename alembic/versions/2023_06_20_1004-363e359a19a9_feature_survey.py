@@ -38,7 +38,7 @@ def upgrade() -> None:
     sa.Column('text', sa.TEXT(), nullable=False),
     sa.Column('is_required', sa.Boolean(), nullable=False),
     sa.Column('survey_id', sa.UUID(), nullable=True),
-    sa.Column('question_type', sa.Enum('TEXT', 'SINGLE_CHOICE', 'MULTIPLE_CHOICE', 'SCALE', 'GRID', 'CHECKBOX_GRID', name='questiontypeenum'), nullable=False),
+    sa.Column('question_type', sa.Enum('TEXT', 'SINGLE_SELECTION', 'MULTIPLE_SELECTION', 'SCALE', 'GRID', 'CHECKBOX_GRID', name='questiontypeenum'), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),

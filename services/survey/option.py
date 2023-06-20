@@ -14,8 +14,8 @@ from .question import question_service
 class OptionService(ServiceBase[Option, OptionCreate, OptionUpdate]):
     
     POSSIBLE_TYPES = {
-        QuestionTypeEnum.SINGLE_CHOICE.value: OptionText,
-        QuestionTypeEnum.MULTIPLE_CHOICE.value: OptionText,
+        QuestionTypeEnum.SINGLE_SELECTION.value: OptionText,
+        QuestionTypeEnum.MULTIPLE_SELECTION.value: OptionText,
         QuestionTypeEnum.SCALE.value: OptionScale,
         QuestionTypeEnum.GRID.value: OptionGrid,
         QuestionTypeEnum.CHECKBOX_GRID.value: OptionCheckboxGrid

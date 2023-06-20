@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from models import (Answer, QuestionTypeEnum, Answer,
-                    AnswerSingleChoice, AnswerScale, AnswerGrid,
+                    AnswerSingleSelection, AnswerScale, AnswerGrid,
                     AnswerCheckboxGrid, Question, Survey,
                     AnswerText)
 from schemas import AnswerCreate, AnswerUpdate
@@ -15,8 +15,8 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
     
     POSSIBLE_TYPES = {
         QuestionTypeEnum.TEXT.value: AnswerText,
-        QuestionTypeEnum.MULTIPLE_CHOICE.value: Answer,
-        QuestionTypeEnum.SINGLE_CHOICE.value: AnswerSingleChoice,
+        QuestionTypeEnum.MULTIPLE_SELECTION.value: Answer,
+        QuestionTypeEnum.SINGLE_SELECTION.value: AnswerSingleSelection,
         QuestionTypeEnum.SCALE.value: AnswerScale,
         QuestionTypeEnum.GRID.value: AnswerGrid,
         QuestionTypeEnum.CHECKBOX_GRID.value: AnswerCheckboxGrid
@@ -33,7 +33,7 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
 
         answer = answer_class(**answer_kwargs)
         
-        if question.question_type == QuestionTypeEnum.MULTIPLE_CHOICE:
+        if question.question_type == QuestionTypeEnum.MULTIPLE_SELECTION:
             options = [option_service.get_by_id(db, option_id) for option_id in body.option_ids]
             answer.options = options
         
@@ -48,7 +48,7 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
     def __update_kwargs(self, question: Question, body: AnswerCreate):
         answer_kwargs = {"question_id": body.question_id}
         
-        if question.question_type == QuestionTypeEnum.SINGLE_CHOICE:
+        if question.question_type == QuestionTypeEnum.SINGLE_SELECTION:
             answer_kwargs.update(
                 {"discriminator": "answer_single_choice", "option_id": body.option_id}
             ) 
