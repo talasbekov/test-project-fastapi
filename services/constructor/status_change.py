@@ -1,13 +1,10 @@
-import datetime
-
 from sqlalchemy.orm import Session
 
 from core import configs
-from models import User, HrDocument, StaffDivisionEnum, StaffUnit
+from models import User, HrDocument, StaffDivisionEnum
 from .base import BaseHandler
-from services import status_service, history_service, staff_unit_service, staff_division_service
+from services import status_service, history_service, staff_unit_service
 from exceptions import ForbiddenException, BadRequestException
-from utils import convert_str_to_datetime
 
 archive_status = [
     StaffDivisionEnum.DEAD,
@@ -68,7 +65,8 @@ class StatusChangeHandler(BaseHandler):
 
         if status_service.exists_relation(db, user.id, status_id):
             raise ForbiddenException(
-                f"This status is already assigned to this user: {user.first_name}, {user.last_name}"
+                ("This status is already assigned to this user:"
+                 f" {user.first_name}, {user.last_name}")
             )
 
     def get_args(
@@ -78,7 +76,7 @@ class StatusChangeHandler(BaseHandler):
     ):
         try:
             status_id = props[action['status']['tagname']]['value']
-        except Exception as e:
+        except Exception:
             raise BadRequestException(
                 detail=f'Invalid props for action: {self.__handler__}')
         return status_id

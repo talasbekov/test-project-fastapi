@@ -6,7 +6,8 @@ from schemas.medical import LiberationCreate, LiberationUpdate
 from services import ServiceBase
 
 
-class LiberationService(ServiceBase[Liberation, LiberationUpdate, LiberationCreate]):
+class LiberationService(
+        ServiceBase[Liberation, LiberationUpdate, LiberationCreate]):
     def get_by_id(self, db: Session, id: str):
         liberation = super().get(db, id)
         if liberation is None:

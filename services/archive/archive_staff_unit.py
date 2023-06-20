@@ -4,9 +4,14 @@ from typing import List
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException, BadRequestException
-from models import ArchiveStaffUnit, StaffUnit, ArchiveStaffDivision, StaffDivisionEnum
-from schemas import ArchiveStaffUnitCreate, ArchiveStaffUnitUpdate, ArchiveStaffUnitFunctions, \
-    NewArchiveStaffUnitCreate, NewArchiveStaffUnitUpdate
+from models import ArchiveStaffUnit, StaffUnit, ArchiveStaffDivision
+from schemas import (
+    ArchiveStaffUnitCreate, 
+    ArchiveStaffUnitUpdate, 
+    ArchiveStaffUnitFunctions, 
+    NewArchiveStaffUnitCreate, 
+    NewArchiveStaffUnitUpdate
+)
 from services import position_service
 
 from .service_archive_staff_function import service_archive_staff_function_service
@@ -25,23 +30,27 @@ class ArchiveStaffUnitService(
                 detail=f"ArchiveStaffUnit with id: {id} is not found!")
         return position
 
-
-    def dispose_all_units(self, db: Session, archive_staff_unit_ids: List[uuid.UUID], archive_staff_division_id: uuid.UUID):
+    def dispose_all_units(
+            self, 
+            db: Session, 
+            archive_staff_unit_ids: List[uuid.UUID], 
+            archive_staff_division_id: uuid.UUID):
         (db.query(self.model)
             .filter(self.model.id.in_(archive_staff_unit_ids))
             .update(
                 {self.model.staff_division_id: archive_staff_division_id}
-            )
         )
-        return db.query(self.model).filter(self.model.id.in_(archive_staff_unit_ids)).all()
-
+        )
+        return db.query(self.model).filter(
+            self.model.id.in_(archive_staff_unit_ids)).all()
 
     def get_by_archive_staff_division_id(
             self,
             db: Session,
             archive_staff_division_id: uuid.UUID) -> ArchiveStaffUnit:
         archive_staff_units = (db.query(ArchiveStaffUnit)
-                               .filter(ArchiveStaffUnit.staff_division_id == archive_staff_division_id)
+                               .filter(ArchiveStaffUnit.staff_division_id 
+                                       == archive_staff_division_id)
                                .all()
                                )
         if archive_staff_units is None:
@@ -49,7 +58,12 @@ class ArchiveStaffUnitService(
                 detail=f"ArchiveStaffUnit with id: {id} is not found!")
         return archive_staff_units
 
-    def duplicate_archive_staff_units_by_division_id(self, db: Session, duplicate_division_id: uuid.UUID, division_id: uuid.UUID):
+    def duplicate_archive_staff_units_by_division_id(
+            self, 
+            db: Session, 
+            duplicate_division_id: uuid.UUID, 
+            division_id: uuid.UUID):
+        
         archive_staff_units = self.get_by_archive_staff_division_id(
             db, division_id)
 
@@ -108,7 +122,7 @@ class ArchiveStaffUnitService(
                 continue
             try:
                 staff_unit.staff_functions.remove(staff_function)
-            except ValueError as e:
+            except ValueError:
                 continue
 
         db.add(staff_unit)
@@ -144,7 +158,7 @@ class ArchiveStaffUnitService(
                 continue
             try:
                 staff_unit.staff_functions.remove(staff_function)
-            except ValueError as e:
+            except ValueError:
                 continue
 
         db.add(staff_unit)
@@ -154,6 +168,7 @@ class ArchiveStaffUnitService(
             self,
             db: Session,
             staff_unit: StaffUnit,
+            curator_of_id: uuid.UUID,
             user_id: uuid.UUID,
             position_id: uuid.UUID,
             actual_user_id: uuid.UUID,
@@ -162,6 +177,7 @@ class ArchiveStaffUnitService(
         return super().create(db, ArchiveStaffUnitCreate(
             position_id=position_id,
             staff_division_id=archive_staff_division.id,
+            curator_of_id=curator_of_id,
             user_id=user_id,
             actual_user_id=actual_user_id,
             user_replacing_id=user_replacing_id,
@@ -195,6 +211,7 @@ class ArchiveStaffUnitService(
             obj_in=ArchiveStaffUnitUpdate(
                 position_id=body.position_id,
                 staff_division_id=body.staff_division_id,
+                curator_of_id=body.curator_of_id,
                 user_id=body.user_id,
                 actual_user_id=body.actual_user_id,
                 user_replacing_id=body.user_replacing_id,
@@ -203,7 +220,8 @@ class ArchiveStaffUnitService(
         increment_changes_size(db, res.staff_division.staff_list)
         return res
 
-    def _validate_archive_staff_position(self, db: Session, position_id: uuid.UUID):
+    def _validate_archive_staff_position(
+            self, db: Session, position_id: uuid.UUID):
         position_service.get_by_id(db, position_id)
 
     def get_service_staff_functions(
@@ -211,16 +229,20 @@ class ArchiveStaffUnitService(
         staff_unit = self.get_by_id(db, staff_unit_id)
         # filter so that only service staff functions are returned
         # discriminator field is different
-        return [staff_function for staff_function in staff_unit.staff_functions if staff_function.discriminator ==
-                "service_staff_function"]
+        return [staff_function 
+                for staff_function in staff_unit.staff_functions 
+                if staff_function.discriminator 
+                == "service_staff_function"]
 
     def get_document_staff_functions(
             self, db: Session, staff_unit_id: uuid.UUID):
         staff_unit = self.get_by_id(db, staff_unit_id)
         # filter so that only document staff functions are returned
         # discriminator field is different
-        return [staff_function for staff_function in staff_unit.staff_functions if staff_function.discriminator ==
-                "document_staff_function"]
+        return [staff_function 
+                for staff_function in staff_unit.staff_functions 
+                if staff_function.discriminator 
+                == "document_staff_function"]
 
     def get_object(self, db: Session, id: uuid.UUID, type: str):
         return db.query(ArchiveStaffUnit).filter(

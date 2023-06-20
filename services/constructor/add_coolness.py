@@ -46,7 +46,8 @@ class AddCoolnessHandler(BaseHandler):
         coolness_id = self.get_args(action, props)
         if coolness_service.exists_relation(db, user.id, coolness_id):
             raise ForbiddenException(
-                f"Coolness is already assigned to this user: {user.first_name}, {user.last_name}"
+                ("Coolness is already assigned to this user:"
+                 f" {user.first_name}, {user.last_name}")
             )
 
     def get_args(self, action, properties):

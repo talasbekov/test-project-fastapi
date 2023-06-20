@@ -12,4 +12,7 @@ class FamilyProfile(Model):
     profile_id = Column(UUID(as_uuid=True), ForeignKey("profiles.id"))
 
     profile = relationship("Profile", back_populates="family_profile")
-    family = relationship("Family", back_populates="profile", cascade="all, delete")
+    family = relationship(
+        "Family",
+        back_populates="profile",
+        cascade="all, delete")

@@ -1,18 +1,17 @@
 import datetime
 import uuid
-from typing import Optional, List
+from typing import Optional
 
 from pydantic import BaseModel
 
 from .candidate_stage_type import CandidateStageTypeRead
 from .candidate import CandidateRead
-from schemas import StaffUnitRead
 
 
 class CandidateStageInfoBase(BaseModel):
     candidate_id: uuid.UUID
     candidate_stage_type_id: uuid.UUID
-    
+
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True

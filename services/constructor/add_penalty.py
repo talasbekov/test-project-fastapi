@@ -4,9 +4,7 @@ from core import configs
 from models import User, HrDocument
 from .base import BaseHandler
 from services import penalty_service, history_service, penalty_type_service
-from exceptions import ForbiddenException, BadRequestException
-
-from utils import convert_str_to_datetime
+from exceptions import BadRequestException
 
 
 class AddPenaltyHandler(BaseHandler):

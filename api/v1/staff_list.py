@@ -8,10 +8,20 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import StaffListCreate, StaffListRead, StaffListUpdate, StaffListUserCreate, StaffListStatusRead
-from services import staff_list_service, hr_document_service
+from schemas import (
+    StaffListRead, 
+    StaffListUpdate, 
+    StaffListUserCreate, 
+    StaffListStatusRead
+)
+from services import staff_list_service
 
-router = APIRouter(prefix="/staff_list", tags=["StaffList"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/staff_list",
+    tags=["StaffList"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
@@ -26,46 +36,60 @@ async def get_all(*,
     """
        Get all Staff Lists
 
-       - **skip**: int - The number of staff divisions to skip before returning the results. This parameter is optional and defaults to 0.
-       - **limit**: int - The maximum number of staff divisions to return in the response. This parameter is optional and defaults to 100.
+       - **skip**: int - The number of staff divisions 
+            to skip before returning the results. 
+            This parameter is optional and defaults to 0.
+       - **limit**: int - The maximum number of staff divisions 
+            to return in the response. 
+            This parameter is optional and defaults to 100.
    """
     Authorize.jwt_required()
     return staff_list_service.get_multi(db, skip, limit)
 
+
 @router.get("/drafts/", dependencies=[Depends(HTTPBearer())],
             response_model=List[StaffListStatusRead],
             summary="Get Staff List history")
-async def get_history(*,
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends(),
-    skip: int = 0,
-    limit: int = 100,
-    filter: str = '',
-):
+async def get_drafts(*,
+                     db: Session = Depends(get_db),
+                     Authorize: AuthJWT = Depends(),
+                     skip: int = 0,
+                     limit: int = 100,
+                     filter: str = '',
+                     ):
     """
        Get Staff Lists drafts
 
-       - **skip**: int - The number of staff divisions to skip before returning the results. This parameter is optional and defaults to 0.
-       - **limit**: int - The maximum number of staff divisions to return in the response. This parameter is optional and defaults to 100.
+       - **skip**: int - The number of staff divisions 
+            to skip before returning the results. 
+            This parameter is optional and defaults to 0.
+       - **limit**: int - The maximum number of staff divisions 
+            to return in the response. 
+            This parameter is optional and defaults to 100.
    """
     Authorize.jwt_required()
     return staff_list_service.get_drafts(db, skip, limit, filter)
 
+
 @router.get("/signed/", dependencies=[Depends(HTTPBearer())],
             response_model=List[StaffListStatusRead],
             summary="Get Staff List history")
-async def get_history(*,
-    db: Session = Depends(get_db),
-    Authorize: AuthJWT = Depends(),
-    skip: int = 0,
-    limit: int = 100,
-    filter: str = ''
-):
+async def get_signed(*,
+                     db: Session = Depends(get_db),
+                     Authorize: AuthJWT = Depends(),
+                     skip: int = 0,
+                     limit: int = 100,
+                     filter: str = ''
+                     ):
     """
        Get Staff Lists signed
 
-       - **skip**: int - The number of staff divisions to skip before returning the results. This parameter is optional and defaults to 0.
-       - **limit**: int - The maximum number of staff divisions to return in the response. This parameter is optional and defaults to 100.
+       - **skip**: int - The number of staff divisions 
+            to skip before returning the results. 
+            This parameter is optional and defaults to 0.
+       - **limit**: int - The maximum number of staff divisions 
+            to return in the response. 
+            This parameter is optional and defaults to 100.
    """
     Authorize.jwt_required()
     return staff_list_service.get_signed(db, skip, limit, filter)
@@ -89,7 +113,11 @@ async def create(*,
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
-    return staff_list_service.create_by_user_id(db, user_id=Authorize.get_jwt_subject(), obj_in=body, current_user_role_id=role)
+    return staff_list_service.create_by_user_id(
+        db, 
+        user_id=Authorize.get_jwt_subject(), 
+        obj_in=body, 
+        current_user_role_id=role)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -110,8 +138,8 @@ async def get_by_id(*,
 
 
 @router.post("/apply/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=StaffListRead,
-            summary="Apply Staff List")
+             response_model=StaffListRead,
+             summary="Apply Staff List")
 async def apply_staff_list(*,
                 db: Session = Depends(get_db),
                 id: uuid.UUID,
@@ -119,7 +147,7 @@ async def apply_staff_list(*,
                 document_creation_date: datetime.date,
                 rank: str,
                 document_number: str,
-                document_link: str,
+                document_link: str = None,
                 Authorize: AuthJWT = Depends()
             ):
     """
@@ -128,25 +156,27 @@ async def apply_staff_list(*,
         - **id**: UUID - id of the Staff List.
         - **signed_by**: required
         - **document_creation_date**: required
-        - **date_from**: date - format (YYYY-MM-DD). This parameter is required.
+        - **date_from**: date - format (YYYY-MM-DD). 
+            This parameter is required.
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
     current_user_id = Authorize.get_jwt_subject()
     return await staff_list_service.apply_staff_list(
-                    db,
-                    id, 
-                    signed_by, 
-                    document_creation_date, 
-                    current_user_id, 
-                    role,
-                    rank,
-                    document_number,
-                    document_link
-                 )
+        db,
+        id,
+        signed_by,
+        document_creation_date,
+        current_user_id,
+        role,
+        rank,
+        document_number,
+        document_link
+    )
 
 
-@router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
+@router.put("/{id}/", 
+            dependencies=[Depends(HTTPBearer())],
             response_model=StaffListRead,
             summary="Update Staff List")
 async def update(*,
@@ -159,15 +189,18 @@ async def update(*,
         Update Staff List
 
         - **id**: UUID - id of the Staff Division.
-        - **parent_group_id**: the id of the parent group. This parameter is optional.
+        - **parent_group_id**: the id of the parent group. 
+            This parameter is optional.
         - **name**: required
-        - **description**: a long description. This parameter is optional.
+        - **description**: a long description. 
+            This parameter is optional.
     """
     Authorize.jwt_required()
     return staff_list_service.update(db, id, body)
 
 
-@router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
+@router.delete("/{id}/", 
+               status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
                summary="Delete Staff List")
 async def delete(*,
@@ -184,7 +217,8 @@ async def delete(*,
     staff_list_service.remove(db, id)
 
 
-@router.post("/duplicate/{id}/", status_code=status.HTTP_201_CREATED,
+@router.post("/duplicate/{id}/", 
+             status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=StaffListRead,
              summary="Duplicate Staff List")
@@ -201,4 +235,9 @@ async def duplicate(*,
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
-    return staff_list_service.duplicate(db, staff_list_id=id, user_id=Authorize.get_jwt_subject(), obj_in=body, current_user_role_id=role)
+    return staff_list_service.duplicate(
+        db, 
+        staff_list_id=id, 
+        user_id=Authorize.get_jwt_subject(), 
+        obj_in=body, 
+        current_user_role_id=role)

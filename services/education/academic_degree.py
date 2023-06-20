@@ -6,7 +6,8 @@ from schemas.education import AcademicDegreeCreate, AcademicDegreeUpdate
 from services import ServiceBase
 
 
-class AcademicDegreeService(ServiceBase[AcademicDegree, AcademicDegreeCreate, AcademicDegreeUpdate]):
+class AcademicDegreeService(
+        ServiceBase[AcademicDegree, AcademicDegreeCreate, AcademicDegreeUpdate]):
     def get_by_id(self, db: Session, id: str):
         academic_degree = super().get(db, id)
         if academic_degree is None:

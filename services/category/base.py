@@ -9,7 +9,8 @@ class BaseCategory:
     __handler__ = 0
 
     def handle(self, db: Session, user_id: uuid.UUID) -> list[uuid.UUID]:
-        raise NotSupportedException(f"Don't use this class: {self.__class__.__name__} directly")
+        raise NotSupportedException(
+            f"Don't use this class: {self.__class__.__name__} directly")
 
 
 handler = BaseCategory()

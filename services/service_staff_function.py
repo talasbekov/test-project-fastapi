@@ -4,13 +4,15 @@ from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import (ServiceStaffFunction, User, StaffUnit,
-                    ArchiveServiceStaffFunction,)
+                    ArchiveServiceStaffFunction)
 from schemas import ServiceStaffFunctionCreate, ServiceStaffFunctionUpdate
 from .base import ServiceBase
 
 
 class ServiceStaffFunctionService(
-        ServiceBase[ServiceStaffFunction, ServiceStaffFunctionCreate, ServiceStaffFunctionUpdate]):
+        ServiceBase[ServiceStaffFunction,
+                    ServiceStaffFunctionCreate,
+                    ServiceStaffFunctionUpdate]):
 
     def get_by_id(self, db: Session, id: str):
         service_staff_function = super().get(db, id)
@@ -25,15 +27,15 @@ class ServiceStaffFunctionService(
             self.model.staff_units.contains(staff_unit)).all()
 
     def get_by_user(self, db: Session, user: User):
-        l = []
+        staff_functions = []
 
         for func in user.actual_staff_unit.staff_functions:
 
             if func.discriminator == self.model.__mapper_args__[
                     'polymorphic_identity']:
-                l.append(func)
+                staff_functions.append(func)
 
-        return l
+        return staff_functions
 
     def duplicate(self, db: Session, id: uuid.UUID):
         func = self.get_by_id(db, id)
@@ -51,7 +53,8 @@ class ServiceStaffFunctionService(
             db,
             archive_staff_function: ArchiveServiceStaffFunction,
             new_type_id: uuid.UUID):
-        service_staff_function = self.get_by_id(db, archive_staff_function.origin_id)
+        service_staff_function = self.get_by_id(
+            db, archive_staff_function.origin_id)
 
         res = super().update(
             db,
@@ -88,8 +91,10 @@ class ServiceStaffFunctionService(
             archive_service_staff_function: ArchiveServiceStaffFunction,
             new_type_id: uuid.UUID):
         if archive_service_staff_function.origin_id is None:
-            return self._create_from_archive(db, archive_service_staff_function, new_type_id)
-        return self._update_from_archive(db, archive_service_staff_function, new_type_id)
+            return self._create_from_archive(
+                db, archive_service_staff_function, new_type_id)
+        return self._update_from_archive(
+            db, archive_service_staff_function, new_type_id)
 
     def make_all_inactive(self, db: Session):
         db.query(self.model).update({self.model.is_active: False})

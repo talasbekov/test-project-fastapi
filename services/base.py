@@ -24,11 +24,12 @@ class ServiceBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
     def get(self, db: Session, id: Any) -> Optional[ModelType]:
         return db.query(self.model).filter(self.model.id == id).first()
-    
+
     def get_by_id(self, db: Session, id: Any) -> ModelType:
         res = self.get(db, id)
         if res is None:
-            raise NotFoundException(detail=f"{self.model.__name__} with id {id} not found!")
+            raise NotFoundException(
+                detail=f"{self.model.__name__} with id {id} not found!")
         return res
 
     def get_multi(
@@ -36,7 +37,8 @@ class ServiceBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     ) -> List[ModelType]:
         return db.query(self.model).offset(skip).limit(limit).all()
 
-    def create(self, db: Session, obj_in: Union[CreateSchemaType, Dict[str, Any]]) -> ModelType:
+    def create(self, db: Session,
+               obj_in: Union[CreateSchemaType, Dict[str, Any]]) -> ModelType:
         obj_in_data = jsonable_encoder(obj_in)
         db_obj = self.model(**obj_in_data)  # type: ignore
         db.add(db_obj)

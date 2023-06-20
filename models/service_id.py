@@ -3,6 +3,7 @@ from sqlalchemy import Column, String, TIMESTAMP, Enum, UUID, ForeignKey
 from models import Model
 from enum import Enum as BaseEnum
 
+
 class ServiceIDStatus(BaseEnum):
     RECEIVED = "Получен"
     LOST = "Утерян"

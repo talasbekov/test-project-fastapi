@@ -1,7 +1,3 @@
-from uuid import UUID
-
-from sqlalchemy.orm import Session
-
 from .base import BaseAutoTagHandler
 from schemas import AutoTagRead
 from services import user_service

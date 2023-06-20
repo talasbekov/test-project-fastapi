@@ -1,9 +1,9 @@
 import uuid
-from typing import Dict, Optional, Union, List
+from typing import Dict, Optional, Union
 
 from pydantic import validator
 
-from schemas import Model, NamedModel, ReadModel, ReadNamedModel
+from schemas import Model, NamedModel, ReadNamedModel
 from models import SubjectType
 from .validator import hr_document_templates_properties_validator
 
@@ -25,7 +25,8 @@ class HrDocumentTemplateBase(NamedModel):
     is_due_date_required: Optional[bool] = False
     is_initial_comment_required: Optional[bool] = False
 
-    _check_properties = validator("properties", allow_reuse=True)(hr_document_templates_properties_validator)
+    _check_properties = validator("properties", allow_reuse=True)(
+        hr_document_templates_properties_validator)
 
 
 class HrDocumentTemplateCreate(HrDocumentTemplateBase):

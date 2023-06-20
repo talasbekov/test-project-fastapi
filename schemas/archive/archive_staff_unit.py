@@ -1,15 +1,13 @@
 import datetime
 import uuid
-from typing import List, Optional, Union
+from typing import List, Optional
 
 from pydantic import BaseModel, EmailStr, Field
 
-from schemas import (BadgeRead, RankRead, ReadModel, 
+from schemas import (BadgeRead, RankRead, ReadModel,
                      HrVacancyRead, Model, PositionRead)
 
 from .archive_staff_function import ArchiveStaffFunctionRead
-
-from enum import Enum
 
 
 class StaffUnitRequirements(Model):
@@ -28,7 +26,8 @@ class ArchiveStaffUnitBase(BaseModel):
 
 
 class ArchiveStaffUnitCreate(ArchiveStaffUnitBase):
-    origin_id: Optional[uuid.UUID]
+    curator_of_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    origin_id: Optional[uuid.UUID] = Field(None, nullable=True)
 
 
 class ArchiveStaffUnitCreateWithStaffFunctions(ArchiveStaffUnitBase):
@@ -39,6 +38,7 @@ class ArchiveStaffUnitCreateWithStaffFunctions(ArchiveStaffUnitBase):
 class ArchiveStaffUnitUpdate(ArchiveStaffUnitBase):
     origin_id: Optional[uuid.UUID]
     user_replacing: Optional[uuid.UUID] = Field(None, nullable=True)
+    curator_of_id: Optional[uuid.UUID] = Field(None, nullable=True)
 
 
 class NewArchiveStaffUnitCreate(ArchiveStaffUnitBase):
@@ -50,7 +50,10 @@ class NewArchiveStaffUnitCreateWithStaffFunctions(ArchiveStaffUnitBase):
 
 
 class NewArchiveStaffUnitUpdate(ArchiveStaffUnitBase):
+    user_replacing: Optional[uuid.UUID] = Field(None, nullable=True)
+    curator_of_id: Optional[uuid.UUID] = Field(None, nullable=True)
     pass
+
 
 class ArchiveStaffUnitUpdateDispose(BaseModel):
     staff_unit_ids: List[uuid.UUID]

@@ -4,7 +4,7 @@ from .general_information import (
 )
 
 
-from .history import ( 
+from .history import (
     HistoryCreate,
     HistoryRead,
     HistoryUpdate,
@@ -18,5 +18,5 @@ from .history_name_change import (
     HistoryNameChangeCreate,
     HistoryNameChangeRead,
     HistoryNameChangeUpdate,
-    
+
 )

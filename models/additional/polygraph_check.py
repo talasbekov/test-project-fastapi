@@ -14,6 +14,9 @@ class PolygraphCheck(Model):
     date_of_issue = Column(TIMESTAMP(timezone=True), nullable=False)
     document_link = Column(String(255), nullable=False)
 
-    profile_id = Column(UUID(as_uuid=True), ForeignKey("additional_profiles.id"))
+    profile_id = Column(UUID(as_uuid=True),
+                        ForeignKey("additional_profiles.id"))
 
-    profile = relationship("AdditionalProfile", back_populates="polygraph_checks")
+    profile = relationship(
+        "AdditionalProfile",
+        back_populates="polygraph_checks")

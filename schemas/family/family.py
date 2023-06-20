@@ -19,7 +19,7 @@ class FamilyBase(BaseModel):
     birthplace: str
     address: str
     workplace: str
-    
+
     profile_id: uuid.UUID
 
     class Config:

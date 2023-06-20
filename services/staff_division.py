@@ -18,7 +18,8 @@ from schemas import (
 from .base import ServiceBase
 
 
-class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, StaffDivisionUpdate]):
+class StaffDivisionService(
+        ServiceBase[StaffDivision, StaffDivisionCreate, StaffDivisionUpdate]):
 
     def get_by_id(self, db: Session, id: str) -> StaffDivision:
         group = super().get(db, id)
@@ -58,7 +59,8 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
         departments = db.query(self.model).filter(
             StaffDivision.parent_group_id == service_staff_function.id
         ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
-        return [self._return_correctly(db, department) for department in departments]
+        return [self._return_correctly(db, department)
+                for department in departments]
 
     def get_departments(
             self,
@@ -74,34 +76,44 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
         ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
         return departments
 
-    def get_all_parents(self, db: Session, skip: int, limit: int) -> List[StaffDivision]:
+    def get_all_parents(self,
+                        db: Session,
+                        skip: int, limit: int) -> List[StaffDivision]:
         parents = db.query(self.model).filter(
-            StaffDivision.parent_group_id == None
+            StaffDivision.parent_group_id is None
         ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
         return parents
 
-    def get_all_except_special(self, db: Session, skip: int, limit: int) -> List[StaffDivision]:
+    def get_all_except_special(self,
+                               db: Session,
+                               skip: int,
+                               limit: int) -> List[StaffDivision]:
         parents = db.query(self.model).filter(
-            StaffDivision.parent_group_id == None,
+            StaffDivision.parent_group_id is None,
             self.model.name != StaffDivisionEnum.SPECIAL_GROUP.value
         ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
         return parents
 
-    def get_child_groups(self, db: Session, id: str, skip: int, limit: int) -> List[StaffDivision]:
+    def get_child_groups(self,
+                         db: Session,
+                         id: str,
+                         skip: int,
+                         limit: int) -> List[StaffDivision]:
         return db.query(self.model).filter(
             StaffDivision.parent_group_id == id
         ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
 
-    def get_all_child_groups(self, db: Session, id: str) -> List[StaffDivision]:        
+    def get_all_child_groups(self, db: Session,
+                             id: str) -> List[StaffDivision]:
         child_groups = (
             db.query(self.model).filter(
                 StaffDivision.parent_group_id == id
             ).all()
         )
-        
+
         for child_group in child_groups:
             child_groups.extend(self.get_all_child_groups(db, child_group.id))
-        
+
         return child_groups
 
     def get_by_name(self, db: Session, name: str) -> StaffDivision:
@@ -127,12 +139,15 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
         db.flush()
         return group
 
-    def get_department_id_from_staff_division_id(self, db: Session, staff_division_id: uuid.UUID):
+    def get_department_id_from_staff_division_id(self,
+                                                 db: Session,
+                                                 staff_division_id: uuid.UUID):
 
         staff_division = self.get_by_id(db, staff_division_id)
 
         parent_id = staff_division.parent_group_id
-        sgo_rk_staff_division = self.get_by_name(db, StaffDivisionEnum.SERVICE.value)
+        sgo_rk_staff_division = self.get_by_name(
+            db, StaffDivisionEnum.SERVICE.value)
 
         res_id = staff_division.id
 
@@ -143,7 +158,8 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
 
         return res_id
 
-    def get_division_parents_by_id(self, db: Session, staff_division_id: uuid.UUID):
+    def get_division_parents_by_id(
+            self, db: Session, staff_division_id: uuid.UUID):
 
         staff_division = self.get_by_id(db, staff_division_id)
 
@@ -160,17 +176,22 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
         db.rollback()
         return res
 
-    def get_by_option(self, db: Session, type: str, id: uuid.UUID, skip: int, limit: int):
+    def get_by_option(self,
+                      db: Session,
+                      type: str,
+                      id: uuid.UUID,
+                      skip: int, limit: int):
         if id is None:
-            return [StaffDivisionOptionRead.from_orm(i) for i in self.get_all_except_special(db, skip, limit)]
-        return [StaffDivisionOptionRead.from_orm(i) for i in self.get_child_groups(db, id, skip, limit)]
+            all_except_special = self.get_all_except_special(db, skip, limit)
+            return [StaffDivisionOptionRead.from_orm(
+                i) for i in all_except_special]
+        child_groups = self.get_child_groups(db, id, skip, limit)
+        return [StaffDivisionOptionRead.from_orm(i) for i in child_groups]
 
     def get_full_name(self, db: Session, staff_division_id: uuid.UUID):
         staff_division = self.get_by_id(db, staff_division_id)
 
         parent_id = staff_division.parent_group_id
-
-        res_id = staff_division.id
 
         full_name = staff_division.name
         full_nameKZ = staff_division.nameKZ
@@ -187,11 +208,15 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
 
         return full_name, full_nameKZ
 
-
-    def create_from_archive(self, db: Session, archive_staff_division: ArchiveStaffDivision, parent_id: uuid.UUID, leader_id: uuid.UUID):
+    def create_from_archive(self,
+                            db: Session,
+                            archive_staff_division: ArchiveStaffDivision,
+                            parent_id: uuid.UUID,
+                            leader_id: uuid.UUID):
         self._validate_parent(db, parent_id)
         if archive_staff_division.name == StaffDivisionEnum.DISPOSITION.value:
-            parent_id = self.get_by_name(db, StaffDivisionEnum.SPECIAL_GROUP.value).id
+            parent_id = self.get_by_name(
+                db, StaffDivisionEnum.SPECIAL_GROUP.value).id
         res = super().create(
             db, StaffDivisionCreate(
                 name=archive_staff_division.name,
@@ -207,11 +232,15 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
         )
         return res
 
-    def update_from_archive(self, db: Session, archive_staff_division: ArchiveStaffDivision, parent_id: uuid.UUID, leader_id: uuid.UUID):
+    def update_from_archive(self, db: Session,
+                            archive_staff_division: ArchiveStaffDivision,
+                            parent_id: uuid.UUID,
+                            leader_id: uuid.UUID):
         self._validate_parent(db, parent_id)
         staff_division = self.get_by_id(db, archive_staff_division.origin_id)
         if archive_staff_division.name == StaffDivisionEnum.DISPOSITION.value:
-            parent_id = self.get_by_name(db, StaffDivisionEnum.SPECIAL_GROUP.value).id
+            parent_id = self.get_by_name(
+                db, StaffDivisionEnum.SPECIAL_GROUP.value).id
         res = super().update(
             db,
             db_obj=staff_division,
@@ -229,10 +258,19 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
         )
         return res
 
-    def create_or_update_from_archive(self, db: Session, archive_staff_division: ArchiveStaffDivision, parent_id: uuid.UUID, leader_id: uuid.UUID):
+    def create_or_update_from_archive(self,
+                                      db: Session,
+                                      archive_staff_division: ArchiveStaffDivision,
+                                      parent_id: uuid.UUID, leader_id: uuid.UUID):
         if archive_staff_division.origin_id is None:
-            return self.create_from_archive(db, archive_staff_division, parent_id, leader_id)
-        return self.update_from_archive(db, archive_staff_division, parent_id, leader_id)
+            return self.create_from_archive(db,
+                                            archive_staff_division,
+                                            parent_id,
+                                            leader_id)
+        return self.update_from_archive(db,
+                                        archive_staff_division,
+                                        parent_id,
+                                        leader_id)
 
     def make_all_inactive(self, db: Session):
         db.query(self.model).filter(
@@ -268,7 +306,9 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
             super().remove(db, staff_division.id)
         db.flush()
 
-    def _replace_secondment_division_id_with_name(self, db, staff_division: StaffDivision):
+    def _replace_secondment_division_id_with_name(self,
+                                                  db,
+                                                  staff_division: StaffDivision):
         (db.query(Secondment)
             .filter(Secondment.staff_division_id == staff_division.id)
             .update({Secondment.staff_division_id: None,
@@ -289,7 +329,9 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
 
         return staff_division
 
-    def _get_count_vacancies_recursive(self, db: Session, staff_division: StaffDivision):
+    def _get_count_vacancies_recursive(self,
+                                       db: Session,
+                                       staff_division: StaffDivision):
 
         count_vacancies = (
             db.query(HrVacancy)
@@ -312,6 +354,11 @@ class StaffDivisionService(ServiceBase[StaffDivision, StaffDivisionCreate, Staff
         if parent is None and parent_id:
             raise BadRequestException(
                 f"Parent staffDivision with id: {parent_id} is not found!")
+
+    def get_all_by_name(self, db: Session, name: str) -> List[StaffDivision]:
+        return db.query(self.model).filter(
+            self.model.name == name
+        ).all()
 
 
 staff_division_service = StaffDivisionService(StaffDivision)

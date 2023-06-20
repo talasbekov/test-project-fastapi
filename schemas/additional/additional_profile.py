@@ -1,13 +1,12 @@
 import uuid
 from typing import List, Optional
 
-from pydantic import BaseModel
 
 from schemas.additional import (AbroadTravelRead, PolygraphCheckRead,
                                 PsychologicalCheckRead, SpecialCheckRead,
                                 ViolationRead, ServiceHousingRead, VehicleRead,
                                 PropertiesRead)
-from schemas import Model, NamedModel, ReadModel, ReadNamedModel
+from schemas import Model, ReadModel
 
 
 class AdditionalProfileBase(Model):

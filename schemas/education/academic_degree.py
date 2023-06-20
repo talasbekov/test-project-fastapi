@@ -10,7 +10,7 @@ from .specialty import SpecialtyRead
 
 
 class AcademicDegreeBase(BaseModel):
-    profile_id: uuid.UUID      
+    profile_id: uuid.UUID
     degree_id: uuid.UUID
     science_id: uuid.UUID
     specialty_id: uuid.UUID

@@ -4,7 +4,7 @@ from core import configs
 from models import User, HrDocument, History
 from .base import BaseHandler
 from services import badge_service, history_service
-from exceptions import ForbiddenException, BadRequestException
+from exceptions import BadRequestException
 
 
 class AddBadgeHandler(BaseHandler):
@@ -43,7 +43,8 @@ class AddBadgeHandler(BaseHandler):
         badge_id = self.get_args(action, props)
         if badge_service.exists_relation(db, user.id, badge_id):
             raise BadRequestException(
-                f"Badge is already assigned to this user: {user.first_name} {user.last_name}"
+                ("Badge is already assigned to this user:"
+                 f" {user.first_name} {user.last_name}")
             )
 
     def get_args(self, action, properties):

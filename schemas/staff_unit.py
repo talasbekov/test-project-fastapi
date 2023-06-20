@@ -2,12 +2,12 @@ import datetime
 import uuid
 from typing import List, Optional
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import EmailStr, Field
 
 from schemas import (BadgeRead, PositionRead, PositionCreate,
                      RankRead, StaffUnitDivisionRead,
                      StaffFunctionRead)
-from schemas import Model, NamedModel, ReadModel, ReadNamedModel
+from schemas import Model, ReadModel, NamedModel
 
 
 class StaffUnitRequirements(NamedModel):
@@ -18,11 +18,12 @@ class StaffUnitBase(Model):
     position_id: uuid.UUID
     staff_division_id: Optional[uuid.UUID] = Field(None, nullable=True)
     is_active: Optional[bool] = True
-    requirements: Optional[List[StaffUnitRequirements]] = Field(None, nullable=True)
+    requirements: Optional[List[StaffUnitRequirements]
+                           ] = Field(None, nullable=True)
 
 
 class StaffUnitCreate(StaffUnitBase):
-    pass
+    curator_of_id: Optional[uuid.UUID] = Field(None, nullable=True)
 
 
 class StaffUnitCreateWithPosition(PositionCreate):
@@ -32,6 +33,7 @@ class StaffUnitCreateWithPosition(PositionCreate):
 
 
 class StaffUnitUpdate(StaffUnitBase):
+    curator_of_id: Optional[uuid.UUID] = Field(None, nullable=True)
     user_replacing_id: Optional[uuid.UUID] = Field(None, nullable=True)
 
 

@@ -9,13 +9,23 @@ class AcademicTitle(Model):
 
     __tablename__ = "academic_titles"
 
-    profile_id = Column(UUID(as_uuid=True), ForeignKey("educational_profiles.id"), nullable=True)
-    profile = relationship("EducationalProfile", back_populates="academic_title")
+    profile_id = Column(UUID(as_uuid=True), ForeignKey(
+        "educational_profiles.id"), nullable=True)
+    profile = relationship(
+        "EducationalProfile",
+        back_populates="academic_title")
 
-    degree_id = Column(UUID(as_uuid=True), ForeignKey("academic_title_degrees.id"), nullable=True)
-    degree = relationship("AcademicTitleDegree", back_populates="academic_title")
+    degree_id = Column(UUID(as_uuid=True), ForeignKey(
+        "academic_title_degrees.id"), nullable=True)
+    degree = relationship(
+        "AcademicTitleDegree",
+        back_populates="academic_title")
 
-    specialty_id = Column(UUID(as_uuid=True), ForeignKey("specialties.id"), nullable=True)
+    specialty_id = Column(
+        UUID(
+            as_uuid=True),
+        ForeignKey("specialties.id"),
+        nullable=True)
     specialty = relationship("Specialty", back_populates="academic_title")
 
     document_number = Column(String)

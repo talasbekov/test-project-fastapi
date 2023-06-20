@@ -2,8 +2,7 @@ import uuid
 
 from sqlalchemy.orm import Session
 
-from schemas import UserShortRead
-from models import User, StaffDivisionEnum, StaffDivision
+from models import StaffDivisionEnum, StaffDivision
 from services import staff_division_service
 from .base import BaseCategory
 
@@ -12,7 +11,8 @@ class CuratorCategory(BaseCategory):
     __handler__ = 1
 
     def handle(self, db: Session, user_id: uuid.UUID) -> list[uuid.UUID]:
-        staff_division = staff_division_service.get_by_name(db, StaffDivisionEnum.SERVICE.value)
+        staff_division = staff_division_service.get_by_name(
+            db, StaffDivisionEnum.SERVICE.value)
         groups = (
             db.query(StaffDivision)
             .filter(
@@ -28,7 +28,6 @@ class CuratorCategory(BaseCategory):
                 if first_user is not None:
                     res.add(first_user.id)
         return list(res)
-
 
 
 handler = CuratorCategory()

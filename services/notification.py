@@ -1,12 +1,14 @@
 from sqlalchemy.orm import Session
 
-from exceptions.client import NotFoundException
 from models import Notification
 from schemas import NotificationCreate, NotificationUpdate
 from .base import ServiceBase
 
-class NotificationService(ServiceBase[Notification, NotificationCreate, NotificationUpdate]):
-    def get_received_by_user_id(self, db: Session, user_id: str, skip: int = 0, limit: int = 10):
+
+class NotificationService(
+        ServiceBase[Notification, NotificationCreate, NotificationUpdate]):
+    def get_received_by_user_id(
+            self, db: Session, user_id: str, skip: int = 0, limit: int = 10):
         return (
             db.query(self.model)
             .filter(self.model.receiver_id == user_id)
