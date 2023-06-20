@@ -7,7 +7,9 @@ from .base import ServiceBase
 
 
 class DocumentStaffFunctionTypeService(
-        ServiceBase[DocumentFunctionType, DocumentStaffFunctionTypeCreate, DocumentStaffFunctionTypeUpdate]):
+        ServiceBase[DocumentFunctionType,
+                     DocumentStaffFunctionTypeCreate, 
+                     DocumentStaffFunctionTypeUpdate]):
     def get_by_id(self, db: Session, id: str) -> DocumentFunctionType:
         document_staff_function_type = super().get(db, id)
         if document_staff_function_type is None:
@@ -21,7 +23,8 @@ class DocumentStaffFunctionTypeService(
             self.model.name == DocumentFunctionTypeEnum.INITIATOR.value).first()
         if not res:
             raise NotFoundException(
-                detail=f"DocumentFunctionType with name: {DocumentFunctionTypeEnum.INITIATOR.value} is not found!")
+                detail=("DocumentFunctionType with name:"
+                        f" {DocumentFunctionTypeEnum.INITIATOR.value} is not found!"))
         return res
 
 

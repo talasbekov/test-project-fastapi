@@ -65,7 +65,8 @@ class StatusChangeHandler(BaseHandler):
 
         if status_service.exists_relation(db, user.id, status_id):
             raise ForbiddenException(
-                f"This status is already assigned to this user: {user.first_name}, {user.last_name}"
+                ("This status is already assigned to this user:"
+                 f" {user.first_name}, {user.last_name}")
             )
 
     def get_args(

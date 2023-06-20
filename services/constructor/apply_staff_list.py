@@ -65,7 +65,10 @@ class ApplyStaffListHandler(BaseHandler):
         pass
 
     def _create_staff_division(
-            self, db: Session, staff_division: ArchiveStaffDivision, parent_id: Optional[int]) -> StaffDivision:
+            self, 
+            db: Session, 
+            staff_division: ArchiveStaffDivision, 
+            parent_id: Optional[int]) -> StaffDivision:
         is_leader_needed = None
         leader_id = None
 

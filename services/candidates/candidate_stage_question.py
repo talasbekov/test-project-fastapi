@@ -6,7 +6,9 @@ from services import ServiceBase
 
 
 class CandidateStageQuestionService(
-        ServiceBase[CandidateStageQuestion, CandidateStageQuestionCreate, CandidateStageQuestionUpdate]):
+        ServiceBase[CandidateStageQuestion, 
+                    CandidateStageQuestionCreate, 
+                    CandidateStageQuestionUpdate]):
 
     def get_multi(
             self, db: Session, skip: int = 0, limit: int = 100

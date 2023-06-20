@@ -131,7 +131,10 @@ class CandidateService(
         if body.status is not None:
             candidate.status = body.status
 
-            if candidate.status == CandidateStatusEnum.DRAFT.value and body.debarment_reason is not None:
+            if (candidate.status 
+                == CandidateStatusEnum.DRAFT.value 
+                and body.debarment_reason 
+                is not None):
                 candidate.debarment_reason = body.debarment_reason
             elif candidate.status == CandidateStatusEnum.ACTIVE.value:
                 candidate.debarment_reason = None

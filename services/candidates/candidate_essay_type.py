@@ -2,13 +2,18 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
 from models import CandidateEssayType, Candidate
-from schemas import (CandidateEssayTypeCreate, CandidateEssayTypeRead, CandidateEssayTypeUpdate,
-                     CandidateEssayTypeSetToCandidate)
+from schemas import (
+    CandidateEssayTypeCreate, 
+    CandidateEssayTypeRead, 
+    CandidateEssayTypeUpdate,
+    CandidateEssayTypeSetToCandidate)
 from services import ServiceBase
 
 
 class CandidateEssayTypeService(
-        ServiceBase[CandidateEssayType, CandidateEssayTypeCreate, CandidateEssayTypeUpdate]):
+        ServiceBase[CandidateEssayType, 
+                    CandidateEssayTypeCreate, 
+                    CandidateEssayTypeUpdate]):
 
     def set_to_candidate(self, db: Session, body: CandidateEssayTypeSetToCandidate,
                          candidate_id: str) -> CandidateEssayTypeRead:

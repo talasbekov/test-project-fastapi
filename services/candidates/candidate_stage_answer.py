@@ -5,16 +5,26 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
 from models import (
-    CandidateStageAnswer, CandidateStageAnswerChoice,
-    CandidateStageAnswerDocument, CandidateStageAnswerText,
-    CandidateEssayAnswer, CandidateStageAnswerDefault, CandidateSportAnswer, CandidateStageType,
-    CandidateStageQuestion, CandidateStageInfo, CandidateStageInfoStatusEnum
+    CandidateStageAnswer, 
+    CandidateStageAnswerChoice,
+    CandidateStageAnswerDocument, 
+    CandidateStageAnswerText,
+    CandidateEssayAnswer, 
+    CandidateStageAnswerDefault, 
+    CandidateSportAnswer, 
+    CandidateStageType,
+    CandidateStageQuestion, 
+    CandidateStageInfo, 
+    CandidateStageInfoStatusEnum
 )
 from models.user_candidates import CandidateStageQuestionTypeEnum
 from schemas import (
-    CandidateStageAnswerCreate, CandidateStageAnswerRead,
-    CandidateStageAnswerUpdate, CandidateStageListAnswerCreate,
-    CandidateStageQuestionReadIn, CandidateStageQuestionType
+    CandidateStageAnswerCreate, 
+    CandidateStageAnswerRead,
+    CandidateStageAnswerUpdate, 
+    CandidateStageListAnswerCreate,
+    CandidateStageQuestionReadIn, 
+    CandidateStageQuestionType
 )
 from exceptions import NotFoundException
 from services import ServiceBase
@@ -22,7 +32,9 @@ from exceptions import SgoErpException
 
 
 class CandidateStageAnswerService(
-        ServiceBase[CandidateStageAnswer, CandidateStageAnswerCreate, CandidateStageAnswerUpdate]):
+        ServiceBase[CandidateStageAnswer, 
+                    CandidateStageAnswerCreate, 
+                    CandidateStageAnswerUpdate]):
 
     def get_multiple(self, db: Session, skip: int = 0, limit: int = 100):
         candidates = db.query(
@@ -65,11 +77,19 @@ class CandidateStageAnswerService(
         for stage_type in stage_types:
             questions = stage_type.candidate_stage_questions
             for question in questions:
-                question.answer = db.query(CandidateStageAnswer).filter(CandidateStageAnswer.candidate_id == candidate_id,
-                                                                        CandidateStageAnswer.candidate_stage_question_id == question.id).first()
+                question.answer = (db
+                                   .query(CandidateStageAnswer)
+                                   .filter(CandidateStageAnswer.candidate_id 
+                                           == candidate_id,
+                                        CandidateStageAnswer.candidate_stage_question_id 
+                                            == question.id).first())
 
-            stage_type.candidate_stage_info = db.query(CandidateStageInfo).filter(CandidateStageInfo.candidate_id == candidate_id,
-                                                                                  CandidateStageInfo.candidate_stage_type_id == stage_type.id).first()
+            stage_type.candidate_stage_info = (db
+                                               .query(CandidateStageInfo)
+                                               .filter(CandidateStageInfo.candidate_id 
+                                                       == candidate_id,
+                                                    CandidateStageInfo.candidate_stage_type_id 
+                                                        == stage_type.id).first())
             stage_type.questions = questions
 
         return [CandidateStageQuestionType.from_orm(
@@ -79,21 +99,35 @@ class CandidateStageAnswerService(
             self, db: Session, candidate_id: str) -> List[CandidateStageAnswerRead]:
         questions = db.query(CandidateStageQuestion).all()
         for question in questions:
-            question.answer = db.query(CandidateStageAnswer).filter(CandidateStageAnswer.candidate_id == candidate_id,
-                                                                    CandidateStageAnswer.candidate_stage_question_id == question.id).first()
+            question.answer = (db
+                               .query(CandidateStageAnswer)
+                               .filter(CandidateStageAnswer.candidate_id 
+                                       == candidate_id,
+                                    CandidateStageAnswer.candidate_stage_question_id 
+                                        == question.id)
+                                    .first())
         return [CandidateStageQuestionReadIn.from_orm(
             question).dict() for question in questions]
 
-    def create_list(self, db: Session,
-                    body: List[CandidateStageListAnswerCreate]) -> List[CandidateStageAnswerRead]:
+    def create_list(
+        self, 
+        db: Session,
+        body: List[CandidateStageListAnswerCreate]) -> List[CandidateStageAnswerRead]:
+        
         body_data = jsonable_encoder(body)
         db_obj_list = []
 
         for item in body_data.get('candidate_stage_answers', []):
             answer_type = item.get('type')
             if not item.get('answer_id'):
-                answer = db.query(CandidateStageAnswer).filter(CandidateStageAnswer.candidate_id == item.get('candidate_id'),
-                                                               CandidateStageAnswer.candidate_stage_question_id == item.get('candidate_stage_question_id')).first()
+                answer = (db
+                        .query(CandidateStageAnswer)
+                        .filter(
+                            CandidateStageAnswer.candidate_id 
+                            == item.get('candidate_id'),
+                            CandidateStageAnswer.candidate_stage_question_id 
+                            == item.get('candidate_stage_question_id'))
+                            .first())
 
                 if answer:
                     raise SgoErpException(
@@ -130,8 +164,15 @@ class CandidateStageAnswerService(
 
         body_list = [body]
 
-        current_stage_info = self._set_status_to_current_stage_info(db, candidate_id=body_list[-1].candidate_stage_answers[-1].candidate_id,
-                                                                    candidate_stage_question_id=body_list[-1].candidate_stage_answers[-1].candidate_stage_question_id, status=CandidateStageInfoStatusEnum.NOT_STARTED)
+        candidate_stage_question_id = (body_list[-1]
+                                       .candidate_stage_answers[-1]
+                                       .candidate_stage_question_id)
+
+        current_stage_info = self._set_status_to_current_stage_info(
+            db, 
+            candidate_id=body_list[-1].candidate_stage_answers[-1].candidate_id,
+            candidate_stage_question_id=candidate_stage_question_id, 
+            status=CandidateStageInfoStatusEnum.NOT_STARTED)
         if current_stage_info:
             db.add(current_stage_info)
             db.flush()
@@ -212,7 +253,11 @@ class CandidateStageAnswerService(
         return db_obj
 
     def _set_status_to_current_stage_info(
-            self, db: Session, candidate_id: str, candidate_stage_question_id: str, status: CandidateStageInfoStatusEnum):
+            self, 
+            db: Session, 
+            candidate_id: str, 
+            candidate_stage_question_id: str, 
+            status: CandidateStageInfoStatusEnum):
         question = db.query(CandidateStageQuestion).filter(
             CandidateStageQuestion.id == candidate_stage_question_id
         ).first()
@@ -235,4 +280,5 @@ class CandidateStageAnswerService(
 
 
 candidate_stage_answer_service = CandidateStageAnswerService(
-    CandidateStageAnswer)
+    CandidateStageAnswer
+)
