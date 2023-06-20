@@ -34,8 +34,10 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
         answer = answer_class(**answer_kwargs)
         
         if question.question_type == QuestionTypeEnum.MULTIPLE_CHOICE:
-            answer.options = [option_service.get_by_id(db, option_id) for option_id in body.options]
-        
+            options = [option_service.get_by_id(db, option_id) for option_id in body.option_ids]
+            print(f"options: {options}")
+            answer.options = options
+            
         db.add(answer)
         db.flush()
 
