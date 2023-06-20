@@ -184,3 +184,4 @@ $RECYCLE.BIN/
 test.py
 test1.py
 .data
+.ruff_cache

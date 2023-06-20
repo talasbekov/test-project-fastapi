@@ -1,4 +1,3 @@
-from sqlalchemy import Column, String, TIMESTAMP, Enum, UUID, ForeignKey
 from sqlalchemy.orm import relationship
 
 from models import NamedModel

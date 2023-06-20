@@ -1,8 +1,8 @@
 import datetime
 import uuid
-from typing import Any, List, Optional
+from typing import Optional
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 
 
 class DocumentArchiveStaffFunctionTypeBase(BaseModel):
@@ -14,23 +14,28 @@ class DocumentArchiveStaffFunctionTypeBase(BaseModel):
         arbitrary_types_allowed = True
 
 
-class DocumentArchiveStaffFunctionTypeCreate(DocumentArchiveStaffFunctionTypeBase):
+class DocumentArchiveStaffFunctionTypeCreate(
+        DocumentArchiveStaffFunctionTypeBase):
     origin_id: Optional[uuid.UUID]
 
 
-class DocumentArchiveStaffFunctionTypeUpdate(DocumentArchiveStaffFunctionTypeBase):
+class DocumentArchiveStaffFunctionTypeUpdate(
+        DocumentArchiveStaffFunctionTypeBase):
     origin_id: Optional[uuid.UUID]
 
 
-class NewDocumentArchiveStaffFunctionTypeCreate(DocumentArchiveStaffFunctionTypeBase):
+class NewDocumentArchiveStaffFunctionTypeCreate(
+        DocumentArchiveStaffFunctionTypeBase):
     pass
 
 
-class NewDocumentArchiveStaffFunctionTypeUpdate(DocumentArchiveStaffFunctionTypeBase):
+class NewDocumentArchiveStaffFunctionTypeUpdate(
+        DocumentArchiveStaffFunctionTypeBase):
     pass
 
 
-class DocumentArchiveStaffFunctionTypeRead(DocumentArchiveStaffFunctionTypeBase):
+class DocumentArchiveStaffFunctionTypeRead(
+        DocumentArchiveStaffFunctionTypeBase):
     id: uuid.UUID
     created_at: datetime.datetime
     updated_at: datetime.datetime

@@ -1,13 +1,10 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from typing import Optional
-from decimal import Decimal
-import uuid
 
 
 class PenaltyReadHistory(BaseModel):
     name: Optional[str]
     nameKZ: Optional[str]
-
 
     class Config:
         orm_mode = True
@@ -25,7 +22,6 @@ class WorkExperienceRead(BaseModel):
     name: Optional[str]
     nameKZ: Optional[str]
 
-
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
@@ -37,10 +33,10 @@ class WorkExperienceRead(BaseModel):
             nameKZ=orm_obj.num_of_organization,
         )
 
+
 class EmergencyServiceRead(BaseModel):
     name: Optional[str]
     nameKZ: Optional[str]
-
 
     class Config:
         orm_mode = True
@@ -56,6 +52,7 @@ class EmergencyServiceRead(BaseModel):
             name=f"{staff_division} Департмент - ({coefficient}:{percentage}%)",
             nameKZ=f"{staff_divisionKZ} Департмент - ({coefficient}:{percentage}%)",
         )
+
 
 class AttestationReadHistory(BaseModel):
     name: Optional[str]
@@ -76,7 +73,6 @@ class AttestationReadHistory(BaseModel):
 class NameChangeReadHistory(BaseModel):
     name: str
     nameKZ: str
-
 
     class Config:
         orm_mode = True
@@ -105,10 +101,10 @@ class NameChangeReadHistory(BaseModel):
             nameKZ=nameKZ,
         )
 
+
 class BadgePersonalReadHistory(BaseModel):
     name: Optional[str]
     nameKZ: Optional[str]
-
 
     class Config:
         orm_mode = True
@@ -120,7 +116,6 @@ class BadgePersonalReadHistory(BaseModel):
             name=orm_obj.type.name,
             nameKZ=orm_obj.type.nameKZ,
         )
-
 
 
 class StatusReadHistory(BaseModel):
@@ -171,10 +166,10 @@ class ContractReadHistory(BaseModel):
             nameKZ=orm_obj.type.nameKZ,
         )
 
+
 class SecondmentReadHistory(BaseModel):
     name: Optional[str]
     nameKZ: Optional[str]
-
 
     class Config:
         orm_mode = True

@@ -1,10 +1,9 @@
-import uuid
 from typing import Any
 
 from sqlalchemy.orm import Session, Query
 
 from core import configs
-from models import User, HrDocument, Badge, BadgeType
+from models import User, HrDocument, Badge
 from exceptions import ForbiddenException, BadRequestException
 from services import badge_service, history_service
 from .base import BaseHandler
@@ -44,21 +43,23 @@ class AddBlackBeretHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        if badge_service.get_black_beret_by_user_id(db, user.id) != None:
+        if badge_service.get_black_beret_by_user_id(db, user.id) is not None:
             raise ForbiddenException(
-                f"Badge is already assigned to this user: {user.first_name} {user.last_name}"
+                ("Badge is already assigned to this user:"
+                 f" {user.first_name} {user.last_name}")
             )
 
     def handle_filter(self, db: Session, user_query: Query[Any]):
         badge = self.get_args(db)
-        return user_query.filter(User.badges.any(Badge.type_id != badge.id) | ~User.badges.any())
+        return user_query.filter(User.badges.any(
+            Badge.type_id != badge.id) | ~User.badges.any())
 
     def get_args(self, db: Session):
         badge_type = badge_service.get_black_beret(db)
         if badge_type:
             return badge_type
         else:
-            raise BadRequestException(f"Black beret badge not found")
+            raise BadRequestException("Black beret badge not found")
 
     def handle_response(self, db: Session,
                         user: User,

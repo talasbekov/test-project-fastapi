@@ -10,11 +10,10 @@ from models import (
     HrDocumentStep,
     DocumentStaffFunction,
     User,
-    Notification,
     HrDocumentTemplateEnum,
     StaffDivisionEnum,
 )
-from models.association import staff_unit_function
+
 from schemas import (
     HrDocumentTemplateCreate,
     HrDocumentTemplateUpdate,
@@ -23,6 +22,7 @@ from schemas import (
     HrDocumentStepCreate,
     SuggestCorrections,
     NotificationCreate,
+    DocumentStaffFunctionAppendToStaffUnit,
 )
 from .base import ServiceBase
 from services import (
@@ -38,7 +38,9 @@ from ws import notification_manager
 
 
 class HrDocumentTemplateService(
-    ServiceBase[HrDocumentTemplate, HrDocumentTemplateCreate, HrDocumentTemplateUpdate]
+    ServiceBase[HrDocumentTemplate,
+                HrDocumentTemplateCreate,
+                HrDocumentTemplateUpdate]
 ):
     def create_template(
         self, db: Session, body: HrDocumentTemplateCreate, role: str
@@ -68,7 +70,8 @@ class HrDocumentTemplateService(
     ) -> dict[str, Union[Union[uuid.UUID, Dict[int, uuid.UUID]], list[uuid.UUID]]]:
         user = db.query(User).filter(User.id == user_id).first()
         if user is None:
-            raise NotFoundException(detail=f"User with id: {user_id} is not found!")
+            raise NotFoundException(
+                detail=f"User with id: {user_id} is not found!")
 
         initial_step = hr_document_step_service.get_initial_step_for_template(
             db, document_template_id
@@ -110,7 +113,8 @@ class HrDocumentTemplateService(
                 continue
             staff_units_ids = [unit.id for unit in function.staff_units]
             user = (
-                db.query(User).filter(User.staff_unit_id.in_(staff_units_ids)).first()
+                db.query(User).filter(
+                    User.staff_unit_id.in_(staff_units_ids)).first()
             )
             steps[str(function.priority)] = str(user.id)
         return steps
@@ -197,7 +201,16 @@ class HrDocumentTemplateService(
                 HrDocumentStepCreate(
                     hr_document_template_id=new_template.id,
                     staff_function_id=new_staff_function.id,
+                    is_direct_supervisor=step.is_direct_supervisor,
+                    category=step.category,
                 ),
+            )
+            document_staff_function_service.append_to_staff_unit(
+                db, 
+                DocumentStaffFunctionAppendToStaffUnit(
+                    staff_function_id=new_staff_function.id,
+                    staff_unit_ids=[i.id for i in staff_function.staff_units]
+                )
             )
             db.add(new_staff_function)
         db.add(new_template)
@@ -228,7 +241,8 @@ class HrDocumentTemplateService(
         )
         if res is None:
             raise NotFoundException(
-                detail=f"HrDocumentTemplate with name: {HrDocumentTemplateEnum.STAFF_LIST.value} is not found!"
+                detail=("HrDocumentTemplate with name: "
+                        f"{HrDocumentTemplateEnum.STAFF_LIST.value} is not found!")
             )
         return res
 
@@ -240,7 +254,8 @@ class HrDocumentTemplateService(
         )
         if res is None:
             raise NotFoundException(
-                detail=f"HrDocumentTemplate with name: {HrDocumentTemplateEnum.DISPOSITION.value} is not found!"
+                detail=("HrDocumentTemplate with name: "
+                        f"{HrDocumentTemplateEnum.DISPOSITION.value} is not found!")
             )
         return res
 
@@ -252,14 +267,16 @@ class HrDocumentTemplateService(
         )
         if res is None:
             raise NotFoundException(
-                detail=f"HrDocumentTemplate with name: {HrDocumentTemplateEnum.STAFF_UNIT.value} is not found!"
+                detail=("HrDocumentTemplate with name: "
+                        f"{HrDocumentTemplateEnum.STAFF_UNIT.value} is not found!")
             )
         return res
 
     def get_all(self, db: Session, ids: List[uuid.UUID]):
         return self._get_all(db, ids).all()
 
-    def get_all_skip(self, db: Session, ids: List[uuid.UUID], skip: int, limit: int):
+    def get_all_skip(self, db: Session,
+                     ids: List[uuid.UUID], skip: int, limit: int):
         return self._get_all(db, ids).offset(skip).limit(limit).all()
 
     def _get_all(self, db: Session, ids: List[uuid.UUID]):

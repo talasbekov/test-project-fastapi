@@ -6,12 +6,14 @@ from schemas import SportAchievementCreate, SportAchievementUpdate
 from services.base import ServiceBase
 
 
-class SportAchievementService(ServiceBase[SportAchievement, SportAchievementCreate, SportAchievementUpdate]):
+class SportAchievementService(
+        ServiceBase[SportAchievement, SportAchievementCreate, SportAchievementUpdate]):
 
     def get_by_id(self, db: Session, id: str):
         sport_achievement = super().get(db, id)
         if sport_achievement is None:
-            raise NotFoundException(detail=f"SportAchievement with id: {id} is not found!")
+            raise NotFoundException(
+                detail=f"SportAchievement with id: {id} is not found!")
         return sport_achievement
 
 

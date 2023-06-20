@@ -12,7 +12,7 @@ class GeneralUserInformationBase(BaseModel):
     age_group: AgeGroup
     profile_id: uuid.UUID
     weight: int
- 
+
     class Config:
         use_enum_values = True
         arbitrary_types_allowed = True

@@ -3,8 +3,11 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-from schemas.medical import (AnthropometricDataRead, DispensaryRegistrationRead, GeneralUserInformationRead,
-                             HospitalDataRead, UserLiberationRead)
+from schemas.medical import (AnthropometricDataRead, 
+                             DispensaryRegistrationRead, 
+                             GeneralUserInformationRead,
+                             HospitalDataRead, 
+                             UserLiberationRead)
 
 
 class MedicalProfileBase(BaseModel):
@@ -20,7 +23,7 @@ class MedicalProfileCreate(MedicalProfileBase):
 
 
 class MedicalProfileUpdate(MedicalProfileBase):
-    pass 
+    pass
 
 
 class MedicalProfileRead(MedicalProfileBase):

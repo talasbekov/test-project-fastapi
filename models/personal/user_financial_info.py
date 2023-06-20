@@ -11,6 +11,12 @@ class UserFinancialInfo(Model):
 
     iban = Column(String)
     housing_payments_iban = Column(String)
-    profile_id = Column(UUID(as_uuid=True), ForeignKey("personal_profiles.id"), nullable=False)
+    profile_id = Column(
+        UUID(
+            as_uuid=True),
+        ForeignKey("personal_profiles.id"),
+        nullable=False)
 
-    profile = relationship("PersonalProfile", back_populates="user_financial_infos")
+    profile = relationship(
+        "PersonalProfile",
+        back_populates="user_financial_infos")

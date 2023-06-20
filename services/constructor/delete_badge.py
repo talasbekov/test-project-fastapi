@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session, Query
 from core import configs
 from models import User, HrDocument, Badge, BadgeHistory
 from .base import BaseHandler
-from services import badge_service, history_service
+from services import badge_service
 from exceptions import ForbiddenException, BadRequestException
 
 
@@ -44,13 +44,16 @@ class DeleteBadgeHandler(BaseHandler):
         badge = badge_service.get_by_id(db, badge_id)
         if not badge_service.exists_relation(db, user.id, badge.type_id):
             raise ForbiddenException(
-                f"Badge is not assigned to this user: {user.first_name}, {user.last_name}"
+                ("Badge is not assigned to this user:"
+                 f" {user.first_name}, {user.last_name}")
             )
 
     def handle_filter(self, db: Session, user_query: Query[Any]):
-        return user_query.join(Badge).filter(User.badges.any(User.id == Badge.user_id)).join(BadgeHistory,
-                                                                                             Badge.id == BadgeHistory.badge_id).filter(
-            BadgeHistory.date_to is None)
+        return (user_query
+                .join(Badge)
+                .filter(User.badges.any(User.id == Badge.user_id))
+                .join(BadgeHistory, Badge.id == BadgeHistory.badge_id)
+                .filter(BadgeHistory.date_to is None))
 
     def get_args(self, action, properties):
         try:

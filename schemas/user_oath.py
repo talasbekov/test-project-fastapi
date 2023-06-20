@@ -2,10 +2,9 @@ import uuid
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel
 
 from schemas import MilitaryUnitRead
-from schemas import Model, NamedModel, ReadModel, ReadNamedModel
+from schemas import Model, ReadModel
 
 
 class UserOath(Model):

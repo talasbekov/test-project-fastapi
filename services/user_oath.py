@@ -1,6 +1,3 @@
-from sqlalchemy.orm import Session
-
-from exceptions.client import NotFoundException
 from models import UserOath
 from schemas import UserOathCreate, UserOathUpdate
 from .base import ServiceBase

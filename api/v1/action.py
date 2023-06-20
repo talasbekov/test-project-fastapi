@@ -2,7 +2,12 @@ from fastapi import APIRouter, Depends
 from fastapi.security import HTTPBearer
 
 
-router = APIRouter(prefix="/actions", tags=["Action"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/actions",
+    tags=["Action"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get('')
@@ -676,8 +681,8 @@ async def get_all_actions():
     #     },
     # },
     {
-        'action_name': 'Смена должности',
-        'action_nameKZ': 'қызмет атауын өзгерту',
+        'action_name': 'Назначение на должность',
+        'action_nameKZ': 'Қызметке тағайындау',
         'action_type': 'position_change',
         'children': [
             {
@@ -748,8 +753,8 @@ async def get_all_actions():
         },
     },
     {
-        'action_name': 'Повышение звания',
-        'action_nameKZ': 'Дәреже арттыру',
+        'action_name': 'Присвоение звания',
+        'action_nameKZ': 'Дәреже тағайындау',
         'action_type': 'increase_rank',
         'children': [
             {

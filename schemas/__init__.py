@@ -2,13 +2,13 @@ from .base import Model, NamedModel, ReadModel, ReadNamedModel
 from .badge import *
 from .autotag import *
 from .notification import *
-from .equipment import (EquipmentCreate, 
-                        EquipmentRead, 
+from .equipment import (EquipmentCreate,
+                        EquipmentRead,
                         EquipmentUpdate,
-                        TypeClothingEquipmentRead, 
-                        TypeArmyEquipmentRead, 
+                        TypeClothingEquipmentRead,
+                        TypeArmyEquipmentRead,
                         TypeOtherEquipmentRead
-                    )
+                        )
 
 from .event import EventCreate, EventRead, EventUpdate
 from .hr_document_template import (HrDocumentTemplateCreate,
@@ -29,7 +29,11 @@ from .staff_function import (DocumentStaffFunctionCreate, DocumentStaffFunctionR
                              StaffUnitFunctions, StaffFunctionRead, DocumentStaffFunctionAdd,
                              DocumentStaffFunctionConstructorAdd, DocumentStaffFunctionAppendToStaffUnit, StaffUnitFunctionsByPosition)
 from .status import *
-from .staff_division_type import (StaffDivisionTypeBase, StaffDivisionTypeCreate, StaffDivisionTypeRead, StaffDivisionTypeUpdate)
+from .staff_division_type import (
+    StaffDivisionTypeBase,
+    StaffDivisionTypeCreate,
+    StaffDivisionTypeRead,
+    StaffDivisionTypeUpdate)
 from .staff_division import (StaffDivisionCreate, StaffDivisionRead,
                              StaffDivisionUpdate, StaffDivisionUpdateParentGroup,
                              StaffDivisionOptionRead, StaffUnitDivisionRead)
@@ -46,16 +50,33 @@ from .hr_document import (HrDocumentCreate, HrDocumentInit, HrDocumentRead,
                           DraftHrDocumentInit)
 from .hr_document_info import (HrDocumentInfoCreate, HrDocumentInfoRead,
                                HrDocumentInfoUpdate, HrDocumentHistoryRead)
-from .privelege_emergency import (PrivelegeEmergencyCreate, PrivelegeEmergencyRead, PrivelegeEmergencyUpdate)
-from .personnal_reserve import (PersonnalReserveCreate, PersonnalReserveRead, PersonnalReserveUpdate)
+from .privelege_emergency import (
+    PrivelegeEmergencyCreate,
+    PrivelegeEmergencyRead,
+    PrivelegeEmergencyUpdate)
+from .personnal_reserve import (
+    PersonnalReserveCreate,
+    PersonnalReserveRead,
+    PersonnalReserveUpdate)
 from .coolness import *
 from .user_stat import UserStatCreate, UserStatRead, UserStatUpdate
 from .auth import LoginForm, RegistrationForm, CandidateRegistrationForm
-from .staff_list import (StaffListCreate, StaffListRead, StaffListUpdate, StaffListUserCreate, StaffListStatusRead)
+from .staff_list import (
+    StaffListCreate,
+    StaffListRead,
+    StaffListUpdate,
+    StaffListUserCreate,
+    StaffListStatusRead)
 from .service_id import (ServiceIDCreate, ServiceIDRead, ServiceIDUpdate)
-from .military_unit import (MilitaryUnitCreate, MilitaryUnitRead, MilitaryUnitUpdate)
+from .military_unit import (
+    MilitaryUnitCreate,
+    MilitaryUnitRead,
+    MilitaryUnitUpdate)
 from .user_oath import (UserOathCreate, UserOathRead, UserOathUpdate)
-from .recommender_user import (RecommenderUserCreate, RecommenderUserRead, RecommenderUserUpdate)
+from .recommender_user import (
+    RecommenderUserCreate,
+    RecommenderUserRead,
+    RecommenderUserUpdate)
 from .additional import *
 from .education import *
 from .personal import *

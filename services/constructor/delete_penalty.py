@@ -6,7 +6,7 @@ from core import configs
 from models import User, HrDocument, Penalty, PenaltyHistory
 from .base import BaseHandler
 from services import penalty_service, penalty_type_service
-from exceptions import ForbiddenException, BadRequestException
+from exceptions import BadRequestException
 
 
 class DeletePenaltyHandler(BaseHandler):
@@ -46,7 +46,8 @@ class DeletePenaltyHandler(BaseHandler):
         pass
 
     def handle_filter(self, db: Session, user_query: Query[Any]):
-        return user_query.filter(User.penalties.any(User.id == Penalty.user_id))
+        return user_query.filter(
+            User.penalties.any(User.id == Penalty.user_id))
 
     def get_args(self, action, properties):
         try:

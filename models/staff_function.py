@@ -4,7 +4,7 @@ from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from models import NamedModel, NamedNestedModel, isActiveModel
+from models import NamedModel
 from .association import staff_unit_function
 
 
@@ -29,7 +29,10 @@ class ServiceFunctionType(NamedModel):
 
     __tablename__ = "service_function_types"
 
-    staff_functions = relationship("ServiceStaffFunction", back_populates="type", cascade="all,delete")
+    staff_functions = relationship(
+        "ServiceStaffFunction",
+        back_populates="type",
+        cascade="all,delete")
 
 
 class DocumentFunctionType(NamedModel):
@@ -38,7 +41,10 @@ class DocumentFunctionType(NamedModel):
 
     can_cancel = Column(Boolean, nullable=False)
 
-    staff_functions = relationship("DocumentStaffFunction", back_populates="role", cascade="all,delete")
+    staff_functions = relationship(
+        "DocumentStaffFunction",
+        back_populates="role",
+        cascade="all,delete")
 
 
 class StaffFunction(NamedModel):
@@ -50,7 +56,9 @@ class StaffFunction(NamedModel):
     is_active = Column(Boolean, nullable=True)
 
     staff_units = relationship("StaffUnit", secondary=staff_unit_function)
-    archived = relationship("ArchiveStaffFunction", back_populates="origin", cascade="all,delete")
+    archived = relationship("ArchiveStaffFunction", 
+                            back_populates="origin", 
+                            cascade="all,delete")
 
     __mapper_args__ = {
         "polymorphic_on": discriminator,
@@ -60,13 +68,20 @@ class StaffFunction(NamedModel):
 
 class DocumentStaffFunction(StaffFunction):
 
-    role_id = Column(UUID(as_uuid=True), ForeignKey("document_function_types.id"))
-    jurisdiction_id = Column(UUID(as_uuid=True), ForeignKey("jurisdictions.id"))
+    role_id = Column(UUID(as_uuid=True),
+                     ForeignKey("document_function_types.id"))
+    jurisdiction_id = Column(
+        UUID(
+            as_uuid=True),
+        ForeignKey("jurisdictions.id"))
 
     priority = Column(Integer)
 
     role = relationship("DocumentFunctionType")
-    hr_document_step = relationship("HrDocumentStep", back_populates='staff_function', cascade="all,delete", uselist=False)
+    hr_document_step = relationship("HrDocumentStep", 
+                                    back_populates='staff_function', 
+                                    cascade="all,delete", 
+                                    uselist=False)
     jurisdiction = relationship("Jurisdiction")
 
     __mapper_args__ = {
@@ -76,9 +91,12 @@ class DocumentStaffFunction(StaffFunction):
 
 class ServiceStaffFunction(StaffFunction):
 
-    type_id = Column(UUID(as_uuid=True), ForeignKey("service_function_types.id"))
+    type_id = Column(UUID(as_uuid=True),
+                     ForeignKey("service_function_types.id"))
 
-    type = relationship("ServiceFunctionType", back_populates="staff_functions")
+    type = relationship(
+        "ServiceFunctionType",
+        back_populates="staff_functions")
 
     __mapper_args__ = {
         "polymorphic_identity": "service_staff_function"

@@ -40,11 +40,13 @@ class DeleteCoolnessHandler(BaseHandler):
         coolness = coolness_service.get_by_id(db, coolness_id)
         if not coolness_service.exists_relation(db, user.id, coolness.type_id):
             raise ForbiddenException(
-                f"Coolness is not assigned to this user: {user.first_name}, {user.last_name}"
+                ("Coolness is not assigned to this user:"
+                 f" {user.first_name}, {user.last_name}")
             )
 
     def handle_filter(self, db: Session, user_query: Query[Any]):
-        return user_query.filter(User.coolnesses.any(User.id == Coolness.user_id))
+        return user_query.filter(
+            User.coolnesses.any(User.id == Coolness.user_id))
 
     def get_args(self, action, properties):
         try:

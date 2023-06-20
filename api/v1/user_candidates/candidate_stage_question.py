@@ -7,10 +7,15 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from core import get_db
-from schemas import CandidateStageQuestionCreate, CandidateStageQuestionRead, CandidateStageQuestionUpdate
+from schemas import (
+    CandidateStageQuestionCreate, 
+    CandidateStageQuestionRead, 
+    CandidateStageQuestionUpdate
+)
 from services import candidate_stage_question_service
 
-router = APIRouter(prefix="/candidate_stage_question", tags=["CandidateStageQuestion"],
+router = APIRouter(prefix="/candidate_stage_question", 
+                   tags=["CandidateStageQuestion"],
                    dependencies=[Depends(HTTPBearer())])
 
 
@@ -26,8 +31,12 @@ async def get_all(
     """
         Get all CandidateStageQuestion.
 
-        - **skip**: int - The number of CandidateStageQuestion to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of CandidateStageQuestion to return in the response. This parameter is optional and defaults to 100.
+        - **skip**: int - The number of CandidateStageQuestion 
+            to skip before returning the results. 
+            This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of CandidateStageQuestion 
+            to return in the response. 
+            This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
     return candidate_stage_question_service.get_multi(db, skip, limit)
@@ -89,7 +98,8 @@ async def update(
     """
     Authorize.jwt_required()
     return candidate_stage_question_service.update(db,
-                                                   db_obj=candidate_stage_question_service.get_by_id(db, id),
+                                                   db_obj=candidate_stage_question_service.get_by_id(
+                                                       db, id),
                                                    obj_in=body)
 
 

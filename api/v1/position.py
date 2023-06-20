@@ -11,7 +11,12 @@ from models.position import CategoryCodeEnum
 from schemas import PositionCreate, PositionUpdate, PositionRead
 from services import position_service
 
-router = APIRouter(prefix="/positions", tags=["Positions"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/positions",
+    tags=["Positions"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
@@ -26,8 +31,12 @@ async def get_all(*,
     """
        Get all Positions
 
-       - **skip**: int - The number of Positions to skip before returning the results. This parameter is optional and defaults to 0.
-       - **limit**: int - The maximum number of Positions to return in the response. This parameter is optional and defaults to 100.
+       - **skip**: int - The number of Positions 
+            to skip before returning the results. 
+            This parameter is optional and defaults to 0.
+       - **limit**: int - The maximum number of Positions 
+            to return in the response. 
+            This parameter is optional and defaults to 100.
    """
     Authorize.jwt_required()
     return position_service.get_multi(db, skip, limit)

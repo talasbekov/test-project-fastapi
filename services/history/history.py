@@ -2,7 +2,6 @@ import uuid
 from datetime import datetime, timedelta
 
 from sqlalchemy.orm import Session
-from fastapi.logger import logger as log
 
 from exceptions import NotFoundException, NotSupportedException
 from models import (
@@ -30,12 +29,10 @@ from models import (
     Status,
     Badge,
     Coolness,
-    PersonalReserve,
-    PrivilegeEmergency,
     User
 )
 from schemas import HistoryCreate, HistoryUpdate
-from schemas.history.history import EquipmentRead, EmergencyContactRead
+from schemas.history.history import EquipmentRead
 from services import ServiceBase
 
 
@@ -46,7 +43,6 @@ from schemas import (
     GeneralInformationRead,
     CoolnessRead,
     AttendanceRead,
-    ServiceIDRead,
     HistoryRead,
     HistoryServiceDetailRead,
     HistoryPersonalRead,
@@ -93,9 +89,10 @@ def get_last_by_user_id(db: Session, user_id: str, type: str):
         raise NotSupportedException(detail=f'Type: {type} is not supported!')
     res = db.query(cls).filter(
         cls.user_id == user_id,
-        cls.date_to == None
+        cls.date_to is None
     ).order_by(cls.date_to.desc()).first()
     return res
+
 
 def finish_last(db: Session, user_id: str, type: str):
     last_history: History = get_last_by_user_id(db, user_id, type)
@@ -126,7 +123,8 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         return list_of_histories
 
     def get_all_by_type(self, db: Session, type: str, skip: int, limit: int):
-        histories = self._get_all_by_type(db, type).offset(skip).limit(limit).all()
+        histories = self._get_all_by_type(
+            db, type).offset(skip).limit(limit).all()
 
         list_of_histories = []
         for history in histories:
@@ -136,9 +134,12 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
     def _get_all_by_type(self, db: Session, type: str):
         return db.query(self.model).filter(self.model.type == type)
 
-    def get_all_by_type_and_user_id(self, db: Session, type: str, user_id: uuid.UUID, skip: int, limit: int):
+    def get_all_by_type_and_user_id(
+            self, db: Session, type: str, user_id: uuid.UUID, skip: int, limit: int):
         if type == 'beret_history':
             black_beret = badge_service.get_black_beret_by_user_id(db, user_id)
+            if black_beret is None:
+                return []
             histories = (
                 db.query(BadgeHistory)
                 .filter(
@@ -163,53 +164,80 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         return lis_of_histories
 
     def _get_all_by_type_and_user_id(self, db: Session, type: str, user_id):
-        return db.query(self.model).filter(self.model.type == type, self.model.user_id == user_id)
+        return db.query(self.model).filter(self.model.type ==
+                                           type, self.model.user_id == user_id)
 
     def create(self, db: Session, obj_in: HistoryCreate):
-        cls = options.get(obj_in.type) 
+        cls = options.get(obj_in.type)
         if cls is None:
-            raise NotSupportedException(detail=f'Type: {obj_in.type} is not supported!')
+            raise NotSupportedException(
+                detail=f'Type: {obj_in.type} is not supported!')
         if hasattr(cls, "badge_id"):
             badge = badge_service.get_by_id(db, obj_in.badge_id)
             if badge is None:
-                raise NotFoundException(detail=f'Badge with id: {obj_in.badge_id} not found!')
+                raise NotFoundException(
+                    detail=f'Badge with id: {obj_in.badge_id} not found!')
         obj_db = cls(**obj_in.dict(exclude_none=True))
         db.add(obj_db)
         db.flush()
         db.refresh(obj_db)
         return obj_db
-    
+
     def get_type_by_user_id(self, db: Session, user_id: str, type: str):
         cls = options.get(type)
         if cls is None:
-            raise NotSupportedException(detail=f'Type: {type} is not supported!')
+            raise NotSupportedException(
+                detail=f'Type: {type} is not supported!')
         return cls
 
     def get_all_by_user_id(self, db: Session, user_id: str):
         user = user_service.get_by_id(db, user_id)
 
-        general_information = self.get_general_information_by_user_id(db, user_id, user)
-        badges = db.query(BadgeHistory).filter(BadgeHistory.user_id == user_id).all()
-        ranks = db.query(RankHistory).filter(RankHistory.user_id == user_id).all()
-        penalties = db.query(PenaltyHistory).filter(PenaltyHistory.user_id == user_id).all()
-        contracts = db.query(ContractHistory).filter(ContractHistory.user_id == user_id).all()
-        attestations = db.query(AttestationHistory).filter(AttestationHistory.user_id == user_id).all()
-        characteristics = db.query(ServiceCharacteristicHistory).filter(ServiceCharacteristicHistory.user_id == user_id).all()
-        holidays = db.query(StatusHistory).filter(StatusHistory.user_id == user_id).all()
-        emergency_contracts = db.query(EmergencyServiceHistory).filter(EmergencyServiceHistory.user_id == user_id).all()
-        experience = db.query(WorkExperienceHistory).filter(WorkExperienceHistory.user_id == user_id).all()
-        secondments = db.query(SecondmentHistory).filter(SecondmentHistory.user_id == user_id).all()
+        general_information = self.get_general_information_by_user_id(
+            db, user_id, user)
+        badges = db.query(BadgeHistory).filter(
+            BadgeHistory.user_id == user_id).all()
+        ranks = db.query(RankHistory).filter(
+            RankHistory.user_id == user_id).all()
+        penalties = db.query(PenaltyHistory).filter(
+            PenaltyHistory.user_id == user_id).all()
+        contracts = db.query(ContractHistory).filter(
+            ContractHistory.user_id == user_id).all()
+        attestations = db.query(AttestationHistory).filter(
+            AttestationHistory.user_id == user_id).all()
+        characteristics = db.query(ServiceCharacteristicHistory).filter(
+            ServiceCharacteristicHistory.user_id == user_id).all()
+        holidays = db.query(StatusHistory).filter(
+            StatusHistory.user_id == user_id).all()
+        emergency_contracts = db.query(EmergencyServiceHistory).filter(
+            EmergencyServiceHistory.user_id == user_id).all()
+        experience = db.query(WorkExperienceHistory).filter(
+            WorkExperienceHistory.user_id == user_id).all()
+        secondments = db.query(SecondmentHistory).filter(
+            SecondmentHistory.user_id == user_id).all()
         equipments = user.equipments
 
-        clothing_equipments_type_count = equipment_service.get_clothing_equipments_type_count(db)
-        equipment_models_count = equipment_service.get_clothing_equipment_models_count_by_user(db, user_id)
+        clothing_equipments_type_count = (
+            equipment_service
+            .get_clothing_equipments_type_count(db)
+        )
+        
+        equipment_models_count = (
+            equipment_service
+            .get_clothing_equipment_models_count_by_user(
+                db, 
+                user_id
+            )
+        )
         percentage = {}
         if equipment_models_count:
             for equipment_model in equipment_models_count:
-                percentage[equipment_model[0]] = (equipment_model[1]*100)/clothing_equipments_type_count
+                percentage[equipment_model[0]] = (
+                    equipment_model[1] * 100) / clothing_equipments_type_count
 
-        service_id_info =self.get_service_id_by_user_id(db, user_id)
-        equipments_dict = [EquipmentRead.from_orm(equipment).dict() for equipment in equipments]
+        service_id_info = self.get_service_id_by_user_id(db, user_id)
+        equipments_dict = [EquipmentRead.from_orm(
+            equipment).dict() for equipment in equipments]
         equipments_dict.append(percentage)
         attendance = AttendanceRead(
             physical_training=100,
@@ -233,15 +261,15 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             general_information=general_information,
             service_id_info=service_id_info
         )
-        history_dict = HistoryServiceDetailRead.from_orm(history_service_detail_read).dict()
+        history_dict = HistoryServiceDetailRead.from_orm(
+            history_service_detail_read).dict()
         return history_dict
-
 
     def get_service_id_by_user_id(self, db: Session, user_id: str):
         service_id = service_id_service.get_by_user_id(db, user_id)
         if service_id is None:
             return None
-        
+
         service_id_read = ServiceIdInfoRead(
             id=service_id.id,
             date_to=service_id.date_to,
@@ -250,22 +278,26 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             number=service_id.number,
         )
         return service_id_read
-        
 
-    
-    def get_general_information_by_user_id(self, db: Session, user_id: str, user: User):
-        oauth_user = db.query(UserOath).filter(UserOath.user_id == user_id).first()
+    def get_general_information_by_user_id(
+            self, db: Session, user_id: str, user: User):
+        oauth_user = db.query(UserOath).filter(
+            UserOath.user_id == user_id).first()
         if oauth_user is None or oauth_user.military_unit is None:
             user_oath_read = None
         else:
             user_oath_read = OathRead(
                 id=oauth_user.id,
-                date=oauth_user.date, military_name=oauth_user.military_unit.name, military_id=oauth_user.military_unit_id)
-        
-        privelege_emergency = privelege_emergency_service.get_by_user_id(db, user_id)
+                date=oauth_user.date, 
+                military_name=oauth_user.military_unit.name, 
+                military_id=oauth_user.military_unit_id
+            )
+
+        privelege_emergency = privelege_emergency_service.get_by_user_id(
+            db, user_id)
         if privelege_emergency is None:
             privelege_emergency_read = None
-        else:         
+        else:
             privelege_emergency_read = PrivelegeEmergencyRead(
                 date_from=privelege_emergency.date_from,
                 date_to=privelege_emergency.date_to,
@@ -273,7 +305,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                 id=privelege_emergency.id,
                 user_id=privelege_emergency.user_id,
             )
-        
+
         coolness = coolness_service.get_by_user_id(db, user_id)
         if coolness is None:
             coolness_read = None
@@ -285,13 +317,14 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                 id=coolness.id,
                 user_id=coolness.user_id,
             )
-        
+
         black_beret = badge_service.get_black_beret_by_user_id(db, user_id)
         is_badge_black = False
         if black_beret:
             is_badge_black = True
 
-        personal_reserve = personnal_reserve_service.get_by_user_id(db, user_id)
+        personal_reserve = personnal_reserve_service.get_by_user_id(
+            db, user_id)
         if personal_reserve is None:
             personal_reserve_read = None
         else:
@@ -306,13 +339,22 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             )
         recommender = recommender_user_service.get_by_user_id(db, user_id)
         if recommender:
-            recommender_user = {"name": f"{recommender.user_by.last_name} {recommender.user_by.first_name[0]}{' ' + recommender.user_by.father_name[0] + '.' if recommender.user_by.father_name is not None else ''}",
+            father_name = ''
+            if recommender.user_by.father_name is not None:
+                father_name = recommender.user_by.father_name[0] + '.'
+            recommender_user = {"name": (f"{recommender.user_by.last_name}"
+                                         f" {recommender.user_by.first_name[0]}"
+                                         f"{' ' + father_name}"),
                                 "id": str(user.id)
                                 }
         else:
             recommender_user = None
         if user:
-            researcher = {"name": f"{user.last_name} {user.first_name[0]} {' ' + user.father_name[0] + '.' if user.father_name is not None else ''}",
+            father_name = ''
+            if user.father_name is not None:
+                father_name = user.father_name[0] + '.'
+            researcher = {"name": (f"{user.last_name} {user.first_name[0]} "
+                                    f"{' ' + father_name}"),
                           "id": str(user.id)
                           }
         else:
@@ -328,16 +370,17 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             recommender=recommender_user
         )
 
-
         return general_information_read
 
     def create_history(self, db: Session, user_id: uuid.UUID, object):
         diff = classes.get(type(object))
         if diff is None:
-            raise NotSupportedException(detail=f'Type: {diff} is not supported!')
+            raise NotSupportedException(
+                detail=f'Type: {diff} is not supported!')
         cls = options.get(diff)
         if cls is None:
-            raise NotSupportedException(detail=f'In options: {diff} is not present!')
+            raise NotSupportedException(
+                detail=f'In options: {diff} is not present!')
         return cls.create_history(db, user_id, object.id, finish_last)
 
     def create_timeline_history(
@@ -350,35 +393,40 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
     ):
         diff = classes.get(type(object))
         if diff is None:
-            raise NotSupportedException(detail=f"Type: {diff} is not supported!")
+            raise NotSupportedException(
+                detail=f"Type: {diff} is not supported!")
         cls = options.get(diff)
         if cls is None:
-            raise NotSupportedException(detail=f"In options: {diff} is not present!")
+            raise NotSupportedException(
+                detail=f"In options: {diff} is not present!")
         if getattr(cls, "create_timeline_history", None) is None:
             raise NotSupportedException(
-                detail=f"Class: {cls.__name__} does not support date_from, date_to format!"
+                detail= (f"Class: {cls.__name__} "
+                         "does not support date_from, date_to format!")
             )
         return cls.create_timeline_history(
             db, user_id, object.id, finish_last, date_from, date_to
         )
 
-    def update(self, db: Session, id: uuid.UUID, object: HistoryUpdate): 
+    def update(self, db: Session, id: uuid.UUID, object: HistoryUpdate):
         history = self.get_by_id(db, id)
         if history is None:
-            raise NotFoundException(detail=f'History with id: {id} is not found!')
+            raise NotFoundException(
+                detail=f'History with id: {id} is not found!')
         for key, value in object.dict(exclude_unset=True).items():
             setattr(history, key, value)
         db.add(history)
         db.flush()
         return history
 
-
-    def get_all_personal(self, db: Session, user_id: uuid.UUID, date_from, skip: int = 0, limit: int = 100):
+    def get_all_personal(self, db: Session, user_id: uuid.UUID,
+                         date_from, skip: int = 0, limit: int = 100):
         if date_from is None:
             histories = (
                 db.query(self.model)
                 .filter(self.model.user_id == user_id)
-                .order_by(self.model.date_from.desc(), self.model.id.asc())  # add secondary sort order
+                # add secondary sort order
+                .order_by(self.model.date_from.desc(), self.model.id.asc())
                 .offset(skip)
                 .limit(limit)
                 .all()
@@ -389,8 +437,11 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             end_date = next_month - timedelta(days=next_month.day)
             histories = (
                 db.query(self.model)
-                .filter(self.model.user_id == user_id, self.model.date_from >= start_date, self.model.date_from <= end_date)
-                .order_by(self.model.date_from.desc(), self.model.id.asc())  # add secondary sort order
+                .filter(self.model.user_id == user_id, 
+                        self.model.date_from >= start_date, 
+                        self.model.date_from <= end_date)
+                # add secondary sort order
+                .order_by(self.model.date_from.desc(), self.model.id.asc())
                 .offset(skip)
                 .limit(limit)
                 .all()
@@ -399,7 +450,8 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         for history in histories:
             type_cls = self.get_type_by_user_id(db, user_id, history.type)
             obj = db.query(type_cls).filter(type_cls.id == history.id).first()
-            lis_of_histories.append(HistoryPersonalRead.from_orm(obj).to_dict())
+            lis_of_histories.append(
+                HistoryPersonalRead.from_orm(obj).to_dict())
         return lis_of_histories
 
 

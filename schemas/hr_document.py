@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Union
 
-from pydantic import BaseModel, validator, Field
+from pydantic import validator, Field
 
 from schemas import (
     HrDocumentTemplateRead,
@@ -10,7 +10,7 @@ from schemas import (
     HrDocumentStatusRead,
     HrDocumentStepRead,
 )
-from schemas import Model, NamedModel, ReadModel, ReadNamedModel
+from schemas import Model, ReadModel
 
 
 class HrDocumentBase(Model):
@@ -25,7 +25,7 @@ class HrDocumentBase(Model):
         if v is None:
             return v
         if not isinstance(v, dict):
-            raise ValueError(f"properties should be dictionary")
+            raise ValueError("properties should be dictionary")
         keys = list(v)
         for key in keys:
             value = v[key]
@@ -48,25 +48,27 @@ class DraftHrDocumentInit(Model):
         if v is None:
             return v
         if not isinstance(v, dict):
-            raise ValueError(f"document_step_users_ids should be dictionary")
+            raise ValueError("document_step_users_ids should be dictionary")
         keys = list(v)
 
         for key in keys:
             value = v[key]
             if key == -1:
                 if not isinstance(value, list):
-                    raise ValueError(f"document_step_users_ids should be list")
+                    raise ValueError("document_step_users_ids should be list")
                 for user_id in value:
                     if not isinstance(user_id, uuid.UUID):
-                        raise ValueError(f"document_step_users_ids should be uuid.UUID")
+                        raise ValueError(
+                            "document_step_users_ids should be uuid.UUID")
             elif key == 1:
-                raise ValueError(f"Don't add initiator")
+                raise ValueError("Don't add initiator")
             else:
                 if isinstance(value, dict):
                     continue
                 value_to_uuid = uuid.UUID(value)
                 if not isinstance(value_to_uuid, uuid.UUID):
-                    raise ValueError(f"document_step_users_ids should be uuid.UUID")
+                    raise ValueError(
+                        "document_step_users_ids should be uuid.UUID")
 
         sorted(v, key=lambda x: keys.index(x))
 

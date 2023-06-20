@@ -11,7 +11,8 @@ class PassportService(ServiceBase[Passport, PassportCreate, PassportUpdate]):
     def get_by_id(self, db: Session, id: str):
         passport = super().get(db, id)
         if passport is None:
-            raise NotFoundException(detail=f"Passport with id: {id} is not found!")
+            raise NotFoundException(
+                detail=f"Passport with id: {id} is not found!")
         return passport
 
 

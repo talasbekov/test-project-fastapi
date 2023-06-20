@@ -35,7 +35,7 @@ class StaffUnitCandidateRead(BaseModel):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
-         
+
 
 class CandidateCreate(CandidateBase):
     pass
@@ -53,9 +53,11 @@ class CandidateUpdate(CandidateBase):
     def validate_debarment_reason(cls, value, values):
         status = values.get('status')
         if status == CandidateStatusEnum.ACTIVE and value is not None:
-            raise ValueError('debarment_reason должен быть пустым для статуса Активный')
+            raise ValueError(
+                'debarment_reason должен быть пустым для статуса Активный')
         elif status == CandidateStatusEnum.DRAFT and value is None:
-            raise ValueError('debarment_reason обязателен для статуса Черновик')
+            raise ValueError(
+                'debarment_reason обязателен для статуса Черновик')
         return value
 
 

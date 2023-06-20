@@ -44,12 +44,14 @@ class DeleteBlackBeretHandler(BaseHandler):
         black_beret = self.get_args(db, user)
         if black_beret is None:
             raise ForbiddenException(
-                f"Black Beret is not assigned to this user: {user.first_name}, {user.last_name}"
+                ("Black Beret is not assigned to this user:"
+                 f" {user.first_name}, {user.last_name}")
             )
 
     def handle_filter(self, db: Session, user_query: Query[Any]):
         badge_type = badge_service.get_black_beret(db)
-        return user_query.filter(User.badges.any(Badge.type_id == badge_type.id))
+        return user_query.filter(User.badges.any(
+            Badge.type_id == badge_type.id))
 
     def get_args(self, db: Session, user: User):
         black_beret = badge_service.get_black_beret_by_user_id(db, user.id)

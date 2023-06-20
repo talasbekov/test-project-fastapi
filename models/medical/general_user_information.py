@@ -32,8 +32,14 @@ class GeneralUserInformation(Model):
     __tablename__ = "general_user_informations"
 
     height = Column(Integer)
-    blood_group = Column(EnumType(BloodType), nullable=True, default=BloodType.O_PLUS)
-    age_group = Column(EnumType(AgeGroup), nullable=True, default=AgeGroup.FIRST)
+    blood_group = Column(
+        EnumType(BloodType),
+        nullable=True,
+        default=BloodType.O_PLUS)
+    age_group = Column(
+        EnumType(AgeGroup),
+        nullable=True,
+        default=AgeGroup.FIRST)
     profile_id = Column(UUID(as_uuid=True), ForeignKey("medical_profiles.id"))
     weight = Column(Integer)
 

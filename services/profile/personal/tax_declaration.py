@@ -6,12 +6,14 @@ from schemas import TaxDeclarationCreate, TaxDeclarationUpdate
 from services.base import ServiceBase
 
 
-class TaxDeclarationService(ServiceBase[TaxDeclaration, TaxDeclarationCreate, TaxDeclarationUpdate]):
+class TaxDeclarationService(
+        ServiceBase[TaxDeclaration, TaxDeclarationCreate, TaxDeclarationUpdate]):
 
     def get_by_id(self, db: Session, id: str):
         tax_declaration = super().get(db, id)
         if tax_declaration is None:
-            raise NotFoundException(detail=f"TaxDeclaration with id: {id} is not found!")
+            raise NotFoundException(
+                detail=f"TaxDeclaration with id: {id} is not found!")
         return tax_declaration
 
 

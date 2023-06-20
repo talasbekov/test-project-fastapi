@@ -6,9 +6,9 @@ from sqlalchemy.orm import Session, Query
 
 from core import configs
 from models import User, HrDocument, StatusEnum, StatusHistory, Status
-from services import status_service, history_service
-from exceptions import ForbiddenException, BadRequestException
-from utils import convert_str_to_datetime
+from services import status_service
+from exceptions import BadRequestException
+
 from .base import BaseHandler
 
 
@@ -24,7 +24,6 @@ class StopLeaveHandler(BaseHandler):
             props: dict,
             document: HrDocument,
     ):
-        reason = self.get_args(props, action)
 
         self.handle_validation(
             db, user, action, template_props, props, document)
@@ -56,7 +55,7 @@ class StopLeaveHandler(BaseHandler):
     ):
         try:
             reason = props[action['reason']['tagname']]['name']
-        except:
+        except Exception:
             raise BadRequestException(
                 detail=f'Invalid props for action: {self.__handler__}')
         return (reason)
@@ -78,7 +77,7 @@ class StopLeaveHandler(BaseHandler):
                 and_(
                     Status.id == StatusHistory.status_id,
                     or_(
-                        StatusHistory.date_to == None,
+                        StatusHistory.date_to is None,
                         StatusHistory.date_to > datetime.now(),
                     ),
                 ),

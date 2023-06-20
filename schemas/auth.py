@@ -36,7 +36,7 @@ class RegistrationForm(Model):
 
 class CandidateRegistrationForm(Model):
     iin: str
-    
+
     @validator('iin')
     def validate_iin(cls, v):
         if not v.isdigit():
