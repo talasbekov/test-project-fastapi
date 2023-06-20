@@ -49,10 +49,12 @@ class ArchiveStaffDivisionService(
     ) -> List[ArchiveStaffDivision]:
         archive_divisions = db.query(self.model).filter(
             ArchiveStaffDivision.staff_list_id == staff_list_id,
-            ArchiveStaffDivision.parent_group_id is None,
+            ArchiveStaffDivision.parent_group_id == None,
             ArchiveStaffDivision.name != StaffDivisionEnum.DISPOSITION.value
         ).offset(skip).limit(limit).all()
-        disposition_division = self.get_by_name(db, StaffDivisionEnum.DISPOSITION.value, staff_list_id)
+        disposition_division = self.get_by_name(db,
+                                        StaffDivisionEnum.DISPOSITION.value,
+                                        staff_list_id)
         archive_divisions.append(disposition_division)
         return archive_divisions
 
@@ -60,7 +62,7 @@ class ArchiveStaffDivisionService(
                     staff_list_id: uuid.UUID) -> List[ArchiveStaffDivision]:
         return db.query(self.model).filter(
             ArchiveStaffDivision.staff_list_id == staff_list_id,
-            ArchiveStaffDivision.parent_group_id is None,
+            ArchiveStaffDivision.parent_group_id == None,
             StaffDivision.name.not_in([*StaffDivisionEnum])
         ).all()
 

@@ -80,7 +80,7 @@ class StaffDivisionService(
                         db: Session,
                         skip: int, limit: int) -> List[StaffDivision]:
         parents = db.query(self.model).filter(
-            StaffDivision.parent_group_id is None
+            StaffDivision.parent_group_id == None
         ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
         return parents
 
@@ -89,9 +89,10 @@ class StaffDivisionService(
                                skip: int,
                                limit: int) -> List[StaffDivision]:
         parents = db.query(self.model).filter(
-            StaffDivision.parent_group_id is None,
+            StaffDivision.parent_group_id == None,
             self.model.name != StaffDivisionEnum.SPECIAL_GROUP.value
         ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
+        print(parents)
         return parents
 
     def get_child_groups(self,
