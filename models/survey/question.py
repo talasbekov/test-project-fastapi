@@ -1,6 +1,6 @@
 import enum
 
-from sqlalchemy import Column, ForeignKey, Boolean, String, TEXT, Enum
+from sqlalchemy import Column, ForeignKey, Boolean, TEXT, Enum
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -25,6 +25,9 @@ class Question(Model):
     survey_id = Column(UUID(as_uuid=True), ForeignKey("surveys.id"))
     question_type = Column(Enum(QuestionTypeEnum), nullable=False)
 
-    survey = relationship("Survey", foreign_keys=[survey_id], back_populates="questions")
-    options = relationship("Option", cascade="all,delete", back_populates="question")
-    answers = relationship("Answer", cascade="all, delete", back_populates="question")
+    survey = relationship("Survey", foreign_keys=[
+                          survey_id], back_populates="questions")
+    options = relationship("Option", cascade="all,delete",
+                           back_populates="question")
+    answers = relationship("Answer", cascade="all, delete",
+                           back_populates="question")

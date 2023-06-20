@@ -27,7 +27,7 @@ class SurveyUpdate(SurveyBase):
 class SurveyRead(SurveyBase, ReadNamedModel):
     start_date: Optional[datetime.datetime]
     end_date: Optional[datetime.datetime]
-    
+
     questions: Optional[List[QuestionRead]]
 
     class Config:

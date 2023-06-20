@@ -1,6 +1,6 @@
 import uuid
 
-from typing import Optional, List
+from typing import Optional
 
 from schemas import Model, ReadModel
 
@@ -13,7 +13,7 @@ class OptionBase(Model):
     row_position: Optional[int]
     column_position: Optional[int]
     is_checked: Optional[bool]
-    
+
 
 class OptionCreate(OptionBase):
     pass

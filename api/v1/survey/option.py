@@ -10,23 +10,26 @@ from core import get_db
 from schemas import OptionCreate, OptionUpdate, OptionRead
 from services import option_service
 
-router = APIRouter(prefix="/options", tags=["Options"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(prefix="/options",
+                   tags=["Options"], dependencies=[Depends(HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[OptionRead],
             summary="Get all Options")
 async def get_all(*,
-    db: Session = Depends(get_db),
-    skip: int = 0,
-    limit: int = 100,
-    Authorize: AuthJWT = Depends()
-):
+                  db: Session = Depends(get_db),
+                  skip: int = 0,
+                  limit: int = 100,
+                  Authorize: AuthJWT = Depends()
+                  ):
     """
         Get all Option
 
-        - **skip**: int - The number of options to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of options to return in the response. This parameter is optional and defaults to 100.
+        - **skip**: int - The number of options to skip before returning the results. 
+                This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of options to return in the response. 
+            This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
     return option_service.get_multi(db, skip, limit)
@@ -36,10 +39,10 @@ async def get_all(*,
             response_model=List[OptionRead],
             summary="Get all Options by question id")
 async def get_by_question(*,
-    db: Session = Depends(get_db),
-    question_id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                          db: Session = Depends(get_db),
+                          question_id: uuid.UUID,
+                          Authorize: AuthJWT = Depends()
+                          ):
     """
         Get all Option by question id
 
@@ -53,10 +56,10 @@ async def get_by_question(*,
              response_model=OptionRead,
              summary="Create")
 async def create(*,
-    db: Session = Depends(get_db),
-    body: OptionCreate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 body: OptionCreate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Create new question
 
@@ -71,10 +74,10 @@ async def create(*,
             response_model=OptionRead,
             summary="Get Option by id")
 async def get_by_id(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                    db: Session = Depends(get_db),
+                    id: uuid.UUID,
+                    Authorize: AuthJWT = Depends()
+                    ):
     """
         Get question by id
 
@@ -88,11 +91,11 @@ async def get_by_id(*,
             response_model=OptionRead,
             summary="Update Option")
 async def update(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    body: OptionUpdate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 body: OptionUpdate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Update question
 
@@ -101,19 +104,19 @@ async def update(*,
         - **url**: image url. This parameter is required.
     """
     Authorize.jwt_required()
-    return option_service.update(db, 
+    return option_service.update(db,
                                  db_obj=option_service.get_by_id(db, id),
                                  obj_in=body)
 
 
-@router.delete("/{id}/",status_code=status.HTTP_204_NO_CONTENT,
+@router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
                summary="Delete Option")
 async def delete(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Delete question
 

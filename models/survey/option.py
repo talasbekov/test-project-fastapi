@@ -1,4 +1,4 @@
-from sqlalchemy import TEXT, Integer, Column, ForeignKey, String, Boolean
+from sqlalchemy import TEXT, Integer, Column, ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -13,18 +13,20 @@ class Option(Model):
     question_id = Column(UUID(as_uuid=True), ForeignKey("questions.id"))
     discriminator = Column(String(255), nullable=True)
 
-    question = relationship("Question", foreign_keys=[question_id], back_populates="options")
-    answers = relationship("Answer", secondary=answers_options, back_populates="options")
+    question = relationship("Question", foreign_keys=[
+                            question_id], back_populates="options")
+    answers = relationship(
+        "Answer", secondary=answers_options, back_populates="options")
 
     __mapper_args__ = {
         "polymorphic_on": discriminator,
         "polymorphic_identity": "options"
     }
-    
-    
+
+
 class OptionText(Option):
-    text = Column(TEXT, nullable = True)
-    
+    text = Column(TEXT, nullable=True)
+
     __mapper_args__ = {
         "polymorphic_identity": "option_text"
     }

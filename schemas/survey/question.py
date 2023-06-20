@@ -29,6 +29,6 @@ class QuestionRead(QuestionBase, ReadModel):
     question_type: Optional[str]
 
     options: Optional[List[OptionRead]]
-    
+
     class Config:
         orm_mode = True

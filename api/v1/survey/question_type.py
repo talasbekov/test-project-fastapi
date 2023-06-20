@@ -4,14 +4,15 @@ from fastapi_jwt_auth import AuthJWT
 
 from models import QuestionTypeEnum
 
-router = APIRouter(prefix="/question_type", tags=["QuestionTypeEnum"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(prefix="/question_type",
+                   tags=["QuestionTypeEnum"], dependencies=[Depends(HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             summary="Get all QuestionTypeEnum")
 async def get_all(*,
-    Authorize: AuthJWT = Depends()
-):
+                  Authorize: AuthJWT = Depends()
+                  ):
     """
         Get all QuestionTypeEnumEnum
 
