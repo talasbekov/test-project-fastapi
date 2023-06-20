@@ -50,6 +50,8 @@ class NewArchiveStaffUnitCreateWithStaffFunctions(ArchiveStaffUnitBase):
 
 
 class NewArchiveStaffUnitUpdate(ArchiveStaffUnitBase):
+    user_replacing: Optional[uuid.UUID] = Field(None, nullable=True)
+    curator_of_id: Optional[uuid.UUID] = Field(None, nullable=True)
     pass
 
 

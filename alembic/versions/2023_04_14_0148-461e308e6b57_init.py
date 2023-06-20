@@ -796,7 +796,7 @@ def upgrade() -> None:
     sa.Column('staff_division_number', sa.Integer(), nullable=True),
     sa.Column('type_id', sa.UUID(), nullable=True),
     sa.Column('staff_list_id', sa.UUID(), nullable=False),
-    sa.Column('origin_id', sa.UUID(), nullable=True),
+    sa.Column('origin_id', sa.UUID(), nullable=True, ondelete='SET NULL'),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('nameKZ', sa.String(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
