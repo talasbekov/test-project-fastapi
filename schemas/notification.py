@@ -3,6 +3,7 @@ from typing import Optional
 
 from schemas import Model, ReadModel
 
+
 class NotificationBase(Model):
     message: str
     sender_id: uuid.UUID

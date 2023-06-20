@@ -7,10 +7,19 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from core import get_db
-from schemas import CandidateStageTypeCreate, CandidateStageTypeRead, CandidateStageTypeUpdate
+from schemas import (
+    CandidateStageTypeCreate, 
+    CandidateStageTypeRead, 
+    CandidateStageTypeUpdate
+)
 from services import candidate_stage_type_service
 
-router = APIRouter(prefix="/candidate_stage_type", tags=["CandidateStageType"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/candidate_stage_type",
+    tags=["CandidateStageType"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
@@ -25,8 +34,12 @@ async def get_all(
     """
         Get all Candidates.
 
-        - **skip**: int - The number of badges to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of badges to return in the response. This parameter is optional and defaults to 100.
+        - **skip**: int - The number of badges 
+            to skip before returning the results. 
+            This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of badges 
+            to return in the response. 
+            This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
     return candidate_stage_type_service.get_multi(db, skip, limit)
@@ -84,7 +97,8 @@ async def update(
     """
     Authorize.jwt_required()
     return candidate_stage_type_service.update(db,
-                                               db_obj=candidate_stage_type_service.get_by_id(db, id),
+                                               db_obj=candidate_stage_type_service.get_by_id(
+                                                   db, id),
                                                obj_in=body)
 
 

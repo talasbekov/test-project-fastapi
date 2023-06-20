@@ -11,6 +11,12 @@ class TaxDeclaration(Model):
 
     year = Column(String)
     is_paid = Column(Boolean)
-    profile_id = Column(UUID(as_uuid=True), ForeignKey("personal_profiles.id"), nullable=False)
+    profile_id = Column(
+        UUID(
+            as_uuid=True),
+        ForeignKey("personal_profiles.id"),
+        nullable=False)
 
-    profile = relationship("PersonalProfile", back_populates="tax_declarations")
+    profile = relationship(
+        "PersonalProfile",
+        back_populates="tax_declarations")

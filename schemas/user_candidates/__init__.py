@@ -1,6 +1,9 @@
 from .candidate import (CandidateRead, CandidateCreate, CandidateUpdate,
                         CandidateEssayUpdate)
-from .candidate_stage_type import (CandidateStageTypeRead, CandidateStageTypeCreate, CandidateStageTypeUpdate)
+from .candidate_stage_type import (
+    CandidateStageTypeRead,
+    CandidateStageTypeCreate,
+    CandidateStageTypeUpdate)
 from .candidate_category import CandidateCategoryRead, CandidateCategoryUpdate, CandidateCategoryCreate
 from .candidate_essay_type import (CandidateEssayTypeRead, CandidateEssayTypeCreate, CandidateEssayTypeUpdate,
                                    CandidateEssayTypeSetToCandidate)
@@ -14,5 +17,5 @@ from .candidate_stage_answer import (
     CandidateStageAnswerUpdate,
     CandidateStageAnswerIdRead,
     CandidateStageListAnswerCreate,
-    
+
 )

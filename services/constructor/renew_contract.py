@@ -6,8 +6,7 @@ from core import configs
 from models import User, ContractType, ContractHistory, HrDocument
 from .base import BaseHandler
 from services import contract_service, history_service
-from exceptions import ForbiddenException, NotFoundException, BadRequestException
-from utils import convert_str_to_datetime
+from exceptions import NotFoundException, BadRequestException
 
 
 def get_last_by_user_id(db: Session, user_id: str):
@@ -85,7 +84,7 @@ class RenewContractHandler(BaseHandler):
                 )
             date_from = datetime.datetime.now()
             date_to = date_from.replace(date_from.year + contract_type.years)
-        except:
+        except Exception:
             raise BadRequestException(
                 detail=f'Invalid props for action: {self.__handler__}')
         return contract_type, date_from, date_to

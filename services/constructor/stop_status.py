@@ -46,7 +46,7 @@ class StopStatusHandler(BaseHandler):
         try:
             status_id = props[action['status']['tagname']]['value']
             reason_id = props[action['reason']['tagname']]['value']
-        except:
+        except Exception:
             raise BadRequestException(
                 f"Status is not defined for this action: {self.__handler__}"
             )

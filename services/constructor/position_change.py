@@ -5,7 +5,7 @@ from models import User, HrDocument, EmergencyServiceHistory
 from schemas import StaffUnitRead
 from .base import BaseHandler
 from services import staff_unit_service, history_service
-from exceptions import ForbiddenException, BadRequestException
+from exceptions import BadRequestException
 
 
 class PositionChangeHandler(BaseHandler):
@@ -61,7 +61,8 @@ class PositionChangeHandler(BaseHandler):
 
         if staff_unit_service.exists_relation(db, user.id, position_id):
             raise BadRequestException(
-                f"This position is already assigned to this user: {user.first_name}, {user.last_name}"
+                ("This position is already assigned to this user:"
+                 f" {user.first_name}, {user.last_name}")
             )
         if percent < 0 or percent > 100:
             raise BadRequestException(

@@ -1,7 +1,7 @@
 import uuid
-from typing import List, Optional
+from typing import List
 
-from schemas import Model, NamedModel, ReadModel, ReadNamedModel
+from schemas import NamedModel, ReadNamedModel
 
 
 class PermissionBase(NamedModel):

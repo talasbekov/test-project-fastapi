@@ -1,8 +1,8 @@
 import datetime
 import uuid
-from typing import Any, List, Optional
+from typing import Optional
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, Field
 
 
 class ServiceArchiveStaffFunctionTypeBase(BaseModel):
@@ -14,19 +14,23 @@ class ServiceArchiveStaffFunctionTypeBase(BaseModel):
         arbitrary_types_allowed = True
 
 
-class NewServiceArchiveStaffFunctionTypeCreate(ServiceArchiveStaffFunctionTypeBase):
+class NewServiceArchiveStaffFunctionTypeCreate(
+        ServiceArchiveStaffFunctionTypeBase):
     pass
 
 
-class NewServiceArchiveStaffFunctionTypeUpdate(ServiceArchiveStaffFunctionTypeBase):
+class NewServiceArchiveStaffFunctionTypeUpdate(
+        ServiceArchiveStaffFunctionTypeBase):
     pass
 
 
-class ServiceArchiveStaffFunctionTypeCreate(ServiceArchiveStaffFunctionTypeBase):
+class ServiceArchiveStaffFunctionTypeCreate(
+        ServiceArchiveStaffFunctionTypeBase):
     origin_id: Optional[uuid.UUID]
 
 
-class ServiceArchiveStaffFunctionTypeUpdate(ServiceArchiveStaffFunctionTypeBase):
+class ServiceArchiveStaffFunctionTypeUpdate(
+        ServiceArchiveStaffFunctionTypeBase):
     origin_id: Optional[uuid.UUID]
 
 

@@ -21,16 +21,20 @@ router = APIRouter(prefix="/course_providers",
             response_model=List[CourseProviderRead],
             summary="Get all CourseProviders")
 async def get_all(*,
-    db: Session = Depends(get_db),
-    skip: int = 0,
-    limit: int = 100,
-    Authorize: AuthJWT = Depends()
-):
+                  db: Session = Depends(get_db),
+                  skip: int = 0,
+                  limit: int = 100,
+                  Authorize: AuthJWT = Depends()
+                  ):
     """
         Get all CourseProviders
 
-        - **skip**: int - The number of CourseProviders to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of CourseProviders to return in the response. This parameter is optional and defaults to 100.
+    - **skip**: int - The number of CourseProviders 
+        to skip before returning the results. 
+        This parameter is optional and defaults to 0.
+    - **limit**: int - The maximum number of CourseProviders 
+        to return in the response. 
+        This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
     return course_provider_service.get_multi(db, skip, limit)
@@ -41,10 +45,10 @@ async def get_all(*,
              response_model=CourseProviderRead,
              summary="Create")
 async def create(*,
-    db: Session = Depends(get_db),
-    body: CourseProviderCreate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 body: CourseProviderCreate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Create new CourseProvider
 
@@ -58,10 +62,10 @@ async def create(*,
             response_model=CourseProviderRead,
             summary="Get CourseProvider by id")
 async def get_by_id(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                    db: Session = Depends(get_db),
+                    id: uuid.UUID,
+                    Authorize: AuthJWT = Depends()
+                    ):
     """
         Get CourseProvider by id
 
@@ -75,11 +79,11 @@ async def get_by_id(*,
             response_model=CourseProviderRead,
             summary="Update CourseProvider")
 async def update(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    body: CourseProviderUpdate,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 body: CourseProviderUpdate,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Update CourseProvider
 
@@ -93,14 +97,14 @@ async def update(*,
         obj_in=body)
 
 
-@router.delete("/{id}/",status_code=status.HTTP_204_NO_CONTENT,
+@router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
                summary="Delete CourseProvider")
 async def delete(*,
-    db: Session = Depends(get_db),
-    id: uuid.UUID,
-    Authorize: AuthJWT = Depends()
-):
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 Authorize: AuthJWT = Depends()
+                 ):
     """
         Delete CourseProvider
 

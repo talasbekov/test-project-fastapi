@@ -7,7 +7,10 @@ from services import profile_service
 from services.base import ServiceBase
 
 
-class PsychologicalService(ServiceBase[PsychologicalCheck, PsychologicalCheckCreate, PsychologicalCheckUpdate]):
+class PsychologicalService(
+        ServiceBase[PsychologicalCheck, 
+                    PsychologicalCheckCreate, 
+                    PsychologicalCheckUpdate]):
 
     def get_by_id(self, db: Session, id: str):
         rank = super().get(db, id)
@@ -19,13 +22,15 @@ class PsychologicalService(ServiceBase[PsychologicalCheck, PsychologicalCheckCre
     def create(self, db: Session, obj_in: PsychologicalCheckCreate):
         return super().create(db, obj_in)
 
-    def update(self, db: Session, db_obj: PsychologicalCheck, obj_in: PsychologicalCheckUpdate):
+    def update(self, db: Session, db_obj: PsychologicalCheck,
+               obj_in: PsychologicalCheckUpdate):
         return super().update(db, db_obj=db_obj, obj_in=obj_in)
 
     def delete(self, db: Session, id: str):
         return super().remove(db, id)
 
-    def get_multi_by_user_id(self, db: Session, user_id: str, skip: int = 0, limit: int = 100):
+    def get_multi_by_user_id(
+            self, db: Session, user_id: str, skip: int = 0, limit: int = 100):
         profile = profile_service.get_by_user_id(db, user_id)
         if profile is None:
             raise NotFoundException(

@@ -2,14 +2,21 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
 from models import CandidateEssayType, Candidate
-from schemas import (CandidateEssayTypeCreate, CandidateEssayTypeRead, CandidateEssayTypeUpdate,
-                     CandidateEssayTypeSetToCandidate)
+from schemas import (
+    CandidateEssayTypeCreate, 
+    CandidateEssayTypeRead, 
+    CandidateEssayTypeUpdate,
+    CandidateEssayTypeSetToCandidate)
 from services import ServiceBase
 
 
-class CandidateEssayTypeService(ServiceBase[CandidateEssayType, CandidateEssayTypeCreate, CandidateEssayTypeUpdate]):
+class CandidateEssayTypeService(
+        ServiceBase[CandidateEssayType, 
+                    CandidateEssayTypeCreate, 
+                    CandidateEssayTypeUpdate]):
 
-    def set_to_candidate(self, db: Session, body: CandidateEssayTypeSetToCandidate, candidate_id: str) -> CandidateEssayTypeRead:
+    def set_to_candidate(self, db: Session, body: CandidateEssayTypeSetToCandidate,
+                         candidate_id: str) -> CandidateEssayTypeRead:
         candidate = db.query(Candidate).filter(
             Candidate.id == candidate_id
         ).first()
@@ -40,4 +47,5 @@ class CandidateEssayTypeService(ServiceBase[CandidateEssayType, CandidateEssayTy
         return None
 
 
-candidate_essay_type_service = CandidateEssayTypeService(CandidateEssayType) # type: ignore
+candidate_essay_type_service = CandidateEssayTypeService(
+    CandidateEssayType)  # type: ignore

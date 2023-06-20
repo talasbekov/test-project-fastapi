@@ -6,7 +6,8 @@ from schemas.education import EducationCreate, EducationUpdate
 from services import ServiceBase
 
 
-class EducationService(ServiceBase[Education, EducationCreate, EducationUpdate]):
+class EducationService(
+        ServiceBase[Education, EducationCreate, EducationUpdate]):
 
     def get_by_id(self, db: Session, id: str):
         education = super().get(db, id)

@@ -13,11 +13,14 @@ class CoolnessService(ServiceBase[Coolness, CoolnessCreate, CoolnessUpdate]):
     def get_by_id(self, db: Session, id: str):
         rank = super().get(db, id)
         if rank is None:
-            raise NotFoundException(detail=f"Coolness with id: {id} is not found!")
+            raise NotFoundException(
+                detail=f"Coolness with id: {id} is not found!")
         return rank
 
     def get_by_user_id(self, db: Session, user_id: str):
-        coolness = db.query(self.model).filter(self.model.user_id == user_id).first()
+        coolness = db.query(
+            self.model).filter(
+            self.model.user_id == user_id).first()
         return coolness
 
     def create_relation(self, db: Session, user_id: str, type_id: uuid.UUID):
@@ -35,14 +38,15 @@ class CoolnessService(ServiceBase[Coolness, CoolnessCreate, CoolnessUpdate]):
         else:
             user = db.query(User).filter(User.id == id).first()
             if user is None:
-                raise NotFoundException(detail=f"User with id: {id} is not found!")
+                raise NotFoundException(
+                    detail=f"User with id: {id} is not found!")
             res = (
                 db.query(Coolness)
-                    .filter(Coolness.user_id == id)
-                    .join(CoolnessHistory, CoolnessHistory.coolness_id == Coolness.id)
-                    .filter(CoolnessHistory.date_to == None)
-                    .all()
-                )
+                .filter(Coolness.user_id == id)
+                .join(CoolnessHistory, CoolnessHistory.coolness_id == Coolness.id)
+                .filter(CoolnessHistory.date_to is None)
+                .all()
+            )
             return [CoolnessRead.from_orm(status).dict() for status in res]
 
     def get_object(self, db: Session, id: str, type: str):
@@ -53,17 +57,20 @@ class CoolnessService(ServiceBase[Coolness, CoolnessCreate, CoolnessUpdate]):
 
     def stop_relation(self, db: Session, user_id: uuid.UUID, id: uuid.UUID):
         res = (
-            db.query(CoolnessHistory).filter(CoolnessHistory.coolness_id == id).first()
+            db.query(CoolnessHistory).filter(
+                CoolnessHistory.coolness_id == id).first()
         )
         if res is None:
-            raise NotFoundException(detail=f"Coolness with id: {id} is not found!")
+            raise NotFoundException(
+                detail=f"Coolness with id: {id} is not found!")
         res.date_to = datetime.now()
         db.add(res)
         db.flush()
         db.refresh(res)
         return res
 
-    def exists_relation(self, db: Session, user_id: str, coolness_type_id: uuid.UUID):
+    def exists_relation(self, db: Session, user_id: str,
+                        coolness_type_id: uuid.UUID):
         return (
             db.query(Coolness)
             .filter(Coolness.user_id == user_id)
@@ -71,7 +78,8 @@ class CoolnessService(ServiceBase[Coolness, CoolnessCreate, CoolnessUpdate]):
             .first()
         ) is not None
 
-    def get_relation(self, db: Session, user_id: str, coolness_type_id: uuid.UUID):
+    def get_relation(self, db: Session, user_id: str,
+                     coolness_type_id: uuid.UUID):
         return (
             db.query(Coolness)
             .filter(Coolness.user_id == user_id)
@@ -80,7 +88,8 @@ class CoolnessService(ServiceBase[Coolness, CoolnessCreate, CoolnessUpdate]):
         )
 
     def get_type_by_order(self, db: Session, order: int):
-        return db.query(CoolnessType).filter(CoolnessType.order == order).first()
+        return db.query(CoolnessType).filter(
+            CoolnessType.order == order).first()
 
 
 coolness_service = CoolnessService(Coolness)

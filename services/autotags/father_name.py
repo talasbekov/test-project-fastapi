@@ -7,7 +7,6 @@ from schemas import AutoTagRead
 from services import user_service
 
 
-
 class FatherNameAutoTagHandler(BaseAutoTagHandler):
     __handler__ = "father_name"
 

@@ -1,12 +1,10 @@
-import logging
-
 from sqlalchemy.orm import Session
 
 from core import configs
 from models import User, HrDocument
 from .base import BaseHandler
 from services import status_service, history_service
-from exceptions import ForbiddenException, BadRequestException
+from exceptions import BadRequestException
 from utils import convert_str_to_datetime
 
 
@@ -69,7 +67,7 @@ class TemporaryStatusChangeHandler(BaseHandler):
                 props[action['date_from']['tagname']]['name'])
             date_to = convert_str_to_datetime(
                 props[action['date_to']['tagname']]['name'])
-        except Exception as e:
+        except Exception:
             raise BadRequestException(
                 f"Status is not defined for this action: {self.__handler__}"
             )

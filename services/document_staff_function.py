@@ -16,7 +16,10 @@ from schemas import (
 from .base import ServiceBase
 
 
-class DocumentStaffFunctionService(ServiceBase[DocumentStaffFunction, DocumentStaffFunctionCreate, DocumentStaffFunctionUpdate]):
+class DocumentStaffFunctionService(
+        ServiceBase[DocumentStaffFunction, 
+                    DocumentStaffFunctionCreate, 
+                    DocumentStaffFunctionUpdate]):
 
     def get_by_id(self, db: Session, id: str) -> DocumentStaffFunction:
         service_staff_function = super().get(db, id)
@@ -25,15 +28,17 @@ class DocumentStaffFunctionService(ServiceBase[DocumentStaffFunction, DocumentSt
                 detail=f"DocumentStaffFunction with id: {id} is not found!")
         return service_staff_function
 
-    def get_by_user(self, db: Session, user: User) -> List[DocumentStaffFunction]:
-        l = []
+    def get_by_user(self, db: Session,
+                    user: User) -> List[DocumentStaffFunction]:
+        staff_functions = []
 
         for func in user.actual_staff_unit.staff_functions:
 
-            if func.discriminator == self.model.__mapper_args__['polymorphic_identity']:
-                l.append(func)
+            if func.discriminator == self.model.__mapper_args__[
+                    'polymorphic_identity']:
+                staff_functions.append(func)
 
-        return l
+        return staff_functions
 
     def duplicate(self, db: Session, id: uuid.UUID):
         func = self.get_by_id(db, id)
@@ -59,14 +64,18 @@ class DocumentStaffFunctionService(ServiceBase[DocumentStaffFunction, DocumentSt
 
     def create_function(self, db: Session, body: DocumentStaffFunctionAdd):
 
-        function: DocumentStaffFunction = super().create(db, DocumentStaffFunctionCreate(
-            role_id=body.role_id,
-            name=body.name,
-            jurisdiction_id=body.jurisdiction_id,
-            hours_per_week=body.hours_per_week,
-            priority=body.priority,
-            is_active=True
-        ))
+        function: DocumentStaffFunction = super().create(
+            db, 
+            DocumentStaffFunctionCreate(
+                role_id=body.role_id,
+                name=body.name,
+                jurisdiction_id=body.jurisdiction_id,
+                hours_per_week=body.hours_per_week,
+                priority=body.priority,
+                is_active=True
+            )
+        )
+
         new_step = HrDocumentStep(
             hr_document_template_id=body.hr_document_template_id,
             staff_function_id=function.id,
@@ -74,13 +83,14 @@ class DocumentStaffFunctionService(ServiceBase[DocumentStaffFunction, DocumentSt
             is_direct_supervisor=body.is_direct_supervisor,
             category=body.category,
         )
-        
+
         db.add(function)
         db.add(new_step)
         db.flush()
         return function
 
-    def create_function_for_constructor(self, db: Session, body: DocumentStaffFunctionConstructorAdd):
+    def create_function_for_constructor(
+            self, db: Session, body: DocumentStaffFunctionConstructorAdd):
         res = self.create_function(db, DocumentStaffFunctionAdd(**body.dict()))
         staff_unit = db.query(StaffUnit).filter(
             StaffUnit.id == body.staff_unit_id).first()
@@ -89,25 +99,30 @@ class DocumentStaffFunctionService(ServiceBase[DocumentStaffFunction, DocumentSt
                 detail=f"StaffUnit with id: {body.staff_unit_id} is not found!")
 
         for staff_function in staff_unit.staff_functions:
-            if staff_function.discriminator != self.model.__mapper_args__['polymorphic_identity']:
+            if staff_function.discriminator != self.model.__mapper_args__[
+                    'polymorphic_identity']:
                 continue
             if staff_function.hr_document_step is None:
                 continue
-            if body.hr_document_template_id == staff_function.hr_document_step.hr_document_template_id:
+            if (body.hr_document_template_id 
+                == staff_function.hr_document_step.hr_document_template_id):
+
                 raise BadRequestException(
-                    detail=f"StaffFunction with template id: {body.hr_document_template_id} already exists!"
+                    detail=("StaffFunction with template id:"
+                            f" {body.hr_document_template_id} already exists!")
                 )
 
         staff_unit.staff_functions.append(res)
         db.add(staff_unit)
-        db.flush() 
+        db.flush()
         return res
 
     def get_staff_units_by_id(self, db: Session, id: uuid.UUID):
         staff_function = self.get_by_id(db, id)
         return [i.id for i in staff_function.staff_units]
 
-    def append_to_staff_unit(self, db: Session, body: DocumentStaffFunctionAppendToStaffUnit):
+    def append_to_staff_unit(self, db: Session,
+                             body: DocumentStaffFunctionAppendToStaffUnit):
         staff_function = self.get_by_id(db, body.staff_function_id)
         staff_units = db.query(StaffUnit).filter(
             StaffUnit.id.in_(body.staff_unit_ids)).all()
@@ -117,7 +132,8 @@ class DocumentStaffFunctionService(ServiceBase[DocumentStaffFunction, DocumentSt
         db.flush()
 
     def get_by_staff_unit(self, db: Session, staff_unit: StaffUnit):
-        return db.query(self.model).filter(self.model.staff_units.contains(staff_unit)).all()
+        return db.query(self.model).filter(
+            self.model.staff_units.contains(staff_unit)).all()
 
 
 document_staff_function_service = DocumentStaffFunctionService(

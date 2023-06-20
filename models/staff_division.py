@@ -1,7 +1,7 @@
 import enum
 
 from sqlalchemy import Column, ForeignKey, Boolean, Integer
-from sqlalchemy.dialects.postgresql import TEXT, UUID, JSON
+from sqlalchemy.dialects.postgresql import UUID, JSON
 from sqlalchemy.orm import relationship
 
 from models import NamedNestedModel, isActiveModel
@@ -36,8 +36,11 @@ class StaffDivision(NamedNestedModel, isActiveModel):
     type = relationship("StaffDivisionType")
     # Relationships
     children = relationship("StaffDivision")
-    staff_units = relationship("StaffUnit", back_populates="staff_division",
-                               cascade="all,delete", foreign_keys="StaffUnit.staff_division_id")
+    staff_units = relationship("StaffUnit", 
+                               back_populates="staff_division",
+                               cascade="all,delete", 
+                               foreign_keys="StaffUnit.staff_division_id")
     leader = relationship("StaffUnit", foreign_keys=leader_id)
     curators = relationship(
-        "StaffUnit", back_populates="courted_group", foreign_keys="StaffUnit.curator_of_id")
+        "StaffUnit", back_populates="courted_group", 
+        foreign_keys="StaffUnit.curator_of_id")

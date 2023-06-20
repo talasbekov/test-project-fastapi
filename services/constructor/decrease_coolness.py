@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from sqlalchemy.orm import Session
 
 from core import configs
@@ -12,7 +10,7 @@ from exceptions import ForbiddenException, BadRequestException
 def get_last_by_user_id(db: Session, user_id: str):
     res = (
         db.query(CoolnessHistory)
-        .filter(CoolnessHistory.user_id == user_id, CoolnessHistory.date_to == None)
+        .filter(CoolnessHistory.user_id == user_id, CoolnessHistory.date_to is None)
         .order_by(CoolnessHistory.date_to.desc())
         .first()
     )

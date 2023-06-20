@@ -6,7 +6,8 @@ from schemas import BiographicInfoCreate, BiographicInfoUpdate
 from services.base import ServiceBase
 
 
-class BiographicInfoService(ServiceBase[BiographicInfo, BiographicInfoCreate, BiographicInfoUpdate]):
+class BiographicInfoService(
+        ServiceBase[BiographicInfo, BiographicInfoCreate, BiographicInfoUpdate]):
 
     def get_by_id(self, db: Session, id: str):
         biographic_info = super().get(db, id)

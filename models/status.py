@@ -24,13 +24,19 @@ class StatusType(NamedModel):
 class Status(Model):
 
     __tablename__ = "statuses"
-    
+
     type_id = Column(UUID(as_uuid=True), ForeignKey("status_types.id"))
     type = relationship("StatusType", back_populates="statuses")
 
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     user = relationship("User", back_populates="statuses")
 
-    history = relationship("StatusHistory", back_populates="status", uselist=False)
+    history = relationship(
+        "StatusHistory",
+        back_populates="status",
+        uselist=False)
 
-    history = relationship("StatusHistory", back_populates="status", uselist=False)
+    history = relationship(
+        "StatusHistory",
+        back_populates="status",
+        uselist=False)

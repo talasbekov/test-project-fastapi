@@ -7,11 +7,12 @@ from .base import ServiceBase
 
 
 class EventService(ServiceBase[Event, EventCreate, EventUpdate]):
-    
+
     def get_by_id(self, db: Session, id: str):
         event = super().get(db, id)
         if event is None:
-            raise NotFoundException(detail=f"Event with id: {id} is not found!")
+            raise NotFoundException(
+                detail=f"Event with id: {id} is not found!")
         return event
 
 

@@ -1,11 +1,12 @@
-import uuid, datetime
+import uuid
+import datetime
 from typing import Optional, List
 
 from pydantic import BaseModel
 
 
 class CandidateStageAnswerBase(BaseModel):
-     
+
     type: Optional[str]
     answer_str: Optional[str]
     answer_bool: Optional[bool]
@@ -14,8 +15,8 @@ class CandidateStageAnswerBase(BaseModel):
     document_number: Optional[str]
     candidate_essay_type_id: Optional[uuid.UUID]
     candidate_id: uuid.UUID
-    category_id: Optional[uuid.UUID] 
-    
+    category_id: Optional[uuid.UUID]
+
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
@@ -34,14 +35,15 @@ class CandidateStageListAnswerCreate(BaseModel):
 class CandidateStageAnswerUpdate(CandidateStageAnswerBase):
     candidate_stage_question_id: uuid.UUID
 
-class CandidateStageQuestionRead(BaseModel): 
+
+class CandidateStageQuestionRead(BaseModel):
     question: Optional[str]
     question_type: Optional[str]
 
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
-        
+
 
 class CandidateStageAnswerRead(CandidateStageAnswerBase):
     id: Optional[uuid.UUID]

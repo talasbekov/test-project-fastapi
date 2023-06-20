@@ -1,12 +1,11 @@
 from typing import Any
 
-from sqlalchemy import and_
 from sqlalchemy.orm import Session, Query, aliased
 
 from core import configs
 from models import User, HrDocument, Rank, Position, StaffUnit
 from .base import BaseHandler
-from services import rank_service, history_service, status_service
+from services import rank_service, history_service
 from exceptions import ForbiddenException, BadRequestException
 
 
@@ -50,7 +49,6 @@ class IncreaseRankHandler(BaseHandler):
         rank_id = self.get_args(action, props)
         rank = rank_service.get_by_id(db, rank_id)
         user_rank = rank_service.get_by_id(db, user.rank_id)
-        max_rank = user.staff_unit.position.max_rank
 
         if user_rank.order >= rank.order:
             raise ForbiddenException(

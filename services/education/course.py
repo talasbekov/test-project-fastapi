@@ -11,7 +11,8 @@ class CourseService(ServiceBase[Course, CourseCreate, CourseUpdate]):
     def get_by_id(self, db: Session, id: str):
         course = super().get(db, id)
         if course is None:
-            raise NotFoundException(detail=f"Course with id: {id} is not found!")
+            raise NotFoundException(
+                detail=f"Course with id: {id} is not found!")
         return course
 
 

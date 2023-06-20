@@ -1,11 +1,10 @@
 import uuid
 from typing import Optional
 
-from pydantic import BaseModel
 from datetime import datetime
 from enum import Enum
 
-from schemas import Model, NamedModel, ReadModel, ReadNamedModel
+from schemas import Model, ReadModel
 
 
 class PersonnalReserveBase(Model):
@@ -19,7 +18,7 @@ class PersonnalReserveBase(Model):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
- 
+
 
 class PersonnalReserveCreate(PersonnalReserveBase):
     pass

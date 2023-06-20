@@ -1,10 +1,8 @@
 import datetime
 import uuid
-from typing import Optional, List
+from typing import Optional
 
 from pydantic import BaseModel
-
-from .liberation import LiberationRead
 
 
 class UserLiberationBase(BaseModel):

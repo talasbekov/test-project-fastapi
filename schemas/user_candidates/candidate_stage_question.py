@@ -1,9 +1,10 @@
-import uuid, datetime
+import uuid
+import datetime
 from typing import Optional, List
 
 from pydantic import BaseModel
 from .candidate_stage_answer import CandidateStageAnswerRead
-from schemas import Model, NamedModel, ReadModel, ReadNamedModel
+from schemas import ReadNamedModel
 
 
 class CandidateStageQuestionBase(BaseModel):
@@ -45,14 +46,13 @@ class CandidateStageQuestionReadIn(BaseModel):
 
 class CandidateStageInfoReadAnswer(BaseModel):
     id: Optional[uuid.UUID]
-    status: Optional[str]   
+    status: Optional[str]
     date_sign: Optional[datetime.date]
     created_at: Optional[datetime.datetime]
-    updated_at: Optional[datetime.datetime] 
+    updated_at: Optional[datetime.datetime]
     is_waits: Optional[bool]
     candidate_stage_type_id: Optional[uuid.UUID]
     staff_unit_coordinate_id: Optional[uuid.UUID]
-
 
     class Config:
         orm_mode = True

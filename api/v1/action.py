@@ -2,7 +2,12 @@ from fastapi import APIRouter, Depends
 from fastapi.security import HTTPBearer
 
 
-router = APIRouter(prefix="/actions", tags=["Action"], dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/actions",
+    tags=["Action"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get('')

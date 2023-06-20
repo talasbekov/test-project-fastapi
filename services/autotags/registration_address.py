@@ -12,7 +12,8 @@ class RegistrationAddressAutoTagHandler(BaseAutoTagHandler):
 
     def handle(self, db: Session, user_id: UUID):
         profile = personal_profile_service.get_by_user_id(db, user_id)
-        return AutoTagRead(name=profile.biographic_info.address, nameKZ=profile.biographic_info.address)
+        return AutoTagRead(name=profile.biographic_info.address,
+                           nameKZ=profile.biographic_info.address)
 
 
 handler = RegistrationAddressAutoTagHandler()

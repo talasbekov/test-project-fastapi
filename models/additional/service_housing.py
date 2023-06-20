@@ -14,7 +14,10 @@ class ServiceHousing(Model):
     issue_date = Column(TIMESTAMP(timezone=True))
     document_link = Column(String(255), nullable=False)
 
-    profile_id = Column(UUID(as_uuid=True), ForeignKey("additional_profiles.id"))
-    profile = relationship("AdditionalProfile", back_populates="service_housing")
+    profile_id = Column(UUID(as_uuid=True),
+                        ForeignKey("additional_profiles.id"))
+    profile = relationship(
+        "AdditionalProfile",
+        back_populates="service_housing")
 
     type = relationship("PropertyType", back_populates="service_housings")

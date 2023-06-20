@@ -8,6 +8,7 @@ from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 class StatusTypeBase(NamedModel):
     pass
 
+
 class StatusTypeCreate(StatusTypeBase):
     pass
 
@@ -18,6 +19,7 @@ class StatusTypeUpdate(StatusTypeBase):
 
 class StatusTypeRead(StatusTypeBase, ReadNamedModel):
     pass
+
 
 class History(Model):
     date_from: Optional[datetime]

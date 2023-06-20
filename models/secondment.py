@@ -9,7 +9,10 @@ class Secondment(NamedModel):
 
     __tablename__ = "secondments"
 
-    staff_division_id = Column(UUID(as_uuid=True), ForeignKey("staff_divisions.id"))
+    staff_division_id = Column(
+        UUID(
+            as_uuid=True),
+        ForeignKey("staff_divisions.id"))
     staff_division = relationship("StaffDivision")
 
     state_body_id = Column(UUID(as_uuid=True), ForeignKey("state_bodies.id"))
