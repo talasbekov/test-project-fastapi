@@ -254,7 +254,8 @@ class CandidateService(
 
         candidate_obj = super().get_by_id(db, candidate['id'])
         if candidate_obj.candidate_stage_answers:
-            candidate['last_edit_date'] = candidate_obj.candidate_stage_answers[0].created_at
+            candidate['last_edit_date'] = \
+                candidate_obj.candidate_stage_answers[0].created_at
 
     def _get_candidates_by_status(self, db: Session,
                                   filter: str,

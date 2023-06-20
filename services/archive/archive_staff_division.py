@@ -182,7 +182,8 @@ class ArchiveStaffDivisionService(
         duplicate_division.is_combat_unit = archive_staff_division.is_combat_unit
         duplicate_division.leader_id = None
         duplicate_division.type_id = archive_staff_division.type_id,
-        duplicate_division.staff_division_number = archive_staff_division.staff_division_number,
+        duplicate_division.staff_division_number = \
+            archive_staff_division.staff_division_number
         duplicate_division.staff_list_id = archive_staff_division.staff_list_id
         duplicate_division.origin_id = archive_staff_division.origin_id
         duplicate_division.name = archive_staff_division.name + '_copy'

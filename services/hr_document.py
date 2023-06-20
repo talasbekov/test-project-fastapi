@@ -656,7 +656,9 @@ class HrDocumentService(
 
         if forbidden_users:
             user_info_list = list(
-                map(lambda user: f"{user.first_name} {user.last_name} {user.father_name}", 
+                map(lambda user: (f"{user.first_name}"
+                                  f" {user.last_name}"
+                                  f" {user.father_name}"), 
                     forbidden_users)
                 )
             raise ForbiddenException(

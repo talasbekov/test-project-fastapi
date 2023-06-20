@@ -19,8 +19,12 @@ class FamilyMemberAutoTagHandler(BaseAutoTagHandler):
         profile.family: list[Family]
         return [
             AutoTagRead(
-                name=f'{i.relation.name} - {i.last_name} {i.first_name}{"" + i.father_name}, {i.birthday.strftime("%Y-%m-%d")} г.р.',
-                nameKZ=f'{i.relation.nameKZ} - {i.last_name} {i.first_name}{" "+ i.father_name}, {i.birthday.strftime("%Y-%m-%d")} г.р.',
+                name=(f'{i.relation.name} - {i.last_name}'
+                      f' {i.first_name}{"" + i.father_name},'
+                      f' {i.birthday.strftime("%Y-%m-%d")} г.р.'),
+                nameKZ=(f'{i.relation.nameKZ} - {i.last_name}'
+                        f' {i.first_name}{" "+ i.father_name},'
+                        f' {i.birthday.strftime("%Y-%m-%d")} г.р.'),
             )
             for i in profile.family
         ]

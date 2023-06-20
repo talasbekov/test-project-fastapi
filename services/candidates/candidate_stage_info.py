@@ -40,7 +40,8 @@ class CandidateStageInfoService(
         """
             Retrieves a list of CandidateStageInfo records for a specific staff_unit_id.
         """
-        candidate_stage_info_id = staff_unit_candidate_stage_infos.c.candidate_stage_info_id
+        candidate_stage_info_id = \
+            staff_unit_candidate_stage_infos.c.candidate_stage_info_id
         staff_unit_candidate_id = staff_unit_candidate_stage_infos.c.staff_unit_id 
         if filter == '':
             subquery = (db
@@ -319,8 +320,10 @@ class CandidateStageInfoService(
             This method returns the query for getting the CandidateStageInfo 
             records based on the provided staff_unit_id and key_words.
         """
-        candidate_stage_info_id = staff_unit_candidate_stage_infos.c.candidate_stage_info_id
-        staff_unit_candidate_id = staff_unit_candidate_stage_infos.c.staff_unit_id
+        candidate_stage_info_id = \
+            staff_unit_candidate_stage_infos.c.candidate_stage_info_id
+        staff_unit_candidate_id = \
+            staff_unit_candidate_stage_infos.c.staff_unit_id
         subquery = (db
                     .query(candidate_stage_info_id)
                     .filter(staff_unit_candidate_id

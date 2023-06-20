@@ -337,15 +337,22 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             )
         recommender = recommender_user_service.get_by_user_id(db, user_id)
         if recommender:
-            recommender_user = {"name": (f"{recommender.user_by.last_name} {recommender.user_by.first_name[0]}"
-        f"{' ' + recommender.user_by.father_name[0] + '.' if recommender.user_by.father_name is not None else ''}"),
+            father_name = ''
+            if recommender.user_by.father_name is not None:
+                father_name = recommender.user_by.father_name[0] + '.'
+            recommender_user = {"name": (f"{recommender.user_by.last_name}"
+                                         f" {recommender.user_by.first_name[0]}"
+                                         f"{' ' + father_name}"),
                                 "id": str(user.id)
                                 }
         else:
             recommender_user = None
         if user:
+            father_name = ''
+            if user.father_name is not None:
+                father_name = user.father_name[0] + '.'
             researcher = {"name": (f"{user.last_name} {user.first_name[0]} "
-                    f"{' ' + user.father_name[0] + '.' if user.father_name is not None else ''}"),
+                                    f"{' ' + father_name}"),
                           "id": str(user.id)
                           }
         else:

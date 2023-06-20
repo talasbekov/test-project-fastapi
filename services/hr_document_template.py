@@ -205,10 +205,13 @@ class HrDocumentTemplateService(
                     category=step.category,
                 ),
             )
-            document_staff_function_service.append_to_staff_unit(db, DocumentStaffFunctionAppendToStaffUnit(
-                staff_function_id=new_staff_function.id,
-                staff_unit_ids=[i.id for i in staff_function.staff_units]
-            ))
+            document_staff_function_service.append_to_staff_unit(
+                db, 
+                DocumentStaffFunctionAppendToStaffUnit(
+                    staff_function_id=new_staff_function.id,
+                    staff_unit_ids=[i.id for i in staff_function.staff_units]
+                )
+            )
             db.add(new_staff_function)
         db.add(new_template)
         return new_template
