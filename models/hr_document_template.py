@@ -43,4 +43,4 @@ class HrDocumentTemplate(NamedModel, isActiveModel):
     # Relationships
     documents = relationship("HrDocument", cascade="all,delete", back_populates="document_template")
     maintainer = relationship("StaffUnit", foreign_keys=[maintainer_id])
-    steps = relationship("HrDocumentStep", back_populates='steps', cascade='all,delete')
+    steps = relationship("HrDocumentStep", back_populates='hr_document_template', cascade='all,delete')
