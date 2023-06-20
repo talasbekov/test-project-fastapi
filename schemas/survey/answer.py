@@ -28,6 +28,7 @@ class AnswerUpdate(AnswerBase):
 class AnswerRead(AnswerBase, ReadModel):
     question_id: Optional[uuid.UUID]
     options: Optional[List[OptionRead]]
+    user_id: Optional[uuid.UUID]
     
     class Config:
         orm_mode = True

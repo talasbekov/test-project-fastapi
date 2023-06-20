@@ -13,8 +13,10 @@ class Answer(Model):
     question_id = Column(UUID(as_uuid=True), ForeignKey("questions.id"))
     discriminator = Column(String(255))
     text = Column(TEXT, nullable = True)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable = True)
 
     question = relationship("Question", foreign_keys=[question_id], back_populates="answers")
+    user = relationship("User", foreign_keys=[user_id], back_populates="answers")
     options = relationship("Option", secondary=answers_options, back_populates="answers")
     
     __mapper_args__ = {

@@ -48,7 +48,8 @@ async def create(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    return answer_service.create(db, body)
+    user_id = Authorize.get_jwt_subject()
+    return answer_service.create(db, body, user_id)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
