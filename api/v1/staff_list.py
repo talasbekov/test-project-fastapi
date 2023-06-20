@@ -16,7 +16,7 @@ router = APIRouter(prefix="/staff_list", tags=["StaffList"], dependencies=[Depen
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[StaffListRead],
-            summary="Get all Staff Divisions")
+            summary="Get all Staff Lists")
 async def get_all(*,
                   db: Session = Depends(get_db),
                   skip: int = 0,
@@ -113,12 +113,15 @@ async def get_by_id(*,
             response_model=StaffListRead,
             summary="Apply Staff List")
 async def apply_staff_list(*,
-                 db: Session = Depends(get_db),
-                 id: uuid.UUID,
-                 signed_by: str,
-                 document_creation_date: datetime.date,
-                 Authorize: AuthJWT = Depends()
-                 ):
+                db: Session = Depends(get_db),
+                id: uuid.UUID,
+                signed_by: str,
+                document_creation_date: datetime.date,
+                rank: str,
+                document_number: str,
+                document_link: str,
+                Authorize: AuthJWT = Depends()
+            ):
     """
         Update Staff List
 
@@ -130,7 +133,17 @@ async def apply_staff_list(*,
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
     current_user_id = Authorize.get_jwt_subject()
-    return await staff_list_service.apply_staff_list(db, id, signed_by, document_creation_date, current_user_id, role)
+    return await staff_list_service.apply_staff_list(
+                    db,
+                    id, 
+                    signed_by, 
+                    document_creation_date, 
+                    current_user_id, 
+                    role,
+                    rank,
+                    document_number,
+                    document_link
+                 )
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],

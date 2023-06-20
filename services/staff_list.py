@@ -107,7 +107,7 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
                 db, archive_staff_division.origin_id)
             self._create_archive_staff_division(
                 db, staff_division, staff_list.id, None, current_user_role_id)
-
+        staff_list.is_signed = False
         db.add(staff_list)
         db.flush()
         return staff_list
@@ -119,7 +119,10 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         signed_by: str,
         document_creation_date: datetime.date,
         current_user_id: uuid.UUID,
-        current_user_role_id: uuid.UUID
+        current_user_role_id: uuid.UUID,
+        rank: str,
+        document_number: str,
+        document_link: str
     ):
         staff_list = self.get_by_id(db, staff_list_id)
 
@@ -142,6 +145,9 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         staff_list.document_signed_by = signed_by
         staff_list.document_signed_at = document_creation_date
         staff_list.status = StaffListStatusEnum.APPROVED.value
+        staff_list.document_link = document_link
+        staff_list.document_number = document_number
+        staff_list.rank = rank
         staff_list.is_signed = True
 
         staff_unit_service.delete_all_inactive(db)
@@ -151,7 +157,12 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
         db.flush()
         user_ids = self.get_disposition_user_ids_by_staff_list_id(db, staff_list_id)
         if user_ids:
-            await self.create_disposition_doc_by_staff_list_id(db, staff_list_id, user_ids, current_user_id, current_user_role_id)
+            await self.create_disposition_doc_by_staff_list_id(
+                db,
+                staff_list_id, 
+                user_ids, 
+                current_user_id, 
+                current_user_role_id)
         return staff_list
 
     def _create_staff_division(self, db: Session,
@@ -265,8 +276,10 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
                     0].id if staff_unit.actual_users else None
                 staff_unit_user_replacing = staff_unit.user_replacing_id
                 staff_unit_position = staff_unit.position_id
+                staff_unit_curator_of_id = staff_unit.curator_of_id
 
                 archive_staff_unit = archive_staff_unit_service.create_based_on_existing_staff_unit(db, staff_unit,
+                                                                                                    staff_unit_curator_of_id,
                                                                                                     staff_unit_user_id,
                                                                                                     staff_unit_position,
                                                                                                     staff_unit_actual_user_id,
@@ -377,6 +390,7 @@ class StaffListService(ServiceBase[StaffList, StaffListCreate, StaffListUpdate])
                        .options(joinedload(StaffList.user))
                        .filter(StaffList.is_signed == False,
                                StaffList.name.contains(filter))
+                       .order_by(desc(StaffList.created_at))
                        .offset(skip)
                        .limit(limit)
                        .all())
