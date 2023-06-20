@@ -103,7 +103,8 @@ class StaffListService(
         )
         staff_list = super().create(db, create_staff_list)
         for archive_staff_division in db.query(ArchiveStaffDivision).filter(
-                ArchiveStaffDivision.staff_list_id == staff_list_id):
+                ArchiveStaffDivision.staff_list_id == staff_list_id,
+                ArchiveStaffDivision.parent_group_id == None):
             staff_division = staff_division_service.get_by_id(
                 db, archive_staff_division.origin_id)
             self._create_archive_staff_division(
