@@ -30,6 +30,11 @@ class HrDocumentStep(Model):
     category = Column(Integer, default=None)
 
     # Relationships
-    staff_function = relationship("DocumentStaffFunction", back_populates='hr_document_step', cascade="all,delete")
-    hr_document_template = relationship("HrDocumentTemplate", back_populates='steps')
-    hr_document_infos = relationship("HrDocumentInfo", back_populates="hr_document_step", cascade="all,delete")
+    staff_function = relationship("DocumentStaffFunction", 
+                                  back_populates='hr_document_step', 
+                                  cascade="all,delete")
+    hr_document_template = relationship("HrDocumentTemplate",
+                                         back_populates='steps')
+    hr_document_infos = relationship("HrDocumentInfo", 
+                                     back_populates="hr_document_step", 
+                                     cascade="all,delete")

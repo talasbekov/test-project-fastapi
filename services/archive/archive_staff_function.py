@@ -4,14 +4,20 @@ from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import ArchiveStaffFunction, StaffFunction
-from schemas import ArchiveStaffFunctionCreate, ArchiveStaffFunctionUpdate, NewArchiveStaffFunctionCreate, \
+from schemas import (
+    ArchiveStaffFunctionCreate, 
+    ArchiveStaffFunctionUpdate, 
+    NewArchiveStaffFunctionCreate, 
     NewArchiveStaffFunctionUpdate
+)
 
 from services.base import ServiceBase
 
 
 class ArchiveStaffFunctionService(
-        ServiceBase[ArchiveStaffFunction, ArchiveStaffFunctionCreate, ArchiveStaffFunctionUpdate]):
+        ServiceBase[ArchiveStaffFunction, 
+                    ArchiveStaffFunctionCreate, 
+                    ArchiveStaffFunctionUpdate]):
 
     def get_all_staff_functions(self, db: Session, skip: int, limit: int):
         staff_functions = (
@@ -55,8 +61,13 @@ class ArchiveStaffFunctionService(
         ))
 
     def update_staff_function(
-            self, db: Session, staff_function: ArchiveStaffFunction, body: NewArchiveStaffFunctionUpdate):
-        return super().update(db, db_obj=staff_function, obj_in=ArchiveStaffFunctionUpdate(
+            self, 
+            db: Session, 
+            staff_function: ArchiveStaffFunction, 
+            body: NewArchiveStaffFunctionUpdate):
+        return super().update(db, 
+            db_obj=staff_function, 
+            obj_in=ArchiveStaffFunctionUpdate(
             name=body.name,
             nameKZ=body.nameKZ,
             hours_per_week=body.hours_per_week,

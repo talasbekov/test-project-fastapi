@@ -13,7 +13,10 @@ from services import ServiceBase
 
 
 class DocumentArchiveStaffFunction(
-        ServiceBase[ArchiveDocumentStaffFunction, ArchiveDocumentStaffFunctionCreate, ArchiveDocumentStaffFunctionUpdate]):
+        ServiceBase[
+            ArchiveDocumentStaffFunction, 
+            ArchiveDocumentStaffFunctionCreate, 
+            ArchiveDocumentStaffFunctionUpdate]):
 
     def get_by_id(self, db: Session, id: str):
         document_staff_function = super().get(db, id)
@@ -23,7 +26,10 @@ class DocumentArchiveStaffFunction(
         return document_staff_function
 
     def create_based_on_existing_archive_staff_function(
-            self, db: Session, staff_function: DocumentStaffFunction, role_id: uuid.UUID):
+            self, 
+            db: Session, 
+            staff_function: DocumentStaffFunction, 
+            role_id: uuid.UUID):
         return super().create(db, ArchiveDocumentStaffFunctionCreate(
             name=staff_function.name,
             nameKZ=staff_function.nameKZ,
@@ -35,7 +41,9 @@ class DocumentArchiveStaffFunction(
         ))
 
     def create_archive_staff_function(
-            self, db: Session, body: NewArchiveDocumentStaffFunctionCreate):
+            self, 
+            db: Session, 
+            body: NewArchiveDocumentStaffFunctionCreate):
         return super().create(db, ArchiveDocumentStaffFunctionCreate(
             name=body.name,
             nameKZ=body.nameKZ,
@@ -47,8 +55,13 @@ class DocumentArchiveStaffFunction(
         ))
 
     def update_archive_staff_function(
-            self, db: Session, staff_function: DocumentStaffFunction, body: NewArchiveDocumentStaffFunctionCreate):
-        return super().update(db, db_obj=staff_function, obj_in=ArchiveDocumentStaffFunctionCreate(
+            self, 
+            db: Session, 
+            staff_function: DocumentStaffFunction, 
+            body: NewArchiveDocumentStaffFunctionCreate):
+        return super().update(db, 
+                              db_obj=staff_function, 
+                              obj_in=ArchiveDocumentStaffFunctionCreate(
             name=body.name,
             nameKZ=body.nameKZ,
             hours_per_week=body.hours_per_week,

@@ -10,14 +10,32 @@ from sqlalchemy.orm import Session
 from core import configs
 from exceptions import BadRequestException
 from models import User, StaffDivisionEnum, StaffUnit
-from schemas import (LoginForm, RegistrationForm, UserCreate,
-                     ProfileCreate, EducationalProfileCreate, AdditionalProfileCreate,
-                     PersonalProfileCreate, MedicalProfileCreate, FamilyProfileCreate,
-                     CandidateRegistrationForm, StaffUnitCreate, CandidateCreate)
-from services import (staff_unit_service, user_service, profile_service,
-                      educational_profile_service, additional_profile_service, personal_profile_service,
-                      medical_profile_service, family_profile_service, staff_division_service,
-                      candidate_service)
+from schemas import (
+    LoginForm, 
+    RegistrationForm, 
+    UserCreate,
+    ProfileCreate, 
+    EducationalProfileCreate, 
+    AdditionalProfileCreate,
+    PersonalProfileCreate, 
+    MedicalProfileCreate, 
+    FamilyProfileCreate,
+    CandidateRegistrationForm, 
+    StaffUnitCreate, 
+    CandidateCreate
+)
+from services import (
+    staff_unit_service, 
+    user_service, 
+    profile_service,
+    educational_profile_service, 
+    additional_profile_service, 
+    personal_profile_service,
+    medical_profile_service, 
+    family_profile_service, 
+    staff_division_service,
+    candidate_service
+)
 from utils import hash_password, is_valid_phone_number, verify_password
 
 
@@ -191,7 +209,7 @@ class AuthService():
         user = user_service.get(db, Authorize.get_jwt_subject())
         if not user:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='The user belonging to this token no longer exist')
+                    detail='The user belonging to this token no longer exist')
 
         access_token, refresh_token = self._generate_tokens(Authorize, user)
 

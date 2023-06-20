@@ -8,7 +8,9 @@ from services.base import ServiceBase
 
 
 class AdditionalProfileService(
-        ServiceBase[AdditionalProfile, AdditionalProfileCreate, AdditionalProfileUpdate]):
+        ServiceBase[AdditionalProfile, 
+                    AdditionalProfileCreate, 
+                    AdditionalProfileUpdate]):
 
     def get_by_id(self, db: Session, id: str):
         rank = super().get(db, id)

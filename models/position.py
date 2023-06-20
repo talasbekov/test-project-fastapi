@@ -18,7 +18,9 @@ class PositionNameEnum(str, EnumBase):
     CANDIDATE_MANAGEMENT_HEAD = 'Начальник управления кандидатами'
     POLITICS_GOVERNMENT_SERVANT = 'Политический гос. служащий'
     PSYCHOLOGIST = 'Психолог'
-    REPRESENTATIVE_OF_SECURITY_DEPARTMENT = 'Представитель Управление собственной безопасности'
+    REPRESENTATIVE_OF_SECURITY_DEPARTMENT = (
+        'Представитель Управление собственной безопасности'
+    )
     POLYGRAPH_EXAMINER = 'Полиграфолог'
     INSTRUCTOR = 'Инструктор'
     DEAD = "Умер"

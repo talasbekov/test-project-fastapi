@@ -8,7 +8,9 @@ from services.base import ServiceBase
 
 
 class PsychologicalService(
-        ServiceBase[PsychologicalCheck, PsychologicalCheckCreate, PsychologicalCheckUpdate]):
+        ServiceBase[PsychologicalCheck, 
+                    PsychologicalCheckCreate, 
+                    PsychologicalCheckUpdate]):
 
     def get_by_id(self, db: Session, id: str):
         rank = super().get(db, id)

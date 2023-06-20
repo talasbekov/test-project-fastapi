@@ -56,10 +56,14 @@ class User(isActiveModel):
         back_populates="users",
         foreign_keys=staff_unit_id)
     staff_unit_replacing = relationship(
-        "StaffUnit", back_populates="user_replacing", foreign_keys="StaffUnit.user_replacing_id"
+        "StaffUnit", 
+        back_populates="user_replacing", 
+        foreign_keys="StaffUnit.user_replacing_id"
     )
     archive_staff_unit_replacing = relationship(
-        "ArchiveStaffUnit", back_populates="user_replacing", foreign_keys="ArchiveStaffUnit.user_replacing_id"
+        "ArchiveStaffUnit", 
+        back_populates="user_replacing", 
+        foreign_keys="ArchiveStaffUnit.user_replacing_id"
     )
     actual_staff_unit = relationship(
         "StaffUnit",
@@ -67,7 +71,10 @@ class User(isActiveModel):
         foreign_keys=actual_staff_unit_id)
 
     hr_documents = relationship(
-        "HrDocument", secondary=hr_documents_users, back_populates="users", cascade="all,delete"
+        "HrDocument", 
+        secondary=hr_documents_users, 
+        back_populates="users", 
+        cascade="all,delete"
     )
     hr_vacancies = relationship(
         "HrVacancyCandidate",

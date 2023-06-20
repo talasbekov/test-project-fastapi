@@ -56,7 +56,9 @@ class StaffFunction(NamedModel):
     is_active = Column(Boolean, nullable=True)
 
     staff_units = relationship("StaffUnit", secondary=staff_unit_function)
-    archived = relationship("ArchiveStaffFunction", back_populates="origin", cascade="all,delete")
+    archived = relationship("ArchiveStaffFunction", 
+                            back_populates="origin", 
+                            cascade="all,delete")
 
     __mapper_args__ = {
         "polymorphic_on": discriminator,
@@ -76,7 +78,10 @@ class DocumentStaffFunction(StaffFunction):
     priority = Column(Integer)
 
     role = relationship("DocumentFunctionType")
-    hr_document_step = relationship("HrDocumentStep", back_populates='staff_function', cascade="all,delete", uselist=False)
+    hr_document_step = relationship("HrDocumentStep", 
+                                    back_populates='staff_function', 
+                                    cascade="all,delete", 
+                                    uselist=False)
     jurisdiction = relationship("Jurisdiction")
 
     __mapper_args__ = {

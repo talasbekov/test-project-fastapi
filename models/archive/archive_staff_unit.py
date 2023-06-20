@@ -3,7 +3,10 @@ from sqlalchemy.dialects.postgresql import UUID, JSON
 from sqlalchemy.orm import relationship
 
 from models import Model
-from .association import archive_staff_unit_function, archive_staff_unit_candidate_stage_infos
+from .association import (
+    archive_staff_unit_function, 
+    archive_staff_unit_candidate_stage_infos
+)
 
 from enum import Enum as EnumBase
 
@@ -63,7 +66,9 @@ class ArchiveStaffUnit(Model):
     user = relationship("User", foreign_keys=user_id)
     actual_user = relationship("User", foreign_keys=actual_user_id)
     staff_division = relationship(
-        "ArchiveStaffDivision", back_populates="staff_units", foreign_keys=[staff_division_id]
+        "ArchiveStaffDivision", 
+        back_populates="staff_units", 
+        foreign_keys=[staff_division_id]
     )
     staff_functions = relationship(
         "ArchiveStaffFunction",

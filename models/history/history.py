@@ -161,7 +161,9 @@ class PenaltyHistory(History):
         penalty = db.query(Penalty).filter(Penalty.id == id).first()
         if penalty is None:
             raise NotFoundException(detail="Penalty not found")
-        finish_last(db, user_id, cls.__mapper_args__["polymorphic_identity"])
+        finish_last(db, 
+                    user_id, 
+                    cls.__mapper_args__["polymorphic_identity"])
         obj = PenaltyHistory(
             date_from=datetime.datetime.now(),
             date_to=None,
@@ -176,7 +178,13 @@ class PenaltyHistory(History):
 
     @classmethod
     def create_timeline_history(
-        cls, db: Session, user_id: uuid.UUID, id: uuid.UUID, finish_last, date_from, date_to
+        cls, 
+        db: Session, 
+        user_id: uuid.UUID, 
+        id: uuid.UUID, 
+        finish_last, 
+        date_from, 
+        date_to
     ):
         penalty = db.query(Penalty).filter(Penalty.id == id).first()
         if penalty is None:
@@ -291,7 +299,12 @@ class ContractHistory(History):
 
     @classmethod
     def create_timeline_history(
-        cls, db: Session, user_id: uuid.UUID, id: uuid.UUID, finish_last, date_from, date_to
+        cls, 
+        db: Session, 
+        user_id: uuid.UUID, 
+        id: uuid.UUID, 
+        finish_last, 
+        date_from, date_to
     ):
         contract = db.query(Contract).filter(Contract.id == id).first()
         if contract is None:
@@ -347,7 +360,8 @@ class CoolnessHistory(History):
     # coefficient = Column(Double, nullable=True)
     # percentage = Column(Integer, nullable=True)
 
-    # staff_division_id = Column(UUID(as_uuid=True), ForeignKey("staff_divisions.id"), nullable=True)
+    # staff_division_id = Column(UUID(as_uuid=True), 
+    # ForeignKey("staff_divisions.id"), nullable=True)
 
     __mapper_args__ = {
         'polymorphic_identity': 'coolness_history'
@@ -395,7 +409,13 @@ class SecondmentHistory(History):
 
     @classmethod
     def create_timeline_history(
-        cls, db: Session, user_id: uuid.UUID, id: uuid.UUID, finish_last, date_from, date_to
+        cls, 
+        db: Session, 
+        user_id: uuid.UUID, 
+        id: uuid.UUID, 
+        finish_last, 
+        date_from, 
+        date_to
     ):
         secondment = db.query(Secondment).filter(Secondment.id == id).first()
         if secondment is None:

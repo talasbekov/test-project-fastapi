@@ -1,4 +1,11 @@
-from sqlalchemy import BigInteger, Column, String, UUID, ForeignKey, TIMESTAMP
+from sqlalchemy import (
+    BigInteger, 
+    Column, 
+    String, 
+    UUID, 
+    ForeignKey, 
+    TIMESTAMP
+)
 from sqlalchemy.orm import relationship
 
 from models import Model, NamedModel
@@ -15,7 +22,8 @@ class Equipment(Model):
 
     type_of_equipment = Column(String, nullable=True)
 
-    hr_documents = relationship("HrDocument", secondary=hr_document_equipments,
+    hr_documents = relationship("HrDocument", 
+                                secondary=hr_document_equipments,
                                 back_populates="equipments")
     inventory_count = Column(BigInteger, nullable=True)
     inventory_number = Column(String, nullable=True)
@@ -46,7 +54,8 @@ class TypeArmyEquipmentModel(NamedModel):
 
 
 class TypeArmyEquipment(NamedModel):
-    """Type of army equipment. Example: Автомат, РПГ, etc."""
+    """Type of army equipment. Example: 
+    Автомат, РПГ, etc."""
     __tablename__ = "type_army_equipments"
 
     type_of_army_equipment_models = relationship(
@@ -74,7 +83,8 @@ class ArmyEquipment(Equipment):
 
 
 class TypeClothingEquipmentModel(NamedModel):
-    """Type of equipment. Example: ШАПКА, ПОЛУЧЕК, ПОЛУЧЕК, etc."""
+    """Type of equipment. Example: 
+    ШАПКА, ПОЛУЧЕК, ПОЛУЧЕК, etc."""
     __tablename__ = "type_clothing_equipment_models"
 
     clothing_equipment_types_models = relationship(
@@ -83,26 +93,31 @@ class TypeClothingEquipmentModel(NamedModel):
 
 
 class TypeClothingEquipment(NamedModel):  # obj.
-    """Type of clothing equipment. Example: ПАРАДНАЯ, ПОВСЕДНЕВНО-ПОСТОВАЯ, ТАКТИЧЕСКАЯ, etc."""
+    """Type of clothing equipment. Example: 
+    ПАРАДНАЯ, ПОВСЕДНЕВНО-ПОСТОВАЯ, ТАКТИЧЕСКАЯ, etc."""
     __tablename__ = "type_clothing_equipments"
 
     clothing_equipment_types_models = relationship(
         "ClothingEquipmentTypesModels",
-        back_populates="type_clothing_equipments")
-
+        back_populates="type_clothing_equipments"
+)
 
 class ClothingEquipmentTypesModels(Model):
     __tablename__ = 'clothing_equipment_types_models'
 
-    type_clothing_equipment_models_id = Column(UUID(as_uuid=True), ForeignKey("type_clothing_equipment_models.id"),
-                                               nullable=True)
-    type_clothing_equipment_models = relationship("TypeClothingEquipmentModel", back_populates="clothing_equipment_types_models",
-                                                  uselist=False)
+    type_clothing_equipment_models_id = Column(UUID(as_uuid=True), 
+                                    ForeignKey("type_clothing_equipment_models.id"),
+                                    nullable=True)
+    type_clothing_equipment_models = relationship("TypeClothingEquipmentModel", 
+                                    back_populates="clothing_equipment_types_models",
+                                    uselist=False)
 
-    type_clothing_equipments_id = Column(UUID(as_uuid=True), ForeignKey("type_clothing_equipments.id"),
-                                         nullable=True)
-    type_clothing_equipments = relationship("TypeClothingEquipment", back_populates="clothing_equipment_types_models",
-                                            uselist=False)
+    type_clothing_equipments_id = Column(UUID(as_uuid=True), 
+                                    ForeignKey("type_clothing_equipments.id"),
+                                    nullable=True)
+    type_clothing_equipments = relationship("TypeClothingEquipment", 
+                                    back_populates="clothing_equipment_types_models",
+                                    uselist=False)
 
     clothing_equipments = relationship(
         "ClothingEquipment",

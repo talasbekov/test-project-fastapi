@@ -56,7 +56,9 @@ class NestedModel(Model):
 
 
 """
-    This class is abstract entity class, which can be nested. This is merely markdown of nested classes. This Model doesn't do anything except marking all nested classes.
+    This class is abstract entity class, which can be nested. 
+    This is merely markdown of nested classes. 
+    This Model doesn't do anything except marking all nested classes.
     Only difference between nested models is **name**
 """
 

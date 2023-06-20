@@ -5,7 +5,14 @@ from exceptions import NotFoundException, ForbiddenException, BadRequestExceptio
 from models import (Candidate, CandidateStageInfo, StaffUnit, User,
                     CandidateStatusEnum, CandidateStageType,
                     PositionNameEnum, CandidateStageInfoStatusEnum)
-from schemas import CandidateCreate, CandidateUpdate, CandidateRead, CandidateStageInfoCreate, CandidateEssayUpdate, CandidateEssayTypeCreate
+from schemas import (
+    CandidateCreate,
+    CandidateUpdate, 
+    CandidateRead, 
+    CandidateStageInfoCreate, 
+    CandidateEssayUpdate, 
+    CandidateEssayTypeCreate
+)
 from services import ServiceBase, staff_unit_service, user_service, position_service
 from .candidate_essay_type import candidate_essay_type_service
 from .candidate_stage_info import candidate_stage_info_service
@@ -32,7 +39,8 @@ class CandidateService(
         """
             Returns a list of active candidates.
 
-            If the user does not have permission to view all candidates, it returns only supervised candidates.
+            If the user does not have permission to view all candidates, 
+            it returns only supervised candidates.
         """
 
         # If user hasn't permission to view all candidates, then return only
@@ -53,7 +61,8 @@ class CandidateService(
         """
             Returns a list of draft candidates.
 
-            If the user does not have permission to view all candidates, it returns only supervised draft candidates.
+            If the user does not have permission to view all candidates, 
+            it returns only supervised draft candidates.
         """
 
         # If user hasn't permission to view all candidates, then return only
@@ -84,7 +93,8 @@ class CandidateService(
 
     def create(self, db: Session, body: CandidateCreate):
         """
-            Creates a new candidate and associated CandidateStageInfo objects for each stage type.
+            Creates a new candidate and associated CandidateStageInfo 
+            objects for each stage type.
         """
         staff_unit_service.get_by_id(db, body.staff_unit_curator_id)
         staff_unit_service.get_by_id(db, body.staff_unit_id)
@@ -138,8 +148,10 @@ class CandidateService(
 
     def finish_candidate(self, db: Session, candidate_id: str, role: str):
         """
-            Finishes the review process for a candidate and raises exceptions
-            if the user is not the candidate's curator or if the candidate has any pending stages
+            Finishes the review process for a candidate and 
+            raises exceptions
+            if the user is not the candidate's curator or 
+            if the candidate has any pending stages
         """
         candidate = db.query(Candidate).filter(
             Candidate.id == candidate_id).first()
@@ -158,7 +170,8 @@ class CandidateService(
         for stage_info in stage_infos:
             if stage_info.status != CandidateStageInfoStatusEnum.APPROVED.value:
                 raise BadRequestException(
-                    detail=f"Кандидат: {candidate.id} не имеет право завершить изучение."
+                    detail=(f"Кандидат: {candidate.id} "
+                            "не имеет право завершить изучение.")
                 )
 
         return "Кандидат: {candidate.id} завершил изучение!"
@@ -185,7 +198,8 @@ class CandidateService(
 
     def _check_by_role(self, db: Session, role_id: str) -> bool:
         """
-            Checks if a user with the given role ID has permission to view all candidates.
+            Checks if a user with the given role 
+            ID has permission to view all candidates.
         """
         staff_unit = staff_unit_service.get_by_id(db, role_id)
 
@@ -196,7 +210,8 @@ class CandidateService(
 
     def _validate_candidate(self, db: Session, candidate):
         """
-            Validates a candidate's progress and sets additional properties on the candidate object.
+            Validates a candidate's progress and 
+            sets additional properties on the candidate object.
         """
         candidate_stage_info_count = db.query(CandidateStageType).count()
 
@@ -206,8 +221,13 @@ class CandidateService(
             CandidateStageInfo.candidate_id == candidate['id']
         ).count()
 
-        candidate[
-            'progress'] = candidate_stage_info_success_count / candidate_stage_info_count * 100 if candidate_stage_info_count > 0 else 0
+        candidate['progress'] = (
+            candidate_stage_info_success_count
+            / candidate_stage_info_count
+            * 100
+            if candidate_stage_info_count > 0 
+            else 0
+        )
 
         current_stage_info = db.query(CandidateStageInfo).filter(
             CandidateStageInfo.status == CandidateStageInfoStatusEnum.PENDING.value,
@@ -216,7 +236,8 @@ class CandidateService(
 
         if not current_stage_info:
             current_stage_info = db.query(CandidateStageInfo).filter(
-                CandidateStageInfo.status == CandidateStageInfoStatusEnum.APPROVED.value,
+                CandidateStageInfo.status 
+                == CandidateStageInfoStatusEnum.APPROVED.value,
                 CandidateStageInfo.candidate_id == candidate['id']
             ).order_by(CandidateStageInfo.date_sign.desc()).first()
 
@@ -258,12 +279,13 @@ class CandidateService(
         return candidates
 
     def _get_candidates_by_status_and_filter(self, db: Session,
-                                             filter: str,
-                                             skip: int = 0,
-                                             limit: int = 100,
-                                             status: CandidateStatusEnum = None) -> CandidateRead:
+                                filter: str,
+                                skip: int = 0,
+                                limit: int = 100,
+                                status: CandidateStatusEnum = None) -> CandidateRead:
         """
-            Returns a list of candidates based on the given status and filtered by the given keyword.
+            Returns a list of candidates based on the given status 
+            and filtered by the given keyword.
         """
         key_words = filter.lower().split()
 
@@ -283,7 +305,8 @@ class CandidateService(
         """
             Returns a list of supervised candidates.
 
-            If the user does not have permission to view all candidates, it returns only supervised candidate
+            If the user does not have permission to view all candidates, 
+            it returns only supervised candidate
         """
         user = user_service.get_by_id(db, user_id)
 
@@ -305,13 +328,14 @@ class CandidateService(
         return candidates
 
     def _get_supervised_candidates_by_status_and_filter(self, db: Session,
-                                                        filter: str,
-                                                        user: User,
-                                                        skip: int = 0,
-                                                        limit: int = 100,
-                                                        status: CandidateStatusEnum = None) -> CandidateRead:
+                            filter: str,
+                            user: User,
+                            skip: int = 0,
+                            limit: int = 100,
+                            status: CandidateStatusEnum = None) -> CandidateRead:
         """
-            Returns a list of supervised candidates based on the given status and filtered by the given keyword.
+            Returns a list of supervised candidates based on the given status 
+            and filtered by the given keyword.
         """
         key_words = filter.lower().split()
 
@@ -326,7 +350,8 @@ class CandidateService(
     def _query_candidates(
             self, db: Session, status: CandidateStatusEnum, key_words: list[str]):
         """
-            Performs a query on the Candidate model and returns a filtered query based on the given status and filter.
+            Performs a query on the Candidate model and returns 
+            a filtered query based on the given status and filter.
         """
         return (
             db.query(self.model)
@@ -337,8 +362,9 @@ class CandidateService(
             )
             .filter(
                 and_(func.concat(func.lower(User.first_name), ' ',
-                                 func.lower(User.last_name), ' ',
-                                 func.lower(User.father_name)).contains(name) for name in key_words)
+                            func.lower(User.last_name), ' ',
+                            func.lower(User.father_name)).contains(name) 
+                            for name in key_words)
             )
         )
 
