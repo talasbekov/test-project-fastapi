@@ -2,7 +2,7 @@ from typing import List
 from sqlalchemy.orm import Session
 
 from models import (Option, QuestionTypeEnum, OptionScale,
-                    OptionCheckboxGrid, OptionGrid)
+                    OptionCheckboxGrid, OptionGrid, Question)
 from schemas import (OptionCreate, OptionUpdate,
                      OptionRead)
 from exceptions import BadRequestException
@@ -36,7 +36,16 @@ class OptionService(ServiceBase[Option, OptionCreate, OptionUpdate]):
         
         option_class = self.POSSIBLE_TYPES[question.question_type]
         option_kwargs = {"question_id": body.question_id}
+        option_kwargs = self.__update_kwargs(question, body, option_kwargs)
 
+        option = option_class(**option_kwargs)
+        db.add(option)
+        db.flush()
+
+        return option
+    
+    
+    def __update_kwargs(self, question: Question, body: OptionCreate, option_kwargs):
         if question.question_type == QuestionTypeEnum.SCALE:
             option_kwargs.update(
                 {"discriminator": "option_scale", "min_value": body.min_value, "max_value": body.max_value}
@@ -51,12 +60,8 @@ class OptionService(ServiceBase[Option, OptionCreate, OptionUpdate]):
             )
         else:
             option_kwargs.update({"text": body.text})
-
-        option = option_class(**option_kwargs)
-        db.add(option)
-        db.flush()
-
-        return option
+            
+        return option_kwargs
 
 
 option_service = OptionService(Option)

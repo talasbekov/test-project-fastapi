@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 
 from models import (Answer, QuestionTypeEnum, Answer,
                     AnswerSingleChoice, AnswerScale, AnswerGrid,
-                    AnswerCheckboxGrid)
+                    AnswerCheckboxGrid, Question)
 from schemas import AnswerCreate, AnswerUpdate
 from exceptions import BadRequestException
 from services.base import ServiceBase
@@ -27,8 +27,22 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
             raise BadRequestException(f"Invalid option type {question.question_type}")
         
         answer_class = self.POSSIBLE_TYPES[question.question_type]
+        
         answer_kwargs = {"question_id": body.question_id}
+        answer_kwargs = self.__update_kwargs(question, body, answer_kwargs)
 
+        answer = answer_class(**answer_kwargs)
+        
+        if question.question_type == QuestionTypeEnum.MULTIPLE_CHOICE:
+            answer.options = [option_service.get_by_id(db, option_id) for option_id in body.options]
+        
+        db.add(answer)
+        db.flush()
+
+        return answer
+    
+    
+    def __update_kwargs(self, question: Question, body: AnswerCreate, answer_kwargs):
         if question.question_type == QuestionTypeEnum.SINGLE_CHOICE:
             answer_kwargs.update(
                 {"discriminator": "answer_single_choice", "option_id": body.option_id}
@@ -47,16 +61,8 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
             )
         elif question.question_type == QuestionTypeEnum.TEXT:
             answer_kwargs.update({"text": body.text})
-
-        answer = answer_class(**answer_kwargs)
-        
-        if question.question_type == QuestionTypeEnum.MULTIPLE_CHOICE:
-            answer.options = [option_service.get_by_id(db, option_id) for option_id in body.options]
-        
-        db.add(answer)
-        db.flush()
-
-        return answer
+            
+        return answer_kwargs
 
 
 answer_service = AnswerService(Answer)
