@@ -29,8 +29,12 @@ async def get_all(*,
     """
         Get all LanguageProficiencies
 
-        - **skip**: int - The number of LanguageProficiencies to skip before returning the results. This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of LanguageProficiencies to return in the response. This parameter is optional and defaults to 100.
+    - **skip**: int - The number of LanguageProficiencies 
+        to skip before returning the results. 
+        This parameter is optional and defaults to 0.
+    - **limit**: int - The maximum number of LanguageProficiencies 
+        to return in the response. 
+        This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
     return language_proficiency_service.get_multi(db, skip, limit)

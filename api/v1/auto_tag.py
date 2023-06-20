@@ -16,14 +16,19 @@ router = APIRouter(
 
 @router.get("/{user_id}/")
 async def get_by_user_id(
-    *, db: Session = Depends(get_db), user_id: str, auto_tag: str, Authorize: AuthJWT = Depends()
+    *, 
+    db: Session = Depends(get_db), 
+    user_id: str, 
+    auto_tag: str, 
+    Authorize: AuthJWT = Depends()
 ):
     """Get User data through AutoTag
 
     Args:
         user_id (str): id of user from whom data is to be fetched
         auto_tag (str): auto_tag to be used to fetch data
-        db (Session, optional): Instance of Session for database connection. Defaults to Depends(get_db).
+        db (Session, optional): Instance of Session for database connection. 
+        Defaults to Depends(get_db).
         Authorize (AuthJWT, optional): JWTToken holder class. Defaults to Depends().
 
     Returns:

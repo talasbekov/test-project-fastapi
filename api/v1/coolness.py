@@ -32,8 +32,10 @@ async def get_all(*,
     """
        Get all Coolness
 
-       - **skip**: int - The number of Coolness to skip before returning the results. This parameter is optional and defaults to 0.
-       - **limit**: int - The maximum number of Coolness to return in the response. This parameter is optional and defaults to 10.
+    - **skip**: int - The number of Coolness to skip before returning the results.
+        This parameter is optional and defaults to 0.
+    - **limit**: int - The maximum number of Coolness to return in the response. 
+        This parameter is optional and defaults to 10.
    """
     Authorize.jwt_required()
     return coolness_service.get_multi(db, skip, limit)
