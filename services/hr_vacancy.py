@@ -43,10 +43,10 @@ class HrVacancyService(
             staff_division_number=staff_division.staff_division_number,
             type_id=staff_division.type_id,
             type=staff_division.type,
-            vacancies=[HrVacancyRead.from_orm(vacancy).to_dict(True)
+            vacancies=[HrVacancyRead.from_orm(vacancy).to_dict(is_responded=True)
                        if self._check_exists_respond(db, vacancy.id, user_id)
                        else
-                       HrVacancyRead.from_orm(vacancy).to_dict(False)
+                       HrVacancyRead.from_orm(vacancy).to_dict(is_responded=False)
                        for vacancy in vacancies
                        ]
         )
