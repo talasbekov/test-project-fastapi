@@ -11,6 +11,7 @@ class PassportBase(BaseModel):
     date_to: datetime.date
     document_link: Optional[AnyUrl]
     profile_id: uuid.UUID
+    issued_by: str
 
 
 class PassportCreate(PassportBase):
@@ -27,6 +28,7 @@ class PassportRead(PassportBase):
     date_of_issue: Optional[datetime.date]
     date_to: Optional[datetime.date]
     document_link: Optional[str]
+    issued_by: Optional[str]
     profile_id: Optional[uuid.UUID]
     created_at: Optional[datetime.date]
     updated_at: Optional[datetime.date]
