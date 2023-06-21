@@ -92,7 +92,6 @@ class StaffDivisionService(
             StaffDivision.parent_group_id == None,
             self.model.name != StaffDivisionEnum.SPECIAL_GROUP.value
         ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
-        print(parents)
         return parents
 
     def get_child_groups(self,

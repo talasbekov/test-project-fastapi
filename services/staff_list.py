@@ -391,7 +391,6 @@ class StaffListService(
                                                            body,
                                                            current_user_id,
                                                            current_user_role_id)
-        print(hr_document)
         return hr_document
 
     def get_disposition_user_ids_by_staff_list_id(self,
