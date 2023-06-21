@@ -36,7 +36,7 @@ class ArchiveStaffUnit(Model):
     curator_of_id = Column(
         UUID(
             as_uuid=True),
-        ForeignKey("staff_divisions.id"),
+        ForeignKey("staff_divisions.id", ondelete='SET NULL'),
         nullable=True)
     actual_user_id = Column(
         UUID(

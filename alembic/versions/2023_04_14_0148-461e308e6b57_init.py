@@ -293,7 +293,7 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['staff_division_id'], ['staff_divisions.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_foreign_key('staff_units_curator_of_id_fkey', 'staff_units', 'staff_divisions', ['curator_of_id'], ['id'])
+    op.create_foreign_key('staff_units_curator_of_id_fkey', 'staff_units', 'staff_divisions', ['curator_of_id'], ['id'], ondelete='SET NULL')
     op.create_table('hr_document_templates',
                     sa.Column('path', sa.String(length=255), nullable=True),
                     sa.Column('pathKZ', sa.String(length=255), nullable=True),
