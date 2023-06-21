@@ -200,7 +200,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
     def get_by_staff_unit(self, db: Session, staff_unit_id):
 
         users = db.query(self.model).filter(
-            self.model.actual_staff_unit_id == staff_unit_id
+            self.model.staff_unit_id == staff_unit_id
         ).all()
 
         return users
@@ -222,7 +222,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         current_user = self.get_by_id(db, user_id)
 
         staff_unit: StaffUnit = staff_unit_service.get_by_id(
-            db, current_user.actual_staff_unit_id)
+            db, current_user.staff_unit_id)
 
         document_staff_functions: List[DocumentStaffFunction] = []
 

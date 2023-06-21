@@ -36,7 +36,9 @@ class HrVacancyService(
 
         response = HrVacancyStaffDivisionRead(
             id=staff_division.id,
-            name=staff_division.name,
+            staff_division_number=staff_division.staff_division_number,
+            type_id=staff_division.type_id,
+            type=staff_division.type,
             vacancies=[HrVacancyRead.from_orm(i).dict() for i in vacancies]
         )
 

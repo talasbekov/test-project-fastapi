@@ -29,7 +29,7 @@ class ServiceStaffFunctionService(
     def get_by_user(self, db: Session, user: User):
         staff_functions = []
 
-        for func in user.actual_staff_unit.staff_functions:
+        for func in user.staff_unit.staff_functions:
 
             if func.discriminator == self.model.__mapper_args__[
                     'polymorphic_identity']:

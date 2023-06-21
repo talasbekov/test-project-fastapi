@@ -1,3 +1,4 @@
+import datetime
 from typing import Any
 
 from sqlalchemy.orm import Session, Query
@@ -5,7 +6,7 @@ from sqlalchemy.orm import Session, Query
 from core import configs
 from models import User, HrDocument, Badge, BadgeHistory
 from .base import BaseHandler
-from services import badge_service
+from services import badge_service, history_service
 from exceptions import ForbiddenException, BadRequestException
 
 
@@ -25,8 +26,10 @@ class DeleteBadgeHandler(BaseHandler):
         self.handle_validation(
             db, user, action, template_props, props, document)
         res = badge_service.stop_relation(db, user.id, badge_id)
+        history = history_service.create_history(db, user.id, res.badge)
         document.old_history_id = res.id
-        res.cancel_document_link = configs.GENERATE_IP + str(document.id)
+        history.cancel_document_link = configs.GENERATE_IP + str(document.id)
+        history.date_to = datetime.datetime.now()
         db.add(document)
         db.add(res)
         db.flush()
@@ -53,7 +56,7 @@ class DeleteBadgeHandler(BaseHandler):
                 .join(Badge)
                 .filter(User.badges.any(User.id == Badge.user_id))
                 .join(BadgeHistory, Badge.id == BadgeHistory.badge_id)
-                .filter(BadgeHistory.date_to is None))
+                .filter(BadgeHistory.date_to == None))
 
     def get_args(self, action, properties):
         try:

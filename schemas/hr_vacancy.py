@@ -2,7 +2,7 @@ import uuid
 from typing import Optional, List
 
 from schemas import (Model, ReadModel, HrVacancyRequirementsRead,
-                     HrVacancyCandidateRead)
+                     HrVacancyCandidateRead, StaffDivisionTypeRead)
 from .staff_unit import StaffUnitRead
 
 
@@ -36,6 +36,8 @@ class HrVacancyRead(HrVacancyBase, ReadModel):
 
 
 class HrVacancyStaffDivisionRead(Model):
-    id: uuid.UUID
-    name: str
-    vacancies: List[HrVacancyRead]
+    id: Optional[uuid.UUID]
+    staff_division_number: Optional[int]
+    type_id: Optional[uuid.UUID]
+    type: Optional[StaffDivisionTypeRead]
+    vacancies: Optional[List[HrVacancyRead]]

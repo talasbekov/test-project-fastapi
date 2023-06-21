@@ -18,5 +18,6 @@ class Passport(Model):
             as_uuid=True),
         ForeignKey("personal_profiles.id"),
         nullable=False)
+    issued_by = Column(String(255), nullable=False)
 
     profile = relationship("PersonalProfile", back_populates="passport")

@@ -246,6 +246,8 @@ def upgrade() -> None:
     badgetype4_id = get_uuid()
     badgetype5_id = get_uuid()
     badgetype6_id = get_uuid()
+    badgetype7_id = get_uuid()
+    badgetype8_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['badge_types'],
@@ -274,6 +276,16 @@ def upgrade() -> None:
             "name": "МЕДАЛЬ 'МВД РК'",
             "nameKZ": "МЕДАЛЬ 'МВД РК'",
             "url": f"{base_s3_url}/static/badge4.png"
+        }, {
+            "id": badgetype7_id,
+            "name": "Медаль за храбрость",
+            "nameKZ": "Ерлігі үшін",
+            "url": f"http://193.106.99.68:2287/static/static/badge5.png"
+        }, {
+            "id": badgetype8_id,
+            "name": "Медаль за достойную работу",
+            "nameKZ": "Ерен еңбегі үшін",
+            "url": f"http://193.106.99.68:2287/static/static/badge6.png"
         }]
     )
 
@@ -3212,7 +3224,7 @@ def upgrade() -> None:
         rank13_id,
         staff_unit29_id,
         f"{base_s3_url}/static/placeholder.jpg",
-        position15_id,
+        position7_id,
         True,
         '1.2.27K',
         True)
@@ -7096,7 +7108,8 @@ def create_user(id,
             'date_of_issue': "2022-09-11",
             'date_to': "2022-09-12",
             'document_link': f"{base_s3_url}/static/example.txt",
-            'profile_id': personal_profile_id
+            'profile_id': personal_profile_id,
+            'issued_by': "МВД РК"
         }]
     )
 
