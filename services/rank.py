@@ -39,7 +39,7 @@ class RankService(ServiceBase[Rank, RankCreate, RankUpdate]):
             db.query(RankHistory)
             .filter(
                 RankHistory.user_id == user_id,
-                RankHistory.date_to is None,
+                RankHistory.date_to == None,
             )
             .order_by(RankHistory.date_from.desc())
             .first()

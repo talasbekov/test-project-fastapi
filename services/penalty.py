@@ -32,7 +32,7 @@ class PenaltyService(ServiceBase[Penalty, PenaltyCreate, PenaltyUpdate]):
                     PenaltyHistory,
                     and_(PenaltyHistory.user_id == id,
                          or_(PenaltyHistory.date_to < datetime.now(),
-                             PenaltyHistory.date_to is None)
+                             PenaltyHistory.date_to == None)
                          )
                 )
             )
