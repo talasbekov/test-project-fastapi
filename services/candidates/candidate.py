@@ -319,7 +319,7 @@ class CandidateService(
                 db, filter, user, skip, limit, status)
         else:
             candidates = db.query(self.model).filter(
-                self.model.staff_unit_curator_id == user.actual_staff_unit_id,
+                self.model.staff_unit_curator_id == user.staff_unit_id,
                 self.model.status == status.value
             ).order_by(self.model.id.asc()).offset(skip).limit(limit).all()
 
@@ -345,7 +345,7 @@ class CandidateService(
 
         return (
             self._query_candidates(db, status, key_words)
-            .filter(user.actual_staff_unit_id == self.model.staff_unit_curator_id)
+            .filter(user.staff_unit_id == self.model.staff_unit_curator_id)
             .order_by(self.model.id.asc())
             .offset(skip)
             .limit(limit)
