@@ -339,7 +339,6 @@ class StaffDivisionService(
             .join(StaffDivision, StaffUnit.staff_division_id == StaffDivision.id)
             .filter(
                 HrVacancy.is_active == True,
-                HrVacancy.staff_unit_id == StaffUnit.id,
                 StaffUnit.staff_division_id == staff_division.id
             ).count()
         )
