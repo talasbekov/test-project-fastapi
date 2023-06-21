@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import Penalty, PenaltyType, PenaltyHistory
-from schemas import PenaltyRead, PenaltyCreate, PenaltyUpdate, PenaltyTypeRead
+from schemas import PenaltyCreate, PenaltyUpdate, PenaltyTypeRead, PenaltyReadForOption
 from .base import ServiceBase
 
 
@@ -36,8 +36,13 @@ class PenaltyService(ServiceBase[Penalty, PenaltyCreate, PenaltyUpdate]):
                          )
                 )
             )
-            return [PenaltyRead.from_orm(penalty).dict()
-                    for penalty in penalties]
+            penalties_with_names = []
+            for penalty in penalties:
+                penalty_with_name = PenaltyReadForOption.from_orm(penalty).dict()
+                penalty_with_name['name'] = penalty.type.name
+                penalty_with_name['nameKZ'] = penalty.type.nameKZ
+                penalties_with_names.append(penalty_with_name)
+            return penalties_with_names
 
     def get_object(self, db: Session, id: str, type: str):
         if type == "write":
