@@ -360,5 +360,22 @@ class StaffDivisionService(
             self.model.name == name
         ).all()
 
+    def get_parent_ids(self, db: Session, id: uuid.UUID) -> List[uuid.UUID]:
+        staff_division = self.get_by_id(db, id)
+
+        parent_id = staff_division.parent_group_id
+        
+        ids = []
+
+        while parent_id != None:
+            if parent_id is None:
+                break
+            tmp = self.get_by_id(db, parent_id)
+            ids.append(tmp.id)
+            parent_id = tmp.parent_group_id
+
+        ids.reverse()
+        return ids
+
 
 staff_division_service = StaffDivisionService(StaffDivision)

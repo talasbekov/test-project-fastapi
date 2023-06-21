@@ -164,7 +164,7 @@ class StaffUnitService(
             db.query(self.model)
             .filter(
                 self.model.staff_division_id == staff_division_id,
-                self.model.users is None
+                self.model.users == None
             )
             .first())
 
@@ -173,7 +173,7 @@ class StaffUnitService(
             db.query(EmergencyServiceHistory)
             .filter(
                 EmergencyServiceHistory.user_id == user_id,
-                EmergencyServiceHistory.date_to is None
+                EmergencyServiceHistory.date_to == None
             )
             .order_by(EmergencyServiceHistory.date_from.desc())
             .first()
