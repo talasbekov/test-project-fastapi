@@ -44,7 +44,7 @@ class CoolnessService(ServiceBase[Coolness, CoolnessCreate, CoolnessUpdate]):
                 db.query(Coolness)
                 .filter(Coolness.user_id == id)
                 .join(CoolnessHistory, CoolnessHistory.coolness_id == Coolness.id)
-                .filter(CoolnessHistory.date_to is None)
+                .filter(CoolnessHistory.date_to == None)
                 .all()
             )
             return [CoolnessRead.from_orm(status).dict() for status in res]
