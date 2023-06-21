@@ -159,7 +159,7 @@ class HrDocumentService(
     ):
         user = user_service.get_by_id(db, user_id)
 
-        staff_unit_service.get_by_id(db, user.actual_staff_unit_id)
+        staff_unit_service.get_by_id(db, user.staff_unit_id)
 
         draft_status = hr_document_status_service.get_by_name(
             db, HrDocumentStatusEnum.DRAFT.value)
@@ -170,12 +170,12 @@ class HrDocumentService(
             .filter(self.model.status_id != draft_status.id,
                     self.model.status_id != revision_status.id,
                     self.model.parent_id == parent_id)
-            .join(HrDocumentStep)
+            .join(self.model.last_step)
             .join(self.model.hr_document_infos)
             .filter(
                 HrDocumentInfo.hr_document_step_id == HrDocumentStep.id,
                 HrDocumentInfo.assigned_to_id == user_id,
-                HrDocumentInfo.signed_by_id is None)
+                HrDocumentInfo.is_signed == None)
         )
 
         if filter != '':
@@ -1155,7 +1155,7 @@ class HrDocumentService(
         # Если один из субъектов не относится к штатной единице то метод
         # выбрасывает False
         for i in subject_users:
-            if i.actual_staff_unit not in staff_units:
+            if i.staff_unit not in staff_units:
                 return False
 
         return True

@@ -193,7 +193,14 @@ class SecondmentReadHistory(BaseModel):
 
     @classmethod
     def from_orm(cls, orm_obj):
+        division_name = getattr(orm_obj.staff_division, 'name', None)
+        division_nameKZ = getattr(orm_obj.staff_division, 'nameKZ', None)
+        if division_name:
+            return cls(
+                name=orm_obj.name + ": " + division_name,
+                nameKZ=orm_obj.nameKZ + ": " + division_nameKZ,
+            )
         return cls(
-            name=getattr(orm_obj.staff_division, 'name', None),
-            nameKZ=getattr(orm_obj.staff_division, 'nameKZ', None),
+            name=orm_obj.name,
+            nameKZ=orm_obj.nameKZ,
         )

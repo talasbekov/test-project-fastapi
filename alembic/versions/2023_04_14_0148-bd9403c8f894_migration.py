@@ -3224,7 +3224,7 @@ def upgrade() -> None:
         rank13_id,
         staff_unit29_id,
         f"{base_s3_url}/static/placeholder.jpg",
-        position15_id,
+        position7_id,
         True,
         '1.2.27K',
         True)

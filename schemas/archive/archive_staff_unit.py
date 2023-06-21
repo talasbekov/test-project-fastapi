@@ -2,7 +2,7 @@ import datetime
 import uuid
 from typing import List, Optional
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, validator
 
 from schemas import (BadgeRead, RankRead, ReadModel,
                      HrVacancyRead, Model, PositionRead)
@@ -42,6 +42,12 @@ class ArchiveStaffUnitUpdate(ArchiveStaffUnitBase):
 
 
 class NewArchiveStaffUnitCreate(ArchiveStaffUnitBase):
+    @validator('user_replacing_id')
+    def validate_user_replacing_id(cls, user_replacing_id, values):
+        user_id = values.get('user_id')
+        if user_replacing_id == user_id:
+            raise ValueError("user_replacing_id cannot be equal to user_id")
+        return user_replacing_id
     pass
 
 
@@ -51,6 +57,13 @@ class NewArchiveStaffUnitCreateWithStaffFunctions(ArchiveStaffUnitBase):
 
 class NewArchiveStaffUnitUpdate(ArchiveStaffUnitBase):
     curator_of_id: Optional[uuid.UUID] = Field(None, nullable=True)
+
+    @validator('user_replacing_id')
+    def validate_user_replacing_id(cls, user_replacing_id, values):
+        user_id = values.get('user_id')
+        if user_replacing_id == user_id:
+            raise ValueError("user_replacing_id cannot be equal to user_id")
+        return user_replacing_id
     pass
 
 
