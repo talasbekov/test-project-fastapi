@@ -125,7 +125,7 @@ class HrDocumentInfoService(
             .join(DocumentStaffFunction)\
             .filter(
                 self.model.hr_document_id == id,
-                self.model.signed_by_id is None
+                self.model.signed_by_id == None
         )\
             .order_by(DocumentStaffFunction.priority.asc(), self.model.order)\
             .all()

@@ -7108,7 +7108,8 @@ def create_user(id,
             'date_of_issue': "2022-09-11",
             'date_to': "2022-09-12",
             'document_link': f"{base_s3_url}/static/example.txt",
-            'profile_id': personal_profile_id
+            'profile_id': personal_profile_id,
+            'issued_by': "МВД РК"
         }]
     )
 

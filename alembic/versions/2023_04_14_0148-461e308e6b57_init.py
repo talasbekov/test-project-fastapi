@@ -1189,6 +1189,7 @@ def upgrade() -> None:
     sa.Column('date_to', sa.TIMESTAMP(timezone=True), nullable=True),
     sa.Column('document_link', sa.TEXT(), nullable=True),
     sa.Column('profile_id', sa.UUID(), nullable=False),
+    sa.Column('issued_by', sa.String(length=255), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
