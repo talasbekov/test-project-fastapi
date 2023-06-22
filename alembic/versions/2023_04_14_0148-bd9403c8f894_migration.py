@@ -3555,9 +3555,7 @@ def upgrade() -> None:
             'created_at': '2023-06-22 09:35:03.514159 +00:00',
             'updated_at': '2023-06-22 09:35:03.514159 +00:00',
             'maintainer_id': user4_id,
-            'is_visible': True,
-            'is_due_date_required': False,
-            'is_initial_comment_required': False
+            'is_visible': True
         },{
             'url': 'http://193.106.99.68:2287/static/498662e9-bc52-40ad-a6ff-2a2649a19bd7.html',
             'subject_type': 'CANDIDATE',
@@ -3654,9 +3652,7 @@ def upgrade() -> None:
             'created_at': '2023-06-22 09:35:03.514159 +00:00',
             'updated_at': '2023-06-22 09:35:03.514159 +00:00',
             'maintainer_id': user4_id,
-            'is_visible': True,
-            'is_due_date_required': False,
-            'is_initial_comment_required': False
+            'is_visible': True
         },
         {
             "name": "Запрос на наличие сведений для указанных граждан о причастности к религиозному экстремизму",
