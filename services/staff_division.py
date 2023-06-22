@@ -2,11 +2,13 @@ import uuid
 from typing import List, Dict, Any
 
 from sqlalchemy.orm import Session
+from sqlalchemy import distinct, func
 
 
 from exceptions import BadRequestException, NotFoundException
 from models import (StaffDivision, StaffDivisionEnum, ArchiveStaffDivision,
-                    StaffUnit, HrVacancy, Secondment, EmergencyServiceHistory)
+                    StaffUnit, HrVacancy, Secondment, EmergencyServiceHistory,
+                    Position)
 from schemas import (
     StaffDivisionCreate,
     StaffDivisionRead,
@@ -334,13 +336,14 @@ class StaffDivisionService(
                                        staff_division: StaffDivision):
 
         count_vacancies = (
-            db.query(HrVacancy)
-            .join(StaffUnit, HrVacancy.staff_unit_id == StaffUnit.id)
-            .join(StaffDivision, StaffUnit.staff_division_id == StaffDivision.id)
+            db.query(func.count(distinct(Position.id)))
+            .join(StaffUnit, Position.id == StaffUnit.position_id)
+            .join(HrVacancy, HrVacancy.staff_unit_id == StaffUnit.id)
+            .join(StaffDivision, StaffDivision.id == StaffUnit.staff_division_id)
             .filter(
                 HrVacancy.is_active == True,
                 StaffUnit.staff_division_id == staff_division.id
-            ).count()
+            ).scalar()
         )
 
         for child in staff_division.children:
