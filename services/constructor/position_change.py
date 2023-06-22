@@ -1,3 +1,5 @@
+import logging
+
 from sqlalchemy.orm import Session
 
 from core import configs
@@ -73,7 +75,8 @@ class PositionChangeHandler(BaseHandler):
             position_id = properties[action["staff_unit"]["tagname"]]["value"]
             percent = int(properties[action["percent"]["tagname"]]["name"])
             reason = properties[action["reason"]["tagname"]]["name"]
-        except KeyError:
+        except KeyError as e:
+            logging.exception(e)
             raise BadRequestException(
                 f"Position is not defined for this action: {self.__handler__}")
         return position_id, percent, reason

@@ -419,7 +419,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             DocumentStaffFunction.staff_units.any(
                 StaffUnit.id == user.staff_unit_id),
             DocumentStaffFunction.role_id == initiator_role.id,
-            DocumentStaffFunction.hr_document_step is not None
+            DocumentStaffFunction.hr_document_step != None
         ).all())
         document_ids = [
             function.hr_document_step.hr_document_template_id for function in functions]
