@@ -43,7 +43,9 @@ class DeletePenaltyHandler(BaseHandler):
             props: dict,
             document: HrDocument,
     ):
-        pass
+        penalty_id = self.get_args(action, props)
+
+        penalty_service.get_by_id(db, penalty_id)
 
     def handle_filter(self, db: Session, user_query: Query[Any]):
         return user_query.filter(

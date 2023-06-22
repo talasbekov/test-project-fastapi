@@ -63,6 +63,8 @@ class StatusChangeHandler(BaseHandler):
     ):
         status_id = self.get_args(action, props)
 
+        status_service.get_by_id(db, status_id)
+
         if status_service.exists_relation(db, user.id, status_id):
             raise ForbiddenException(
                 ("This status is already assigned to this user:"

@@ -44,6 +44,9 @@ class ConfirmCoolnessHandler(BaseHandler):
         document: HrDocument,
     ):
         coolness_id = self.get_args(action, props)
+
+        coolness_service.get_by_id(db, coolness_id)
+
         if not coolness_service.exists_relation(db, user.id, coolness_id):
             raise ForbiddenException(
                 ("Coolness is not assigned to this user:"
