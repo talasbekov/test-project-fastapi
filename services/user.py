@@ -78,6 +78,17 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
         return users
 
+    def is_template_accessible_for_user(self,
+                                db: Session,
+                                user_id: uuid.UUID,
+                                template_id: uuid.UUID) -> bool:
+        user = self.get_by_id(db, user_id)
+        
+        unavailable_users = self._get_excepted_users_by_document_in_progress(
+            db, template_id)
+        
+        return True if user not in unavailable_users else False
+        
     def get_all_active(self,
                        db: Session,
                        filter: str,
