@@ -64,7 +64,8 @@ async def is_template_accessible_for_user(
     - **user_id**: str - The value which returns filtered results by user_id.
     """
     Authorize.jwt_required()
-    return user_service.is_template_accessible_for_user(db, user_id, hr_document_template_id)
+    return user_service.is_template_accessible_for_user(
+                db, user_id, hr_document_template_id)
 
 
 @router.get("/archived",
