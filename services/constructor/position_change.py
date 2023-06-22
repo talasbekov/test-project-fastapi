@@ -61,6 +61,8 @@ class PositionChangeHandler(BaseHandler):
     ):
         position_id, percent, reason = self.get_args(action, props)
 
+        staff_unit_service.get_by_id(db, position_id)
+
         if staff_unit_service.exists_relation(db, user.id, position_id):
             raise BadRequestException(
                 ("This position is already assigned to this user:"
