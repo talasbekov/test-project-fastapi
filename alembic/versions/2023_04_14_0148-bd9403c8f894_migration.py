@@ -847,6 +847,10 @@ def upgrade() -> None:
     staff_function18_id = get_uuid()
     staff_function19_id = get_uuid()
     staff_function20_id = get_uuid()
+    staff_function21_id = get_uuid()
+    staff_function22_id = get_uuid()
+    staff_function23_id = get_uuid()
+    staff_function24_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['staff_functions'],
@@ -1045,6 +1049,44 @@ def upgrade() -> None:
                 'discriminator': 'document_staff_function',
                 'name': 'Утверждающий приказа о назначении на должность (штатное расписание)',
                 'nameKZ': 'Штаттық кестенің (жұмыс кестесінің) мүшесіне тағайындау туралы бұйрықтың бекітушісі',
+                'jurisdiction_id': jurisdiction_id,
+                'priority': 100,
+                'role_id': doc_type3_id
+        }, {
+                'id': staff_function21_id,
+                'hours_per_week': 3,
+                'discriminator': 'document_staff_function',
+                'name': 'Приказ о назначении на должность',
+                'nameKZ': 'Қызметке тағайындау туралы бұйрық',
+                'jurisdiction_id': jurisdiction_id,
+                'priority': 1,
+                'role_id': doc_type5_id
+        },
+            {
+                'id': staff_function22_id,
+                'hours_per_week': 3,
+                'discriminator': 'document_staff_function',
+                'name': 'Утверждающий Приказ о назначении на должность',
+                'nameKZ': 'Қызметке тағайындау туралы бұйрық бекітушісі',
+                'jurisdiction_id': jurisdiction_id,
+                'priority': 100,
+                'role_id': doc_type3_id
+            }, {
+                'id': staff_function23_id,
+                'hours_per_week': 3,
+                'discriminator': 'document_staff_function',
+                'name': 'Инициатор Приказ о зачислении на службу сотрудника',
+                'nameKZ': 'Қызметкерді қызметке қабылдау бұйрығы',
+                'jurisdiction_id': jurisdiction_id,
+                'priority': 1,
+                'role_id': doc_type5_id
+        },
+            {
+                'id': staff_function24_id,
+                'hours_per_week': 3,
+                'discriminator': 'document_staff_function',
+                'name': 'Утверждающий приказа о зачислении на службу сотрудника',
+                'nameKZ': 'Қызметкерді қызметке қабылдау бұйрығы бекітушісі',
                 'jurisdiction_id': jurisdiction_id,
                 'priority': 100,
                 'role_id': doc_type3_id
@@ -3393,6 +3435,18 @@ def upgrade() -> None:
         }, {
             'staff_unit_id': staff_unit10_id,
             'staff_function_id': staff_function20_id
+        },{
+            'staff_unit_id': staff_unit9_id,
+            'staff_function_id': staff_function21_id
+        }, {
+            'staff_unit_id': staff_unit10_id,
+            'staff_function_id': staff_function22_id
+        }, {
+            'staff_unit_id': staff_unit9_id,
+            'staff_function_id': staff_function23_id
+        }, {
+            'staff_unit_id': staff_unit10_id,
+            'staff_function_id': staff_function24_id
         }
         ]
     )
@@ -3403,6 +3457,8 @@ def upgrade() -> None:
     template7_id = get_uuid()
     template8_id = get_uuid()
     template9_id = get_uuid()
+    template10_id = get_uuid()
+    template11_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['hr_document_templates'],
@@ -3552,7 +3608,7 @@ def upgrade() -> None:
             },
             'name': 'Приказ о назначении на должность',
             'nameKZ': 'Қызметке тағайындау туралы бұйрық',
-            'id': get_uuid(),
+            'id': template10_id,
             'maintainer_id': staff_unit4_id,
             'is_visible': True
         },{
@@ -3648,7 +3704,7 @@ def upgrade() -> None:
             },
             'name': 'Приказ о зачислении на службу сотрудника',
             'nameKZ': 'Қызметкерді қызметке қабылдау бұйрығы',
-            'id': get_uuid(),
+            'id': template11_id,
             'maintainer_id': staff_unit4_id,
             'is_visible': True
         },
@@ -4059,6 +4115,10 @@ def upgrade() -> None:
     step6_2 = get_uuid()
     step6_3 = get_uuid()
     step6_4 = get_uuid()
+    step7_1 = get_uuid()
+    step7_2 = get_uuid()
+    step8_1 = get_uuid()
+    step8_2 = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['hr_document_steps'],
@@ -4122,7 +4182,29 @@ def upgrade() -> None:
             'previous_step_id': step6_3,
             'staff_function_id': staff_function20_id,
             'id': step6_4
-        }]
+        },{
+            'hr_document_template_id': template10_id,
+            'previous_step_id': step6_2,
+            'staff_function_id': staff_function21_id,
+            'id': step7_1
+        }, {
+            'hr_document_template_id': template10_id,
+            'previous_step_id': step7_1,
+            'staff_function_id': staff_function22_id,
+            'id': step7_2
+        }, {
+            'hr_document_template_id': template11_id,
+            'previous_step_id': step6_2,
+            'staff_function_id': staff_function23_id,
+            'id': step8_1
+        }, {
+            'hr_document_template_id': template11_id,
+            'previous_step_id': step8_1,
+            'staff_function_id': staff_function24_id,
+            'id': step8_2
+        }
+
+        ]
     )
 
     candidate_id = get_uuid()
