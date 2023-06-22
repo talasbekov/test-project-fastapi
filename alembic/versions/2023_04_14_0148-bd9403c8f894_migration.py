@@ -3408,6 +3408,8 @@ def upgrade() -> None:
         Base.metadata.tables['hr_document_templates'],
         [{
             'path': 'http://193.106.99.68:2287/static/732a700e-d3f5-475c-bfcc-2f5503a101c1.html',
+            'pathKZ': '',
+            "description": "",
             'subject_type': 2,
             'properties': {
                 'rank': {
@@ -3555,6 +3557,8 @@ def upgrade() -> None:
             'is_visible': True
         },{
             'path': 'http://193.106.99.68:2287/static/498662e9-bc52-40ad-a6ff-2a2649a19bd7.html',
+            "pathKZ": "",
+            "description": "",
             'subject_type': 1,
             'properties': {
                         'surname': {
