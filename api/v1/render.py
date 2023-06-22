@@ -11,6 +11,7 @@ from core import get_db
 from models import LanguageEnum
 from services import render_service
 
+morph = pymorphy2.MorphAnalyzer()
 
 class ConvertCandidateTemplate(BaseModel):
     hr_document_template_id: uuid.UUID
@@ -105,9 +106,8 @@ async def inflect_word(
                     septik_int: int, 
                     lang: LanguageEnum = LanguageEnum.ru):
     if lang == LanguageEnum.ru:
-        morph = pymorphy2.MorphAnalyzer()
-        return [i.word for i in morph.parse(word)[0].lexeme][septik_int]
-    if lang == LanguageEnum.kz:
+        return padezh(word, septik_int)
+    elif lang == LanguageEnum.kz:
         return septik(word, septik_int)
     else:
         return None
@@ -126,6 +126,8 @@ def septik(text, septik):
     last_consonant = next(
         (char for char in reversed(text) if char in consonants), None)
     last_is_vowel = last_char in vowels
+    if septik == 0:
+        return text
     if septik == 1:
         if last_is_vowel:
             end = 'дАЕн'
@@ -187,3 +189,19 @@ def septik(text, septik):
             'ЫІ',
             'і')
     return text + end
+
+def padezh(word, septik_int):
+    parsed_word = morph.parse(word)
+    if septik_int == 1:
+        return parsed_word.inflect({'gent'}).word
+    if septik_int == 2:
+        return parsed_word.inflect({'datv'}).word
+    if septik_int == 3:
+        return parsed_word.inflect({'accs'}).word
+    if septik_int == 4:
+        return parsed_word.inflect({'loc2'}).word
+    if septik_int == 5:
+        return parsed_word.inflect({'gen2'}).word
+    if septik_int == 6:
+        return parsed_word.inflect({'ablt'}).word
+    return word

@@ -53,7 +53,9 @@ class TemporaryStatusChangeHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        pass
+        status_id, _, _ = self.get_args(db, action, props)
+
+        status_service.get_by_id(db, status_id)
 
     def get_args(
             self,

@@ -367,7 +367,7 @@ class StaffDivisionService(
 
         parent_id = staff_division.parent_group_id
         
-        ids = []
+        ids = [staff_division.id]
 
         while parent_id != None:
             if parent_id is None:
