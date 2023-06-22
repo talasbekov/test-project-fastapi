@@ -3408,7 +3408,7 @@ def upgrade() -> None:
         Base.metadata.tables['hr_document_templates'],
         [{
             'url': 'http://193.106.99.68:2287/static/732a700e-d3f5-475c-bfcc-2f5503a101c1.html',
-            'subject_type': 'EMPLOYEE',
+            'subject_type': 1,
             'properties': {
                 'rank': {
                     'alias_nameKZ': 'Лауазым',
@@ -3557,7 +3557,7 @@ def upgrade() -> None:
             'is_visible': True
         },{
             'url': 'http://193.106.99.68:2287/static/498662e9-bc52-40ad-a6ff-2a2649a19bd7.html',
-            'subject_type': 'CANDIDATE',
+            'subject_type': 0,
             'properties': {
                         'surname': {
                         'alias_nameKZ': '\u0422\u0435\u0433\u0456',
