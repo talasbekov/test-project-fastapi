@@ -3551,7 +3551,7 @@ def upgrade() -> None:
             'name': 'Приказ о назначении на должность',
             'nameKZ': 'Қызметке тағайындау туралы бұйрық',
             'id': get_uuid(),
-            'maintainer_id': user4_id,
+            'maintainer_id': staff_unit4_id,
             'is_visible': True
         },{
             'url': 'http://193.106.99.68:2287/static/498662e9-bc52-40ad-a6ff-2a2649a19bd7.html',
@@ -3645,7 +3645,7 @@ def upgrade() -> None:
             'name': 'Приказ о зачислении на службу сотрудника',
             'nameKZ': 'Қызметкерді қызметке қабылдау бұйрығы',
             'id': get_uuid(),
-            'maintainer_id': user4_id,
+            'maintainer_id': staff_unit4_id,
             'is_visible': True
         },
         {
