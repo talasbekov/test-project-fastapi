@@ -66,7 +66,7 @@ class StatusChangeHandler(BaseHandler):
         if status_service.get_object(
             db,
             status_id,
-            props[action['status']['tagname']]['type']) is None:
+            template_props[action['status']['tagname']]['type']) is None:
             raise BadRequestException(
                 "Invalid status was sent with " + 
                 f"type: {props[action['status']['tagname']]['type']}" +
