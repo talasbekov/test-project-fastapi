@@ -3436,13 +3436,13 @@ def upgrade() -> None:
             'staff_unit_id': staff_unit10_id,
             'staff_function_id': staff_function20_id
         },{
-            'staff_unit_id': staff_unit9_id,
+            'staff_unit_id': staff_unit25_id,
             'staff_function_id': staff_function21_id
         }, {
             'staff_unit_id': staff_unit10_id,
             'staff_function_id': staff_function22_id
         }, {
-            'staff_unit_id': staff_unit9_id,
+            'staff_unit_id': staff_unit25_id,
             'staff_function_id': staff_function23_id
         }, {
             'staff_unit_id': staff_unit10_id,
