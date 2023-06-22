@@ -48,6 +48,26 @@ async def get_all(
                                 limit)
 
 
+@router.get("/{user_id}/templates/", 
+            dependencies=[Depends(HTTPBearer())],
+            summary="Check if user has access to template")
+async def is_template_accessible_for_user(
+    *,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends(),
+    user_id: uuid.UUID,
+    hr_document_template_id: uuid.UUID
+):
+    """
+    Check if user has access to template
+
+    - **user_id**: str - The value which returns filtered results by user_id.
+    """
+    Authorize.jwt_required()
+    return user_service.is_template_accessible_for_user(
+                db, user_id, hr_document_template_id)
+
+
 @router.get("/archived",
             dependencies=[Depends(HTTPBearer())],
             response_model=TableUserRead,

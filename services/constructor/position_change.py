@@ -61,6 +61,8 @@ class PositionChangeHandler(BaseHandler):
     ):
         position_id, percent, reason = self.get_args(action, props)
 
+        staff_unit_service.get_by_id(db, position_id)
+
         if staff_unit_service.exists_relation(db, user.id, position_id):
             raise BadRequestException(
                 ("This position is already assigned to this user:"
@@ -73,12 +75,22 @@ class PositionChangeHandler(BaseHandler):
     def get_args(self, action, properties):
         try:
             position_id = properties[action["staff_unit"]["tagname"]]["value"]
-            percent = int(properties[action["percent"]["tagname"]]["name"])
-            reason = properties[action["reason"]["tagname"]]["name"]
         except KeyError as e:
             logging.exception(e)
             raise BadRequestException(
                 f"Position is not defined for this action: {self.__handler__}")
+        try:
+           percent = int(properties[action["percent"]["tagname"]]["name"])
+        except KeyError as e:
+            logging.exception(e)
+            raise BadRequestException(
+                f"Percent is not defined for this action: {self.__handler__}")
+        try:
+           reason = properties[action["reason"]["tagname"]]["name"]
+        except KeyError as e:
+            logging.exception(e)
+            raise BadRequestException(
+                f"Reason is not defined for this action: {self.__handler__}")
         return position_id, percent, reason
 
     def handle_response(self, db: Session,
