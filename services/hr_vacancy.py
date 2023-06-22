@@ -28,7 +28,11 @@ class HrVacancyService(
 
         return vacancies
 
-    def get_by_department(self, db: Session, staff_division_id: str):
+    def get_by_department(self,
+                          db: Session,
+                          staff_division_id: str,
+                          user_id: uuid.UUID
+                          ):
 
         staff_division = staff_division_service.get_by_id(
             db, staff_division_id)
@@ -39,7 +43,12 @@ class HrVacancyService(
             staff_division_number=staff_division.staff_division_number,
             type_id=staff_division.type_id,
             type=staff_division.type,
-            vacancies=[HrVacancyRead.from_orm(i).dict() for i in vacancies]
+            vacancies=[HrVacancyRead.from_orm(vacancy).to_dict(is_responded=True)
+                       if self._check_exists_respond(db, vacancy.id, user_id)
+                       else
+                       HrVacancyRead.from_orm(vacancy).to_dict(is_responded=False)
+                       for vacancy in vacancies
+                       ]
         )
 
         return response
