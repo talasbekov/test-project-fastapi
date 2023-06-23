@@ -60,7 +60,7 @@ class StaffDivisionService(
             db, StaffDivisionEnum.SERVICE.value)
         departments = db.query(self.model).filter(
             StaffDivision.parent_group_id == service_staff_function.id
-        ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
+        ).order_by(StaffDivision.staff_division_number).offset(skip).limit(limit).all()
         return [self._return_correctly(db, department)
                 for department in departments]
 
