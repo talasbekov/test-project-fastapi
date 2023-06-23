@@ -641,6 +641,8 @@ class HrDocumentService(
                         raise ForbiddenException(
                             detail='Вы не можете инициализировать этот документ!'
                         )
+        elif step.category is not None:
+            pass
         elif not staff_unit_service.has_staff_function(db, 
                                                        staff_unit.id, 
                                                        step.staff_function_id):
