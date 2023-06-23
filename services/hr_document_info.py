@@ -113,7 +113,7 @@ class HrDocumentInfoService(
             .join(DocumentStaffFunction)\
             .filter(
                 self.model.hr_document_id == id,
-                self.model.signed_by_id is not None
+                self.model.signed_by_id != None
         )\
             .order_by(self.model.created_at.asc(),
                       DocumentStaffFunction.priority.asc(),
@@ -177,7 +177,7 @@ class HrDocumentInfoService(
         info = db.query(HrDocumentInfo).filter(
             HrDocumentInfo.hr_document_id == document_id,
             HrDocumentInfo.hr_document_step_id == step_id,
-            HrDocumentInfo.is_signed is not None,
+            HrDocumentInfo.is_signed != None,
             HrDocumentInfo.order == order,
         ).order_by(HrDocumentInfo.signed_at.desc()).first()
 
