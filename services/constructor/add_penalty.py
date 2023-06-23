@@ -49,7 +49,7 @@ class AddPenaltyHandler(BaseHandler):
     ):
         penalty_id = self.get_args(action, props)
 
-        penalty_service.get_by_id(db, penalty_id)
+        penalty_type_service.get_by_id(db, penalty_id)
 
     def get_args(self, action, properties):
         try:

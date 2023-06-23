@@ -42,7 +42,7 @@ class AddBadgeHandler(BaseHandler):
     ):
         badge_id = self.get_args(action, props)
 
-        badge_service.get_by_id(db, badge_id)
+        badge_service.get_badge_by_id(db, badge_id)
 
         if badge_service.exists_relation(db, user.id, badge_id):
             raise BadRequestException(

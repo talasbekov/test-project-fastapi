@@ -63,7 +63,15 @@ class StatusChangeHandler(BaseHandler):
     ):
         status_id = self.get_args(action, props)
 
-        status_service.get_by_id(db, status_id)
+        if status_service.get_object(
+            db,
+            status_id,
+            template_props[action['status']['tagname']]['type']) is None:
+            raise BadRequestException(
+                "Invalid status was sent with " + 
+                f"type: {props[action['status']['tagname']]['type']}" +
+                f"id: {status_id}"
+            )
 
         if status_service.exists_relation(db, user.id, status_id):
             raise ForbiddenException(

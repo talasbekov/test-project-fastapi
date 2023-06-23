@@ -44,7 +44,7 @@ class DeleteBadgeHandler(BaseHandler):
         document: HrDocument,
     ):
         badge_id = self.get_args(action, props)
-        badge = badge_service.get_by_id(db, badge_id)
+        badge = badge_service.get_badge_by_id(db, badge_id)
         if not badge_service.exists_relation(db, user.id, badge.type_id):
             raise ForbiddenException(
                 ("Badge is not assigned to this user:"
