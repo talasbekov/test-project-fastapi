@@ -1,3 +1,4 @@
+import datetime
 from typing import Any
 
 from sqlalchemy.orm import Session, Query
@@ -5,7 +6,7 @@ from sqlalchemy.orm import Session, Query
 from core import configs
 from models import User, HrDocument, Badge
 from .base import BaseHandler
-from services import badge_service
+from services import badge_service, history_service
 from exceptions import ForbiddenException
 
 
@@ -25,8 +26,13 @@ class DeleteBlackBeretHandler(BaseHandler):
             db, user, action, template_props, props, document)
         black_beret = self.get_args(db, user)
         res = badge_service.stop_relation(db, user.id, black_beret.id)
-        res.cancel_document_link = configs.GENERATE_IP + str(document.id)
+        history = history_service.create_history(db, user.id, res.badge)
+        document.old_history_id = res.id
         res.document_number = document.reg_number
+        history.cancel_document_link = configs.GENERATE_IP + str(document.id)
+        history.date_to = datetime.datetime.now()
+        history.document_number = document.reg_number
+
 
         db.add(res)
         db.add(document)

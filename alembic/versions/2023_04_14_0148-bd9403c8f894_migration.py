@@ -246,6 +246,8 @@ def upgrade() -> None:
     badgetype4_id = get_uuid()
     badgetype5_id = get_uuid()
     badgetype6_id = get_uuid()
+    badgetype7_id = get_uuid()
+    badgetype8_id = get_uuid()
 
     op.bulk_insert(
         Base.metadata.tables['badge_types'],
@@ -272,7 +274,7 @@ def upgrade() -> None:
         }, {
             "id": badgetype6_id,
             "name": "МЕДАЛЬ 'МВД РК'",
-            "nameKZ": "МЕДАЛЬ 'МВД РК'",
+            "nameKZ": "МЕДАЛЬ 'ҚР ІІМ'",
             "url": f"{base_s3_url}/static/badge4.png"
         }]
     )
@@ -618,7 +620,7 @@ def upgrade() -> None:
         }, {
             'id': position25_id,
             'name': 'Инструктор',
-            'nameKZ': 'Инструктор',
+            'nameKZ': 'Нүсқаушы',
             'category_code': 'C-S-10',
             'form': 'Форма 1',
             'max_rank_id': rank9_id
@@ -725,19 +727,19 @@ def upgrade() -> None:
         }, {
             'id': staff_division_type2_id,
             'name': "Управление",
-            'nameKZ': 'Управление',
+            'nameKZ': 'Басқару',
         }, {
             'id': staff_division_type3_id,
             'name': "Отдел",
-            'nameKZ': 'Отдел',
+            'nameKZ': 'Бөлім',
         }, {
             'id': staff_division_type4_id,
             'name': "Универсал",
-            'nameKZ': 'Универсал'
+            'nameKZ': 'Әмбебап'
         }, {
             'id': staff_division_type5_id,
             'name': "Группа",
-            'nameKZ': 'Группа'
+            'nameKZ': 'Топ'
         }]
     )
 
@@ -793,15 +795,15 @@ def upgrade() -> None:
         }, {
             'id': jurisdiction2_id,
             'name': "Личный Состав",
-            'nameKZ': 'Жеке құрамы'
+            'nameKZ': 'Жеке құрам'
         }, {
             'id': jurisdiction3_id,
             'name': "Боевое Подразделение",
-            'nameKZ': 'Жауынгерлік Бөлімшесі'
+            'nameKZ': 'Жауынгерлік Бөлімше'
         }, {
             'id': jurisdiction4_id,
             'name': "Штабное Подразделение",
-            'nameKZ': 'Штаб Бөлімшесі'
+            'nameKZ': 'Штаб Бөлімше'
         }, {
             'id': jurisdiction5_id,
             'name': "Кандидаты",
@@ -1037,7 +1039,6 @@ def upgrade() -> None:
                 'priority': 100,
                 'role_id': doc_type3_id
         }
-
         ]
     )
 
@@ -2631,11 +2632,11 @@ def upgrade() -> None:
         [{
             'id': family_status_id,
             'name': "Женат / Замужем",
-            'nameKZ': 'Үйленген / Тұрмысқа шыққан'
+            'nameKZ': 'Үйленген / Тұрмыс құрған'
         }, {
             'id': family_status2_id,
             'name': "Не женат / Не замужем",
-            'nameKZ': 'Үйленбеген / Тұрмысқа құрмаған'
+            'nameKZ': 'Үйленбеген / Тұрмыс құрмаған'
         }, {
             'id': family_status3_id,
             'name': "Разведен-а",
@@ -3212,7 +3213,7 @@ def upgrade() -> None:
         rank13_id,
         staff_unit29_id,
         f"{base_s3_url}/static/placeholder.jpg",
-        position15_id,
+        position7_id,
         True,
         '1.2.27K',
         True)
@@ -3802,6 +3803,7 @@ def upgrade() -> None:
     step6_3 = get_uuid()
     step6_4 = get_uuid()
 
+
     op.bulk_insert(
         Base.metadata.tables['hr_document_steps'],
         [{
@@ -3864,7 +3866,8 @@ def upgrade() -> None:
             'previous_step_id': step6_3,
             'staff_function_id': staff_function20_id,
             'id': step6_4
-        }]
+        }
+        ]
     )
 
     candidate_id = get_uuid()
@@ -3979,7 +3982,7 @@ def upgrade() -> None:
             {
                 'id': penalty_type4_id,
                 'name': 'Предупреждение о неполном служебном соответствии',
-                'nameKZ': 'Толық қызметтік сәйкестікті қателіктен басқа құлақтандыру'
+                'nameKZ': 'Толықсыз қызметтік сәйкестікті қателіктен басқа құлақтандыру'
         },
             {
                 'id': penalty_type5_id,
@@ -4528,7 +4531,7 @@ def upgrade() -> None:
         }, {
             'id': status_type10,
             'name': "В отпуске по болезни",
-            'nameKZ': 'Аурулардың демалысында'
+            'nameKZ': 'Денсаулық бойынша демалыста'
         }, {
             'id': status_type11,
             'name': "Ежегодный отпуск",
@@ -4582,13 +4585,13 @@ def upgrade() -> None:
         [{
             'id': contract_type_id,
             'name': 'Контракт на 2 года',
-            'nameKZ': '2 жылға арналған келісімшарт',
+            'nameKZ': '2 жылғы келісімшарт',
             'years': 2,
             'is_finite': True
         }, {
             'id': contract_type2_id,
             'name': 'Контракт на неопределенный срок',
-            'nameKZ': 'Белгісіз мерзімге келісімшарт',
+            'nameKZ': 'Белгісіз мерзімді келісімшарт',
             'years': -1,
             'is_finite': False
         }]
@@ -6356,7 +6359,7 @@ def upgrade() -> None:
         }, {
             'id': candidate_essay_type10_id,
             'name': 'Как вы понимаете значение слова подвиг',
-            'nameKZ': 'Виг сөзінің мағынасын қалай түсінесіз',
+            'nameKZ': 'Ерлік сөзінің мағынасын қалай түсінесіз',
         }, {
             'id': candidate_essay_type11_id,
             'name': 'Почему я хочу служить в СГО РК',
@@ -6851,7 +6854,7 @@ def create_user(id,
         [{
             'id': course1_id,
             'name': "Backend курс",
-            'nameKZ': 'Backend курс',
+            'nameKZ': 'Backend курсы',
             'profile_id': educational_profile_id,
             'course_provider_id': course_provider1_id,
             'specialty_id': specialty1_id,
@@ -6875,7 +6878,7 @@ def create_user(id,
         }, {
             'id': course3_id,
             'name': "Front-End курс",
-            'nameKZ': 'Front-End курс',
+            'nameKZ': 'Front-End курсы',
             'profile_id': educational_profile_id,
             'course_provider_id': course_provider3_id,
             'specialty_id': specialty3_id,
@@ -7096,7 +7099,8 @@ def create_user(id,
             'date_of_issue': "2022-09-11",
             'date_to': "2022-09-12",
             'document_link': f"{base_s3_url}/static/example.txt",
-            'profile_id': personal_profile_id
+            'profile_id': personal_profile_id,
+            'issued_by': "МВД РК"
         }]
     )
 

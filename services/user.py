@@ -78,6 +78,17 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
         return users
 
+    def is_template_accessible_for_user(self,
+                                db: Session,
+                                user_id: uuid.UUID,
+                                template_id: uuid.UUID) -> bool:
+        user = self.get_by_id(db, user_id)
+        
+        unavailable_users = self._get_excepted_users_by_document_in_progress(
+            db, template_id)
+        
+        return True if user not in unavailable_users else False
+        
     def get_all_active(self,
                        db: Session,
                        filter: str,
@@ -200,7 +211,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
     def get_by_staff_unit(self, db: Session, staff_unit_id):
 
         users = db.query(self.model).filter(
-            self.model.actual_staff_unit_id == staff_unit_id
+            self.model.staff_unit_id == staff_unit_id
         ).all()
 
         return users
@@ -222,7 +233,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         current_user = self.get_by_id(db, user_id)
 
         staff_unit: StaffUnit = staff_unit_service.get_by_id(
-            db, current_user.actual_staff_unit_id)
+            db, current_user.staff_unit_id)
 
         document_staff_functions: List[DocumentStaffFunction] = []
 
@@ -408,7 +419,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             DocumentStaffFunction.staff_units.any(
                 StaffUnit.id == user.staff_unit_id),
             DocumentStaffFunction.role_id == initiator_role.id,
-            DocumentStaffFunction.hr_document_step is not None
+            DocumentStaffFunction.hr_document_step != None
         ).all())
         document_ids = [
             function.hr_document_step.hr_document_template_id for function in functions]

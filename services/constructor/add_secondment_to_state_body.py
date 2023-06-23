@@ -48,7 +48,9 @@ class AddSecondmentToStateBody(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        pass
+        secondment_id, _, _ = self.get_args(action, props)
+
+        state_body_service.get_by_id(db, secondment_id)
 
     def get_args(self, action, properties):
         try:

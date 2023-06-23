@@ -293,7 +293,7 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['staff_division_id'], ['staff_divisions.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_foreign_key('staff_units_curator_of_id_fkey', 'staff_units', 'staff_divisions', ['curator_of_id'], ['id'])
+    op.create_foreign_key('staff_units_curator_of_id_fkey', 'staff_units', 'staff_divisions', ['curator_of_id'], ['id'], ondelete='SET NULL')
     op.create_table('hr_document_templates',
                     sa.Column('path', sa.String(length=255), nullable=True),
                     sa.Column('pathKZ', sa.String(length=255), nullable=True),
@@ -796,13 +796,13 @@ def upgrade() -> None:
     sa.Column('staff_division_number', sa.Integer(), nullable=True),
     sa.Column('type_id', sa.UUID(), nullable=True),
     sa.Column('staff_list_id', sa.UUID(), nullable=False),
-    sa.Column('origin_id', sa.UUID(), nullable=True, ondelete='SET NULL'),
+    sa.Column('origin_id', sa.UUID(), nullable=True),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('nameKZ', sa.String(), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.ForeignKeyConstraint(['origin_id'], ['staff_divisions.id'], ),
+    sa.ForeignKeyConstraint(['origin_id'], ['staff_divisions.id'], ondelete='SET NULL'),
     sa.ForeignKeyConstraint(['parent_group_id'], ['archive_staff_divisions.id'], ),
     sa.ForeignKeyConstraint(['staff_list_id'], ['staff_lists.id'], ),
     sa.ForeignKeyConstraint(['type_id'], ['staff_division_types.id'], ),
@@ -1189,6 +1189,7 @@ def upgrade() -> None:
     sa.Column('date_to', sa.TIMESTAMP(timezone=True), nullable=True),
     sa.Column('document_link', sa.TEXT(), nullable=True),
     sa.Column('profile_id', sa.UUID(), nullable=False),
+    sa.Column('issued_by', sa.String(length=255), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),

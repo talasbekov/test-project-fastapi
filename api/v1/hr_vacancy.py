@@ -48,7 +48,8 @@ async def get_all_by_department(*,
         - **staff_division_id**: uuid - required.
     """
     Authorize.jwt_required()
-    return hr_vacancy_service.get_by_department(db, staff_division_id)
+    user_id = Authorize.get_jwt_subject()
+    return hr_vacancy_service.get_by_department(db, staff_division_id, user_id)
 
 
 @router.get("/not_active", dependencies=[Depends(HTTPBearer())],

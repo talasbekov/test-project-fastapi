@@ -41,6 +41,9 @@ class AddBadgeHandler(BaseHandler):
         document: HrDocument,
     ):
         badge_id = self.get_args(action, props)
+
+        badge_service.get_badge_by_id(db, badge_id)
+
         if badge_service.exists_relation(db, user.id, badge_id):
             raise BadRequestException(
                 ("Badge is already assigned to this user:"

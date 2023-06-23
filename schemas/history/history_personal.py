@@ -167,6 +167,22 @@ class ContractReadHistory(BaseModel):
         )
 
 
+class BadgeReadHistory(BaseModel):
+    name: Optional[str]
+    nameKZ: Optional[str]
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
+
+    @classmethod
+    def from_orm(cls, orm_obj):
+
+        return cls(
+            name=orm_obj.type.name,
+            nameKZ=orm_obj.type.nameKZ,
+        )
+
 class SecondmentReadHistory(BaseModel):
     name: Optional[str]
     nameKZ: Optional[str]
@@ -177,7 +193,14 @@ class SecondmentReadHistory(BaseModel):
 
     @classmethod
     def from_orm(cls, orm_obj):
+        division_name = getattr(orm_obj.staff_division, 'name', None)
+        division_nameKZ = getattr(orm_obj.staff_division, 'nameKZ', None)
+        if division_name:
+            return cls(
+                name=orm_obj.name + ": " + division_name,
+                nameKZ=orm_obj.nameKZ + ": " + division_nameKZ,
+            )
         return cls(
-            name=orm_obj.staff_division.name,
-            nameKZ=orm_obj.staff_division.nameKZ,
+            name=orm_obj.name,
+            nameKZ=orm_obj.nameKZ,
         )

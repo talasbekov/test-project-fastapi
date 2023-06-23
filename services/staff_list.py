@@ -157,15 +157,15 @@ class StaffListService(
         service_staff_function_service.delete_all_inactive(db)
         db.add(staff_list)
         db.flush()
-        user_ids = self.get_disposition_user_ids_by_staff_list_id(
-            db, staff_list_id)
-        if user_ids:
-            await self.create_disposition_doc_by_staff_list_id(
-                db,
-                staff_list_id,
-                user_ids,
-                current_user_id,
-                current_user_role_id)
+        # user_ids = self.get_disposition_user_ids_by_staff_list_id(
+        #     db, staff_list_id)
+        # if user_ids:
+        #     await self.create_disposition_doc_by_staff_list_id(
+        #         db,
+        #         staff_list_id,
+        #         user_ids,
+        #         current_user_id,
+        #         current_user_role_id)
         return staff_list
 
     def _create_staff_division(self, db: Session,
@@ -296,7 +296,7 @@ class StaffListService(
             for staff_unit in staff_division.staff_units:
                 staff_unit: StaffUnit
 
-                staff_unit_user_id = (staff_unit.users[0].id 
+                staff_unit_user_id = (staff_unit.users[0].id
                                       if staff_unit.users else None)
                 staff_unit_actual_user_id = staff_unit.actual_users[
                     0].id if staff_unit.actual_users else None
@@ -306,7 +306,7 @@ class StaffListService(
 
                 archive_staff_unit = (archive_staff_unit_service
                                       .create_based_on_existing_staff_unit(
-                                        db, 
+                                        db,
                                         staff_unit,
                                         staff_unit_curator_of_id,
                                         staff_unit_user_id,
@@ -391,7 +391,6 @@ class StaffListService(
                                                            body,
                                                            current_user_id,
                                                            current_user_role_id)
-        print(hr_document)
         return hr_document
 
     def get_disposition_user_ids_by_staff_list_id(self,

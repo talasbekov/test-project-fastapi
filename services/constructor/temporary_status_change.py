@@ -4,7 +4,7 @@ from core import configs
 from models import User, HrDocument
 from .base import BaseHandler
 from services import status_service, history_service
-from exceptions import BadRequestException
+from exceptions import BadRequestException, ForbiddenException
 from utils import convert_str_to_datetime
 
 
@@ -53,7 +53,11 @@ class TemporaryStatusChangeHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        pass
+        status_id, _, _ = self.get_args(db, action, props)
+
+        if status_service.get_object(db, status_id, 'write') is None:
+            raise ForbiddenException(
+                detail=f'Invalid status_id for action: {self.__handler__}')
 
     def get_args(
             self,

@@ -210,3 +210,15 @@ async def get_division_types(*,
     """
     Authorize.jwt_required()
     return staff_division_type_service.get_multi(db, skip=skip, limit=limit)
+
+
+@router.get('/ids/{id}/', dependencies=[Depends(HTTPBearer())],
+            response_model=List[uuid.UUID],
+            summary="Get ids of all parents of Staff Division")
+async def get_parent_ids(*,
+                         db: Session = Depends(get_db),
+                         id: uuid.UUID,
+                         Authorize: AuthJWT = Depends()
+                         ):
+    Authorize.jwt_required()
+    return staff_division_service.get_parent_ids(db, id)
