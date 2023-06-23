@@ -194,8 +194,8 @@ class HrVacancyService(
                 db, body.hr_vacancy_requirements_ids)
 
         if body.staff_unit_id is not None:
-            staff_unit = staff_unit_service.get_by_id(db, body.staff_unit_id)
-            hr_vacancy.staff_unit_id = staff_unit.id
+            hr_vacancy.staff_unit_id = staff_unit_service.get_by_id(
+                db, body.staff_unit_id).id
 
         if body.is_active is not None:
             hr_vacancy.is_active = body.is_active
