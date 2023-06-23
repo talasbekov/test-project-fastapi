@@ -45,7 +45,7 @@ class AddCoolnessHandler(BaseHandler):
     ):
         coolness_id = self.get_args(action, props)
 
-        coolness_service.get_by_id(db, coolness_id)
+        coolness_service.get_object(db, coolness_id)
 
         if coolness_service.exists_relation(db, user.id, coolness_id):
             raise ForbiddenException(

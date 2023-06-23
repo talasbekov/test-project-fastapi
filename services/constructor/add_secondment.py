@@ -55,7 +55,7 @@ class AddSecondmentHandler(BaseHandler):
     ):
         secondment_id, _, _ = self.get_args(action, props)
 
-        secondment_service.get_by_id(db, secondment_id)
+        staff_division_service.get_by_id(db, secondment_id)
 
     def get_args(self, action, properties):
         try:
