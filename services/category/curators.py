@@ -1,20 +1,17 @@
 from __future__ import annotations
 import uuid
-from typing import List, TYPE_CHECKING
+from typing import List
 
 from sqlalchemy.orm import Session
 
 from models import (
     StaffDivisionEnum,
     StaffDivision,
+    User,
 )
 from services import staff_division_service
+from exceptions import NotFoundException
 from .base import BaseCategory
-
-if TYPE_CHECKING:
-    from services.user import (
-        user_service,
-    )
 
 
 class CuratorCategory(BaseCategory):
@@ -54,7 +51,9 @@ class CuratorCategory(BaseCategory):
         db: Session,
         user_id: uuid.UUID,
     ) -> bool:
-        user = user_service.get_by_id(db, user_id)
+        user = db.query(User).filter(User.id == user_id).first()
+        if user is None:
+            raise NotFoundException(f'User with id {user_id} not found!')
         if user.staff_unit is None or user.staff_unit.courted_group is None:
             return False
         return True
