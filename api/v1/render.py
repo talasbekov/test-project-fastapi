@@ -126,9 +126,7 @@ def septik(text, septik):
     last_consonant = next(
         (char for char in reversed(text) if char in consonants), None)
     last_is_vowel = last_char in vowels
-    if septik == 0:
-        return text
-    if septik == 1:
+    if septik == 4:
         if last_is_vowel:
             end = 'дАЕн'
         elif last_consonant in deaf:
@@ -137,18 +135,18 @@ def septik(text, septik):
             end = 'дАЕн'
         elif last_consonant in 'мнң':
             end = 'нАЕн'
-    elif septik == 2:
-        end = 'тАЕ' if last_consonant in deaf else 'дАЕ'
     elif septik == 3:
+        end = 'тАЕ' if last_consonant in deaf else 'дАЕ'
+    elif septik == 5:
         end = 'гАЕ' if last_consonant in deaf else 'кАЕ'
-    elif septik == 4:
+    elif septik == 2:
         if last_char in 'июлруйжз':
             end = 'дЫІң'
         elif last_consonant in deaf:
             end = 'тЫІң'
         else:
             end = 'нЫІң'
-    elif septik == 5:
+    elif septik == 1:
         if last_char in 'июжзрлймнң':
             end = 'дЫІ'
         elif last_consonant in deaf:
