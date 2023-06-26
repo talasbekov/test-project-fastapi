@@ -1,6 +1,6 @@
 from __future__ import annotations
 import uuid
-from typing import List, TYPE_CHECKING
+from typing import List
 
 from sqlalchemy import and_, func
 from sqlalchemy.orm import Session
