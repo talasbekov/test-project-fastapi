@@ -138,7 +138,7 @@ def septik(text, septik):
     elif septik == 4:
         end = 'тАЕ' if last_consonant in deaf else 'дАЕ'
     elif septik == 2:
-        end = 'гАЕ' if last_consonant in deaf else 'қАЕ'
+        end = 'гАЕ' if last_consonant in deaf and last_consonant !='т' else 'кАЕ'
     elif septik == 1:
         if last_char in 'июлруйжз':
             end = 'дЫІң'
