@@ -653,7 +653,7 @@ class HrDocumentService(
                 raise InvalidOperationException(
                     "Категория не поддерживается!"
                 )
-            if category.validate(db, user_id):
+            if not category.validate(db, user_id):
                 raise ForbiddenException(
                     detail='Вы не можете инициализировать этот документ!'
                 )

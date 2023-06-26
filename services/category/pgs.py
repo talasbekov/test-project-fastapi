@@ -32,7 +32,7 @@ class PgsCategory(BaseCategory):
         role_id: uuid.UUID,
         user_id: uuid.UUID,
     ) -> List[uuid.UUID]:
-        if self.validate(db, user_id):
+        if not self.validate(db, user_id):
             return []
         return super().get_templates(db, role_id, user_id, self.__handler__)
 
