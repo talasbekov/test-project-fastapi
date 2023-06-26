@@ -1157,7 +1157,7 @@ class HrDocumentService(
             subject_users: List[User]) -> bool:
         # Получаем все дочерние штатные группы пользователя, включая саму
         # группу
-        staff_divisions: List[StaffDivision] = staff_division_service.get_child_groups(
+        staff_divisions: List[StaffDivision] = staff_division_service.get_all_child_groups(
             db, staff_unit.staff_division_id)
         staff_divisions.append(staff_division)
 
