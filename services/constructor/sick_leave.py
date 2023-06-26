@@ -60,9 +60,9 @@ class SickLeaveHandler(BaseHandler):
     ):
         try:
             date_from = convert_str_to_datetime(
-                props[action['date_from']['tagname']]['name'])
+                props[action['date_from']['tagname']]['value'])
             date_to = convert_str_to_datetime(
-                props[action['date_to']['tagname']]['name'])
+                props[action['date_to']['tagname']]['value'])
         except Exception:
             raise BadRequestException(
                 detail=f'Invalid props for action: {self.__handler__}')
