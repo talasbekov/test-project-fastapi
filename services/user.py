@@ -278,8 +278,10 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             staff_division: StaffDivision) -> List[User]:
         # Получаем все дочерние штатные группы пользователя, включая саму
         # группу
-        staff_divisions: List[StaffDivision] = staff_division_service.get_all_child_groups(
-            db, staff_division.id)
+        staff_divisions: List[StaffDivision] = (
+            staff_division_service.get_all_child_groups(
+                db, staff_division.id)
+        )
         staff_divisions.append(staff_division)
 
         # Получаем все staff unit из staff divisions
