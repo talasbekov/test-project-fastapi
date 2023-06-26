@@ -14,7 +14,7 @@ class PositionService(ServiceBase[Position, PositionCreate, PositionUpdate]):
         skip: int = 0, 
         limit: int = 100
     ) -> List[Position]:
-        specials = ['Умер','Погиб','В запасе', 'В отставке']
+        specials = ['Умер', 'Погиб', 'В запасе', 'В отставке']
         positions = (db.query(Position)
                      .filter(Position.name.notin_(specials))
                      .offset(skip)
