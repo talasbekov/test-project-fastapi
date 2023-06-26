@@ -39,7 +39,7 @@ async def get_all(*,
             This parameter is optional and defaults to 100.
    """
     Authorize.jwt_required()
-    return position_service.get_multi(db, skip, limit)
+    return position_service.get_without_special(db, skip, limit)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
