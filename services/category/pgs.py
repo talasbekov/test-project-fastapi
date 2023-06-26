@@ -12,14 +12,15 @@ if TYPE_CHECKING:
         user_service,
     )
 
+
 class PgsCategory(BaseCategory):
     __handler__ = 2
 
     def handle(self, db: Session, user_id: uuid.UUID) -> list[uuid.UUID]:
         staff_divisions = (staff_division_service
-                           .get_all_by_name(db, 
+                           .get_all_by_name(db,
                                             StaffDivisionEnum.SERVICE.value)
-        )
+                           )
         res = set()
         for staff_division in staff_divisions:
             for staff_unit in staff_division.staff_units:
@@ -34,6 +35,8 @@ class PgsCategory(BaseCategory):
         role_id: uuid.UUID,
         user_id: uuid.UUID,
     ) -> List[uuid.UUID]:
+        if self.validate(db, user_id):
+            return []
         return super().get_templates(db, role_id, user_id, self.__handler__)
 
     def validate(

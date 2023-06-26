@@ -1,5 +1,5 @@
 import uuid
-from typing import List
+from typing import List, TYPE_CHECKING
 
 from sqlalchemy.orm import Session
 
@@ -9,6 +9,11 @@ from models import (
 )
 from services import staff_division_service
 from .base import BaseCategory
+
+if TYPE_CHECKING:
+    from services import (
+        user_service,
+    )
 
 
 class CuratorCategory(BaseCategory):
@@ -39,6 +44,8 @@ class CuratorCategory(BaseCategory):
         role_id: uuid.UUID,
         user_id: uuid.UUID,
     ) -> List[uuid.UUID]:
+        if not self.validate(db, user_id):
+            return []
         return super().get_templates(db, role_id, user_id, self.__handler__)
 
     def validate(
@@ -46,6 +53,9 @@ class CuratorCategory(BaseCategory):
         db: Session,
         user_id: uuid.UUID,
     ) -> bool:
+        user = user_service.get_by_id(db, user_id)
+        if user.staff_unit is None or user.staff_unit.courted_group is None:
+            return False
         return True
 
 

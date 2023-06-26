@@ -40,6 +40,8 @@ class SupervisorCategory(BaseCategory):
         role_id: uuid.UUID,
         user_id: uuid.UUID,
     ) -> List[uuid.UUID]:
+        if not self.validate(db, user_id):
+            return []
         return super().get_templates(db, role_id, user_id, self.__handler__)
 
     def validate(
@@ -53,7 +55,7 @@ class SupervisorCategory(BaseCategory):
         if user.staff_unit.position is None:
             return False
         if user.staff_unit.position.name.lower() not in\
-            PositionNameEnum.SUPERVISOR.value.lower():
+                PositionNameEnum.SUPERVISOR.value.lower():
             return False
         return True
 
