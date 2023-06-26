@@ -9,7 +9,7 @@ from models import User, StaffUnit, Position, PositionNameEnum
 from .base import BaseCategory
 
 if TYPE_CHECKING:
-    from services import (
+    from services.user import (
         user_service,
     )
 

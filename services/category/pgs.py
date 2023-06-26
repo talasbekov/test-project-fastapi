@@ -9,7 +9,7 @@ from services import staff_division_service
 from .base import BaseCategory
 
 if TYPE_CHECKING:
-    from services import (
+    from services.user import (
         user_service,
     )
 
