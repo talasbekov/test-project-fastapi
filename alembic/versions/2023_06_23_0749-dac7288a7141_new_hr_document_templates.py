@@ -248,7 +248,7 @@ def upgrade() -> None:
                             'isHidden': False
 
                             },
-                        'new_rank': {
+                        'new_rank_name': {
                             'alias_nameKZ': '\u0416\u0430\u04a3\u0430 \u043b\u0430\u0443\u0430\u0437\u044b\u043c',
                             'data_taken': 'dropdown',
                             'type': 'write',
@@ -273,7 +273,7 @@ def upgrade() -> None:
                 {
                     'renew_contract': {
                         'contract': {
-                            'tagname': 'contract_type',
+                            'tagname': 'contract',
                             'alias_name': '\u041a\u043e\u043d\u0442\u0440\u0430\u043a\u0442',
                             'alias_nameKZ': '\u041a\u043e\u043d\u0442\u0440\u0430\u043a\u0442'
                         }

@@ -198,11 +198,7 @@ class StaffDivisionService(
         full_name = staff_division.name
         full_nameKZ = staff_division.nameKZ
 
-        service = self.get_by_name(db, StaffDivisionEnum.SERVICE.value)
-
-        while parent_id != service.id:
-            if parent_id is None:
-                break
+        while parent_id != None:
             tmp = self.get_by_id(db, parent_id)
             full_name = tmp.name + " / " + full_name
             full_nameKZ = tmp.nameKZ + " / " + full_nameKZ

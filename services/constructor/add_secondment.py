@@ -62,9 +62,9 @@ class AddSecondmentHandler(BaseHandler):
             secondment_id = properties[action["secondment"]
                                        ["tagname"]]["value"]
             date_from = convert_str_to_datetime(
-                properties[action["date_from"]["tagname"]]['name'])
+                properties[action["date_from"]["tagname"]]['value'])
             date_to = convert_str_to_datetime(
-                properties[action["date_to"]["tagname"]]['name'])
+                properties[action["date_to"]["tagname"]]['value'])
         except KeyError:
             raise BadRequestException(
                 f"Secondment is not defined for this action: {self.__handler__}")

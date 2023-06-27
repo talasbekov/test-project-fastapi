@@ -29,6 +29,7 @@ from services import (
     document_staff_function_type_service,
     hr_document_status_service,
     hr_document_template_service,
+    categories,
 )
 from .base import ServiceBase
 
@@ -277,8 +278,10 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             staff_division: StaffDivision) -> List[User]:
         # Получаем все дочерние штатные группы пользователя, включая саму
         # группу
-        staff_divisions: List[StaffDivision] = staff_division_service.get_child_groups(
-            db, staff_division.id)
+        staff_divisions: List[StaffDivision] = (
+            staff_division_service.get_all_child_groups(
+                db, staff_division.id)
+        )
         staff_divisions.append(staff_division)
 
         # Получаем все staff unit из staff divisions
@@ -421,8 +424,14 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             DocumentStaffFunction.role_id == initiator_role.id,
             DocumentStaffFunction.hr_document_step != None
         ).all())
-        document_ids = [
-            function.hr_document_step.hr_document_template_id for function in functions]
+        document_ids = []
+        [document_ids.extend(
+            categories[handler].get_templates(db, initiator_role.id, user_id))
+            if handler != 0 else []
+         for handler in categories]
+        document_ids.extend([
+            function.hr_document_step.hr_document_template_id
+            for function in functions])
         return hr_document_template_service.get_all_skip(
             db, document_ids, skip, limit)
 

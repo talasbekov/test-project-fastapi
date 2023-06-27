@@ -42,11 +42,13 @@ class ArchiveStaffUnitUpdate(ArchiveStaffUnitBase):
 
 
 class NewArchiveStaffUnitCreate(ArchiveStaffUnitBase):
+    curator_of_id: Optional[uuid.UUID] = Field(None, nullable=True)
     @validator('user_replacing_id')
     def validate_user_replacing_id(cls, user_replacing_id, values):
         user_id = values.get('user_id')
-        if user_replacing_id == user_id:
-            raise ValueError("user_replacing_id cannot be equal to user_id")
+        if user_replacing_id is not None and user_id is not None:
+            if user_replacing_id == user_id:
+                raise ValueError("user_replacing_id cannot be equal to user_id")
         return user_replacing_id
     pass
 
@@ -61,8 +63,9 @@ class NewArchiveStaffUnitUpdate(ArchiveStaffUnitBase):
     @validator('user_replacing_id')
     def validate_user_replacing_id(cls, user_replacing_id, values):
         user_id = values.get('user_id')
-        if user_replacing_id == user_id:
-            raise ValueError("user_replacing_id cannot be equal to user_id")
+        if user_replacing_id is not None and user_id is not None:
+            if user_replacing_id == user_id:
+                raise ValueError("user_replacing_id cannot be equal to user_id")
         return user_replacing_id
     pass
 

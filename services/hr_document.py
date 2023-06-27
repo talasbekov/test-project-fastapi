@@ -74,6 +74,7 @@ from services import (
     archive_staff_unit_service,
     status_leave_service,
     state_body_service,
+    categories,
 )
 from .base import ServiceBase
 
@@ -289,7 +290,8 @@ class HrDocumentService(
         )
 
         self._validate_document(db, body=body, role=role,
-                                step=step, users=body.user_ids)
+                                step=step, users=body.user_ids,
+                                user_id=user_id)
 
         status = hr_document_status_service.get_by_name(
             db, HrDocumentStatusEnum.DRAFT.value)
@@ -363,7 +365,8 @@ class HrDocumentService(
         )
 
         self._validate_document(db, hr_document_init,
-                                role=role, step=step, users=subject_users_ids)
+                                role=role, step=step, users=subject_users_ids,
+                                user_id=user_id)
         self._validate_document_for_steps(
             step=step, all_steps=all_steps, users=users)
 
@@ -405,7 +408,8 @@ class HrDocumentService(
         users = [v for _, v in body.document_step_users_ids.items()]
 
         self._validate_document(db, body=body, role=role,
-                                step=step, users=body.user_ids)
+                                step=step, users=body.user_ids,
+                                user_id=user_id)
         self._validate_document_for_steps(
             step=step, all_steps=all_steps, users=users)
 
@@ -624,7 +628,8 @@ class HrDocumentService(
                            body: HrDocumentInit, 
                            role: str, 
                            step: HrDocumentStep,
-                           users: List[uuid.UUID]):
+                           users: List[uuid.UUID],
+                           user_id: uuid.UUID = None):
 
         staff_unit: StaffUnit = staff_unit_service.get_by_id(db, role)
 
@@ -641,6 +646,18 @@ class HrDocumentService(
                         raise ForbiddenException(
                             detail='Вы не можете инициализировать этот документ!'
                         )
+
+        elif step.category is not None:
+            category = categories.get(step.category)
+            if category is None:
+                raise InvalidOperationException(
+                    "Категория не поддерживается!"
+                )
+            if not category.validate(db, user_id):
+                raise ForbiddenException(
+                    detail='Вы не можете инициализировать этот документ!'
+                )
+
         elif not staff_unit_service.has_staff_function(db, 
                                                        staff_unit.id, 
                                                        step.staff_function_id):
@@ -1140,8 +1157,11 @@ class HrDocumentService(
             subject_users: List[User]) -> bool:
         # Получаем все дочерние штатные группы пользователя, включая саму
         # группу
-        staff_divisions: List[StaffDivision] = staff_division_service.get_child_groups(
-            db, staff_unit.staff_division_id)
+        staff_divisions: List[StaffDivision] = (
+            staff_division_service.get_all_child_groups(
+                db, staff_unit.staff_division_id
+                )
+            )
         staff_divisions.append(staff_division)
 
         # Получаем все staff unit из staff divisions
