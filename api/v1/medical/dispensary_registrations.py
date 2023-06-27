@@ -8,8 +8,8 @@ from sqlalchemy.orm import Session
 
 from core import get_db
 from schemas.medical import (
-    DispensaryRegistrationRead, 
-    DispensaryRegistrationCreate, 
+    DispensaryRegistrationRead,
+    DispensaryRegistrationCreate,
     DispensaryRegistrationUpdate
 )
 from services.medical import dispensary_registration_service
@@ -34,11 +34,11 @@ async def get_all(*,
     """
         Get all DispensaryRegistration
 
-    - **skip**: int - The number of DispensaryRegistration 
-        to skip before returning the results. 
+    - **skip**: int - The number of DispensaryRegistration
+        to skip before returning the results.
         This parameter is optional and defaults to 0.
-    - **limit**: int - The maximum number of DispensaryRegistration 
-        to return in the response. 
+    - **limit**: int - The maximum number of DispensaryRegistration
+        to return in the response.
         This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()

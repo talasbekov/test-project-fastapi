@@ -7,10 +7,10 @@ from models import (Candidate, CandidateStageInfo, StaffUnit, User,
                     PositionNameEnum, CandidateStageInfoStatusEnum)
 from schemas import (
     CandidateCreate,
-    CandidateUpdate, 
-    CandidateRead, 
-    CandidateStageInfoCreate, 
-    CandidateEssayUpdate, 
+    CandidateUpdate,
+    CandidateRead,
+    CandidateStageInfoCreate,
+    CandidateEssayUpdate,
     CandidateEssayTypeCreate
 )
 from services import ServiceBase, staff_unit_service, user_service, position_service
@@ -39,7 +39,7 @@ class CandidateService(
         """
             Returns a list of active candidates.
 
-            If the user does not have permission to view all candidates, 
+            If the user does not have permission to view all candidates,
             it returns only supervised candidates.
         """
 
@@ -61,7 +61,7 @@ class CandidateService(
         """
             Returns a list of draft candidates.
 
-            If the user does not have permission to view all candidates, 
+            If the user does not have permission to view all candidates,
             it returns only supervised draft candidates.
         """
 
@@ -93,7 +93,7 @@ class CandidateService(
 
     def create(self, db: Session, body: CandidateCreate):
         """
-            Creates a new candidate and associated CandidateStageInfo 
+            Creates a new candidate and associated CandidateStageInfo
             objects for each stage type.
         """
         staff_unit_service.get_by_id(db, body.staff_unit_curator_id)
@@ -131,9 +131,9 @@ class CandidateService(
         if body.status is not None:
             candidate.status = body.status
 
-            if (candidate.status 
-                == CandidateStatusEnum.DRAFT.value 
-                and body.debarment_reason 
+            if (candidate.status
+                == CandidateStatusEnum.DRAFT.value
+                and body.debarment_reason
                 is not None):
                 candidate.debarment_reason = body.debarment_reason
             elif candidate.status == CandidateStatusEnum.ACTIVE.value:
@@ -151,9 +151,9 @@ class CandidateService(
 
     def finish_candidate(self, db: Session, candidate_id: str, role: str):
         """
-            Finishes the review process for a candidate and 
+            Finishes the review process for a candidate and
             raises exceptions
-            if the user is not the candidate's curator or 
+            if the user is not the candidate's curator or
             if the candidate has any pending stages
         """
         candidate = db.query(Candidate).filter(
@@ -201,7 +201,7 @@ class CandidateService(
 
     def _check_by_role(self, db: Session, role_id: str) -> bool:
         """
-            Checks if a user with the given role 
+            Checks if a user with the given role
             ID has permission to view all candidates.
         """
         staff_unit = staff_unit_service.get_by_id(db, role_id)
@@ -213,7 +213,7 @@ class CandidateService(
 
     def _validate_candidate(self, db: Session, candidate):
         """
-            Validates a candidate's progress and 
+            Validates a candidate's progress and
             sets additional properties on the candidate object.
         """
         candidate_stage_info_count = db.query(CandidateStageType).count()
@@ -228,7 +228,7 @@ class CandidateService(
             candidate_stage_info_success_count
             / candidate_stage_info_count
             * 100
-            if candidate_stage_info_count > 0 
+            if candidate_stage_info_count > 0
             else 0
         )
 
@@ -239,7 +239,7 @@ class CandidateService(
 
         if not current_stage_info:
             current_stage_info = db.query(CandidateStageInfo).filter(
-                CandidateStageInfo.status 
+                CandidateStageInfo.status
                 == CandidateStageInfoStatusEnum.APPROVED.value,
                 CandidateStageInfo.candidate_id == candidate['id']
             ).order_by(CandidateStageInfo.date_sign.desc()).first()
@@ -288,7 +288,7 @@ class CandidateService(
                                 limit: int = 100,
                                 status: CandidateStatusEnum = None) -> CandidateRead:
         """
-            Returns a list of candidates based on the given status 
+            Returns a list of candidates based on the given status
             and filtered by the given keyword.
         """
         key_words = filter.lower().split()
@@ -309,7 +309,7 @@ class CandidateService(
         """
             Returns a list of supervised candidates.
 
-            If the user does not have permission to view all candidates, 
+            If the user does not have permission to view all candidates,
             it returns only supervised candidate
         """
         user = user_service.get_by_id(db, user_id)
@@ -338,7 +338,7 @@ class CandidateService(
                             limit: int = 100,
                             status: CandidateStatusEnum = None) -> CandidateRead:
         """
-            Returns a list of supervised candidates based on the given status 
+            Returns a list of supervised candidates based on the given status
             and filtered by the given keyword.
         """
         key_words = filter.lower().split()
@@ -354,7 +354,7 @@ class CandidateService(
     def _query_candidates(
             self, db: Session, status: CandidateStatusEnum, key_words: list[str]):
         """
-            Performs a query on the Candidate model and returns 
+            Performs a query on the Candidate model and returns
             a filtered query based on the given status and filter.
         """
         return (
@@ -367,7 +367,7 @@ class CandidateService(
             .filter(
                 and_(func.concat(func.lower(User.first_name), ' ',
                             func.lower(User.last_name), ' ',
-                            func.lower(User.father_name)).contains(name) 
+                            func.lower(User.father_name)).contains(name)
                             for name in key_words)
             )
         )

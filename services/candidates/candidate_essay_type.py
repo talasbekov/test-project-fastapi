@@ -3,16 +3,16 @@ from sqlalchemy.orm import Session
 
 from models import CandidateEssayType, Candidate
 from schemas import (
-    CandidateEssayTypeCreate, 
-    CandidateEssayTypeRead, 
+    CandidateEssayTypeCreate,
+    CandidateEssayTypeRead,
     CandidateEssayTypeUpdate,
     CandidateEssayTypeSetToCandidate)
 from services import ServiceBase
 
 
 class CandidateEssayTypeService(
-        ServiceBase[CandidateEssayType, 
-                    CandidateEssayTypeCreate, 
+        ServiceBase[CandidateEssayType,
+                    CandidateEssayTypeCreate,
                     CandidateEssayTypeUpdate]):
 
     def set_to_candidate(self, db: Session, body: CandidateEssayTypeSetToCandidate,

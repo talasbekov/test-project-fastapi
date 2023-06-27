@@ -11,28 +11,28 @@ from core import configs
 from exceptions import BadRequestException
 from models import User, StaffDivisionEnum, StaffUnit
 from schemas import (
-    LoginForm, 
-    RegistrationForm, 
+    LoginForm,
+    RegistrationForm,
     UserCreate,
-    ProfileCreate, 
-    EducationalProfileCreate, 
+    ProfileCreate,
+    EducationalProfileCreate,
     AdditionalProfileCreate,
-    PersonalProfileCreate, 
-    MedicalProfileCreate, 
+    PersonalProfileCreate,
+    MedicalProfileCreate,
     FamilyProfileCreate,
-    CandidateRegistrationForm, 
-    StaffUnitCreate, 
+    CandidateRegistrationForm,
+    StaffUnitCreate,
     CandidateCreate
 )
 from services import (
-    staff_unit_service, 
-    user_service, 
+    staff_unit_service,
+    user_service,
     profile_service,
-    educational_profile_service, 
-    additional_profile_service, 
+    educational_profile_service,
+    additional_profile_service,
     personal_profile_service,
-    medical_profile_service, 
-    family_profile_service, 
+    medical_profile_service,
+    family_profile_service,
     staff_division_service,
     candidate_service
 )

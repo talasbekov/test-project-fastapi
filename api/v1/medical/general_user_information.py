@@ -8,8 +8,8 @@ from sqlalchemy.orm import Session
 
 from core import get_db
 from schemas.medical import (
-    GeneralUserInformationRead, 
-    GeneralUserInformationCreate, 
+    GeneralUserInformationRead,
+    GeneralUserInformationCreate,
     GeneralUserInformationUpdate
 )
 from services.medical import general_user_information_service
@@ -34,11 +34,11 @@ async def get_all(*,
     """
         Get all GeneralUserInformation
 
-    - **skip**: int - The number of GeneralUserInformation 
-        to skip before returning the results. 
+    - **skip**: int - The number of GeneralUserInformation
+        to skip before returning the results.
         This parameter is optional and defaults to 0.
-    - **limit**: int - The maximum number of GeneralUserInformation 
-        to return in the response. 
+    - **limit**: int - The maximum number of GeneralUserInformation
+        to return in the response.
         This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()

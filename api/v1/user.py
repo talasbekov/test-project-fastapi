@@ -30,7 +30,7 @@ async def get_all(
     """
     Get all Users
 
-    - **hr_document_template_id**: str - The value which returns filtered 
+    - **hr_document_template_id**: str - The value which returns filtered
         results by hr_document_template_id.
         This parameter is optional and defaults to None
     - **filter**: str - The value which returns filtered results.
@@ -48,7 +48,7 @@ async def get_all(
                                 limit)
 
 
-@router.get("/{user_id}/templates/", 
+@router.get("/{user_id}/templates/",
             dependencies=[Depends(HTTPBearer())],
             summary="Check if user has access to template")
 async def is_template_accessible_for_user(
@@ -197,10 +197,10 @@ async def update_user_patch(
     - **id_number**: unique employee number. This parameter is required.
     - **phone_number**: format (+77xxxxxxxxx). This parameter is optional.
     - **address**: optional.
-    - **status**: the current status of the employee 
-        (e.g. "working", "on vacation", "sick", etc.). 
+    - **status**: the current status of the employee
+        (e.g. "working", "on vacation", "sick", etc.).
         This parameter is optional.
-    - **status_till**: the date when the current status 
+    - **status_till**: the date when the current status
         of the employee will end. This parameter is optional.
     """
     Authorize.jwt_required()

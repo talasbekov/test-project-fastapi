@@ -362,7 +362,7 @@ class StaffDivisionService(
         staff_division = self.get_by_id(db, id)
 
         parent_id = staff_division.parent_group_id
-        
+
         ids = [staff_division.id]
 
         while parent_id != None:

@@ -9,4 +9,3 @@ family_router = APIRouter(prefix="/family")
 family_router.include_router(families_router)
 family_router.include_router(family_relation_router)
 family_router.include_router(family_profile_router)
- 
