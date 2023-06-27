@@ -47,9 +47,9 @@ async def create(*,
     """
         Crete HrDocumentStep
 
-        - **hr_document_template_id**: UUID - the id of HrDocumentTemplate. 
+        - **hr_document_template_id**: UUID - the id of HrDocumentTemplate.
             This step will depend to this template. This field is required.
-        - **previous_step_id**: UUID - the id of previous HrDocumentStep. 
+        - **previous_step_id**: UUID - the id of previous HrDocumentStep.
             This parameter is optional.
         - **staff_unit_id**: UUID - the id of StaffUnit. This is required.
         - **staff_function_id**: UUID - the id of StaffFunction. This is required.
@@ -88,16 +88,16 @@ async def update(*,
         Update HrDocumentStep
 
         - **id**: UUID - required
-        - **hr_document_template_id**: UUID - the id of HrDocumentTemplate. 
+        - **hr_document_template_id**: UUID - the id of HrDocumentTemplate.
             This step will depend on this template. This field is required.
         - **previous_step_id**: UUID - the id of previous HrDocumentStep.
              This parameter is optional.
         - **staff_unit_id**: UUID - the id of StaffUnit. This is required.
-        - **staff_function_id**: UUID - the id of StaffFunction. 
+        - **staff_function_id**: UUID - the id of StaffFunction.
             This is required.
 
         > Note that child steps **can not change** template type,
-        > and **template will be changed for every child steps** 
+        > and **template will be changed for every child steps**
         if you want to change template for parent step
     """
     Authorize.jwt_required()

@@ -7,11 +7,11 @@ from services import ServiceBase
 
 
 class PositionService(ServiceBase[Position, PositionCreate, PositionUpdate]):
-    
+
     def get_without_special(
-        self, 
-        db: Session, 
-        skip: int = 0, 
+        self,
+        db: Session,
+        skip: int = 0,
         limit: int = 100
     ) -> List[Position]:
         specials = ['Умер', 'Погиб', 'В запасе', 'В отставке']
@@ -20,9 +20,9 @@ class PositionService(ServiceBase[Position, PositionCreate, PositionUpdate]):
                      .offset(skip)
                      .limit(limit)
                      .all())
-        
+
         return positions
-        
+
 
     def get_id_by_name(self, db: Session, name: str):
         role = db.query(Position).filter(

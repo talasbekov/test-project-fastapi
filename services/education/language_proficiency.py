@@ -7,8 +7,8 @@ from services import ServiceBase
 
 
 class LanguageProficiencyService(
-        ServiceBase[LanguageProficiency, 
-                    LanguageProficiencyCreate, 
+        ServiceBase[LanguageProficiency,
+                    LanguageProficiencyCreate,
                     LanguageProficiencyUpdate]):
 
     def get_by_id(self, db: Session, id: str):

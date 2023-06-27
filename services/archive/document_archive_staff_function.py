@@ -14,8 +14,8 @@ from services import ServiceBase
 
 class DocumentArchiveStaffFunction(
         ServiceBase[
-            ArchiveDocumentStaffFunction, 
-            ArchiveDocumentStaffFunctionCreate, 
+            ArchiveDocumentStaffFunction,
+            ArchiveDocumentStaffFunctionCreate,
             ArchiveDocumentStaffFunctionUpdate]):
 
     def get_by_id(self, db: Session, id: str):
@@ -26,9 +26,9 @@ class DocumentArchiveStaffFunction(
         return document_staff_function
 
     def create_based_on_existing_archive_staff_function(
-            self, 
-            db: Session, 
-            staff_function: DocumentStaffFunction, 
+            self,
+            db: Session,
+            staff_function: DocumentStaffFunction,
             role_id: uuid.UUID):
         return super().create(db, ArchiveDocumentStaffFunctionCreate(
             name=staff_function.name,
@@ -41,8 +41,8 @@ class DocumentArchiveStaffFunction(
         ))
 
     def create_archive_staff_function(
-            self, 
-            db: Session, 
+            self,
+            db: Session,
             body: NewArchiveDocumentStaffFunctionCreate):
         return super().create(db, ArchiveDocumentStaffFunctionCreate(
             name=body.name,
@@ -55,12 +55,12 @@ class DocumentArchiveStaffFunction(
         ))
 
     def update_archive_staff_function(
-            self, 
-            db: Session, 
-            staff_function: DocumentStaffFunction, 
+            self,
+            db: Session,
+            staff_function: DocumentStaffFunction,
             body: NewArchiveDocumentStaffFunctionCreate):
-        return super().update(db, 
-                              db_obj=staff_function, 
+        return super().update(db,
+                              db_obj=staff_function,
                               obj_in=ArchiveDocumentStaffFunctionCreate(
             name=body.name,
             nameKZ=body.nameKZ,

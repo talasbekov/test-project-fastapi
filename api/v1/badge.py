@@ -30,9 +30,9 @@ async def get_all(*,
     """
         Get all Badges
 
-    - **skip**: int - The number of badges to skip before returning the results. 
+    - **skip**: int - The number of badges to skip before returning the results.
         This parameter is optional and defaults to 0.
-    - **limit**: int - The maximum number of badges to return in the response. 
+    - **limit**: int - The maximum number of badges to return in the response.
         This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()

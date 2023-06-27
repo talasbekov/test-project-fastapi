@@ -18,8 +18,8 @@ router = APIRouter(
             HTTPBearer())])
 
 
-@router.get("", 
-            response_model=List[UserStatRead], 
+@router.get("",
+            response_model=List[UserStatRead],
             dependencies=[Depends(HTTPBearer())],
             summary="Get all UserStats")
 async def get_all(*,
@@ -31,18 +31,18 @@ async def get_all(*,
     """
         Get all UserStats
 
-       - **skip**: int - The number of UserStats 
-            to skip before returning the results. 
+       - **skip**: int - The number of UserStats
+            to skip before returning the results.
             This parameter is optional and defaults to 0.
-       - **limit**: int - The maximum number of UserStats 
-            to return in the response. 
+       - **limit**: int - The maximum number of UserStats
+            to return in the response.
             This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
     return user_stat_service.get_multi(db, skip, limit)
 
 
-@router.post("", 
+@router.post("",
              status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=UserStatRead,
@@ -55,23 +55,23 @@ async def create(*,
     """
         Create UserStat
 
-    - **user_id**: UUID - the ID of the user. 
+    - **user_id**: UUID - the ID of the user.
         This parameter is required and should exist in database.
-    - **physical_training**: int - representing the user's 
+    - **physical_training**: int - representing the user's
         physical training score.
     - **fire_training**: int - representing the user's fire training score.
     - **attendance**: int - representing the user's attendance score.
     - **activity**: int - representing the user's activity score.
-    - **opinion_of_colleagues**: int - representing the user's opinion 
+    - **opinion_of_colleagues**: int - representing the user's opinion
         of colleagues score.
-    - **opinion_of_management**: int - representing the user's opinion 
+    - **opinion_of_management**: int - representing the user's opinion
         of management score.
     """
     Authorize.jwt_required()
     return user_stat_service.create(db, body)
 
 
-@router.get("/{id}/", 
+@router.get("/{id}/",
             dependencies=[Depends(HTTPBearer())],
             response_model=UserStatRead,
             summary="Get UserStat by id")
@@ -101,25 +101,25 @@ async def update(*,
     """
         Update UserStat
 
-        - **id**: UUID - the ID of the UserStat. 
+        - **id**: UUID - the ID of the UserStat.
             This is required.
-        - **user_id**: UUID - the ID of the user. 
+        - **user_id**: UUID - the ID of the user.
             This parameter is required and should exist in database.
-        - **physical_training**: int - representing the user's 
-            physical training score. 
+        - **physical_training**: int - representing the user's
+            physical training score.
             This is required.
-        - **fire_training**: int - representing the user's fire 
-            training score. 
+        - **fire_training**: int - representing the user's fire
+            training score.
             This is required.
-        - **attendance**: int - representing the user's attendance score. 
+        - **attendance**: int - representing the user's attendance score.
             This is required.
-        - **activity**: int - representing the user's activity score. 
+        - **activity**: int - representing the user's activity score.
             This is required.
-        - **opinion_of_colleagues**: int - representing the user's 
+        - **opinion_of_colleagues**: int - representing the user's
             opinion of colleagues score.
              This is required.
-        - **opinion_of_management**: int - representing the user's 
-            opinion of management score. 
+        - **opinion_of_management**: int - representing the user's
+            opinion of management score.
             This is required.
     """
     Authorize.jwt_required()

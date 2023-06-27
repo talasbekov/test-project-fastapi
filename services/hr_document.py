@@ -117,11 +117,11 @@ class HrDocumentService(
             raise NotFoundException(detail="Document is not found!")
         return document
 
-    def get_initialized_documents(self, 
-                                  db: Session, 
-                                  user_id: uuid.UUID, 
-                                  parent_id: uuid.UUID, 
-                                  filter: str, 
+    def get_initialized_documents(self,
+                                  db: Session,
+                                  user_id: uuid.UUID,
+                                  parent_id: uuid.UUID,
+                                  filter: str,
                                   skip: int,
                                   limit: int):
         user = user_service.get_by_id(db, user_id)
@@ -150,12 +150,12 @@ class HrDocumentService(
         return self._return_correctly(db, documents, user)
 
     def get_not_signed_documents(
-            self, 
-            db: Session, 
-            user_id: str, 
-            parent_id: uuid.UUID, 
-            filter: str, 
-            skip: int, 
+            self,
+            db: Session,
+            user_id: str,
+            parent_id: uuid.UUID,
+            filter: str,
+            skip: int,
             limit: int
     ):
         user = user_service.get_by_id(db, user_id)
@@ -192,12 +192,12 @@ class HrDocumentService(
         return self._return_correctly(db, documents, user)
 
     def get_signed_documents(
-            self, 
-            db: Session, 
-            user_id: str, 
-            parent_id: uuid.UUID, 
-            filter: str, 
-            skip: int, 
+            self,
+            db: Session,
+            user_id: str,
+            parent_id: uuid.UUID,
+            filter: str,
+            skip: int,
             limit: int
     ):
         user = user_service.get_by_id(db, user_id)
@@ -247,11 +247,11 @@ class HrDocumentService(
         )
         return self._return_correctly(db, documents, user)
 
-    def get_draft_documents(self, 
-                            db: Session, 
-                            user_id: str, 
-                            parent_id: uuid.UUID, 
-                            filter: str, 
+    def get_draft_documents(self,
+                            db: Session,
+                            user_id: str,
+                            parent_id: uuid.UUID,
+                            filter: str,
                             skip: int = 0,
                             limit: int = 100):
         user = user_service.get_by_id(db, user_id)
@@ -320,10 +320,10 @@ class HrDocumentService(
 
         return document
 
-    def initialize_draft_document(self, 
-                                  db: Session, 
-                                  body: DraftHrDocumentCreate, 
-                                  document_id: str, 
+    def initialize_draft_document(self,
+                                  db: Session,
+                                  body: DraftHrDocumentCreate,
+                                  document_id: str,
                                   user_id: str,
                                   role: str):
         document = hr_document_service.get_by_id(db, document_id)
@@ -386,13 +386,13 @@ class HrDocumentService(
 
         return document
 
-    async def initialize(self, 
-                         db: Session, 
-                         body: HrDocumentInit, 
-                         user_id: str, 
-                         role: str, 
+    async def initialize(self,
+                         db: Session,
+                         body: HrDocumentInit,
+                         user_id: str,
+                         role: str,
                          parent_id: uuid.UUID = None):
-        
+
         template = hr_document_template_service.get_by_id(
             db, body.hr_document_template_id
         )
@@ -513,12 +513,12 @@ class HrDocumentService(
         next_step = self._set_next_step(db, document_id, info)
 
         if self._is_superdoc(db, document):
-            return await self._sign_super_document(db, 
-                                                   document, 
-                                                   next_step, 
-                                                   body.is_signed, 
-                                                   body.comment, 
-                                                   info, 
+            return await self._sign_super_document(db,
+                                                   document,
+                                                   next_step,
+                                                   body.is_signed,
+                                                   body.comment,
+                                                   info,
                                                    current_user)
 
         if body.is_signed:
@@ -535,10 +535,10 @@ class HrDocumentService(
             steps = (
                     hr_document_step_service
                      .get_all_by_document_template_id_without_notifiers(
-                        db, 
+                        db,
                         document.hr_document_template_id)
                     )
-            
+
             self._create_info_for_document_steps(db, document, steps)
 
             document.last_step = steps[0]
@@ -598,11 +598,11 @@ class HrDocumentService(
             )
         return service.get_by_option(db, type, id, skip, limit)
 
-    def _create_staff_unit_document_body(self, 
-                                         db: Session, 
-                                         user_id: uuid.UUID, 
+    def _create_staff_unit_document_body(self,
+                                         db: Session,
+                                         user_id: uuid.UUID,
                                          staff_unit: ArchiveStaffUnit,
-                                         template_id: uuid.UUID, 
+                                         template_id: uuid.UUID,
                                          parent_id: uuid.UUID):
         steps = hr_document_template_service.get_steps_by_document_template_id(
             db, template_id)
@@ -623,10 +623,10 @@ class HrDocumentService(
         )
         return body
 
-    def _validate_document(self, 
-                           db: Session, 
-                           body: HrDocumentInit, 
-                           role: str, 
+    def _validate_document(self,
+                           db: Session,
+                           body: HrDocumentInit,
+                           role: str,
                            step: HrDocumentStep,
                            users: List[uuid.UUID],
                            user_id: uuid.UUID = None):
@@ -658,8 +658,8 @@ class HrDocumentService(
                     detail='Вы не можете инициализировать этот документ!'
                 )
 
-        elif not staff_unit_service.has_staff_function(db, 
-                                                       staff_unit.id, 
+        elif not staff_unit_service.has_staff_function(db,
+                                                       staff_unit.id,
                                                        step.staff_function_id):
             raise ForbiddenException(
                 detail=(
@@ -675,7 +675,7 @@ class HrDocumentService(
             user_info_list = list(
                 map(lambda user: (f"{user.first_name}"
                                   f" {user.last_name}"
-                                  f" {user.father_name}"), 
+                                  f" {user.father_name}"),
                     forbidden_users)
                 )
             raise ForbiddenException(
@@ -705,8 +705,8 @@ class HrDocumentService(
             )
 
     def _exists_user_document_in_progress(
-                                self, 
-                                db: Session, 
+                                self,
+                                db: Session,
                                 hr_document_template_id: uuid.UUID,
                                 user_ids: List[uuid.UUID]):
 
@@ -730,11 +730,11 @@ class HrDocumentService(
             .all()
         )
 
-    async def _finish_document(self, 
-                               db: Session, 
-                               document: HrDocument, 
+    async def _finish_document(self,
+                               db: Session,
+                               document: HrDocument,
                                users: List[User]):
-        
+
         completed_status = hr_document_status_service.get_by_name(
             db, HrDocumentStatusEnum.COMPLETED.value)
         document.status_id = completed_status.id
@@ -795,10 +795,10 @@ class HrDocumentService(
 
         return document
 
-    # async def initialize_super_document(self, 
-    #                                   db: Session, 
-    #                                   staff_list_id: uuid.UUID, 
-    #                                   user_id: str, 
+    # async def initialize_super_document(self,
+    #                                   db: Session,
+    #                                   staff_list_id: uuid.UUID,
+    #                                   user_id: str,
     #                                   role: str):
     #     template = hr_document_template_service.get_staff_list(db)
     #     child_template = hr_document_template_service.get_staff_unit(db)
@@ -809,7 +809,7 @@ class HrDocumentService(
     #         due_date=datetime.now() + timedelta(days=7),
     #         document_step_users_ids=(hr_document_template_service
     #              .get_steps_by_document_template_id(
-    #               db, 
+    #               db,
     #               template.id,
     #             user_id=user_id)),
     #         properties={
@@ -825,8 +825,8 @@ class HrDocumentService(
     #     staff_list.is_signed = True
     #     for archive_staff_division in staff_list.archive_staff_divisions:
     #      for archive_staff_unit in archive_staff_division.staff_units:
-    #    if not staff_unit_service.exists_relation(db, 
-    #     archive_staff_unit.user_id, 
+    #    if not staff_unit_service.exists_relation(db,
+    #     archive_staff_unit.user_id,
     #     archive_staff_unit.origin_id):
     #                 if archive_staff_unit.user_id is not None:
     #        child_body = self._create_staff_unit_document_body(
@@ -884,7 +884,7 @@ class HrDocumentService(
                 super_document.status_id = on_revision_status.id
 
         for child_document in child_documents:
-            if (child_document.last_step is None 
+            if (child_document.last_step is None
                 and child_document.status_id is completed_status.id):
                 raise InvalidOperationException(
                     detail=f'Document with id {child_document.id} is already signed!')
@@ -892,8 +892,8 @@ class HrDocumentService(
             child_document_info = (
                 hr_document_info_service
                 .get_by_document_id_and_step_id(
-                    db, 
-                    child_document.id, 
+                    db,
+                    child_document.id,
                     child_document.last_step_id
             ))
 
@@ -950,11 +950,11 @@ class HrDocumentService(
                     super_document.users) > 0:
                 for user in super_document.users:
                     handlers[action_name].handle_action(
-                                                db, 
-                                                user, 
-                                                action, 
+                                                db,
+                                                user,
+                                                action,
                                                 super_template.properties,
-                                                super_document.properties, 
+                                                super_document.properties,
                                                 super_document)
             else:
                 handlers[action_name].handle_action(
@@ -1235,7 +1235,7 @@ class HrDocumentService(
                 setattr(hr_document, field, update_data[field])
         if update_data['user_ids'] and update_data['user_ids'] != []:
             users_document = [
-                user_service.get_by_id(db, user_id) 
+                user_service.get_by_id(db, user_id)
                 for user_id in update_data['user_ids']
             ]
             hr_document.users = users_document

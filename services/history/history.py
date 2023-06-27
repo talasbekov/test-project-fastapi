@@ -221,11 +221,11 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             equipment_service
             .get_clothing_equipments_type_count(db)
         )
-        
+
         equipment_models_count = (
             equipment_service
             .get_clothing_equipment_models_count_by_user(
-                db, 
+                db,
                 user_id
             )
         )
@@ -288,8 +288,8 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         else:
             user_oath_read = OathRead(
                 id=oauth_user.id,
-                date=oauth_user.date, 
-                military_name=oauth_user.military_unit.name, 
+                date=oauth_user.date,
+                military_name=oauth_user.military_unit.name,
                 military_id=oauth_user.military_unit_id
             )
 
@@ -437,8 +437,8 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             end_date = next_month - timedelta(days=next_month.day)
             histories = (
                 db.query(self.model)
-                .filter(self.model.user_id == user_id, 
-                        self.model.date_from >= start_date, 
+                .filter(self.model.user_id == user_id,
+                        self.model.date_from >= start_date,
                         self.model.date_from <= end_date)
                 # add secondary sort order
                 .order_by(self.model.date_from.desc(), self.model.id.asc())

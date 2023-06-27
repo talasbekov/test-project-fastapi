@@ -8,9 +8,9 @@ from sqlalchemy.orm import Session
 
 from core import get_db
 from schemas import (
-    HrDocumentTemplateCreate, 
-    HrDocumentTemplateUpdate, 
-    HrDocumentTemplateRead, 
+    HrDocumentTemplateCreate,
+    HrDocumentTemplateUpdate,
+    HrDocumentTemplateRead,
     SuggestCorrections
 )
 from services import hr_document_template_service
@@ -36,11 +36,11 @@ async def get_all(*,
     """
         Get all HrDocumentTemplate
 
-        - **skip**: int - The number of HrDocumentTemplate 
-            to skip before returning the results. 
+        - **skip**: int - The number of HrDocumentTemplate
+            to skip before returning the results.
             This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of HrDocumentTemplate 
-            to return in the response. 
+        - **limit**: int - The maximum number of HrDocumentTemplate
+            to return in the response.
             This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
@@ -71,12 +71,12 @@ async def create(*,
         Create HrDocumentTemplate
 
         - **name**: required
-        - **path**: string - the current location of this document. 
+        - **path**: string - the current location of this document.
             This is required.
-        - **subject_type**: int - the subject type of the HrDocumentTemplate. 
+        - **subject_type**: int - the subject type of the HrDocumentTemplate.
             This field should necessarily accept one of the following types.
-        - **properties**: Dict[str, dict] - details which 
-            will be replaced while creating HrDocument. 
+        - **properties**: Dict[str, dict] - details which
+            will be replaced while creating HrDocument.
             This is required.
 
         - CANDIDATE = 1
@@ -138,11 +138,11 @@ async def update(*,
 
         - **id**: UUID - required.
         - **name**: required
-        - **path**: string - the current location of this document. 
+        - **path**: string - the current location of this document.
             This is required.
-        - **subject_type**: int - the subject type of the HrDocumentTemplate. 
+        - **subject_type**: int - the subject type of the HrDocumentTemplate.
             This field should necessarily accept one of the following types.
-        - **properties**: Dict[str, dict] - details which will be replaced 
+        - **properties**: Dict[str, dict] - details which will be replaced
             while creating HrDocument. This is required.
 
         * CANDIDATE = 1

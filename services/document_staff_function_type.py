@@ -8,7 +8,7 @@ from .base import ServiceBase
 
 class DocumentStaffFunctionTypeService(
         ServiceBase[DocumentFunctionType,
-                     DocumentStaffFunctionTypeCreate, 
+                     DocumentStaffFunctionTypeCreate,
                      DocumentStaffFunctionTypeUpdate]):
     def get_by_id(self, db: Session, id: str) -> DocumentFunctionType:
         document_staff_function_type = super().get(db, id)

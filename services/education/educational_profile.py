@@ -7,8 +7,8 @@ from services import ServiceBase
 
 
 class EducationalProfileService(
-        ServiceBase[EducationalProfile, 
-                    EducationalProfileCreate, 
+        ServiceBase[EducationalProfile,
+                    EducationalProfileCreate,
                     EducationalProfileUpdate]):
 
     def get_by_id(self, db: Session, id: str):
