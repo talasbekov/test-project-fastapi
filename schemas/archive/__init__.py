@@ -1,6 +1,6 @@
 from .archive_staff_division import (ArchiveStaffDivisionCreate, ArchiveStaffDivisionUpdate, ArchiveStaffDivisionRead,
-                                     ArchiveStaffDivisionUpdateParentGroup, NewArchiveStaffDivisionCreate,
-                                     NewArchiveStaffDivisionUpdate)
+                                     ArchiveStaffDivisionUpdateParentGroup, ArchiveStaffDivisionStepRead,
+                                     NewArchiveStaffDivisionCreate, NewArchiveStaffDivisionUpdate)
 from .archive_staff_function import (ArchiveStaffFunctionCreate, ArchiveStaffFunctionUpdate, ArchiveStaffFunctionRead,
                                      ArchiveDocumentStaffFunctionCreate, ArchiveDocumentStaffFunctionUpdate,
                                      ArchiveDocumentStaffFunctionRead,

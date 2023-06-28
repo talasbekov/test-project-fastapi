@@ -7,9 +7,9 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import (StaffDivisionCreate, StaffDivisionRead,
-                     StaffDivisionUpdate, StaffDivisionUpdateParentGroup,
-                     StaffDivisionTypeRead)
+from schemas import (StaffDivisionCreate, StaffDivisionRead, 
+                     StaffDivisionStepRead,StaffDivisionUpdate, 
+                     StaffDivisionUpdateParentGroup, StaffDivisionTypeRead)
 from services import staff_division_service, staff_division_type_service
 
 router = APIRouter(
@@ -115,6 +115,22 @@ async def get_by_id(*,
         Get Staff Division by id
 
         - **id**: UUID - required
+    """
+    Authorize.jwt_required()
+    return staff_division_service.get_by_id(db, id)
+
+@router.get("/one-level/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=StaffDivisionStepRead,
+            summary="Get Staff Division one level by id")
+async def get_all_one_level_for_id(*,
+                  db: Session = Depends(get_db),
+                  id: uuid.UUID,
+                  Authorize: AuthJWT = Depends()
+                  ):
+    """
+       Get all Staff Divisions
+
+    - **id**: uuid - The id of staff division. This parameter is required.
     """
     Authorize.jwt_required()
     return staff_division_service.get_by_id(db, id)

@@ -133,3 +133,19 @@ class StaffUnitDivisionRead(StaffDivisionBase, ReadNamedModel):
 
     class Config:
         orm_mode = True
+
+class StaffDivisionStepChildRead(StaffDivisionBase):
+    id: Optional[uuid.UUID]
+    type: Optional[StaffDivisionTypeRead]
+
+    class Config:
+        orm_mode = True
+
+class StaffDivisionStepRead(StaffDivisionBase):
+    id: Optional[uuid.UUID]
+    children: Optional[List['StaffDivisionStepChildRead']]
+    staff_units: Optional[List['StaffUnitRead']]
+    type: Optional[StaffDivisionTypeRead]
+
+    class Config:
+        orm_mode = True
