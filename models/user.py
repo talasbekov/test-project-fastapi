@@ -125,3 +125,7 @@ class User(isActiveModel):
         "Equipment",
         back_populates="user",
         cascade="all,delete")
+    answers = relationship(
+        "Answer",
+        cascade="all,delete",
+        back_populates="user")
