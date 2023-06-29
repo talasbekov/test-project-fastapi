@@ -107,10 +107,28 @@ class StaffUnitRead(ReadModel):
         arbitrary_types_allowed = True
 
 
-class StaffDivisionRead(StaffDivisionBase, ReadNamedModel):
-    is_combat_unit: Optional[bool] = Field(None, nullable=True)
-    count_vacancies: Optional[int]
-    children: Optional[List['StaffDivisionRead']]
+# class StaffDivisionRead(StaffDivisionBase, ReadNamedModel):
+#     is_combat_unit: Optional[bool] = Field(None, nullable=True)
+#     count_vacancies: Optional[int]
+#     children: Optional[List['StaffDivisionRead']]
+#     staff_units: Optional[List['StaffUnitRead']]
+#     type: Optional[StaffDivisionTypeRead]
+#
+#     class Config:
+#         orm_mode = True
+
+
+class StaffDivisionChildRead(StaffDivisionBase):
+    id: Optional[uuid.UUID]
+    type: Optional[StaffDivisionTypeRead]
+
+    class Config:
+        orm_mode = True
+
+
+class StaffDivisionRead(StaffDivisionBase):
+    id: Optional[uuid.UUID]
+    children: Optional[List['StaffDivisionChildRead']]
     staff_units: Optional[List['StaffUnitRead']]
     type: Optional[StaffDivisionTypeRead]
 
