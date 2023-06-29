@@ -36,7 +36,7 @@ class HrVacancyService(
 
         staff_division = staff_division_service.get_by_id(
             db, staff_division_id)
-        vacancies = self._get_vacancies_recursive(db, staff_division)
+        vacancies = self.get_vacancies_recursive(db, staff_division)
 
         response = HrVacancyStaffDivisionRead(
             id=staff_division.id,
@@ -230,7 +230,7 @@ class HrVacancyService(
 
         return vacancy_requirements
 
-    def _get_vacancies_recursive(self, db: Session, department: StaffDivision):
+    def get_vacancies_recursive(self, db: Session, department: StaffDivision):
         vacancies = db.query(self.model)\
             .join(StaffUnit, self.model.staff_unit_id == StaffUnit.id)\
             .join(StaffDivision, StaffUnit.staff_division_id == StaffDivision.id)\
@@ -242,7 +242,7 @@ class HrVacancyService(
 
         # Recursively call this function for each child division
         for child in department.children:
-            vacancies.extend(self._get_vacancies_recursive(db, child))
+            vacancies.extend(self.get_vacancies_recursive(db, child))
 
         return vacancies
 
