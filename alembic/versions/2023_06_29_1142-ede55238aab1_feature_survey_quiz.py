@@ -59,7 +59,7 @@ def upgrade() -> None:
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('survey_id', sa.UUID(), nullable=True),
     sa.Column('quiz_id', sa.UUID(), nullable=True),
-    sa.Column('score', sa.Integer(), nullable=False),
+    sa.Column('score', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['quiz_id'], ['quizzes.id'], ),
     sa.ForeignKeyConstraint(['survey_id'], ['surveys.id'], ),
     sa.PrimaryKeyConstraint('id')
