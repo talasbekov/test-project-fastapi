@@ -14,7 +14,7 @@ class Answer(Model):
     discriminator = Column(String(255))
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
 
-    question = relationship("Question", foreign_keys=[
+    question = relationship("QuestionBase", foreign_keys=[
                             question_id], back_populates="answers")
     user = relationship("User", foreign_keys=[
                         user_id], back_populates="answers")

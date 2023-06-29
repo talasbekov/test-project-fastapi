@@ -12,8 +12,9 @@ class Option(Model):
 
     question_id = Column(UUID(as_uuid=True), ForeignKey("questions.id"))
     discriminator = Column(String(255), nullable=True)
+    score = Column(Integer, nullable=True)
 
-    question = relationship("Question", foreign_keys=[
+    question = relationship("QuestionBase", foreign_keys=[
                             question_id], back_populates="options")
     answers = relationship(
         "Answer", secondary=answers_options, back_populates="options")
