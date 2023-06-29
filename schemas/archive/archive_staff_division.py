@@ -36,9 +36,27 @@ class ArchiveStaffDivisionUpdateParentGroup(BaseModel):
     parent_group_id: uuid.UUID
 
 
+# class ArchiveStaffDivisionRead(ArchiveStaffDivisionBase):
+#     id: Optional[uuid.UUID]
+#     children: Optional[List['ArchiveStaffDivisionRead']]
+#     staff_units: Optional[List['ArchiveStaffUnitRead']]
+#     type: Optional[StaffDivisionTypeRead]
+#
+#     class Config:
+#         orm_mode = True
+
+
+class ArchiveStaffDivisionChildRead(ArchiveStaffDivisionBase):
+    id: Optional[uuid.UUID]
+    type: Optional[StaffDivisionTypeRead]
+
+    class Config:
+        orm_mode = True
+
+
 class ArchiveStaffDivisionRead(ArchiveStaffDivisionBase):
     id: Optional[uuid.UUID]
-    children: Optional[List['ArchiveStaffDivisionRead']]
+    children: Optional[List['ArchiveStaffDivisionChildRead']]
     staff_units: Optional[List['ArchiveStaffUnitRead']]
     type: Optional[StaffDivisionTypeRead]
 

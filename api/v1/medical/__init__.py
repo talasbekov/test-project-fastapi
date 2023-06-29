@@ -1,4 +1,4 @@
-from fastapi import APIRouter 
+from fastapi import APIRouter
 
 from .anthropometric_data import router as anthropometric_data_router
 from .dispensary_registrations import router as dispensary_registrations_router
@@ -13,7 +13,7 @@ from .liberation import router as liberation_router
 
 router_medical= APIRouter(prefix="/medical")
 
-router_medical.include_router(anthropometric_data_router)  
+router_medical.include_router(anthropometric_data_router)
 router_medical.include_router(dispensary_registrations_router)
 router_medical.include_router(age_group_router)
 router_medical.include_router(general_user_information_router)

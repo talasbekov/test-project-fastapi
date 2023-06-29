@@ -5,8 +5,8 @@ from sqlalchemy.orm import Session
 from exceptions.client import NotFoundException
 from models import ArchiveDocumentFunctionType, DocumentFunctionType
 from schemas import (
-    DocumentArchiveStaffFunctionTypeCreate, 
-    DocumentArchiveStaffFunctionTypeUpdate, 
+    DocumentArchiveStaffFunctionTypeCreate,
+    DocumentArchiveStaffFunctionTypeUpdate,
     NewDocumentArchiveStaffFunctionTypeCreate
 )
 
@@ -14,8 +14,8 @@ from services.base import ServiceBase
 
 
 class DocumentArchiveStaffFunctionTypeService(
-        ServiceBase[ArchiveDocumentFunctionType, 
-                    DocumentArchiveStaffFunctionTypeCreate, 
+        ServiceBase[ArchiveDocumentFunctionType,
+                    DocumentArchiveStaffFunctionTypeCreate,
                     DocumentArchiveStaffFunctionTypeUpdate]):
 
     def get_by_id(self, db: Session, id: str) -> ArchiveDocumentFunctionType:
@@ -54,12 +54,12 @@ class DocumentArchiveStaffFunctionTypeService(
         )
 
     def update_staff_function_type(
-            self, 
-            db: Session, 
-            type: ArchiveDocumentFunctionType, 
+            self,
+            db: Session,
+            type: ArchiveDocumentFunctionType,
             body: NewDocumentArchiveStaffFunctionTypeCreate):
-        return super().update(db, 
-                              db_obj=type, 
+        return super().update(db,
+                              db_obj=type,
                               obj_in=DocumentArchiveStaffFunctionTypeCreate(
             name=body.name,
             nameKZ=body.nameKZ,

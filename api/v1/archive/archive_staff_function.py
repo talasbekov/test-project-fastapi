@@ -7,9 +7,9 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import (ArchiveStaffFunctionRead, 
+from schemas import (ArchiveStaffFunctionRead,
                      NewArchiveStaffFunctionCreate,
-                     NewArchiveStaffFunctionUpdate, 
+                     NewArchiveStaffFunctionUpdate,
                      AllArchiveStaffFunctionsRead)
 
 from services import archive_staff_function_service
@@ -57,7 +57,7 @@ async def create(*,
         Create StaffFunction
 
     - **name**: required
-    - **service_function_type_id**: UUID - required. 
+    - **service_function_type_id**: UUID - required.
         The id of service function type.
     - **spend_hours_per_week**: int - optional.
     """
@@ -95,7 +95,7 @@ async def update(*,
         Update StaffFunction
 
     - **name**: required
-    - **service_function_type_id**: UUID - required. 
+    - **service_function_type_id**: UUID - required.
         The id of service function type.
     - **spend_hours_per_week**: int - optional.
     """

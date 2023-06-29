@@ -36,11 +36,11 @@ class StaffDivision(NamedNestedModel, isActiveModel):
     type = relationship("StaffDivisionType")
     # Relationships
     children = relationship("StaffDivision")
-    staff_units = relationship("StaffUnit", 
+    staff_units = relationship("StaffUnit",
                                back_populates="staff_division",
-                               cascade="all,delete", 
+                               cascade="all,delete",
                                foreign_keys="StaffUnit.staff_division_id")
     leader = relationship("StaffUnit", foreign_keys=leader_id)
     curators = relationship(
-        "StaffUnit", back_populates="courted_group", 
+        "StaffUnit", back_populates="courted_group",
         foreign_keys="StaffUnit.curator_of_id")

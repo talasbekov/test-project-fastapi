@@ -29,11 +29,11 @@ async def get_all(*,
     """
         Get all AcademicDegreeDegrees
 
-    - **skip**: int - The number of AcademicDegreeDegrees 
-        to skip before returning the results. 
+    - **skip**: int - The number of AcademicDegreeDegrees
+        to skip before returning the results.
         This parameter is optional and defaults to 0.
-    - **limit**: int - The maximum number of AcademicDegreeDegrees 
-        to return in the response. 
+    - **limit**: int - The maximum number of AcademicDegreeDegrees
+        to return in the response.
         This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
@@ -87,7 +87,7 @@ async def update(*,
     """
         Update AcademicDegreeDegree
 
-        - **id**: UUID - the ID of AcademicDegreeDegree to update. 
+        - **id**: UUID - the ID of AcademicDegreeDegree to update.
             This is required.
         - **name**: required.
     """

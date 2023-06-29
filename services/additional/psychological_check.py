@@ -8,8 +8,8 @@ from services.base import ServiceBase
 
 
 class PsychologicalService(
-        ServiceBase[PsychologicalCheck, 
-                    PsychologicalCheckCreate, 
+        ServiceBase[PsychologicalCheck,
+                    PsychologicalCheckCreate,
                     PsychologicalCheckUpdate]):
 
     def get_by_id(self, db: Session, id: str):

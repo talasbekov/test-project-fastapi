@@ -6,18 +6,18 @@ from sqlalchemy.orm import Session
 
 from exceptions import ForbiddenException, BadRequestException
 from models import (
-    CandidateStageInfo, 
-    Candidate, 
-    StaffUnit, 
+    CandidateStageInfo,
+    Candidate,
+    StaffUnit,
     User,
-    CandidateStageInfoStatusEnum, 
-    PositionNameEnum, 
+    CandidateStageInfoStatusEnum,
+    PositionNameEnum,
     CandidateStageType
 )
 from models.association import staff_unit_candidate_stage_infos
 from schemas import (
-    CandidateStageInfoRead, 
-    CandidateStageInfoCreate, 
+    CandidateStageInfoRead,
+    CandidateStageInfoCreate,
     CandidateStageInfoUpdate,
     CandidateStageInfoSendToApproval
 )
@@ -26,27 +26,27 @@ from .candidate_stage_type import candidate_stage_type_service
 
 
 class CandidateStageInfoService(
-        ServiceBase[CandidateStageInfo, 
-                    CandidateStageInfoCreate, 
+        ServiceBase[CandidateStageInfo,
+                    CandidateStageInfoCreate,
                     CandidateStageInfoUpdate]):
 
     def get_all_by_staff_unit_id(
-            self, 
-            db: Session, 
-            filter: str, 
+            self,
+            db: Session,
+            filter: str,
             skip: int,
-            limit: int, 
+            limit: int,
             staff_unit_id: uuid.UUID) -> CandidateStageInfoRead:
         """
             Retrieves a list of CandidateStageInfo records for a specific staff_unit_id.
         """
         candidate_stage_info_id = \
             staff_unit_candidate_stage_infos.c.candidate_stage_info_id
-        staff_unit_candidate_id = staff_unit_candidate_stage_infos.c.staff_unit_id 
+        staff_unit_candidate_id = staff_unit_candidate_stage_infos.c.staff_unit_id
         if filter == '':
             subquery = (db
                         .query(candidate_stage_info_id)
-                        .filter(staff_unit_candidate_id == staff_unit_id) 
+                        .filter(staff_unit_candidate_id == staff_unit_id)
             )
 
             return db.query(CandidateStageInfo).filter(
@@ -69,7 +69,7 @@ class CandidateStageInfoService(
         """
             Retrieves a list of CandidateStageInfo records for a specific candidate_id.
 
-            It also validates the candidate by calling 
+            It also validates the candidate by calling
             the _validate_candidate_infos method.
         """
         candidate_stage_infos = db.query(CandidateStageInfo).filter(
@@ -77,7 +77,7 @@ class CandidateStageInfoService(
         ).order_by(self.model.id.asc()).offset(skip).limit(limit).all()
 
         candidate_stage_infos = [CandidateStageInfoRead.from_orm(
-            candidate_stage_info).dict() 
+            candidate_stage_info).dict()
             for candidate_stage_info in candidate_stage_infos]
 
         current_user_staff_unit = staff_unit_service.get_by_id(db, role)
@@ -94,20 +94,20 @@ class CandidateStageInfoService(
 
         return candidate_stage_infos
 
-    def send_to_approval(self, 
-                         db: Session, 
+    def send_to_approval(self,
+                         db: Session,
                          id: str,
-                         body: CandidateStageInfoSendToApproval, 
+                         body: CandidateStageInfoSendToApproval,
                          staff_unit_id: str):
         """
             Sends a CandidateStageInfo record to approval.
 
-            This updates a CandidateStageInfo record's is_waits flag to True, 
+            This updates a CandidateStageInfo record's is_waits flag to True,
             indicating that it is waiting for approval.
-            If a staff_unit_coordinate_id is provided, it sets it 
+            If a staff_unit_coordinate_id is provided, it sets it
             as the coordinator unit for the CandidateStageInfo.
-            Otherwise, it sends the CandidateStageInfo to multiple approvers 
-            based on the type of the CandidateStageInfo and sets 
+            Otherwise, it sends the CandidateStageInfo to multiple approvers
+            based on the type of the CandidateStageInfo and sets
             the staff_unit_coordinate_id accordingly.
         """
         candidate_stage_info = super().get_by_id(db, id)
@@ -126,7 +126,7 @@ class CandidateStageInfoService(
             )
 
         if body.staff_unit_coordinate_id is not None:
-            staff_unit = staff_unit_service.get_by_id(db, 
+            staff_unit = staff_unit_service.get_by_id(db,
                                 body.staff_unit_coordinate_id
             )
 
@@ -144,10 +144,10 @@ class CandidateStageInfoService(
 
     def sign_candidate_info(self, db: Session, id: uuid.UUID, role: str):
         """
-            This method updates the CandidateStageInfo record with the provided 
+            This method updates the CandidateStageInfo record with the provided
             id and sets its status to APPROVED.
 
-            If the CandidateStageInfo is related to physical training results, 
+            If the CandidateStageInfo is related to physical training results,
             it also updates the related Candidate record
                 and sets its is_physical_passed flag to True.
         """
@@ -179,10 +179,10 @@ class CandidateStageInfoService(
 
     def reject_candidate_info(self, db: Session, id: uuid.UUID, role: str):
         """
-            This updates the CandidateStageInfo record with the provided id 
+            This updates the CandidateStageInfo record with the provided id
             and sets its status to DECLINED.
-            If the CandidateStageInfo is related to physical training results, 
-            it also updates the related Candidate 
+            If the CandidateStageInfo is related to physical training results,
+            it also updates the related Candidate
             record and increments its attempt_number
         """
         candidate_stage_info: CandidateStageInfo = super().get_by_id(db, id)
@@ -218,13 +218,13 @@ class CandidateStageInfoService(
     def _validate_access_to_candidate_info(
             self, db: Session, candidate_stage_info: CandidateStageInfo, role: str):
         """
-            This method validates whether the current user 
+            This method validates whether the current user
             has access to the CandidateStageInfo record with the provided id.
         """
         current_user_staff_unit = staff_unit_service.get_by_id(db, role)
 
-        if (not candidate_stage_info.is_waits 
-            or current_user_staff_unit.id 
+        if (not candidate_stage_info.is_waits
+            or current_user_staff_unit.id
             != candidate_stage_info.staff_unit_coordinate_id):
             raise ForbiddenException(
                 detail=("У вас нет доступа к информации о стадии"
@@ -232,13 +232,13 @@ class CandidateStageInfoService(
             )
 
     def _send_to_multiple_approval(
-            self, 
-            db: Session, 
-            candidate_stage_info: CandidateStageInfo, 
+            self,
+            db: Session,
+            candidate_stage_info: CandidateStageInfo,
             candidate) -> CandidateStageInfo:
         """
-            This method sends the CandidateStageInfo to multiple approvers 
-            based on the type of the CandidateStageInfo and sets 
+            This method sends the CandidateStageInfo to multiple approvers
+            based on the type of the CandidateStageInfo and sets
             the staff_unit_coordinate_id accordingly.
         """
         candidate_stage_type = db.query(CandidateStageType).filter(
@@ -275,13 +275,13 @@ class CandidateStageInfoService(
 
         return candidate_stage_info
 
-    def _validate_candidate_infos(self, 
-                                  db: Session, 
-                                  candidate_stage_info: CandidateStageInfo, 
+    def _validate_candidate_infos(self,
+                                  db: Session,
+                                  candidate_stage_info: CandidateStageInfo,
                                   candidate,
                                   current_user_staff_unit):
         """
-            This method validates whether the current user 
+            This method validates whether the current user
             has access to the CandidateStageInfo record with the provided id.
         """
 
@@ -301,14 +301,14 @@ class CandidateStageInfoService(
                 candidate_stage_info['access'] = True
             else:
                 candidate_stage_info['access'] = False
-        if (position.name 
+        if (position.name
             == PositionNameEnum.REPRESENTATIVE_OF_SECURITY_DEPARTMENT.value):
             if candidate_stage_type.name == 'Беседа с представителем УСБ':
                 candidate_stage_info['access'] = True
             else:
                 candidate_stage_info['access'] = False
         if position.name == PositionNameEnum.POLYGRAPH_EXAMINER.value:
-            if (candidate_stage_type.name 
+            if (candidate_stage_type.name
                 == 'Результаты полиграфологического исследования'):
                 candidate_stage_info['access'] = True
             else:
@@ -317,7 +317,7 @@ class CandidateStageInfoService(
     def _query_candidate_stage_infos(
             self, db: Session, staff_unit_id: str, key_words: list[str]):
         """
-            This method returns the query for getting the CandidateStageInfo 
+            This method returns the query for getting the CandidateStageInfo
             records based on the provided staff_unit_id and key_words.
         """
         candidate_stage_info_id = \
@@ -340,7 +340,7 @@ class CandidateStageInfoService(
                 CandidateStageInfo.is_waits == True,
                 (and_(func.concat(func.lower(User.first_name), ' ',
                         func.lower(User.last_name), ' ',
-                        func.lower(User.father_name)).contains(name) 
+                        func.lower(User.father_name)).contains(name)
                         for name in key_words))
             )
         )

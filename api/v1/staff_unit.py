@@ -39,11 +39,11 @@ async def get_all(*,
     """
        Get all Staff Units
 
-       - **skip**: int - The number of staff units 
-            to skip before returning the results. 
+       - **skip**: int - The number of staff units
+            to skip before returning the results.
             This parameter is optional and defaults to 0.
-       - **limit**: int - The maximum number of staff units 
-            to return in the response. 
+       - **limit**: int - The maximum number of staff units
+            to return in the response.
             This parameter is optional and defaults to 10.
    """
     Authorize.jwt_required()
@@ -70,7 +70,7 @@ async def create(*,
     return staff_unit_service.create(db, body)
 
 
-@router.post("/position/", 
+@router.post("/position/",
              status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=StaffUnitRead,
@@ -89,7 +89,7 @@ async def create_with_position(*,
     return staff_unit_service.create_with_position(db, body)
 
 
-@router.put("/{id}/", 
+@router.put("/{id}/",
             dependencies=[Depends(HTTPBearer())],
             response_model=StaffUnitRead,
             summary="Update Staff Unit")
@@ -104,9 +104,9 @@ async def update(*,
 
         - **id**: UUID - required
         - **name**: required
-        - **position_id**: id of position. 
+        - **position_id**: id of position.
             This parameter is optional.
-        - **staff_division_id**: id of staff_division. 
+        - **staff_division_id**: id of staff_division.
             This parameter is optional.
     """
     Authorize.jwt_required()
@@ -116,7 +116,7 @@ async def update(*,
         obj_in=body)
 
 
-@router.get("/{id}/", 
+@router.get("/{id}/",
             dependencies=[Depends(HTTPBearer())],
             response_model=StaffUnitRead,
             summary="Get Staff Unit by id")
@@ -134,7 +134,7 @@ async def get_by_id(*,
     return staff_unit_service.get_by_id(db, id)
 
 
-@router.delete("/{id}/", 
+@router.delete("/{id}/",
                status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
                summary="Delete Staff Unit")
@@ -152,7 +152,7 @@ async def delete(*,
     staff_unit_service.remove(db, id)
 
 
-@router.get('/get-service-staff-functions/{id}', 
+@router.get('/get-service-staff-functions/{id}',
             dependencies=[Depends(HTTPBearer())],
             response_model=List[ServiceStaffFunctionRead],
             summary="Get ServiceStaffFunctions by StaffUnit id")
@@ -232,7 +232,7 @@ async def add_document_staff_function(*,
     staff_unit_service.add_document_staff_function(db, body)
 
 
-@router.post("/add-document-staff-function/position", 
+@router.post("/add-document-staff-function/position",
              dependencies=[Depends(HTTPBearer())],
              summary="Add DocumentStaffFunction")
 async def add_document_staff_function_by_position(*,

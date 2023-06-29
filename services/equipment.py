@@ -45,28 +45,28 @@ class EquipmentService(
 
     def get_all_army_equipments(
             self, db: Session, skip: int = 0, limit: int = 10):
-        
+
         army_equipments = (db.query(TypeArmyEquipment)
                            .offset(skip)
                            .limit(limit).all())
-        
-        return [TypeArmyEquipmentRead.from_orm(army_equipment) 
+
+        return [TypeArmyEquipmentRead.from_orm(army_equipment)
                 for army_equipment in army_equipments]
 
     def get_all_clothing_equipments(
-            self, db: Session, 
+            self, db: Session,
             skip: int = 0, limit: int = 10):
-        
+
         type_clothing_equipments_list = (db.query(TypeClothingEquipment)
                                          .offset(skip).limit(limit).all())
-        
+
         if not type_clothing_equipments_list:
             raise NotFoundException("Equipment not found")
         type_clothing_equipments_read_list = []
         for type_clothing_equipment in type_clothing_equipments_list:
             clothing_equipment_models = (db.query(TypeClothingEquipmentModel)
                         .join(ClothingEquipmentTypesModels)
-                        .filter(ClothingEquipmentTypesModels.type_clothing_equipments_id 
+                        .filter(ClothingEquipmentTypesModels.type_clothing_equipments_id
                                 == type_clothing_equipment.id)
                         .offset(skip)
                         .limit(limit)
@@ -104,14 +104,14 @@ class EquipmentService(
         return db.query(TypeClothingEquipment).count()
 
     def get_all_other_equipments(
-            self, db: Session, 
+            self, db: Session,
             skip: int = 0, limit: int = 10):
-        
+
         other_equipments = (db.query(TypeOtherEquipment)
                             .offset(skip)
                             .limit(limit).all())
-        
-        return [TypeOtherEquipmentRead.from_orm(other_equipment) 
+
+        return [TypeOtherEquipmentRead.from_orm(other_equipment)
                 for other_equipment in other_equipments]
 
     def get_all_available_equipments(

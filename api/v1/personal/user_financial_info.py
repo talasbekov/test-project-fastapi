@@ -8,8 +8,8 @@ from sqlalchemy.orm import Session
 
 from core import get_db
 from schemas import (
-    UserFinancialInfoCreate, 
-    UserFinancialInfoUpdate, 
+    UserFinancialInfoCreate,
+    UserFinancialInfoUpdate,
     UserFinancialInfoRead
 )
 from services import user_financial_info_service
@@ -34,11 +34,11 @@ async def get_all(*,
     """
         Get all UserFinancialInfo
 
-        - **skip**: int - The number of UserFinancialInfo 
-            to skip before returning the results. 
+        - **skip**: int - The number of UserFinancialInfo
+            to skip before returning the results.
             This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of UserFinancialInfo 
-            to return in the response. 
+        - **limit**: int - The maximum number of UserFinancialInfo
+            to return in the response.
             This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()

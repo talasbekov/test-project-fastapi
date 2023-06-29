@@ -69,8 +69,8 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
             db.query(Badge)
             .filter(Badge.user_id == user_id)
             .filter(Badge.type_id == badge_type_id)
-            .join(BadgeHistory, 
-                  and_(Badge.id == BadgeHistory.badge_id, 
+            .join(BadgeHistory,
+                  and_(Badge.id == BadgeHistory.badge_id,
                        BadgeHistory.date_to == None))
             .first()
         ) is not None
@@ -141,10 +141,10 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
         if type == "write":
             active_badges = [i.id for i in (
                 db.query(BadgeType)
-                .join(Badge, and_(Badge.type_id == BadgeType.id, 
+                .join(Badge, and_(Badge.type_id == BadgeType.id,
                                   Badge.user_id == id))
-                .join(BadgeHistory, 
-                      and_(Badge.id == BadgeHistory.badge_id, 
+                .join(BadgeHistory,
+                      and_(Badge.id == BadgeHistory.badge_id,
                            BadgeHistory.date_to == None))
                 .all()
             )]
@@ -152,6 +152,8 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
                 BadgeTypeRead.from_orm(badge).dict()
                 for badge in db.query(BadgeType)
                 .filter(BadgeType.id.notin_(active_badges))
+                .filter(
+                    BadgeType.name != "Черный Берет")
                 .offset(skip)
                 .limit(limit)
                 .all()
@@ -160,8 +162,8 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
             return [BadgeRead.from_orm(badge).dict() for badge in (
                 db.query(Badge)
                 .filter(Badge.user_id == id)
-                .join(BadgeHistory, 
-                      and_(Badge.id == BadgeHistory.badge_id, 
+                .join(BadgeHistory,
+                      and_(Badge.id == BadgeHistory.badge_id,
                            BadgeHistory.date_to is None))
                 .all()
             )]

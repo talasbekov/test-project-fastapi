@@ -64,11 +64,11 @@ async def get_not_active(*,
     """
         Get all HrVacancies
 
-       - **skip**: int - The number of HrVacancies 
-            to skip before returning the results. 
+       - **skip**: int - The number of HrVacancies
+            to skip before returning the results.
             This parameter is optional and defaults to 0.
-       - **limit**: int - The maximum number of HrVacancies 
-            to return in the response. 
+       - **limit**: int - The maximum number of HrVacancies
+            to return in the response.
             This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
@@ -175,7 +175,7 @@ async def update(*,
     return hr_vacancy_service.update(db, hr_vacancy, body, role)
 
 
-@router.put("/{id}/archieve-staff-unit", 
+@router.put("/{id}/archieve-staff-unit",
             dependencies=[Depends(HTTPBearer())],
             response_model=HrVacancyRead,
             summary="Update HrVacancy")
@@ -217,7 +217,7 @@ async def get_by_id(*,
     return hr_vacancy_service.get_by_id(db, id)
 
 
-@router.get("/archieve-staff-unit/{archieve_staff_unit_id}/", 
+@router.get("/archieve-staff-unit/{archieve_staff_unit_id}/",
             dependencies=[Depends(HTTPBearer())],
             response_model=HrVacancyRead,
             summary="Get HrVacancy by archieve staff unit")
