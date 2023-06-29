@@ -14,7 +14,6 @@ from schemas import (
     StaffDivisionRead,
     StaffDivisionUpdate,
     StaffDivisionUpdateParentGroup,
-    StaffDivisionOptionRead,
 )
 
 from .base import ServiceBase
@@ -185,10 +184,10 @@ class StaffDivisionService(
                       skip: int, limit: int):
         if id is None:
             all_except_special = self.get_all_except_special(db, skip, limit)
-            return [StaffDivisionOptionRead.from_orm(
+            return [StaffDivisionRead.from_orm(
                 i) for i in all_except_special]
         child_groups = self.get_child_groups(db, id, skip, limit)
-        return [StaffDivisionOptionRead.from_orm(i) for i in child_groups]
+        return [StaffDivisionRead.from_orm(i) for i in child_groups]
 
     def get_full_name(self, db: Session, staff_division_id: uuid.UUID):
         staff_division = self.get_by_id(db, staff_division_id)
