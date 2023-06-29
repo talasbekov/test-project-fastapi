@@ -71,7 +71,7 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
             .filter(Badge.type_id == badge_type_id)
             .join(BadgeHistory, 
                   and_(Badge.id == BadgeHistory.badge_id, 
-                       BadgeHistory.date_to is None))
+                       BadgeHistory.date_to == None))
             .first()
         ) is not None
 
@@ -145,7 +145,7 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
                                   Badge.user_id == id))
                 .join(BadgeHistory, 
                       and_(Badge.id == BadgeHistory.badge_id, 
-                           BadgeHistory.date_to is None))
+                           BadgeHistory.date_to == None))
                 .all()
             )]
             return [

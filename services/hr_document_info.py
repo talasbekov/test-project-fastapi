@@ -60,11 +60,11 @@ class HrDocumentInfoService(
         info = db.query(self.model).filter(
             self.model.hr_document_id == document_id,
             self.model.hr_document_step_id == step_id,
-            self.model.is_signed is None
+            self.model.is_signed == None
         ).order_by(self.model.order).first()
 
         if info is None:
-            raise NotFoundException(detail='Нет истории подписания!')
+            raise NotFoundException(detail='Нет истории подписания для!')
 
         return info
 
@@ -73,7 +73,7 @@ class HrDocumentInfoService(
         return db.query(self.model).filter(
             self.model.hr_document_id == document_id,
             self.model.hr_document_step_id == step_id,
-            self.model.is_signed is None
+            self.model.is_signed == None
         ).order_by(self.model.order).first()
 
     def find_by_document_id_and_step_id_signed(
@@ -113,7 +113,7 @@ class HrDocumentInfoService(
             .join(DocumentStaffFunction)\
             .filter(
                 self.model.hr_document_id == id,
-                self.model.signed_by_id is not None
+                self.model.signed_by_id != None
         )\
             .order_by(self.model.created_at.asc(),
                       DocumentStaffFunction.priority.asc(),
@@ -125,7 +125,7 @@ class HrDocumentInfoService(
             .join(DocumentStaffFunction)\
             .filter(
                 self.model.hr_document_id == id,
-                self.model.signed_by_id is None
+                self.model.signed_by_id == None
         )\
             .order_by(DocumentStaffFunction.priority.asc(), self.model.order)\
             .all()
@@ -177,7 +177,7 @@ class HrDocumentInfoService(
         info = db.query(HrDocumentInfo).filter(
             HrDocumentInfo.hr_document_id == document_id,
             HrDocumentInfo.hr_document_step_id == step_id,
-            HrDocumentInfo.is_signed is not None,
+            HrDocumentInfo.is_signed != None,
             HrDocumentInfo.order == order,
         ).order_by(HrDocumentInfo.signed_at.desc()).first()
 

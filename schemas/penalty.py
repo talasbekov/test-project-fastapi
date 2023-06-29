@@ -44,5 +44,13 @@ class PenaltyUpdate(PenaltyBase):
 
 class PenaltyRead(PenaltyBase):
     id: uuid.UUID
-
     type: Optional[PenaltyTypeRead]
+
+class PenaltyReadForOption(PenaltyBase):
+    id: uuid.UUID
+    type.name: Optional[str]
+    type.nameKZ: Optional[str]
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True

@@ -44,6 +44,9 @@ class AddCoolnessHandler(BaseHandler):
         document: HrDocument,
     ):
         coolness_id = self.get_args(action, props)
+
+        coolness_service.get_object(db, coolness_id)
+
         if coolness_service.exists_relation(db, user.id, coolness_id):
             raise ForbiddenException(
                 ("Coolness is already assigned to this user:"

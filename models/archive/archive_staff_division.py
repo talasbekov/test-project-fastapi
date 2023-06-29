@@ -21,13 +21,11 @@ class ArchiveStaffDivision(NamedNestedModel):
         "staff_division_types.id"), nullable=True)
     type = relationship("StaffDivisionType")
     staff_list_id = Column(
-        UUID(
-            as_uuid=True),
+        UUID(as_uuid=True),
         ForeignKey("staff_lists.id"),
         nullable=False)
     origin_id = Column(
-        UUID(
-            as_uuid=True),
+        UUID(as_uuid=True),
         ForeignKey("staff_divisions.id"),
         nullable=True)
 

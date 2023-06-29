@@ -2,11 +2,13 @@ import uuid
 from typing import List, Dict, Any
 
 from sqlalchemy.orm import Session
+from sqlalchemy import distinct, func
 
 
 from exceptions import BadRequestException, NotFoundException
 from models import (StaffDivision, StaffDivisionEnum, ArchiveStaffDivision,
-                    StaffUnit, HrVacancy, Secondment, EmergencyServiceHistory)
+                    StaffUnit, HrVacancy, Secondment, EmergencyServiceHistory,
+                    Position)
 from schemas import (
     StaffDivisionCreate,
     StaffDivisionRead,
@@ -58,7 +60,7 @@ class StaffDivisionService(
             db, StaffDivisionEnum.SERVICE.value)
         departments = db.query(self.model).filter(
             StaffDivision.parent_group_id == service_staff_function.id
-        ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
+        ).order_by(StaffDivision.staff_division_number).offset(skip).limit(limit).all()
         return [self._return_correctly(db, department)
                 for department in departments]
 
@@ -80,7 +82,7 @@ class StaffDivisionService(
                         db: Session,
                         skip: int, limit: int) -> List[StaffDivision]:
         parents = db.query(self.model).filter(
-            StaffDivision.parent_group_id is None
+            StaffDivision.parent_group_id == None
         ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
         return parents
 
@@ -89,7 +91,7 @@ class StaffDivisionService(
                                skip: int,
                                limit: int) -> List[StaffDivision]:
         parents = db.query(self.model).filter(
-            StaffDivision.parent_group_id is None,
+            StaffDivision.parent_group_id == None,
             self.model.name != StaffDivisionEnum.SPECIAL_GROUP.value
         ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
         return parents
@@ -196,11 +198,7 @@ class StaffDivisionService(
         full_name = staff_division.name
         full_nameKZ = staff_division.nameKZ
 
-        service = self.get_by_name(db, StaffDivisionEnum.SERVICE.value)
-
-        while parent_id != service.id:
-            if parent_id is None:
-                break
+        while parent_id != None:
             tmp = self.get_by_id(db, parent_id)
             full_name = tmp.name + " / " + full_name
             full_nameKZ = tmp.nameKZ + " / " + full_nameKZ
@@ -311,9 +309,9 @@ class StaffDivisionService(
                                                   staff_division: StaffDivision):
         (db.query(Secondment)
             .filter(Secondment.staff_division_id == staff_division.id)
-            .update({Secondment.staff_division_id: None,
-                     Secondment.name: staff_division.name,
-                     Secondment.nameKZ: staff_division.nameKZ}
+            .update({Secondment.staff_division_id:None,
+                     Secondment.name:Secondment.name + ": " + staff_division.name,
+                     Secondment.nameKZ:Secondment.nameKZ + ": " + staff_division.nameKZ}
                     )
          )
         db.flush()
@@ -334,14 +332,14 @@ class StaffDivisionService(
                                        staff_division: StaffDivision):
 
         count_vacancies = (
-            db.query(HrVacancy)
-            .join(StaffUnit, HrVacancy.staff_unit_id == StaffUnit.id)
-            .join(StaffDivision, StaffUnit.staff_division_id == StaffDivision.id)
+            db.query(func.count(distinct(Position.id)))
+            .join(StaffUnit, Position.id == StaffUnit.position_id)
+            .join(HrVacancy, HrVacancy.staff_unit_id == StaffUnit.id)
+            .join(StaffDivision, StaffDivision.id == StaffUnit.staff_division_id)
             .filter(
                 HrVacancy.is_active == True,
-                HrVacancy.staff_unit_id == StaffUnit.id,
                 StaffUnit.staff_division_id == staff_division.id
-            ).count()
+            ).scalar()
         )
 
         for child in staff_division.children:
@@ -359,6 +357,23 @@ class StaffDivisionService(
         return db.query(self.model).filter(
             self.model.name == name
         ).all()
+
+    def get_parent_ids(self, db: Session, id: uuid.UUID) -> List[uuid.UUID]:
+        staff_division = self.get_by_id(db, id)
+
+        parent_id = staff_division.parent_group_id
+        
+        ids = [staff_division.id]
+
+        while parent_id != None:
+            if parent_id is None:
+                break
+            tmp = self.get_by_id(db, parent_id)
+            ids.append(tmp.id)
+            parent_id = tmp.parent_group_id
+
+        ids.reverse()
+        return ids
 
 
 staff_division_service = StaffDivisionService(StaffDivision)
