@@ -13,7 +13,7 @@ class QuestionBase(Model):
     question_type: str
     survey_id: Optional[uuid.UUID]
     quiz_id: Optional[uuid.UUID]
-    score: Optional[int]
+    score: Optional[int] = None
 
     @validator('score')
     def validate_score(cls, score, values):
@@ -48,6 +48,7 @@ class QuestionUpdate(QuestionBase):
 class QuestionRead(QuestionBase, ReadModel):
     text: Optional[str]
     question_type: Optional[str]
+    score: Optional[int]
 
     options: Optional[List[OptionRead]]
 

@@ -13,6 +13,7 @@ class OptionBase(Model):
     row_position: Optional[int]
     column_position: Optional[int]
     is_checked: Optional[bool]
+    score: Optional[int] = None
 
 
 class OptionCreate(OptionBase):
@@ -25,6 +26,7 @@ class OptionUpdate(OptionBase):
 
 class OptionRead(OptionBase, ReadModel):
     question_id: Optional[uuid.UUID]
+    score: Optional[int]
 
     class Config:
         orm_mode = True

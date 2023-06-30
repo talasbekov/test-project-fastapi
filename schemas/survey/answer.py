@@ -29,6 +29,7 @@ class AnswerRead(AnswerBase, ReadModel):
     question_id: Optional[uuid.UUID]
     options: Optional[List[OptionRead]]
     user_id: Optional[uuid.UUID]
+    score: Optional[int]
 
     class Config:
         orm_mode = True
