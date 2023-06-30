@@ -38,7 +38,7 @@ class QuestionBase(Model):
 
 class QuestionSurvey(QuestionBase):
 
-    survey_id = Column(UUID(as_uuid=True), ForeignKey("surveys.id"))
+    survey_id = Column(UUID(as_uuid=True), ForeignKey("surveys.id"), nullable=True)
 
     survey = relationship("Survey", foreign_keys=[
                           survey_id], back_populates="questions")
@@ -50,8 +50,8 @@ class QuestionSurvey(QuestionBase):
 
 class QuestionQuiz(QuestionBase):
 
-    quiz_id = Column(UUID(as_uuid=True), ForeignKey("quizzes.id"))
-    score = Column(Integer, nullable=False, default=1)
+    quiz_id = Column(UUID(as_uuid=True), ForeignKey("quizzes.id"), nullable=True)
+    score = Column(Integer, nullable=True)
 
     quiz = relationship("Quiz", foreign_keys=[
                           quiz_id], back_populates="questions")
