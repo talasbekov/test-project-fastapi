@@ -21,7 +21,6 @@ class OptionCreate(OptionBase):
 
 class OptionUpdate(OptionBase):
     question_id: Optional[uuid.UUID]
-    pass
 
 
 class OptionRead(OptionBase, ReadModel):
