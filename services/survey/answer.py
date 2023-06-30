@@ -2,8 +2,8 @@ from sqlalchemy.orm import Session
 
 from models import (Answer, QuestionTypeEnum,
                     AnswerSingleSelection, AnswerScale, AnswerGrid,
-                    AnswerCheckboxGrid, Question, Survey,
-                    AnswerText)
+                    AnswerCheckboxGrid, QuestionBase, Survey,
+                    AnswerText, QuestionSurvey)
 from schemas import AnswerCreate, AnswerUpdate
 from exceptions import BadRequestException
 from services.base import ServiceBase
@@ -25,6 +25,7 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
 
     def create(self, db: Session, body: AnswerCreate, user_id: str) -> Answer:
         question = question_service.get_by_id(db, body.question_id)
+        question_class = question_service.define_class(question)
 
         if question.question_type not in self.POSSIBLE_TYPES:
             raise BadRequestException(
@@ -40,15 +41,18 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
                 db, option_id) for option_id in body.option_ids]
             answer.options = options
 
-        answer = self.__validate_survey_type(
-            db, question.survey_id, user_id, answer)
+        if question_class == QuestionSurvey:
+            answer = self.__validate_anonymous(
+                db, question.survey_id, user_id, answer)
+        else:
+            answer.score = self.__calculate_score(db, answer)
 
         db.add(answer)
         db.flush()
 
         return answer
 
-    def __update_kwargs(self, question: Question, body: AnswerCreate):
+    def __update_kwargs(self, question: QuestionBase, body: AnswerCreate):
         answer_kwargs = {"question_id": body.question_id}
 
         if question.question_type == QuestionTypeEnum.SINGLE_SELECTION:
@@ -74,13 +78,26 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
 
         return answer_kwargs
 
-    def __validate_survey_type(self, db: Session, survey_id: str, user_id: str, answer):
+    def __validate_anonymous(self, db: Session, survey_id: str, user_id: str, answer):
         survey: Survey = survey_service.get_by_id(db, survey_id)
 
         if not survey.is_anonymous:
             answer.user_id = user_id
 
         return answer
+
+    def __calculate_score(self, db: Session, answer):
+        question = question_service.get_by_id(db, answer.question_id)
+
+        if question.question_type == QuestionTypeEnum.SINGLE_SELECTION.value:
+            option = option_service.get_by_id(db, answer.option_id)
+
+            return option.score
+        elif question.question_type == QuestionTypeEnum.MULTIPLE_SELECTION.value:
+            options = [option_service.get_by_id(db, option_id)
+                       for option_id in answer.options]
+
+            return sum([option.score for option in options])
 
 
 answer_service = AnswerService(Answer)
