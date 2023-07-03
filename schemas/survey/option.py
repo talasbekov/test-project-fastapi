@@ -13,7 +13,7 @@ class OptionBase(Model):
     row_position: Optional[int]
     column_position: Optional[int]
     is_checked: Optional[bool]
-    score: Optional[int] = None
+    score: Optional[int]
 
 
 class OptionCreate(OptionBase):

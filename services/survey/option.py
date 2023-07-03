@@ -38,7 +38,7 @@ class OptionService(ServiceBase[Option, OptionCreate, OptionUpdate]):
                 f"Invalid option type {question.question_type}")
 
         option_class = self.POSSIBLE_TYPES[question.question_type]
-        option_kwargs = {"question_id": body.question_id}
+        option_kwargs = {"question_id": body.question_id, "score": body.score}
         option_kwargs = self.__update_kwargs(question, body, option_kwargs)
 
         option = option_class(**option_kwargs)
