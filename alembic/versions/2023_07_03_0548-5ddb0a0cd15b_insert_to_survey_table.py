@@ -17,7 +17,7 @@ from core import Base
 
 # revision identifiers, used by Alembic.
 revision = '5ddb0a0cd15b'
-down_revision = 'dac7288a7141'
+down_revision = 'ede55238aab1'
 branch_labels = None
 depends_on = None
 
@@ -55,35 +55,40 @@ def upgrade() -> None:
             'text': 'Какими словами вы бы описали свой общий опыт использования веб-сайта от Cleverest Technologies?',
             'is_required': False,
             'survey_id': survey1_id,
-            'question_type': 'TEXT'
+            'question_type': 'TEXT',
+            'discriminator': 'question_survey'
         },
         {
             'id': question1_2_id,
             'text': 'Какую из следующих функций веб-сайта вы считаете наиболее полезной?',
             'is_required': True,
             'survey_id': survey1_id,
-            'question_type': 'SINGLE_SELECTION'
+            'question_type': 'SINGLE_SELECTION',
+            'discriminator': 'question_survey'
         },
         {
             'id': question1_3_id,
             'text': 'Какие из следующих факторов, на ваш взгляд, определяют удобство использования веб-сайта Cleverest Technologies? (Выберите все подходящие варианты)',
             'is_required': True,
             'survey_id': survey1_id,
-            'question_type': 'MULTIPLE_SELECTION'
+            'question_type': 'MULTIPLE_SELECTION',
+            'discriminator': 'question_survey'
         },
         {
             'id': question1_4_id,
             'text': 'Насколько удовлетворены вы общей производительностью веб-сайта',
             'is_required': True,
             'survey_id': survey1_id,
-            'question_type': 'SCALE'
+            'question_type': 'SCALE',
+            'discriminator': 'question_survey'
         },
         {
             'id': question1_5_id,
             'text': 'Пожалуйста, оцените следующие аспекты веб-сайта Cleverest Technologies от 1 до 5, где 1 - очень низкое качество и 5 - очень высокое качество:',
             'is_required': True,
             'survey_id': survey1_id,
-            'question_type': 'GRID'
+            'question_type': 'GRID',
+            'discriminator': 'question_survey'
         }]
     )
     
