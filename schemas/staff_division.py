@@ -2,7 +2,7 @@ import datetime
 import uuid
 from typing import List, Optional
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, validator
 
 from schemas import (PositionRead, RankRead, StaffFunctionRead,
                      NamedModel, ReadModel, ReadNamedModel,
@@ -120,7 +120,23 @@ class StaffUnitRead(ReadModel):
 
 class StaffDivisionChildRead(StaffDivisionBase):
     id: Optional[uuid.UUID]
+    children: Optional[List]
+    staff_units: Optional[List]
     type: Optional[StaffDivisionTypeRead]
+    
+    @validator('children')
+    def validate_children(cls, children):
+        if children == []:
+            return None
+        else:
+            return []
+        
+    @validator('staff_units')
+    def validate_staff_units(cls, staff_units):
+        if staff_units == []:
+            return None
+        else:
+            return []
 
     class Config:
         orm_mode = True
@@ -131,6 +147,20 @@ class StaffDivisionRead(StaffDivisionBase):
     children: Optional[List['StaffDivisionChildRead']]
     staff_units: Optional[List['StaffUnitRead']]
     type: Optional[StaffDivisionTypeRead]
+    
+    @validator('children')
+    def validate_children(cls, children):
+        if children == []:
+            return None
+        else:
+            return children
+        
+    @validator('staff_units')
+    def validate_staff_units(cls, staff_units):
+        if staff_units == []:
+            return None
+        else:
+            return staff_units
 
     class Config:
         orm_mode = True
