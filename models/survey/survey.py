@@ -5,17 +5,31 @@ from sqlalchemy.orm import relationship
 from models import NamedModel
 
 
-class Survey(NamedModel):
+class Base(NamedModel):
 
-    __tablename__ = "surveys"
+    __abstract__ = True
 
     description = Column(TEXT, nullable=True)
     start_date = Column(TIMESTAMP(timezone=True), nullable=False)
     end_date = Column(TIMESTAMP(timezone=True), nullable=False)
     jurisdiction_id = Column(
         UUID(as_uuid=True), ForeignKey("jurisdictions.id"))
-    is_anonymous = Column(Boolean(), default=False, nullable=True)
     owner_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
 
+
+class Survey(Base):
+
+    __tablename__ = "surveys"
+
+    is_anonymous = Column(Boolean(), default=False, nullable=True)
+
     questions = relationship(
-        "Question", cascade="all, delete", back_populates="survey")
+        "QuestionSurvey", cascade="all, delete", back_populates="survey")
+
+
+class Quiz(Base):
+
+    __tablename__ = "quizzes"
+
+    questions = relationship(
+        "QuestionQuiz", cascade="all, delete", back_populates="quiz")
