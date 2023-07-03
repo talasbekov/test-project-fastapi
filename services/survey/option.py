@@ -31,7 +31,7 @@ class OptionService(ServiceBase[Option, OptionCreate, OptionUpdate]):
 
         if body.score is not None and question_class == QuestionSurvey:
             raise BadRequestException(
-                f"Score is not allowed for survey")
+                "Score is not allowed for survey")
 
         if question.question_type not in self.POSSIBLE_TYPES:
             raise BadRequestException(
