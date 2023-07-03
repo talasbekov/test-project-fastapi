@@ -1,7 +1,7 @@
 import uuid
 from typing import List, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
 from schemas import NamedModel, StaffDivisionTypeRead
 from .archive_staff_unit import ArchiveStaffUnitRead
 
@@ -48,7 +48,23 @@ class ArchiveStaffDivisionUpdateParentGroup(BaseModel):
 
 class ArchiveStaffDivisionChildRead(ArchiveStaffDivisionBase):
     id: Optional[uuid.UUID]
+    children: Optional[List]
+    staff_units: Optional[List]
     type: Optional[StaffDivisionTypeRead]
+    
+    @validator('children')
+    def validate_children(cls, children):
+        if children == []:
+            return None
+        else:
+            return []
+        
+    @validator('staff_units')
+    def validate_staff_units(cls, staff_units):
+        if staff_units == []:
+            return None
+        else:
+            return []
 
     class Config:
         orm_mode = True
@@ -59,6 +75,20 @@ class ArchiveStaffDivisionRead(ArchiveStaffDivisionBase):
     children: Optional[List['ArchiveStaffDivisionChildRead']]
     staff_units: Optional[List['ArchiveStaffUnitRead']]
     type: Optional[StaffDivisionTypeRead]
+    
+    @validator('children')
+    def validate_children(cls, children):
+        if children == []:
+            return None
+        else:
+            return children
+        
+    @validator('staff_units')
+    def validate_staff_units(cls, staff_units):
+        if staff_units == []:
+            return None
+        else:
+            return staff_units
 
     class Config:
         orm_mode = True

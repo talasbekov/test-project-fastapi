@@ -2,7 +2,7 @@ from typing import List
 from sqlalchemy.orm import Session
 
 from models import (Option, QuestionTypeEnum, OptionScale,
-                    OptionCheckboxGrid, OptionGrid, Question,
+                    OptionCheckboxGrid, OptionGrid, QuestionSurvey,
                     OptionText)
 from schemas import (OptionCreate, OptionUpdate)
 from exceptions import BadRequestException
@@ -27,13 +27,18 @@ class OptionService(ServiceBase[Option, OptionCreate, OptionUpdate]):
 
     def create(self, db: Session, body: OptionCreate) -> Option:
         question = question_service.get_by_id(db, body.question_id)
+        question_class = question_service.define_class(question)
+
+        if body.score is not None and question_class == QuestionSurvey:
+            raise BadRequestException(
+                "Score is not allowed for survey")
 
         if question.question_type not in self.POSSIBLE_TYPES:
             raise BadRequestException(
                 f"Invalid option type {question.question_type}")
 
         option_class = self.POSSIBLE_TYPES[question.question_type]
-        option_kwargs = {"question_id": body.question_id}
+        option_kwargs = {"question_id": body.question_id, "score": body.score}
         option_kwargs = self.__update_kwargs(question, body, option_kwargs)
 
         option = option_class(**option_kwargs)
@@ -42,7 +47,11 @@ class OptionService(ServiceBase[Option, OptionCreate, OptionUpdate]):
 
         return option
 
-    def __update_kwargs(self, question: Question, body: OptionCreate, option_kwargs):
+    def __update_kwargs(self,
+                        question: QuestionSurvey,
+                        body: OptionCreate,
+                        option_kwargs):
+
         if question.question_type == QuestionTypeEnum.SCALE:
             option_kwargs.update(
                 {"discriminator": "option_scale",

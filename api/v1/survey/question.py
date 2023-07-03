@@ -55,6 +55,26 @@ async def get_by_survey(*,
     return question_service.get_by_survey(db, survey_id)
 
 
+@router.get("/quiz-id/", dependencies=[Depends(HTTPBearer())],
+            response_model=List[QuestionRead],
+            summary="Get all Questions by quiz id")
+async def get_by_quiz(*,
+                  db: Session = Depends(get_db),
+                  quiz_id: uuid.UUID,
+                  Authorize: AuthJWT = Depends()
+                  ):
+    """
+        Get all Question by survey
+
+        - **skip**: int - The number of questions to skip before returning the results. 
+                This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of questions to return in the response. 
+            This parameter is optional and defaults to 100.
+    """
+    Authorize.jwt_required()
+    return question_service.get_by_quiz(db, quiz_id)
+
+
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=QuestionRead,

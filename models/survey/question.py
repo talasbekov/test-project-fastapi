@@ -1,6 +1,6 @@
 import enum
 
-from sqlalchemy import Column, ForeignKey, Boolean, TEXT, Enum
+from sqlalchemy import Column, ForeignKey, Boolean, TEXT, Enum, Integer, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -16,18 +16,46 @@ class QuestionTypeEnum(str, enum.Enum):
     CHECKBOX_GRID = "Сетка флажков"
 
 
-class Question(Model):
+class QuestionBase(Model):
 
     __tablename__ = "questions"
 
     text = Column(TEXT, nullable=False)
     is_required = Column(Boolean, nullable=False, default=True)
-    survey_id = Column(UUID(as_uuid=True), ForeignKey("surveys.id"))
     question_type = Column(Enum(QuestionTypeEnum), nullable=False)
+    discriminator = Column(String(255), nullable=True)
 
-    survey = relationship("Survey", foreign_keys=[
-                          survey_id], back_populates="questions")
     options = relationship("Option", cascade="all,delete",
                            back_populates="question")
     answers = relationship("Answer", cascade="all, delete",
                            back_populates="question")
+
+    __mapper_args__ = {
+        "polymorphic_on": discriminator,
+        "polymorphic_identity": "questions"
+    }
+
+
+class QuestionSurvey(QuestionBase):
+
+    survey_id = Column(UUID(as_uuid=True), ForeignKey("surveys.id"), nullable=True)
+
+    survey = relationship("Survey", foreign_keys=[
+                          survey_id], back_populates="questions")
+
+    __mapper_args__ = {
+        "polymorphic_identity": "question_survey"
+    }
+
+
+class QuestionQuiz(QuestionBase):
+
+    quiz_id = Column(UUID(as_uuid=True), ForeignKey("quizzes.id"), nullable=True)
+    score = Column(Integer, nullable=True)
+
+    quiz = relationship("Quiz", foreign_keys=[
+                          quiz_id], back_populates="questions")
+
+    __mapper_args__ = {
+        "polymorphic_identity": "question_quiz"
+    }
