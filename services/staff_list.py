@@ -114,7 +114,7 @@ class StaffListService(
         db.flush()
         return staff_list
 
-    async def apply_staff_list(
+    def apply_staff_list(
         self,
         db: Session,
         staff_list_id: uuid.UUID,

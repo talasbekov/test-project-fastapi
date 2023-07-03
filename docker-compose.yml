@@ -1,7 +1,6 @@
 version: '3'
 
 services:
-
   postgres-dev-erp:
     image: postgres:15.1-alpine
     container_name: postgresql-dev
@@ -37,13 +36,47 @@ services:
     networks:
       - backend-erp-sgo
     depends_on:
-        postgres-dev-erp:
-          condition: service_healthy
+      postgres-dev-erp:
+        condition: service_healthy
     deploy:
       resources:
         limits:
           memory: 4g
 
+  redis:
+    image: redis
+    container_name: redis-dev
+    ports:
+      - '6379:6379'
+    restart: always
+    networks:
+      - backend-erp-sgo
+
+  celery:
+    build:
+      context: .
+    command: celery -A tasks.celery_app worker --loglevel=info -f celery.logs
+    container_name: celery-dev
+    depends_on:
+      - redis
+    environment:
+      - REDIS_HOST=redis
+    restart: always
+    networks:
+      - backend-erp-sgo
+
+  flower:
+    image: "mher/flower"
+    container_name: flower-dev
+    environment:
+      CELERY_BROKER_URL: redis://redis:6379
+    ports:
+      - "5555:5555"
+    restart: always
+    networks:
+      - backend-erp-sgo
+    depends_on:
+      - celery
 networks:
   backend-erp-sgo:
     driver: bridge
