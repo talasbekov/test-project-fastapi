@@ -10,6 +10,8 @@ class Option(Model):
 
     __tablename__ = "options"
 
+    text = Column(TEXT, nullable=True)
+
     question_id = Column(UUID(as_uuid=True), ForeignKey("questions.id"))
     discriminator = Column(String(255), nullable=True)
     score = Column(Integer, nullable=True)
@@ -26,7 +28,6 @@ class Option(Model):
 
 
 class OptionText(Option):
-    text = Column(TEXT, nullable=True)
 
     __mapper_args__ = {
         "polymorphic_identity": "option_text"
