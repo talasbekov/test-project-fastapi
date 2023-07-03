@@ -1,7 +1,7 @@
 import uuid
 
 from typing import Optional, List
-from pydantic import validator, root_validator
+from pydantic import root_validator
 
 from schemas import Model, ReadModel
 from .option import OptionRead
@@ -13,14 +13,7 @@ class QuestionBase(Model):
     question_type: str
     survey_id: Optional[uuid.UUID]
     quiz_id: Optional[uuid.UUID]
-    score: Optional[int] = None
-
-    @validator('score')
-    def validate_score(cls, score, values):
-        quiz_id = values.get('quiz_id')
-
-        if score is not None and quiz_id is None:
-            raise ValueError('Score is only available for quiz questions')
+    score: Optional[int]
 
     @root_validator
     def validate_ids(cls, values):
