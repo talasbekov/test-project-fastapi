@@ -9,7 +9,7 @@ from models import NamedModel
 
 class SurveyStatusEnum(str, enum.Enum):
     ACTIVE = "Активный"
-    NOT_ACTIVE = "Не активный"
+    NOT_ACTIVE = "Архивный"
     DRAFT = "Черновик"
 
 

@@ -24,7 +24,7 @@ async def get_all_active(*,
                   Authorize: AuthJWT = Depends()
                   ):
     """
-        Get all Quiz
+        Get all Quizzes
 
         - **skip**: int - The number of quizzes to skip before returning the results.
                 This parameter is optional and defaults to 0.
@@ -35,9 +35,9 @@ async def get_all_active(*,
     return quiz_service.get_all_active(db, skip, limit)
 
 
-@router.get("/not-active", dependencies=[Depends(HTTPBearer())],
+@router.get("/archives", dependencies=[Depends(HTTPBearer())],
             response_model=List[QuizRead],
-            summary="Get all not active Quizzes")
+            summary="Get all archive Quizzes")
 async def get_all_not_active(*,
                   db: Session = Depends(get_db),
                   skip: int = 0,
@@ -45,7 +45,7 @@ async def get_all_not_active(*,
                   Authorize: AuthJWT = Depends()
                   ):
     """
-        Get all Quiz
+        Get all archive Quizzes
 
         - **skip**: int - The number of quizzes to skip before returning the results.
                 This parameter is optional and defaults to 0.
@@ -54,6 +54,27 @@ async def get_all_not_active(*,
     """
     Authorize.jwt_required()
     return quiz_service.get_all_not_active(db, skip, limit)
+
+
+@router.get("/drafts", dependencies=[Depends(HTTPBearer())],
+            response_model=List[QuizRead],
+            summary="Get all draft Quizzes")
+async def get_all_draft(*,
+                  db: Session = Depends(get_db),
+                  skip: int = 0,
+                  limit: int = 100,
+                  Authorize: AuthJWT = Depends()
+                  ):
+    """
+        Get all draft Quizzes
+
+        - **skip**: int - The number of quizzes to skip before returning the results.
+                This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of quizzes to return in the response.
+            This parameter is optional and defaults to 100.
+    """
+    Authorize.jwt_required()
+    return quiz_service.get_all_draft(db, skip, limit)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
@@ -73,6 +94,25 @@ async def create(*,
     """
     Authorize.jwt_required()
     return quiz_service.create(db, body)
+
+
+@router.post("/draft", status_code=status.HTTP_201_CREATED,
+             dependencies=[Depends(HTTPBearer())],
+             response_model=QuizRead,
+             summary="Save as draft")
+async def save_as_draft(*,
+                 db: Session = Depends(get_db),
+                 body: QuizCreate,
+                 Authorize: AuthJWT = Depends()
+                 ):
+    """
+        Create new survey
+
+        - **name**: required
+        - **url**: image url. This parameter is required
+    """
+    Authorize.jwt_required()
+    return quiz_service.save_as_draft(db, body)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],

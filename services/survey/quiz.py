@@ -17,4 +17,18 @@ class QuizService(ServiceBase[Quiz, QuizCreate, QuizUpdate]):
             self.model.status == SurveyStatusEnum.NOT_ACTIVE.value
         ).offset(skip).limit(limit).all()
 
+    def get_all_draft(self, db: Session, skip: int = 0, limit: int = 100):
+        return db.query(self.model).filter(
+            self.model.status == SurveyStatusEnum.DRAFT.value
+        ).offset(skip).limit(limit).all()
+
+    def save_as_draft(self, db: Session, body: QuizCreate):
+        quiz = Quiz(**body.dict())
+        quiz.status = SurveyStatusEnum.DRAFT.value
+
+        db.add(quiz)
+        db.flush()
+
+        return quiz
+
 quiz_service = QuizService(Quiz)
