@@ -53,7 +53,7 @@ def upgrade() -> None:
         Base.metadata.tables['questions'],
         [{
             'id': question1_1_id,
-            'text': 'Какими словами вы бы описали свой общий опыт использования веб-сайта от Cleverest Technologies?',
+            'name': 'Какими словами вы бы описали свой общий опыт использования веб-сайта от Cleverest Technologies?',
             'is_required': False,
             'survey_id': survey1_id,
             'question_type': 'TEXT',
@@ -61,7 +61,7 @@ def upgrade() -> None:
         },
         {
             'id': question1_2_id,
-            'text': 'Какую из следующих функций веб-сайта вы считаете наиболее полезной?',
+            'name': 'Какую из следующих функций веб-сайта вы считаете наиболее полезной?',
             'is_required': True,
             'survey_id': survey1_id,
             'question_type': 'SINGLE_SELECTION',
@@ -69,7 +69,7 @@ def upgrade() -> None:
         },
         {
             'id': question1_3_id,
-            'text': 'Какие из следующих факторов, на ваш взгляд, определяют удобство использования веб-сайта Cleverest Technologies? (Выберите все подходящие варианты)',
+            'name': 'Какие из следующих факторов, на ваш взгляд, определяют удобство использования веб-сайта Cleverest Technologies? (Выберите все подходящие варианты)',
             'is_required': True,
             'survey_id': survey1_id,
             'question_type': 'MULTIPLE_SELECTION',
@@ -77,7 +77,7 @@ def upgrade() -> None:
         },
         {
             'id': question1_4_id,
-            'text': 'Насколько удовлетворены вы общей производительностью веб-сайта',
+            'name': 'Насколько удовлетворены вы общей производительностью веб-сайта',
             'is_required': True,
             'survey_id': survey1_id,
             'question_type': 'SCALE',
@@ -85,7 +85,7 @@ def upgrade() -> None:
         },
         {
             'id': question1_5_id,
-            'text': 'Пожалуйста, оцените следующие аспекты веб-сайта Cleverest Technologies от 1 до 5, где 1 - очень низкое качество и 5 - очень высокое качество:',
+            'name': 'Пожалуйста, оцените следующие аспекты веб-сайта Cleverest Technologies от 1 до 5, где 1 - очень низкое качество и 5 - очень высокое качество:',
             'is_required': True,
             'survey_id': survey1_id,
             'question_type': 'GRID',

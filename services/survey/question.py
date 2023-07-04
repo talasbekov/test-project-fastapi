@@ -39,14 +39,16 @@ class QuestionService(ServiceBase[QuestionBase, QuestionCreate, QuestionUpdate])
     def __define_class_and_create(self, body: QuestionCreate):
         if body.survey_id:
             question = QuestionSurvey(
-                text=body.text,
+                name=body.name,
+                nameKZ=body.nameKZ,
                 is_required=body.is_required,
                 question_type=body.question_type,
                 survey_id=body.survey_id
             )
         else:
             question = QuestionQuiz(
-                text=body.text,
+                name=body.name,
+                nameKZ=body.nameKZ,
                 is_required=body.is_required,
                 question_type=body.question_type,
                 quiz_id=body.quiz_id,

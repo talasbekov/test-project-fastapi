@@ -12,6 +12,7 @@ class Base(NamedModel):
     start_date: datetime.datetime
     end_date: datetime.datetime
     jurisdiction_id: Optional[uuid.UUID]
+    is_kz_required: Optional[bool]
 
 
 class SurveyBase(Base):
