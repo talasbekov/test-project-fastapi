@@ -17,7 +17,7 @@ router = APIRouter(prefix="/surveys",
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[SurveyRead],
             summary="Get all Surveys")
-async def get_all(*,
+async def get_all_active(*,
                   db: Session = Depends(get_db),
                   skip: int = 0,
                   limit: int = 100,
@@ -32,7 +32,28 @@ async def get_all(*,
             This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    return survey_service.get_multi(db, skip, limit)
+    return survey_service.get_all_active(db, skip, limit)
+
+
+@router.get("/not-active", dependencies=[Depends(HTTPBearer())],
+            response_model=List[SurveyRead],
+            summary="Get all not active Surveys")
+async def get_all_not_active(*,
+                  db: Session = Depends(get_db),
+                  skip: int = 0,
+                  limit: int = 100,
+                  Authorize: AuthJWT = Depends()
+                  ):
+    """
+        Get all Survey
+
+        - **skip**: int - The number of surveys to skip before returning the results. 
+                This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of surveys to return in the response. 
+            This parameter is optional and defaults to 100.
+    """
+    Authorize.jwt_required()
+    return survey_service.get_all_not_active(db, skip, limit)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,

@@ -37,6 +37,7 @@ def upgrade() -> None:
             'end_date': end_date,
             'is_anonymous': False,
             'jurisdiction_id': None,
+            'status': 'Активный',
             'name': 'Опрос "Оценка пользовательского опыта: ваше впечатление о веб-сайте Cleverest Technologies',
             'nameKZ': None
         }]

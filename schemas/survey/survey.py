@@ -15,7 +15,7 @@ class Base(NamedModel):
 
 
 class SurveyBase(Base):
-    is_anonymous: Optional[bool] = False
+    is_anonymous: Optional[bool]
 
 
 class QuizBase(Base):
@@ -33,20 +33,24 @@ class QuizCreate(QuizBase):
 
 #update
 class SurveyUpdate(SurveyBase):
+    name: Optional[str]
     start_date: Optional[datetime.datetime]
     end_date: Optional[datetime.datetime]
+    status: Optional[str]
 
 
 class QuizUpdate(QuizBase):
+    name: Optional[str]
     start_date: Optional[datetime.datetime]
     end_date: Optional[datetime.datetime]
+    status: Optional[str]
 
 
 #read
 class SurveyRead(SurveyBase, ReadNamedModel):
     start_date: Optional[datetime.datetime]
     end_date: Optional[datetime.datetime]
-
+    status: Optional[str]
     questions: Optional[List[QuestionRead]]
 
     class Config:
@@ -56,7 +60,7 @@ class SurveyRead(SurveyBase, ReadNamedModel):
 class QuizRead(QuizBase, ReadNamedModel):
     start_date: Optional[datetime.datetime]
     end_date: Optional[datetime.datetime]
-
+    status: Optional[str]
     questions: Optional[List[QuestionRead]]
 
     class Config:
