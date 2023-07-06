@@ -24,7 +24,6 @@ def upgrade() -> None:
     sa.Column('end_date', sa.TIMESTAMP(timezone=True), nullable=False),
     sa.Column('jurisdiction_id', sa.UUID(), nullable=True),
     sa.Column('status', sa.String(), nullable=False),
-    sa.Column('is_kz_required', sa.Boolean(), server_default='false', nullable=False),
     sa.Column('owner_id', sa.UUID(), nullable=True),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('nameKZ', sa.String(), nullable=True),
@@ -42,7 +41,6 @@ def upgrade() -> None:
     sa.Column('end_date', sa.TIMESTAMP(timezone=True), nullable=False),
     sa.Column('jurisdiction_id', sa.UUID(), nullable=True),
     sa.Column('status', sa.String(), nullable=False),
-    sa.Column('is_kz_required', sa.Boolean(), server_default='false', nullable=False),
     sa.Column('owner_id', sa.UUID(), nullable=True),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('nameKZ', sa.String(), nullable=True),
@@ -54,8 +52,7 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('questions',
-    sa.Column('name', sa.String(), nullable=False),
-    sa.Column('nameKZ', sa.String(), nullable=True),
+    sa.Column('text', sa.TEXT(), nullable=False),
     sa.Column('is_required', sa.Boolean(), nullable=False),
     sa.Column('question_type', sa.Enum('TEXT', 'SINGLE_SELECTION', 'MULTIPLE_SELECTION', 'SCALE', 'GRID', 'CHECKBOX_GRID', name='questiontypeenum'), nullable=False),
     sa.Column('discriminator', sa.String(length=255), nullable=True),
@@ -77,7 +74,6 @@ def upgrade() -> None:
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('text', sa.TEXT(), nullable=True),
-    sa.Column('textKZ', sa.TEXT(), nullable=True),
     sa.Column('min_value', sa.Integer(), nullable=True),
     sa.Column('max_value', sa.Integer(), nullable=True),
     sa.Column('row_position', sa.Integer(), nullable=True),

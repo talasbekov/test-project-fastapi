@@ -3,11 +3,12 @@ import uuid
 from typing import Optional, List
 from pydantic import root_validator
 
-from schemas import NamedModel, ReadNamedModel
+from schemas import Model, ReadModel
 from .option import OptionRead
 
 
-class QuestionBase(NamedModel):
+class QuestionBase(Model):
+    text: str
     is_required: Optional[bool]
     question_type: str
     survey_id: Optional[uuid.UUID]
@@ -33,10 +34,12 @@ class QuestionCreate(QuestionBase):
 
 
 class QuestionUpdate(QuestionBase):
+    text: Optional[str]
     question_type: Optional[str]
 
 
-class QuestionRead(QuestionBase, ReadNamedModel):
+class QuestionRead(QuestionBase, ReadModel):
+    text: Optional[str]
     question_type: Optional[str]
     score: Optional[int]
 

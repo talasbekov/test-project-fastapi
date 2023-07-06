@@ -30,5 +30,5 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
         db.flush()
 
         return survey
-
+    
 survey_service = SurveyService(Survey)

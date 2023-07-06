@@ -72,7 +72,7 @@ class OptionService(ServiceBase[Option, OptionCreate, OptionUpdate]):
                 }
             )
         else:
-            option_kwargs.update({"text": body.text, "textKZ": body.textKZ})
+            option_kwargs.update({"text": body.text})
 
         return option_kwargs
 

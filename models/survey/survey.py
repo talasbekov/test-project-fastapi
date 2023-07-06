@@ -21,7 +21,6 @@ class Base(NamedModel):
     start_date = Column(TIMESTAMP(timezone=True), nullable=False)
     end_date = Column(TIMESTAMP(timezone=True), nullable=False)
     status = Column(String, default=SurveyStatusEnum.ACTIVE.value, nullable=False)
-    is_kz_required = Column(Boolean, server_default="false", nullable=False)
     jurisdiction_id = Column(
         UUID(as_uuid=True), ForeignKey("jurisdictions.id"))
     owner_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))

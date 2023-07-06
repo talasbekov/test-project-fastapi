@@ -11,7 +11,6 @@ class Option(Model):
     __tablename__ = "options"
 
     text = Column(TEXT, nullable=True)
-    textKZ = Column(TEXT, nullable=True)
 
     question_id = Column(UUID(as_uuid=True), ForeignKey("questions.id"))
     discriminator = Column(String(255), nullable=True)
