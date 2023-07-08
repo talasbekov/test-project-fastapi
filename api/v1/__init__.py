@@ -1,5 +1,3 @@
-from fastapi import APIRouter
-
 from .education import router_education
 
 from .hr_document import router as hr_document_router
@@ -109,5 +107,4 @@ router.include_router(recommender_user_router)
 router.include_router(hr_vacancy_router)
 router.include_router(hr_vacancy_requirement_router)
 router.include_router(position_router)
-
 router.include_router(dashboard_router)
