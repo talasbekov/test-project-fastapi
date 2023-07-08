@@ -3,7 +3,8 @@ from typing import List
 from sqlalchemy.orm import Session
 
 from models import (StaffDivision, StaffUnit,
-                    PositionNameEnum, StaffDivisionEnum)
+                    PositionNameEnum, StaffDivisionEnum,
+                    StatusEnum, Status, User, StatusType)
 from services import (staff_division_service, staff_unit_service,
                       position_service, hr_vacancy_service)
 
@@ -14,6 +15,14 @@ class DashboardService:
         PositionNameEnum.HEAD_OF_DEPARTMENT.value,
         PositionNameEnum.MANAGEMENT_HEAD.value,
         PositionNameEnum.HEAD_OF_OTDEL.value,
+    ]
+
+    ALL_STATUSES = [
+        StatusEnum.ROOT.value,
+        StatusEnum.VACATION.value,
+        StatusEnum.BUSINESS_TRIP.value,
+        StatusEnum.SICK_LEAVE.value,
+        StatusEnum.MATERNITY_LEAVE.value
     ]
 
     def get_all_state(self, db: Session, role: str) -> int:
@@ -65,6 +74,26 @@ class DashboardService:
                                .get_vacancies_recursive(db, staff_division)))
             return len(hr_vacancy_service
                        .get_vacancies_recursive(db, staff_division))
+
+    def get_in_line_count_by_status(self, db: Session, role: str):
+
+        # Получите пользователей с соответствующими статусами
+        users = db.query(User).join(Status)\
+            .join(StatusType).filter(
+            StatusType.name.in_(self.ALL_STATUSES)
+        ).all()
+        users_with_status: List[User] = []
+        for user in users:
+            print(user.name)
+            users_with_status.append(user.name)
+
+        print([name for name in users_with_status])
+
+        state_by_list = self.get_state_by_list(db, role)
+        state_by_status = len([name for name in users_with_status])
+        state_in_line = state_by_list - state_by_status
+        print(state_in_line)
+        return state_in_line
 
     def check_by_role(self, db: Session, staff_unit) -> bool:
         """

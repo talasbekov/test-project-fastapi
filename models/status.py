@@ -8,10 +8,11 @@ from models import NamedModel, Model
 
 
 class StatusEnum(Enum):
-    ROOT = 'отпуск'
+    ROOT = 'Ежегодный отпуск'
     VACATION = 'В отпуске'
     MATERNITY_LEAVE = 'В отпуске по беременности и родам'
     SICK_LEAVE = 'В отпуске по болезни'
+    BUSINESS_TRIP = 'В командировке'
 
 
 class StatusType(NamedModel):

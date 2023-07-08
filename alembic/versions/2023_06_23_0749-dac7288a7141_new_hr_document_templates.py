@@ -285,7 +285,6 @@ def upgrade() -> None:
         }
     ])
 
-
     document_function_id1 = uuid.uuid4()
     document_function_id2 = uuid.uuid4()
     document_function_id3 = uuid.uuid4()

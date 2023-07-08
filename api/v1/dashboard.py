@@ -55,3 +55,17 @@ async def get_hr_vacancy_count_by_division(*,
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
     return dashboard_service.get_hr_vacancy_count_by_division(db, role)
+
+
+@router.get("/inline/", dependencies=[Depends(HTTPBearer())],
+            summary="Get all data of users in line for Dashboard")
+async def get_in_line_count_by_status(*,
+                        db: Session = Depends(get_db),
+                        Authorize: AuthJWT = Depends(),
+                        ):
+    """
+       Get all Specialty Enum
+   """
+    Authorize.jwt_required()
+    role = Authorize.get_raw_jwt()['role']
+    return dashboard_service.get_in_line_count_by_status(db, role)
