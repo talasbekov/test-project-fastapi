@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
-from models import (Quiz, SurveyStatusEnum, SurveyJurisdictionTypeEnum,
-                    SurveyStaffPosition, StaffUnit)
+from models import (Quiz, StaffUnit, SurveyStatusEnum, SurveyJurisdictionTypeEnum,
+                    SurveyStaffPositionEnum, PositionNameEnum)
 from schemas import QuizCreate, QuizUpdate
 from services.base import ServiceBase
 from services import (
@@ -10,6 +10,12 @@ from services import (
 
 
 class QuizService(ServiceBase[Quiz, QuizCreate, QuizUpdate]):
+    
+    ALL_MANAGING_STRUCTURE = {
+        PositionNameEnum.HEAD_OF_DEPARTMENT.value,
+        PositionNameEnum.MANAGEMENT_HEAD.value,
+        PositionNameEnum.HEAD_OF_OTDEL.value
+    }
     
     def get_by_jurisdiction(self,
                             db: Session,
@@ -23,7 +29,7 @@ class QuizService(ServiceBase[Quiz, QuizCreate, QuizUpdate]):
             db.query(self.model).filter(
                 (self.model.certain_member_id ==  user.id) |
                 (self.model.staff_division_id == staff_unit.staff_division_id),
-                self.model.staff_position == SurveyStaffPosition.EVERYONE.value
+                self.model.staff_position == SurveyStaffPositionEnum.EVERYONE.value
             )
         )
         
@@ -72,9 +78,16 @@ class QuizService(ServiceBase[Quiz, QuizCreate, QuizUpdate]):
             return SurveyJurisdictionTypeEnum(jurisdiction_type)
         except ValueError:
             raise ValueError("Invalid jurisdiction type")
+        
+    def __validate_staff_position(self, staff_position: str):
+        try:
+            return SurveyStaffPositionEnum(staff_position)
+        except ValueError:
+            raise ValueError("Invalid staff position")
     
     def __set_jurisdiction(self, db: Session, quiz: Quiz, body):
         self.__validate_jurisdiciton_type(body.jurisdiction_type)
+        self.__validate_staff_position(body.staff_position)
         
         if body.jurisdiction_type == SurveyJurisdictionTypeEnum.STAFF_DIVISION.value:
             staff_division = (
@@ -86,6 +99,8 @@ class QuizService(ServiceBase[Quiz, QuizCreate, QuizUpdate]):
             user = user_service.get_by_id(db, body.certain_member_id)
             
             quiz.certain_member_id = user.id
+            
+        quiz.staff_position = body.staff_position
         
         return quiz
     
@@ -94,14 +109,14 @@ class QuizService(ServiceBase[Quiz, QuizCreate, QuizUpdate]):
             query = (
                 db.query(self.model).filter(
                     self.model.staff_position ==
-                        SurveyStaffPosition.ONLY_MANAGING_STRUCTURE.value
+                        SurveyStaffPositionEnum.ONLY_MANAGING_STRUCTURE.value
                 )
             )
         else:
             query = (
                 db.query(self.model).filter(
                     self.model.staff_position ==
-                        SurveyStaffPosition.ONLY_PERSONNAL_STURCTURE.value
+                        SurveyStaffPositionEnum.ONLY_PERSONNAL_STURCTURE.value
                 )
             )
             

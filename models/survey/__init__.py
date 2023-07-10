@@ -1,5 +1,5 @@
 from .question import *
 from .survey import (Quiz, Survey, SurveyStatusEnum, 
-                     SurveyJurisdictionTypeEnum, SurveyStaffPosition)
+                     SurveyJurisdictionTypeEnum, SurveyStaffPositionEnum)
 from .option import *
 from .answer import *

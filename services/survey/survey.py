@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from models import (Survey, SurveyStatusEnum, SurveyJurisdictionTypeEnum, 
-                    SurveyStaffPosition, PositionNameEnum, StaffUnit)
+                    SurveyStaffPositionEnum, PositionNameEnum, StaffUnit)
 from schemas import SurveyCreate, SurveyUpdate
 from services.base import ServiceBase
 from services import (
@@ -29,7 +29,7 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
             db.query(self.model).filter(
                 (self.model.certain_member_id ==  user.id) |
                 (self.model.staff_division_id == staff_unit.staff_division_id),
-                self.model.staff_position == SurveyStaffPosition.EVERYONE.value
+                self.model.staff_position == SurveyStaffPositionEnum.EVERYONE.value
             )
         )
         
@@ -81,9 +81,9 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
         
     def __validate_staff_position(self, staff_position: str):
         try:
-            return SurveyStaffPosition(staff_position)
+            return SurveyStaffPositionEnum(staff_position)
         except ValueError:
-            raise ValueError("Invalid service status")
+            raise ValueError("Invalid staff position")
     
     def __set_jurisdiction(self, db: Session, survey: Survey, body):
         self.__validate_jurisdiciton_type(body.jurisdiction_type)
@@ -109,14 +109,14 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
             query = (
                 db.query(self.model).filter(
                     self.model.staff_position ==
-                        SurveyStaffPosition.ONLY_MANAGING_STRUCTURE.value
+                        SurveyStaffPositionEnum.ONLY_MANAGING_STRUCTURE.value
                 )
             )
         else:
             query = (
                 db.query(self.model).filter(
                     self.model.staff_position ==
-                        SurveyStaffPosition.ONLY_PERSONNAL_STURCTURE.value
+                        SurveyStaffPositionEnum.ONLY_PERSONNAL_STURCTURE.value
                 )
             )
             

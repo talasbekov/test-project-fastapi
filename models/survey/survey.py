@@ -19,7 +19,7 @@ class SurveyJurisdictionTypeEnum(str, enum.Enum):
     CERTAIN_MEMBER = "Определенный участник"
 
 
-class SurveyStaffPosition(str, enum.Enum):
+class SurveyStaffPositionEnum(str, enum.Enum):
     EVERYONE = "Все"
     ONLY_PERSONNAL_STURCTURE = "Только личный состав"
     ONLY_MANAGING_STRUCTURE = "Только руководящий состав"
@@ -40,7 +40,7 @@ class Base(NamedModel):
     jurisdiction_type = Column(Enum(SurveyJurisdictionTypeEnum), nullable=False)
     certain_member_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     staff_division_id = Column(UUID(as_uuid=True), ForeignKey("staff_divisions.id"))
-    staff_position = Column(Enum(SurveyStaffPosition), nullable=False)
+    staff_position = Column(Enum(SurveyStaffPositionEnum), nullable=False)
     
     owner_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
 
