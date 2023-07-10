@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 
-from models import Survey, SurveyStatusEnum, SurveyJurisdictionTypeEnum
+from models import (Survey, SurveyStatusEnum, SurveyJurisdictionTypeEnum, 
+                    SurveyStaffPosition, PositionNameEnum, StaffUnit)
 from schemas import SurveyCreate, SurveyUpdate
 from services.base import ServiceBase
 from services import (
@@ -10,6 +11,12 @@ from services import (
 
 class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
     
+    ALL_MANAGING_STRUCTURE = {
+        PositionNameEnum.HEAD_OF_DEPARTMENT.value,
+        PositionNameEnum.MANAGEMENT_HEAD.value,
+        PositionNameEnum.HEAD_OF_OTDEL.value
+    }
+    
     def get_by_jurisdiction(self,
                             db: Session,
                             role_id: str,
@@ -18,11 +25,18 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
         staff_unit = staff_unit_service.get_by_id(db, role_id)
         user = staff_unit.users[0]
         
-        return db.query(self.model).filter(
-            (self.model.certain_member_id ==  user.id) |
-            (self.model.staff_division_id == staff_unit.staff_division_id)
-        ).offset(skip).limit(limit).all()
-
+        query = (
+            db.query(self.model).filter(
+                (self.model.certain_member_id ==  user.id) |
+                (self.model.staff_division_id == staff_unit.staff_division_id),
+                self.model.staff_position == SurveyStaffPosition.EVERYONE.value
+            )
+        )
+        
+        query = self.__filter_by_staff_position(db, staff_unit, query)
+        
+        return query.offset(skip).limit(limit).all()
+            
     def get_all_active(self, db: Session, skip: int = 0, limit: int = 100):
         return db.query(self.model).filter(
             self.model.status == SurveyStatusEnum.ACTIVE.value
@@ -64,9 +78,16 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
             return SurveyJurisdictionTypeEnum(jurisdiction_type)
         except ValueError:
             raise ValueError("Invalid jurisdiction type")
+        
+    def __validate_staff_position(self, staff_position: str):
+        try:
+            return SurveyStaffPosition(staff_position)
+        except ValueError:
+            raise ValueError("Invalid service status")
     
     def __set_jurisdiction(self, db: Session, survey: Survey, body):
         self.__validate_jurisdiciton_type(body.jurisdiction_type)
+        self.__validate_staff_position(body.staff_position)
         
         if body.jurisdiction_type == SurveyJurisdictionTypeEnum.STAFF_DIVISION.value:
             staff_division = (
@@ -79,6 +100,26 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
             
             survey.certain_member_id = user.id
         
+        survey.staff_position = body.staff_position
+        
         return survey
+    
+    def __filter_by_staff_position(self, db: Session, staff_unit: StaffUnit, query):
+        if staff_unit.position.name in self.ALL_MANAGING_STRUCTURE:
+            query = (
+                db.query(self.model).filter(
+                    self.model.staff_position ==
+                        SurveyStaffPosition.ONLY_MANAGING_STRUCTURE.value
+                )
+            )
+        else:
+            query = (
+                db.query(self.model).filter(
+                    self.model.staff_position ==
+                        SurveyStaffPosition.ONLY_PERSONNAL_STURCTURE.value
+                )
+            )
+            
+        return query
     
 survey_service = SurveyService(Survey)

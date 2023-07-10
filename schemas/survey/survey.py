@@ -14,6 +14,7 @@ class Base(NamedModel):
     jurisdiction_type: str
     certain_member_id: Optional[uuid.UUID]
     staff_division_id: Optional[uuid.UUID]
+    staff_position: str
 
 
 class SurveyBase(Base):
@@ -40,6 +41,7 @@ class SurveyUpdate(SurveyBase):
     end_date: Optional[datetime.datetime]
     status: Optional[str]
     jurisdiction_type: Optional[str]
+    staff_position: Optional[str]
 
 
 class QuizUpdate(QuizBase):
@@ -47,6 +49,8 @@ class QuizUpdate(QuizBase):
     start_date: Optional[datetime.datetime]
     end_date: Optional[datetime.datetime]
     status: Optional[str]
+    jurisdiction_type: Optional[str]
+    staff_position: Optional[str]
 
 
 #read
@@ -56,6 +60,7 @@ class SurveyRead(SurveyBase, ReadNamedModel):
     status: Optional[str]
     questions: Optional[List[QuestionRead]]
     jurisdiction_type: Optional[str]
+    staff_position: Optional[str]
 
     class Config:
         orm_mode = True
@@ -67,6 +72,7 @@ class QuizRead(QuizBase, ReadNamedModel):
     status: Optional[str]
     questions: Optional[List[QuestionRead]]
     jurisdiction_type: Optional[str]
+    staff_position: Optional[str]
 
     class Config:
         orm_mode = True

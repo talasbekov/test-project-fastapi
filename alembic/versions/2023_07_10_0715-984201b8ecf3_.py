@@ -40,7 +40,8 @@ def upgrade() -> None:
             'staff_division_id': None,
             'status': 'Активный',
             'name': 'Опрос "Оценка пользовательского опыта: ваше впечатление о веб-сайте Cleverest Technologies',
-            'nameKZ': None
+            'nameKZ': None,
+            'staff_position': 'Все'
         }]
     )
     
