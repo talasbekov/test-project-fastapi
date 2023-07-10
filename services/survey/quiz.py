@@ -3,10 +3,26 @@ from sqlalchemy.orm import Session
 from models import Quiz, SurveyStatusEnum, SurveyJurisdictionTypeEnum
 from schemas import QuizCreate, QuizUpdate
 from services.base import ServiceBase
+from services import (
+    staff_division_service, staff_unit_service, user_service
+)
 
 
 class QuizService(ServiceBase[Quiz, QuizCreate, QuizUpdate]):
     
+    def get_by_jurisdiction(self,
+                            db: Session,
+                            role_id: str,
+                            skip: int = 0,
+                            limit: int = 100):
+        staff_unit = staff_unit_service.get_by_id(db, role_id)
+        user = staff_unit.users[0]
+        
+        return db.query(self.model).filter(
+            (self.model.certain_member_id ==  user.id) |
+            (self.model.staff_division_id == staff_unit.staff_division_id)
+        ).offset(skip).limit(limit).all()
+
     def get_all_active(self, db: Session, skip: int = 0, limit: int = 100):
         return db.query(self.model).filter(
             self.model.status == SurveyStatusEnum.ACTIVE.value
@@ -49,13 +65,19 @@ class QuizService(ServiceBase[Quiz, QuizCreate, QuizUpdate]):
         except ValueError:
             raise ValueError("Invalid jurisdiction type")
     
-    def __set_jurisdiction(self, quiz: Quiz, body):
+    def __set_jurisdiction(self, db: Session, quiz: Quiz, body):
         self.__validate_jurisdiciton_type(body.jurisdiction_type)
         
         if body.jurisdiction_type == SurveyJurisdictionTypeEnum.STAFF_DIVISION.value:
-            quiz.staff_division_id = body.staff_division_id
+            staff_division = (
+                staff_division_service.get_by_id(db, body.staff_division_id)
+            )
+            
+            quiz.staff_division_id = staff_division.id
         else:
-            quiz.certain_member_id = body.certain_member_id
+            user = user_service.get_by_id(db, body.certain_member_id)
+            
+            quiz.certain_member_id = user.id
         
         return quiz
 
