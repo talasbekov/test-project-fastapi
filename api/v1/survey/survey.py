@@ -14,7 +14,7 @@ router = APIRouter(prefix="/surveys",
                    tags=["Surveys"], dependencies=[Depends(HTTPBearer())])
 
 
-@router.get("/jurisdiction", dependencies=[Depends(HTTPBearer())],
+@router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[SurveyRead],
             summary="Get all Surveys by jurisdiction")
 async def get_by_jurisdiction(*,
@@ -36,25 +36,25 @@ async def get_by_jurisdiction(*,
     return survey_service.get_by_jurisdiction(db, role, skip, limit)
 
 
-@router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[SurveyRead],
-            summary="Get all Surveys")
-async def get_all_active(*,
-                  db: Session = Depends(get_db),
-                  skip: int = 0,
-                  limit: int = 100,
-                  Authorize: AuthJWT = Depends()
-                  ):
-    """
-        Get all Surveys
+# @router.get("", dependencies=[Depends(HTTPBearer())],
+#             response_model=List[SurveyRead],
+#             summary="Get all Surveys")
+# async def get_all_active(*,
+#                   db: Session = Depends(get_db),
+#                   skip: int = 0,
+#                   limit: int = 100,
+#                   Authorize: AuthJWT = Depends()
+#                   ):
+#     """
+#         Get all Surveys
 
-        - **skip**: int - The number of surveys to skip before returning the results. 
-                This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of surveys to return in the response. 
-            This parameter is optional and defaults to 100.
-    """
-    Authorize.jwt_required()
-    return survey_service.get_all_active(db, skip, limit)
+#         - **skip**: int - The number of surveys to skip before returning the results. 
+#                 This parameter is optional and defaults to 0.
+#         - **limit**: int - The maximum number of surveys to return in the response. 
+#             This parameter is optional and defaults to 100.
+#     """
+#     Authorize.jwt_required()
+#     return survey_service.get_all_active(db, skip, limit)
 
 
 @router.get("/archives", dependencies=[Depends(HTTPBearer())],
