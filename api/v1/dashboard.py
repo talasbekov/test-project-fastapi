@@ -23,7 +23,7 @@ async def get_all_state(*,
                         ):
     """
        Get all Specialty Enum
-   """
+    """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
     return dashboard_service.get_all_state(db, role)
@@ -37,7 +37,7 @@ async def get_state_by_list(*,
                         ):
     """
        Get all Specialty Enum
-   """
+    """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
     return dashboard_service.get_state_by_list(db, role)
@@ -51,7 +51,7 @@ async def get_hr_vacancy_count_by_division(*,
                         ):
     """
        Get all Specialty Enum
-   """
+    """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
     return dashboard_service.get_hr_vacancy_count_by_division(db, role)
@@ -65,7 +65,7 @@ async def get_in_line_count_by_status(*,
                         ):
     """
        Get all Specialty Enum
-   """
+    """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
     return dashboard_service.get_in_line_count_by_status(db, role)

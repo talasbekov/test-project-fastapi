@@ -18,7 +18,7 @@ class DashboardService:
     ]
 
     ALL_STATUSES = [
-        StatusEnum.ROOT.value,
+        StatusEnum.ANNUAL_LEAVE.value,
         StatusEnum.VACATION.value,
         StatusEnum.BUSINESS_TRIP.value,
         StatusEnum.SICK_LEAVE.value,
