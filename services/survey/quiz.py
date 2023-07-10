@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 
-from models import Quiz, SurveyStatusEnum, SurveyJurisdictionTypeEnum
+from models import (Quiz, SurveyStatusEnum, SurveyJurisdictionTypeEnum,
+                    SurveyStaffPosition, StaffUnit)
 from schemas import QuizCreate, QuizUpdate
 from services.base import ServiceBase
 from services import (
@@ -18,10 +19,17 @@ class QuizService(ServiceBase[Quiz, QuizCreate, QuizUpdate]):
         staff_unit = staff_unit_service.get_by_id(db, role_id)
         user = staff_unit.users[0]
         
-        return db.query(self.model).filter(
-            (self.model.certain_member_id ==  user.id) |
-            (self.model.staff_division_id == staff_unit.staff_division_id)
-        ).offset(skip).limit(limit).all()
+        query = (
+            db.query(self.model).filter(
+                (self.model.certain_member_id ==  user.id) |
+                (self.model.staff_division_id == staff_unit.staff_division_id),
+                self.model.staff_position == SurveyStaffPosition.EVERYONE.value
+            )
+        )
+        
+        query = self.__filter_by_staff_position(db, staff_unit, query)
+        
+        return query.offset(skip).limit(limit).all()
 
     def get_all_active(self, db: Session, skip: int = 0, limit: int = 100):
         return db.query(self.model).filter(
@@ -80,5 +88,23 @@ class QuizService(ServiceBase[Quiz, QuizCreate, QuizUpdate]):
             quiz.certain_member_id = user.id
         
         return quiz
+    
+    def __filter_by_staff_position(self, db: Session, staff_unit: StaffUnit, query):
+        if staff_unit.position.name in self.ALL_MANAGING_STRUCTURE:
+            query = (
+                db.query(self.model).filter(
+                    self.model.staff_position ==
+                        SurveyStaffPosition.ONLY_MANAGING_STRUCTURE.value
+                )
+            )
+        else:
+            query = (
+                db.query(self.model).filter(
+                    self.model.staff_position ==
+                        SurveyStaffPosition.ONLY_PERSONNAL_STURCTURE.value
+                )
+            )
+            
+        return query
 
 quiz_service = QuizService(Quiz)
