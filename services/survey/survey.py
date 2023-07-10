@@ -31,4 +31,9 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
 
         return survey
     
+    # def __set_jurisdiction(self, db: Session, jurisdiction_id: str):
+    #     jurisdiction = jurisdiction_service.get_by_id(db, jurisdiction_id)
+        
+        
+    
 survey_service = SurveyService(Survey)
