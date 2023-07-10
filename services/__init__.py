@@ -56,5 +56,6 @@ from .render import render_service
 from .auth import auth_service
 
 from .hr_vacancy_requirements import hr_vacancy_requirement_service
+from .survey import *
 
 from .dashboard import dashboard_service

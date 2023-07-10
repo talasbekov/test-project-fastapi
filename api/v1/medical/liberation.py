@@ -8,8 +8,8 @@ from sqlalchemy.orm import Session
 
 from core import get_db
 from schemas.medical import (
-    LiberationCreate, 
-    LiberationRead, 
+    LiberationCreate,
+    LiberationRead,
     LiberationUpdate
 )
 from services.medical import liberation_service
@@ -34,11 +34,11 @@ async def get_all(*,
     """
         Get all Liberation
 
-    - **skip**: int - The number of Liberation 
-        to skip before returning the results. 
+    - **skip**: int - The number of Liberation
+        to skip before returning the results.
         This parameter is optional and defaults to 0.
-    - **limit**: int - The maximum number of Liberation 
-        to return in the response. 
+    - **limit**: int - The maximum number of Liberation
+        to return in the response.
         This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()

@@ -6,8 +6,8 @@ from services import ServiceBase
 
 
 class CandidateStageTypeService(
-        ServiceBase[CandidateStageType, 
-                    CandidateStageTypeCreate, 
+        ServiceBase[CandidateStageType,
+                    CandidateStageTypeCreate,
                     CandidateStageTypeUpdate]):
 
     def get_multi(

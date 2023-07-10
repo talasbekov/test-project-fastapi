@@ -46,8 +46,8 @@ class StaffUnit(isActiveModel):
         back_populates="staff_unit",
         foreign_keys="User.staff_unit_id")
     actual_users = relationship(
-        "User", 
-        back_populates="actual_staff_unit", 
+        "User",
+        back_populates="actual_staff_unit",
         foreign_keys="User.actual_staff_unit_id"
     )
     user_replacing = relationship(

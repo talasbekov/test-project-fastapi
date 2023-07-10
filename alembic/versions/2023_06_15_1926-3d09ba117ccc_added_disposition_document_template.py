@@ -88,7 +88,7 @@ def upgrade() -> None:
     ).fetchone()[0]
     conn.execute(
         text(f"""
-            WITH selected_units AS 
+            WITH selected_units AS
             (SELECT id FROM staff_units WHERE position_id = '{position_id}')
             INSERT INTO staff_unit_functions(staff_function_id, staff_unit_id)
             SELECT '{disposition_function_id1}', id from selected_units;

@@ -17,8 +17,8 @@ from .base import ServiceBase
 
 
 class DocumentStaffFunctionService(
-        ServiceBase[DocumentStaffFunction, 
-                    DocumentStaffFunctionCreate, 
+        ServiceBase[DocumentStaffFunction,
+                    DocumentStaffFunctionCreate,
                     DocumentStaffFunctionUpdate]):
 
     def get_by_id(self, db: Session, id: str) -> DocumentStaffFunction:
@@ -65,7 +65,7 @@ class DocumentStaffFunctionService(
     def create_function(self, db: Session, body: DocumentStaffFunctionAdd):
 
         function: DocumentStaffFunction = super().create(
-            db, 
+            db,
             DocumentStaffFunctionCreate(
                 role_id=body.role_id,
                 name=body.name,
@@ -104,7 +104,7 @@ class DocumentStaffFunctionService(
                 continue
             if staff_function.hr_document_step is None:
                 continue
-            if (body.hr_document_template_id 
+            if (body.hr_document_template_id
                 == staff_function.hr_document_step.hr_document_template_id):
 
                 raise BadRequestException(

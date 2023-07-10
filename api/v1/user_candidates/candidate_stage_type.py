@@ -8,8 +8,8 @@ from typing import List
 
 from core import get_db
 from schemas import (
-    CandidateStageTypeCreate, 
-    CandidateStageTypeRead, 
+    CandidateStageTypeCreate,
+    CandidateStageTypeRead,
     CandidateStageTypeUpdate
 )
 from services import candidate_stage_type_service
@@ -34,11 +34,11 @@ async def get_all(
     """
         Get all Candidates.
 
-        - **skip**: int - The number of badges 
-            to skip before returning the results. 
+        - **skip**: int - The number of badges
+            to skip before returning the results.
             This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of badges 
-            to return in the response. 
+        - **limit**: int - The maximum number of badges
+            to return in the response.
             This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()

@@ -6984,7 +6984,7 @@ def create_user(id,
 
     """
         Table biographic_infos as BI {
-        id uuid 
+        id uuid
         place_birth str
         gender bool
         citizenship str

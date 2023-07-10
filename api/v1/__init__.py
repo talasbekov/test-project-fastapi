@@ -44,6 +44,8 @@ from .position import router as position_router
 from .auto_tag import router as auto_tag_router
 from .dashboard import router as dashboard_router
 
+from .survey import *
+
 router = APIRouter(prefix="/v1")
 
 router.include_router(auth_router)
@@ -108,3 +110,10 @@ router.include_router(hr_vacancy_router)
 router.include_router(hr_vacancy_requirement_router)
 router.include_router(position_router)
 router.include_router(dashboard_router)
+
+router.include_router(survey_router)
+router.include_router(quiz_router)
+router.include_router(question_type_router)
+router.include_router(question_router)
+router.include_router(option_router)
+router.include_router(answer_router)

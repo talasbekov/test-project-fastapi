@@ -7,7 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import (ServiceArchiveStaffFunctionTypeRead, 
+from schemas import (ServiceArchiveStaffFunctionTypeRead,
                      NewServiceArchiveStaffFunctionTypeCreate,
                      NewServiceArchiveStaffFunctionTypeUpdate)
 from services import service_archive_staff_function_type_service
@@ -32,11 +32,11 @@ async def get_all(*,
     """
        Get all ArchiveStaffFunction
 
-       - **skip**: int - The number of ArchiveStaffFunction 
-            to skip before returning the results. 
+       - **skip**: int - The number of ArchiveStaffFunction
+            to skip before returning the results.
             This parameter is optional and defaults to 0.
-       - **limit**: int - The maximum number of ArchiveStaffFunction 
-            to return in the response. 
+       - **limit**: int - The maximum number of ArchiveStaffFunction
+            to return in the response.
             This parameter is optional and defaults to 100.
    """
     Authorize.jwt_required()
@@ -56,7 +56,7 @@ async def create(*,
     """
         Create ArchiveStaffFunction
 
-        - **parent_group_id**: the id of the parent group. 
+        - **parent_group_id**: the id of the parent group.
             This parameter is optional.
         - **name**: required
         - **description**: a long description. This parameter is optional.
@@ -64,7 +64,7 @@ async def create(*,
     Authorize.jwt_required()
     return (
         service_archive_staff_function_type_service
-        .create_archive_staff_function_type(db, 
+        .create_archive_staff_function_type(db,
                                             body)
         )
 
@@ -99,18 +99,18 @@ async def update(*,
         Update ArchiveStaffFunction
 
         - **id**: UUID - id of the ArchiveStaffFunction.
-        - **parent_group_id**: the id of the parent group. 
+        - **parent_group_id**: the id of the parent group.
             This parameter is optional.
         - **name**: required
-        - **description**: a long description. 
+        - **description**: a long description.
             This parameter is optional.
     """
     Authorize.jwt_required()
     obj = service_archive_staff_function_type_service.get_by_id(db, id)
     return (
         service_archive_staff_function_type_service
-        .update_archive_staff_function_type(db, 
-                                            obj, 
+        .update_archive_staff_function_type(db,
+                                            obj,
                                             body)
         )
 
