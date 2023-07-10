@@ -117,3 +117,5 @@ router.include_router(question_type_router)
 router.include_router(question_router)
 router.include_router(option_router)
 router.include_router(answer_router)
+
+router.include_router(dashboard_router)
