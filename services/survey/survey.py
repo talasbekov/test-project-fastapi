@@ -1,8 +1,9 @@
 from sqlalchemy.orm import Session
 
-from models import Survey, SurveyStatusEnum
+from models import Survey, SurveyStatusEnum, SurveyJurisdictionTypeEnum
 from schemas import SurveyCreate, SurveyUpdate
 from services.base import ServiceBase
+from services import staff_division_service, user_service
 
 
 class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
@@ -25,15 +26,44 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
     def save_as_draft(self, db: Session, body: SurveyCreate):
         survey = Survey(**body.dict())
         survey.status = SurveyStatusEnum.DRAFT.value
+        
+        self.__set_jurisdiction(db, survey, body)
 
         db.add(survey)
         db.flush()
 
         return survey
     
-    # def __set_jurisdiction(self, db: Session, jurisdiction_id: str):
-    #     jurisdiction = jurisdiction_service.get_by_id(db, jurisdiction_id)
+    def create(self, db: Session, body: SurveyCreate):
+        survey = Survey(**body.dict())
         
+        self.__set_jurisdiction(db, survey, body)
+
+        db.add(survey)
+        db.flush()
+
+        return survey
+
+    def __validate_jurisdiciton_type(self, jurisdiction_type: str):
+        try:
+            return SurveyJurisdictionTypeEnum(jurisdiction_type)
+        except ValueError:
+            raise ValueError("Invalid jurisdiction type")
+    
+    def __set_jurisdiction(self, db: Session, survey: Survey, body):
+        self.__validate_jurisdiciton_type(body.jurisdiction_type)
         
+        if body.jurisdiction_type == SurveyJurisdictionTypeEnum.STAFF_DIVISION.value:
+            staff_division = (
+                staff_division_service.get_by_id(db, body.staff_division_id)
+            )
+            
+            survey.staff_division_id = staff_division.id
+        else:
+            user = user_service.get_by_id(db, body.certain_member_id)
+            
+            survey.certain_member_id = user.id
+        
+        return survey
     
 survey_service = SurveyService(Survey)
