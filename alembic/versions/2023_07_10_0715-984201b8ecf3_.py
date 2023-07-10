@@ -1,12 +1,11 @@
-"""insert to survey table
+"""empty message
 
-Revision ID: 5ddb0a0cd15b
-Revises: dac7288a7141
-Create Date: 2023-07-03 05:48:00.489408
+Revision ID: 984201b8ecf3
+Revises: 5895ed1b9641
+Create Date: 2023-07-10 07:15:41.392298
 
 """
-import datetime
-import uuid
+import uuid, datetime
 
 from alembic import op
 import sqlalchemy as sa
@@ -14,12 +13,12 @@ import sqlalchemy as sa
 from core import Base
 
 
-
 # revision identifiers, used by Alembic.
-revision = '5ddb0a0cd15b'
-down_revision = 'ede55238aab1'
+revision = '984201b8ecf3'
+down_revision = '5895ed1b9641'
 branch_labels = None
 depends_on = None
+
 
 def get_uuid():
     return str(uuid.uuid4())
@@ -36,7 +35,9 @@ def upgrade() -> None:
             'start_date': datetime.datetime.now(),
             'end_date': end_date,
             'is_anonymous': False,
-            'jurisdiction_id': None,
+            'jurisdiction_type': 'Штатное подразделение',
+            'certain_member_id': None,
+            'staff_division_id': None,
             'status': 'Активный',
             'name': 'Опрос "Оценка пользовательского опыта: ваше впечатление о веб-сайте Cleverest Technologies',
             'nameKZ': None
@@ -242,8 +243,7 @@ def upgrade() -> None:
         {
             'id': option1_5_5_id,
             'question_id': question1_5_id,
-            'discriminator': 'option_grid',
-            'text': 'Удобство использования функциональности',
+            'discriminator': 'option_grid','text': 'Удобство использования функциональности',
             'row_position': 5,
             'column_position': 1,
             'min_value': None,
@@ -300,3 +300,7 @@ def upgrade() -> None:
             'max_value': None,
         }]
     )
+
+
+def downgrade() -> None:
+    pass
