@@ -8,9 +8,9 @@ from sqlalchemy.orm import Session
 
 from core import get_db
 from models import LanguageEnum
-from schemas import (HrDocumentInit, 
+from schemas import (HrDocumentInit,
                      HrDocumentRead,
-                     HrDocumentSign, 
+                     HrDocumentSign,
                      HrDocumentUpdate,
                      DraftHrDocumentCreate,
                      UserRead)
@@ -24,7 +24,7 @@ router = APIRouter(
             HTTPBearer())])
 
 
-@router.get("/not-signed", 
+@router.get("/not-signed",
             response_model=List[HrDocumentRead],
             summary="Get all not signed HrDocuments")
 async def get_not_signed(*,
@@ -38,12 +38,12 @@ async def get_not_signed(*,
     """
         Get all not signed HrDocuments
 
-        - **skip**: int - The number of HrDocuments to skip 
-            before returning the results.  
+        - **skip**: int - The number of HrDocuments to skip
+            before returning the results.
             This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of HrDocuments to return in the response. 
+        - **limit**: int - The maximum number of HrDocuments to return in the response.
             This parameter is optional and defaults to 10.
-        - **filter**: str - The value which returns filtered results. 
+        - **filter**: str - The value which returns filtered results.
             This parameter is optional and defaults to None
     """
     Authorize.jwt_required()
@@ -65,12 +65,12 @@ async def get_signed(*,
     """
         Get all not signed HrDocuments
 
-        - **skip**: int - The number of HrDocuments to skip 
-            before returning the results. 
+        - **skip**: int - The number of HrDocuments to skip
+            before returning the results.
             This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of HrDocuments to return in the response. 
+        - **limit**: int - The maximum number of HrDocuments to return in the response.
             This parameter is optional and defaults to 10.
-        - **filter**: str - The value which returns filtered results. 
+        - **filter**: str - The value which returns filtered results.
             This parameter is optional and defaults to None
     """
     Authorize.jwt_required()
@@ -92,12 +92,12 @@ async def get_initialized(*,
     """
         Get all initialized HrDocuments
 
-        - **skip**: int - The number of HrDocuments to skip 
-            before returning the results. 
+        - **skip**: int - The number of HrDocuments to skip
+            before returning the results.
             This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of HrDocuments to return in the response. 
+        - **limit**: int - The maximum number of HrDocuments to return in the response.
             This parameter is optional and defaults to 10.
-        - **filter**: str - The value which returns filtered results. 
+        - **filter**: str - The value which returns filtered results.
             This parameter is optional and defaults to None
 
     """
@@ -107,7 +107,7 @@ async def get_initialized(*,
         db, user_id, parent_id, filter.lstrip().rstrip(), skip, limit)
 
 
-@router.get("/all/", 
+@router.get("/all/",
             response_model=List[HrDocumentRead],
             summary="Get all al HrDocuments by user")
 async def get_all(*,
@@ -121,14 +121,14 @@ async def get_all(*,
     """
         Get all all HrDocuments
 
-        - **skip**: int - The number of HrDocuments to skip 
-            before returning the results. 
+        - **skip**: int - The number of HrDocuments to skip
+            before returning the results.
             This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of HrDocuments to return in the response. 
+        - **limit**: int - The maximum number of HrDocuments to return in the response.
             This parameter is optional and defaults to 10.
-        - **filter**: str - The value which returns filtered results. 
+        - **filter**: str - The value which returns filtered results.
             This parameter is optional and defaults to None
-        - **user_id**: UUID - optional defaults to authorized user. 
+        - **user_id**: UUID - optional defaults to authorized user.
             User ID of the subject of the HrDocument.
 
     """
@@ -139,8 +139,8 @@ async def get_all(*,
         db, user_id, filter.lstrip().rstrip(), skip, limit)
 
 
-@router.post("", 
-             status_code=status.HTTP_201_CREATED, 
+@router.post("",
+             status_code=status.HTTP_201_CREATED,
              response_model=HrDocumentRead,
              summary="Initialize HrDocument")
 async def initialize(*,
@@ -153,14 +153,14 @@ async def initialize(*,
 
         The user must have a role that allows them to create HR documents.
 
-        - **hr_document_template_id**: UUID - required. 
+        - **hr_document_template_id**: UUID - required.
             HrDocument will be initialized based on HrDocumentTemplate.
-        - **due_date**: the end date of this document - format (YYYY-MM-DD). 
+        - **due_date**: the end date of this document - format (YYYY-MM-DD).
             This parameter is required.
         - **properties**: A dictionary containing properties for the HrDocument.
-        - **user_ids**: UUID - required and should exist in database. 
+        - **user_ids**: UUID - required and should exist in database.
             A list of user IDs to be assigned to the HrDocument.
-        - **document_step_users_ids**: UUID - required and should exist in database. 
+        - **document_step_users_ids**: UUID - required and should exist in database.
             Dictionary of priority to user IDs to be assigned to the HrDocument.
     """
     Authorize.jwt_required()
@@ -182,11 +182,11 @@ async def get_draft_documents(*,
                               ):
     """
         Get all Draft HrDocuments
-    - **filter**: str - The value which returns filtered results. 
+    - **filter**: str - The value which returns filtered results.
         This parameter is optional and defaults to None
-    - **skip**: int - The number of HrDocuments to skip before returning the results. 
+    - **skip**: int - The number of HrDocuments to skip before returning the results.
         This parameter is optional and defaults to 0.
-    - **limit**: int - The maximum number of HrDocuments to return in the response. 
+    - **limit**: int - The maximum number of HrDocuments to return in the response.
         This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
@@ -195,8 +195,8 @@ async def get_draft_documents(*,
         db, user_id, parent_id, filter, skip, limit)
 
 
-@router.post("/drafts", 
-             status_code=status.HTTP_201_CREATED, 
+@router.post("/drafts",
+             status_code=status.HTTP_201_CREATED,
              response_model=HrDocumentRead,
              summary="Save HrDocument to Draft")
 async def save_to_draft(*,
@@ -209,12 +209,12 @@ async def save_to_draft(*,
 
     The user must have a role that allows them to create HR documents.
 
-        - **hr_document_template_id**: UUID - required. 
+        - **hr_document_template_id**: UUID - required.
             HrDocument will be initialized based on HrDocumentTemplate.
-        - **due_date**: the end date of this document - format (YYYY-MM-DD). 
+        - **due_date**: the end date of this document - format (YYYY-MM-DD).
             This parameter is required.
         - **properties**: A dictionary containing properties for the HrDocument.
-        - **user_ids**: UUID - required and should exist in database. 
+        - **user_ids**: UUID - required and should exist in database.
             A list of user IDs to be assigned to the HrDocument.
     """
     Authorize.jwt_required()
@@ -223,8 +223,8 @@ async def save_to_draft(*,
     return hr_document_service.save_to_draft(db, user_id, body, role)
 
 
-@router.post("/drafts/{id}", 
-             status_code=status.HTTP_201_CREATED, 
+@router.post("/drafts/{id}",
+             status_code=status.HTTP_201_CREATED,
              response_model=HrDocumentRead,
              summary="Initialize Draft HrDocument")
 async def initialize_draft_document(*,
@@ -239,10 +239,10 @@ async def initialize_draft_document(*,
         The user must have a role that allows them to create HR documents.
 
         - **document_id**: UUID - required.
-        - **due_date**: the end date of this document - format (YYYY-MM-DD). 
+        - **due_date**: the end date of this document - format (YYYY-MM-DD).
             This parameter is required.
         - **properties**: A dictionary containing properties for the HrDocument.
-        - **user_ids**: UUID - required and should exist in database. 
+        - **user_ids**: UUID - required and should exist in database.
             A list of user IDs to be assigned to the HrDocument.
     """
     Authorize.jwt_required()
@@ -264,14 +264,14 @@ async def update(*,
         Update HrDocument
 
         - **id**: UUID - the id of HrDocument. This is required.
-        - **hr_document_template_id**: UUID - required. 
+        - **hr_document_template_id**: UUID - required.
             HrDocument will be initialized based on HrDocumentTemplate.
-        - **due_date**: the end date of this document - format (YYYY-MM-DD). 
+        - **due_date**: the end date of this document - format (YYYY-MM-DD).
             This parameter is required.
         - **properties**: A dictionary containing properties for the HrDocument.
-        - **user_ids**: UUID - required and should exist in database. 
+        - **user_ids**: UUID - required and should exist in database.
             A list of user IDs to be assigned to the HrDocument.
-        - **status**: the status of the HrDocument. 
+        - **status**: the status of the HrDocument.
             This field should accept one of the following statuses:
 
         * Иницилизирован
@@ -351,13 +351,13 @@ async def generate(*,
     """
         This endpoint generates a HR document based on the given document ID. (pdf)
 
-        It takes a document ID as input, 
-        retrieves the corresponding HR document from the database, 
-        retrieves the HR document template associated with the document, 
-        renders the template with the document's properties, 
-        and saves the resulting Word document to a temporary file. 
-        It then returns a FileResponse 
-        containing the generated document as an attachment 
+        It takes a document ID as input,
+        retrieves the corresponding HR document from the database,
+        retrieves the HR document template associated with the document,
+        renders the template with the document's properties,
+        and saves the resulting Word document to a temporary file.
+        It then returns a FileResponse
+        containing the generated document as an attachment
         that can be downloaded by the user.
 
         - **id**: UUID - required.
@@ -376,12 +376,12 @@ async def generate_html(*,
     """
         This endpoint generates a HR document based on the given document ID. (html)
 
-        It takes a document ID as input, 
-        retrieves the corresponding HR document from the database, 
-        retrieves the HR document template associated with the document, 
-        renders the template with the document's properties, 
-        and saves the resulting Word document to a temporary file. 
-        It then returns a FileResponse containing 
+        It takes a document ID as input,
+        retrieves the corresponding HR document from the database,
+        retrieves the HR document template associated with the document,
+        renders the template with the document's properties,
+        and saves the resulting Word document to a temporary file.
+        It then returns a FileResponse containing
         the generated document as an attachment that can be downloaded by the user.
 
         - **id**: UUID - required.
@@ -449,7 +449,7 @@ async def initialize_from_staff_list(*,
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
     role = Authorize.get_raw_jwt()['role']
-    return await hr_document_service.initialize_super_document(db=db, 
-                                                               staff_list_id=id, 
-                                                               user_id=user_id, 
+    return await hr_document_service.initialize_super_document(db=db,
+                                                               staff_list_id=id,
+                                                               user_id=user_id,
                                                                role=role)

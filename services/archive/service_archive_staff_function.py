@@ -5,8 +5,8 @@ from sqlalchemy.orm import Session
 from exceptions.client import NotFoundException
 from models import ArchiveServiceStaffFunction, User, ServiceStaffFunction
 from schemas import (
-    ArchiveServiceStaffFunctionCreate, 
-    ArchiveServiceStaffFunctionUpdate, 
+    ArchiveServiceStaffFunctionCreate,
+    ArchiveServiceStaffFunctionUpdate,
     NewArchiveServiceStaffFunctionCreate
 )
 
@@ -14,8 +14,8 @@ from services.base import ServiceBase
 
 
 class ArchiveServiceStaffFunctionService(
-        ServiceBase[ArchiveServiceStaffFunction, 
-                    ArchiveServiceStaffFunctionCreate, 
+        ServiceBase[ArchiveServiceStaffFunction,
+                    ArchiveServiceStaffFunctionCreate,
                     ArchiveServiceStaffFunctionUpdate]):
 
     def get_by_id(self, db: Session, id: str):
@@ -48,9 +48,9 @@ class ArchiveServiceStaffFunctionService(
         return copy
 
     def create_based_on_existing_archive_staff_function(
-            self, 
-            db: Session, 
-            staff_function: ServiceStaffFunction, 
+            self,
+            db: Session,
+            staff_function: ServiceStaffFunction,
             type_id: uuid.UUID):
         return super().create(db, ArchiveServiceStaffFunctionCreate(
             name=staff_function.name,
@@ -71,12 +71,12 @@ class ArchiveServiceStaffFunctionService(
         ))
 
     def update_archive_staff_function(
-            self, 
-            db: Session, 
-            staff_function: ArchiveServiceStaffFunction, 
+            self,
+            db: Session,
+            staff_function: ArchiveServiceStaffFunction,
             body: NewArchiveServiceStaffFunctionCreate):
-        return super().update(db, 
-                              db_obj=staff_function, 
+        return super().update(db,
+                              db_obj=staff_function,
                               obj_in=ArchiveServiceStaffFunctionCreate(
             name=body.name,
             nameKZ=body.nameKZ,

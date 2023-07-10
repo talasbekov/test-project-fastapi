@@ -1,5 +1,5 @@
-from sqlalchemy import Column, ForeignKey, Integer
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy.dialects.postgresql import UUID, TEXT, DATE
 from sqlalchemy.orm import relationship
 
 from models import Model
@@ -23,3 +23,7 @@ class LanguageProficiency(Model):
     profile = relationship(
         "EducationalProfile",
         back_populates="language_proficiency")
+    
+    document_number = Column(String)
+    document_link = Column(TEXT, nullable=True)
+    assignment_date = Column(DATE)

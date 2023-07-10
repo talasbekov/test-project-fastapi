@@ -3,10 +3,10 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-from schemas.medical import (AnthropometricDataRead, 
-                             DispensaryRegistrationRead, 
+from schemas.medical import (AnthropometricDataRead,
+                             DispensaryRegistrationRead,
                              GeneralUserInformationRead,
-                             HospitalDataRead, 
+                             HospitalDataRead,
                              UserLiberationRead)
 
 

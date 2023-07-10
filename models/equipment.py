@@ -1,9 +1,9 @@
 from sqlalchemy import (
-    BigInteger, 
-    Column, 
-    String, 
-    UUID, 
-    ForeignKey, 
+    BigInteger,
+    Column,
+    String,
+    UUID,
+    ForeignKey,
     TIMESTAMP
 )
 from sqlalchemy.orm import relationship
@@ -22,7 +22,7 @@ class Equipment(Model):
 
     type_of_equipment = Column(String, nullable=True)
 
-    hr_documents = relationship("HrDocument", 
+    hr_documents = relationship("HrDocument",
                                 secondary=hr_document_equipments,
                                 back_populates="equipments")
     inventory_count = Column(BigInteger, nullable=True)
@@ -54,7 +54,7 @@ class TypeArmyEquipmentModel(NamedModel):
 
 
 class TypeArmyEquipment(NamedModel):
-    """Type of army equipment. Example: 
+    """Type of army equipment. Example:
     Автомат, РПГ, etc."""
     __tablename__ = "type_army_equipments"
 
@@ -83,7 +83,7 @@ class ArmyEquipment(Equipment):
 
 
 class TypeClothingEquipmentModel(NamedModel):
-    """Type of equipment. Example: 
+    """Type of equipment. Example:
     ШАПКА, ПОЛУЧЕК, ПОЛУЧЕК, etc."""
     __tablename__ = "type_clothing_equipment_models"
 
@@ -93,7 +93,7 @@ class TypeClothingEquipmentModel(NamedModel):
 
 
 class TypeClothingEquipment(NamedModel):  # obj.
-    """Type of clothing equipment. Example: 
+    """Type of clothing equipment. Example:
     ПАРАДНАЯ, ПОВСЕДНЕВНО-ПОСТОВАЯ, ТАКТИЧЕСКАЯ, etc."""
     __tablename__ = "type_clothing_equipments"
 
@@ -105,17 +105,17 @@ class TypeClothingEquipment(NamedModel):  # obj.
 class ClothingEquipmentTypesModels(Model):
     __tablename__ = 'clothing_equipment_types_models'
 
-    type_clothing_equipment_models_id = Column(UUID(as_uuid=True), 
+    type_clothing_equipment_models_id = Column(UUID(as_uuid=True),
                                     ForeignKey("type_clothing_equipment_models.id"),
                                     nullable=True)
-    type_clothing_equipment_models = relationship("TypeClothingEquipmentModel", 
+    type_clothing_equipment_models = relationship("TypeClothingEquipmentModel",
                                     back_populates="clothing_equipment_types_models",
                                     uselist=False)
 
-    type_clothing_equipments_id = Column(UUID(as_uuid=True), 
+    type_clothing_equipments_id = Column(UUID(as_uuid=True),
                                     ForeignKey("type_clothing_equipments.id"),
                                     nullable=True)
-    type_clothing_equipments = relationship("TypeClothingEquipment", 
+    type_clothing_equipments = relationship("TypeClothingEquipment",
                                     back_populates="clothing_equipment_types_models",
                                     uselist=False)
 

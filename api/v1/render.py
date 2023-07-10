@@ -26,7 +26,7 @@ router = APIRouter(
             HTTPBearer())])
 
 
-@router.post("/render", 
+@router.post("/render",
              dependencies=[Depends(HTTPBearer())],
              summary="Генерация документа 'Заключение спец. проверки'")
 async def generate(*,
@@ -42,12 +42,12 @@ async def generate(*,
     """
     Authorize.jwt_required()
     return render_service.generate(
-        db, 
-        candidate_id=body.candidate_id, 
+        db,
+        candidate_id=body.candidate_id,
         template_id=body.hr_document_template_id)
 
 
-@router.post("/render/finish-candidate", 
+@router.post("/render/finish-candidate",
              dependencies=[Depends(HTTPBearer())],
              summary="Генерация документа 'Заключение на зачисление'")
 async def render_finish_candidate(*,
@@ -63,8 +63,8 @@ async def render_finish_candidate(*,
     """
     Authorize.jwt_required()
     return await (render_service
-                  .generate_finish_candidate(db=db, 
-                                             candidate_id=body.candidate_id, 
+                  .generate_finish_candidate(db=db,
+                                             candidate_id=body.candidate_id,
                                              template_id=body.hr_document_template_id))
 
 
@@ -102,8 +102,8 @@ async def convert_html_to_pdf(*,
 
 @router.get('/inflect')
 async def inflect_word(
-                    word: str, 
-                    septik_int: int, 
+                    word: str,
+                    septik_int: int,
                     lang: LanguageEnum = LanguageEnum.ru):
     if lang == LanguageEnum.ru:
         return padezh(word, septik_int)

@@ -28,7 +28,7 @@ class HrVacancyService(
 
         return vacancies
 
-    def get_by_department(self,
+    def get_by_staff_division(self,
                           db: Session,
                           staff_division_id: str,
                           user_id: uuid.UUID

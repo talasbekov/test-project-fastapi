@@ -63,11 +63,11 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             excepted_users = self._get_excepted_users_by_document_in_progress(
                 db, hr_document_template_id)
             users = (self
-                     ._filter_for_eligible_actions(db, 
-                                                users, 
-                                                hr_document_template_id)
-                    .except_(excepted_users)
-                    .filter(self.model.is_active.is_(True)))
+                     ._filter_for_eligible_actions(db,
+                                                   users,
+                                                   hr_document_template_id)
+                     .except_(excepted_users)
+                     .filter(self.model.is_active.is_(True)))
 
         users = (
             users
@@ -80,16 +80,16 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         return users
 
     def is_template_accessible_for_user(self,
-                                db: Session,
-                                user_id: uuid.UUID,
-                                template_id: uuid.UUID) -> bool:
+                                        db: Session,
+                                        user_id: uuid.UUID,
+                                        template_id: uuid.UUID) -> bool:
         user = self.get_by_id(db, user_id)
-        
+
         unavailable_users = self._get_excepted_users_by_document_in_progress(
             db, template_id)
-        
+
         return True if user not in unavailable_users else False
-        
+
     def get_all_active(self,
                        db: Session,
                        filter: str,
@@ -309,7 +309,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             .filter(HrDocument.hr_document_template_id == hr_document_template_id,
                     HrDocumentInfo.signed_by_id.is_(None),
                     and_(*[HrDocument.status_id !=
-                         status.id for status in forbidden_statuses])
+                           status.id for status in forbidden_statuses])
                     )
         )
         return excepted_users
@@ -427,7 +427,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         document_ids = []
         [document_ids.extend(
             categories[handler].get_templates(db, initiator_role.id, user_id))
-            if handler != 0 else []
+         if handler != 0 else []
          for handler in categories]
         document_ids.extend([
             function.hr_document_step.hr_document_template_id

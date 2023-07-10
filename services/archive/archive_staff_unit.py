@@ -36,10 +36,10 @@ class ArchiveStaffUnitService(
             archive_staff_unit_ids: List[uuid.UUID],
             archive_staff_division_id: uuid.UUID):
         (db.query(self.model)
-            .filter(self.model.id.in_(archive_staff_unit_ids))
-            .update(
-                {self.model.staff_division_id: archive_staff_division_id}
-        )
+           .filter(self.model.id.in_(archive_staff_unit_ids))
+           .update(
+               {self.model.staff_division_id: archive_staff_division_id}
+           )
         )
         return db.query(self.model).filter(
             self.model.id.in_(archive_staff_unit_ids)).all()

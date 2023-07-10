@@ -8,8 +8,8 @@ from sqlalchemy.orm import Session
 
 from core import get_db
 from schemas import (
-    IdentificationCardCreate, 
-    IdentificationCardUpdate, 
+    IdentificationCardCreate,
+    IdentificationCardUpdate,
     IdentificationCardRead
 )
 from services import identification_card_service
@@ -34,11 +34,11 @@ async def get_all(*,
     """
         Get all IdentificationCard
 
-        - **skip**: int - The number of IdentificationCard 
-            to skip before returning the results. 
+        - **skip**: int - The number of IdentificationCard
+            to skip before returning the results.
             This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of IdentificationCard 
-            to return in the response. 
+        - **limit**: int - The maximum number of IdentificationCard
+            to return in the response.
             This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
