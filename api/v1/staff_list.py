@@ -106,7 +106,7 @@ async def get_result(task_id: str):
     if result.ready():
         return StaffListRead(**result.result)
     else:
-        return {"status": "Task in progress"}
+        return {"status": AsyncResult(task_id).state}
     
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],

@@ -10,7 +10,8 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import sessionmaker
 
 
-app = Celery('celery_app', backend='redis://redis:6379/', broker='amqp://rabbitmq:5672/')
+app = Celery('celery_app', backend='redis://redis:6379/',
+             broker='amqp://rabbitmq:5672/')
 
 SQLALCHEMY_DATABASE_URL = f"postgresql://{configs.POSTGRES_USER}:{configs.POSTGRES_PASSWORD}@{configs.POSTGRES_HOSTNAME}:{configs.DATABASE_PORT}/{configs.POSTGRES_DB}"
 
@@ -20,15 +21,17 @@ engine = create_engine(
 )
 
 
-@app.task
-def task_create_draft(user_id: str,
-                 obj_in: dict, 
-                 current_user_role_id: str):
+@app.task(bind=True)
+def task_create_draft(self,
+                      user_id: str,
+                      obj_in: dict,
+                      current_user_role_id: str):
     SessionLocal = sessionmaker(bind=engine)
     db = SessionLocal()
-    staff_list = staff_list_service.create_by_user_id(db,
+    staff_list = staff_list_service.create_by_user_id(self, db,
                                                       user_id,
-                                                      StaffListUserCreate(**obj_in), 
+                                                      StaffListUserCreate(
+                                                          **obj_in),
                                                       current_user_role_id)
     staff_list = StaffListRead.from_orm(staff_list).dict()
     try:
@@ -40,6 +43,7 @@ def task_create_draft(user_id: str,
         if db:
             db.close()
     return staff_list
+
 
 @app.task
 def task_apply_staff_list(
@@ -73,4 +77,3 @@ def task_apply_staff_list(
         if db:
             db.close()
     return staff_list
-    
