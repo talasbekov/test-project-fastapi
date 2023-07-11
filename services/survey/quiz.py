@@ -25,17 +25,10 @@ class QuizService(ServiceBase[Quiz, QuizCreate, QuizUpdate]):
         staff_unit = staff_unit_service.get_by_id(db, role_id)
         user = staff_unit.users[0]
         
-        query = (
-            db.query(self.model).filter(
-                (self.model.certain_member_id ==  user.id) |
-                (self.model.staff_division_id == staff_unit.staff_division_id),
-                self.model.staff_position == SurveyStaffPositionEnum.EVERYONE.value
-            )
-        )
+        quizzes = self.__get_by_certaint_member(db, user.id, skip, limit)
+        quizzes.extend(self.__get_by_staff_division(db, staff_unit, skip, limit))
         
-        query = self.__filter_by_staff_position(db, staff_unit, query)
-        
-        return query.offset(skip).limit(limit).all()
+        return quizzes
 
     def get_all_active(self, db: Session, skip: int = 0, limit: int = 100):
         return db.query(self.model).filter(
@@ -104,17 +97,45 @@ class QuizService(ServiceBase[Quiz, QuizCreate, QuizUpdate]):
         
         return quiz
     
-    def __filter_by_staff_position(self, db: Session, staff_unit: StaffUnit, query):
+    def __get_by_certaint_member(self,
+                                 db: Session,
+                                 user_id: str,
+                                 skip: int,
+                                 limit: int):
+        return db.query(self.model).filter(
+            self.model.jurisdiction_type == 
+                SurveyJurisdictionTypeEnum.CERTAIN_MEMBER.value,
+            self.model.certain_member_id == user_id
+        ).offset(skip).limit(limit).all()
+        
+    def __get_by_staff_division(self,
+                                db: Session,
+                                staff_unit: StaffUnit,
+                                skip: int,
+                                limit: int):
+        query = (
+            db.query(self.model).filter(
+                self.model.jurisdiction_type == 
+                    SurveyJurisdictionTypeEnum.STAFF_DIVISION.value,
+                self.model.staff_division_id == staff_unit.staff_division_id
+            )
+        )
+        
+        query = self.__filter_by_staff_position(staff_unit, query)
+        
+        return query.offset(skip).limit(limit).all()
+    
+    def __filter_by_staff_position(self, staff_unit: StaffUnit, query):
         if staff_unit.position.name in self.ALL_MANAGING_STRUCTURE:
             query = (
-                db.query(self.model).filter(
+                query.filter(
                     self.model.staff_position ==
                         SurveyStaffPositionEnum.ONLY_MANAGING_STRUCTURE.value
                 )
             )
         else:
             query = (
-                db.query(self.model).filter(
+                query.filter(
                     self.model.staff_position ==
                         SurveyStaffPositionEnum.ONLY_PERSONNAL_STURCTURE.value
                 )
