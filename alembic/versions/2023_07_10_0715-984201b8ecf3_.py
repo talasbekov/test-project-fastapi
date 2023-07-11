@@ -9,6 +9,7 @@ import uuid, datetime
 
 from alembic import op
 import sqlalchemy as sa
+from sqlalchemy import text
 
 from core import Base
 
@@ -24,6 +25,15 @@ def get_uuid():
     return str(uuid.uuid4())
 
 def upgrade() -> None:
+    
+    conn = op.get_bind()
+    # get user_id of batyrbek
+    batyrbek_user_id = conn.execute(
+        text(
+            "SELECT id FROM users WHERE email = 'batyrbek@mail.ru'")
+    ).fetchone()[0]
+    
+    
     survey1_id = get_uuid()
     end_date = datetime.datetime.now() + datetime.timedelta(days=30)
     
@@ -35,8 +45,8 @@ def upgrade() -> None:
             'start_date': datetime.datetime.now(),
             'end_date': end_date,
             'is_anonymous': False,
-            'jurisdiction_type': 'Штатное подразделение',
-            'certain_member_id': None,
+            'jurisdiction_type': 'Определенный участник',
+            'certain_member_id': batyrbek_user_id,
             'staff_division_id': None,
             'status': 'Активный',
             'name': 'Опрос "Оценка пользовательского опыта: ваше впечатление о веб-сайте Cleverest Technologies',
