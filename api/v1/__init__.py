@@ -111,6 +111,8 @@ router.include_router(hr_vacancy_requirement_router)
 router.include_router(position_router)
 router.include_router(dashboard_router)
 
+router.include_router(survey_jurisdiction_type_router)
+router.include_router(survey_staff_position_router)
 router.include_router(survey_router)
 router.include_router(quiz_router)
 router.include_router(question_type_router)
