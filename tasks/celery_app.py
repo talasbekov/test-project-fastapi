@@ -10,7 +10,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import sessionmaker
 
 
-app = Celery('celery_app', backend='redis://redis:6379/', broker='redis://redis:6379/')
+app = Celery('celery_app', backend='redis://redis:6379/', broker='amqp://rabbitmq:5672/')
 
 SQLALCHEMY_DATABASE_URL = f"postgresql://{configs.POSTGRES_USER}:{configs.POSTGRES_PASSWORD}@{configs.POSTGRES_HOSTNAME}:{configs.DATABASE_PORT}/{configs.POSTGRES_DB}"
 
