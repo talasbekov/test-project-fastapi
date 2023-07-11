@@ -35,6 +35,47 @@ async def get_all(*,
     return answer_service.get_multi(db, skip, limit)
 
 
+@router.get("/quiz/{quiz_id}", dependencies=[Depends(HTTPBearer())],
+            response_model=List[AnswerRead],
+            summary="Get all by quiz")
+async def get_all_by_quiz(*,
+                  db: Session = Depends(get_db),
+                  quiz_id: uuid.UUID,
+                  Authorize: AuthJWT = Depends()
+                  ):
+    """
+        Get all Answer by quiz
+
+        - **skip**: int - The number of answers to skip before returning the results. 
+                This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of answers to return in the response. 
+            This parameter is optional and defaults to 100.
+    """
+    Authorize.jwt_required()
+    return answer_service.get_by_quiz_id(db, quiz_id)
+
+
+@router.get("/survey/{survey_id}", dependencies=[Depends(HTTPBearer())],
+            response_model=List[AnswerRead],
+            summary="Get all by survey")
+async def get_all_by_survey(*,
+                  db: Session = Depends(get_db),
+                  survey_id: uuid.UUID,
+                  Authorize: AuthJWT = Depends()
+                  ):
+    """
+        Get all Answer by survey
+
+        - **skip**: int - The number of answers to skip before returning the results. 
+                This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of answers to return in the response. 
+            This parameter is optional and defaults to 100.
+    """
+    Authorize.jwt_required()
+    return answer_service.get_by_survey_id(db, survey_id)
+
+
+
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=AnswerRead,

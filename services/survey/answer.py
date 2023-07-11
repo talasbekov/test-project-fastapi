@@ -1,15 +1,17 @@
 from sqlalchemy.orm import Session
+from typing import List
 
 from models import (Answer, QuestionTypeEnum,
                     AnswerSingleSelection, AnswerScale, AnswerGrid,
                     AnswerCheckboxGrid, QuestionBase, Survey,
-                    AnswerText, QuestionSurvey)
+                    AnswerText, QuestionSurvey, QuestionQuiz)
 from schemas import AnswerCreate, AnswerUpdate
 from exceptions import BadRequestException
 from services.base import ServiceBase
 from .question import question_service
 from .option import option_service
 from .survey import survey_service
+from .quiz import quiz_service
 
 
 class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
@@ -22,6 +24,30 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
         QuestionTypeEnum.GRID.value: AnswerGrid,
         QuestionTypeEnum.CHECKBOX_GRID.value: AnswerCheckboxGrid
     }
+    
+    def get_by_survey_id(self, db: Session, survey_id: str) -> List[Answer]:
+        survey = survey_service.get_by_id(db, survey_id)
+        
+        survey_questions_ids = (
+            question_id for (question_id,) in db.query(QuestionSurvey.id).filter(
+                QuestionSurvey.survey_id == survey.id).all()
+        )
+        
+        return db.query(self.model).filter(
+            self.model.question_id.in_(survey_questions_ids)
+        ).all()
+        
+    def get_by_quiz_id(self, db: Session, quiz_id: str) -> List[Answer]:
+        quiz = quiz_service.get_by_id(db, quiz_id)
+        
+        quiz_questions_ids = (
+            question_id for (question_id,) in db.query(QuestionQuiz.id).filter(
+                QuestionQuiz.quiz_id == quiz.id).all()
+        )
+        
+        return db.query(self.model).filter(
+            self.model.question_id.in_(quiz_questions_ids)
+        ).all()
 
     def create(self, db: Session, body: AnswerCreate, user_id: str) -> Answer:
         question = question_service.get_by_id(db, body.question_id)
