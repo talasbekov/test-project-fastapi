@@ -13,6 +13,20 @@ from .base import ServiceBase
 
 class StatusService(ServiceBase[Status, StatusCreate, StatusUpdate]):
 
+    def get_by_id(self, db: Session, id: str) -> Status:
+        status = super().get(db, id)
+        if status is None:
+            raise NotFoundException(detail="User is not found!")
+        return status
+
+    def get_status_by_name(self, db: Session, name: str):
+        status = db.query(StatusType).filter(StatusType.name == name).first()
+        return status
+
+    def get_users_from_status_by_id(self, db: Session, id: str):
+        users = db.query(Status).filter(Status.type_id == id).all()
+        return users
+
     def create_relation(self, db: Session, user_id: uuid.UUID, type_id: str):
         status = super().create(db, StatusCreate(type_id=type_id, user_id=user_id))
         return status

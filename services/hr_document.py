@@ -553,7 +553,7 @@ class HrDocumentService(
     async def generate_html(self, db: Session, id: str, language: LanguageEnum):
         ans, name = await self._get_html(db, id, language)
 
-        # Write ans to tempfile and return it
+        # Write and to tempfile and return it
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
             file_name = temp_file.name
             temp_file.write(ans.encode("utf-8"))

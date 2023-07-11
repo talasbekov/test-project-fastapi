@@ -1,5 +1,3 @@
-from fastapi import APIRouter
-
 from .education import router_education
 
 from .hr_document import router as hr_document_router
@@ -44,6 +42,7 @@ from .hr_vacancy import router as hr_vacancy_router
 from .hr_vacancy_requirement import router as hr_vacancy_requirement_router
 from .position import router as position_router
 from .auto_tag import router as auto_tag_router
+from .dashboard import router as dashboard_router
 
 from .survey import *
 
@@ -110,6 +109,7 @@ router.include_router(recommender_user_router)
 router.include_router(hr_vacancy_router)
 router.include_router(hr_vacancy_requirement_router)
 router.include_router(position_router)
+router.include_router(dashboard_router)
 
 router.include_router(survey_router)
 router.include_router(quiz_router)
@@ -117,3 +117,5 @@ router.include_router(question_type_router)
 router.include_router(question_router)
 router.include_router(option_router)
 router.include_router(answer_router)
+
+router.include_router(dashboard_router)

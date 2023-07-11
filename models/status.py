@@ -12,6 +12,8 @@ class StatusEnum(Enum):
     VACATION = 'В отпуске'
     MATERNITY_LEAVE = 'В отпуске по беременности и родам'
     SICK_LEAVE = 'В отпуске по болезни'
+    BUSINESS_TRIP = 'В командировке'
+    ANNUAL_LEAVE = 'Ежегодный отпуск'
 
 
 class StatusType(NamedModel):
