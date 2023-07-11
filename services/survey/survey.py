@@ -7,6 +7,7 @@ from services.base import ServiceBase
 from services import (
     staff_division_service, staff_unit_service, user_service
 )
+from exceptions import BadRequestException
 
 
 class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
@@ -70,13 +71,13 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
         try:
             return SurveyJurisdictionTypeEnum(jurisdiction_type)
         except ValueError:
-            raise ValueError("Invalid jurisdiction type")
+            raise BadRequestException(f"Invalid jurisdiction type: {jurisdiction_type}")
         
     def __validate_staff_position(self, staff_position: str):
         try:
             return SurveyStaffPositionEnum(staff_position)
         except ValueError:
-            raise ValueError("Invalid staff position")
+            raise BadRequestException(f"Invalid staff position: {staff_position}")
     
     def __set_jurisdiction(self, db: Session, survey: Survey, body):
         self.__validate_jurisdiciton_type(body.jurisdiction_type)
@@ -129,15 +130,19 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
         if staff_unit.position.name in self.ALL_MANAGING_STRUCTURE:
             query = (
                 query.filter(
-                    self.model.staff_position ==
-                        SurveyStaffPositionEnum.ONLY_MANAGING_STRUCTURE.value
+                    (self.model.staff_position ==
+                        SurveyStaffPositionEnum.ONLY_MANAGING_STRUCTURE.value) |
+                    (self.model.staff_position ==
+                        SurveyStaffPositionEnum.EVERYONE.value)
                 )
             )
         else:
             query = (
                 query.filter(
-                    self.model.staff_position ==
-                        SurveyStaffPositionEnum.ONLY_PERSONNAL_STURCTURE.value
+                    (self.model.staff_position ==
+                        SurveyStaffPositionEnum.ONLY_PERSONNAL_STURCTURE.value) |
+                    (self.model.staff_position ==
+                        SurveyStaffPositionEnum.EVERYONE.value)
                 )
             )
             
