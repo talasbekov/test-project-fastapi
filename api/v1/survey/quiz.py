@@ -16,44 +16,23 @@ router = APIRouter(prefix="/quizzes",
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[QuizRead],
-            summary="Get all Quizzes by jurisdiction")
-async def get_by_jurisdiction(*,
+            summary="Get all Quizzes")
+async def get_all_active(*,
                   db: Session = Depends(get_db),
                   skip: int = 0,
                   limit: int = 100,
                   Authorize: AuthJWT = Depends()
                   ):
     """
-        Get all Quizzes by jurisdiction
+        Get all Quizzes
 
-        - **skip**: int - The number of quizzes to skip before returning the results. 
+        - **skip**: int - The number of quizzes to skip before returning the results.
                 This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of quizzes to return in the response. 
+        - **limit**: int - The maximum number of quizzes to return in the response.
             This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    role = Authorize.get_raw_jwt()['role']
-    return quiz_service.get_by_jurisdiction(db, role, skip, limit)
-
-# @router.get("", dependencies=[Depends(HTTPBearer())],
-#             response_model=List[QuizRead],
-#             summary="Get all Quizzes")
-# async def get_all_active(*,
-#                   db: Session = Depends(get_db),
-#                   skip: int = 0,
-#                   limit: int = 100,
-#                   Authorize: AuthJWT = Depends()
-#                   ):
-#     """
-#         Get all Quizzes
-
-#         - **skip**: int - The number of quizzes to skip before returning the results.
-#                 This parameter is optional and defaults to 0.
-#         - **limit**: int - The maximum number of quizzes to return in the response.
-#             This parameter is optional and defaults to 100.
-#     """
-#     Authorize.jwt_required()
-#     return quiz_service.get_all_active(db, skip, limit)
+    return quiz_service.get_all_active(db, skip, limit)
 
 
 @router.get("/archives", dependencies=[Depends(HTTPBearer())],
@@ -96,6 +75,28 @@ async def get_all_draft(*,
     """
     Authorize.jwt_required()
     return quiz_service.get_all_draft(db, skip, limit)
+
+
+@router.get("/jurisdiction", dependencies=[Depends(HTTPBearer())],
+            response_model=List[QuizRead],
+            summary="Get all Quizzes by jurisdiction")
+async def get_by_jurisdiction(*,
+                  db: Session = Depends(get_db),
+                  skip: int = 0,
+                  limit: int = 100,
+                  Authorize: AuthJWT = Depends()
+                  ):
+    """
+        Get all Quizzes by jurisdiction
+
+        - **skip**: int - The number of quizzes to skip before returning the results. 
+                This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of quizzes to return in the response. 
+            This parameter is optional and defaults to 100.
+    """
+    Authorize.jwt_required()
+    role = Authorize.get_raw_jwt()['role']
+    return quiz_service.get_by_jurisdiction(db, role, skip, limit)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
