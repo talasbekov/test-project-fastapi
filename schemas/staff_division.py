@@ -147,6 +147,7 @@ class StaffDivisionRead(StaffDivisionBase):
     children: Optional[List['StaffDivisionChildRead']]
     staff_units: Optional[List['StaffUnitRead']]
     type: Optional[StaffDivisionTypeRead]
+    count_vacancies: Optional[int]
     
     @validator('children')
     def validate_children(cls, children):
