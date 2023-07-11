@@ -77,7 +77,7 @@ async def get_all_draft(*,
     return quiz_service.get_all_draft(db, skip, limit)
 
 
-@router.get("/jurisdiction", dependencies=[Depends(HTTPBearer())],
+@router.get("/my", dependencies=[Depends(HTTPBearer())],
             response_model=List[QuizRead],
             summary="Get all Quizzes by jurisdiction")
 async def get_by_jurisdiction(*,

@@ -77,7 +77,7 @@ async def get_all_draft(*,
     return survey_service.get_all_draft(db, skip, limit)
 
 
-@router.get("/jurisdiction", dependencies=[Depends(HTTPBearer())],
+@router.get("/my", dependencies=[Depends(HTTPBearer())],
             response_model=List[SurveyRead],
             summary="Get all Surveys by jurisdiction")
 async def get_by_jurisdiction(*,
