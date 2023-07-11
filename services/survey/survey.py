@@ -78,6 +78,12 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
             return SurveyStaffPositionEnum(staff_position)
         except ValueError:
             raise BadRequestException(f"Invalid staff position: {staff_position}")
+        
+    def __validate_status(self, status: str):
+        try:
+            return SurveyStatusEnum(status)
+        except ValueError:
+            raise BadRequestException(f"Invalid status: {status}")
     
     def __set_jurisdiction(self, db: Session, survey: Survey, body):
         self.__validate_jurisdiciton_type(body.jurisdiction_type)
@@ -104,6 +110,7 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
                                  skip: int,
                                  limit: int):
         return db.query(self.model).filter(
+            self.model.status == SurveyStatusEnum.ACTIVE.value,
             self.model.jurisdiction_type == 
                 SurveyJurisdictionTypeEnum.CERTAIN_MEMBER.value,
             self.model.certain_member_id == user_id
@@ -116,6 +123,7 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
                                 limit: int):
         query = (
             db.query(self.model).filter(
+                self.model.status == SurveyStatusEnum.ACTIVE.value,
                 self.model.jurisdiction_type == 
                     SurveyJurisdictionTypeEnum.STAFF_DIVISION.value,
                 self.model.staff_division_id == staff_unit.staff_division_id

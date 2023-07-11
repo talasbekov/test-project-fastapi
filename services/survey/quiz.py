@@ -7,6 +7,7 @@ from services.base import ServiceBase
 from services import (
     staff_division_service, staff_unit_service, user_service
 )
+from exceptions import BadRequestException
 
 
 class QuizService(ServiceBase[Quiz, QuizCreate, QuizUpdate]):
@@ -70,13 +71,19 @@ class QuizService(ServiceBase[Quiz, QuizCreate, QuizUpdate]):
         try:
             return SurveyJurisdictionTypeEnum(jurisdiction_type)
         except ValueError:
-            raise ValueError("Invalid jurisdiction type")
+            raise BadRequestException("Invalid jurisdiction type")
         
     def __validate_staff_position(self, staff_position: str):
         try:
             return SurveyStaffPositionEnum(staff_position)
         except ValueError:
-            raise ValueError("Invalid staff position")
+            raise BadRequestException("Invalid staff position")
+        
+    def __validate_status(self, status: str):
+        try:
+            return SurveyStatusEnum(status)
+        except ValueError:
+            raise BadRequestException(f"Invalid status: {status}")
     
     def __set_jurisdiction(self, db: Session, quiz: Quiz, body):
         self.__validate_jurisdiciton_type(body.jurisdiction_type)
@@ -103,6 +110,7 @@ class QuizService(ServiceBase[Quiz, QuizCreate, QuizUpdate]):
                                  skip: int,
                                  limit: int):
         return db.query(self.model).filter(
+            self.model.status == SurveyStatusEnum.ACTIVE.value,
             self.model.jurisdiction_type == 
                 SurveyJurisdictionTypeEnum.CERTAIN_MEMBER.value,
             self.model.certain_member_id == user_id
@@ -115,6 +123,7 @@ class QuizService(ServiceBase[Quiz, QuizCreate, QuizUpdate]):
                                 limit: int):
         query = (
             db.query(self.model).filter(
+                self.model.status == SurveyStatusEnum.ACTIVE.value,
                 self.model.jurisdiction_type == 
                     SurveyJurisdictionTypeEnum.STAFF_DIVISION.value,
                 self.model.staff_division_id == staff_unit.staff_division_id
@@ -129,15 +138,19 @@ class QuizService(ServiceBase[Quiz, QuizCreate, QuizUpdate]):
         if staff_unit.position.name in self.ALL_MANAGING_STRUCTURE:
             query = (
                 query.filter(
-                    self.model.staff_position ==
-                        SurveyStaffPositionEnum.ONLY_MANAGING_STRUCTURE.value
+                    (self.model.staff_position ==
+                        SurveyStaffPositionEnum.ONLY_MANAGING_STRUCTURE.value) |
+                    (self.model.staff_position ==
+                        SurveyStaffPositionEnum.EVERYONE.value)
                 )
             )
         else:
             query = (
                 query.filter(
-                    self.model.staff_position ==
-                        SurveyStaffPositionEnum.ONLY_PERSONNAL_STURCTURE.value
+                    (self.model.staff_position ==
+                        SurveyStaffPositionEnum.ONLY_MANAGING_STRUCTURE.value) |
+                    (self.model.staff_position ==
+                        SurveyStaffPositionEnum.EVERYONE.value)
                 )
             )
             
