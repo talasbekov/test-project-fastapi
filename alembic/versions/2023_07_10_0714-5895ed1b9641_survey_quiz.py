@@ -70,6 +70,8 @@ def upgrade() -> None:
     sa.Column('survey_id', sa.UUID(), nullable=True),
     sa.Column('quiz_id', sa.UUID(), nullable=True),
     sa.Column('score', sa.Integer(), nullable=True),
+    sa.Column('diagram_description', sa.TEXT(), nullable=True),
+    sa.Column('report_description', sa.TEXT(), nullable=True),
     sa.ForeignKeyConstraint(['quiz_id'], ['quizzes.id'], ),
     sa.ForeignKeyConstraint(['survey_id'], ['surveys.id'], ),
     sa.PrimaryKeyConstraint('id')

@@ -24,6 +24,8 @@ class QuestionBase(Model):
     is_required = Column(Boolean, nullable=False, default=True)
     question_type = Column(Enum(QuestionTypeEnum), nullable=False)
     discriminator = Column(String(255), nullable=True)
+    diagram_description = Column(TEXT, nullable=True)
+    report_description = Column(TEXT, nullable=True)
 
     options = relationship("Option", cascade="all,delete",
                            back_populates="question")
