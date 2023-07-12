@@ -35,7 +35,7 @@ from .staff_division_type import (
     StaffDivisionTypeRead,
     StaffDivisionTypeUpdate)
 from .staff_division import (StaffDivisionCreate, StaffDivisionRead,
-                             StaffDivisionStepRead, StaffDivisionUpdate, 
+                             StaffDivisionStepRead, StaffDivisionUpdate,
                              StaffDivisionUpdateParentGroup,
                              StaffDivisionOptionRead, StaffUnitDivisionRead)
 from .staff_unit import StaffUnitCreate, StaffUnitRead, StaffUnitUpdate, UserStaffUnitRead, StaffUnitCreateWithPosition
@@ -93,3 +93,4 @@ from .contract import *
 from .secondment import *
 from .history import *
 from .survey import *
+from .bsp import *

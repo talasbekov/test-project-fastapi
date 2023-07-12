@@ -58,5 +58,7 @@ from .auth import auth_service
 from .hr_vacancy_requirements import hr_vacancy_requirement_service
 
 from .survey import *
+from .bsp import *
+
 
 from .dashboard import dashboard_service
