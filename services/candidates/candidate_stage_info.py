@@ -344,6 +344,20 @@ class CandidateStageInfoService(
                         for name in key_words))
             )
         )
+        
+    def get_count_passed_stages(self, db: Session, candidate_id: str):
+        """
+            This method returns the count of passed stages
+            for the Candidate with the provided id.
+        """
+        return (
+            db.query(CandidateStageInfo)
+            .filter(
+                CandidateStageInfo.candidate_id == candidate_id,
+                CandidateStageInfo.status == CandidateStageInfoStatusEnum.APPROVED.value
+            )
+            .count()
+        )
 
 
 candidate_stage_info_service = CandidateStageInfoService(

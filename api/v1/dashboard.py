@@ -69,3 +69,45 @@ async def get_in_line_count_by_status(*,
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
     return dashboard_service.get_in_line_count_by_status(db, role)
+
+@router.get("/candidates/stages", dependencies=[Depends(HTTPBearer())],
+            summary="Get passed candidate stage infos")
+async def get_statistic_passed_candidate_stage_infos(*,
+                        db: Session = Depends(get_db),
+                        Authorize: AuthJWT = Depends(),
+                        ):
+    """
+       Get passed candidate stage infos
+    """
+    Authorize.jwt_required()
+    return (
+       dashboard_service.get_statistic_passed_candidate_stage_infos(db)
+    )
+
+@router.get("/candidates/duration", dependencies=[Depends(HTTPBearer())],
+            summary="Get duration candidates")
+async def get_statistic_duration_candidate_learning(*,
+                        db: Session = Depends(get_db),
+                        Authorize: AuthJWT = Depends(),
+                        ):
+    """
+       Get duration candidates
+    """
+    Authorize.jwt_required()
+    return (
+       dashboard_service.get_statistic_duration_candidate_learning(db)
+    )
+
+@router.get("/candidates/completed", dependencies=[Depends(HTTPBearer())],
+            summary="Get completed candidates")
+async def get_statistic_completed_candidates(*,
+                        db: Session = Depends(get_db),
+                        Authorize: AuthJWT = Depends(),
+                        ):
+    """
+       Get completed candidates
+    """
+    Authorize.jwt_required()
+    return (
+       dashboard_service.get_statistic_completed_candidates(db)
+    )

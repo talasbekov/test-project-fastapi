@@ -15,6 +15,11 @@ class CandidateStageTypeService(
     ):
         return db.query(self.model).order_by(
             self.model.id.asc()).offset(skip).limit(limit).all()
+        
+    def get_count(
+        self, db: Session
+    ):
+        return db.query(self.model).count()
 
 
 candidate_stage_type_service = CandidateStageTypeService(

@@ -29,6 +29,21 @@ class CandidateService(
         PositionNameEnum.CANDIDATE_MANAGEMENT_HEAD.value,
         PositionNameEnum.POLITICS_GOVERNMENT_SERVANT.value
     }
+    
+    def get_all(self, db: Session):
+        """
+            Returns a list of all candidates.
+        """
+        return db.query(self.model).filter(
+            self.model.status == CandidateStatusEnum.ACTIVE.value
+        ).all()
+        
+    def get_count_completed_candidates(
+        self, db: Session
+    ):
+        return db.query(self.model).filter(
+            self.model.status == CandidateStatusEnum.COMPLETED.value
+        ).count()
 
     def get_multiple(self, db: Session,
                      filter: str,
@@ -371,6 +386,5 @@ class CandidateService(
                             for name in key_words)
             )
         )
-
 
 candidate_service = CandidateService(Candidate)  # type: ignore

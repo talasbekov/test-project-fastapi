@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta, timezone
 from typing import List
 
 from sqlalchemy.orm import Session
@@ -6,7 +7,9 @@ from models import (StaffDivision, StaffUnit,
                     PositionNameEnum, StaffDivisionEnum,
                     StatusEnum, Status, User, StatusType)
 from services import (staff_division_service, staff_unit_service,
-                      position_service, hr_vacancy_service)
+                      position_service, hr_vacancy_service,
+                      candidate_stage_type_service, candidate_service,
+                      candidate_stage_info_service)
 
 
 class DashboardService:
@@ -94,6 +97,79 @@ class DashboardService:
         state_in_line = state_by_list - state_by_status
         print(state_in_line)
         return state_in_line
+    
+    def get_statistic_passed_candidate_stage_infos(self, db: Session):
+        candidates = candidate_service.get_all(db)
+        count_candidate_stages = candidate_stage_type_service.get_count(db)
+        
+        less_than_25 = 0
+        between_25_50 = 0
+        between_50_75 = 0
+        more_than_75 = 0
+        
+        for candidate in candidates:
+            passed_stages = (
+                candidate_stage_info_service.get_count_passed_stages(db,
+                                                                     candidate.id)
+            )
+            
+            if passed_stages < count_candidate_stages / 4:
+                less_than_25 += 1
+            elif passed_stages < count_candidate_stages / 2:
+                between_25_50 += 1
+            elif passed_stages < count_candidate_stages * 3 / 4:
+                between_50_75 += 1
+            else:
+                more_than_75 += 1
+        
+        return {
+                'less_than_25': less_than_25,
+                'between_25_50': between_25_50,
+                'between_50_75': between_50_75,
+                'more_than_75': more_than_75
+        }
+    
+    def get_statistic_duration_candidate_learning(self, db: Session):
+        candidates = candidate_service.get_all(db)
+
+        less_than_3_month = 0
+        between_3_6_month = 0
+        between_6_12_month = 0
+        more_than_year = 0
+
+        date_now = datetime.now(timezone.utc)
+
+        for candidate in candidates:
+            # Check if the candidate has been learning for more than a year
+            if date_now - candidate.created_at > timedelta(days=365):
+                more_than_year += 1
+            # Check if the candidate has been learning for between 6-12 months
+            elif date_now - candidate.created_at > timedelta(days=180):
+                between_6_12_month += 1
+            # Check if the candidate has been learning for between 3-6 months
+            elif date_now - candidate.created_at > timedelta(days=90):
+                between_3_6_month += 1
+            # Check if the candidate has been learning for less than 3 months
+            else:
+                less_than_3_month += 1
+                    
+        return {
+            'less_than_3_month': less_than_3_month,
+            'between_3_6_month': between_3_6_month,
+            'between_6_12_month': between_6_12_month,
+            'more_than_year': more_than_year
+        }
+        
+    def get_statistic_completed_candidates(self, db: Session):
+        completed_candidates_count = (
+            candidate_service.get_count_completed_candidates(db)
+        )
+        
+        return {
+            'last_week': completed_candidates_count,
+            'last_month': completed_candidates_count,
+            'last_year': completed_candidates_count,
+        }
 
     def check_by_role(self, db: Session, staff_unit) -> bool:
         """

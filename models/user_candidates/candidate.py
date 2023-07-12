@@ -10,6 +10,7 @@ from models import Model
 class CandidateStatusEnum(str, enum.Enum):
     ACTIVE = "Активный"
     DRAFT = "Черновик"
+    COMPLETED = "Завершен"
 
 
 class Candidate(Model):
