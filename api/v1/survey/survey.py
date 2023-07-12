@@ -1,5 +1,4 @@
 import uuid
-from typing import List
 
 from fastapi import APIRouter, Depends, status
 from fastapi.security import HTTPBearer
@@ -15,7 +14,6 @@ router = APIRouter(prefix="/surveys",
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[SurveyRead],
             summary="Get all Surveys")
 async def get_all_active(*,
                   db: Session = Depends(get_db),
@@ -32,13 +30,15 @@ async def get_all_active(*,
             This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    return survey_service.get_all_active(db, skip, limit)
+    return {
+        'total': survey_service.get_count_actives(db),
+        'objects': survey_service.get_all_active(db, skip, limit)
+    }
 
 
 @router.get("/archives", dependencies=[Depends(HTTPBearer())],
-            response_model=List[SurveyRead],
             summary="Get all archive Surveys")
-async def get_all_not_active(*,
+async def get_all_archives(*,
                   db: Session = Depends(get_db),
                   skip: int = 0,
                   limit: int = 100,
@@ -53,11 +53,13 @@ async def get_all_not_active(*,
             This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    return survey_service.get_all_not_active(db, skip, limit)
+    return {
+        'total': survey_service.get_count_archives(db),
+        'objects': survey_service.get_all_archives(db, skip, limit)
+    }
 
 
 @router.get("/drafts", dependencies=[Depends(HTTPBearer())],
-            response_model=List[SurveyRead],
             summary="Get all draft Surveys")
 async def get_all_draft(*,
                   db: Session = Depends(get_db),
@@ -74,11 +76,13 @@ async def get_all_draft(*,
             This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    return survey_service.get_all_draft(db, skip, limit)
+    return {
+        'total': survey_service.get_count_drafts(db),
+        'objects': survey_service.get_all_draft(db, skip, limit)
+    }
 
 
 @router.get("/my", dependencies=[Depends(HTTPBearer())],
-            response_model=List[SurveyRead],
             summary="Get all Surveys by jurisdiction")
 async def get_by_jurisdiction(*,
                   db: Session = Depends(get_db),
@@ -96,7 +100,11 @@ async def get_by_jurisdiction(*,
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
-    return survey_service.get_by_jurisdiction(db, role, skip, limit)
+    objects = survey_service.get_by_jurisdiction(db, role, skip, limit)
+    return {
+        'total': len(objects),
+        'objects': objects
+    }
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,

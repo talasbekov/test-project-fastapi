@@ -19,6 +19,9 @@ class OptionService(ServiceBase[Option, OptionCreate, OptionUpdate]):
         QuestionTypeEnum.GRID.value: OptionGrid,
         QuestionTypeEnum.CHECKBOX_GRID.value: OptionCheckboxGrid
     }
+    
+    def get_count(self, db: Session) -> int:
+        return db.query(self.model).count()
 
     def get_by_question(self, db: Session, question_id: str) -> List[Option]:
         return db.query(self.model).filter(

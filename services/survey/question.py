@@ -15,6 +15,9 @@ class QuestionService(ServiceBase[QuestionBase, QuestionCreate, QuestionUpdate])
         "question_survey": QuestionSurvey,
         "question_quiz": QuestionQuiz
     }
+    
+    def get_count(self, db: Session) -> int:
+        return db.query(self.model).count()
 
     def get_by_survey(self, db: Session, survey_id: str):
         return db.query(QuestionSurvey).filter(

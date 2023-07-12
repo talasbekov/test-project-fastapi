@@ -25,6 +25,9 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
         QuestionTypeEnum.CHECKBOX_GRID.value: AnswerCheckboxGrid
     }
     
+    def get_count(self, db: Session) -> int:
+        return db.query(self.model).count()
+    
     def get_by_survey_id(self, db: Session, survey_id: str) -> List[Answer]:
         survey = survey_service.get_by_id(db, survey_id)
         

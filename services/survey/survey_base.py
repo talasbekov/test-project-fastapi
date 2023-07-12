@@ -52,15 +52,30 @@ class SurveyBaseService(ServiceBase,
             self.model.status == SurveyStatusEnum.ACTIVE.value
         ).offset(skip).limit(limit).all()
 
-    def get_all_not_active(self, db: Session, skip: int = 0, limit: int = 100):
+    def get_count_actives(self, db: Session) -> int:
+        return db.query(self.model).filter(
+            self.model.status == SurveyStatusEnum.ACTIVE.value
+        ).count()
+
+    def get_all_archives(self, db: Session, skip: int = 0, limit: int = 100):
         return db.query(self.model).filter(
             self.model.status == SurveyStatusEnum.ARCHIVE.value
         ).offset(skip).limit(limit).all()
+    
+    def get_count_archives(self, db: Session) -> int:
+        return db.query(self.model).filter(
+            self.model.status == SurveyStatusEnum.ARCHIVE.value
+        ).count()
 
     def get_all_draft(self, db: Session, skip: int = 0, limit: int = 100):
         return db.query(self.model).filter(
             self.model.status == SurveyStatusEnum.DRAFT.value
         ).offset(skip).limit(limit).all()
+    
+    def get_count_drafts(self, db: Session) -> int:
+        return db.query(self.model).filter(
+            self.model.status == SurveyStatusEnum.DRAFT.value
+        ).count()
 
     def save_as_draft(self, db: Session, body: CreateSchemaType):
         obj = self.model(**body.dict())
