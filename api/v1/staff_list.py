@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, status
 from fastapi.security import HTTPBearer
 from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
+from celery.result import AsyncResult
 
 from core import get_db
 from schemas import (
@@ -15,6 +16,7 @@ from schemas import (
     StaffListStatusRead
 )
 from services import staff_list_service
+from tasks import task_create_draft, task_apply_staff_list
 
 router = APIRouter(
     prefix="/staff_list",
@@ -94,13 +96,23 @@ async def get_signed(*,
     Authorize.jwt_required()
     return staff_list_service.get_signed(db, skip, limit, filter)
 
+@router.get("/task-status/{task_id}",
+            status_code=status.HTTP_201_CREATED,
+            dependencies=[Depends(HTTPBearer())],
+            summary="Staff List task status")
+async def get_result(task_id: str):
+    result = AsyncResult(task_id)
 
+    if result.ready():
+        return StaffListRead(**result.result)
+    else:
+        return {"status": AsyncResult(task_id).state}
+    
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
-             response_model=StaffListRead,
+             response_model=dict,
              summary="Create Staff List")
 async def create(*,
-                 db: Session = Depends(get_db),
                  body: StaffListUserCreate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -113,11 +125,12 @@ async def create(*,
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
-    return staff_list_service.create_by_user_id(
-        db,
-        user_id=Authorize.get_jwt_subject(),
-        obj_in=body,
-        current_user_role_id=role)
+    body = body.dict()
+    result = task_create_draft.delay(user_id=str(Authorize.get_jwt_subject()),
+                                obj_in=body,
+                                current_user_role_id=role)
+    
+    return {"task_id": result.id}
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -138,10 +151,8 @@ async def get_by_id(*,
 
 
 @router.post("/apply/{id}/", dependencies=[Depends(HTTPBearer())],
-             response_model=StaffListRead,
              summary="Apply Staff List")
 async def apply_staff_list(*,
-                db: Session = Depends(get_db),
                 id: uuid.UUID,
                 signed_by: str,
                 document_creation_date: datetime.date,
@@ -162,17 +173,16 @@ async def apply_staff_list(*,
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
     current_user_id = Authorize.get_jwt_subject()
-    return await staff_list_service.apply_staff_list(
-        db,
-        id,
-        signed_by,
-        document_creation_date,
-        current_user_id,
-        role,
-        rank,
-        document_number,
-        document_link
-    )
+    result = task_apply_staff_list.delay(id,
+                                    signed_by,
+                                    document_creation_date,
+                                    current_user_id,
+                                    role,
+                                    rank,
+                                    document_number,
+                                    document_link)
+    
+    return {"task_id": result.id}
 
 
 @router.put("/{id}/",

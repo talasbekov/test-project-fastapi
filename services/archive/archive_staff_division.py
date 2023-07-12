@@ -26,7 +26,7 @@ class ArchiveStaffDivisionService(
         group = super().get(db, id)
         if group is None:
             raise NotFoundException(
-                f"StaffDivision with id: {id} is not found!")
+                f"ArchiveStaffDivision with id: {id} is not found!")
         return group
 
     def get_by_name(self, db: Session, name: str,

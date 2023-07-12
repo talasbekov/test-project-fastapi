@@ -9,9 +9,10 @@ from sqlalchemy.orm import Session
 from core import get_db
 
 from schemas import (ArchiveStaffDivisionRead,
+                     ArchiveStaffDivisionStepRead,
                      ArchiveStaffDivisionUpdateParentGroup,
                      NewArchiveStaffDivisionCreate,
-                     NewArchiveStaffDivisionUpdate)
+                     NewArchiveStaffDivisionUpdate,)
 
 from services import (archive_staff_division_service,
                       staff_list_service,
@@ -50,6 +51,21 @@ async def get_all(*,
     return archive_staff_division_service.get_departments(
         db, staff_list_id, skip, limit)
 
+@router.get("/one-level/", dependencies=[Depends(HTTPBearer())],
+            response_model=ArchiveStaffDivisionStepRead,
+            summary="Get Staff Division one level by id")
+async def get_all_one_level_for_id(*,
+                  db: Session = Depends(get_db),
+                  staff_division_id: uuid.UUID,
+                  Authorize: AuthJWT = Depends()
+                  ):
+    """
+       Get all Staff Divisions
+
+    - **id**: uuid - The id of staff division. This parameter is required.
+    """
+    Authorize.jwt_required()
+    return archive_staff_division_service.get_by_id(db, staff_division_id)
 
 @router.get("/division_parents/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=ArchiveStaffDivisionRead,

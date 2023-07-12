@@ -1,12 +1,15 @@
 version: '3'
 
 services:
-
-  postgres:
+  postgres-dev-erp:
     image: postgres:15.1-alpine
-    container_name: postgresql-test
+    container_name: postgresql-dev
     healthcheck:
-      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'"]
+      test:
+        [
+          "CMD-SHELL",
+          "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'"
+        ]
       interval: 5s
       timeout: 3s
       retries: 10
@@ -14,33 +17,78 @@ services:
     env_file:
       - .env
     ports:
-      - '5412:5432'
+      - '5411:5432'
     volumes:
       - ./.data:/var/lib/postgresql/data
     networks:
-      - backend-dev
+      - backend-erp-sgo
 
-  sgo-erp:
+  sgo-erp-dev-erp:
     platform: linux/amd64
-    command: bash -c "ruff check . --ignore E712,E711 --exclude ./alembic,__init__.py && alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8002 --log-config log.ini --workers ${NUMBER_OF_WORKERS}"
+    command: bash -c "ruff check . --ignore E712,E711 --exclude ./alembic,__init__.py && alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8003 --log-config log.ini --workers ${NUMBER_OF_WORKERS}"
     build: .
-    container_name: sgo-erp-test
+    container_name: sgo-erp-dev
     restart: always
     ports:
-        - "8002:8002"
+      - "8003:8003"
     volumes:
       - .:/app
-      - /app/.venv
     networks:
-      - backend-dev
+      - backend-erp-sgo
     depends_on:
-        postgres:
-          condition: service_healthy
+      postgres-dev-erp:
+        condition: service_healthy
     deploy:
       resources:
         limits:
           memory: 4g
 
+  rabbitmq:
+    image: rabbitmq:3.9.4
+    container_name: rabbitmq-dev
+    ports:
+      - '5672:5672'
+    restart: always
+    networks:
+      - backend-erp-sgo
+
+  redis:
+    image: redis
+    container_name: redis-dev
+    ports:
+      - '6379:6379'
+    restart: always
+    networks:
+      - backend-erp-sgo
+
+  celery:
+    build:
+      context: .
+    command: celery -A tasks.celery_app worker --loglevel=info
+    container_name: celery-dev
+    user: "1000"
+    depends_on:
+      - redis
+      - rabbitmq
+    environment:
+      - C_FORCE_ROOT=false
+      - CELERY_BROKER_URL=amqp://rabbitmq:5672/
+    restart: always
+    networks:
+      - backend-erp-sgo
+
+  flower:
+    image: "mher/flower"
+    container_name: flower-dev
+    environment:
+      CELERY_BROKER_URL: amqp://rabbitmq:5672/
+    ports:
+      - "5555:5555"
+    restart: always
+    networks:
+      - backend-erp-sgo
+    depends_on:
+      - rabbitmq
 networks:
-  backend-dev:
-      driver: bridge
+  backend-erp-sgo:
+    driver: bridge

@@ -1,4 +1,5 @@
 import datetime
+import time
 from typing import Optional
 import uuid
 
@@ -71,9 +72,17 @@ class StaffListService(
             raise NotFoundException(detail="Staff list is not found!")
         return staff_list
 
-    def create_by_user_id(self, db: Session, user_id: uuid.UUID,
+    def create_by_user_id(self, task, db: Session, user_id: uuid.UUID,
                           obj_in: StaffListUserCreate, current_user_role_id: str):
-
+        task.update_state(state=0)
+        time.sleep(5)
+        task.update_state(state=10)
+        time.sleep(5)
+        task.update_state(state=30)
+        time.sleep(5)
+        task.update_state(state=50)
+        time.sleep(5)
+        task.update_state(state=90)
         create_staff_list = StaffListCreate(
             name=obj_in.name,
             user_id=user_id
@@ -114,7 +123,7 @@ class StaffListService(
         db.flush()
         return staff_list
 
-    async def apply_staff_list(
+    def apply_staff_list(
         self,
         db: Session,
         staff_list_id: uuid.UUID,
@@ -306,15 +315,15 @@ class StaffListService(
 
                 archive_staff_unit = (archive_staff_unit_service
                                       .create_based_on_existing_staff_unit(
-                                        db,
-                                        staff_unit,
-                                        staff_unit_curator_of_id,
-                                        staff_unit_user_id,
-                                        staff_unit_position,
-                                        staff_unit_actual_user_id,
-                                        staff_unit_user_replacing,
-                                        archive_division)
-                )
+                                          db,
+                                          staff_unit,
+                                          staff_unit_curator_of_id,
+                                          staff_unit_user_id,
+                                          staff_unit_position,
+                                          staff_unit_actual_user_id,
+                                          staff_unit_user_replacing,
+                                          archive_division)
+                                      )
 
                 if is_leader_needed:
                     if staff_division.leader_id == staff_unit.id:
