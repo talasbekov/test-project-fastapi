@@ -15,7 +15,6 @@ router = APIRouter(prefix="/questions",
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[QuestionRead],
             summary="Get all Questions")
 async def get_all(*,
                   db: Session = Depends(get_db),
@@ -32,7 +31,10 @@ async def get_all(*,
             This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    return question_service.get_multi(db, skip, limit)
+    return {
+        'total': question_service.get_count(db),
+        'objects': question_service.get_multi(db, skip, limit)
+    }
 
 
 @router.get("/survey-id/", dependencies=[Depends(HTTPBearer())],

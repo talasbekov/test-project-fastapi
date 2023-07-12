@@ -2,12 +2,11 @@ import uuid
 
 from typing import Optional, List
 
-from schemas import Model, ReadModel
+from schemas import TextModel, ReadTextModel
 from .option import OptionRead
 
 
-class QuestionBase(Model):
-    text: str
+class QuestionBase(TextModel):
     is_required: Optional[bool]
     question_type: str
     survey_id: Optional[uuid.UUID]
@@ -26,8 +25,7 @@ class QuestionUpdate(QuestionBase):
     question_type: Optional[str]
 
 
-class QuestionRead(QuestionBase, ReadModel):
-    text: Optional[str]
+class QuestionRead(QuestionBase, ReadTextModel):
     question_type: Optional[str]
     score: Optional[int]
 

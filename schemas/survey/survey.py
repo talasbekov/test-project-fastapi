@@ -15,6 +15,7 @@ class Base(NamedModel):
     certain_member_id: Optional[uuid.UUID]
     staff_division_id: Optional[uuid.UUID]
     staff_position: str
+    is_kz_translate_required: Optional[bool]
 
 
 class SurveyBase(Base):
