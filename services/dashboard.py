@@ -3,6 +3,7 @@ from typing import List
 
 from sqlalchemy.orm import Session
 
+from exceptions import ForbiddenException
 from models import (StaffDivision, StaffUnit,
                     PositionNameEnum, StaffDivisionEnum,
                     StatusEnum, Status, User, StatusType)
@@ -14,7 +15,7 @@ from services import (staff_division_service, staff_unit_service,
 
 class DashboardService:
     ALL_STATE_VIEWERS = [
-        PositionNameEnum.SUPERVISOR.value,
+        PositionNameEnum.POLITICS_GOVERNMENT_SERVANT.value,
         PositionNameEnum.HEAD_OF_DEPARTMENT.value,
         PositionNameEnum.MANAGEMENT_HEAD.value,
         PositionNameEnum.HEAD_OF_OTDEL.value,
@@ -48,7 +49,7 @@ class DashboardService:
 
     def get_state_by_list(self, db: Session, role: str) -> int:
         all_state = self.get_all_state(db, role)
-        hr_vacancy = self.get_hr_vacancy_count_by_division\
+        hr_vacancy = self.get_hr_vacancy_count_by_division \
             (db, role)
         state_by_list = all_state - hr_vacancy
         return state_by_list
@@ -62,57 +63,73 @@ class DashboardService:
             staff_division = staff_division_service.get_by_name(
                 db, StaffDivisionEnum.SERVICE.value
             )
-            print("5dep", hr_vacancy_service
-                  .get_vacancies_recursive(db, staff_division))
             return len(hr_vacancy_service
                        .get_vacancies_recursive(db, staff_division))
         elif not self.check_by_role(db, staff_unit):
-            print("true")
-            return 0
+            raise ForbiddenException(
+                "You don't have permission to see stats of vacancy!")
         else:
             staff_division = staff_division_service.get_by_id(
                 db, staff_unit.staff_division_id
             )
-            print("false", len(hr_vacancy_service
-                               .get_vacancies_recursive(db, staff_division)))
             return len(hr_vacancy_service
                        .get_vacancies_recursive(db, staff_division))
 
     def get_in_line_count_by_status(self, db: Session, role: str):
 
         # Получите пользователей с соответствующими статусами
-        users = db.query(User).join(Status)\
+        users = db.query(User).join(Status) \
             .join(StatusType).filter(
             StatusType.name.in_(self.ALL_STATUSES)
         ).all()
+
         users_with_status: List[User] = []
         for user in users:
             print(user.name)
             users_with_status.append(user.name)
 
-        print([name for name in users_with_status])
-
         state_by_list = self.get_state_by_list(db, role)
         state_by_status = len([name for name in users_with_status])
         state_in_line = state_by_list - state_by_status
-        print(state_in_line)
         return state_in_line
-    
+
+    def get_all_active_candidates(
+            self, db: Session, role: str
+    ) -> int:
+        staff_unit: StaffUnit = staff_unit_service.get_by_id(db, role)
+        fifth_department = staff_division_service.get_by_name(db, "Пятый департамент")
+
+        if staff_unit.staff_division_id == fifth_department.id:
+            staff_division = staff_division_service.get_by_name(
+                db, StaffDivisionEnum.SERVICE.value
+            )
+            return len(candidate_service
+                       .get_candidates_recursive(db, staff_division))
+        elif not self.check_by_role(db, staff_unit):
+            raise ForbiddenException(
+                "You don't have permission to see stats of candidates!")
+        else:
+            staff_division = staff_division_service.get_by_id(
+                db, staff_unit.staff_division_id
+            )
+            return len(candidate_service
+                       .get_candidates_recursive(db, staff_division))
+
     def get_statistic_passed_candidate_stage_infos(self, db: Session):
         candidates = candidate_service.get_all(db)
         count_candidate_stages = candidate_stage_type_service.get_count(db)
-        
+
         less_than_25 = 0
         between_25_50 = 0
         between_50_75 = 0
         more_than_75 = 0
-        
+
         for candidate in candidates:
             passed_stages = (
                 candidate_stage_info_service.get_count_passed_stages(db,
                                                                      candidate.id)
             )
-            
+
             if passed_stages < count_candidate_stages / 4:
                 less_than_25 += 1
             elif passed_stages < count_candidate_stages / 2:
@@ -121,14 +138,14 @@ class DashboardService:
                 between_50_75 += 1
             else:
                 more_than_75 += 1
-        
+
         return {
-                'less_than_25': less_than_25,
-                'between_25_50': between_25_50,
-                'between_50_75': between_50_75,
-                'more_than_75': more_than_75
+            'less_than_25': less_than_25,
+            'between_25_50': between_25_50,
+            'between_50_75': between_50_75,
+            'more_than_75': more_than_75
         }
-    
+
     def get_statistic_duration_candidate_learning(self, db: Session):
         candidates = candidate_service.get_all(db)
 
@@ -152,19 +169,19 @@ class DashboardService:
             # Check if the candidate has been learning for less than 3 months
             else:
                 less_than_3_month += 1
-                    
+
         return {
             'less_than_3_month': less_than_3_month,
             'between_3_6_month': between_3_6_month,
             'between_6_12_month': between_6_12_month,
             'more_than_year': more_than_year
         }
-        
+
     def get_statistic_completed_candidates(self, db: Session):
         completed_candidates_count = (
             candidate_service.get_count_completed_candidates(db)
         )
-        
+
         return {
             'last_week': completed_candidates_count,
             'last_month': completed_candidates_count,
