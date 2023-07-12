@@ -1,4 +1,4 @@
-from .base import Model, NamedModel, ReadModel, ReadNamedModel
+from .base import Model, NamedModel, ReadModel, ReadNamedModel, ReadTextModel, TextModel
 from .badge import *
 from .autotag import *
 from .notification import *

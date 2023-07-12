@@ -1,4 +1,4 @@
-from .base import Model, NamedModel, NestedModel, NamedNestedModel, isActiveModel
+from .base import Model, NamedModel, NestedModel, NamedNestedModel, isActiveModel, TextModel
 from .badge import Badge, BadgeType
 from .equipment import (Equipment, TypeClothingEquipment, TypeArmyEquipment, TypeOtherEquipment, ClothingEquipment, ArmyEquipment, OtherEquipment,
                         TypeClothingEquipmentModel, ClothingEquipmentTypesModels)

@@ -27,6 +27,7 @@ def upgrade() -> None:
     sa.Column('jurisdiction_type', sa.String(), nullable=False),
     sa.Column('certain_member_id', sa.UUID(), nullable=True),
     sa.Column('staff_division_id', sa.UUID(), nullable=True),
+    sa.Column('is_kz_translate_required', sa.Boolean(), nullable=True),
     sa.Column('owner_id', sa.UUID(), nullable=True),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('nameKZ', sa.String(), nullable=True),
@@ -40,6 +41,7 @@ def upgrade() -> None:
     )
     op.create_table('surveys',
     sa.Column('is_anonymous', sa.Boolean(), nullable=True),
+    sa.Column('is_kz_translate_required', sa.Boolean(), nullable=True),
     sa.Column('description', sa.TEXT(), nullable=True),
     sa.Column('start_date', sa.TIMESTAMP(timezone=True), nullable=False),
     sa.Column('end_date', sa.TIMESTAMP(timezone=True), nullable=False),
@@ -61,6 +63,7 @@ def upgrade() -> None:
     )
     op.create_table('questions',
     sa.Column('text', sa.TEXT(), nullable=False),
+    sa.Column('textKZ', sa.TEXT(), nullable=True),
     sa.Column('is_required', sa.Boolean(), nullable=False),
     sa.Column('question_type', sa.String(), nullable=False),
     sa.Column('discriminator', sa.String(length=255), nullable=True),
@@ -78,6 +81,7 @@ def upgrade() -> None:
     )
     op.create_table('options',
     sa.Column('text', sa.TEXT(), nullable=True),
+    sa.Column('textKZ', sa.TEXT(), nullable=True),
     sa.Column('question_id', sa.UUID(), nullable=True),
     sa.Column('discriminator', sa.String(length=255), nullable=True),
     sa.Column('score', sa.Integer(), nullable=True),

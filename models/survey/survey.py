@@ -38,13 +38,14 @@ class Base(NamedModel):
         nullable=False
     )
     jurisdiction_type = Column(Enum(SurveyJurisdictionTypeEnum), nullable=False)
+    is_kz_translate_required = Column(Boolean(), default=False, nullable=True)
     certain_member_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     staff_division_id = Column(UUID(as_uuid=True), ForeignKey("staff_divisions.id"))
     staff_position = Column(Enum(SurveyStaffPositionEnum), nullable=False)
     
     owner_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
 
-    
+
 class Survey(Base):
 
     __tablename__ = "surveys"

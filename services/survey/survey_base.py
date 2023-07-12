@@ -87,13 +87,13 @@ class SurveyBaseService(ServiceBase,
         try:
             return SurveyJurisdictionTypeEnum(jurisdiction_type)
         except ValueError:
-            raise BadRequestException("Invalid jurisdiction type")
+            raise BadRequestException(f"Invalid jurisdiction type {jurisdiction_type}")
         
     def __validate_staff_position(self, staff_position: str):
         try:
             return SurveyStaffPositionEnum(staff_position)
         except ValueError:
-            raise BadRequestException("Invalid staff position")
+            raise BadRequestException(f"Invalid staff position {staff_position}")
         
     def __validate_status(self, status: str):
         try:
