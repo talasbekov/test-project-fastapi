@@ -1,8 +1,7 @@
 from typing import List, Type
 from sqlalchemy.orm import Session
 
-from models import (Option, QuestionTypeEnum, OptionScale,
-                    OptionCheckboxGrid, OptionGrid, QuestionSurvey,
+from models import (Option, QuestionTypeEnum, QuestionSurvey,
                     OptionText, QuestionBase)
 from schemas import (OptionCreate, OptionUpdate)
 from exceptions import BadRequestException
@@ -14,10 +13,7 @@ class OptionService(ServiceBase[Option, OptionCreate, OptionUpdate]):
 
     POSSIBLE_TYPES = {
         QuestionTypeEnum.SINGLE_SELECTION.value: OptionText,
-        QuestionTypeEnum.MULTIPLE_SELECTION.value: OptionText,
-        QuestionTypeEnum.SCALE.value: OptionScale,
-        QuestionTypeEnum.GRID.value: OptionGrid,
-        QuestionTypeEnum.CHECKBOX_GRID.value: OptionCheckboxGrid
+        QuestionTypeEnum.MULTIPLE_SELECTION.value: OptionText
     }
     
     def get_count(self, db: Session) -> int:
@@ -33,44 +29,17 @@ class OptionService(ServiceBase[Option, OptionCreate, OptionUpdate]):
         self.__validate_kz_required(db, question, body.textKZ)
         self.__validate_score(question, body.score)
 
-        option_class = self.POSSIBLE_TYPES[question.question_type]
-        option_kwargs = {"question_id": body.question_id, "score": body.score}
-        option_kwargs = self.__update_kwargs(question, body, option_kwargs)
-
-        option = option_class(**option_kwargs)
+        option = OptionText(
+            question_id=body.question_id,
+            score=body.score,
+            text=body.text,
+            textKZ=body.textKZ
+        )
+        
         db.add(option)
         db.flush()
 
         return option
-
-    def __update_kwargs(self,
-                        question: QuestionSurvey,
-                        body: OptionCreate,
-                        option_kwargs):
-
-        if question.question_type == QuestionTypeEnum.SCALE:
-            option_kwargs.update(
-                {"discriminator": "option_scale",
-                    "min_value": body.min_value, "max_value": body.max_value}
-            )
-        elif question.question_type == QuestionTypeEnum.GRID:
-            option_kwargs.update(
-                {"discriminator": "option_grid", "row_position": body.row_position,
-                    "column_position": body.column_position}
-            )
-        elif question.question_type == QuestionTypeEnum.CHECKBOX_GRID:
-            option_kwargs.update(
-                {
-                    "discriminator": "option_checkbox_grid",
-                    "row_position": body.row_position,
-                    "column_position": body.column_position,
-                    "is_checked": body.is_checked
-                }
-            )
-        else:
-            option_kwargs.update({"text": body.text})
-
-        return option_kwargs
 
     def __validate_score(self, question: Type[QuestionBase], score: int):
         if score is not None and question == QuestionSurvey:

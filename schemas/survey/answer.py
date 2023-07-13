@@ -1,6 +1,6 @@
 import uuid
 
-from typing import List, Optional, Dict
+from typing import List, Optional
 from pydantic import BaseModel, Field
 from schemas import Model, ReadModel
 from .option import OptionRead
@@ -11,9 +11,6 @@ class AnswerBase(Model):
     text: Optional[str]
     option_id: Optional[uuid.UUID]
     option_ids: Optional[List[uuid.UUID]]
-    scale_value: Optional[int]
-    grid_values: Optional[Dict[str, Dict[str, bool]]]
-    checkbox_grid_values: Optional[Dict[str, Dict[str, bool]]]
 
 
 class AnswerCreate(AnswerBase):
@@ -29,7 +26,6 @@ class AnswerRead(AnswerBase, ReadModel):
     question_id: Optional[uuid.UUID]
     options: Optional[List[OptionRead]]
     user_id: Optional[uuid.UUID]
-    score: Optional[int]
 
     class Config:
         orm_mode = True

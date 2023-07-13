@@ -45,8 +45,9 @@ def task_create_draft(self,
     return staff_list
 
 
-@app.task
+@app.task(bind=True)
 def task_apply_staff_list(
+    self,
     id,
     signed_by,
     document_creation_date,
@@ -56,9 +57,10 @@ def task_apply_staff_list(
     document_number,
     document_link
 ):
+    self.update_state(state=0)
     SessionLocal = sessionmaker(bind=engine)
     db = SessionLocal()
-    staff_list = staff_list_service.apply_staff_list(db,
+    staff_list = staff_list_service.apply_staff_list(self, db,
                                                      id,
                                                      signed_by,
                                                      document_creation_date,

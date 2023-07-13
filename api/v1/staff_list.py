@@ -13,7 +13,8 @@ from schemas import (
     StaffListRead,
     StaffListUpdate,
     StaffListUserCreate,
-    StaffListStatusRead
+    StaffListStatusRead,
+    StaffListApplyRead
 )
 from services import staff_list_service
 from tasks import task_create_draft, task_apply_staff_list
@@ -96,18 +97,19 @@ async def get_signed(*,
     Authorize.jwt_required()
     return staff_list_service.get_signed(db, skip, limit, filter)
 
+
 @router.get("/task-status/{task_id}",
             status_code=status.HTTP_201_CREATED,
             dependencies=[Depends(HTTPBearer())],
             summary="Staff List task status")
 async def get_result(task_id: str):
     result = AsyncResult(task_id)
-
     if result.ready():
         return StaffListRead(**result.result)
     else:
         return {"status": AsyncResult(task_id).state}
-    
+
+
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=dict,
@@ -118,7 +120,6 @@ async def create(*,
                  ):
     """
         Create Staff List
-
         - **parent_group_id**: the id of the parent group. This parameter is optional.
         - **name**: required
         - **description**: a long description. This parameter is optional.
@@ -127,9 +128,9 @@ async def create(*,
     role = Authorize.get_raw_jwt()['role']
     body = body.dict()
     result = task_create_draft.delay(user_id=str(Authorize.get_jwt_subject()),
-                                obj_in=body,
-                                current_user_role_id=role)
-    
+                                     obj_in=body,
+                                     current_user_role_id=role)
+
     return {"task_id": result.id}
 
 
@@ -151,16 +152,17 @@ async def get_by_id(*,
 
 
 @router.post("/apply/{id}/", dependencies=[Depends(HTTPBearer())],
+             response_model=StaffListApplyRead,
              summary="Apply Staff List")
 async def apply_staff_list(*,
-                id: uuid.UUID,
-                signed_by: str,
-                document_creation_date: datetime.date,
-                rank: str,
-                document_number: str,
-                document_link: str = None,
-                Authorize: AuthJWT = Depends()
-            ):
+                           id: uuid.UUID,
+                           signed_by: str,
+                           document_creation_date: datetime.date,
+                           rank: str,
+                           document_number: str,
+                           document_link: str = None,
+                           Authorize: AuthJWT = Depends()
+                           ):
     """
         Update Staff List
 
@@ -174,14 +176,14 @@ async def apply_staff_list(*,
     role = Authorize.get_raw_jwt()['role']
     current_user_id = Authorize.get_jwt_subject()
     result = task_apply_staff_list.delay(id,
-                                    signed_by,
-                                    document_creation_date,
-                                    current_user_id,
-                                    role,
-                                    rank,
-                                    document_number,
-                                    document_link)
-    
+                                         signed_by,
+                                         document_creation_date,
+                                         current_user_id,
+                                         role,
+                                         rank,
+                                         document_number,
+                                         document_link)
+
     return {"task_id": result.id}
 
 
@@ -225,7 +227,6 @@ async def delete(*,
     """
     Authorize.jwt_required()
     staff_list_service.remove(db, id)
-
 
 @router.post("/duplicate/{id}/",
              status_code=status.HTTP_201_CREATED,
