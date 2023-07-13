@@ -6,7 +6,8 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import SurveyCreate, SurveyUpdate, SurveyRead
+from schemas import (SurveyCreate, SurveyUpdate,
+                     SurveyRead, SurveyReadPagination)
 from services import survey_service
 
 router = APIRouter(prefix="/surveys",
@@ -14,6 +15,7 @@ router = APIRouter(prefix="/surveys",
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
+            response_model=SurveyReadPagination,
             summary="Get all Surveys")
 async def get_all_active(*,
                   db: Session = Depends(get_db),
@@ -37,6 +39,7 @@ async def get_all_active(*,
 
 
 @router.get("/archives", dependencies=[Depends(HTTPBearer())],
+            response_model=SurveyReadPagination,
             summary="Get all archive Surveys")
 async def get_all_archives(*,
                   db: Session = Depends(get_db),
@@ -60,6 +63,7 @@ async def get_all_archives(*,
 
 
 @router.get("/drafts", dependencies=[Depends(HTTPBearer())],
+            response_model=SurveyReadPagination,
             summary="Get all draft Surveys")
 async def get_all_draft(*,
                   db: Session = Depends(get_db),
@@ -83,6 +87,7 @@ async def get_all_draft(*,
 
 
 @router.get("/my", dependencies=[Depends(HTTPBearer())],
+            response_model=SurveyReadPagination,
             summary="Get all Surveys by jurisdiction")
 async def get_by_jurisdiction(*,
                   db: Session = Depends(get_db),

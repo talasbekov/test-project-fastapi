@@ -6,7 +6,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import QuizCreate, QuizUpdate, QuizRead
+from schemas import QuizCreate, QuizUpdate, QuizRead, QuizReadPagination
 from services import quiz_service
 
 router = APIRouter(prefix="/quizzes",
@@ -14,13 +14,14 @@ router = APIRouter(prefix="/quizzes",
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
+            response_model=QuizReadPagination,
             summary="Get all Quizzes")
 async def get_all_active(*,
-                  db: Session = Depends(get_db),
-                  skip: int = 0,
-                  limit: int = 100,
-                  Authorize: AuthJWT = Depends()
-                  ):
+                         db: Session = Depends(get_db),
+                         skip: int = 0,
+                         limit: int = 100,
+                         Authorize: AuthJWT = Depends()
+                         ):
     """
         Get all Quizzes
 
@@ -37,13 +38,14 @@ async def get_all_active(*,
 
 
 @router.get("/archives", dependencies=[Depends(HTTPBearer())],
+            response_model=QuizReadPagination,
             summary="Get all archive Quizzes")
 async def get_all_archives(*,
-                  db: Session = Depends(get_db),
-                  skip: int = 0,
-                  limit: int = 100,
-                  Authorize: AuthJWT = Depends()
-                  ):
+                           db: Session = Depends(get_db),
+                           skip: int = 0,
+                           limit: int = 100,
+                           Authorize: AuthJWT = Depends()
+                           ):
     """
         Get all archive Quizzes
 
@@ -58,14 +60,16 @@ async def get_all_archives(*,
         'objects': quiz_service.get_all_archives(db, skip, limit)
     }
 
+
 @router.get("/drafts", dependencies=[Depends(HTTPBearer())],
+            response_model=QuizReadPagination,
             summary="Get all draft Quizzes")
 async def get_all_draft(*,
-                  db: Session = Depends(get_db),
-                  skip: int = 0,
-                  limit: int = 100,
-                  Authorize: AuthJWT = Depends()
-                  ):
+                        db: Session = Depends(get_db),
+                        skip: int = 0,
+                        limit: int = 100,
+                        Authorize: AuthJWT = Depends()
+                        ):
     """
         Get all draft Quizzes
 
@@ -82,13 +86,14 @@ async def get_all_draft(*,
 
 
 @router.get("/my", dependencies=[Depends(HTTPBearer())],
+            response_model=QuizReadPagination,
             summary="Get all Quizzes by jurisdiction")
 async def get_by_jurisdiction(*,
-                  db: Session = Depends(get_db),
-                  skip: int = 0,
-                  limit: int = 100,
-                  Authorize: AuthJWT = Depends()
-                  ):
+                              db: Session = Depends(get_db),
+                              skip: int = 0,
+                              limit: int = 100,
+                              Authorize: AuthJWT = Depends()
+                              ):
     """
         Get all Quizzes by jurisdiction
 
@@ -130,10 +135,10 @@ async def create(*,
              response_model=QuizRead,
              summary="Save as draft")
 async def save_as_draft(*,
-                 db: Session = Depends(get_db),
-                 body: QuizCreate,
-                 Authorize: AuthJWT = Depends()
-                 ):
+                        db: Session = Depends(get_db),
+                        body: QuizCreate,
+                        Authorize: AuthJWT = Depends()
+                        ):
     """
         Create new survey
 
@@ -179,8 +184,8 @@ async def update(*,
     """
     Authorize.jwt_required()
     return quiz_service.update(db,
-                                 db_obj=quiz_service.get_by_id(db, id),
-                                 obj_in=body)
+                               db_obj=quiz_service.get_by_id(db, id),
+                               obj_in=body)
 
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
