@@ -11,9 +11,6 @@ class QuestionTypeEnum(str, enum.Enum):
     TEXT = "Текст"
     SINGLE_SELECTION = "Один из списка"
     MULTIPLE_SELECTION = "Несколько из списка"
-    SCALE = "Шкала"
-    GRID = "Сетка"
-    CHECKBOX_GRID = "Сетка флажков"
 
 
 class QuestionBase(TextModel):

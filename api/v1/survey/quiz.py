@@ -60,7 +60,6 @@ async def get_all_archives(*,
         'objects': quiz_service.get_all_archives(db, skip, limit)
     }
 
-
 @router.get("/drafts", dependencies=[Depends(HTTPBearer())],
             response_model=QuizReadPagination,
             summary="Get all draft Quizzes")
