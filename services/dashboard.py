@@ -285,9 +285,7 @@ class DashboardService:
         for i in staff_divisions:
             staff_units.extend(
                 staff_unit_service.get_by_staff_division_id(db, i.id))
-        # print(len(staff_units))
         return len(staff_units)
-    #
 
 
 dashboard_service = DashboardService()

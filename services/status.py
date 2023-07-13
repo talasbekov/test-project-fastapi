@@ -127,11 +127,9 @@ class StatusService(ServiceBase[Status, StatusCreate, StatusUpdate]):
 
         users_with_status: List[User] = []
         for user in users:
-            print(user.name)
             users_with_status.append(user.name)
 
         state_by_status = [name for name in users_with_status]
-        print(state_by_status)
         return state_by_status
 
     ALL_STATUSES = [
@@ -162,11 +160,9 @@ class StatusService(ServiceBase[Status, StatusCreate, StatusUpdate]):
 
         users_with_status: List[User] = []
         for user in users:
-            print(user.name)
             users_with_status.append(user.name)
 
         state_by_status = [name for name in users_with_status]
-        print(state_by_status)
         return state_by_status
 
 
