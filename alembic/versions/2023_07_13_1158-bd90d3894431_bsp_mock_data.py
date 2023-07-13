@@ -18,7 +18,7 @@ from core import Base
 
 # revision identifiers, used by Alembic.
 revision = 'bd90d3894431'
-down_revision = '821642c0ded0'
+down_revision = 'c5f49d190077'
 branch_labels = None
 depends_on = None
 
@@ -26,8 +26,6 @@ def get_uuid():
     return str(uuid.uuid4())
 
 def upgrade() -> None:
-    base_s3_url = 'http://192.168.0.169:8083'
-
     conn = op.get_bind()
 
     creator_id = conn.execute(
@@ -46,28 +44,28 @@ def upgrade() -> None:
             "name": "Специальная физическая подготовка",
             "nameKZ": "Арнайы дене дайындығы",
             "parent_group_id": None,
-            "instructions": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+            "instructions": "when an unknown printer took a galley of type and scrambled it to make a type specimen book."
         },
         {
             "id": activity_id2,
             "name": "Рукопашные бои",
             "nameKZ": "Қоян-қолтық ұрыс",
             "parent_group_id": activity_id1,
-            "instructions": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+            "instructions": "standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
         },
         {
             "id": activity_id3,
             "name": "Плавание",
             "nameKZ": "Жүзім",
             "parent_group_id": activity_id1,
-            "instructions": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+            "instructions": "and typesetting industry.has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
         },
         {
             "id": activity_id4,
             "name": "Бег (100м)",
             "nameKZ": "Жүгіру (100м)",
             "parent_group_id": activity_id1,
-            "instructions": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+            "instructions": "has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
         }
         ]
     )
@@ -264,12 +262,6 @@ def upgrade() -> None:
              "WHERE name = 'Пятый департамент'")
     ).fetchone()[0]
 
-    division_id = conn.execute(
-        text(f"SELECT id FROM staff_divisions"
-             f" WHERE name = '1 управление' "
-             f"and parent_group_id = '{department_id}'")
-    ).fetchone()[0]
-
     op.bulk_insert(
         Base.metadata.tables['schedule_year_staff_divisions'],
         [
@@ -305,8 +297,7 @@ def upgrade() -> None:
             WHERE su.staff_division_id = '{department_id}'
             )
             INSERT INTO schedule_year_users(schedule_year_id, user_id)
-            SELECT '{schedule_id1}', user_id from selected_users
-            );
+            SELECT '{schedule_id1}', id from selected_users
             """)
     )
 
@@ -318,14 +309,99 @@ def upgrade() -> None:
             JOIN staff_units su ON u.staff_unit_id = su.id
             WHERE su.staff_division_id in (
             SELECT id FROM staff_divisions
-            WHERE parent_group_id = {department_id})
+            WHERE parent_group_id = '{department_id}')
             )
             INSERT INTO schedule_year_users(schedule_year_id, user_id)
-            SELECT '{schedule_id1}', user_id from selected_users
-            );
+            SELECT '{schedule_id1}', id from selected_users
             """)
     )
-    
+
+    conn.execute(
+        text(f"""
+            WITH selected_users AS
+            (
+            SELECT u.id FROM users u
+            JOIN staff_units su ON u.staff_unit_id = su.id
+            WHERE su.staff_division_id = '{department_id}'
+            )
+            INSERT INTO schedule_year_users(schedule_year_id, user_id)
+            SELECT '{schedule_id2}', id from selected_users
+            """)
+    )
+
+    conn.execute(
+        text(f"""
+            WITH selected_users AS
+            (
+            SELECT u.id FROM users u
+            JOIN staff_units su ON u.staff_unit_id = su.id
+            WHERE su.staff_division_id in (
+            SELECT id FROM staff_divisions
+            WHERE parent_group_id = '{department_id}')
+            )
+            INSERT INTO schedule_year_users(schedule_year_id, user_id)
+            SELECT '{schedule_id2}', id from selected_users
+            """)
+    )
+
+    conn.execute(
+        text(f"""
+            WITH selected_users AS
+            (
+            SELECT u.id FROM users u
+            JOIN staff_units su ON u.staff_unit_id = su.id
+            WHERE su.staff_division_id = '{department_id}'
+            )
+            INSERT INTO schedule_year_users(schedule_year_id, user_id)
+            SELECT '{schedule_id3}', id from selected_users
+            """)
+    )
+
+    conn.execute(
+        text(f"""
+            WITH selected_users AS
+            (
+            SELECT u.id FROM users u
+            JOIN staff_units su ON u.staff_unit_id = su.id
+            WHERE su.staff_division_id in (
+            SELECT id FROM staff_divisions
+            WHERE parent_group_id = '{department_id}')
+            )
+            INSERT INTO schedule_year_users(schedule_year_id, user_id)
+            SELECT '{schedule_id3}', id from selected_users
+            """)
+    )
+
+    conn.execute(
+        text(f"""
+            WITH selected_users AS
+            (
+            SELECT u.id FROM users u
+            JOIN staff_units su ON u.staff_unit_id = su.id
+            WHERE su.staff_division_id = '{department_id}'
+            )
+            INSERT INTO schedule_year_users(schedule_year_id, user_id)
+            SELECT '{schedule_id4}', id from selected_users
+            """)
+    )
+
+    conn.execute(
+        text(f"""
+            WITH selected_users AS
+            (
+            SELECT u.id FROM users u
+            JOIN staff_units su ON u.staff_unit_id = su.id
+            WHERE su.staff_division_id in (
+            SELECT id FROM staff_divisions
+            WHERE parent_group_id = '{department_id}')
+            )
+            INSERT INTO schedule_year_users(schedule_year_id, user_id)
+            SELECT '{schedule_id4}', id from selected_users
+            """)
+    )
+
+
+
     day_id1 = get_uuid()
     day_id2 = get_uuid()
     day_id3 = get_uuid()
@@ -375,8 +451,8 @@ def upgrade() -> None:
         },
         ]
     )
-    
-    
+
+
     place_id1 = get_uuid()
     place_id2 = get_uuid()
     place_id3 = get_uuid()
@@ -407,9 +483,9 @@ def upgrade() -> None:
             "id": place_id4
         },
         ]
-    ) 
-    
-    
+    )
+
+
     op.bulk_insert(
         Base.metadata.tables['schedule_year_staff_divisions'],
         [
@@ -435,7 +511,7 @@ def upgrade() -> None:
         }
         ]
     )
-    
+
     schedule_month_id1 = get_uuid()
     schedule_month_id2 = get_uuid()
     schedule_month_id3 = get_uuid()
@@ -472,23 +548,23 @@ def upgrade() -> None:
             "id": schedule_month_id4
         }]
     )
-    
+
     instructor_id1 = conn.execute(
         text("SELECT id FROM users WHERE first_name = 'Адилет'")
     ).fetchone()[0]
-    
+
     instructor_id2 = conn.execute(
         text("SELECT id FROM users WHERE first_name = 'Елена'")
     ).fetchone()[0]
-        
+
     instructor_id3 = conn.execute(
-        text("SELECT id FROM users WHERE first_name = 'Коктем'")
+        text("SELECT id FROM users WHERE first_name = 'Бауыржан'")
     ).fetchone()[0]
-    
+
     instructor_id4 = conn.execute(
         text("SELECT id FROM users WHERE first_name = 'Асет'")
     ).fetchone()[0]
-    
+
     op.bulk_insert(
         Base.metadata.tables['schedule_month_instructors'],
         [
@@ -498,19 +574,19 @@ def upgrade() -> None:
         },
         {
             "schedule_month_id": schedule_month_id2,
-            "staff_division_id": instructor_id2
+            "user_id": instructor_id2
         },
         {
             "schedule_month_id": schedule_month_id3,
-            "staff_division_id": instructor_id3
+            "user_id": instructor_id3
         },
         {
             "schedule_month_id": schedule_month_id4,
-            "staff_division_id": instructor_id4
+            "user_id": instructor_id4
         }
         ]
     )
-    
+
     exam_schedule_id1 = get_uuid()
     exam_schedule_id2 = get_uuid()
     exam_schedule_id3 = get_uuid()
@@ -555,7 +631,7 @@ def upgrade() -> None:
             "id": exam_schedule_id4
         }]
     )
-    
+
     op.bulk_insert(
         Base.metadata.tables['exam_schedule_instructors'],
         [
@@ -565,19 +641,19 @@ def upgrade() -> None:
         },
         {
             "exam_schedule_id": exam_schedule_id2,
-            "staff_division_id": instructor_id2
+            "user_id": instructor_id2
         },
         {
             "exam_schedule_id": exam_schedule_id3,
-            "staff_division_id": instructor_id3
+            "user_id": instructor_id3
         },
         {
             "exam_schedule_id": exam_schedule_id4,
-            "staff_division_id": instructor_id4
+            "user_id": instructor_id4
         }
         ]
     )
-    
+
     schedule_day_id1 = get_uuid()
     schedule_day_id2 = get_uuid()
     schedule_day_id3 = get_uuid()
@@ -615,7 +691,7 @@ def upgrade() -> None:
         }
         ]
     )
-    
+
 
 
 

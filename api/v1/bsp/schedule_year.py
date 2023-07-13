@@ -44,12 +44,10 @@ async def get_all(*,
 
 @router.get("/plan/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=List[ScheduleYearRead],
-            summary="Get all ScheduleYear")
+            summary="Get all ScheduleYear by plan id")
 async def get_all_by_plan(*,
                   db: Session = Depends(get_db),
                   id: uuid.UUID,
-                  skip: int = 0,
-                  limit: int = 100,
                   Authorize: AuthJWT = Depends()
                   ):
     """
@@ -64,6 +62,21 @@ async def get_all_by_plan(*,
    """
     Authorize.jwt_required()
     return schedule_year_service.get_all_by_plan_id(db, id)
+
+@router.get("/staff_division/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=List[ScheduleYearRead],
+            summary="Get all ScheduleYear by staff_division id")
+async def get_all_by_staff_division(*,
+                  db: Session = Depends(get_db),
+                  id: uuid.UUID,
+                  Authorize: AuthJWT = Depends()
+                  ):
+    """
+       Get all ScheduleYears by plan id
+
+   """
+    Authorize.jwt_required()
+    return schedule_year_service.get_all_by_division_id(db, id)
 
 @router.get("/year/", dependencies=[Depends(HTTPBearer())],
             response_model=List[ScheduleYearRead],

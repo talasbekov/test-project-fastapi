@@ -2,11 +2,12 @@ import uuid
 
 from sqlalchemy.orm import Session
 
-from models import ScheduleYear, BspPlan
+from models import ScheduleYear, BspPlan, StaffDivision
 from schemas import (ScheduleYearCreate,
                      ScheduleYearUpdate,
                      ScheduleYearCreateString,)
 from services.base import ServiceBase
+from services import staff_division_service
 from .plan import plan_service
 from .month import month_service
 
@@ -32,8 +33,19 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
                          id: uuid.UUID):
         plan_service.get_by_id(db, id)
         schedules = (db.query(ScheduleYear)
-                     .join(BspPlan,)
+                     .join(BspPlan)
                      .filter(BspPlan.id == id)
+                     .all()
+                     )
+        return schedules
+
+    def get_all_by_division_id(self,
+                         db: Session,
+                         id: uuid.UUID):
+        staff_division_service.get_by_id(db, id)
+        schedules = (db.query(ScheduleYear)
+                     .join(ScheduleYear.staff_divisions)
+                     .filter(StaffDivision.id == id)
                      .all()
                      )
         return schedules
