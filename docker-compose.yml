@@ -1,9 +1,9 @@
 version: '3'
 
 services:
-  postgres-dev-erp:
+  postgres:
     image: postgres:15.1-alpine
-    container_name: postgresql-dev
+    container_name: postgresql-test
     healthcheck:
       test:
         [
@@ -17,26 +17,26 @@ services:
     env_file:
       - .env
     ports:
-      - '5411:5432'
+      - '5412:5432'
     volumes:
       - ./.data:/var/lib/postgresql/data
     networks:
-      - backend-erp-sgo
+      - backend-dev
 
-  sgo-erp-dev-erp:
+  sgo-erp:
     platform: linux/amd64
-    command: bash -c "ruff check . --ignore E712,E711 --exclude ./alembic,__init__.py && alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8003 --log-config log.ini --workers ${NUMBER_OF_WORKERS}"
+    command: bash -c "ruff check . --ignore E712,E711 --exclude ./alembic,__init__.py && alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8002 --log-config log.ini --workers ${NUMBER_OF_WORKERS}"
     build: .
     container_name: sgo-erp-dev
     restart: always
     ports:
-      - "8003:8003"
+      - "8002:8002"
     volumes:
       - .:/app
     networks:
-      - backend-erp-sgo
+      - backend-dev
     depends_on:
-      postgres-dev-erp:
+      postgres:
         condition: service_healthy
     deploy:
       resources:
@@ -50,7 +50,7 @@ services:
       - '5672:5672'
     restart: always
     networks:
-      - backend-erp-sgo
+      - backend-dev
 
   redis:
     image: redis
@@ -59,7 +59,7 @@ services:
       - '6379:6379'
     restart: always
     networks:
-      - backend-erp-sgo
+      - backend-dev
 
   celery:
     build:
@@ -75,7 +75,7 @@ services:
       - CELERY_BROKER_URL=amqp://rabbitmq:5672/
     restart: always
     networks:
-      - backend-erp-sgo
+      - backend-dev
 
   flower:
     image: "mher/flower"
@@ -86,9 +86,9 @@ services:
       - "5555:5555"
     restart: always
     networks:
-      - backend-erp-sgo
+      - backend-dev
     depends_on:
       - rabbitmq
 networks:
-  backend-erp-sgo:
+  backend-dev:
     driver: bridge
