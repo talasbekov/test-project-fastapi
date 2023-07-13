@@ -32,28 +32,3 @@ class OptionText(Option):
     __mapper_args__ = {
         "polymorphic_identity": "option_text"
     }
-
-
-class OptionScale(Option):
-    min_value = Column(Integer, nullable=True)
-    max_value = Column(Integer, nullable=True)
-
-    __mapper_args__ = {
-        "polymorphic_identity": "option_scale"
-    }
-
-
-class OptionGrid(Option):
-    row_position = Column(Integer, nullable=True)
-    column_position = Column(Integer, nullable=True)
-
-    __mapper_args__ = {
-        "polymorphic_identity": "option_grid"
-    }
-
-
-class OptionCheckboxGrid(OptionGrid):
-
-    __mapper_args__ = {
-        "polymorphic_identity": "option_checkbox_grid"
-    }
