@@ -8,11 +8,6 @@ from schemas import TextModel, ReadTextModel
 class OptionBase(TextModel):
     text: Optional[str]
     question_id: uuid.UUID
-    min_value: Optional[int]
-    max_value: Optional[int]
-    row_position: Optional[int]
-    column_position: Optional[int]
-    is_checked: Optional[bool]
     score: Optional[int]
 
 
