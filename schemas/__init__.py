@@ -38,7 +38,8 @@ from .staff_division import (StaffDivisionCreate, StaffDivisionRead,
                              StaffDivisionStepRead, StaffDivisionUpdate,
                              StaffDivisionUpdateParentGroup,
                              StaffDivisionOptionRead, StaffUnitDivisionRead,
-                             StaffDivisionVacancyRead)
+                             StaffDivisionReadWithoutStaffUnit,
+                             StaffDivisionVacancyRead,)
 from .staff_unit import StaffUnitCreate, StaffUnitRead, StaffUnitUpdate, UserStaffUnitRead, StaffUnitCreateWithPosition
 from .state_body import StateBodyCreate, StateBodyRead, StateBodyUpdate
 from .hr_document_step import (HrDocumentStepCreate, HrDocumentStepRead,
