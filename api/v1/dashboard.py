@@ -95,8 +95,9 @@ async def get_statistic_passed_candidate_stage_infos(*,
        Get passed candidate stage infos
     """
     Authorize.jwt_required()
+    role = Authorize.get_raw_jwt()['role']
     return (
-       dashboard_service.get_statistic_passed_candidate_stage_infos(db)
+       dashboard_service.get_statistic_passed_candidate_stage_infos(db, role)
     )
 
 
@@ -110,8 +111,9 @@ async def get_statistic_duration_candidate_learning(*,
        Get duration candidates
     """
     Authorize.jwt_required()
+    role = Authorize.get_raw_jwt()['role']
     return (
-       dashboard_service.get_statistic_duration_candidate_learning(db)
+       dashboard_service.get_statistic_duration_candidate_learning(db, role)
     )
 
 
@@ -125,6 +127,7 @@ async def get_statistic_completed_candidates(*,
        Get completed candidates
     """
     Authorize.jwt_required()
+    role = Authorize.get_raw_jwt()['role']
     return (
-       dashboard_service.get_statistic_completed_candidates(db)
+       dashboard_service.get_statistic_completed_candidates(db, role)
     )
