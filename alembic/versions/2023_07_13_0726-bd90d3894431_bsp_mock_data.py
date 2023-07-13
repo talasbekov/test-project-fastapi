@@ -50,20 +50,20 @@ def upgrade() -> None:
         }]
     )
 
-    op.bulk_insert(
-        Base.metadata.tables['schedule_years'],
-        [{
-            "year": 2023,
-            "creator_id": creator_id,
-            "signed_at": datetime.now(),
-            "id": plan_id
-        }, {
-            "year": 2023,
-            "creator_id": creator_id,
-            "signed_at": None,
-            "id": plan_id
-        }]
-    )
+    # op.bulk_insert(
+    #     Base.metadata.tables['schedule_years'],
+    #     [{
+    #         "year": 2023,
+    #         "creator_id": creator_id,
+    #         "signed_at": datetime.now(),
+    #         "id": plan_id
+    #     }, {
+    #         "year": 2023,
+    #         "creator_id": creator_id,
+    #         "signed_at": None,
+    #         "id": plan_id
+    #     }]
+    # )
 
 
 
