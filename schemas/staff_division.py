@@ -198,3 +198,14 @@ class StaffDivisionStepRead(StaffDivisionBase):
 
     class Config:
         orm_mode = True
+
+class StaffDivisionVacancyRead(BaseModel):
+    id: Optional[uuid.UUID]
+    staff_division_number: Optional[int] = Field(None, nullable=True)
+    type: Optional[StaffDivisionTypeRead]
+    count_vacancies: Optional[int]
+    name: str
+    nameKZ: Optional[str] = Field(None, nullable=True)
+
+    class Config:
+        orm_mode = True
