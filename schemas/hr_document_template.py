@@ -19,7 +19,7 @@ class HrDocumentTemplateBase(NamedModel):
     subject_type: SubjectType
     maintainer_id: Optional[uuid.UUID]
     properties: Dict[str, dict]
-    description: Optional[str]
+    description: Optional[NamedModel]
     actions: Dict[str, list]
     is_visible: bool
     is_due_date_required: Optional[bool] = False
