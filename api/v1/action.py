@@ -916,6 +916,108 @@ async def get_all_actions():
         },
     },
     {
+        'action_name': 'Отпуск по болезни',
+        'action_nameKZ': 'Ауру демалысы',
+        'action_type': 'sick_leave',
+        'children': [
+            {
+                'alias_name': 'Дата начала',
+                'alias_nameKZ': 'Басталу күні',
+                'tagname': 'date_from',
+                'data_taken': 'manual',
+                'data_type': 'date',
+            },
+            {
+                'alias_name': 'Дата конца',
+                'alias_nameKZ': 'Аяқталу күні',
+                'tagname': 'date_to',
+                'data_taken': 'manual',
+                'data_type': 'date',
+            },
+        ],
+        'properties': {
+            "surname":{
+                "alias_nameKZ":"Тегі",
+                "data_taken":"auto",
+                "type":"write",
+                "field_name":"surname",
+                "to_tags":{
+                    "titleKZ":"Тегі",
+                    "isHidden":"false"
+                }
+            },
+            "name":{
+                "alias_nameKZ":"Аты",
+                "data_taken":"auto",
+                "type":"write",
+                "field_name":"name",
+                "to_tags":{
+                    "titleKZ":"Аты",
+                    "isHidden":False
+                }
+            },
+            "father":{
+                "alias_nameKZ":"Әкесінің аты",
+                "data_taken":"auto",
+                "type":"write",
+                "field_name":"father_name",
+                "to_tags":{
+                    "foundInText":"Отчество субъекта",
+                    "titleKZ":"Әкесінің аты",
+                    "isHidden":False,
+                    "cases":0
+                }
+            },
+            "contract":{
+                "to_tags":{
+                    "tagname":"contract",
+                    "titleKZ":"Контракт",
+                    "idToChange":"1687429527959",
+                    "id":"1687429527959",
+                    "foundInText":"{{contract - term}}",
+                    "isHidden":False,
+                    "cases":0,
+                    "action_type":"[renew_contract]"
+                },
+                "alias_name":"Контракт",
+                "alias_nameKZ":"Контракт",
+                "type":"write",
+                "data_taken":"dropdown",
+                "field_name":"contracts",
+                "isHidden":False
+            },
+            "new_position":{
+                "alias_nameKZ":"Жаңа позиция",
+                "data_taken":"dropdown",
+                "type":"write",
+                "field_name":"staff_unit",
+                "to_tags":{
+                    "titleKZ":"Жаңа позиция",
+                    "directory":"staff_unit",
+                    "isHidden":"false"
+                }
+            }
+            },
+        'actions': {
+            'args': [
+                {
+                    "apply_candidate":{
+                        "staff_unit":{
+                            "tagname":"new_position",
+                            "alias_name":"Новая должность",
+                            "alias_nameKZ":"Жаңа қызмет атауы"
+                        },
+                        "contract":{
+                            "tagname":"contract_type",
+                            "alias_name":"Контракт",
+                            "alias_nameKZ":"Контракт"
+                        },
+                    },
+                },
+            ],
+        },
+    },
+    {
         'data_taken': 'auto',
         'properties': [
             {
