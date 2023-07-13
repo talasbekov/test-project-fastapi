@@ -67,7 +67,8 @@ from .staff_list import (
     StaffListRead,
     StaffListUpdate,
     StaffListUserCreate,
-    StaffListStatusRead)
+    StaffListStatusRead,
+    StaffListApplyRead)
 from .service_id import (ServiceIDCreate, ServiceIDRead, ServiceIDUpdate)
 from .military_unit import (
     MilitaryUnitCreate,
