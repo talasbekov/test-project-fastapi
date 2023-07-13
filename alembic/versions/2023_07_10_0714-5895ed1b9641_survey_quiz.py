@@ -88,10 +88,6 @@ def upgrade() -> None:
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('min_value', sa.Integer(), nullable=True),
-    sa.Column('max_value', sa.Integer(), nullable=True),
-    sa.Column('row_position', sa.Integer(), nullable=True),
-    sa.Column('column_position', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['question_id'], ['questions.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -105,9 +101,6 @@ def upgrade() -> None:
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('text', sa.TEXT(), nullable=True),
     sa.Column('option_id', sa.UUID(), nullable=True),
-    sa.Column('scale_value', sa.Integer(), nullable=True),
-    sa.Column('grid_values', sa.JSON(), nullable=True),
-    sa.Column('checkbox_grid_values', sa.JSON(), nullable=True),
     sa.ForeignKeyConstraint(['option_id'], ['options.id'], ),
     sa.ForeignKeyConstraint(['question_id'], ['questions.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),

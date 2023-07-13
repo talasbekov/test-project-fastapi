@@ -16,7 +16,7 @@ from core import Base
 
 # revision identifiers, used by Alembic.
 revision = '59ab1232c593'
-down_revision = '821642c0ded0'
+down_revision = '5895ed1b9641'
 branch_labels = None
 depends_on = None
 
@@ -103,74 +103,42 @@ def upgrade() -> None:
             'id': option1_2_1_id,
             'question_id': question1_2_id,
             'discriminator': 'option_text',
-            'text': 'Личный дело сотрудника',
-            'min_value': None,
-            'max_value': None,
-            'row_position': None,
-            'column_position': None
+            'text': 'Личный дело сотрудника'
         }, {
             'id': option1_2_2_id,
             'question_id': question1_2_id,
             'discriminator': 'option_text',
-            'text': 'Автоматизации документооборота',
-            'min_value': None,
-            'max_value': None,
-            'row_position': None,
-            'column_position': None
+            'text': 'Автоматизации документооборота'
         }, {
             'id': option1_2_3_id,
             'question_id': question1_2_id,
             'discriminator': 'option_text',
-            'text': 'Штатное расписание',
-            'min_value': None,
-            'max_value': None,
-            'row_position': None,
-            'column_position': None
+            'text': 'Штатное расписание'
         }, {
             'id': option1_2_4_id,
             'question_id': question1_2_id,
             'discriminator': 'option_text',
-            'text': 'Опросы и тесты',
-            'min_value': None,
-            'max_value': None,
-            'row_position': None,
-            'column_position': None
+            'text': 'Опросы и тесты'
         }, {
             'id': option1_3_1_id,
             'question_id': question1_3_id,
             'discriminator': 'option_text',
-            'text': 'Интуитивный интерфейс',
-            'min_value': None,
-            'max_value': None,
-            'row_position': None,
-            'column_position': None
+            'text': 'Интуитивный интерфейс'
         }, {
             'id': option1_3_2_id,
             'question_id': question1_3_id,
             'discriminator': 'option_text',
-            'text': 'Быстрая загрузка страниц',
-            'min_value': None,
-            'max_value': None,
-            'row_position': None,
-            'column_position': None
+            'text': 'Быстрая загрузка страниц'
         }, {
             'id': option1_3_3_id,
             'question_id': question1_3_id,
             'discriminator': 'option_text',
-            'text': 'Четкая навигация',
-            'min_value': None,
-            'max_value': None,
-            'row_position': None,
-            'column_position': None
+            'text': 'Четкая навигация'
         }, {
             'id': option1_3_4_id,
             'question_id': question1_3_id,
             'discriminator': 'option_text',
-            'text': 'Автоматизация рутинных задач',
-            'min_value': None,
-            'max_value': None,
-            'row_position': None,
-            'column_position': None
+            'text': 'Автоматизация рутинных задач'
         }]
     )
 
