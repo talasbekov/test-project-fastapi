@@ -179,7 +179,7 @@ class SurveyBaseService(ServiceBase,
             query = (
                 query.filter(
                     (self.model.staff_position ==
-                        SurveyStaffPositionEnum.ONLY_MANAGING_STRUCTURE.value) |
+                        SurveyStaffPositionEnum.ONLY_PERSONNAL_STURCTURE.value) |
                     (self.model.staff_position ==
                         SurveyStaffPositionEnum.EVERYONE.value)
                 )
