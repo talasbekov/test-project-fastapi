@@ -35,7 +35,7 @@ from .staff_division_type import (
     StaffDivisionTypeRead,
     StaffDivisionTypeUpdate)
 from .staff_division import (StaffDivisionCreate, StaffDivisionRead,
-                             StaffDivisionStepRead, StaffDivisionUpdate, 
+                             StaffDivisionStepRead, StaffDivisionUpdate,
                              StaffDivisionUpdateParentGroup,
                              StaffDivisionOptionRead, StaffUnitDivisionRead)
 from .staff_unit import StaffUnitCreate, StaffUnitRead, StaffUnitUpdate, UserStaffUnitRead, StaffUnitCreateWithPosition
@@ -67,7 +67,8 @@ from .staff_list import (
     StaffListRead,
     StaffListUpdate,
     StaffListUserCreate,
-    StaffListStatusRead)
+    StaffListStatusRead,
+    StaffListApplyRead)
 from .service_id import (ServiceIDCreate, ServiceIDRead, ServiceIDUpdate)
 from .military_unit import (
     MilitaryUnitCreate,
