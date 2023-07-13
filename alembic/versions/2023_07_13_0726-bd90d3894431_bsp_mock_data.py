@@ -6,7 +6,7 @@ Create Date: 2023-07-13 07:26:35.539976
 
 """
 import uuid
-from datetime import datetime
+from datetime import datetime, date, time
 
 from alembic import op
 from sqlalchemy import text
@@ -325,6 +325,297 @@ def upgrade() -> None:
             );
             """)
     )
+    
+    day_id1 = get_uuid()
+    day_id2 = get_uuid()
+    day_id3 = get_uuid()
+    day_id4 = get_uuid()
+    day_id5 = get_uuid()
+    day_id6 = get_uuid()
+    day_id7 = get_uuid()
+
+
+    op.bulk_insert(
+        Base.metadata.tables['days'],
+        [
+        {
+            "name": "Понедельник",
+            "nameKZ": "Дүйсенбі",
+            "id": day_id1
+        },
+        {
+            "name": "Вторник",
+            "nameKZ": "Сейсенбі",
+            "id": day_id2
+        },
+        {
+            "name": "Среда",
+            "nameKZ": "Сәрсенбі",
+            "id": day_id3
+        },
+        {
+            "name": "Четверг",
+            "nameKZ": "Бейсенбі",
+            "id": day_id4
+        },
+        {
+            "name": "Пятница",
+            "nameKZ": "Жұма",
+            "id": day_id5
+        },
+        {
+            "name": "Суббота",
+            "nameKZ": "Сенбі",
+            "id": day_id6
+        },
+        {
+            "name": "Воскресенье",
+            "nameKZ": "Жексенбі",
+            "id": day_id7
+        },
+        ]
+    )
+    
+    
+    place_id1 = get_uuid()
+    place_id2 = get_uuid()
+    place_id3 = get_uuid()
+    place_id4 = get_uuid()
+
+
+    op.bulk_insert(
+        Base.metadata.tables['places'],
+        [
+        {
+            "name": "Большой спортзал",
+            "nameKZ": "Үлкен спортзал",
+            "id": place_id1
+        },
+        {
+            "name": "Малый спортзал",
+            "nameKZ": "Кіші спортзал",
+            "id":  place_id2
+        },
+        {
+            "name": "Стрельбище",
+            "nameKZ": "Ату алаңы",
+            "id": place_id3
+        },
+        {
+            "name": "Бассейн",
+            "nameKZ": "Бассейн",
+            "id": place_id4
+        },
+        ]
+    ) 
+    
+    
+    op.bulk_insert(
+        Base.metadata.tables['schedule_year_staff_divisions'],
+        [
+        {
+            "schedule_year_id": schedule_id1,
+            "staff_division_id": department_id
+        },
+        {
+            "schedule_year_id": schedule_id1,
+            "staff_division_id": department_id
+        },
+        {
+            "schedule_year_id": schedule_id2,
+            "staff_division_id": department_id
+        },
+        {
+            "schedule_year_id": schedule_id3,
+            "staff_division_id": department_id
+        },
+        {
+            "schedule_year_id": schedule_id4,
+            "staff_division_id": department_id
+        }
+        ]
+    )
+    
+    schedule_month_id1 = get_uuid()
+    schedule_month_id2 = get_uuid()
+    schedule_month_id3 = get_uuid()
+    schedule_month_id4 = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['schedule_months'],
+        [{
+            "start_date": date(2023, 3, 1),
+            "end_date": date(2023, 3, 30),
+            "place_id": place_id1,
+            "schedule_id": schedule_id1,
+            "id": schedule_month_id1
+        },
+        {
+            "start_date": date(2023, 4, 1),
+            "end_date": date(2023, 4, 30),
+            "place_id": place_id2,
+            "schedule_id": schedule_id2,
+            "id": schedule_month_id2
+        },
+        {
+            "start_date": date(2023, 5, 1),
+            "end_date": date(2023, 5, 30),
+            "place_id": place_id3,
+            "schedule_id": schedule_id3,
+            "id": schedule_month_id3
+        },
+        {
+            "start_date": date(2023, 6, 1),
+            "end_date": date(2023, 6, 30),
+            "place_id": place_id4,
+            "schedule_id": schedule_id4,
+            "id": schedule_month_id4
+        }]
+    )
+    
+    instructor_id1 = conn.execute(
+        text("SELECT id FROM users WHERE first_name = 'Адилет'")
+    ).fetchone()[0]
+    
+    instructor_id2 = conn.execute(
+        text("SELECT id FROM users WHERE first_name = 'Елена'")
+    ).fetchone()[0]
+        
+    instructor_id3 = conn.execute(
+        text("SELECT id FROM users WHERE first_name = 'Коктем'")
+    ).fetchone()[0]
+    
+    instructor_id4 = conn.execute(
+        text("SELECT id FROM users WHERE first_name = 'Асет'")
+    ).fetchone()[0]
+    
+    op.bulk_insert(
+        Base.metadata.tables['schedule_month_instructors'],
+        [
+        {
+            "schedule_month_id": schedule_month_id1,
+            "user_id": instructor_id1
+        },
+        {
+            "schedule_month_id": schedule_month_id2,
+            "staff_division_id": instructor_id2
+        },
+        {
+            "schedule_month_id": schedule_month_id3,
+            "staff_division_id": instructor_id3
+        },
+        {
+            "schedule_month_id": schedule_month_id4,
+            "staff_division_id": instructor_id4
+        }
+        ]
+    )
+    
+    exam_schedule_id1 = get_uuid()
+    exam_schedule_id2 = get_uuid()
+    exam_schedule_id3 = get_uuid()
+    exam_schedule_id4 = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['exam_schedules'],
+        [{
+            "start_date": date(2023, 4, 1),
+            "end_date": date(2023, 4, 3),
+            "start_time": time(8, 0, 0),
+            "end_time": time(10, 0, 0),
+            "place_id": place_id1,
+            "schedule_id": schedule_id1,
+            "id": exam_schedule_id1
+        },
+        {
+            "start_date": date(2023, 5, 1),
+            "end_date": date(2023, 5, 3),
+            "start_time": time(8, 0, 0),
+            "end_time": time(10, 0, 0),
+            "place_id": place_id2,
+            "schedule_id": schedule_id2,
+            "id": exam_schedule_id2
+        },
+        {
+            "start_date": date(2023, 6, 1),
+            "end_date": date(2023, 6, 3),
+            "start_time": time(8, 0, 0),
+            "end_time": time(10, 0, 0),
+            "place_id": place_id3,
+            "schedule_id": schedule_id3,
+            "id": exam_schedule_id3
+        },
+        {
+            "start_date": date(2023, 7, 1),
+            "end_date": date(2023, 7, 3),
+            "start_time": time(8, 0, 0),
+            "end_time": time(10, 0, 0),
+            "place_id": place_id4,
+            "schedule_id": schedule_id4,
+            "id": exam_schedule_id4
+        }]
+    )
+    
+    op.bulk_insert(
+        Base.metadata.tables['exam_schedule_instructors'],
+        [
+        {
+            "exam_schedule_id": exam_schedule_id1,
+            "user_id": instructor_id1
+        },
+        {
+            "exam_schedule_id": exam_schedule_id2,
+            "staff_division_id": instructor_id2
+        },
+        {
+            "exam_schedule_id": exam_schedule_id3,
+            "staff_division_id": instructor_id3
+        },
+        {
+            "exam_schedule_id": exam_schedule_id4,
+            "staff_division_id": instructor_id4
+        }
+        ]
+    )
+    
+    schedule_day_id1 = get_uuid()
+    schedule_day_id2 = get_uuid()
+    schedule_day_id3 = get_uuid()
+    schedule_day_id4 = get_uuid()
+
+    op.bulk_insert(
+        Base.metadata.tables['schedule_days'],
+        [{
+            "day_id": day_id1,
+            "month_id": schedule_month_id1,
+            "start_time": time(8, 0, 0),
+            "end_time": time(10, 0, 0),
+            "id": schedule_day_id1
+        },
+        {
+            "day_id": day_id2,
+            "month_id": schedule_month_id2,
+            "start_time": time(8, 0, 0),
+            "end_time": time(10, 0, 0),
+            "id": schedule_day_id2
+        },
+        {
+            "day_id": day_id3,
+            "month_id": schedule_month_id3,
+            "start_time": time(8, 0, 0),
+            "end_time": time(10, 0, 0),
+            "id": schedule_day_id3
+        },
+        {
+            "day_id": day_id4,
+            "month_id": schedule_month_id4,
+            "start_time": time(8, 0, 0),
+            "end_time": time(10, 0, 0),
+            "id": schedule_day_id4
+        }
+        ]
+    )
+    
 
 
 
