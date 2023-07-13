@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from exceptions import NotFoundException, ForbiddenException, BadRequestException
 from models import (Candidate, CandidateStageInfo, StaffUnit, User,
                     CandidateStatusEnum, CandidateStageType,
-                    PositionNameEnum, CandidateStageInfoStatusEnum)
+                    PositionNameEnum, CandidateStageInfoStatusEnum, StaffDivision)
 from schemas import (
     CandidateCreate,
     CandidateUpdate,
@@ -44,6 +44,22 @@ class CandidateService(
         return db.query(self.model).filter(
             self.model.status == CandidateStatusEnum.COMPLETED.value
         ).count()
+
+    def get_candidates_recursive(self, db: Session, department: StaffDivision):
+        candidates = db.query(self.model)\
+            .join(StaffUnit, self.model.staff_unit_id == StaffUnit.id)\
+            .join(StaffDivision, StaffUnit.staff_division_id == StaffDivision.id)\
+            .filter(
+                self.model.status == CandidateStatusEnum.ACTIVE,
+                self.model.staff_unit_id == StaffUnit.id,
+                StaffUnit.staff_division_id == department.id
+        ).all()
+
+        # Recursively call this function for each child division
+        for child in department.children:
+            candidates.extend(self.get_candidates_recursive(db, child))
+        print(candidates)
+        return candidates
 
     def get_multiple(self, db: Session,
                      filter: str,
