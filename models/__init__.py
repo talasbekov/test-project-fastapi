@@ -49,3 +49,4 @@ from .hr_vacancy import HrVacancy
 from .hr_vacancy_requirements import HrVacancyRequirements
 from .hr_vacancy_candidate import HrVacancyCandidate
 from .survey import *
+from .bsp import *

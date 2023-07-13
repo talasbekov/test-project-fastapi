@@ -16,7 +16,7 @@ from core import Base
 
 # revision identifiers, used by Alembic.
 revision = '59ab1232c593'
-down_revision = '5895ed1b9641'
+down_revision = 'bd90d3894431'
 branch_labels = None
 depends_on = None
 
@@ -25,18 +25,18 @@ def get_uuid():
     return str(uuid.uuid4())
 
 def upgrade() -> None:
-    
+
     conn = op.get_bind()
     # get user_id of batyrbek
     batyrbek_user_id = conn.execute(
         text(
             "SELECT id FROM users WHERE email = 'batyrbek@mail.ru'")
     ).fetchone()[0]
-    
-    
+
+
     survey1_id = get_uuid()
     end_date = datetime.datetime.now() + datetime.timedelta(days=30)
-    
+
     op.bulk_insert(
         Base.metadata.tables['surveys'],
         [{
@@ -54,11 +54,11 @@ def upgrade() -> None:
             'staff_position': 'Все'
         }]
     )
-    
+
     question1_1_id = get_uuid()
     question1_2_id = get_uuid()
     question1_3_id = get_uuid()
-    
+
     op.bulk_insert(
         Base.metadata.tables['questions'],
         [{
@@ -86,17 +86,17 @@ def upgrade() -> None:
             'discriminator': 'question_survey'
         }]
     )
-    
+
     option1_2_1_id = get_uuid()
     option1_2_2_id = get_uuid()
     option1_2_3_id = get_uuid()
     option1_2_4_id = get_uuid()
-    
+
     option1_3_1_id = get_uuid()
     option1_3_2_id = get_uuid()
     option1_3_3_id = get_uuid()
     option1_3_4_id = get_uuid()
-    
+
     op.bulk_insert(
         Base.metadata.tables['options'],
         [{
