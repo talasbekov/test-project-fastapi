@@ -1,5 +1,4 @@
 import datetime
-import time
 from typing import Optional
 import uuid
 
@@ -75,22 +74,16 @@ class StaffListService(
     def create_by_user_id(self, task, db: Session, user_id: uuid.UUID,
                           obj_in: StaffListUserCreate, current_user_role_id: str):
         task.update_state(state=0)
-        time.sleep(5)
-        task.update_state(state=10)
-        time.sleep(5)
-        task.update_state(state=30)
-        time.sleep(5)
-        task.update_state(state=50)
-        time.sleep(5)
-        task.update_state(state=90)
         create_staff_list = StaffListCreate(
             name=obj_in.name,
             user_id=user_id
         )
+        task.update_state(state=10)
         staff_list = super().create(db, create_staff_list)
         staff_divisions = staff_division_service.get_all_except_special(
             db, 0, 100)
-
+        
+        task.update_state(state=30)
         disposition_division = staff_division_service.get_by_name(
             db, StaffDivisionEnum.DISPOSITION.value)
         staff_divisions.append(disposition_division)
@@ -99,6 +92,7 @@ class StaffListService(
             self._create_archive_staff_division(
                 db, staff_division, staff_list.id, None, current_user_role_id)
 
+        task.update_state(state=90)
         staff_list.status = StaffListStatusEnum.IN_PROGRESS.value
         db.add(staff_list)
         db.flush()
@@ -122,9 +116,10 @@ class StaffListService(
         db.add(staff_list)
         db.flush()
         return staff_list
-
+    
     def apply_staff_list(
         self,
+        task,
         db: Session,
         staff_list_id: uuid.UUID,
         signed_by: str,
@@ -136,23 +131,24 @@ class StaffListService(
         document_link: str
     ):
         staff_list = self.get_by_id(db, staff_list_id)
-
+        task.update_state(state=10)
         staff_division_service.make_all_inactive(db)
         exclude_staff_division_ids = [
             i.id for i in staff_division_service.get_excluded_staff_divisions(db)]
         staff_unit_service.make_all_inactive(db, exclude_staff_division_ids)
         service_staff_function_service.make_all_inactive(db)
-
+        task.update_state(state=20)
         staff_divisions: list[ArchiveStaffDivision] = (
             archive_staff_division_service.get_departments(
                 db, staff_list_id, 0, 100)
         )
         new_staff_divisions = []
+        task.update_state(state=30)
         for staff_division in staff_divisions:
             new_staff_division = self._create_staff_division(
                 db, staff_division, None, current_user_role_id)
             new_staff_divisions.append(new_staff_division)
-
+        task.update_state(state=90)
         staff_list.document_signed_by = signed_by
         staff_list.document_signed_at = document_creation_date
         staff_list.status = StaffListStatusEnum.APPROVED.value
@@ -166,15 +162,6 @@ class StaffListService(
         service_staff_function_service.delete_all_inactive(db)
         db.add(staff_list)
         db.flush()
-        # user_ids = self.get_disposition_user_ids_by_staff_list_id(
-        #     db, staff_list_id)
-        # if user_ids:
-        #     await self.create_disposition_doc_by_staff_list_id(
-        #         db,
-        #         staff_list_id,
-        #         user_ids,
-        #         current_user_id,
-        #         current_user_role_id)
         return staff_list
 
     def _create_staff_division(self, db: Session,
@@ -207,7 +194,6 @@ class StaffListService(
         if staff_division.leader_id is not None:
             is_leader_needed = True
         staff_units: list[ArchiveStaffUnit] = staff_division.staff_units
-
         for staff_unit in staff_units:
             new_staff_unit = staff_unit_service.create_or_update_from_archive(
                 db, staff_unit, new_staff_division.id)
@@ -290,7 +276,6 @@ class StaffListService(
                                                                                    archive_division.id,
                                                                                    current_user_role_id)
                 archive_division.children.append(child_archive_staff_division)
-
         if staff_division.name == StaffDivisionEnum.DISPOSITION.value:
             db.add(archive_division)
             db.flush()
