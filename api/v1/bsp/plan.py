@@ -136,7 +136,7 @@ async def create(*,
 
     """
     Authorize.jwt_required()
-    return plan_service.create(db, obj_in=body)
+    return plan_service.create(db, body)
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=BspPlanRead,

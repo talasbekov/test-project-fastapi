@@ -13,9 +13,13 @@ class BspPlanService(ServiceBase[BspPlan, BspPlanCreate, BspPlanUpdate]):
         plan = super().create(db, BspPlanCreate(
             year=plan.year,
             creator_id=plan.creator_id,
-            status=PlanStatus.DRAFT,
             signed_at=None,
         ))
+        plan.status = PlanStatus.DRAFT
+
+        db.add(plan)
+        db.flush()
+
         return plan
 
     def sign(self, db: Session, id: uuid.UUID):

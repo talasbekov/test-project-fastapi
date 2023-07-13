@@ -7,6 +7,7 @@ Create Date: 2023-07-13 07:26:35.539976
 """
 import uuid
 from datetime import datetime, date, time
+from models import PlanStatus
 
 from alembic import op
 from sqlalchemy import text
@@ -79,11 +80,13 @@ def upgrade() -> None:
             "year": 2022,
             "creator_id": creator_id,
             "signed_at": datetime.now(),
+            "status": PlanStatus.ACTIVE,
             "id": plan_id
         }, {
             "year": 2023,
             "creator_id": creator_id,
             "signed_at": None,
+            "status": PlanStatus.DRAFT,
             "id": plan_id1
         }]
     )
