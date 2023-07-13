@@ -1,9 +1,8 @@
-from typing import List
+from typing import List, Type
 from sqlalchemy.orm import Session
 
-from models import (Option, QuestionTypeEnum, OptionScale,
-                    OptionCheckboxGrid, OptionGrid, QuestionSurvey,
-                    OptionText)
+from models import (Option, QuestionTypeEnum, QuestionSurvey,
+                    OptionText, QuestionBase)
 from schemas import (OptionCreate, OptionUpdate)
 from exceptions import BadRequestException
 from services.base import ServiceBase
@@ -14,11 +13,11 @@ class OptionService(ServiceBase[Option, OptionCreate, OptionUpdate]):
 
     POSSIBLE_TYPES = {
         QuestionTypeEnum.SINGLE_SELECTION.value: OptionText,
-        QuestionTypeEnum.MULTIPLE_SELECTION.value: OptionText,
-        QuestionTypeEnum.SCALE.value: OptionScale,
-        QuestionTypeEnum.GRID.value: OptionGrid,
-        QuestionTypeEnum.CHECKBOX_GRID.value: OptionCheckboxGrid
+        QuestionTypeEnum.MULTIPLE_SELECTION.value: OptionText
     }
+    
+    def get_count(self, db: Session) -> int:
+        return db.query(self.model).count()
 
     def get_by_question(self, db: Session, question_id: str) -> List[Option]:
         return db.query(self.model).filter(
@@ -27,54 +26,34 @@ class OptionService(ServiceBase[Option, OptionCreate, OptionUpdate]):
 
     def create(self, db: Session, body: OptionCreate) -> Option:
         question = question_service.get_by_id(db, body.question_id)
-        question_class = question_service.define_class(question)
+        self.__validate_kz_required(db, question, body.textKZ)
+        self.__validate_score(question, body.score)
 
-        if body.score is not None and question_class == QuestionSurvey:
-            raise BadRequestException(
-                "Score is not allowed for survey")
-
-        if question.question_type not in self.POSSIBLE_TYPES:
-            raise BadRequestException(
-                f"Invalid option type {question.question_type}")
-
-        option_class = self.POSSIBLE_TYPES[question.question_type]
-        option_kwargs = {"question_id": body.question_id, "score": body.score}
-        option_kwargs = self.__update_kwargs(question, body, option_kwargs)
-
-        option = option_class(**option_kwargs)
+        option = OptionText(
+            question_id=body.question_id,
+            score=body.score,
+            text=body.text,
+            textKZ=body.textKZ
+        )
+        
         db.add(option)
         db.flush()
 
         return option
 
-    def __update_kwargs(self,
-                        question: QuestionSurvey,
-                        body: OptionCreate,
-                        option_kwargs):
+    def __validate_score(self, question: Type[QuestionBase], score: int):
+        if score is not None and question == QuestionSurvey:
+            raise BadRequestException(
+                "Score is not allowed for survey")
 
-        if question.question_type == QuestionTypeEnum.SCALE:
-            option_kwargs.update(
-                {"discriminator": "option_scale",
-                    "min_value": body.min_value, "max_value": body.max_value}
-            )
-        elif question.question_type == QuestionTypeEnum.GRID:
-            option_kwargs.update(
-                {"discriminator": "option_grid", "row_position": body.row_position,
-                    "column_position": body.column_position}
-            )
-        elif question.question_type == QuestionTypeEnum.CHECKBOX_GRID:
-            option_kwargs.update(
-                {
-                    "discriminator": "option_checkbox_grid",
-                    "row_position": body.row_position,
-                    "column_position": body.column_position,
-                    "is_checked": body.is_checked
-                }
-            )
-        else:
-            option_kwargs.update({"text": body.text})
+    def __validate_kz_required(self,
+                               db: Session,
+                               question: Type[QuestionBase],
+                               textKZ: str):        
+        parent = question_service.get_parent(db, question.id)
 
-        return option_kwargs
-
+        if parent.is_kz_translate_required and not textKZ:
+            raise BadRequestException("KZ translation is required")
+            
 
 option_service = OptionService(Option)

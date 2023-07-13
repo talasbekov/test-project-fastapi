@@ -2,8 +2,7 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from models import (Answer, QuestionTypeEnum,
-                    AnswerSingleSelection, AnswerScale, AnswerGrid,
-                    AnswerCheckboxGrid, QuestionBase, Survey,
+                    AnswerSingleSelection, QuestionBase, Survey,
                     AnswerText, QuestionSurvey, QuestionQuiz)
 from schemas import AnswerCreate, AnswerUpdate
 from exceptions import BadRequestException
@@ -19,11 +18,11 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
     POSSIBLE_TYPES = {
         QuestionTypeEnum.TEXT.value: AnswerText,
         QuestionTypeEnum.MULTIPLE_SELECTION.value: Answer,
-        QuestionTypeEnum.SINGLE_SELECTION.value: AnswerSingleSelection,
-        QuestionTypeEnum.SCALE.value: AnswerScale,
-        QuestionTypeEnum.GRID.value: AnswerGrid,
-        QuestionTypeEnum.CHECKBOX_GRID.value: AnswerCheckboxGrid
+        QuestionTypeEnum.SINGLE_SELECTION.value: AnswerSingleSelection
     }
+    
+    def get_count(self, db: Session) -> int:
+        return db.query(self.model).count()
     
     def get_by_survey_id(self, db: Session, survey_id: str) -> List[Answer]:
         survey = survey_service.get_by_id(db, survey_id)
@@ -85,19 +84,6 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
             answer_kwargs.update(
                 {"discriminator": "answer_single_choice",
                     "option_id": body.option_id}
-            )
-        if question.question_type == QuestionTypeEnum.SCALE:
-            answer_kwargs.update(
-                {"discriminator": "answer_scale", "scale_value": body.scale_value}
-            )
-        elif question.question_type == QuestionTypeEnum.GRID:
-            answer_kwargs.update(
-                {"discriminator": "answer_grid", "grid_values": body.grid_values}
-            )
-        elif question.question_type == QuestionTypeEnum.CHECKBOX_GRID:
-            answer_kwargs.update(
-                {"discriminator": "answer_checkbox_grid",
-                    "checkbox_grid_values": body.checkbox_grid_values}
             )
         elif question.question_type == QuestionTypeEnum.TEXT:
             answer_kwargs.update({"text": body.text})

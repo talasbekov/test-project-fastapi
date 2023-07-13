@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, String, TEXT, Integer, JSON
+from sqlalchemy import Column, ForeignKey, String, TEXT, Integer
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -42,28 +42,4 @@ class AnswerSingleSelection(Answer):
 
     __mapper_args__ = {
         "polymorphic_identity": "answer_single_choice"
-    }
-
-
-class AnswerScale(Answer):
-    scale_value = Column(Integer, nullable=True)
-
-    __mapper_args__ = {
-        "polymorphic_identity": "answer_scale"
-    }
-
-
-class AnswerGrid(Answer):
-    grid_values = Column(JSON, nullable=True)
-
-    __mapper_args__ = {
-        "polymorphic_identity": "answer_grid"
-    }
-
-
-class AnswerCheckboxGrid(Answer):
-    checkbox_grid_values = Column(JSON, nullable=True)
-
-    __mapper_args__ = {
-        'polymorphic_identity': 'answer_checkbox_grid',
     }

@@ -1,0 +1,109 @@
+import uuid
+from typing import List
+
+from fastapi import APIRouter, Depends
+from fastapi.security import HTTPBearer
+from fastapi_jwt_auth import AuthJWT
+from sqlalchemy.orm import Session
+
+from core import get_db
+
+from schemas import (ScheduleMonthRead,
+                     ScheduleMonthUpdate,
+                     ScheduleMonthCreate,)
+
+from services import schedule_month_service
+
+
+router = APIRouter(prefix="/schedule_month",
+                   tags=["ScheduleMonth"],
+                   dependencies=[Depends(HTTPBearer())])
+
+
+@router.get("", dependencies=[Depends(HTTPBearer())],
+            response_model=List[ScheduleMonthRead],
+            summary="Get all ScheduleMonth")
+async def get_all(*,
+                  db: Session = Depends(get_db),
+                  skip: int = 0,
+                  limit: int = 100,
+                  Authorize: AuthJWT = Depends()
+                  ):
+    """
+       Get all ScheduleMonth
+
+    - **skip**: int - The number of ScheduleMonth
+        to skip before returning the results.
+        This parameter is optional and defaults to 0.
+    - **limit**: int - The maximum number of ScheduleMonth
+        to return in the response.
+        This parameter is optional and defaults to 100.
+   """
+    Authorize.jwt_required()
+    return schedule_month_service.get_multi(db, skip, limit)
+
+
+@router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=ScheduleMonthRead,
+            summary="Get ScheduleMonth by id")
+async def get_by_id(*,
+                    db: Session = Depends(get_db),
+                    id: uuid.UUID,
+                    Authorize: AuthJWT = Depends()
+                    ):
+    """
+        Get ScheduleMonth by id
+
+        - **id**: UUID - required
+    """
+    Authorize.jwt_required()
+    return schedule_month_service.get_by_id(db, id)
+
+@router.post("/", dependencies=[Depends(HTTPBearer())],
+            response_model=ScheduleMonthRead,
+            summary="Create ScheduleMonth")
+async def create(*,
+                 db: Session = Depends(get_db),
+                 body: ScheduleMonthCreate,
+                 Authorize: AuthJWT = Depends()
+                 ):
+    """
+        Create ScheduleMonth
+
+    """
+    Authorize.jwt_required()
+    return schedule_month_service.create(db, obj_in=body)
+
+@router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=ScheduleMonthRead,
+            summary="Update ScheduleMonth")
+async def update(*,
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 body: ScheduleMonthUpdate,
+                 Authorize: AuthJWT = Depends()
+                 ):
+    """
+        Update ScheduleMonth
+
+    """
+    Authorize.jwt_required()
+    return schedule_month_service.update(
+        db,
+        db_obj=schedule_month_service.get_by_id(db, id),
+        obj_in=body)
+
+@router.delete("/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=ScheduleMonthRead,
+            summary="Delete ScheduleMonth")
+async def delete(*,
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 Authorize: AuthJWT = Depends()
+                 ):
+    """
+        Delete ScheduleMonth
+
+    """
+    Authorize.jwt_required()
+    return schedule_month_service.remove(db, id)

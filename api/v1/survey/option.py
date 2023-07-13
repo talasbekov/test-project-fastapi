@@ -7,7 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import OptionCreate, OptionUpdate, OptionRead
+from schemas import OptionCreate, OptionUpdate, OptionRead, OptionReadPagination
 from services import option_service
 
 router = APIRouter(prefix="/options",
@@ -15,7 +15,7 @@ router = APIRouter(prefix="/options",
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[OptionRead],
+            response_model=OptionReadPagination,
             summary="Get all Options")
 async def get_all(*,
                   db: Session = Depends(get_db),
@@ -32,7 +32,10 @@ async def get_all(*,
             This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    return option_service.get_multi(db, skip, limit)
+    return {
+        'total': option_service.get_count(db),
+        'objects': option_service.get_multi(db, skip, limit)
+    }
 
 
 @router.get("/question-id/", dependencies=[Depends(HTTPBearer())],

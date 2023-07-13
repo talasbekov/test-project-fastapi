@@ -50,3 +50,6 @@ class StaffListStatusRead(StaffListBase):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
+
+class StaffListApplyRead(BaseModel):
+    task_id: uuid.UUID

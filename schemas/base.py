@@ -20,6 +20,14 @@ class NamedModel(Model):
         orm_mode = True
 
 
+class TextModel(Model):
+    text: str
+    textKZ: Optional[str] = Field(None, nullable=True)
+    
+    class Config:
+        orm_mode = True
+
+
 class ReadModel(Model):
     id: Optional[uuid.UUID]
     created_at: Optional[datetime.datetime]
@@ -32,6 +40,14 @@ class ReadModel(Model):
 class ReadNamedModel(NamedModel, ReadModel):
     name: Optional[str]
     nameKZ: Optional[str]
+
+    class Config:
+        orm_mode = True
+
+
+class ReadTextModel(TextModel, ReadModel):
+    text: Optional[str]
+    textKZ: Optional[str]
 
     class Config:
         orm_mode = True

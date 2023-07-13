@@ -6,7 +6,8 @@ from sqlalchemy.orm import Session
 from exceptions import ForbiddenException
 from models import (StaffDivision, StaffUnit,
                     PositionNameEnum, StaffDivisionEnum,
-                    StatusEnum)
+                    StatusEnum, Status, User, StatusType,
+                    CandidateStatusEnum)
 from services import (staff_division_service, staff_unit_service,
                       position_service, hr_vacancy_service,
                       candidate_stage_type_service, candidate_service,
@@ -190,8 +191,19 @@ class DashboardService:
             return len(candidate_service
                        .get_candidates_recursive(db, staff_division))
 
-    def get_statistic_passed_candidate_stage_infos(self, db: Session):
-        candidates = candidate_service.get_all(db)
+    def get_statistic_passed_candidate_stage_infos(self, db: Session, role: str):
+        staff_unit: StaffUnit = staff_unit_service.get_by_id(db, role)
+        fifth_department = staff_division_service.get_by_name(db, "Пятый департамент")
+        
+        if staff_unit.staff_division_id == fifth_department.id:
+            candidates = candidate_service.get_all(db)
+        else:
+            candidates = (
+                candidate_service.get_all_by_staff_division(db,
+                                                            staff_unit.staff_division,
+                                                            CandidateStatusEnum.ACTIVE.value)
+            )
+            
         count_candidate_stages = candidate_stage_type_service.get_count(db)
 
         less_than_25 = 0
@@ -221,8 +233,18 @@ class DashboardService:
             'more_than_75': more_than_75
         }
 
-    def get_statistic_duration_candidate_learning(self, db: Session):
-        candidates = candidate_service.get_all(db)
+    def get_statistic_duration_candidate_learning(self, db: Session, role: str):
+        staff_unit: StaffUnit = staff_unit_service.get_by_id(db, role)
+        fifth_department = staff_division_service.get_by_name(db, "Пятый департамент")
+        
+        if staff_unit.staff_division_id == fifth_department.id:
+            candidates = candidate_service.get_all(db)
+        else:
+            candidates = (
+                candidate_service.get_all_by_staff_division(db,
+                                                            staff_unit.staff_division,
+                                                            CandidateStatusEnum.ACTIVE.value)
+            )
 
         less_than_3_month = 0
         between_3_6_month = 0
@@ -252,7 +274,7 @@ class DashboardService:
             'more_than_year': more_than_year
         }
 
-    def get_statistic_completed_candidates(self, db: Session):
+    def get_statistic_completed_candidates(self, db: Session, role: str):
         completed_candidates_count = (
             candidate_service.get_count_completed_candidates(db)
         )
