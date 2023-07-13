@@ -18,7 +18,7 @@ from core import Base
 
 # revision identifiers, used by Alembic.
 revision = 'bd90d3894431'
-down_revision = 'c5f49d190077'
+down_revision = '87263d264688'
 branch_labels = None
 depends_on = None
 
