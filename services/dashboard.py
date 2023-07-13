@@ -6,8 +6,7 @@ from sqlalchemy.orm import Session
 from exceptions import ForbiddenException
 from models import (StaffDivision, StaffUnit,
                     PositionNameEnum, StaffDivisionEnum,
-                    StatusEnum, Status, User, StatusType,
-                    CandidateStatusEnum)
+                    StatusEnum, CandidateStatusEnum)
 from services import (staff_division_service, staff_unit_service,
                       position_service, hr_vacancy_service,
                       candidate_stage_type_service, candidate_service,
