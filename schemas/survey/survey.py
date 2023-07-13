@@ -2,11 +2,13 @@ import uuid
 import datetime
 
 from typing import Optional, List
-
+from pydantic import BaseModel, Field
 from schemas import NamedModel, ReadNamedModel
 from .question import QuestionRead
 
 # base
+
+
 class Base(NamedModel):
     description: Optional[str]
     start_date: datetime.datetime
@@ -26,7 +28,7 @@ class QuizBase(Base):
     pass
 
 
-#create
+# create
 class SurveyCreate(SurveyBase):
     pass
 
@@ -35,7 +37,7 @@ class QuizCreate(QuizBase):
     pass
 
 
-#update
+# update
 class SurveyUpdate(SurveyBase):
     name: Optional[str]
     start_date: Optional[datetime.datetime]
@@ -54,7 +56,7 @@ class QuizUpdate(QuizBase):
     staff_position: Optional[str]
 
 
-#read
+# read
 class SurveyRead(SurveyBase, ReadNamedModel):
     start_date: Optional[datetime.datetime]
     end_date: Optional[datetime.datetime]
@@ -77,3 +79,13 @@ class QuizRead(QuizBase, ReadNamedModel):
 
     class Config:
         orm_mode = True
+
+
+class SurveyReadPagination(BaseModel):
+    total: int = Field(0, nullable=False)
+    objects: List[SurveyRead] = Field([], nullable=False)
+
+
+class QuizReadPagination(BaseModel):
+    total: int = Field(0, nullable=False)
+    objects: List[QuizRead] = Field([], nullable=False)
