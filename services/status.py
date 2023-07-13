@@ -1,11 +1,13 @@
 import uuid
 from datetime import datetime
+from typing import List
 
 from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
-from models import Status, StatusHistory, StatusType
+from models import (Status, StatusHistory, StatusType,
+                    StaffDivision, User, StaffUnit, StatusEnum)
 from schemas import StatusRead, StatusCreate, StatusUpdate, StatusTypeRead
 from services import user_service
 from .base import ServiceBase
@@ -101,6 +103,67 @@ class StatusService(ServiceBase[Status, StatusCreate, StatusUpdate]):
             .order_by(StatusHistory.date_to.desc())
             .all()
         )
+
+    # Получаем количество отсуствующих по каждому статусу
+    # в зависимости от подразделения:
+    # на больничном, по рапорту, в отпуске, в командировке
+    def get_users_recursive_by_status(
+            self, db: Session, department: StaffDivision, status: str
+    ):
+        users = db.query(User) \
+            .join(Status) \
+            .join(StatusType) \
+            .join(StaffUnit, User.staff_unit_id == StaffUnit.id) \
+            .join(StaffDivision, StaffUnit.staff_division_id == StaffDivision.id) \
+            .filter(
+            StatusType.name == status,
+            User.staff_unit_id == StaffUnit.id,
+            StaffUnit.staff_division_id == department.id
+        ).all()
+
+        # Recursively call this function for each child division
+        for child in department.children:
+            users.extend(self.get_users_recursive_by_status(db, child, status))
+
+        users_with_status: List[User] = []
+        for user in users:
+            users_with_status.append(user.name)
+
+        state_by_status = [name for name in users_with_status]
+        return state_by_status
+
+    ALL_STATUSES = [
+        StatusEnum.ANNUAL_LEAVE.value,
+        StatusEnum.VACATION.value,
+        StatusEnum.BUSINESS_TRIP.value,
+        StatusEnum.SICK_LEAVE.value,
+        StatusEnum.MATERNITY_LEAVE.value
+    ]
+
+    def get_count_all_users_recursive_by_status(
+            self, db: Session, department: StaffDivision
+    ):
+        users = db.query(User) \
+            .join(Status) \
+            .join(StatusType) \
+            .join(StaffUnit, User.staff_unit_id == StaffUnit.id) \
+            .join(StaffDivision, StaffUnit.staff_division_id == StaffDivision.id) \
+            .filter(
+            StatusType.name.in_(self.ALL_STATUSES),
+            User.staff_unit_id == StaffUnit.id,
+            StaffUnit.staff_division_id == department.id
+        ).all()
+
+        # Recursively call this function for each child division
+        for child in department.children:
+            users.extend(self.get_count_all_users_recursive_by_status(db, child))
+
+        users_with_status: List[User] = []
+        for user in users:
+            users_with_status.append(user.name)
+
+        state_by_status = [name for name in users_with_status]
+        return state_by_status
 
 
 status_service = StatusService(Status)
