@@ -22,7 +22,7 @@ async def get_all_state(*,
                         Authorize: AuthJWT = Depends(),
                         ):
     """
-       Get all data for Dashboard
+       Количество всей штатки
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
@@ -36,7 +36,7 @@ async def get_state_by_list(*,
                         Authorize: AuthJWT = Depends(),
                         ):
     """
-       Get all data by list for Dashboard
+       Количество сотрудников по списку
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
@@ -50,7 +50,7 @@ async def get_hr_vacancy_count_by_division(*,
                         Authorize: AuthJWT = Depends(),
                         ):
     """
-       Get all data of vacancies for Dashboard
+       Количество вакансии
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
@@ -64,11 +64,39 @@ async def get_in_line_count_by_status(*,
                         Authorize: AuthJWT = Depends(),
                         ):
     """
-       Get all data of users in line for Dashboard
+       Количество сотрудников которые в строю
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
     return dashboard_service.get_in_line_count_by_status(db, role)
+
+
+@router.get("/states/outline/all/", dependencies=[Depends(HTTPBearer())],
+            summary="Get data of all out line users for Dashboard")
+async def get_count_by_status_all_users(*,
+                        db: Session = Depends(get_db),
+                        Authorize: AuthJWT = Depends(),
+                        ):
+    """
+       Общее количество сотрудников которые отсутствуют
+    """
+    Authorize.jwt_required()
+    role = Authorize.get_raw_jwt()['role']
+    return dashboard_service.get_count_by_status_all_users(db, role)
+
+
+@router.get("/states/outline/bystatus/", dependencies=[Depends(HTTPBearer())],
+            summary="Get data by every status of out line users for Dashboard")
+async def get_count_by_every_status_users(*,
+                        db: Session = Depends(get_db),
+                        Authorize: AuthJWT = Depends(),
+                        ):
+    """
+       Количество сотрудников которые отсутствуют по статусам
+    """
+    Authorize.jwt_required()
+    role = Authorize.get_raw_jwt()['role']
+    return dashboard_service.get_count_by_every_status_users(db, role)
 
 
 @router.get("/candidates/active/", dependencies=[Depends(HTTPBearer())],
@@ -78,7 +106,7 @@ async def get_all_active_candidates(*,
                         Authorize: AuthJWT = Depends(),
                         ):
     """
-       Get all data of candidates for Dashboard
+       Количество изучающихся кандидатов
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
