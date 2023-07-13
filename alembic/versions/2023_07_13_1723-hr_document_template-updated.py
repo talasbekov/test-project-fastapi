@@ -45,62 +45,62 @@ def upgrade() -> None:
         UPDATE hr_document_templates
         SET properties = '{
                             "surname":{
-                                "alias_nameKZ":"\u0422\u0435\u0433\u0456",
+                                "alias_nameKZ":"Тегі",
                                 "data_taken":"auto",
                                 "type":"write",
                                 "field_name":"surname",
                                 "to_tags":{
-                                    "titleKZ":"\u0422\u0435\u0433\u0456",
+                                    "titleKZ":"Тегі",
                                     "isHidden":"false"
                                 }
                             },
                             "name":{
-                                "alias_nameKZ":"\u0410\u0442\u044b",
+                                "alias_nameKZ":"Аты",
                                 "data_taken":"auto",
                                 "type":"write",
                                 "field_name":"name",
                                 "to_tags":{
-                                    "titleKZ":"\u0410\u0442\u044b",
-                                    "isHidden":false
+                                    "titleKZ":"Аты",
+                                    "isHidden":"false"
                                 }
                             },
                             "father":{
-                                "alias_nameKZ":"\u04d8\u043a\u0435\u0441\u0456\u043d\u0456\u04a3 \u0430\u0442\u044b",
+                                "alias_nameKZ":"Әкесінің аты",
                                 "data_taken":"auto",
                                 "type":"write",
                                 "field_name":"father_name",
                                 "to_tags":{
-                                    "foundInText":"\u041e\u0442\u0447\u0435\u0441\u0442\u0432\u043e \u0441\u0443\u0431\u044a\u0435\u043a\u0442\u0430",
-                                    "titleKZ":"\u04d8\u043a\u0435\u0441\u0456\u043d\u0456\u04a3 \u0430\u0442\u044b",
-                                    "isHidden":false,
-                                    "cases":0
+                                    "foundInText":"Отчество субъекта",
+                                    "titleKZ":"Әкесінің аты",
+                                    "isHidden":"false",
+                                    "cases":"0"
                                 }
                             },
                             "contract":{
                                 "to_tags":{
                                     "tagname":"contract",
-                                    "titleKZ":"\u041a\u043e\u043d\u0442\u0440\u0430\u043a\u0442",
+                                    "titleKZ":"Контракт",
                                     "idToChange":"1687429527959",
                                     "id":"1687429527959",
                                     "foundInText":"{{contract - term}}",
-                                    "isHidden":false,
-                                    "cases":0,
+                                    "isHidden":"false",
+                                    "cases":"0",
                                     "action_type":"[renew_contract]"
                                 },
-                                "alias_name":"\u041a\u043e\u043d\u0442\u0440\u0430\u043a\u0442",
-                                "alias_nameKZ":"\u041a\u043e\u043d\u0442\u0440\u0430\u043a\u0442",
+                                "alias_name":"Контракт",
+                                "alias_nameKZ":"Контракт",
                                 "type":"write",
                                 "data_taken":"dropdown",
                                 "field_name":"contracts",
-                                "isHidden":false
+                                "isHidden":"false"
                             },
                             "new_position":{
-                                "alias_nameKZ":"\u0416\u0430\u04a3\u0430 \u043f\u043e\u0437\u0438\u0446\u0438\u044f",
+                                "alias_nameKZ":"Жаңа позиция",
                                 "data_taken":"dropdown",
                                 "type":"write",
                                 "field_name":"staff_unit",
                                 "to_tags":{
-                                    "titleKZ":"\u0416\u0430\u04a3\u0430 \u043f\u043e\u0437\u0438\u0446\u0438\u044f",
+                                    "titleKZ":"Жаңа позиция",
                                     "directory":"staff_unit",
                                     "isHidden":"false"
                                 }
