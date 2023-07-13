@@ -6,7 +6,8 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import SurveyCreate, SurveyUpdate, SurveyRead
+from schemas import (SurveyCreate, SurveyUpdate, SurveyRead,
+                     SurveyResponse)
 from services import survey_service
 
 router = APIRouter(prefix="/surveys",
@@ -14,6 +15,7 @@ router = APIRouter(prefix="/surveys",
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
+            response_model=SurveyResponse,
             summary="Get all Surveys")
 async def get_all_active(*,
                   db: Session = Depends(get_db),
@@ -30,13 +32,14 @@ async def get_all_active(*,
             This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    return {
-        'total': survey_service.get_count_actives(db),
-        'objects': survey_service.get_all_active(db, skip, limit)
-    }
+    return SurveyResponse(
+        total=survey_service.get_count_actives(db),
+        objects=survey_service.get_all_active(db, skip, limit)
+    )
 
 
 @router.get("/archives", dependencies=[Depends(HTTPBearer())],
+            response_model=SurveyResponse,
             summary="Get all archive Surveys")
 async def get_all_archives(*,
                   db: Session = Depends(get_db),
@@ -53,13 +56,14 @@ async def get_all_archives(*,
             This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    return {
-        'total': survey_service.get_count_archives(db),
-        'objects': survey_service.get_all_archives(db, skip, limit)
-    }
+    return SurveyResponse(
+        total=survey_service.get_count_archives(db),
+        objects=survey_service.get_all_archives(db, skip, limit)
+    )
 
 
 @router.get("/drafts", dependencies=[Depends(HTTPBearer())],
+            response_model=SurveyResponse,
             summary="Get all draft Surveys")
 async def get_all_draft(*,
                   db: Session = Depends(get_db),
@@ -76,10 +80,10 @@ async def get_all_draft(*,
             This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    return {
-        'total': survey_service.get_count_drafts(db),
-        'objects': survey_service.get_all_draft(db, skip, limit)
-    }
+    return SurveyResponse(
+        total=survey_service.get_count_drafts(db),
+        objects=survey_service.get_all_draft(db, skip, limit)
+    )
 
 
 @router.get("/my", dependencies=[Depends(HTTPBearer())],
@@ -101,10 +105,10 @@ async def get_by_jurisdiction(*,
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
     objects = survey_service.get_by_jurisdiction(db, role, skip, limit)
-    return {
-        'total': len(objects),
-        'objects': objects
-    }
+    return SurveyResponse(
+        total=len(objects),
+        objects=objects
+    )
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,

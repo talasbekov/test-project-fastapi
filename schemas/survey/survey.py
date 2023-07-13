@@ -2,6 +2,7 @@ import uuid
 import datetime
 
 from typing import Optional, List
+from pydantic import BaseModel
 
 from schemas import NamedModel, ReadNamedModel
 from .question import QuestionRead
@@ -77,3 +78,14 @@ class QuizRead(QuizBase, ReadNamedModel):
 
     class Config:
         orm_mode = True
+
+
+#response
+class SurveyResponse(BaseModel):
+    total: int
+    objects: List[SurveyRead]
+
+
+class QuizResponse(BaseModel):
+    total: int
+    objects: List[QuizRead]

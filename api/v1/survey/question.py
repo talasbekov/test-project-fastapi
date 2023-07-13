@@ -7,7 +7,8 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import QuestionCreate, QuestionUpdate, QuestionRead
+from schemas import (QuestionCreate, QuestionUpdate,
+                     QuestionRead, QuestionResponse)
 from services import question_service
 
 router = APIRouter(prefix="/questions",
@@ -15,6 +16,7 @@ router = APIRouter(prefix="/questions",
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
+            response_model=QuestionResponse,
             summary="Get all Questions")
 async def get_all(*,
                   db: Session = Depends(get_db),
@@ -31,10 +33,10 @@ async def get_all(*,
             This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    return {
-        'total': question_service.get_count(db),
-        'objects': question_service.get_multi(db, skip, limit)
-    }
+    return QuestionResponse(
+        total=question_service.get_count(db),
+        objects=question_service.get_multi(db, skip, limit)
+    )
 
 
 @router.get("/survey-id/", dependencies=[Depends(HTTPBearer())],

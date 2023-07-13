@@ -1,6 +1,7 @@
 import uuid
 
 from typing import Optional, List
+from pydantic import BaseModel
 
 from schemas import TextModel, ReadTextModel
 from .option import OptionRead
@@ -33,3 +34,8 @@ class QuestionRead(QuestionBase, ReadTextModel):
 
     class Config:
         orm_mode = True
+
+
+class QuestionResponse(BaseModel):
+    total: int
+    objects: List[QuestionRead]

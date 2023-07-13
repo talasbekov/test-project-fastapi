@@ -6,7 +6,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import QuizCreate, QuizUpdate, QuizRead
+from schemas import QuizCreate, QuizUpdate, QuizRead, QuizResponse
 from services import quiz_service
 
 router = APIRouter(prefix="/quizzes",
@@ -14,6 +14,7 @@ router = APIRouter(prefix="/quizzes",
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
+            response_model=QuizResponse,
             summary="Get all Quizzes")
 async def get_all_active(*,
                   db: Session = Depends(get_db),
@@ -30,13 +31,14 @@ async def get_all_active(*,
             This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    return {
-        'total': quiz_service.get_count_actives(db),
-        'objects': quiz_service.get_all_active(db, skip, limit)
-    }
+    return QuizResponse(
+        total=quiz_service.get_count_actives(db),
+        objects=quiz_service.get_all_active(db, skip, limit)
+    )
 
 
 @router.get("/archives", dependencies=[Depends(HTTPBearer())],
+            response_model=QuizResponse,
             summary="Get all archive Quizzes")
 async def get_all_archives(*,
                   db: Session = Depends(get_db),
@@ -53,12 +55,13 @@ async def get_all_archives(*,
             This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    return {
-        'total': quiz_service.get_count_archives(db),
-        'objects': quiz_service.get_all_archives(db, skip, limit)
-    }
+    return QuizResponse(
+        total=quiz_service.get_count_archives(db),
+        objects=quiz_service.get_all_archives(db, skip, limit)
+    )
 
 @router.get("/drafts", dependencies=[Depends(HTTPBearer())],
+            response_model=QuizResponse,
             summary="Get all draft Quizzes")
 async def get_all_draft(*,
                   db: Session = Depends(get_db),
@@ -75,13 +78,14 @@ async def get_all_draft(*,
             This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    return {
-        'total': quiz_service.get_count_drafts(db),
-        'objects': quiz_service.get_all_draft(db, skip, limit)
-    }
+    return QuizResponse(
+        total=quiz_service.get_count_drafts(db),
+        objects=quiz_service.get_all_draft(db, skip, limit)
+    )
 
 
 @router.get("/my", dependencies=[Depends(HTTPBearer())],
+            response_model=QuizResponse,
             summary="Get all Quizzes by jurisdiction")
 async def get_by_jurisdiction(*,
                   db: Session = Depends(get_db),
@@ -100,10 +104,10 @@ async def get_by_jurisdiction(*,
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
     objects = quiz_service.get_by_jurisdiction(db, role, skip, limit)
-    return {
-        'total': len(objects),
-        'objects': objects
-    }
+    return QuizResponse(
+        total=len(objects),
+        objects=objects
+    )
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
