@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 984201b8ecf3
-Revises: 5895ed1b9641
-Create Date: 2023-07-10 07:15:41.392298
+Revision ID: f6e9a3d77f97
+Revises: 9cecd5eef7dd
+Create Date: 2023-07-13 05:16:43.421507
 
 """
 import uuid, datetime
@@ -15,8 +15,8 @@ from core import Base
 
 
 # revision identifiers, used by Alembic.
-revision = '984201b8ecf3'
-down_revision = '5895ed1b9641'
+revision = 'f6e9a3d77f97'
+down_revision = '9cecd5eef7dd'
 branch_labels = None
 depends_on = None
 

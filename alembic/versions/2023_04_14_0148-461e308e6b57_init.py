@@ -418,7 +418,7 @@ def upgrade() -> None:
     sa.UniqueConstraint('id_number'),
     )
     op.create_table('candidates',
-    sa.Column('status', sa.Enum('ACTIVE', 'DRAFT', 'COMPLETED', name='candidatestatusenum'), server_default='ACTIVE', nullable=True),
+    sa.Column('status', sa.Enum('ACTIVE', 'DRAFT', name='candidatestatusenum'), server_default='ACTIVE', nullable=True),
     sa.Column('debarment_reason', sa.String(), nullable=True),
     sa.Column('is_physical_passed', sa.Boolean(), nullable=True),
     sa.Column('attempt_number', sa.Integer(), server_default='0', nullable=True),
