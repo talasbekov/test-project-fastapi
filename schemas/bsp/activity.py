@@ -8,7 +8,7 @@ from schemas import NamedModel
 
 class ActivityBase(NamedModel):
     parent_group_id: Optional[uuid.UUID]
-    instructions: Optional[dict]
+    instructions: Optional[str]
 
     class Config:
         orm_mode = True

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, JSON
+from sqlalchemy import Column, ForeignKey, TEXT
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -11,7 +11,7 @@ class Activity(NamedModel):
     # Properties
     parent_group_id = Column(UUID(as_uuid=True), ForeignKey(
         "activities.id"), nullable=True)
-    instructions = Column(JSON(none_as_null=True))
+    instructions = Column(TEXT())
 
     # Relationships
     children = relationship("Activity")
