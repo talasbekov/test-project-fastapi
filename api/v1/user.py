@@ -171,6 +171,26 @@ async def get_all_by_staff_unit(*,
     return user_service.get_by_staff_unit(db, id)
 
 
+
+@router.get(
+    "/plan/{id}",
+    dependencies=[Depends(HTTPBearer())],
+    response_model=List[UserRead],
+    summary="Get all Users by BspPlan",
+)
+async def get_all_by_plan_id(*,
+                                db: Session = Depends(get_db),
+                                Authorize: AuthJWT = Depends(),
+                                id: uuid.UUID):
+    """
+     Get all Users by Plan
+
+    - **id**: UUID - required and should exist in the database.
+    """
+    Authorize.jwt_required()
+    return user_service.get_by_plan_id(db, id)
+
+
 @router.patch(
     "/{id}/",
     status_code=status.HTTP_202_ACCEPTED,
