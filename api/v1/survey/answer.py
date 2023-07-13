@@ -7,7 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import AnswerCreate, AnswerUpdate, AnswerRead
+from schemas import AnswerCreate, AnswerUpdate, AnswerRead, AnswerReadPagination
 from services import answer_service
 
 router = APIRouter(prefix="/answers",
@@ -15,6 +15,7 @@ router = APIRouter(prefix="/answers",
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
+            response_model=AnswerReadPagination,
             summary="Get all Answers")
 async def get_all(*,
                   db: Session = Depends(get_db),

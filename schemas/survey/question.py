@@ -1,7 +1,7 @@
 import uuid
 
 from typing import Optional, List
-
+from pydantic import BaseModel, Field
 from schemas import TextModel, ReadTextModel
 from .option import OptionRead
 
@@ -33,3 +33,7 @@ class QuestionRead(QuestionBase, ReadTextModel):
 
     class Config:
         orm_mode = True
+
+class QuestionReadPagination(BaseModel):
+    total: int = Field(0, nullable=False)
+    objects: List[QuestionRead] = Field([], nullable=False)
