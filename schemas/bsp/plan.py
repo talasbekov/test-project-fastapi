@@ -26,6 +26,7 @@ class BspPlanUpdate(BspPlanBase):
 
 
 class BspPlanRead(BspPlanBase):
+    created_at: Optional[datetime]
     id: Optional[uuid.UUID]
     creator: Optional[UserRead]
     schedule_years: Optional[List[ScheduleYearRead]]
