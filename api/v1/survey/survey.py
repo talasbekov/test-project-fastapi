@@ -131,6 +131,24 @@ async def create(*,
     return survey_service.create(db, body)
 
 
+@router.post("/{id}/duplicate", status_code=status.HTTP_201_CREATED,
+             dependencies=[Depends(HTTPBearer())],
+             response_model=SurveyRead,
+             summary="Duplicate")
+async def duplicate(*,
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 Authorize: AuthJWT = Depends()
+                 ):
+    """
+        Duplicate the survey
+
+        - **id**: required
+    """
+    Authorize.jwt_required()
+    return survey_service.duplicate(db, id)
+
+
 @router.post("/draft", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=SurveyRead,
