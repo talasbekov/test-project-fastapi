@@ -14,6 +14,7 @@ from schemas import (
     StaffDivisionRead,
     StaffDivisionUpdate,
     StaffDivisionUpdateParentGroup,
+    StaffDivisionVacancyRead
 )
 
 from .base import ServiceBase
@@ -320,7 +321,7 @@ class StaffDivisionService(
         count_vacancies = self._get_count_vacancies_recursive(
             db, staff_division)
 
-        staff_division = StaffDivisionRead.from_orm(staff_division).dict()
+        staff_division = StaffDivisionVacancyRead.from_orm(staff_division).dict()
 
         staff_division['count_vacancies'] = count_vacancies
 

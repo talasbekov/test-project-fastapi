@@ -2,7 +2,7 @@ import uuid
 from typing import Optional, List
 from datetime import date
 
-from schemas import BaseModel, UserRead
+from schemas import BaseModel, UserShortRead
 from .schedule_month import ScheduleMonthRead
 
 class AttendedUserBase(BaseModel):
@@ -25,7 +25,7 @@ class AttendedUserUpdate(AttendedUserBase):
 
 class AttendedUserRead(AttendedUserBase):
     id: Optional[uuid.UUID]
-    user: Optional[UserRead]
+    user: Optional[UserShortRead]
 
 
 class AttendanceBase(BaseModel):
@@ -71,4 +71,4 @@ class AbsentUserUpdate(AttendanceBase):
 
 class AbsentUserRead(AttendanceBase):
     id: Optional[uuid.UUID]
-    user: Optional[UserRead]
+    user: Optional[UserShortRead]

@@ -2,7 +2,7 @@ import uuid
 from datetime import date, time
 from typing import Optional, List
 
-from schemas import BaseModel, UserRead
+from schemas import BaseModel, UserShortRead
 from .schedule_month import PlaceRead
 
 class ExamScheduleBase(BaseModel):
@@ -28,7 +28,7 @@ class ExamScheduleUpdate(ExamScheduleBase):
 
 class ExamScheduleRead(ExamScheduleBase):
     id: Optional[uuid.UUID]
-    instructors: Optional[List[Optional[UserRead]]]
+    instructors: Optional[List[Optional[UserShortRead]]]
     place: Optional[PlaceRead]
 
 
@@ -53,5 +53,5 @@ class ExamResultUpdate(ExamResultBase):
 
 class ExamResultRead(ExamResultBase):
     id: Optional[uuid.UUID]
-    user: Optional[UserRead]
+    user: Optional[UserShortRead]
     exam: Optional[ExamScheduleRead]

@@ -123,14 +123,14 @@ class StaffDivisionChildRead(StaffDivisionBase):
     children: Optional[List]
     staff_units: Optional[List]
     type: Optional[StaffDivisionTypeRead]
-    
+
     @validator('children')
     def validate_children(cls, children):
         if children == []:
             return None
         else:
             return []
-        
+
     @validator('staff_units')
     def validate_staff_units(cls, staff_units):
         if staff_units == []:
@@ -148,20 +148,38 @@ class StaffDivisionRead(StaffDivisionBase):
     staff_units: Optional[List['StaffUnitRead']]
     type: Optional[StaffDivisionTypeRead]
     count_vacancies: Optional[int]
-    
+
     @validator('children')
     def validate_children(cls, children):
         if children == []:
             return None
         else:
             return children
-        
+
     @validator('staff_units')
     def validate_staff_units(cls, staff_units):
         if staff_units == []:
             return None
         else:
             return staff_units
+
+    class Config:
+        orm_mode = True
+
+
+class StaffDivisionReadWithoutStaffUnit(StaffDivisionBase):
+    id: Optional[uuid.UUID]
+    children: Optional[List['StaffDivisionChildRead']]
+    type: Optional[StaffDivisionTypeRead]
+    count_vacancies: Optional[int]
+
+    @validator('children')
+    def validate_children(cls, children):
+        if children == []:
+            return None
+        else:
+            return children
+
 
     class Config:
         orm_mode = True
@@ -195,6 +213,17 @@ class StaffDivisionStepRead(StaffDivisionBase):
     children: Optional[List['StaffDivisionStepChildRead']]
     staff_units: Optional[List['StaffUnitRead']]
     type: Optional[StaffDivisionTypeRead]
+
+    class Config:
+        orm_mode = True
+
+class StaffDivisionVacancyRead(BaseModel):
+    id: Optional[uuid.UUID]
+    staff_division_number: Optional[int] = Field(None, nullable=True)
+    type: Optional[StaffDivisionTypeRead]
+    count_vacancies: Optional[int]
+    name: str
+    nameKZ: Optional[str] = Field(None, nullable=True)
 
     class Config:
         orm_mode = True

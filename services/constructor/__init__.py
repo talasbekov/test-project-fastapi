@@ -18,7 +18,6 @@ from .delete_coolness import handler as delete_coolness_handler
 from .increase_rank import handler as increase_rank_handler
 
 from .renew_contract import handler as renew_contract_handler
-
 from .stop_status import handler as stop_status_handler
 from .temporary_status_change import handler as temporary_status_change_handler
 from .status_change import handler as status_change_handler
@@ -29,7 +28,7 @@ from .superdoc import handler as superdoc_handler
 from .grant_leave import handler as grant_leave_handler
 from .sick_leave import handler as sick_leave_handler
 from .stop_leave import handler as stop_leave_handler
-
+from .apply_candidate import handler as apply_candidate_handler
 
 # Create an empty dictionary to store the handlers
 handlers = {}
