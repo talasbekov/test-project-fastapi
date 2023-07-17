@@ -14,6 +14,7 @@ from services import (staff_division_service, staff_unit_service,
 
 
 class DashboardService:
+
     ALL_STATE_VIEWERS = [
         PositionNameEnum.POLITICS_GOVERNMENT_SERVANT.value,
         PositionNameEnum.HEAD_OF_DEPARTMENT.value,
@@ -26,13 +27,14 @@ class DashboardService:
         staff_unit: StaffUnit = staff_unit_service.get_by_id(db, role)
         fifth_department = staff_division_service.get_by_name(db, "Пятый департамент")
 
-        if staff_unit.staff_division_id == fifth_department.id:
+        if staff_unit.curator_of_id == fifth_department.id:
             staff_division = staff_division_service.get_by_name(
                 db, StaffDivisionEnum.SERVICE.value
             )
             return self.__retrieve_all_staff_unit_count(db, staff_division)
         elif not self.check_by_role(db, staff_unit):
-            return 0
+            raise ForbiddenException(
+                "You don't have permission to see stats!")
         else:
             staff_division = staff_division_service.get_by_id(
                 db, staff_unit.staff_division_id
@@ -51,7 +53,7 @@ class DashboardService:
         staff_unit: StaffUnit = staff_unit_service.get_by_id(db, role)
         fifth_department = staff_division_service.get_by_name(db, "Пятый департамент")
 
-        if staff_unit.staff_division_id == fifth_department.id:
+        if staff_unit.curator_of_id == fifth_department.id:
             staff_division = staff_division_service.get_by_name(
                 db, StaffDivisionEnum.SERVICE.value
             )
@@ -80,7 +82,7 @@ class DashboardService:
         staff_unit: StaffUnit = staff_unit_service.get_by_id(db, role)
         fifth_department = staff_division_service.get_by_name(db, "Пятый департамент")
 
-        if staff_unit.staff_division_id == fifth_department.id:
+        if staff_unit.curator_of_id == fifth_department.id:
             staff_division = staff_division_service.get_by_name(
                 db, StaffDivisionEnum.SERVICE.value
             )
@@ -110,7 +112,7 @@ class DashboardService:
         staff_unit: StaffUnit = staff_unit_service.get_by_id(db, role)
         fifth_department = staff_division_service.get_by_name(db, "Пятый департамент")
 
-        if staff_unit.staff_division_id == fifth_department.id:
+        if staff_unit.curator_of_id == fifth_department.id:
             staff_division = staff_division_service.get_by_name(
                 db, StaffDivisionEnum.SERVICE.value
             )
@@ -120,17 +122,17 @@ class DashboardService:
                         db, staff_division, StatusEnum.ANNUAL_LEAVE.value
                     )
                 ),
-                'Otpusk po raportu': len(
+                'Otpusk_po_raportu': len(
                     status_service.get_users_recursive_by_status(
                         db, staff_division, StatusEnum.VACATION.value
                     )
                 ),
-                'v komandirovke': len(
+                'v_komandirovke': len(
                     status_service.get_users_recursive_by_status(
                         db, staff_division, StatusEnum.BUSINESS_TRIP.value
                     )
                 ),
-                'na bolnichnom': len(
+                'na_bolnichnom': len(
                     status_service.get_users_recursive_by_status(
                         db, staff_division, StatusEnum.SICK_LEAVE.value
                     )
@@ -151,17 +153,17 @@ class DashboardService:
                         db, staff_division, StatusEnum.ANNUAL_LEAVE.value
                     )
                 ),
-                'Otpusk po raportu': len(
+                'Otpusk_po_raportu': len(
                     status_service.get_users_recursive_by_status(
                         db, staff_division, StatusEnum.VACATION.value
                     )
                 ),
-                'v komandirovke': len(
+                'v_komandirovke': len(
                     status_service.get_users_recursive_by_status(
                         db, staff_division, StatusEnum.BUSINESS_TRIP.value
                     )
                 ),
-                'na bolnichnom': len(
+                'na_bolnichnom': len(
                     status_service.get_users_recursive_by_status(
                         db, staff_division, StatusEnum.SICK_LEAVE.value
                     )
@@ -174,7 +176,7 @@ class DashboardService:
         staff_unit: StaffUnit = staff_unit_service.get_by_id(db, role)
         fifth_department = staff_division_service.get_by_name(db, "Пятый департамент")
 
-        if staff_unit.staff_division_id == fifth_department.id:
+        if staff_unit.curator_of_id == fifth_department.id:
             staff_division = staff_division_service.get_by_name(
                 db, StaffDivisionEnum.SERVICE.value
             )
@@ -190,8 +192,8 @@ class DashboardService:
             return len(candidate_service
                        .get_candidates_recursive(db, staff_division))
 
-    def get_statistic_passed_candidate_stage_infos(self, db: Session):
-        candidates = candidate_service.get_all(db)
+    def __get_statistic_passed_candidate_stage_infos(self, db: Session, staff_division):
+        candidates = candidate_service.get_candidates_recursive(db, staff_division)
         count_candidate_stages = candidate_stage_type_service.get_count(db)
 
         less_than_25 = 0
@@ -262,6 +264,56 @@ class DashboardService:
             'last_month': completed_candidates_count,
             'last_year': completed_candidates_count,
         }
+
+    def get_curators_by_candidates(
+            self, db: Session, role: str
+    ) -> dict[str, int]:
+        staff_unit: StaffUnit = staff_unit_service.get_by_id(db, role)
+        fifth_department = staff_division_service.get_by_name(db, "Пятый департамент")
+
+        if staff_unit.curator_of_id == fifth_department.id:
+            staff_division = staff_division_service.get_by_name(
+                db, StaffDivisionEnum.SERVICE.value
+            )
+            print("fifth department")
+            return candidate_service.get_top_curators_by_candidates(
+                db, staff_division
+            )
+        elif not self.check_by_role(db, staff_unit):
+            raise ForbiddenException(
+                "You don't have permission to see stats of candidates!")
+        else:
+            staff_division = staff_division_service.get_by_id(
+                db, staff_unit.staff_division_id
+            )
+            return candidate_service.get_top_curators_by_candidates(
+                db, staff_division
+            )
+
+    def get_curators_by_candidates_duration(
+            self, db: Session, role: str
+    ) -> dict[str, int]:
+        staff_unit: StaffUnit = staff_unit_service.get_by_id(db, role)
+        fifth_department = staff_division_service.get_by_name(db, "Пятый департамент")
+
+        if staff_unit.curator_of_id == fifth_department.id:
+            staff_division = staff_division_service.get_by_name(
+                db, StaffDivisionEnum.SERVICE.value
+            )
+            print("fifth department")
+            return candidate_service.get_top_curator_duration_by_candidates(
+                db, staff_division
+            )
+        elif not self.check_by_role(db, staff_unit):
+            raise ForbiddenException(
+                "You don't have permission to see stats of candidates!")
+        else:
+            staff_division = staff_division_service.get_by_id(
+                db, staff_unit.staff_division_id
+            )
+            return candidate_service.get_top_curator_duration_by_candidates(
+                db, staff_division
+            )
 
     def check_by_role(self, db: Session, staff_unit) -> bool:
         """

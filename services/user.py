@@ -209,11 +209,19 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
                    and not key.startswith('_'))]
         return fields
 
-    def get_by_staff_unit(self, db: Session, staff_unit_id):
+    def get_all_by_staff_unit(self, db: Session, staff_unit_id):
 
         users = db.query(self.model).filter(
             self.model.staff_unit_id == staff_unit_id
         ).all()
+
+        return users
+
+    def get_user_by_staff_unit(self, db: Session, staff_unit_id):
+
+        users = db.query(self.model).filter(
+            self.model.staff_unit_id == staff_unit_id
+        ).first()
 
         return users
 

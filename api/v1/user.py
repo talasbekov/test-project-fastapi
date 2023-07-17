@@ -168,7 +168,7 @@ async def get_all_by_staff_unit(*,
     - **id**: UUID - required and should exist in the database.
     """
     Authorize.jwt_required()
-    return user_service.get_by_staff_unit(db, id)
+    return user_service.get_all_by_staff_unit(db, id)
 
 
 @router.patch(

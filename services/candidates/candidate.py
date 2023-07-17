@@ -1,4 +1,4 @@
-from sqlalchemy import func, and_
+from sqlalchemy import func, and_, desc
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException, ForbiddenException, BadRequestException
@@ -19,8 +19,7 @@ from .candidate_stage_info import candidate_stage_info_service
 
 
 class CandidateService(
-        ServiceBase[Candidate, CandidateCreate, CandidateUpdate]):
-
+    ServiceBase[Candidate, CandidateCreate, CandidateUpdate]):
     # This const variable stores the positions which have access to all
     # candidates
     ALL_CANDIDATE_VIEWERS = {
@@ -29,7 +28,7 @@ class CandidateService(
         PositionNameEnum.CANDIDATE_MANAGEMENT_HEAD.value,
         PositionNameEnum.POLITICS_GOVERNMENT_SERVANT.value
     }
-    
+
     def get_all(self, db: Session):
         """
             Returns a list of all candidates.
@@ -37,22 +36,22 @@ class CandidateService(
         return db.query(self.model).filter(
             self.model.status == CandidateStatusEnum.ACTIVE.value
         ).all()
-        
+
     def get_count_completed_candidates(
-        self, db: Session
+            self, db: Session
     ):
         return db.query(self.model).filter(
             self.model.status == CandidateStatusEnum.COMPLETED.value
         ).count()
 
     def get_candidates_recursive(self, db: Session, department: StaffDivision):
-        candidates = db.query(self.model)\
-            .join(StaffUnit, self.model.staff_unit_id == StaffUnit.id)\
-            .join(StaffDivision, StaffUnit.staff_division_id == StaffDivision.id)\
+        candidates = db.query(self.model) \
+            .join(StaffUnit, self.model.staff_unit_id == StaffUnit.id) \
+            .join(StaffDivision, StaffUnit.staff_division_id == StaffDivision.id) \
             .filter(
-                self.model.status == CandidateStatusEnum.ACTIVE,
-                self.model.staff_unit_id == StaffUnit.id,
-                StaffUnit.staff_division_id == department.id
+            self.model.status == CandidateStatusEnum.ACTIVE,
+            self.model.staff_unit_id == StaffUnit.id,
+            StaffUnit.staff_division_id == department.id
         ).all()
 
         # Recursively call this function for each child division
@@ -60,6 +59,75 @@ class CandidateService(
             candidates.extend(self.get_candidates_recursive(db, child))
         print(candidates)
         return candidates
+
+    def get_candidates_by_staff_division(self, db, department: StaffDivision):
+        candidates = db.query(self.model) \
+            .join(StaffUnit, self.model.staff_unit_curator_id == StaffUnit.id) \
+            .join(StaffDivision, StaffUnit.staff_division_id == StaffDivision.id) \
+            .filter(
+            self.model.status == CandidateStatusEnum.ACTIVE,
+            self.model.staff_unit_curator_id == StaffUnit.id,
+            StaffUnit.staff_division_id == department.id
+        ).order_by(desc(self.model.staff_unit_curator_id)).all()
+
+        for child in department.children:
+            print(child.name)
+            candidates.extend(self.get_candidates_by_staff_division(db, child))
+        return candidates
+
+    def get_top_curators_by_candidates(self, db: Session, department: StaffDivision):
+
+        candidates = self.get_candidates_by_staff_division(db, department)
+        print(f"candidates {len(candidates)}")
+
+        top_curators = {}
+        for candidate in candidates:
+            curator = user_service.get_user_by_staff_unit(
+                db, candidate.staff_unit_curator_id
+            )
+            print(curator.first_name)
+            if curator.id in top_curators:
+                top_curators[curator.id] += 1
+                print("curator in top_curators")
+            else:
+                top_curators[curator.id] = 1
+
+        print(f"tip curators {top_curators}")
+
+        top_curators = {
+            id: value for id, value in top_curators.items()
+            if value is not None and value != ""
+        }
+        sorted_curators = sorted(top_curators.items(), key=lambda x: x[1], reverse=True)
+        return sorted_curators
+
+    def get_top_curator_duration_by_candidates(self,
+                                               db: Session,
+                                               department: StaffDivision):
+
+        candidates = self.get_candidates_by_staff_division(db, department)
+        print(f"candidates {len(candidates)}")
+
+        top_curators = {}
+        for candidate in candidates:
+            curator = user_service.get_user_by_staff_unit(
+                db, candidate.staff_unit_curator_id
+            )
+            print(curator.first_name)
+            if curator.id in top_curators:
+                if candidate.created_at > top_curators[curator.id]:
+                    top_curators[curator.id] = candidate.created_at
+            else:
+                top_curators[curator.id] = candidate.created_at
+
+        print(f"tip curators {top_curators}")
+
+        top_curators = {
+            id: value for id, value in top_curators.items()
+            if value is not None and value != ""
+        }
+        sorted_curators = sorted(top_curators.items(), key=lambda x: x[1], reverse=True)
+        return sorted_curators
 
     def get_multiple(self, db: Session,
                      filter: str,
@@ -163,9 +231,9 @@ class CandidateService(
             candidate.status = body.status
 
             if (candidate.status
-                == CandidateStatusEnum.DRAFT.value
-                and body.debarment_reason
-                is not None):
+                    == CandidateStatusEnum.DRAFT.value
+                    and body.debarment_reason
+                    is not None):
                 candidate.debarment_reason = body.debarment_reason
             elif candidate.status == CandidateStatusEnum.ACTIVE.value:
                 candidate.debarment_reason = None
@@ -314,10 +382,11 @@ class CandidateService(
         return candidates
 
     def _get_candidates_by_status_and_filter(self, db: Session,
-                                filter: str,
-                                skip: int = 0,
-                                limit: int = 100,
-                                status: CandidateStatusEnum = None) -> CandidateRead:
+                                             filter: str,
+                                             skip: int = 0,
+                                             limit: int = 100,
+                                             status: CandidateStatusEnum = None
+                                             ) -> CandidateRead:
         """
             Returns a list of candidates based on the given status
             and filtered by the given keyword.
@@ -336,7 +405,8 @@ class CandidateService(
                                    user_id: str,
                                    skip: int = 0,
                                    limit: int = 100,
-                                   status: CandidateStatusEnum = None) -> CandidateRead:
+                                   status: CandidateStatusEnum = None
+                                   ) -> CandidateRead:
         """
             Returns a list of supervised candidates.
 
@@ -363,11 +433,13 @@ class CandidateService(
         return candidates
 
     def _get_supervised_candidates_by_status_and_filter(self, db: Session,
-                            filter: str,
-                            user: User,
-                            skip: int = 0,
-                            limit: int = 100,
-                            status: CandidateStatusEnum = None) -> CandidateRead:
+                                                        filter: str,
+                                                        user: User,
+                                                        skip: int = 0,
+                                                        limit: int = 100,
+                                                        status:
+                                                        CandidateStatusEnum = None
+                                                        ) -> CandidateRead:
         """
             Returns a list of supervised candidates based on the given status
             and filtered by the given keyword.
@@ -397,10 +469,11 @@ class CandidateService(
             )
             .filter(
                 and_(func.concat(func.lower(User.first_name), ' ',
-                            func.lower(User.last_name), ' ',
-                            func.lower(User.father_name)).contains(name)
-                            for name in key_words)
+                                 func.lower(User.last_name), ' ',
+                                 func.lower(User.father_name)).contains(name)
+                     for name in key_words)
             )
         )
+
 
 candidate_service = CandidateService(Candidate)  # type: ignore
