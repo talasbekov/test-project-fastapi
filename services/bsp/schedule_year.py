@@ -56,8 +56,6 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
                                                 schedule.activity_months)
         exam_months = month_service.get_months_by_names(db,
                                                 schedule.exam_months)
-        print(activity_months)
-        print(exam_months)
         res = super().create(db, ScheduleYearCreate(
             is_exam_required=schedule.is_exam_required,
             retry_count=schedule.retry_count,
