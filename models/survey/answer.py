@@ -13,6 +13,7 @@ class Answer(Model):
     question_id = Column(UUID(as_uuid=True), ForeignKey("questions.id"))
     discriminator = Column(String(255))
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
+    encrypted_used_id = Column(String(255), nullable=True)
     score = Column(Integer, nullable=True)
 
     question = relationship("QuestionBase", foreign_keys=[

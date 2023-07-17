@@ -120,7 +120,6 @@ class ApplyCandidateHandler(BaseHandler):
             date_from = datetime.datetime.now()
             date_to = date_from.replace(date_from.year + contract_type.years)
         except Exception as e:
-            print(e)
             raise BadRequestException(
                 detail=f'Invalid props for action: {self.__handler__}')
         try:

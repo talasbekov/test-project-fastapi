@@ -53,7 +53,6 @@ class CandidateService(
                     StaffUnit.staff_division_id == staff_division.id
                 ).all()
         )
-        print(status)
         for group in staff_division.children:
             candidates += self.get_all_by_staff_division(db, group, status)
         
@@ -79,7 +78,6 @@ class CandidateService(
         # Recursively call this function for each child division
         for child in department.children:
             candidates.extend(self.get_candidates_recursive(db, child))
-        print(candidates)
         return candidates
 
     def get_multiple(self, db: Session,
