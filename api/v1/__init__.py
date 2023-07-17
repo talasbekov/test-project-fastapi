@@ -45,6 +45,7 @@ from .auto_tag import router as auto_tag_router
 from .dashboard import router as dashboard_router
 
 from .survey import *
+from .bsp import *
 
 router = APIRouter(prefix="/v1")
 
@@ -119,5 +120,13 @@ router.include_router(question_type_router)
 router.include_router(question_router)
 router.include_router(option_router)
 router.include_router(answer_router)
+
+router.include_router(activity_router)
+router.include_router(attendance_router)
+router.include_router(exam_router)
+router.include_router(plan_router)
+router.include_router(schedule_day_router)
+router.include_router(schedule_month_router)
+router.include_router(schedule_year_router)
 
 router.include_router(dashboard_router)

@@ -37,6 +37,28 @@ class CandidateService(
             self.model.status == CandidateStatusEnum.ACTIVE.value
         ).all()
 
+    def get_all_by_staff_division(self,
+                                  db: Session,
+                                  staff_division: StaffDivision,
+                                  status: str):
+        """
+            Returns a list of all candidates by curators within staff division.
+        """
+        candidates = (
+            db.query(self.model)\
+                .join(StaffUnit, self.model.staff_unit_curator_id == StaffUnit.id)\
+                .filter(
+                    self.model.status == status,
+                    StaffUnit.staff_division_id == staff_division.id
+                ).all()
+        )
+        print(status)
+        for group in staff_division.children:
+            candidates += self.get_all_by_staff_division(db, group, status)
+
+        return candidates
+
+
     def get_count_completed_candidates(
             self, db: Session
     ):
@@ -382,11 +404,10 @@ class CandidateService(
         return candidates
 
     def _get_candidates_by_status_and_filter(self, db: Session,
-                                             filter: str,
-                                             skip: int = 0,
-                                             limit: int = 100,
-                                             status: CandidateStatusEnum = None
-                                             ) -> CandidateRead:
+                                filter: str,
+                                skip: int = 0,
+                                limit: int = 100,
+                                status: CandidateStatusEnum = None) -> CandidateRead:
         """
             Returns a list of candidates based on the given status
             and filtered by the given keyword.

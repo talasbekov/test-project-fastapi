@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import TIMESTAMP, Column, String, text
+from sqlalchemy import TIMESTAMP, Column, String, text, TEXT
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql.sqltypes import Boolean
 
@@ -80,3 +80,11 @@ class isActiveModel(Model):
     __abstract__ = True
 
     is_active = Column(Boolean, nullable=False, default=True)
+
+
+class TextModel(Model):
+
+    __abstract__ = True
+
+    text = Column(TEXT, nullable=False)
+    textKZ = Column(TEXT, nullable=True)

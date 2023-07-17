@@ -1,18 +1,13 @@
 import uuid
 
-from typing import Optional
+from typing import Optional, List
+from pydantic import BaseModel, Field
+from schemas import TextModel, ReadTextModel
 
-from schemas import Model, ReadModel
 
-
-class OptionBase(Model):
-    question_id: uuid.UUID
+class OptionBase(TextModel):
     text: Optional[str]
-    min_value: Optional[int]
-    max_value: Optional[int]
-    row_position: Optional[int]
-    column_position: Optional[int]
-    is_checked: Optional[bool]
+    question_id: uuid.UUID
     score: Optional[int]
 
 
@@ -24,9 +19,13 @@ class OptionUpdate(OptionBase):
     question_id: Optional[uuid.UUID]
 
 
-class OptionRead(OptionBase, ReadModel):
+class OptionRead(OptionBase, ReadTextModel):
     question_id: Optional[uuid.UUID]
     score: Optional[int]
 
     class Config:
         orm_mode = True
+
+class OptionReadPagination(BaseModel):
+    total: int = Field(0, nullable=False)
+    objects: List[OptionRead] = Field([], nullable=False)

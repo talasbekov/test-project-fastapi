@@ -1,4 +1,4 @@
-from .base import Model, NamedModel, NestedModel, NamedNestedModel, isActiveModel
+from .base import Model, NamedModel, NestedModel, NamedNestedModel, isActiveModel, TextModel
 from .badge import Badge, BadgeType
 from .equipment import (Equipment, TypeClothingEquipment, TypeArmyEquipment, TypeOtherEquipment, ClothingEquipment, ArmyEquipment, OtherEquipment,
                         TypeClothingEquipmentModel, ClothingEquipmentTypesModels)
@@ -49,3 +49,4 @@ from .hr_vacancy import HrVacancy
 from .hr_vacancy_requirements import HrVacancyRequirements
 from .hr_vacancy_candidate import HrVacancyCandidate
 from .survey import *
+from .bsp import *
