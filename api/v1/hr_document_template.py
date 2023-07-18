@@ -62,7 +62,7 @@ async def get_all_archived(*,
              dependencies=[Depends(HTTPBearer())],
              response_model=HrDocumentTemplateRead,
              summary="Get HrDocumentTemplate drafts")
-async def get_all_archived(*,
+async def get_all_draft(*,
                            db: Session = Depends(get_db),
                            skip: int = 0,
                            limit: int = 10,
@@ -106,7 +106,7 @@ async def create(*,
              dependencies=[Depends(HTTPBearer())],
              response_model=HrDocumentTemplateRead,
              summary="Create HrDocumentTemplate draft")
-async def create(*,
+async def create_draft(*,
                  db: Session = Depends(get_db),
                  body: HrDocumentTemplateDraftCreate,
                  Authorize: AuthJWT = Depends()

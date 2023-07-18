@@ -58,8 +58,6 @@ def upgrade() -> None:
     question1_1_id = get_uuid()
     question1_2_id = get_uuid()
     question1_3_id = get_uuid()
-    question1_4_id = get_uuid()
-    question1_5_id = get_uuid()
     
     op.bulk_insert(
         Base.metadata.tables['questions'],
@@ -86,22 +84,6 @@ def upgrade() -> None:
             'survey_id': survey1_id,
             'question_type': 'MULTIPLE_SELECTION',
             'discriminator': 'question_survey'
-        },
-        {
-            'id': question1_4_id,
-            'text': 'Насколько удовлетворены вы общей производительностью веб-сайта',
-            'is_required': True,
-            'survey_id': survey1_id,
-            'question_type': 'SCALE',
-            'discriminator': 'question_survey'
-        },
-        {
-            'id': question1_5_id,
-            'text': 'Пожалуйста, оцените следующие аспекты веб-сайта Cleverest Technologies от 1 до 5, где 1 - очень низкое качество и 5 - очень высокое качество:',
-            'is_required': True,
-            'survey_id': survey1_id,
-            'question_type': 'GRID',
-            'discriminator': 'question_survey'
         }]
     )
     
@@ -115,200 +97,48 @@ def upgrade() -> None:
     option1_3_3_id = get_uuid()
     option1_3_4_id = get_uuid()
     
-    option1_4_1_id = get_uuid()
-    
-    option1_5_1_id = get_uuid()
-    option1_5_2_id = get_uuid()
-    option1_5_3_id = get_uuid()
-    option1_5_4_id = get_uuid()
-    option1_5_5_id = get_uuid()
-    option1_5_6_id = get_uuid()
-    option1_5_7_id = get_uuid()
-    option1_5_8_id = get_uuid()
-    option1_5_9_id = get_uuid()
-    option1_5_10_id = get_uuid()
-    
     op.bulk_insert(
         Base.metadata.tables['options'],
         [{
             'id': option1_2_1_id,
             'question_id': question1_2_id,
             'discriminator': 'option_text',
-            'text': 'Личный дело сотрудника',
-            'min_value': None,
-            'max_value': None,
-            'row_position': None,
-            'column_position': None
+            'text': 'Личный дело сотрудника'
         }, {
             'id': option1_2_2_id,
             'question_id': question1_2_id,
             'discriminator': 'option_text',
-            'text': 'Автоматизации документооборота',
-            'min_value': None,
-            'max_value': None,
-            'row_position': None,
-            'column_position': None
+            'text': 'Автоматизации документооборота'
         }, {
             'id': option1_2_3_id,
             'question_id': question1_2_id,
             'discriminator': 'option_text',
-            'text': 'Штатное расписание',
-            'min_value': None,
-            'max_value': None,
-            'row_position': None,
-            'column_position': None
+            'text': 'Штатное расписание'
         }, {
             'id': option1_2_4_id,
             'question_id': question1_2_id,
             'discriminator': 'option_text',
-            'text': 'Опросы и тесты',
-            'min_value': None,
-            'max_value': None,
-            'row_position': None,
-            'column_position': None
+            'text': 'Опросы и тесты'
         }, {
             'id': option1_3_1_id,
             'question_id': question1_3_id,
             'discriminator': 'option_text',
-            'text': 'Интуитивный интерфейс',
-            'min_value': None,
-            'max_value': None,
-            'row_position': None,
-            'column_position': None
+            'text': 'Интуитивный интерфейс'
         }, {
             'id': option1_3_2_id,
             'question_id': question1_3_id,
             'discriminator': 'option_text',
-            'text': 'Быстрая загрузка страниц',
-            'min_value': None,
-            'max_value': None,
-            'row_position': None,
-            'column_position': None
+            'text': 'Быстрая загрузка страниц'
         }, {
             'id': option1_3_3_id,
             'question_id': question1_3_id,
             'discriminator': 'option_text',
-            'text': 'Четкая навигация',
-            'min_value': None,
-            'max_value': None,
-            'row_position': None,
-            'column_position': None
+            'text': 'Четкая навигация'
         }, {
             'id': option1_3_4_id,
             'question_id': question1_3_id,
             'discriminator': 'option_text',
-            'text': 'Автоматизация рутинных задач',
-            'min_value': None,
-            'max_value': None,
-            'row_position': None,
-            'column_position': None
-        }, {
-            'id': option1_4_1_id,
-            'question_id': question1_4_id,
-            'discriminator': 'option_scale',
-            'min_value': 1,
-            'max_value': 5,
-            'text': None,
-            'row_position': None,
-            'column_position': None
-        }, {
-            'id': option1_5_1_id,
-            'question_id': question1_5_id,
-            'discriminator': 'option_grid',
-            'text': 'Дизайн интерфейса',
-            'row_position': 1,
-            'column_position': 1,
-            'min_value': None,
-            'max_value': None
-        },
-        {
-            'id': option1_5_2_id,
-            'question_id': question1_5_id,
-            'discriminator': 'option_grid',
-            'text': 'Скорость загрузки страниц',
-            'row_position': 2,
-            'column_position': 1,
-            'min_value': None,
-            'max_value': None
-        },
-        {
-            'id': option1_5_3_id,
-            'question_id': question1_5_id,
-            'discriminator': 'option_grid',
-            'text': 'Навигация по сайту',
-            'row_position': 3,
-            'column_position': 1,
-            'min_value': None,
-            'max_value': None
-        },
-        {
-            'id': option1_5_4_id,
-            'question_id': question1_5_id,
-            'discriminator': 'option_grid',
-            'text': 'Качество предоставляемой информации',
-            'row_position': 4,
-            'column_position': 1,
-            'min_value': None,
-            'max_value': None
-        },
-        {
-            'id': option1_5_5_id,
-            'question_id': question1_5_id,
-            'discriminator': 'option_grid','text': 'Удобство использования функциональности',
-            'row_position': 5,
-            'column_position': 1,
-            'min_value': None,
-            'max_value': None
-        },
-        {
-            'id': option1_5_6_id,
-            'question_id': question1_5_id,
-            'discriminator': 'option_grid',
-            'text': '1',
-            'row_position': 1,
-            'column_position': 1,
-            'min_value': None,
-            'max_value': None
-        },
-        {
-            'id': option1_5_7_id,
-            'question_id': question1_5_id,
-            'discriminator': 'option_grid',
-            'text': '2',
-            'row_position': 1,
-            'column_position': 2,
-            'min_value': None,
-            'max_value': None
-        },
-        {
-            'id': option1_5_8_id,
-            'question_id': question1_5_id,
-            'discriminator': 'option_grid',
-            'text': '3',
-            'row_position': 1,
-            'column_position': 3,
-            'min_value': None,
-            'max_value': None
-        },
-        {
-            'id': option1_5_9_id,
-            'question_id': question1_5_id,
-            'discriminator': 'option_grid',
-            'text': '4',
-            'row_position': 1,
-            'column_position': 4,
-            'min_value': None,
-            'max_value': None
-        },
-        {
-            'id': option1_5_10_id,
-            'question_id': question1_5_id,
-            'discriminator': 'option_grid',
-            'text': '5',
-            'row_position': 1,
-            'column_position': 5,
-            'min_value': None,
-            'max_value': None,
+            'text': 'Автоматизация рутинных задач'
         }]
     )
 
