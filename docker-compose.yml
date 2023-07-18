@@ -25,7 +25,7 @@ services:
 
   sgo-erp:
     platform: linux/amd64
-    command: bash -c "ruff check . --ignore E712,E711 --exclude ./alembic,__init__.py && alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8002 --log-config log.ini --workers ${NUMBER_OF_WORKERS}"
+    command: bash -c "ruff check . --ignore E712,E711 --exclude ./alembic,__init__.py && alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8002 --log-config log.ini --workers ${NUMBER_OF_WORKERS} --reload"
     build: .
     container_name: sgo-erp-test
     restart: always
@@ -42,53 +42,6 @@ services:
       resources:
         limits:
           memory: 4g
-
-  rabbitmq:
-    image: rabbitmq:3.9.4
-    container_name: rabbitmq-dev
-    ports:
-      - '5672:5672'
-    restart: always
-    networks:
-      - backend-dev
-
-  redis:
-    image: redis
-    container_name: redis-dev
-    ports:
-      - '6379:6379'
-    restart: always
-    networks:
-      - backend-dev
-
-  celery:
-    build:
-      context: .
-    command: celery -A tasks.celery_app worker --loglevel=info
-    container_name: celery
-    user: "1000"
-    depends_on:
-      - redis
-      - rabbitmq
-    environment:
-      - C_FORCE_ROOT=false
-      - CELERY_BROKER_URL=amqp://rabbitmq:5672/
-    restart: always
-    networks:
-      - backend-dev
-
-  flower:
-    image: "mher/flower"
-    container_name: flower
-    environment:
-      CELERY_BROKER_URL: amqp://rabbitmq:5672/
-    ports:
-      - "5555:5555"
-    restart: always
-    networks:
-      - backend-dev
-    depends_on:
-      - rabbitmq
 networks:
   backend-dev:
     driver: bridge
