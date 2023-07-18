@@ -296,7 +296,6 @@ class DashboardService:
             staff_division = staff_division_service.get_by_name(
                 db, StaffDivisionEnum.SERVICE.value
             )
-            print("fifth department")
             return candidate_service.get_top_curators_by_candidates(
                 db, staff_division
             )
@@ -321,7 +320,6 @@ class DashboardService:
             staff_division = staff_division_service.get_by_name(
                 db, StaffDivisionEnum.SERVICE.value
             )
-            print("fifth department")
             return candidate_service.get_top_curator_duration_by_candidates(
                 db, staff_division
             )
