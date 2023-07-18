@@ -1,7 +1,8 @@
 import enum
 
 from sqlalchemy import (Column, ForeignKey, TEXT,
-                        TIMESTAMP, Boolean, Enum)
+                        TIMESTAMP, Boolean, Enum,
+                        String)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -25,10 +26,14 @@ class SurveyStaffPositionEnum(str, enum.Enum):
     ONLY_MANAGING_STRUCTURE = "Только руководящий состав"
 
 
-class Base(NamedModel):
+class SurveyTypeEnum(str, enum.Enum):
+    SURVEY = "Опрос"
+    QUIZ = "Тест"
 
-    __abstract__ = True
+class SurveyBase(NamedModel):
 
+    __tablename__ = "surveys"
+    
     description = Column(TEXT, nullable=True)
     start_date = Column(TIMESTAMP(timezone=True), nullable=False)
     end_date = Column(TIMESTAMP(timezone=True), nullable=False)
@@ -42,23 +47,31 @@ class Base(NamedModel):
     certain_member_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     staff_division_id = Column(UUID(as_uuid=True), ForeignKey("staff_divisions.id"))
     staff_position = Column(Enum(SurveyStaffPositionEnum), nullable=False)
-    
     owner_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
+    type = Column(Enum(SurveyTypeEnum), nullable=False)
+    
+    discriminator = Column(String(255))
+    
+    questions = relationship(
+        "Question", cascade="all, delete", back_populates="survey")
+    
+    __mapper_args__ = {
+        "polymorphic_on": discriminator,
+        "polymorphic_identity": ""
+    }
 
 
-class Survey(Base):
-
-    __tablename__ = "surveys"
+class Survey(SurveyBase):
 
     is_anonymous = Column(Boolean(), default=False, nullable=True)
+    
+    __mapper_args__ = {
+        "polymorphic_identity": "survey"
+    }
 
-    questions = relationship(
-        "QuestionSurvey", cascade="all, delete", back_populates="survey")
 
-
-class Quiz(Base):
-
-    __tablename__ = "quizzes"
-
-    questions = relationship(
-        "QuestionQuiz", cascade="all, delete", back_populates="quiz")
+class Quiz(SurveyBase):
+    
+    __mapper_args__ = {
+        "polymorphic_identity": "quiz"
+    }
