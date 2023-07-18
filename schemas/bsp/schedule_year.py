@@ -2,7 +2,6 @@ import uuid
 from datetime import datetime
 from typing import Optional, List
 
-
 from schemas import (BaseModel,
                      NamedModel,
                      UserShortRead,
@@ -39,9 +38,11 @@ class ScheduleYearBase(BaseModel):
         orm_mode = True
         arbitrary_types_allowed = True
 
+
 class ScheduleYearCreateString(ScheduleYearBase):
     activity_months: Optional[List[Optional[str]]]
     exam_months: Optional[List[Optional[str]]]
+
 
 class ScheduleYearCreate(ScheduleYearBase):
     pass

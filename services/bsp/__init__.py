@@ -1,6 +1,6 @@
 from .activity import activity_service
+from .attended_user import attended_user_service
 from .attendance import attendance_service
-from .absent_user import absent_user_service
 from .exam import exam_service
 from .plan import plan_service
 from .schedule_day import schedule_day_service
