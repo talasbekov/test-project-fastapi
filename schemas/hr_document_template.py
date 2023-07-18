@@ -19,7 +19,8 @@ class HrDocumentTemplateBase(NamedModel):
     subject_type: SubjectType
     maintainer_id: Optional[uuid.UUID]
     properties: Dict[str, dict]
-    description: Optional[NamedModel]
+    description: Optional[str]
+    #description: Optional[NamedModel]
     actions: Dict[str, list]
     is_visible: bool
     is_due_date_required: Optional[bool] = False
@@ -32,9 +33,13 @@ class HrDocumentTemplateBase(NamedModel):
 class HrDocumentTemplateCreate(HrDocumentTemplateBase):
     pass
 
+class HrDocumentTemplateDraftCreate(HrDocumentTemplateBase):
+    is_draft: Optional[bool]
+
 
 class HrDocumentTemplateUpdate(HrDocumentTemplateBase):
     is_active: Optional[bool]
+    is_draft: Optional[bool]
 
 
 class HrDocumentTemplateRead(HrDocumentTemplateBase, ReadNamedModel):
