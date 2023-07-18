@@ -225,6 +225,8 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             self.model.staff_unit_id == staff_unit_id
         ).first()
         
+        return users
+    
     def get_by_plan_id(self, db: Session, plan_id: uuid.UUID):
 
         users = (db.query(User)

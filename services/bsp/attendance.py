@@ -16,6 +16,8 @@ class AttendanceService(ServiceBase[Attendance, AttendanceCreate, AttendanceUpda
                             .group_by(Attendance.schedule_id)
                             .all()
                             )
+        
+        return attendances_count
         # attended_count = (db.query(Attendance)
         #                   .join(Attendance.attended_users)
         #                   .filter(AttendedUser.user_id == user_id)
