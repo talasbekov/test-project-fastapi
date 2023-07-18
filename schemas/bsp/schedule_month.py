@@ -1,13 +1,13 @@
 import uuid
 from typing import Optional, List
-from datetime import date
+from datetime import date, time
 
 from schemas import (BaseModel,
                      NamedModel,
                      UserShortRead,
                      StaffDivisionReadWithoutStaffUnit, )
 from .activity import ActivityRead
-from .schedule_day import ScheduleDayRead
+from .schedule_day import ScheduleDayRead, ScheduleDayCreateWithString
 
 
 class PlaceBase(NamedModel):
@@ -31,10 +31,10 @@ class MonthRead(NamedModel):
 
 
 class ScheduleMonthBase(BaseModel):
-    start_date: Optional[date]
-    end_date: Optional[date]
-    place_id: Optional[uuid.UUID]
-    schedule_id: Optional[uuid.UUID]
+    start_date: date
+    end_date: date
+    place_id: uuid.UUID
+    schedule_id: uuid.UUID
 
     class Config:
         orm_mode = True
@@ -43,6 +43,11 @@ class ScheduleMonthBase(BaseModel):
 
 class ScheduleMonthCreate(ScheduleMonthBase):
     pass
+
+
+class ScheduleMonthCreateWithDay(ScheduleMonthBase):
+    days: List[ScheduleDayCreateWithString]
+    instructor_ids: List[Optional[uuid.UUID]]
 
 
 class ScheduleMonthUpdate(ScheduleMonthBase):
