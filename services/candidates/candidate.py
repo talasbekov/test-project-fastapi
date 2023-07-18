@@ -91,28 +91,27 @@ class CandidateService(
         ).order_by(desc(self.model.staff_unit_curator_id)).all()
 
         for child in department.children:
-            print(child.name)
             candidates.extend(self.get_candidates_by_staff_division(db, child))
         return candidates
 
     def get_top_curators_by_candidates(self, db: Session, department: StaffDivision):
 
         candidates = self.get_candidates_by_staff_division(db, department)
-        # print(f"candidates {len(candidates)}")
 
         top_curators = {}
         for candidate in candidates:
             curator = user_service.get_user_by_staff_unit(
                 db, candidate.staff_unit_curator_id
             )
-            # print(curator.first_name)
             if curator.id in top_curators:
                 top_curators[curator.id] += 1
                 # print("curator in top_curators")
             else:
                 top_curators[curator.id] = 1
-
-        # print(f"tip curators {top_curators}")
+            if curator.id in top_curators:
+                top_curators[curator.id] += 1
+            else:
+                top_curators[curator.id] = 1
 
         top_curators = {
             id: value for id, value in top_curators.items()
@@ -127,21 +126,18 @@ class CandidateService(
                                                department: StaffDivision):
 
         candidates = self.get_candidates_by_staff_division(db, department)
-        # print(f"candidates {len(candidates)}")
 
         top_curators = {}
         for candidate in candidates:
             curator = user_service.get_user_by_staff_unit(
                 db, candidate.staff_unit_curator_id
             )
-            # print(curator.first_name)
             if curator.id in top_curators:
                 if candidate.created_at > top_curators[curator.id]:
                     top_curators[curator.id] = candidate.created_at
             else:
                 top_curators[curator.id] = candidate.created_at
 
-        # print(f"tip curators {top_curators}")
 
         top_curators = {
             id: value for id, value in top_curators.items()

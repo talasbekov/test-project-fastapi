@@ -27,6 +27,7 @@ class AnswerRead(AnswerBase, ReadModel):
     options: Optional[List[OptionRead]]
     user_id: Optional[uuid.UUID]
     encrypted_used_id: Optional[str]
+    score: Optional[int]
 
     class Config:
         orm_mode = True
