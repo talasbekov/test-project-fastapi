@@ -40,9 +40,13 @@ class OptionService(ServiceBase[Option, OptionCreate, OptionUpdate]):
         return super().update(db, obj_from_db, body)
 
     def __validate_score(self, survey, score: int):        
-        if survey.type == SurveyTypeEnum.SURVEY.value and score:
+        if survey.type == SurveyTypeEnum.SURVEY.value and score is not None:
             raise BadRequestException(
                 "Score is not allowed for survey")
+        elif survey.type == SurveyTypeEnum.QUIZ.value and score is None:
+            raise BadRequestException(
+                "Score is required for quiz"
+            )
     
     def __validate_question_type(self, question_type: str):
         if question_type == QuestionTypeEnum.TEXT.value:

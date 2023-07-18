@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from services.base import ServiceBase
 from models import (StaffUnit, SurveyStatusEnum, SurveyJurisdictionTypeEnum,
                     SurveyStaffPositionEnum, PositionNameEnum,
-                    SurveyBase, SurveyTypeEnum, Survey, Quiz)
+                    Survey)
 from services import (
     staff_division_service, staff_unit_service, user_service
 )
@@ -11,7 +11,7 @@ from schemas import SurveyCreate, SurveyUpdate
 from exceptions import BadRequestException
 
 
-class SurveyService(ServiceBase[SurveyBase, SurveyCreate, SurveyUpdate]):
+class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
     
     ALL_MANAGING_STRUCTURE = {
         PositionNameEnum.HEAD_OF_DEPARTMENT.value,
@@ -63,10 +63,7 @@ class SurveyService(ServiceBase[SurveyBase, SurveyCreate, SurveyUpdate]):
         ).count()
 
     def save_as_draft(self, db: Session, body: SurveyCreate):
-        if body.type == SurveyTypeEnum.QUIZ.value:
-            obj = Quiz(**body.dict())
-        else:
-            obj = Survey(**body.dict())
+        obj = Survey(**body.dict())
         
         obj.status = SurveyStatusEnum.DRAFT.value
         
@@ -78,22 +75,7 @@ class SurveyService(ServiceBase[SurveyBase, SurveyCreate, SurveyUpdate]):
         return obj
     
     def create(self, db: Session, body: SurveyCreate):
-        if body.type == SurveyTypeEnum.QUIZ.value:
-            obj = Quiz(
-                name=body.name,
-                nameKZ=body.nameKZ,
-                description=body.description,
-                start_date=body.start_date,
-                end_date=body.end_date,
-                jurisdiction_type=body.jurisdiction_type,
-                is_kz_translate_required=body.is_kz_translate_required,
-                certain_member_id=body.certain_member_id,
-                staff_division_id=body.staff_division_id,
-                staff_position=body.staff_position,
-                type=body.type
-            )
-        else:
-            obj = Survey(**body.dict())
+        obj = Survey(**body.dict())
         
         self.__set_jurisdiction(db, obj, body)
 
@@ -120,7 +102,7 @@ class SurveyService(ServiceBase[SurveyBase, SurveyCreate, SurveyUpdate]):
         except ValueError:
             raise BadRequestException(f"Invalid status: {status}")
     
-    def __set_jurisdiction(self, db: Session, obj: SurveyBase, body):
+    def __set_jurisdiction(self, db: Session, obj: Survey, body):
         self.__validate_jurisdiciton_type(body.jurisdiction_type)
         self.__validate_staff_position(body.staff_position)
         
@@ -191,4 +173,4 @@ class SurveyService(ServiceBase[SurveyBase, SurveyCreate, SurveyUpdate]):
             
         return query
 
-survey_service = SurveyService(SurveyBase)
+survey_service = SurveyService(Survey)

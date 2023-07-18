@@ -3,7 +3,8 @@ from typing import List
 from b64uuid import B64UUID
 
 from models import (Answer, QuestionTypeEnum, Question,
-                    AnswerSingleSelection, Survey, AnswerText)
+                    AnswerSingleSelection, Survey, AnswerText,
+                    SurveyTypeEnum)
 from schemas import AnswerCreate, AnswerUpdate
 from exceptions import BadRequestException
 from services.base import ServiceBase
@@ -51,11 +52,13 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
             options = [option_service.get_by_id(
                 db, option_id) for option_id in body.option_ids]
             answer.options = options
-
+        
+        survey = survey_service.get_by_id(db, question.survey_id)
+        if survey.type == SurveyTypeEnum.QUIZ.value:
+            answer.score = self.__calculate_score(db, answer)
+        
         answer = self.__set_anonymous(
-            db, question.survey_id, user_id, answer)
-
-        # answer.score = self.__calculate_score(db, answer)
+            survey, user_id, answer)
 
         db.add(answer)
         db.flush()
@@ -75,12 +78,14 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
 
         return answer_kwargs
 
-    def __set_anonymous(self, db: Session, survey_id: str, user_id: str, answer):
-        survey: Survey = survey_service.get_by_id(db, survey_id)
-
+    def __set_anonymous(self, survey: Survey, user_id: str, answer):
+        print("set anonymous")
+        
         if survey.is_anonymous:
+            print("is_anonymous")
             answer.encrypted_used_id = B64UUID(user_id).string
         else:
+            print("not is_anonymous")
             answer.user_id = user_id
 
         return answer
