@@ -79,13 +79,10 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
         return answer_kwargs
 
     def __set_anonymous(self, survey: Survey, user_id: str, answer):
-        print("set anonymous")
         
         if survey.is_anonymous:
-            print("is_anonymous")
             answer.encrypted_used_id = B64UUID(user_id).string
         else:
-            print("not is_anonymous")
             answer.user_id = user_id
 
         return answer
