@@ -24,14 +24,10 @@ def upgrade() -> None:
     op.drop_column('questions', 'quiz_id')
     op.drop_column('questions', 'discriminator')
     op.drop_table('quizzes')
-    op.add_column('surveys', sa.Column('discriminator', sa.String(length=255), nullable=True))
     op.add_column('surveys', sa.Column('type', sa.String()))
     op.alter_column('surveys', 'is_kz_translate_required',
                existing_type=sa.BOOLEAN(),
                nullable=True)
-    op.execute(sa.text("UPDATE surveys " +
-                        "SET discriminator = 'survey'")
-    )
     op.execute(sa.text("UPDATE surveys " +
                         "SET type = 'SURVEY'")
     )
@@ -43,7 +39,6 @@ def downgrade() -> None:
     op.alter_column('surveys', 'is_kz_translate_required',
                existing_type=sa.BOOLEAN(),
                nullable=False)
-    op.drop_column('surveys', 'discriminator')
     op.add_column('questions', sa.Column('discriminator', sa.VARCHAR(length=255), autoincrement=False, nullable=True))
     op.add_column('questions', sa.Column('quiz_id', sa.UUID(), autoincrement=False, nullable=True))
     op.create_foreign_key('questions_quiz_id_fkey', 'questions', 'quizzes', ['quiz_id'], ['id'])

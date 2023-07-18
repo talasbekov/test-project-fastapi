@@ -1,8 +1,7 @@
 import enum
 
 from sqlalchemy import (Column, ForeignKey, TEXT,
-                        TIMESTAMP, Boolean, Enum,
-                        String)
+                        TIMESTAMP, Boolean, Enum)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -30,7 +29,7 @@ class SurveyTypeEnum(str, enum.Enum):
     SURVEY = "Опрос"
     QUIZ = "Тест"
 
-class SurveyBase(NamedModel):
+class Survey(NamedModel):
 
     __tablename__ = "surveys"
     
@@ -44,34 +43,12 @@ class SurveyBase(NamedModel):
     )
     jurisdiction_type = Column(Enum(SurveyJurisdictionTypeEnum), nullable=False)
     is_kz_translate_required = Column(Boolean(), default=False, nullable=True)
+    is_anonymous = Column(Boolean(), default=False, nullable=True)
     certain_member_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     staff_division_id = Column(UUID(as_uuid=True), ForeignKey("staff_divisions.id"))
     staff_position = Column(Enum(SurveyStaffPositionEnum), nullable=False)
     owner_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     type = Column(Enum(SurveyTypeEnum), nullable=False)
-    
-    discriminator = Column(String(255))
-    
+        
     questions = relationship(
         "Question", cascade="all, delete", back_populates="survey")
-    
-    __mapper_args__ = {
-        "polymorphic_on": discriminator,
-        "polymorphic_identity": ""
-    }
-
-
-class Survey(SurveyBase):
-
-    is_anonymous = Column(Boolean(), default=False, nullable=True)
-    
-    __mapper_args__ = {
-        "polymorphic_identity": "survey"
-    }
-
-
-class Quiz(SurveyBase):
-    
-    __mapper_args__ = {
-        "polymorphic_identity": "quiz"
-    }
