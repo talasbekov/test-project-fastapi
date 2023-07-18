@@ -6,11 +6,11 @@ from sqlalchemy.orm import Session
 from exceptions import ForbiddenException
 from models import (StaffDivision, StaffUnit,
                     PositionNameEnum, StaffDivisionEnum,
-                    StatusEnum, CandidateStatusEnum)
+                    StatusEnum, CandidateStatusEnum, User)
 from services import (staff_division_service, staff_unit_service,
                       position_service, hr_vacancy_service,
                       candidate_stage_type_service, candidate_service,
-                      candidate_stage_info_service, status_service)
+                      candidate_stage_info_service, status_service, user_service)
 
 
 class DashboardService:
@@ -196,7 +196,7 @@ class DashboardService:
         staff_unit: StaffUnit = staff_unit_service.get_by_id(db, role)
         fifth_department = staff_division_service.get_by_name(db, "Пятый департамент")
 
-        if staff_unit.staff_division_id == fifth_department.id:
+        if staff_unit.curator_of_id == fifth_department.id:
             candidates = candidate_service.get_all(db)
         else:
             candidates = (
@@ -238,7 +238,7 @@ class DashboardService:
         staff_unit: StaffUnit = staff_unit_service.get_by_id(db, role)
         fifth_department = staff_division_service.get_by_name(db, "Пятый департамент")
 
-        if staff_unit.staff_division_id == fifth_department.id:
+        if staff_unit.curator_of_id == fifth_department.id:
             candidates = candidate_service.get_all(db)
         else:
             candidates = (
@@ -335,6 +335,27 @@ class DashboardService:
             return candidate_service.get_top_curator_duration_by_candidates(
                 db, staff_division
             )
+
+    def get_all_users_of_erp(self, db: Session) -> int:
+        users: List[User] = user_service.get_multi(db)
+        print(len(users))
+        return len(users)
+
+    def get_all_new_users_at_week(self, db: Session) -> int:
+        end_date = datetime.now()
+        start_date = end_date - timedelta(days=7)
+        users = db.query(User).filter(
+            User.created_at.between(start_date, end_date)
+        ).all()
+        print(len(users))
+        return len(users)
+
+    def get_active_users(self, db: Session) -> int:
+        active_users = db.query(User).filter(
+            User.is_active.is_(True)
+        ).all()
+        print(len(active_users))
+        return len(active_users)
 
     def check_by_role(self, db: Session, staff_unit) -> bool:
         """
