@@ -127,7 +127,7 @@ class StatusService(ServiceBase[Status, StatusCreate, StatusUpdate]):
 
         users_with_status: List[User] = []
         for user in users:
-            users_with_status.append(user.name)
+            users_with_status.append(user)
 
         state_by_status = [name for name in users_with_status]
         return state_by_status
@@ -159,10 +159,14 @@ class StatusService(ServiceBase[Status, StatusCreate, StatusUpdate]):
             users.extend(self.get_count_all_users_recursive_by_status(db, child))
 
         users_with_status: List[User] = []
+        
+        if users is None:
+            return 0
+        
         for user in users:
-            users_with_status.append(user.first_name)
+            users_with_status.append(user)
 
-        state_by_status = [name for name in users_with_status]
+        state_by_status = [first_name for first_name in users_with_status]
         return state_by_status
 
 

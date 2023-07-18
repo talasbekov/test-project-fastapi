@@ -11,7 +11,8 @@ from schemas import (
     HrDocumentTemplateCreate,
     HrDocumentTemplateUpdate,
     HrDocumentTemplateRead,
-    SuggestCorrections
+    SuggestCorrections,
+    HrDocumentTemplateDraftCreate
 )
 from services import hr_document_template_service
 
@@ -57,6 +58,19 @@ async def get_all_archived(*,
     Authorize.jwt_required()
     return hr_document_template_service.get_all_archived(db, skip, limit)
 
+@router.get('/draft',  status_code=status.HTTP_200_OK,
+             dependencies=[Depends(HTTPBearer())],
+             response_model=HrDocumentTemplateRead,
+             summary="Get HrDocumentTemplate drafts")
+async def get_all_archived(*,
+                           db: Session = Depends(get_db),
+                           skip: int = 0,
+                           limit: int = 10,
+                           Authorize: AuthJWT = Depends(),
+                           ):
+    Authorize.jwt_required()
+    return hr_document_template_service.get_all_drafts(db, skip, limit)
+
 
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
@@ -78,6 +92,35 @@ async def create(*,
         - **properties**: Dict[str, dict] - details which
             will be replaced while creating HrDocument.
             This is required.
+
+        - CANDIDATE = 1
+        - EMPLOYEE = 2
+        - PERSONNEL = 3
+        - STAFF = 4
+    """
+    Authorize.jwt_required()
+    role = Authorize.get_raw_jwt()['role']
+    return hr_document_template_service.create_template(db, body, role)
+
+@router.post("/draft", status_code=status.HTTP_201_CREATED,
+             dependencies=[Depends(HTTPBearer())],
+             response_model=HrDocumentTemplateRead,
+             summary="Create HrDocumentTemplate draft")
+async def create(*,
+                 db: Session = Depends(get_db),
+                 body: HrDocumentTemplateDraftCreate,
+                 Authorize: AuthJWT = Depends()
+                 ):
+    """
+        Create HrDocumentTemplate draft
+
+        - **name**: required
+        - **path**: string - the current location of this document.
+            This is required.
+        - **subject_type**: int - the subject type of the HrDocumentTemplate.
+            This field should necessarily accept one of the following types.
+        - **properties**: Dict[str, dict] - details which
+            will be replaced while creating HrDocument.
 
         - CANDIDATE = 1
         - EMPLOYEE = 2

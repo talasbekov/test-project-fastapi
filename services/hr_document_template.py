@@ -41,7 +41,7 @@ class HrDocumentTemplateService(
     ServiceBase[HrDocumentTemplate,
                 HrDocumentTemplateCreate,
                 HrDocumentTemplateUpdate]
-):
+):  
     def create_template(
         self, db: Session, body: HrDocumentTemplateCreate, role: str
     ) -> HrDocumentTemplateRead:
@@ -51,7 +51,22 @@ class HrDocumentTemplateService(
         hr_document_template = self.model(**obj_in_data)
 
         hr_document_template.maintainer_id = current_user_staff_unit_id.id
+        hr_document_template.is_draft = False
+        db.add(hr_document_template)
+        db.flush()
 
+        return hr_document_template
+    
+    def create_template_draft(
+        self, db: Session, body: HrDocumentTemplateCreate, role: str
+    ) -> HrDocumentTemplateRead:
+        current_user_staff_unit_id = staff_unit_service.get_by_id(db, role)
+
+        obj_in_data = jsonable_encoder(body)
+        hr_document_template = self.model(**obj_in_data)
+
+        hr_document_template.maintainer_id = current_user_staff_unit_id.id
+        hr_document_template.is_draft = True
         db.add(hr_document_template)
         db.flush()
 
@@ -136,6 +151,7 @@ class HrDocumentTemplateService(
                 .all()
             )
         return self.get_all_active(db, skip, limit)
+    
 
     def get_all_active(
         self, db: Session, skip: int = 0, limit: int = 100
@@ -143,6 +159,18 @@ class HrDocumentTemplateService(
         return (
             db.query(HrDocumentTemplate)
             .filter(HrDocumentTemplate.is_active == True)
+            .filter(HrDocumentTemplate.is_visible == True)
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
+        
+    def get_all_drafts(
+        self, db: Session, skip: int = 0, limit: int = 100
+    ) -> List[HrDocumentTemplateRead]:
+        return (
+            db.query(HrDocumentTemplate)
+            .filter(HrDocumentTemplate.is_draft == True)
             .filter(HrDocumentTemplate.is_visible == True)
             .offset(skip)
             .limit(limit)
