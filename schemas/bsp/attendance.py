@@ -4,9 +4,11 @@ from datetime import date
 
 from schemas import BaseModel, UserShortRead
 from .schedule_month import ScheduleMonthRead
+from .activity import ActivityRead
+
 
 class AttendedUserBase(BaseModel):
-    is_attended: Optional[bool]
+    attendance_status: Optional[str]
     user_id: Optional[uuid.UUID]
     attendance_id: Optional[uuid.UUID]
 
@@ -26,6 +28,12 @@ class AttendedUserUpdate(AttendedUserBase):
 class AttendedUserRead(AttendedUserBase):
     id: Optional[uuid.UUID]
     user: Optional[UserShortRead]
+
+
+class AttendanceChangeStatus(BaseModel):
+    attendance_id: uuid.UUID
+    attendance_status: Optional[str]
+    user_ids: List[uuid.UUID]
 
 
 class AttendanceBase(BaseModel):
@@ -51,24 +59,6 @@ class AttendanceRead(AttendanceBase):
     attended_users: Optional[List[AttendedUserRead]]
 
 
-class AbsentUserBase(BaseModel):
-    reason: Optional[str]
-    absent_date: Optional[date]
-    user_id: Optional[uuid.UUID]
-
-    class Config:
-        orm_mode = True
-        arbitrary_types_allowed = True
-
-
-class AbsentUserCreate(AttendanceBase):
-    pass
-
-
-class AbsentUserUpdate(AttendanceBase):
-    pass
-
-
-class AbsentUserRead(AttendanceBase):
-    id: Optional[uuid.UUID]
-    user: Optional[UserShortRead]
+class AttendancePercentageRead(BaseModel):
+    activity: Optional[ActivityRead]
+    percentage: Optional[int]
