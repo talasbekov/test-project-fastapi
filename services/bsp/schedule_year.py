@@ -74,6 +74,9 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
             plan_id=schedule.plan_id,
             activity_id=schedule.activity_id,
         ))
+        staff_divisions = [staff_division_service.get_by_id(db, division_id)
+                       for division_id in schedule.staff_division_ids]
+        res.staff_divisions = staff_divisions
 
         res.activity_months = activity_months
         res.exam_months = exam_months

@@ -42,6 +42,7 @@ class ScheduleYearBase(BaseModel):
 class ScheduleYearCreateString(ScheduleYearBase):
     activity_months: Optional[List[Optional[str]]]
     exam_months: Optional[List[Optional[str]]]
+    staff_division_ids: List[uuid.UUID]
 
 
 class ScheduleYearCreate(ScheduleYearBase):
