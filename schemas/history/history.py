@@ -108,7 +108,7 @@ class HistoryBase(BaseModel):
     staff_division_nameKZ: Optional[str]
 
     class Config:
-        orm_mode = True
+        from_attributes=True
         arbitrary_types_allowed = True
 
 
@@ -132,7 +132,7 @@ class HistoryRead(HistoryBase, ReadNamedModel):
     staff_division: Optional[StaffDivisionRead]
 
     class Config:
-        orm_mode = True
+        from_attributes=True
         arbitrary_types_allowed = True
 
     @property
@@ -202,7 +202,7 @@ class HistoryPersonalRead(ReadModel):
     characteristic_initiator: Optional[UserRead]
     date_to: Optional[datetime]
     position: Optional[PositionRead]
-    rank: Optional['RankRead']
+    rank: Optional[RankRead]
     penalty: Optional['PenaltyReadHistory']
     emergency_service: Optional['EmergencyServiceRead']
     work_experience: Optional['WorkExperienceRead']
@@ -223,7 +223,7 @@ class HistoryPersonalRead(ReadModel):
     coefficent: Optional[Decimal]
 
     class Config:
-        orm_mode = True
+        from_attributes=True
         arbitrary_types_allowed = True
 
     @property
@@ -297,13 +297,13 @@ class HistoryPersonalRead(ReadModel):
             return badge_dict
 
 
-class AttendanceRead(Model):
-    physical_training: Optional[int]
-    tactical_training: Optional[int]
-    shooting_training: Optional[int]
+class TrainingAttendanceRead(Model):
+    physical_training: Optional[int] = None
+    tactical_training: Optional[int] = None
+    shooting_training: Optional[int] = None
 
     class Config:
-        orm_mode = True
+        from_attributes=True
         arbitrary_types_allowed = True
 
 
@@ -316,7 +316,7 @@ class BadgeServiceDetailRead(ReadNamedModel):
     url: Optional[str]
 
     class Config:
-        orm_mode = True
+        from_attributes=True
         arbitrary_types_allowed = True
 
     @classmethod
@@ -343,7 +343,7 @@ class RankServiceDetailRead(ReadNamedModel):
     rank_id: Optional[uuid.UUID]
 
     class Config:
-        orm_mode = True
+        from_attributes=True
         arbitrary_types_allowed = True
 
     @classmethod
@@ -373,7 +373,7 @@ class PenaltyRead(Model):
     """TODO: WHO IS THIS?"""
 
     class Config:
-        orm_mode = True
+        from_attributes=True
         arbitrary_types_allowed = True
 
     @classmethod
@@ -397,7 +397,7 @@ class ContractRead(ReadNamedModel):
     experience_years: Optional[int]
 
     class Config:
-        orm_mode = True
+        from_attributes=True
         arbitrary_types_allowed = True
 
     @classmethod
@@ -423,7 +423,7 @@ class AttestationRead(Model):
     attestation_status: Optional[str]
 
     class Config:
-        orm_mode = True
+        from_attributes=True
         arbitrary_types_allowed = True
 
 
@@ -437,7 +437,7 @@ class CharacteristicRead(ReadModel):
     characteristic_initiator_id: Optional[uuid.UUID]
 
     class Config:
-        orm_mode = True
+        from_attributes=True
         arbitrary_types_allowed = True
 
     @classmethod
@@ -469,7 +469,7 @@ class HolidayRead(Model):
     status: Optional[str]
 
     class Config:
-        orm_mode = True
+        from_attributes=True
         arbitrary_types_allowed = True
 
     @classmethod
@@ -501,7 +501,7 @@ class EmergencyContactRead(ReadModel):
     contractor_signer_name: Optional[dict]
 
     class Config:
-        orm_mode = True
+        from_attributes=True
         arbitrary_types_allowed = True
 
     @classmethod
@@ -548,7 +548,7 @@ class ExperienceRead(ReadModel):
     position_work_experience: Optional[str]
 
     class Config:
-        orm_mode = True
+        from_attributes=True
         arbitrary_types_allowed = True
 
     @classmethod
@@ -575,7 +575,7 @@ class ServiceIdInfoRead(ReadModel):
     id_status: Optional[Enum]
 
     class Config:
-        orm_mode = True
+        from_attributes=True
         arbitrary_types_allowed = True
 
 
@@ -587,7 +587,7 @@ class SecondmentRead(Model):
     state_body: Optional[str]
 
     class Config:
-        orm_mode = True
+        from_attributes=True
         arbitrary_types_allowed = True
 
     @classmethod
@@ -609,7 +609,7 @@ class TypeOfArmyEquipmentModelRead(ReadNamedModel):
     type_of_equipment: Optional[dict]
 
     class Config:
-        orm_mode = True
+        from_attributes=True
         arbitrary_types_allowed = True
 
     @classmethod
@@ -628,7 +628,7 @@ class TypeOfClothingEquipmentModelRead(ReadModel):
     model_of_equipment: Optional[dict]
 
     class Config:
-        orm_mode = True
+        from_attributes=True
         arbitrary_types_allowed = True
 
     @classmethod
@@ -646,7 +646,7 @@ class TypeOfOtherEquipmentModelRead(ReadNamedModel):
     type_of_equipment: Optional[dict]
 
     class Config:
-        orm_mode = True
+        from_attributes=True
         arbitrary_types_allowed = True
 
     @classmethod
@@ -679,27 +679,26 @@ class EquipmentRead(ReadModel):
     type_of_other_equipment_model: Optional[TypeOfOtherEquipmentModelRead]
 
     class Config:
-        orm_mode = True
+        from_attributes=True
         arbitrary_types_allowed = True
 
 
 class HistoryServiceDetailRead(Model):
-
-    general_information: Optional[GeneralInformationRead]
-    attendance: Optional[AttendanceRead]
-    service_id_info: Optional[ServiceIdInfoRead]
-    badges: Optional[List[BadgeServiceDetailRead]]
-    ranks: Optional[List[RankServiceDetailRead]]
-    penalties: Optional[List[PenaltyRead]]
-    contracts: Optional[List[ContractRead]]
-    attestations: Optional[List[AttestationRead]]
-    characteristics: Optional[List[CharacteristicRead]]
-    holidays: Optional[List[HolidayRead]]
-    emergency_contracts: Optional[List[EmergencyContactRead]]
-    experience: Optional[List[ExperienceRead]]
-    secondments: Optional[List[SecondmentRead]]
-    equipments: Optional[List[dict]]
+    general_information: Optional[GeneralInformationRead] = None
+    attendance: Optional[TrainingAttendanceRead] = None
+    service_id_info: Optional[ServiceIdInfoRead] = None
+    badges: Optional[List[BadgeServiceDetailRead]] = None
+    ranks: Optional[List[RankServiceDetailRead]] = None
+    penalties: Optional[List[PenaltyRead]] = None
+    contracts: Optional[List[ContractRead]] = None
+    attestations: Optional[List[AttestationRead]] = None
+    characteristics: Optional[List[CharacteristicRead]] = None
+    holidays: Optional[List[HolidayRead]] = None
+    emergency_contracts: Optional[List[EmergencyContactRead]] = None
+    experience: Optional[List[ExperienceRead]] = None
+    secondments: Optional[List[SecondmentRead]] = None
+    equipments: Optional[List[dict]] = None
 
     class Config:
-        orm_mode = True
+        from_attributes=True
         arbitrary_types_allowed = True

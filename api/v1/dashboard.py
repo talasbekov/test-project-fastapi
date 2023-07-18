@@ -186,3 +186,45 @@ async def get_curators_by_candidates_duration(*,
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
     return dict(dashboard_service.get_curators_by_candidates_duration(db, role))
+
+
+@router.get("/users/all/inErp", dependencies=[Depends(HTTPBearer())],
+            summary="Get all data of candidates curators for Dashboard")
+async def get_all_users_of_erp(*,
+                             db: Session = Depends(get_db),
+                             Authorize: AuthJWT = Depends(),
+                             ):
+    """
+       Количество изучающих кандидатов кураторы
+    """
+    Authorize.jwt_required()
+    return dashboard_service.get_all_users_of_erp(db)
+
+
+@router.get("/users/added", dependencies=[Depends(HTTPBearer())],
+            summary="Get all data of candidates curators for Dashboard")
+async def get_all_new_users_at_week(*,
+                             db: Session = Depends(get_db),
+                             Authorize: AuthJWT = Depends(),
+                             ):
+    """
+       Количество изучающих кандидатов кураторы
+    """
+    Authorize.jwt_required()
+    return dashboard_service.get_all_new_users_at_week(db)
+
+
+@router.get("/users/active", dependencies=[Depends(HTTPBearer())],
+            summary="Get all data of candidates curators for Dashboard")
+async def get_all_active(*,
+                         db: Session = Depends(get_db),
+                         Authorize: AuthJWT = Depends(),
+                        ):
+    """
+       Количество изучающих кандидатов кураторы
+    """
+    Authorize.jwt_required()
+    return dashboard_service.get_active_users(db)
+
+
+
