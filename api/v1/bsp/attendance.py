@@ -10,9 +10,11 @@ from core import get_db
 
 from schemas import (AttendanceRead,
                      AttendanceUpdate,
-                     AttendanceCreate,)
+                     AttendanceCreate,
+                     AttendancePercentageRead,
+                     AttendanceChangeStatus,)
 
-from services import attendance_service
+from services import attendance_service, attended_user_service
 
 
 router = APIRouter(prefix="/attendance",
@@ -60,7 +62,7 @@ async def get_by_id(*,
     return attendance_service.get_by_id(db, id)
 
 @router.get("/percentage", dependencies=[Depends(HTTPBearer())],
-            response_model=List[dict],
+            response_model=List[AttendancePercentageRead],
             summary="Get Attendance by id")
 async def get_attendance_percentage(*,
                     db: Session = Depends(get_db),
@@ -88,7 +90,21 @@ async def create(*,
 
     """
     Authorize.jwt_required()
-    return attendance_service.create(db, obj_in=body)
+    return attendance_service.create(db, body)
+
+@router.post("/status_change", dependencies=[Depends(HTTPBearer())],
+            summary="Change Attendance status")
+async def change_attendance_status(*,
+                 db: Session = Depends(get_db),
+                 body: AttendanceChangeStatus,
+                 Authorize: AuthJWT = Depends()
+                 ):
+    """
+        Change Attendance status
+
+    """
+    Authorize.jwt_required()
+    return attended_user_service.change_attendance_status(db, body)
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=AttendanceRead,
