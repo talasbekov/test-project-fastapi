@@ -160,7 +160,7 @@ class StatusService(ServiceBase[Status, StatusCreate, StatusUpdate]):
 
         users_with_status: List[User] = []
         for user in users:
-            users_with_status.append(user.name)
+            users_with_status.append(user.first_name)
 
         state_by_status = [name for name in users_with_status]
         return state_by_status
