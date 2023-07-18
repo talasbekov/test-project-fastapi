@@ -98,27 +98,28 @@ class CandidateService(
     def get_top_curators_by_candidates(self, db: Session, department: StaffDivision):
 
         candidates = self.get_candidates_by_staff_division(db, department)
-        print(f"candidates {len(candidates)}")
+        # print(f"candidates {len(candidates)}")
 
         top_curators = {}
         for candidate in candidates:
             curator = user_service.get_user_by_staff_unit(
                 db, candidate.staff_unit_curator_id
             )
-            print(curator.first_name)
+            # print(curator.first_name)
             if curator.id in top_curators:
                 top_curators[curator.id] += 1
-                print("curator in top_curators")
+                # print("curator in top_curators")
             else:
                 top_curators[curator.id] = 1
 
-        print(f"tip curators {top_curators}")
+        # print(f"tip curators {top_curators}")
 
         top_curators = {
             id: value for id, value in top_curators.items()
             if value is not None and value != ""
         }
         sorted_curators = sorted(top_curators.items(), key=lambda x: x[1], reverse=True)
+        print("111:  ", sorted_curators)
         return sorted_curators
 
     def get_top_curator_duration_by_candidates(self,
@@ -126,27 +127,28 @@ class CandidateService(
                                                department: StaffDivision):
 
         candidates = self.get_candidates_by_staff_division(db, department)
-        print(f"candidates {len(candidates)}")
+        # print(f"candidates {len(candidates)}")
 
         top_curators = {}
         for candidate in candidates:
             curator = user_service.get_user_by_staff_unit(
                 db, candidate.staff_unit_curator_id
             )
-            print(curator.first_name)
+            # print(curator.first_name)
             if curator.id in top_curators:
                 if candidate.created_at > top_curators[curator.id]:
                     top_curators[curator.id] = candidate.created_at
             else:
                 top_curators[curator.id] = candidate.created_at
 
-        print(f"tip curators {top_curators}")
+        # print(f"tip curators {top_curators}")
 
         top_curators = {
             id: value for id, value in top_curators.items()
             if value is not None and value != ""
         }
         sorted_curators = sorted(top_curators.items(), key=lambda x: x[1], reverse=True)
+        print("222:  ", sorted_curators)
         return sorted_curators
 
     def get_multiple(self, db: Session,

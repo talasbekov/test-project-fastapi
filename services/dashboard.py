@@ -357,6 +357,28 @@ class DashboardService:
         print(len(active_users))
         return len(active_users)
 
+    # def get_users_at_three_day_by_active(self, db: Session):
+    #
+    #     end_time = datetime.now()
+    #     start_time = end_time - timedelta(hours=72)
+    #
+    #     update_interval = timedelta(minutes=30)
+    #
+    #     activity_counts = []
+    #
+    #     current_time = start_time
+    #     while current_time < end_time:
+    #         next_time = current_time + update_interval
+    #
+    #         active_users_count = db.query(User).filter(
+    #             User.last_signed_at.between(current_time, next_time),
+    #
+    #         ).count()
+    #
+    #         activity_counts.append(active_users_count)
+    #
+    #         current_time = next_time
+
     def check_by_role(self, db: Session, staff_unit) -> bool:
         """
             Checks if a user with the given role
