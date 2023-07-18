@@ -9,6 +9,19 @@ from services.base import ServiceBase
 
 class BspPlanService(ServiceBase[BspPlan, BspPlanCreate, BspPlanUpdate]):
 
+    def create(self, db: Session, plan: BspPlanCreate):
+        plan = super().create(db, BspPlanCreate(
+            year=plan.year,
+            creator_id=plan.creator_id,
+            signed_at=None,
+        ))
+        plan.status = PlanStatus.DRAFT
+
+        db.add(plan)
+        db.flush()
+
+        return plan
+
     def sign(self, db: Session, id: uuid.UUID):
         plan = self.get_by_id(db, id)
         plan.status = PlanStatus.ACTIVE

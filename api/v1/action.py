@@ -15,7 +15,7 @@ async def get_all_actions():
     return [
     {
         'action_name': 'Добавление медали',
-        'alias_nameKZ': 'Қосуға арналған медаль',
+        'action_nameKZ': 'Қосуға арналған медаль',
         'action_type': 'add_badge',
         'children': [
             {
@@ -916,6 +916,108 @@ async def get_all_actions():
         },
     },
     {
+        'action_name': 'Отпуск по болезни',
+        'action_nameKZ': 'Ауру демалысы',
+        'action_type': 'sick_leave',
+        'children': [
+            {
+                'alias_name': 'Дата начала',
+                'alias_nameKZ': 'Басталу күні',
+                'tagname': 'date_from',
+                'data_taken': 'manual',
+                'data_type': 'date',
+            },
+            {
+                'alias_name': 'Дата конца',
+                'alias_nameKZ': 'Аяқталу күні',
+                'tagname': 'date_to',
+                'data_taken': 'manual',
+                'data_type': 'date',
+            },
+        ],
+        'properties': {
+            "surname":{
+                "alias_nameKZ":"Тегі",
+                "data_taken":"auto",
+                "type":"write",
+                "field_name":"surname",
+                "to_tags":{
+                    "titleKZ":"Тегі",
+                    "isHidden":"false"
+                }
+            },
+            "name":{
+                "alias_nameKZ":"Аты",
+                "data_taken":"auto",
+                "type":"write",
+                "field_name":"name",
+                "to_tags":{
+                    "titleKZ":"Аты",
+                    "isHidden":False
+                }
+            },
+            "father":{
+                "alias_nameKZ":"Әкесінің аты",
+                "data_taken":"auto",
+                "type":"write",
+                "field_name":"father_name",
+                "to_tags":{
+                    "foundInText":"Отчество субъекта",
+                    "titleKZ":"Әкесінің аты",
+                    "isHidden":False,
+                    "cases":0
+                }
+            },
+            "contract":{
+                "to_tags":{
+                    "tagname":"contract",
+                    "titleKZ":"Контракт",
+                    "idToChange":"1687429527959",
+                    "id":"1687429527959",
+                    "foundInText":"{{contract - term}}",
+                    "isHidden":False,
+                    "cases":0,
+                    "action_type":"[renew_contract]"
+                },
+                "alias_name":"Контракт",
+                "alias_nameKZ":"Контракт",
+                "type":"write",
+                "data_taken":"dropdown",
+                "field_name":"contracts",
+                "isHidden":False
+            },
+            "new_position":{
+                "alias_nameKZ":"Жаңа позиция",
+                "data_taken":"dropdown",
+                "type":"write",
+                "field_name":"staff_unit",
+                "to_tags":{
+                    "titleKZ":"Жаңа позиция",
+                    "directory":"staff_unit",
+                    "isHidden":"false"
+                }
+            }
+            },
+        'actions': {
+            'args': [
+                {
+                    "apply_candidate":{
+                        "staff_unit":{
+                            "tagname":"new_position",
+                            "alias_name":"Новая должность",
+                            "alias_nameKZ":"Жаңа қызмет атауы"
+                        },
+                        "contract":{
+                            "tagname":"contract_type",
+                            "alias_name":"Контракт",
+                            "alias_nameKZ":"Контракт"
+                        },
+                    },
+                },
+            ],
+        },
+    },
+    {
         'data_taken': 'auto',
         'properties': [
             {
@@ -930,14 +1032,14 @@ async def get_all_actions():
                 'alias_nameKZ': 'Аты',
                 'type': 'read',
                 'data_taken': 'auto',
-                'auto_name': 'first_name',
+                'auto_name': 'name',
             },
             {
                 'alias_name': 'Фамилия субъекта',
                 'alias_nameKZ': 'Тегі',
                 'type': 'read',
                 'data_taken': 'auto',
-                'auto_name': 'last_name',
+                'auto_name': 'surname',
             },
             {
                 'alias_name': 'Звание',
@@ -947,109 +1049,95 @@ async def get_all_actions():
                 'auto_name': 'rank',
             },
             {
-                'alias_name': 'Электронная почта',
-                'alias_nameKZ': 'Электрондық пошта',
-                'type': 'read',
-                'data_taken': 'auto',
-                'auto_name': 'email',
-            },
-            {
-                'alias_name': 'Фото',
-                'alias_nameKZ': 'Сурет',
-                'type': 'read',
-                'data_taken': 'auto',
-                'auto_name': 'icon',
-            },
-            {
-                'alias_name': 'Позывной',
-                'alias_nameKZ': 'Шақырушы атауы',
-                'type': 'read',
-                'data_taken': 'auto',
-                'auto_name': 'call_sign',
-            },
-            {
-                'alias_name': 'Телефон',
-                'alias_nameKZ': 'Телефон',
-                'type': 'read',
-                'data_taken': 'auto',
-                'auto_name': 'phone_number',
-            },
-            {
-                'alias_name': 'Место жительства',
-                'alias_nameKZ': 'Мекен-жайы',
-                'type': 'read',
-                'data_taken': 'auto',
-                'auto_name': 'address',
-            },
-            {
-                'alias_name': 'Под руководством',
-                'alias_nameKZ': 'Басшылығы алдында',
-                'type': 'read',
-                'data_taken': 'auto',
-                'auto_name': 'supervised_by',
-            },
-            {
-                'alias_name': 'Описание',
-                'alias_nameKZ': 'Сипаттама',
-                'type': 'read',
-                'data_taken': 'auto',
-                'auto_name': 'description',
-            },
-            {
-                'alias_name': 'Кабинет',
-                'alias_nameKZ': 'Кабинет',
-                'type': 'read',
-                'data_taken': 'auto',
-                'auto_name': 'cabinet',
-            },
-            {
-                'alias_name': 'Рабочий телефон',
-                'alias_nameKZ': 'Қызмет телефоны',
-                'type': 'read',
-                'data_taken': 'auto',
-                'auto_name': 'service_phone_number',
-            },
-            {
-                'alias_name': 'Военный',
-                'alias_nameKZ': 'Әскери',
-                'type': 'read',
-                'data_taken': 'auto',
-                'auto_name': 'is_military',
-            },
-            {
-                'alias_name': 'ИИН',
-                'alias_nameKZ': 'ЖСН',
-                'type': 'read',
-                'data_taken': 'auto',
-                'auto_name': 'iin',
-            },
-            {
-                'alias_name': 'Дата рождения',
-                'alias_nameKZ': 'Туған күні',
-                'type': 'read',
-                'data_taken': 'auto',
-                'auto_name': 'date_birth',
-            },
-            {
-                'alias_name': 'Медали',
-                'alias_nameKZ': 'Медальдар',
-                'type': 'read',
-                'data_taken': 'auto',
-                'auto_name': 'badges',
-            },
-            {
-                'alias_name': 'Актуальная позиция',
-                'alias_nameKZ': 'Жаңа позициясы',
-                'type': 'read',
-                'data_taken': 'auto',
-                'auto_name': 'actual_staff_unit',
-            },
-            {
                 'alias_name': 'Позиция',
                 'alias_nameKZ': 'Позиция',
                 'type': 'read',
                 'data_taken': 'auto',
-                'auto_name': 'staff_unit',
+                'auto_name': 'position',
+            },
+            {
+                'alias_name': 'Офицерский номер субъекта',
+                'alias_nameKZ': 'Субъект қызметкерінің нөмірі',
+                'type': 'read',
+                'data_taken': 'auto',
+                'auto_name': 'officer_number',
+            },
+            {
+                'alias_name': 'Дата рождения',
+                'alias_nameKZ': 'Tуған күні',
+                'type': 'read',
+                'data_taken': 'auto',
+                'auto_name': 'date-of-living',
+            },
+            {
+                'alias_name': 'Выслуга лет (годы)',
+                'alias_nameKZ': 'Қызмет өтілі (жыл)',
+                'type': 'read',
+                'data_taken': 'auto',
+                'auto_name': 'length-of-service-year',
+            },
+            {
+                'alias_name': 'Выслуга лет (месяца)',
+                'alias_nameKZ': 'Қызмет өтілі (айлар)',
+                'type': 'read',
+                'data_taken': 'auto',
+                'auto_name': 'length-of-service-month',
+            },
+            {
+                'alias_name': 'Выслуга лет (дни)',
+                'alias_nameKZ': 'Қызмет өтілі (күндер)',
+                'type': 'read',
+                'data_taken': 'auto',
+                'auto_name': 'length-of-service-day',
+            },
+            {
+                'alias_name': 'Стаж работы фактический (года)',
+                'alias_nameKZ': 'Нақты жұмыс өтілі (жыл)',
+                'type': 'read',
+                'data_taken': 'auto',
+                'auto_name': 'length-of-work-year',
+            },
+            {
+                'alias_name': 'Стаж работы фактический (месяца)',
+                'alias_nameKZ': 'Нақты жұмыс өтілі (айлар)',
+                'type': 'read',
+                'data_taken': 'auto',
+                'auto_name': 'length-of-work-month',
+            },
+            {
+                'alias_name': 'Нақты жұмыс өтілі (күндер)',
+                'alias_nameKZ': 'Стаж работы фактический (дни)',
+                'type': 'read',
+                'data_taken': 'auto',
+                'auto_name': 'length-of-work-day',
+            },
+            {
+                'alias_name': 'Еңбек өтілі және еңбек өтілі (жылдар)',
+                'alias_nameKZ': 'Стаж работы в сумме с выслугой лет (годы)',
+                'type': 'read',
+                'data_taken': 'auto',
+                'auto_name': 'total-of-service-year',
+            },
+            {
+                'alias_name': 'Еңбек өтілі және еңбек өтілі (айлар)',
+                'alias_nameKZ': 'Стаж работы в сумме с выслугой лет (месяца)',
+                'type': 'read',
+                'data_taken': 'auto',
+                'auto_name': 'total-of-service-month',
+            },
+            {
+                'alias_name': 'Еңбек өтілі және еңбек өтілі (күндер)',
+                'alias_nameKZ': 'Стаж работы в сумме с выслугой лет (дни)',
+                'type': 'read',
+                'data_taken': 'auto',
+                'auto_name': 'total-of-service-day',
+            },
+            {
+                'alias_name': 'Данные о семье',
+                'alias_nameKZ': 'Отбасы деректері',
+                'type': 'read',
+                'data_taken': 'auto',
+                'auto_name': 'family_member',
             },
         ],
     },

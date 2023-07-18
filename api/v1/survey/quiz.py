@@ -129,6 +129,24 @@ async def create(*,
     return quiz_service.create(db, body)
 
 
+@router.post("/{id}/duplicate", status_code=status.HTTP_201_CREATED,
+             dependencies=[Depends(HTTPBearer())],
+             response_model=QuizRead,
+             summary="Duplicate")
+async def duplicate(*,
+                 db: Session = Depends(get_db),
+                 id: uuid.UUID,
+                 Authorize: AuthJWT = Depends()
+                 ):
+    """
+        Duplicate the quiz
+
+        - **id**: required
+    """
+    Authorize.jwt_required()
+    return quiz_service.duplicate(db, id)
+
+
 @router.post("/draft", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=QuizRead,

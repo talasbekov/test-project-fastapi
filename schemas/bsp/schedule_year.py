@@ -1,7 +1,13 @@
 import uuid
+from datetime import datetime
 from typing import Optional, List
 
-from schemas import BaseModel, NamedModel, UserRead, StaffDivisionRead
+
+from schemas import (BaseModel,
+                     NamedModel,
+                     UserShortRead,
+                     StaffDivisionReadWithoutStaffUnit,
+                     )
 from .activity import ActivityRead
 from .schedule_month import ScheduleMonthRead
 from .exam import ExamScheduleRead
@@ -47,8 +53,9 @@ class ScheduleYearUpdate(ScheduleYearBase):
 
 class ScheduleYearRead(ScheduleYearBase):
     id: Optional[uuid.UUID]
-    staff_divisions: Optional[List[Optional[StaffDivisionRead]]]
-    users: Optional[List[Optional[UserRead]]]
+    created_at: Optional[datetime]
+    staff_divisions: Optional[List[StaffDivisionReadWithoutStaffUnit]]
+    users: Optional[List[Optional[UserShortRead]]]
     activity: Optional[ActivityRead]
     activity_months: Optional[List[MonthRead]]
     exam_months: Optional[List[MonthRead]]

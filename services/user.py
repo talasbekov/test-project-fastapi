@@ -15,7 +15,9 @@ from models import (
     StaffDivisionEnum,
     HrDocument,
     HrDocumentInfo,
-    HrDocumentTemplate
+    HrDocumentTemplate,
+    BspPlan,
+    ScheduleYear,
 )
 from schemas import (
     UserCreate,
@@ -216,12 +218,20 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         ).all()
 
         return users
-
+      
     def get_user_by_staff_unit(self, db: Session, staff_unit_id):
 
         users = db.query(self.model).filter(
             self.model.staff_unit_id == staff_unit_id
         ).first()
+        
+    def get_by_plan_id(self, db: Session, plan_id: uuid.UUID):
+
+        users = (db.query(User)
+                 .join(ScheduleYear.users)
+                 .join(BspPlan)
+                 .filter(BspPlan.id == plan_id)
+                 .all())
 
         return users
 

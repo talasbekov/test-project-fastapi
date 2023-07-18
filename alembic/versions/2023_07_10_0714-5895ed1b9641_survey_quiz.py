@@ -27,7 +27,6 @@ def upgrade() -> None:
     sa.Column('jurisdiction_type', sa.String(), nullable=False),
     sa.Column('certain_member_id', sa.UUID(), nullable=True),
     sa.Column('staff_division_id', sa.UUID(), nullable=True),
-    sa.Column('is_kz_translate_required', sa.Boolean(), nullable=True),
     sa.Column('owner_id', sa.UUID(), nullable=True),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('nameKZ', sa.String(), nullable=True),
@@ -41,7 +40,6 @@ def upgrade() -> None:
     )
     op.create_table('surveys',
     sa.Column('is_anonymous', sa.Boolean(), nullable=True),
-    sa.Column('is_kz_translate_required', sa.Boolean(), nullable=True),
     sa.Column('description', sa.TEXT(), nullable=True),
     sa.Column('start_date', sa.TIMESTAMP(timezone=True), nullable=False),
     sa.Column('end_date', sa.TIMESTAMP(timezone=True), nullable=False),
@@ -88,10 +86,6 @@ def upgrade() -> None:
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('min_value', sa.Integer(), nullable=True),
-    sa.Column('max_value', sa.Integer(), nullable=True),
-    sa.Column('row_position', sa.Integer(), nullable=True),
-    sa.Column('column_position', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['question_id'], ['questions.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -105,9 +99,6 @@ def upgrade() -> None:
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('text', sa.TEXT(), nullable=True),
     sa.Column('option_id', sa.UUID(), nullable=True),
-    sa.Column('scale_value', sa.Integer(), nullable=True),
-    sa.Column('grid_values', sa.JSON(), nullable=True),
-    sa.Column('checkbox_grid_values', sa.JSON(), nullable=True),
     sa.ForeignKeyConstraint(['option_id'], ['options.id'], ),
     sa.ForeignKeyConstraint(['question_id'], ['questions.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),

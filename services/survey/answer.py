@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from typing import List
+from b64uuid import B64UUID
 
 from models import (Answer, QuestionTypeEnum,
                     AnswerSingleSelection, QuestionBase, Survey,
@@ -50,6 +51,10 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
 
     def create(self, db: Session, body: AnswerCreate, user_id: str) -> Answer:
         question = question_service.get_by_id(db, body.question_id)
+        
+        if self.__is_exists(db, user_id, body.question_id):
+            raise BadRequestException("Answer already exists")
+        
         question_class = question_service.define_class(question)
 
         if question.question_type not in self.POSSIBLE_TYPES:
@@ -67,7 +72,7 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
             answer.options = options
 
         if question_class == QuestionSurvey:
-            answer = self.__validate_anonymous(
+            answer = self.__set_anonymous(
                 db, question.survey_id, user_id, answer)
         else:
             answer.score = self.__calculate_score(db, answer)
@@ -90,10 +95,12 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
 
         return answer_kwargs
 
-    def __validate_anonymous(self, db: Session, survey_id: str, user_id: str, answer):
+    def __set_anonymous(self, db: Session, survey_id: str, user_id: str, answer):
         survey: Survey = survey_service.get_by_id(db, survey_id)
 
-        if not survey.is_anonymous:
+        if survey.is_anonymous:
+            answer.encrypted_used_id = B64UUID(user_id).string
+        else:
             answer.user_id = user_id
 
         return answer
@@ -110,6 +117,16 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
                        for option_id in answer.options]
 
             return sum([option.score for option in options])
-
+    
+    def __is_exists(self, db: Session, user_id: str, question_id: str) -> bool:
+        encoded_user_id = B64UUID(user_id).string
+        
+        answer = db.query(self.model).filter(
+            self.model.question_id == question_id,
+            (self.model.user_id == user_id) |
+            (self.model.encrypted_used_id == encoded_user_id)
+        ).first()
+        
+        return answer is not None
 
 answer_service = AnswerService(Answer)
