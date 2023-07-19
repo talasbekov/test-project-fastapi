@@ -34,7 +34,8 @@ from services import (
     medical_profile_service,
     family_profile_service,
     staff_division_service,
-    candidate_service
+    candidate_service,
+    user_logging_activity_service
 )
 from utils import hash_password, is_valid_phone_number, verify_password
 
@@ -261,6 +262,8 @@ class AuthService():
 
     def _set_last_signed_at(self, db: Session, user: User):
         user.last_signed_at = datetime.now()
+        
+        user_logging_activity_service.create(db, user.id)
 
         db.add(user)
         db.flush()

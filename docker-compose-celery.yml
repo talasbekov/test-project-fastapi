@@ -34,6 +34,21 @@ services:
     restart: always
     networks:
       - backend-dev
+    
+  celery-beat:
+    image: erp-sgo-backend-celery
+    command: celery -A tasks.celery_app beat --loglevel=info
+    container_name: celery-beat
+    depends_on:
+      - redis
+      - rabbitmq
+    environment:
+      - CELERY_BROKER_URL=amqp://rabbitmq:5672/
+    restart: always
+    networks:
+      - backend-dev
+    volumes:
+      - .:/app
 
   flower:
     image: "mher/flower"

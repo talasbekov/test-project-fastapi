@@ -130,3 +130,6 @@ class User(isActiveModel):
         cascade="all,delete",
         back_populates="user")
     exam_results = relationship("ExamResult", back_populates="user")
+    activities = relationship("UserLoggingActivity",
+                              back_populates="user",
+                              cascade="all,delete")
