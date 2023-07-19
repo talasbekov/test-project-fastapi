@@ -45,7 +45,7 @@ async def get_all(*,
             This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
-    return hr_document_template_service.get_all_by_name(db, name, skip, limit)
+    return hr_document_template_service.get_all_drafts(db, name, skip, limit)
 
 
 @router.get('/archive')
@@ -129,7 +129,7 @@ async def create_draft(*,
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
-    return hr_document_template_service.create_template(db, body, role)
+    return hr_document_template_service.create_template_draft(db, body, role)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
