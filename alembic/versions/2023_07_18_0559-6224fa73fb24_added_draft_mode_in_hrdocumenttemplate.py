@@ -17,7 +17,10 @@ depends_on = None
 
 
 def upgrade() -> None:
-    op.add_column('hr_document_templates', sa.Column('is_draft', sa.Boolean(), nullable=True))
+    op.add_column('hr_document_templates', sa.Column('is_draft',
+                                                     sa.Boolean(),
+                                                     nullable=True,
+                                                     default=False))
 
 
 def downgrade() -> None:
