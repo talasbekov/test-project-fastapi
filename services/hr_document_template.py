@@ -172,16 +172,34 @@ class HrDocumentTemplateService(
         )
         
     def get_all_drafts(
-        self, db: Session, skip: int = 0, limit: int = 100
+        self, db: Session, name: str, skip: int = 0, limit: int = 100
     ) -> List[HrDocumentTemplateRead]:
-        return (
-            db.query(HrDocumentTemplate)
-            .filter(HrDocumentTemplate.is_draft == True)
-            .filter(HrDocumentTemplate.is_visible == True)
-            .offset(skip)
-            .limit(limit)
-            .all()
-        )
+        if name:
+            return (
+                db.query(HrDocumentTemplate)
+                .filter(
+                    HrDocumentTemplate.is_active == True,
+                    (
+                        HrDocumentTemplate.name.ilike(f"%{name}%")
+                        | HrDocumentTemplate.description.ilike(f"%{name}%")
+                    ),
+                    HrDocumentTemplate.is_draft == False
+                )
+                .filter(HrDocumentTemplate.is_visible == True)
+                .filter(HrDocumentTemplate.is_draft == True)
+                .offset(skip)
+                .limit(limit)
+                .all()
+            )
+        else:
+            return (
+                db.query(HrDocumentTemplate)
+                .filter(HrDocumentTemplate.is_draft == True)
+                .filter(HrDocumentTemplate.is_visible == True)
+                .offset(skip)
+                .limit(limit)
+                .all()
+            )
 
     def get_all_archived(self, db: Session, skip: int, limit: int):
         return (
