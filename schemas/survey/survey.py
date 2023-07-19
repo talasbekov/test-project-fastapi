@@ -20,11 +20,10 @@ class SurveyBase(NamedModel):
     staff_position: SurveyStaffPositionEnum
     is_kz_translate_required: Optional[bool]
     is_anonymous: Optional[bool]
-    type: SurveyTypeEnum
 
 
 class SurveyCreate(SurveyBase):
-    pass
+    type: SurveyTypeEnum
 
 
 class SurveyUpdate(SurveyBase):
@@ -32,8 +31,8 @@ class SurveyUpdate(SurveyBase):
     start_date: Optional[datetime.datetime]
     end_date: Optional[datetime.datetime]
     status: Optional[SurveyStatusEnum]
-    jurisdiction_type: Optional[str]
-    staff_position: Optional[str]
+    jurisdiction_type: Optional[SurveyJurisdictionTypeEnum]
+    staff_position: Optional[SurveyStaffPositionEnum]
 
 
 class SurveyRead(SurveyBase, ReadNamedModel):
