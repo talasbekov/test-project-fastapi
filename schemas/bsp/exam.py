@@ -18,9 +18,12 @@ class ExamScheduleBase(BaseModel):
         arbitrary_types_allowed = True
 
 
+class ExamScheduleCreateWithInstructors(ExamScheduleBase):
+    instructor_ids: List[Optional[uuid.UUID]]
+
+
 class ExamScheduleCreate(ExamScheduleBase):
     pass
-
 
 class ExamScheduleUpdate(ExamScheduleBase):
     pass

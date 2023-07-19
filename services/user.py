@@ -465,5 +465,13 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
                 f"call_sign {call_sign} is already assigned to {user_name}!"
             )
 
+    def get_all_by_position(self, db: Session, position_id: uuid.UUID):
+
+        users = (db.query(User)
+                 .join(StaffUnit.users)
+                 .filter(StaffUnit.position_id == position_id)
+                 .all())
+
+        return users
 
 user_service = UserService(User)

@@ -1,7 +1,10 @@
 import uuid
 from sqlalchemy.orm import Session
 from models import ExamSchedule, ExamResult
-from schemas import ExamScheduleCreate, ExamScheduleUpdate
+from schemas import (ExamScheduleCreate,
+                     ExamScheduleUpdate,
+                     ExamScheduleCreateWithInstructors,)
+from services import user_service
 from services.base import ServiceBase
 
 
@@ -18,5 +21,24 @@ class ExamService(ServiceBase[ExamSchedule, ExamScheduleCreate, ExamScheduleUpda
                    .all())
 
         return results
+
+    def create(self, db: Session, body: ExamScheduleCreateWithInstructors):
+        exam_schedule = super().create(db,
+                                        ExamScheduleCreate(
+                                            start_date=body.start_date,
+                                            end_date=body.end_date,
+                                            start_time=body.start_time,
+                                            end_time=body.end_time,
+                                            place_id=body.place_id,
+                                        ))
+
+        instructors = [user_service.get_by_id(db, user_id)
+                       for user_id in body.instructor_ids]
+        exam_schedule.instructors = instructors
+
+        db.add(exam_schedule)
+        db.flush()
+
+        return exam_schedule
 
 exam_service = ExamService(ExamSchedule)
