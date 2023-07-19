@@ -16,7 +16,7 @@ class Answer(Model):
     encrypted_used_id = Column(String(255), nullable=True)
     score = Column(Integer, nullable=True)
 
-    question = relationship("QuestionBase", foreign_keys=[
+    question = relationship("Question", foreign_keys=[
                             question_id], back_populates="answers")
     user = relationship("User", foreign_keys=[
                         user_id], back_populates="answers")

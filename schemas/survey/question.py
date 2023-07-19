@@ -2,15 +2,16 @@ import uuid
 
 from typing import Optional, List
 from pydantic import BaseModel, Field
+
+from models import QuestionTypeEnum
 from schemas import TextModel, ReadTextModel
 from .option import OptionRead
 
 
 class QuestionBase(TextModel):
     is_required: Optional[bool]
-    question_type: str
+    question_type: QuestionTypeEnum
     survey_id: Optional[uuid.UUID]
-    quiz_id: Optional[uuid.UUID]
     score: Optional[int]
     diagram_description: Optional[str]
     report_description: Optional[str]
@@ -26,7 +27,7 @@ class QuestionUpdate(QuestionBase):
 
 
 class QuestionRead(QuestionBase, ReadTextModel):
-    question_type: Optional[str]
+    question_type: Optional[QuestionTypeEnum]
     score: Optional[int]
 
     options: Optional[List[OptionRead]]

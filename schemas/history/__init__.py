@@ -9,7 +9,7 @@ from .history import (
     HistoryRead,
     HistoryUpdate,
     HistoryServiceDetailRead,
-    AttendanceRead,
+    TrainingAttendanceRead,
     HistoryPersonalRead,
     ServiceIdInfoRead,
 )

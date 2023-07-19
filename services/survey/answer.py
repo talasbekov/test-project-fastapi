@@ -2,16 +2,15 @@ from sqlalchemy.orm import Session
 from typing import List
 from b64uuid import B64UUID
 
-from models import (Answer, QuestionTypeEnum,
-                    AnswerSingleSelection, QuestionBase, Survey,
-                    AnswerText, QuestionSurvey, QuestionQuiz)
+from models import (Answer, QuestionTypeEnum, Question,
+                    AnswerSingleSelection, Survey, AnswerText,
+                    SurveyTypeEnum)
 from schemas import AnswerCreate, AnswerUpdate
 from exceptions import BadRequestException
 from services.base import ServiceBase
 from .question import question_service
 from .option import option_service
 from .survey import survey_service
-from .quiz import quiz_service
 
 
 class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
@@ -25,28 +24,13 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
     def get_count(self, db: Session) -> int:
         return db.query(self.model).count()
     
-    def get_by_survey_id(self, db: Session, survey_id: str) -> List[Answer]:
-        survey = survey_service.get_by_id(db, survey_id)
+    def get_by_survey_id(self, db: Session, survey_id: str) -> List[Answer]:        
+        questions = question_service.get_by_survey(db, survey_id)
         
-        survey_questions_ids = (
-            question_id for (question_id,) in db.query(QuestionSurvey.id).filter(
-                QuestionSurvey.survey_id == survey.id).all()
-        )
+        question_ids = [id for id in questions]
         
         return db.query(self.model).filter(
-            self.model.question_id.in_(survey_questions_ids)
-        ).all()
-        
-    def get_by_quiz_id(self, db: Session, quiz_id: str) -> List[Answer]:
-        quiz = quiz_service.get_by_id(db, quiz_id)
-        
-        quiz_questions_ids = (
-            question_id for (question_id,) in db.query(QuestionQuiz.id).filter(
-                QuestionQuiz.quiz_id == quiz.id).all()
-        )
-        
-        return db.query(self.model).filter(
-            self.model.question_id.in_(quiz_questions_ids)
+            self.model.question_id.in_(question_ids)
         ).all()
 
     def create(self, db: Session, body: AnswerCreate, user_id: str) -> Answer:
@@ -55,8 +39,6 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
         if self.__is_exists(db, user_id, body.question_id):
             raise BadRequestException("Answer already exists")
         
-        question_class = question_service.define_class(question)
-
         if question.question_type not in self.POSSIBLE_TYPES:
             raise BadRequestException(
                 f"Invalid option type {question.question_type}")
@@ -70,19 +52,20 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
             options = [option_service.get_by_id(
                 db, option_id) for option_id in body.option_ids]
             answer.options = options
-
-        if question_class == QuestionSurvey:
-            answer = self.__set_anonymous(
-                db, question.survey_id, user_id, answer)
-        else:
+        
+        survey = survey_service.get_by_id(db, question.survey_id)
+        if survey.type == SurveyTypeEnum.QUIZ.value:
             answer.score = self.__calculate_score(db, answer)
+        
+        answer = self.__set_anonymous(
+            survey, user_id, answer)
 
         db.add(answer)
         db.flush()
 
         return answer
 
-    def __update_kwargs(self, question: QuestionBase, body: AnswerCreate):
+    def __update_kwargs(self, question: Question, body: AnswerCreate):
         answer_kwargs = {"question_id": body.question_id}
 
         if question.question_type == QuestionTypeEnum.SINGLE_SELECTION:
@@ -95,9 +78,8 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
 
         return answer_kwargs
 
-    def __set_anonymous(self, db: Session, survey_id: str, user_id: str, answer):
-        survey: Survey = survey_service.get_by_id(db, survey_id)
-
+    def __set_anonymous(self, survey: Survey, user_id: str, answer):
+        
         if survey.is_anonymous:
             answer.encrypted_used_id = B64UUID(user_id).string
         else:
