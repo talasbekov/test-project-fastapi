@@ -15,8 +15,8 @@ from .schedule_month import schedule_month_service
 
 
 class ScheduleYearService(ServiceBase[ScheduleYear,
-                                      ScheduleYearCreate,
-                                      ScheduleYearUpdate]):
+ScheduleYearCreate,
+ScheduleYearUpdate]):
     def get_all_by_plan_year(self,
                              db: Session,
                              year: int,
@@ -64,10 +64,6 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
 
     def create_schedule(self, db: Session,
                         schedule: ScheduleYearCreateString):
-        activity_months = month_service.get_months_by_names(db,
-                                                            schedule.activity_months)
-        exam_months = month_service.get_months_by_names(db,
-                                                        schedule.exam_months)
         res = super().create(db, ScheduleYearCreate(
             is_exam_required=schedule.is_exam_required,
             retry_count=schedule.retry_count,
@@ -75,11 +71,17 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
             activity_id=schedule.activity_id,
         ))
         staff_divisions = [staff_division_service.get_by_id(db, division_id)
-                       for division_id in schedule.staff_division_ids]
+                           for division_id in schedule.staff_division_ids]
         res.staff_divisions = staff_divisions
 
+        activity_months = month_service.get_months_by_names(db,
+                                                            schedule.activity_months)
         res.activity_months = activity_months
-        res.exam_months = exam_months
+
+        if schedule.is_exam_required:
+            exam_months = month_service.get_months_by_names(db,
+                                                            schedule.exam_months)
+            res.exam_months = exam_months
 
         db.add(res)
         db.flush()

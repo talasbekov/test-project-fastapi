@@ -95,17 +95,24 @@ async def sign(*,
                   Authorize: AuthJWT = Depends()
                   ):
     """
-       Get all draft BspPlans
-
-    - **skip**: int - The number of BspPlan
-        to skip before returning the results.
-        This parameter is optional and defaults to 0.
-    - **limit**: int - The maximum number of BspPlan
-        to return in the response.
-        This parameter is optional and defaults to 100.
+       Sign BspPlan
    """
     Authorize.jwt_required()
     return plan_service.sign(db, id)
+
+@router.post("/draft/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=BspPlanRead,
+            summary="Get all BspPlan")
+async def send_to_draft(*,
+                  db: Session = Depends(get_db),
+                  id: uuid.UUID,
+                  Authorize: AuthJWT = Depends()
+                  ):
+    """
+       Send BspPlan to draft
+   """
+    Authorize.jwt_required()
+    return plan_service.send_to_draft(db, id)
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=BspPlanRead,

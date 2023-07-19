@@ -24,7 +24,6 @@ class BspPlanCreate(BspPlanBase):
 class BspPlanUpdate(BspPlanBase):
     pass
 
-
 class BspPlanRead(BspPlanBase):
     created_at: Optional[datetime]
     id: Optional[uuid.UUID]
