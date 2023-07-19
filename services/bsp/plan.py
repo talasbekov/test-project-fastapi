@@ -15,7 +15,7 @@ class BspPlanService(ServiceBase[BspPlan, BspPlanCreate, BspPlanUpdate]):
             creator_id=plan.creator_id,
             signed_at=None,
         ))
-        plan.status = PlanStatus.DRAFT
+        plan.status = None
 
         db.add(plan)
         db.flush()
@@ -31,6 +31,17 @@ class BspPlanService(ServiceBase[BspPlan, BspPlanCreate, BspPlanUpdate]):
         db.flush()
 
         return plan
+
+
+    def send_to_draft(self, db: Session, id: uuid.UUID):
+        plan = self.get_by_id(db, id)
+        plan.status = PlanStatus.DRAFT
+
+        db.add(plan)
+        db.flush()
+
+        return plan
+
     def get_all_draft(self, db: Session, skip: int, limit:int):
         draft_plans = (db.query(BspPlan)
                        .filter(BspPlan.status == PlanStatus.DRAFT)
