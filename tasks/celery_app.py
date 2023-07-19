@@ -98,7 +98,7 @@ def task_clear_user_logging_activities_table_every_3_days():
     SessionLocal = sessionmaker(bind=engine)
     db = SessionLocal()
     try:
-        now_date = datetime.now()
+        now_date = datetime.datetime.now()
         delete_objects = (
             db.query(UserLoggingActivity).filter(
                 UserLoggingActivity.signed_at < now_date - datetime.timedelta(days=3)
