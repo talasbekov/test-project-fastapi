@@ -39,7 +39,7 @@ class HrDocumentTemplate(NamedModel, isActiveModel):
     is_visible = Column(Boolean(), default=True)
     is_due_date_required = Column(Boolean(), default=False)
     is_initial_comment_required = Column(Boolean(), default=False)
-    is_draft = Column(Boolean(), default=False)
+    is_draft = Column(Boolean())
 
     # Relationships
     documents = relationship(
