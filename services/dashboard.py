@@ -359,26 +359,45 @@ class DashboardService:
     # def get_users_at_three_day_by_active(self, db: Session):
     #
     #     end_time = datetime.now()
-    #     start_time = end_time - timedelta(hours=72)
+    #     start_time = end_time - timedelta(days=3)
     #
-    #     update_interval = timedelta(minutes=30)
+    #     last_signed_ids = {}
     #
-    #     activity_counts = []
-    #
-    #     while start_time < end_time:
-    #         next_time = start_time + update_interval
-    #
-    #         active_users_count = db.query(User).filter(
-    #             User.last_signed_at.between(current_time, next_time),
-    #         ).count()
-    #
-    #         activity_counts.append(active_users_count)
-    #
-    #         current_time = next_time
+    #     users = db.query(User).filter(User.last_signed_at.between(start_time, end_time)).all()
+    #     for user in users:
+    #         last_signed_ids[user.id] = user.last_signed_id
 
-    def get_users_at_three_day_by_active(self, db: Session):
-        s = random.randint(57, 421)
-        return s
+    def get_users_at_three_day_by_active(self, db: Session) -> dict[str, int]:
+        s = random.randint(14, 132)
+        a1 = random.randint(57, 421)
+        a2 = random.randint(57, 421)
+        a3 = random.randint(57, 421)
+        a4 = random.randint(57, 421)
+        a5 = random.randint(57, 421)
+        a6 = random.randint(57, 421)
+        a7 = random.randint(57, 421)
+        a8 = random.randint(57, 421)
+        a9 = random.randint(57, 421)
+        a10 = random.randint(57, 421)
+        a11 = random.randint(57, 421)
+        a12 = random.randint(57, 421)
+        a13 = random.randint(57, 421)
+        return {
+            "USB": s,
+            "1DSGO": a1,
+            "2DSGO": a2,
+            "3DSGO": a3,
+            "4DSGO": a4,
+            "5DSGO": a5,
+            "6DSGO": a6,
+            "7DSGO": a7,
+            "8DSGO": a8,
+            "9DSGO": a9,
+            "10DSGO": a10,
+            "11DSGO": a11,
+            "Aibyn": a12,
+            "Batyr": a13
+        }
 
     def check_by_role(self, db: Session, staff_unit) -> bool:
         """
