@@ -1,8 +1,10 @@
 import uuid
+import datetime
 
 from sqlalchemy import TIMESTAMP, Column, String, text, TEXT
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql.sqltypes import Boolean
+from abc import abstractmethod
 
 from core import Base
 
@@ -15,7 +17,24 @@ from core import Base
 """
 
 
-class Model(Base):
+class Cloneable():
+    
+    @abstractmethod
+    def clone(self, **attr):
+        new_obj = self.__class__()
+        
+        for c in self.__table__.c:
+            setattr(new_obj, c.name, getattr(self, c.name))
+                
+        new_obj.__dict__.update(attr)
+        new_obj.id = uuid.uuid4()
+        new_obj.created_at = datetime.datetime.now()
+        new_obj.updated_at = datetime.datetime.now()
+        
+        return new_obj
+
+
+class Model(Base, Cloneable):
 
     __abstract__ = True
 
