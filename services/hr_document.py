@@ -110,7 +110,7 @@ responses = {
 
 
 class HrDocumentService(
-        ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpdate]):
+    ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpdate]):
     def get_by_id(self, db: Session, id: str) -> HrDocument:
         document = super().get(db, id)
         if document is None:
@@ -343,10 +343,10 @@ class HrDocumentService(
         current_user = user_service.get_by_id(db, user_id)
 
         step_from_template = (hr_document_template_service
-                              .get_steps_by_document_template_id(
-                                    db,
-                                    document.hr_document_template_id,
-                                    current_user.id))
+        .get_steps_by_document_template_id(
+            db,
+            document.hr_document_template_id,
+            current_user.id))
 
         users = [v for _, v in step_from_template.items()]
         subject_users_ids: List[uuid.UUID] = []
@@ -533,11 +533,11 @@ class HrDocumentService(
                 return self._cancel_document(db, document)
 
             steps = (
-                    hr_document_step_service
-                     .get_all_by_document_template_id_without_notifiers(
-                        db,
-                        document.hr_document_template_id)
-                    )
+                hr_document_step_service
+                .get_all_by_document_template_id_without_notifiers(
+                    db,
+                    document.hr_document_template_id)
+            )
 
             self._create_info_for_document_steps(db, document, steps)
 
@@ -594,7 +594,7 @@ class HrDocumentService(
         if service is None:
             raise InvalidOperationException(
                 (f"Работа с {option} еще не поддерживается! "
-                f"Обратитесь к администратору для получения информации!")
+                 f"Обратитесь к администратору для получения информации!")
             )
         return service.get_by_option(db, type, id, skip, limit)
 
@@ -663,8 +663,8 @@ class HrDocumentService(
                                                        step.staff_function_id):
             raise ForbiddenException(
                 detail=(
-                "Вы не можете инициализировать "
-                "этот документ из-за отсутствия прав!"
+                    "Вы не можете инициализировать "
+                    "этот документ из-за отсутствия прав!"
                 )
             )
 
@@ -677,16 +677,17 @@ class HrDocumentService(
                                   f" {user.last_name}"
                                   f" {user.father_name}"),
                     forbidden_users)
-                )
+            )
             raise ForbiddenException(
                 detail=(
-            "Вы не можете инициализировать этот документ, для пользователей:"
-            f"{user_info_list} так как они уже имеют аналогичный документ в процессе"
+                    "Вы не можете инициализировать этот документ, для пользователей:"
+                    f"{user_info_list} "
+                    f"так как они уже имеют аналогичный документ в процессе"
                 )
             )
 
         document_staff_function = document_staff_function_service.get_by_id(db,
-                                                            step.staff_function_id)
+                                                                            step.staff_function_id)
 
         if not self._check_jurisdiction(
                 db, staff_unit, document_staff_function, body.user_ids):
@@ -705,10 +706,10 @@ class HrDocumentService(
             )
 
     def _exists_user_document_in_progress(
-                                self,
-                                db: Session,
-                                hr_document_template_id: uuid.UUID,
-                                user_ids: List[uuid.UUID]):
+            self,
+            db: Session,
+            hr_document_template_id: uuid.UUID,
+            user_ids: List[uuid.UUID]):
 
         if user_ids is None:
             return None
@@ -725,7 +726,7 @@ class HrDocumentService(
                     User.id.in_(user_ids),
                     HrDocumentInfo.signed_by_id.is_(None),
                     and_(*[HrDocument.status_id !=
-                         status.id for status in forbidden_statuses])
+                           status.id for status in forbidden_statuses])
                     )
             .all()
         )
@@ -746,10 +747,10 @@ class HrDocumentService(
         properties: dict = document.properties
 
         document.reg_number = (
-            "11"
-            + "-"
-            + str(random.randint(1, 10000))
-            + "ДСП/ЛС-ЭС"
+                "11"
+                + "-"
+                + str(random.randint(1, 10000))
+                + "ДСП/ЛС-ЭС"
         )
 
         for user in users:
@@ -872,7 +873,7 @@ class HrDocumentService(
                     hr_document_step_service
                     .get_all_by_document_template_id_without_notifiers(
                         db, super_document.hr_document_template_id
-                ))
+                    ))
 
                 self._create_info_for_document_steps(db, super_document, steps)
 
@@ -885,7 +886,7 @@ class HrDocumentService(
 
         for child_document in child_documents:
             if (child_document.last_step is None
-                and child_document.status_id is completed_status.id):
+                    and child_document.status_id is completed_status.id):
                 raise InvalidOperationException(
                     detail=f'Document with id {child_document.id} is already signed!')
 
@@ -895,7 +896,7 @@ class HrDocumentService(
                     db,
                     child_document.id,
                     child_document.last_step_id
-            ))
+                ))
 
             hr_document_info_service.sign(
                 db, child_document_info, user, comment, is_signed)
@@ -915,7 +916,7 @@ class HrDocumentService(
                         hr_document_step_service
                         .get_all_by_document_template_id_without_notifiers(
                             db, child_document.hr_document_template_id
-                    ))
+                        ))
                     self._create_info_for_document_steps(
                         db, child_document, child_steps)
 
@@ -950,12 +951,12 @@ class HrDocumentService(
                     super_document.users) > 0:
                 for user in super_document.users:
                     handlers[action_name].handle_action(
-                                                db,
-                                                user,
-                                                action,
-                                                super_template.properties,
-                                                super_document.properties,
-                                                super_document)
+                        db,
+                        user,
+                        action,
+                        super_template.properties,
+                        super_document.properties,
+                        super_document)
             else:
                 handlers[action_name].handle_action(
                     db,
@@ -989,10 +990,10 @@ class HrDocumentService(
 
             document.signed_at = datetime.now()
             document.reg_number = (
-                str(random.randint(1, 10000))
-                + "-"
-                + str(random.randint(1, 10000))
-                + "қбп/жқ"
+                    str(random.randint(1, 10000))
+                    + "-"
+                    + str(random.randint(1, 10000))
+                    + "қбп/жқ"
             )
 
             document.status_id = completed_status.id
@@ -1000,10 +1001,10 @@ class HrDocumentService(
 
         super_document.signed_at = datetime.now()
         super_document.reg_number = (
-            str(random.randint(1, 10000))
-            + "-"
-            + str(random.randint(1, 10000))
-            + "қбп/жқ"
+                str(random.randint(1, 10000))
+                + "-"
+                + str(random.randint(1, 10000))
+                + "қбп/жқ"
         )
 
         super_document.status_id = completed_status.id
@@ -1160,8 +1161,8 @@ class HrDocumentService(
         staff_divisions: List[StaffDivision] = (
             staff_division_service.get_all_child_groups(
                 db, staff_unit.staff_division_id
-                )
             )
+        )
         staff_divisions.append(staff_division)
 
         # Получаем все staff unit из staff divisions
@@ -1314,8 +1315,8 @@ class HrDocumentService(
         completed_status: HrDocumentStatus = hr_document_status_service.get_by_name(
             db, HrDocumentStatusEnum.COMPLETED.value)
 
-        if document.last_step is None\
-           and document.status_id is completed_status.id:
+        if document.last_step is None \
+                and document.status_id is completed_status.id:
             raise InvalidOperationException(
                 detail='Document is already signed!')
 

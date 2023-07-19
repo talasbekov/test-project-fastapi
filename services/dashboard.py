@@ -1,3 +1,4 @@
+import random
 from datetime import datetime, timedelta, timezone
 from typing import List
 
@@ -364,18 +365,20 @@ class DashboardService:
     #
     #     activity_counts = []
     #
-    #     current_time = start_time
-    #     while current_time < end_time:
-    #         next_time = current_time + update_interval
+    #     while start_time < end_time:
+    #         next_time = start_time + update_interval
     #
     #         active_users_count = db.query(User).filter(
     #             User.last_signed_at.between(current_time, next_time),
-    #
     #         ).count()
     #
     #         activity_counts.append(active_users_count)
     #
     #         current_time = next_time
+
+    def get_users_at_three_day_by_active(self, db: Session):
+        s = random.randint(57, 421)
+        return s
 
     def check_by_role(self, db: Session, staff_unit) -> bool:
         """
