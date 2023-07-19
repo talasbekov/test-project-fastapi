@@ -15,8 +15,7 @@ from .hr_document_template import (HrDocumentTemplateCreate,
                                    HrDocumentTemplateRead,
                                    HrDocumentTemplateUpdate,
                                    SuggestCorrections,
-                                   HrDocumentTemplateDraftCreate,
-                                   HrDocumentTemplateDraftRead)
+                                   HrDocumentTemplateDraftCreate)
 from .permission import (PermissionCreate, PermissionRead, PermissionUpdate,
                          UserPermission)
 

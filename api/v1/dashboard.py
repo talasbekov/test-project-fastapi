@@ -227,4 +227,17 @@ async def get_all_active(*,
     return dashboard_service.get_active_users(db)
 
 
+@router.get("/users/active/statistics", dependencies=[Depends(HTTPBearer())],
+            summary="Get all data of candidates curators for Dashboard")
+async def get_users_at_three_day_by_active(*,
+                         db: Session = Depends(get_db),
+                         Authorize: AuthJWT = Depends(),
+                        ):
+    """
+       Количество изучающих кандидатов кураторы
+    """
+    Authorize.jwt_required()
+    return dashboard_service.get_users_at_three_day_by_active(db)
+
+
 

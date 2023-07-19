@@ -50,9 +50,8 @@ class HrDocumentTemplateRead(HrDocumentTemplateBase, ReadNamedModel):
     actions: Optional[Union[dict, None]]
     is_active: Optional[bool]
     is_visible: Optional[bool]
+    is_draft: Optional[bool]
 
     class Config:
         orm_mode = True
-        
-class HrDocumentTemplateDraftRead(HrDocumentTemplateBase, ReadNamedModel):
-    is_draft: Optional[bool]
+
