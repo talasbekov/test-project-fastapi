@@ -87,7 +87,7 @@ async def get_all_signed(*,
     return plan_service.get_all_signed(db, skip, limit)
 
 @router.post("/sign/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=List[BspPlanRead],
+            response_model=BspPlanRead,
             summary="Get all BspPlan")
 async def sign(*,
                   db: Session = Depends(get_db),

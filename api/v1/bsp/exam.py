@@ -10,8 +10,8 @@ from core import get_db
 
 from schemas import (ExamScheduleRead,
                      ExamScheduleUpdate,
-                     ExamScheduleCreate,
-                     ExamResultRead)
+                     ExamResultRead,
+                     ExamScheduleCreateWithInstructors,)
 
 from services import exam_service
 
@@ -87,7 +87,7 @@ async def get_by_id(*,
             summary="Create ExamSchedule")
 async def create(*,
                  db: Session = Depends(get_db),
-                 body: ExamScheduleCreate,
+                 body: ExamScheduleCreateWithInstructors,
                  Authorize: AuthJWT = Depends()
                  ):
     """
@@ -95,7 +95,7 @@ async def create(*,
 
     """
     Authorize.jwt_required()
-    return exam_service.create(db, obj_in=body)
+    return exam_service.create(db, body)
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=ExamScheduleRead,

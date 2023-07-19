@@ -16,7 +16,7 @@ class SuggestCorrections(Model):
 class HrDocumentTemplateBase(NamedModel):
     path: Optional[str]
     pathKZ: str
-    subject_type: SubjectType
+    subject_type: Optional[SubjectType]
     maintainer_id: Optional[uuid.UUID]
     properties: Dict[str, dict]
     description: Optional[str]
@@ -53,3 +53,6 @@ class HrDocumentTemplateRead(HrDocumentTemplateBase, ReadNamedModel):
 
     class Config:
         orm_mode = True
+        
+class HrDocumentTemplateDraftRead(HrDocumentTemplateBase, ReadNamedModel):
+    is_draft: Optional[bool]
