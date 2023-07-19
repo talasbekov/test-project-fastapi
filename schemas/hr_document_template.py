@@ -53,3 +53,6 @@ class HrDocumentTemplateRead(HrDocumentTemplateBase, ReadNamedModel):
 
     class Config:
         orm_mode = True
+        
+class HrDocumentTemplateDraftRead(HrDocumentTemplateBase, ReadNamedModel):
+    is_draft: Optional[bool]

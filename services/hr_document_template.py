@@ -144,6 +144,7 @@ class HrDocumentTemplateService(
                         HrDocumentTemplate.name.ilike(f"%{name}%")
                         | HrDocumentTemplate.description.ilike(f"%{name}%")
                     ),
+                    HrDocumentTemplate.is_draft == False
                 )
                 .filter(HrDocumentTemplate.is_visible == True)
                 .offset(skip)
