@@ -10,7 +10,7 @@ from core import get_db
 
 from schemas import (ScheduleMonthRead,
                      ScheduleMonthUpdate,
-                     ScheduleMonthCreate,)
+                     ScheduleMonthCreateWithDay,)
 
 from services import schedule_month_service
 
@@ -64,7 +64,7 @@ async def get_by_id(*,
             summary="Create ScheduleMonth")
 async def create(*,
                  db: Session = Depends(get_db),
-                 body: ScheduleMonthCreate,
+                 body: ScheduleMonthCreateWithDay,
                  Authorize: AuthJWT = Depends()
                  ):
     """
@@ -72,7 +72,7 @@ async def create(*,
 
     """
     Authorize.jwt_required()
-    return schedule_month_service.create(db, obj_in=body)
+    return schedule_month_service.create(db, body)
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=ScheduleMonthRead,

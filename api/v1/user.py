@@ -171,6 +171,24 @@ async def get_all_by_staff_unit(*,
     return user_service.get_all_by_staff_unit(db, id)
 
 
+@router.get(
+    "/position/{id}",
+    dependencies=[Depends(HTTPBearer())],
+    response_model=List[UserRead],
+    summary="Get all Users by Staff Unit",
+)
+async def get_all_by_position(*,
+                                db: Session = Depends(get_db),
+                                Authorize: AuthJWT = Depends(),
+                                id: uuid.UUID):
+    """
+     Get all Users by Position
+
+    - **id**: UUID - required and should exist in the database.
+    """
+    Authorize.jwt_required()
+    return user_service.get_all_by_position(db, id)
+
 
 @router.get(
     "/plan/{id}",

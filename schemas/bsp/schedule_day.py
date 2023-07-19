@@ -37,6 +37,12 @@ class ScheduleDayCreate(ScheduleDayBase):
     pass
 
 
+class ScheduleDayCreateWithString(BaseModel):
+    day: Optional[str]
+    start_time: Optional[time]
+    end_time: Optional[time]
+
+
 class ScheduleDayUpdate(ScheduleDayBase):
     pass
 
