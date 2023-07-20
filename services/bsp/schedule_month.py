@@ -1,6 +1,9 @@
+import datetime
+import uuid
+
 from sqlalchemy.orm import Session
 
-from models import ScheduleMonth
+from models import ScheduleMonth, ScheduleDay, ScheduleYear, User, Day
 from schemas import (ScheduleMonthCreate,
                      ScheduleMonthUpdate,
                      ScheduleMonthCreateWithDay,
@@ -14,6 +17,7 @@ from .. import user_service
 class ScheduleMonthService(ServiceBase[ScheduleMonth,
                                        ScheduleMonthCreate,
                                        ScheduleMonthUpdate]):
+
     def create(self, db: Session, body: ScheduleMonthCreateWithDay):
         schedule_month = super().create(db,
                                         ScheduleMonthCreate(
@@ -42,6 +46,56 @@ class ScheduleMonthService(ServiceBase[ScheduleMonth,
 
         return schedule_month
 
+    def get_nearest_schedules(self,
+                              db: Session,
+                              user_id: uuid.UUID,
+                              limit: int):
+        current_time = datetime.datetime.now().time()
+        today_weekday = datetime.date.today().isoweekday()
+
+        schedule_days = (db.query(ScheduleDay.id)
+                         .join(Day)
+                         .filter(Day.order >= today_weekday,
+                                 ScheduleDay.start_time > current_time)
+                         .order_by(Day.order, ScheduleDay.start_time)
+                         .limit(limit)
+                         .subquery()
+                         )
+
+        closest_schedules = (db.query(ScheduleMonth)
+                             .join(ScheduleMonth.days)
+                             .join(ScheduleYear.users)
+                             .filter(User.id == user_id,
+                                     ScheduleDay.id.in_(schedule_days))
+                             .all()
+                             )
+
+        return closest_schedules
+
+    def get_schedule_by_day(self,
+                            db: Session,
+                            user_id: uuid.UUID,
+                            date: datetime.date,
+                            limit: int):
+        today_weekday = date.isoweekday()
+
+        schedule_days = (db.query(ScheduleDay.id)
+                         .join(Day)
+                         .filter(Day.order == today_weekday)
+                         .order_by(Day.order, ScheduleDay.start_time)
+                         .limit(limit)
+                         .subquery()
+                         )
+
+        schedules = (db.query(ScheduleMonth)
+                     .join(ScheduleMonth.days)
+                     .join(ScheduleYear.users)
+                     .filter(User.id == user_id,
+                             ScheduleDay.id.in_(schedule_days))
+                     .all()
+                     )
+
+        return schedules
 
 
 schedule_month_service = ScheduleMonthService(ScheduleMonth)
