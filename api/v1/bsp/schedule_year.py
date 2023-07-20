@@ -159,6 +159,7 @@ async def update(*,
 async def delete(*,
                  db: Session = Depends(get_db),
                  id: uuid.UUID,
+                 division_id: uuid.UUID,
                  Authorize: AuthJWT = Depends()
                  ):
     """
@@ -166,4 +167,6 @@ async def delete(*,
 
     """
     Authorize.jwt_required()
-    return schedule_year_service.remove(db, id)
+    return schedule_year_service.remove_staff_division_from_schedule(db,
+                                                                     id,
+                                                                     division_id)

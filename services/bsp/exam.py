@@ -1,4 +1,6 @@
 import uuid
+
+from sqlalchemy import extract
 from sqlalchemy.orm import Session
 from models import ExamSchedule, ExamResult, ScheduleYear
 from schemas import (ExamScheduleCreate,
@@ -56,5 +58,21 @@ class ExamService(ServiceBase[ExamSchedule, ExamScheduleCreate, ExamScheduleUpda
         db.flush()
 
         return exam_schedule
+
+    def get_by_month_and_schedule_year(self,
+                              db: Session,
+                              month_numbers: int,
+                              schedule_id: uuid.UUID):
+        schedule = (
+            db.query(ExamSchedule)
+            .join(ScheduleYear)
+            .filter(extract('month', ExamSchedule.start_date) == month_numbers,
+                    ExamSchedule.schedule_id == schedule_id,
+                    ScheduleYear.is_active == True)
+            .first()
+        )
+
+        return schedule
+
 
 exam_service = ExamService(ExamSchedule)

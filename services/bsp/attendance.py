@@ -3,7 +3,8 @@ import uuid
 from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
 
-from models import Attendance, AttendedUser, AttendanceStatus
+from models import Attendance, AttendedUser, AttendanceStatus, ScheduleMonth, \
+    ScheduleYear
 from schemas import (AttendanceCreate,
                      AttendanceUpdate,
                      AttendedUserCreate,
@@ -75,6 +76,28 @@ class AttendanceService(ServiceBase[Attendance, AttendanceCreate, AttendanceUpda
             )
 
         return attendances_percentages
+
+    def get_absent_users(self, db: Session, schedule_id: uuid.UUID):
+        schedule_months = (
+            db.query(ScheduleMonth.id)
+            .join(ScheduleYear.months)
+            .filter(ScheduleMonth.schedule_id == schedule_id)
+            .subquery()
+        )
+        attendances = (
+            db.query(Attendance.id)
+            .filter(Attendance.schedule_id.in_(schedule_months))
+            .all()
+        )
+
+        absent_users = (
+            db.query(AttendedUser.user)
+            .filter(AttendedUser.attendance_id.in_(attendances),
+                    AttendedUser.attendance_status == AttendanceStatus.ABSENT_REASON)
+            .all()
+        )
+
+        return absent_users
 
 
 attendance_service = AttendanceService(Attendance)

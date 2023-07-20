@@ -12,7 +12,9 @@ from schemas import (AttendanceRead,
                      AttendanceUpdate,
                      AttendanceCreate,
                      AttendancePercentageRead,
-                     AttendanceChangeStatus,)
+                     AttendanceChangeStatus,
+                     AttendanceChangeStatusWithSchedule,
+                     UserShortRead,)
 
 from services import attendance_service, attended_user_service
 
@@ -77,6 +79,23 @@ async def get_attendance_percentage(*,
     user_id = Authorize.get_jwt_subject()
     return attendance_service.get_percentage_by_user_id(db, user_id)
 
+@router.get("/absent/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=List[UserShortRead],
+            summary="Get all absent users for the ScheduleYear")
+async def get_absent_users(*,
+                    db: Session = Depends(get_db),
+                    id: uuid.UUID,
+                    Authorize: AuthJWT = Depends()
+                    ):
+    """
+        Get all absent users for the ScheduleYear
+
+        - **id**: UUID - required. ScheduleYear id
+    """
+    Authorize.jwt_required()
+    return attendance_service.get_absent_users(db, id)
+
+
 @router.post("/", dependencies=[Depends(HTTPBearer())],
             response_model=AttendanceRead,
             summary="Create Attendance")
@@ -106,6 +125,20 @@ async def change_attendance_status(*,
     Authorize.jwt_required()
     attendance_service.get_by_id(db, body.attendance_id)
     return attended_user_service.change_attendance_status(db, body)
+
+@router.post("/status_change/schedule", dependencies=[Depends(HTTPBearer())],
+            summary="Change Attendance status by schedule and date")
+async def change_attendance_status_by_schedule(*,
+                 db: Session = Depends(get_db),
+                 body: AttendanceChangeStatusWithSchedule,
+                 Authorize: AuthJWT = Depends()
+                 ):
+    """
+        Change Attendance status
+
+    """
+    Authorize.jwt_required()
+    return attended_user_service.change_attendance_status_by_schedule(db, body)
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=AttendanceRead,

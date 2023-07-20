@@ -11,6 +11,7 @@ from .association import (
 )
 
 class Month(NamedModel):
+    order = Column(Integer)
     __tablename__ = 'months'
 
 

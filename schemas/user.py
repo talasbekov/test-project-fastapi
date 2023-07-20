@@ -2,10 +2,10 @@ import datetime
 import uuid
 from typing import List, Optional
 
-from pydantic import EmailStr
+from pydantic import EmailStr, Field
 
 from schemas import BadgeRead, RankRead, UserStaffUnitRead, StatusRead
-from schemas import Model, ReadModel
+from schemas import Model, ReadModel, BaseModel
 
 
 class UserBase(Model):
@@ -102,3 +102,8 @@ class UserShortReadStatus(Model):
 class TableUserRead(Model):
     total: int
     users: List[UserRead]
+
+
+class UserShortReadStatusPagination(BaseModel):
+    total: int = Field(0, nullable=False)
+    objects: List[UserShortReadStatus] = Field([], nullable=False)
