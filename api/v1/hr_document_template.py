@@ -45,7 +45,7 @@ async def get_all(*,
             This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
-    return hr_document_template_service.get_all_drafts(db, name, skip, limit)
+    return hr_document_template_service.get_all_by_name(db, name, skip, limit)
 
 
 @router.get('/archive')
@@ -60,16 +60,17 @@ async def get_all_archived(*,
 
 @router.get('/draft',  status_code=status.HTTP_200_OK,
              dependencies=[Depends(HTTPBearer())],
-             response_model=HrDocumentTemplateRead,
+             response_model=List[HrDocumentTemplateRead],
              summary="Get HrDocumentTemplate drafts")
 async def get_all_draft(*,
                            db: Session = Depends(get_db),
                            skip: int = 0,
+                           name: str = None,
                            limit: int = 10,
                            Authorize: AuthJWT = Depends(),
                            ):
     Authorize.jwt_required()
-    return hr_document_template_service.get_all_drafts(db, skip, limit)
+    return hr_document_template_service.get_all_drafts(db, name, skip, limit)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,

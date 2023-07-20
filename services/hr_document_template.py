@@ -1,7 +1,6 @@
 import uuid
 
 from sqlalchemy.orm import Session
-from sqlalchemy import or_
 from fastapi.encoders import jsonable_encoder
 from typing import List, Union, Dict
 
@@ -148,8 +147,7 @@ class HrDocumentTemplateService(
                     HrDocumentTemplate.is_draft == False
                 )
                 .filter(HrDocumentTemplate.is_visible == True)
-                .filter(or_(HrDocumentTemplate.is_draft != False,
-                            HrDocumentTemplate.is_draft == None))
+                .filter(HrDocumentTemplate.is_draft == False)
                 .offset(skip)
                 .limit(limit)
                 .all()
@@ -164,8 +162,7 @@ class HrDocumentTemplateService(
             db.query(HrDocumentTemplate)
             .filter(HrDocumentTemplate.is_active == True)
             .filter(HrDocumentTemplate.is_visible == True)
-            .filter(or_(HrDocumentTemplate.is_draft != False,
-                        HrDocumentTemplate.is_draft == None))
+            .filter(HrDocumentTemplate.is_draft == False)
             .offset(skip)
             .limit(limit)
             .all()
@@ -227,6 +224,7 @@ class HrDocumentTemplateService(
                 description=template.description,
                 actions=template.actions,
                 is_visible=template.is_visible,
+                is_draft=template.is_draft
             ),
         )
         steps = hr_document_step_service.get_all_by_document_template_id(
