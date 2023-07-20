@@ -1,6 +1,7 @@
 import uuid
 from datetime import datetime
 from typing import Optional, List
+from pydantic import Field
 
 from schemas import (BaseModel,
                      NamedModel,
@@ -63,3 +64,7 @@ class ScheduleYearRead(ScheduleYearBase):
     exam_months: Optional[List[MonthRead]]
     months: Optional[List[ScheduleMonthRead]]
     exams: Optional[List[ExamScheduleRead]]
+    
+class ScheduleYearReadPagination(BaseModel):
+    total: int = Field(0, nullable=False)
+    objects: List[ScheduleYearRead] = Field([], nullable=False)

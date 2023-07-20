@@ -12,20 +12,23 @@ from services import staff_division_service
 from .month import month_service
 from .schedule_month import schedule_month_service
 
-
 class ScheduleYearService(ServiceBase[ScheduleYear,
                                       ScheduleYearCreate,
                                       ScheduleYearUpdate]):
-
     def get_multi(
         self, db: Session, skip: int = 0, limit: int = 100
-    ):
-        return (db.query(self.model)
+    ):  
+        total = (db.query(self.model)
+                 .filter(ScheduleYear.is_active == True)
+                 .count())
+        schedules = (db.query(self.model)
                 .filter(ScheduleYear.is_active == True)
                 .offset(skip)
                 .limit(limit)
                 .all())
 
+        return {'total': total, 'objects': schedules}
+     
     def get_all_by_plan_year(self,
                              db: Session,
                              year: int,
@@ -38,8 +41,14 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
                      .offset(skip)
                      .limit(limit)
                      )
-        return schedules
+        total = (db.query(self.model)
+                 .join(BspPlan,)
+                 .filter(BspPlan.year == year,
+                         ScheduleYear.is_active == True)
+                 .count())
+        return {'total': total, 'objects': schedules}
 
+        
 
     def get_all_by_plan_id(self,
                            db: Session,
@@ -50,7 +59,12 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
                              ScheduleYear.is_active == True)
                      .all()
                      )
-        return schedules
+        total = (db.query(self.model)
+                 .join(BspPlan)
+                 .filter(BspPlan.id == id,
+                         ScheduleYear.is_active == True)
+                 .count())
+        return {'total': total, 'objects': schedules}
 
     def get_by_schedule_month_id(self,
                                  db: Session,
@@ -61,7 +75,11 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
                         ScheduleYear.is_active == True)
                 .first()
                 )
-        return year
+        total = (db.query(self.model)
+                 .filter(ScheduleYear.id == month.schedule_id,
+                         ScheduleYear.is_active == True)
+                 .count())
+        return {'total': total, 'objects': year}
 
     def get_all_by_division_id(self,
                                db: Session,
@@ -73,7 +91,13 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
                              ScheduleYear.is_active == True)
                      .all()
                      )
-        return schedules
+
+        total = (db.query(self.model)
+                 .join(ScheduleYear.staff_divisions)
+                 .filter(StaffDivision.id == id,
+                         ScheduleYear.is_active == True)
+                 .count())
+        return {'total': total, 'objects': schedules}
 
     def create_schedule(self, db: Session,
                         schedule: ScheduleYearCreateString):
@@ -105,7 +129,6 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
         (db.query(ScheduleYear)
          .filter(ScheduleYear.plan_id == plan_id)
          .update({self.model.is_active: False}))
-
 
 
 schedule_year_service = ScheduleYearService(ScheduleYear)

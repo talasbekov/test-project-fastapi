@@ -10,7 +10,8 @@ from core import get_db
 
 from schemas import (ScheduleYearRead,
                      ScheduleYearUpdate,
-                     ScheduleYearCreateString,)
+                     ScheduleYearCreateString,
+                     ScheduleYearReadPagination)
 
 from services import schedule_year_service, plan_service
 
@@ -21,7 +22,7 @@ router = APIRouter(prefix="/schedule_year",
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[ScheduleYearRead],
+            response_model=List[ScheduleYearReadPagination],
             summary="Get all ScheduleYear")
 async def get_all(*,
                   db: Session = Depends(get_db),
@@ -43,7 +44,7 @@ async def get_all(*,
     return schedule_year_service.get_multi(db, skip, limit)
 
 @router.get("/plan/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=List[ScheduleYearRead],
+            response_model=List[ScheduleYearReadPagination],
             summary="Get all ScheduleYear by plan id")
 async def get_all_by_plan(*,
                   db: Session = Depends(get_db),
@@ -65,7 +66,7 @@ async def get_all_by_plan(*,
     return schedule_year_service.get_all_by_plan_id(db, id)
 
 @router.get("/staff_division/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=List[ScheduleYearRead],
+            response_model=List[ScheduleYearReadPagination],
             summary="Get all ScheduleYear by staff_division id")
 async def get_all_by_staff_division(*,
                   db: Session = Depends(get_db),
@@ -80,7 +81,7 @@ async def get_all_by_staff_division(*,
     return schedule_year_service.get_all_by_division_id(db, id)
 
 @router.get("/year/", dependencies=[Depends(HTTPBearer())],
-            response_model=List[ScheduleYearRead],
+            response_model=List[ScheduleYearReadPagination],
             summary="Get all Schedule Year by plan year")
 async def get_all_by_year(*,
                   db: Session = Depends(get_db),
