@@ -130,6 +130,22 @@ async def get_by_id(*,
     Authorize.jwt_required()
     return plan_service.get_by_id(db, id)
 
+@router.get("/duplicate/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=BspPlanRead,
+            summary="Duplicate BspPlan by id")
+async def duplicate(*,
+                    db: Session = Depends(get_db),
+                    id: uuid.UUID,
+                    Authorize: AuthJWT = Depends()
+                    ):
+    """
+        Duplicate BspPlan by id
+
+        - **id**: UUID - required
+    """
+    Authorize.jwt_required()
+    return plan_service.duplicate(db, id)
+
 @router.post("/", dependencies=[Depends(HTTPBearer())],
             response_model=BspPlanRead,
             summary="Create BspPlan")

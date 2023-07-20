@@ -14,7 +14,7 @@ from .exam import ExamScheduleRead
 
 
 class MonthBase(NamedModel):
-    pass
+    order: Optional[int]
 
 
 class MonthCreate(MonthBase):
@@ -27,6 +27,7 @@ class MonthUpdate(MonthBase):
 
 class MonthRead(MonthBase):
     id: Optional[uuid.UUID]
+    has_schedule_month: bool = True
 
 
 class ScheduleYearBase(BaseModel):
@@ -47,7 +48,7 @@ class ScheduleYearCreateString(ScheduleYearBase):
 
 
 class ScheduleYearCreate(ScheduleYearBase):
-    pass
+    is_active: bool
 
 
 class ScheduleYearUpdate(ScheduleYearBase):

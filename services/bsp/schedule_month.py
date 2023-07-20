@@ -103,18 +103,45 @@ class ScheduleMonthService(ServiceBase[ScheduleMonth,
 
         return schedules
 
+    def get_by_month_and_schedule_year(self,
+                              db: Session,
+                              month_numbers: int,
+                              schedule_id: uuid.UUID):
+        schedule = (
+            db.query(ScheduleMonth)
+            .join(ScheduleYear)
+            .filter(extract('month', ScheduleMonth.start_date) == month_numbers,
+                    ScheduleMonth.schedule_id == schedule_id,
+                    ScheduleYear.is_active == True)
+            .first()
+        )
+
+        return schedule
+
+
+    def get_by_schedule_year_id(self,
+                              db: Session,
+                              schedule_id: uuid.UUID):
+        schedules = (
+            db.query(ScheduleMonth)
+            .filter(ScheduleMonth.schedule_id == schedule_id)
+            .all()
+        )
+
+        return schedules
+
 
     def get_schedule_by_day(self,
                             db: Session,
                             user_id: uuid.UUID,
                             date: datetime.date,
                             limit: int):
-        today_weekday = date.isoweekday()
+        date_weekday = date.isoweekday()
 
         schedule_days = (db.query(ScheduleDay.id)
                          .join(Day)
-                         .filter(Day.order == today_weekday)
-                         .order_by(Day.order, ScheduleDay.start_time)
+                         .filter(Day.order == date_weekday)
+                         .order_by(ScheduleDay.start_time)
                          .limit(limit)
                          .subquery()
                          )
@@ -125,7 +152,9 @@ class ScheduleMonthService(ServiceBase[ScheduleMonth,
                      .join(ScheduleYear.users)
                      .filter(User.id == user_id,
                              ScheduleDay.id.in_(schedule_days),
-                             ScheduleYear.is_active == True)
+                             ScheduleYear.is_active == True,
+                             ScheduleMonth.start_date <= date,
+                             ScheduleMonth.end_date >= date)
                      .all()
                      )
 

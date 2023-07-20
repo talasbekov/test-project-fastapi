@@ -37,6 +37,15 @@ class AttendanceChangeStatus(BaseModel):
     user_ids: List[uuid.UUID]
 
 
+class AttendanceChangeStatusWithSchedule(BaseModel):
+    schedule_id: uuid.UUID
+    attendance_status: Optional[str]
+    reason: Optional[str]
+    user_id: uuid.UUID
+    date: date
+    activity: Optional[str]
+
+
 class AttendanceBase(BaseModel):
     attendance_date: Optional[date]
     schedule_id: Optional[uuid.UUID]

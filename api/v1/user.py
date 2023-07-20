@@ -7,7 +7,11 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import UserRead, UserUpdate, UserShortRead, TableUserRead
+from schemas import (UserRead,
+                     UserUpdate,
+                     UserShortRead,
+                     TableUserRead,
+                     UserShortReadStatusPagination,)
 from services import user_service
 
 router = APIRouter(
@@ -193,7 +197,7 @@ async def get_all_by_position(*,
 @router.get(
     "/schedule/{id}",
     dependencies=[Depends(HTTPBearer())],
-    response_model=List[UserShortRead],
+    response_model=UserShortReadStatusPagination,
     summary="Get all Users by ScheduleYear",
 )
 async def get_all_by_schedule_id(*,

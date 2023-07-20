@@ -238,7 +238,12 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
                  .limit(limit)
                  .all())
 
-        return users
+        total = (db.query(User)
+                 .join(ScheduleYear.users)
+                 .filter(ScheduleYear.id == schedule_id)
+                 .count())
+
+        return {'total': total, 'objects': users}
 
     def get_by_iin(self, db: Session, iin: str):
 
