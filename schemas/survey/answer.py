@@ -4,7 +4,7 @@ from typing import List, Optional
 from pydantic import BaseModel, Field
 from schemas import Model, ReadModel
 from .option import OptionRead
-
+from .question import QuestionRead
 
 class AnswerBase(Model):
     question_id: uuid.UUID
@@ -24,6 +24,7 @@ class AnswerUpdate(AnswerBase):
 # read
 class AnswerRead(AnswerBase, ReadModel):
     question_id: Optional[uuid.UUID]
+    question: Optional[QuestionRead]
     options: Optional[List[OptionRead]]
     user_id: Optional[uuid.UUID]
     encrypted_used_id: Optional[str]
