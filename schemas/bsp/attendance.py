@@ -33,6 +33,7 @@ class AttendedUserRead(AttendedUserBase):
 class AttendanceChangeStatus(BaseModel):
     attendance_id: uuid.UUID
     attendance_status: Optional[str]
+    reason: Optional[str]
     user_ids: List[uuid.UUID]
 
 

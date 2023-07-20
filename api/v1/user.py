@@ -191,22 +191,29 @@ async def get_all_by_position(*,
 
 
 @router.get(
-    "/plan/{id}",
+    "/schedule/{id}",
     dependencies=[Depends(HTTPBearer())],
-    response_model=List[UserRead],
-    summary="Get all Users by BspPlan",
+    response_model=List[UserShortRead],
+    summary="Get all Users by ScheduleYear",
 )
-async def get_all_by_plan_id(*,
-                                db: Session = Depends(get_db),
-                                Authorize: AuthJWT = Depends(),
-                                id: uuid.UUID):
+async def get_all_by_schedule_id(*,
+                             db: Session = Depends(get_db),
+                             Authorize: AuthJWT = Depends(),
+                             id: uuid.UUID,
+                             skip: int,
+                             limit: int
+                                 ):
     """
      Get all Users by Plan
 
     - **id**: UUID - required and should exist in the database.
+    - **skip**: int - The number of users to skip before returning the results.
+    This parameter is optional and defaults to 0.
+    - **limit**: int - The maximum number of users to return in response.
+    This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
-    return user_service.get_by_plan_id(db, id)
+    return user_service.get_by_schedule_id(db, id, skip, limit)
 
 
 @router.patch(

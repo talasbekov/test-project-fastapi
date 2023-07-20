@@ -15,7 +15,8 @@ class AttendedUserService(ServiceBase[AttendedUser,
             .filter(AttendedUser.attendance_id == body.attendance_id)
             .filter(AttendedUser.user_id.in_(body.user_ids))
             .update(
-                {self.model.attendance_status: body.attendance_status}
+                {self.model.attendance_status: body.attendance_status,
+                 self.model.reason: body.reason}
             )
         )
 

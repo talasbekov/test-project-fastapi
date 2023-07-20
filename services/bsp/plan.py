@@ -58,4 +58,10 @@ class BspPlanService(ServiceBase[BspPlan, BspPlanCreate, BspPlanUpdate]):
                        .all())
         return draft_plans
 
+    def send_to_draft_full(self, db: Session, plan_id: uuid.UUID):
+        plan = self.get_by_id(db, plan_id)
+
+        plan.status = PlanStatus.DRAFT
+
+
 plan_service = BspPlanService(BspPlan)
