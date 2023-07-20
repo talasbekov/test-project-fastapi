@@ -28,6 +28,7 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
                      .filter(ScheduleYear.is_active == True)
                      .offset(skip)
                      .limit(limit)
+                     .order_by(self.model.created_at.desc())
                      .all())
 
         schedules = [ScheduleYearRead.from_orm(schedule).dict()
@@ -86,6 +87,7 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
                      .join(BspPlan, )
                      .filter(BspPlan.year == year,
                              ScheduleYear.is_active == True)
+                     .order_by(self.model.created_at.desc())
                      .offset(skip)
                      .limit(limit)
                      )
@@ -103,6 +105,7 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
                      .join(BspPlan)
                      .filter(BspPlan.id == id,
                              ScheduleYear.is_active == True)
+                     .order_by(self.model.created_at.desc())
                      .all()
                      )
         total = (db.query(self.model)
@@ -135,6 +138,7 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
                      .join(ScheduleYear.staff_divisions)
                      .filter(StaffDivision.id == id,
                              ScheduleYear.is_active == True)
+                     .order_by(self.model.created_at.desc())
                      .all()
                      )
 
