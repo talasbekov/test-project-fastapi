@@ -28,7 +28,7 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
         questions = question_service.get_by_survey(db, survey_id)
         
         question_ids = [question.id for question in questions]
-        print(question_ids)
+
         return db.query(self.model).filter(
             self.model.question_id.in_(question_ids)
         ).all()
