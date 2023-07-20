@@ -8,15 +8,15 @@ from schemas import (ScheduleYearCreate,
                      ScheduleYearCreateString,
                      ScheduleYearRead, )
 from services.base import ServiceBase
-from services import staff_division_service
+from services import staff_division_service, user_service
 from .month import month_service
 from .schedule_month import schedule_month_service
 from .exam import exam_service
 
 
 class ScheduleYearService(ServiceBase[ScheduleYear,
-ScheduleYearCreate,
-ScheduleYearUpdate]):
+                                      ScheduleYearCreate,
+                                      ScheduleYearUpdate]):
 
     def get_multi(
             self, db: Session, skip: int = 0, limit: int = 100
@@ -157,6 +157,12 @@ ScheduleYearUpdate]):
         staff_divisions = [staff_division_service.get_by_id(db, division_id)
                            for division_id in schedule.staff_division_ids]
         schedule_year.staff_divisions = staff_divisions
+
+        users = []
+        for staff_division in staff_divisions:
+            users.extend(user_service.get_users_by_staff_division(db, staff_division))
+        schedule_year.users = users
+
 
         activity_months = month_service.get_months_by_names(db,
                                                             schedule.activity_months)
