@@ -11,8 +11,7 @@ from schemas import (
     HrDocumentTemplateCreate,
     HrDocumentTemplateUpdate,
     HrDocumentTemplateRead,
-    SuggestCorrections,
-    HrDocumentTemplateDraftCreate
+    SuggestCorrections
 )
 from services import hr_document_template_service
 
@@ -109,7 +108,7 @@ async def create(*,
              summary="Create HrDocumentTemplate draft")
 async def create_draft(*,
                  db: Session = Depends(get_db),
-                 body: HrDocumentTemplateDraftCreate,
+                 body: HrDocumentTemplateCreate,
                  Authorize: AuthJWT = Depends()
                  ):
     """

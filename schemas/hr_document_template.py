@@ -25,6 +25,7 @@ class HrDocumentTemplateBase(NamedModel):
     is_visible: bool
     is_due_date_required: Optional[bool] = False
     is_initial_comment_required: Optional[bool] = False
+    is_draft: Optional[bool] = False
 
     _check_properties = validator("properties", allow_reuse=True)(
         hr_document_templates_properties_validator)
@@ -32,9 +33,6 @@ class HrDocumentTemplateBase(NamedModel):
 
 class HrDocumentTemplateCreate(HrDocumentTemplateBase):
     pass
-
-class HrDocumentTemplateDraftCreate(HrDocumentTemplateBase):
-    is_draft: Optional[bool]
 
 
 class HrDocumentTemplateUpdate(HrDocumentTemplateBase):

@@ -14,8 +14,7 @@ from .event import EventCreate, EventRead, EventUpdate
 from .hr_document_template import (HrDocumentTemplateCreate,
                                    HrDocumentTemplateRead,
                                    HrDocumentTemplateUpdate,
-                                   SuggestCorrections,
-                                   HrDocumentTemplateDraftCreate)
+                                   SuggestCorrections)
 from .permission import (PermissionCreate, PermissionRead, PermissionUpdate,
                          UserPermission)
 
