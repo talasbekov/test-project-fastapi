@@ -1,6 +1,7 @@
 import datetime
 import uuid
 
+from sqlalchemy import extract
 from sqlalchemy.orm import Session
 
 from models import ScheduleMonth, ScheduleDay, ScheduleYear, User, Day
@@ -85,6 +86,23 @@ class ScheduleMonthService(ServiceBase[ScheduleMonth,
                              )
 
         return closest_schedules
+
+
+    def get_schedules_by_month(self,
+                              db: Session,
+                              user_id: uuid.UUID,
+                              month_number: int):
+        schedules = (
+            db.query(ScheduleMonth)
+            .join(ScheduleYear.users)
+            .filter(User.id == user_id,
+                    extract('month', ScheduleMonth.date) == month_number,
+                    ScheduleYear.is_active == True)
+            .all()
+        )
+
+        return schedules
+
 
     def get_schedule_by_day(self,
                             db: Session,

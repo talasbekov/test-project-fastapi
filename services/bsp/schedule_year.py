@@ -21,7 +21,7 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
         self, db: Session, skip: int = 0, limit: int = 100
     ):
         return (db.query(self.model)
-                .flter(ScheduleYear.is_active == True)
+                .filter(ScheduleYear.is_active == True)
                 .offset(skip)
                 .limit(limit)
                 .all())
