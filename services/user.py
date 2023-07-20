@@ -283,7 +283,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
                 return super().get_multi(db, skip=skip, limit=limit)
 
             if i.name == JurisdictionEnum.PERSONNEL.value:
-                return self._get_users_by_personnel_jurisdiction(
+                return self.get_users_by_staff_division(
                     db, staff_division)
 
             if i.name == JurisdictionEnum.SUPERVISED_EMPLOYEES.value:
@@ -300,7 +300,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             if i.name == JurisdictionEnum.CANDIDATES.value:
                 return self._get_users_by_candidates_jurisdiction(db)
 
-    def _get_users_by_personnel_jurisdiction(
+    def get_users_by_staff_division(
             self,
             db: Session,
             staff_division: StaffDivision) -> List[User]:
