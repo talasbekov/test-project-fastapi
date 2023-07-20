@@ -1,5 +1,4 @@
 import uuid
-from typing import List
 
 from fastapi import APIRouter, Depends
 from fastapi.security import HTTPBearer
@@ -22,7 +21,7 @@ router = APIRouter(prefix="/plan",
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[BspPlanReadPagination],
+            response_model=BspPlanReadPagination,
             summary="Get all BspPlan")
 async def get_all(*,
                   db: Session = Depends(get_db),
@@ -44,7 +43,7 @@ async def get_all(*,
     return plan_service.get_multi(db, skip, limit)
 
 @router.get("/draft/", dependencies=[Depends(HTTPBearer())],
-            response_model=List[BspPlanReadPagination],
+            response_model=BspPlanReadPagination,
             summary="Get all BspPlan")
 async def get_all_draft(*,
                   db: Session = Depends(get_db),
@@ -66,7 +65,7 @@ async def get_all_draft(*,
     return plan_service.get_all_draft(db, skip, limit)
 
 @router.get("/signed/", dependencies=[Depends(HTTPBearer())],
-            response_model=List[BspPlanReadPagination],
+            response_model=BspPlanReadPagination,
             summary="Get all BspPlan")
 async def get_all_signed(*,
                   db: Session = Depends(get_db),

@@ -1,5 +1,4 @@
 import uuid
-from typing import List
 
 from fastapi import APIRouter, Depends
 from fastapi.security import HTTPBearer
@@ -22,7 +21,7 @@ router = APIRouter(prefix="/exam",
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[ExamResultReadPagination],
+            response_model=ExamResultReadPagination,
             summary="Get all ExamSchedule")
 async def get_all(*,
                   db: Session = Depends(get_db),
@@ -44,7 +43,7 @@ async def get_all(*,
     return exam_service.get_multi(db, skip, limit)
 
 @router.get("/results/", dependencies=[Depends(HTTPBearer())],
-            response_model=List[ExamResultReadPagination],
+            response_model=ExamResultReadPagination,
             summary="Get ExamSchedule by id")
 async def get_exam_results(*,
                     db: Session = Depends(get_db),
