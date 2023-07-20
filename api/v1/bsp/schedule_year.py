@@ -12,7 +12,7 @@ from schemas import (ScheduleYearRead,
                      ScheduleYearUpdate,
                      ScheduleYearCreateString,)
 
-from services import schedule_year_service
+from services import schedule_year_service, plan_service
 
 
 router = APIRouter(prefix="/schedule_year",
@@ -61,6 +61,7 @@ async def get_all_by_plan(*,
         This parameter is optional and defaults to 100.
    """
     Authorize.jwt_required()
+    plan_service.get_by_id(db, id)
     return schedule_year_service.get_all_by_plan_id(db, id)
 
 @router.get("/staff_division/{id}/", dependencies=[Depends(HTTPBearer())],

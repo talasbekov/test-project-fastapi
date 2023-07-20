@@ -5,5 +5,5 @@ from .attendance import (Attendance, AttendedUser,
 from .exam import ExamResult, ExamSchedule
 from .plan import BspPlan, PlanStatus
 from .schedule_day import ScheduleDay, Day
-from .schedule_month import ScheduleMonth
+from .schedule_month import ScheduleMonth, Place
 from .schedule_year import ScheduleYear, Month

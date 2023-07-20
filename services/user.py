@@ -16,7 +16,6 @@ from models import (
     HrDocument,
     HrDocumentInfo,
     HrDocumentTemplate,
-    BspPlan,
     ScheduleYear,
 )
 from schemas import (
@@ -227,12 +226,16 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         
         return users
     
-    def get_by_plan_id(self, db: Session, plan_id: uuid.UUID):
+    def get_by_schedule_id(self, db: Session,
+                           schedule_id: uuid.UUID,
+                           skip: int,
+                           limit: int):
 
         users = (db.query(User)
                  .join(ScheduleYear.users)
-                 .join(BspPlan)
-                 .filter(BspPlan.id == plan_id)
+                 .filter(ScheduleYear.id == schedule_id)
+                 .offset(skip)
+                 .limit(limit)
                  .all())
 
         return users

@@ -104,6 +104,7 @@ async def change_attendance_status(*,
 
     """
     Authorize.jwt_required()
+    attendance_service.get_by_id(db, body.attendance_id)
     return attended_user_service.change_attendance_status(db, body)
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],

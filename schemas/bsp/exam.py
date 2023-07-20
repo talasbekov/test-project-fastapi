@@ -2,7 +2,7 @@ import uuid
 from datetime import date, time
 from typing import Optional, List
 
-from schemas import BaseModel, UserShortRead
+from schemas import BaseModel, UserShortReadStatus
 from .schedule_month import PlaceRead
 from .activity import ActivityRead
 
@@ -32,7 +32,7 @@ class ExamScheduleUpdate(ExamScheduleBase):
 
 class ExamScheduleRead(ExamScheduleBase):
     id: Optional[uuid.UUID]
-    instructors: Optional[List[Optional[UserShortRead]]]
+    instructors: Optional[List[Optional[UserShortReadStatus]]]
     place: Optional[PlaceRead]
     activity: Optional[ActivityRead]
 
@@ -74,5 +74,5 @@ class ExamResultUpdate(ExamResultBase):
 
 class ExamResultRead(ExamResultBase):
     id: Optional[uuid.UUID]
-    user: Optional[UserShortRead]
+    user: Optional[UserShortReadStatus]
     exam: Optional[ExamScheduleRead]

@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Optional, List
 from enum import Enum
 
-from schemas import BaseModel, UserShortRead
+from schemas import BaseModel, UserShortReadStatus
 from .schedule_year import ScheduleYearRead
 
 class BspPlanBase(BaseModel):
@@ -27,5 +27,5 @@ class BspPlanUpdate(BspPlanBase):
 class BspPlanRead(BspPlanBase):
     created_at: Optional[datetime]
     id: Optional[uuid.UUID]
-    creator: Optional[UserShortRead]
+    creator: Optional[UserShortReadStatus]
     schedule_years: Optional[List[ScheduleYearRead]]

@@ -6,6 +6,7 @@ from models import BspPlan, PlanStatus
 from schemas import BspPlanCreate, BspPlanUpdate
 from services.base import ServiceBase
 
+from .schedule_year import schedule_year_service
 
 class BspPlanService(ServiceBase[BspPlan, BspPlanCreate, BspPlanUpdate]):
 
@@ -57,5 +58,16 @@ class BspPlanService(ServiceBase[BspPlan, BspPlanCreate, BspPlanUpdate]):
                        .limit(limit)
                        .all())
         return draft_plans
+
+    def send_to_draft_full(self, db: Session, plan_id: uuid.UUID):
+        plan = self.get_by_id(db, plan_id)
+
+        plan.status = PlanStatus.DRAFT
+
+        schedule_year_service.send_all_to_draft_by_plan(db, plan.id)
+
+        return plan
+
+
 
 plan_service = BspPlanService(BspPlan)

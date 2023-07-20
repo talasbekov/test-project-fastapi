@@ -86,6 +86,23 @@ async def get_by_date(*,
     user_id = Authorize.get_jwt_subject()
     return schedule_month_service.get_schedule_by_day(db, user_id, date, limit)
 
+@router.get("/month", dependencies=[Depends(HTTPBearer())],
+            response_model=List[ScheduleMonthRead],
+            summary="Get ScheduleMonths by month")
+async def get_by_month(*,
+                      db: Session = Depends(get_db),
+                      month_num: int = 1,
+                      Authorize: AuthJWT = Depends()
+                      ):
+    """
+       Get ScheduleMonths by month
+
+    - **month**: int - The number of month when you want to get ScheduleMonth
+   """
+
+    Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
+    return schedule_month_service.get_schedules_by_month(db, user_id, month_num)
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=ScheduleMonthRead,
