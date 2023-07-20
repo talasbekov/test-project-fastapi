@@ -1,3 +1,4 @@
+import datetime
 import uuid
 from typing import List
 
@@ -41,6 +42,49 @@ async def get_all(*,
    """
     Authorize.jwt_required()
     return schedule_month_service.get_multi(db, skip, limit)
+
+
+@router.get("/nearest", dependencies=[Depends(HTTPBearer())],
+            response_model=List[ScheduleMonthRead],
+            summary="Get nearest ScheduleMonths")
+async def get_nearest(*,
+                      db: Session = Depends(get_db),
+                      limit: int = 100,
+                      Authorize: AuthJWT = Depends()
+                      ):
+    """
+       Get nearest ScheduleMonths
+
+    - **limit**: int - The maximum number of ScheduleMonth
+        to return in the response.
+        This parameter is optional and defaults to 100.
+   """
+    Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
+    return schedule_month_service.get_nearest_schedules(db, user_id, limit)
+
+
+@router.get("/date", dependencies=[Depends(HTTPBearer())],
+            response_model=List[ScheduleMonthRead],
+            summary="Get ScheduleMonths by date")
+async def get_by_date(*,
+                      db: Session = Depends(get_db),
+                      limit: int = 100,
+                      date: datetime.date,
+                      Authorize: AuthJWT = Depends()
+                      ):
+    """
+       Get ScheduleMonths by date
+
+    - **limit**: int - The maximum number of ScheduleMonth
+        to return in the response.
+        This parameter is optional and defaults to 100.
+    - **date**: date (yyyy-mm-dd) - The date when you want to get ScheduleMonth
+   """
+
+    Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
+    return schedule_month_service.get_schedule_by_day(db, user_id, date, limit)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],

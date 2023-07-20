@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Time
+from sqlalchemy import Column, ForeignKey, Time, Integer
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -7,6 +7,8 @@ from models import Model, NamedModel
 
 class Day(NamedModel):
     __tablename__ = "days"
+    order = Column(Integer)
+
 
 
 class ScheduleDay(Model):

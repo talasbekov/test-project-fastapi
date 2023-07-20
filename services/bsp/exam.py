@@ -15,9 +15,9 @@ class ExamService(ServiceBase[ExamSchedule, ExamScheduleCreate, ExamScheduleUpda
                                     limit: int):
         results = (db.query(ExamResult)
                    .filter(ExamResult.user_id == user_id)
+                   .order_by(ExamResult.exam_date.desc())
                    .offset(skip)
                    .limit(limit)
-                   .order_by(ExamResult.exam_date.desc())
                    .all())
 
         return results
