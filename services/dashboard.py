@@ -357,13 +357,17 @@ class DashboardService:
         return len(active_users)
 
     # def get_users_at_three_day_by_active(self, db: Session):
-    #
+    
     #     end_time = datetime.now()
     #     start_time = end_time - timedelta(days=3)
-    #
+    
     #     last_signed_ids = {}
-    #
-    #     users = db.query(User).filter(User.last_signed_at.between(start_time, end_time)).all()
+    
+    #     users = (
+    #         db.query(User).filter(
+    #             User.last_signed_at.between(start_time, end_time)
+    #             ).all()
+    #     )
     #     for user in users:
     #         last_signed_ids[user.id] = user.last_signed_id
 
