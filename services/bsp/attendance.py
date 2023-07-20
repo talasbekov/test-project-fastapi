@@ -63,7 +63,7 @@ class AttendanceService(ServiceBase[Attendance, AttendanceCreate, AttendanceUpda
                                in attended_count}
         attendances_percentages = []
         for key in attendances_count_dict.keys():
-            year = schedule_year_service.get_by_schedule_month_id(db, key)
+            year = schedule_year_service.get_by_schedule_month_id(db, key)['objects']
             try:
                 percentage = ((attended_count_dict[key] * 100)
                               / attendances_count_dict[key])

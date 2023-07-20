@@ -80,6 +80,21 @@ class UserShortRead(Model):
     icon: Optional[str]
     rank: Optional[RankRead]
 
+
+    class Config:
+        orm_mode = True
+
+
+class UserShortReadStatus(Model):
+    id: Optional[uuid.UUID]
+    first_name: Optional[str]
+    last_name: Optional[str]
+    father_name: Optional[str]
+    icon: Optional[str]
+    rank: Optional[RankRead]
+    statuses: Optional[List[StatusRead]]
+
+
     class Config:
         orm_mode = True
 

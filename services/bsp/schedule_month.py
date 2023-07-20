@@ -1,6 +1,7 @@
 import datetime
 import uuid
 
+from sqlalchemy import extract
 from sqlalchemy.orm import Session
 
 from models import ScheduleMonth, ScheduleDay, ScheduleYear, User, Day
@@ -17,6 +18,18 @@ from .. import user_service
 class ScheduleMonthService(ServiceBase[ScheduleMonth,
                                        ScheduleMonthCreate,
                                        ScheduleMonthUpdate]):
+
+    def get_multi(
+        self, db: Session, skip: int = 0, limit: int = 100
+    ):
+        schedules = (db.query(self.model)
+                     .join(ScheduleYear)
+                     .filter(ScheduleYear.is_active == True)
+                     .offset(skip)
+                     .limit(limit)
+                     .all())
+
+        return schedules
 
     def create(self, db: Session, body: ScheduleMonthCreateWithDay):
         schedule_month = super().create(db,
@@ -64,13 +77,32 @@ class ScheduleMonthService(ServiceBase[ScheduleMonth,
 
         closest_schedules = (db.query(ScheduleMonth)
                              .join(ScheduleMonth.days)
+                             .join(ScheduleYear)
                              .join(ScheduleYear.users)
                              .filter(User.id == user_id,
-                                     ScheduleDay.id.in_(schedule_days))
+                                     ScheduleDay.id.in_(schedule_days),
+                                     ScheduleYear.is_active == True)
                              .all()
                              )
 
         return closest_schedules
+
+
+    def get_schedules_by_month(self,
+                              db: Session,
+                              user_id: uuid.UUID,
+                              month_number: int):
+        schedules = (
+            db.query(ScheduleMonth)
+            .join(ScheduleYear.users)
+            .filter(User.id == user_id,
+                    extract('month', ScheduleMonth.start_date) == month_number,
+                    ScheduleYear.is_active == True)
+            .all()
+        )
+
+        return schedules
+
 
     def get_schedule_by_day(self,
                             db: Session,
@@ -89,9 +121,11 @@ class ScheduleMonthService(ServiceBase[ScheduleMonth,
 
         schedules = (db.query(ScheduleMonth)
                      .join(ScheduleMonth.days)
+                     .join(ScheduleYear)
                      .join(ScheduleYear.users)
                      .filter(User.id == user_id,
-                             ScheduleDay.id.in_(schedule_days))
+                             ScheduleDay.id.in_(schedule_days),
+                             ScheduleYear.is_active == True)
                      .all()
                      )
 

@@ -1,6 +1,6 @@
 import uuid
 from sqlalchemy.orm import Session
-from models import ExamSchedule, ExamResult
+from models import ExamSchedule, ExamResult, ScheduleYear
 from schemas import (ExamScheduleCreate,
                      ExamScheduleUpdate,
                      ExamScheduleCreateWithInstructors,)
@@ -9,6 +9,22 @@ from services.base import ServiceBase
 
 
 class ExamService(ServiceBase[ExamSchedule, ExamScheduleCreate, ExamScheduleUpdate]):
+
+    def get_multi(
+        self, db: Session, skip: int = 0, limit: int = 100
+    ):
+        exams = (db.query(self.model)
+                 .join(ScheduleYear)
+                 .filter(ScheduleYear.is_active == True)
+                 .offset(skip)
+                 .limit(limit)
+                 .all())
+        total = (db.query(self.model)
+                 .join(ScheduleYear)
+                 .filter(ScheduleYear.is_active == True)
+                 .count())
+        return {'total': total, 'objects': exams}
+
     def get_exam_results_by_user_id(self, db: Session,
                                     user_id: uuid.UUID,
                                     skip: int,
@@ -19,8 +35,8 @@ class ExamService(ServiceBase[ExamSchedule, ExamScheduleCreate, ExamScheduleUpda
                    .offset(skip)
                    .limit(limit)
                    .all())
-
-        return results
+        total = db.query(self.model).filter(ExamResult.user_id == user_id).count()
+        return {'total': total, 'objects': results}
 
     def create(self, db: Session, body: ExamScheduleCreateWithInstructors):
         exam_schedule = super().create(db,
