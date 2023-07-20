@@ -1,6 +1,7 @@
 import uuid
 from datetime import date, time
 from typing import Optional, List
+from pydantic import Field
 
 from schemas import BaseModel, UserShortReadStatus
 from .schedule_month import PlaceRead
@@ -76,3 +77,7 @@ class ExamResultRead(ExamResultBase):
     id: Optional[uuid.UUID]
     user: Optional[UserShortReadStatus]
     exam: Optional[ExamScheduleRead]
+
+class ExamResultReadPagination(BaseModel):
+    total: int = Field(0, nullable=False)
+    objects: List[ExamResultRead] = Field([], nullable=False)

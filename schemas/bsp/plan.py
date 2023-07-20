@@ -2,6 +2,7 @@ import uuid
 from datetime import datetime
 from typing import Optional, List
 from enum import Enum
+from pydantic import Field
 
 from schemas import BaseModel, UserShortReadStatus
 from .schedule_year import ScheduleYearRead
@@ -29,3 +30,7 @@ class BspPlanRead(BspPlanBase):
     id: Optional[uuid.UUID]
     creator: Optional[UserShortReadStatus]
     schedule_years: Optional[List[ScheduleYearRead]]
+
+class BspPlanReadPagination(BaseModel):
+    total: int = Field(0, nullable=False)
+    objects: List[BspPlanRead] = Field([], nullable=False)

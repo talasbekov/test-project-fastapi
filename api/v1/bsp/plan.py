@@ -10,7 +10,8 @@ from core import get_db
 
 from schemas import (BspPlanRead,
                      BspPlanUpdate,
-                     BspPlanCreate,)
+                     BspPlanCreate,
+                     BspPlanReadPagination,)
 
 from services import plan_service
 
@@ -21,7 +22,7 @@ router = APIRouter(prefix="/plan",
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[BspPlanRead],
+            response_model=List[BspPlanReadPagination],
             summary="Get all BspPlan")
 async def get_all(*,
                   db: Session = Depends(get_db),
@@ -43,7 +44,7 @@ async def get_all(*,
     return plan_service.get_multi(db, skip, limit)
 
 @router.get("/draft/", dependencies=[Depends(HTTPBearer())],
-            response_model=List[BspPlanRead],
+            response_model=List[BspPlanReadPagination],
             summary="Get all BspPlan")
 async def get_all_draft(*,
                   db: Session = Depends(get_db),
@@ -65,7 +66,7 @@ async def get_all_draft(*,
     return plan_service.get_all_draft(db, skip, limit)
 
 @router.get("/signed/", dependencies=[Depends(HTTPBearer())],
-            response_model=List[BspPlanRead],
+            response_model=List[BspPlanReadPagination],
             summary="Get all BspPlan")
 async def get_all_signed(*,
                   db: Session = Depends(get_db),

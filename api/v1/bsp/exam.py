@@ -10,8 +10,8 @@ from core import get_db
 
 from schemas import (ExamScheduleRead,
                      ExamScheduleUpdate,
-                     ExamResultRead,
-                     ExamScheduleCreateWithInstructors,)
+                     ExamScheduleCreateWithInstructors,
+                     ExamResultReadPagination)
 
 from services import exam_service
 
@@ -22,7 +22,7 @@ router = APIRouter(prefix="/exam",
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[ExamScheduleRead],
+            response_model=List[ExamResultReadPagination],
             summary="Get all ExamSchedule")
 async def get_all(*,
                   db: Session = Depends(get_db),
@@ -44,7 +44,7 @@ async def get_all(*,
     return exam_service.get_multi(db, skip, limit)
 
 @router.get("/results/", dependencies=[Depends(HTTPBearer())],
-            response_model=List[ExamResultRead],
+            response_model=List[ExamResultReadPagination],
             summary="Get ExamSchedule by id")
 async def get_exam_results(*,
                     db: Session = Depends(get_db),
