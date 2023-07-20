@@ -96,7 +96,7 @@ class ScheduleMonthService(ServiceBase[ScheduleMonth,
             db.query(ScheduleMonth)
             .join(ScheduleYear.users)
             .filter(User.id == user_id,
-                    extract('month', ScheduleMonth.date) == month_number,
+                    extract('month', ScheduleMonth.start_date) == month_number,
                     ScheduleYear.is_active == True)
             .all()
         )
