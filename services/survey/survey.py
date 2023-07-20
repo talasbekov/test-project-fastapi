@@ -1,3 +1,5 @@
+import datetime
+
 from sqlalchemy.orm import Session
 
 from services.base import ServiceBase
@@ -111,34 +113,12 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
         db.flush()
 
         return new_survey
-
-
-    def __validate_jurisdiciton_type(self, jurisdiction_type: str):
-        try:
-            return SurveyJurisdictionTypeEnum(jurisdiction_type)
-        except ValueError:
-            raise BadRequestException(f"Invalid jurisdiction type {jurisdiction_type}")
-        
-    def __validate_staff_position(self, staff_position: str):
-        try:
-            return SurveyStaffPositionEnum(staff_position)
-        except ValueError:
-            raise BadRequestException(f"Invalid staff position {staff_position}")
-        
-    def __validate_status(self, status: str):
-        try:
-            return SurveyStatusEnum(status)
-        except ValueError:
-            raise BadRequestException(f"Invalid status: {status}")
     
     def __validate_duplicate_status(self, survey: Survey):
         if survey.status == SurveyStatusEnum.ACTIVE.value:
             raise BadRequestException("Duplicate is not allowed for active survey")
     
     def __set_jurisdiction(self, db: Session, obj: Survey, body):
-        self.__validate_jurisdiciton_type(body.jurisdiction_type)
-        self.__validate_staff_position(body.staff_position)
-        
         if body.jurisdiction_type == SurveyJurisdictionTypeEnum.STAFF_DIVISION.value:
             staff_division = (
                 staff_division_service.get_by_id(db, body.staff_division_id)
@@ -159,12 +139,18 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
                                  user_id: str,
                                  skip: int,
                                  limit: int):
-        return db.query(self.model).filter(
-            self.model.status == SurveyStatusEnum.ACTIVE.value,
-            self.model.jurisdiction_type == 
-                SurveyJurisdictionTypeEnum.CERTAIN_MEMBER.value,
-            self.model.certain_member_id == user_id
-        ).offset(skip).limit(limit).all()
+        query = (
+            db.query(self.model).filter(
+                self.model.status == SurveyStatusEnum.ACTIVE.value,
+                self.model.jurisdiction_type == 
+                    SurveyJurisdictionTypeEnum.CERTAIN_MEMBER.value,
+                self.model.certain_member_id == user_id
+            )
+        )
+        
+        query = self.__filter_by_date(query)
+        
+        return query.offset(skip).limit(limit).all()
         
     def __get_by_staff_division(self,
                                 db: Session,
@@ -180,6 +166,7 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
             )
         )
         
+        query = self.__filter_by_date(query)
         query = self.__filter_by_staff_position(staff_unit, query)
         
         return query.offset(skip).limit(limit).all()
@@ -204,6 +191,16 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
                 )
             )
             
+        return query
+    
+    def __filter_by_date(self, query):
+        query = (
+            query.filter(
+                self.model.start_date <= datetime.datetime.now(),
+                self.model.end_date >= datetime.datetime.now()
+            )
+        )
+        
         return query
 
 survey_service = SurveyService(Survey)
