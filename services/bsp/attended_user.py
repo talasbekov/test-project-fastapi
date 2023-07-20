@@ -5,6 +5,7 @@ from schemas import AttendedUserCreate, AttendedUserUpdate, AttendanceChangeStat
 from services.base import ServiceBase
 
 
+
 class AttendedUserService(ServiceBase[AttendedUser,
                                       AttendedUserCreate,
                                       AttendedUserUpdate]):

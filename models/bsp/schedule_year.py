@@ -22,6 +22,7 @@ class ScheduleYear(Model):
     activity_id = Column(UUID(as_uuid=True), ForeignKey('activities.id'))
     is_exam_required = Column(Boolean)
     retry_count = Column(Integer)
+    is_active = Column(Boolean, nullable=False)
 
     # Relationships
     staff_divisions = relationship(

@@ -18,6 +18,18 @@ class ScheduleMonthService(ServiceBase[ScheduleMonth,
                                        ScheduleMonthCreate,
                                        ScheduleMonthUpdate]):
 
+    def get_multi(
+        self, db: Session, skip: int = 0, limit: int = 100
+    ):
+        schedules = (db.query(self.model)
+                     .join(ScheduleYear)
+                     .filter(ScheduleYear.is_active == True)
+                     .offset(skip)
+                     .limit(limit)
+                     .all())
+
+        return schedules
+
     def create(self, db: Session, body: ScheduleMonthCreateWithDay):
         schedule_month = super().create(db,
                                         ScheduleMonthCreate(
@@ -64,9 +76,11 @@ class ScheduleMonthService(ServiceBase[ScheduleMonth,
 
         closest_schedules = (db.query(ScheduleMonth)
                              .join(ScheduleMonth.days)
+                             .join(ScheduleYear)
                              .join(ScheduleYear.users)
                              .filter(User.id == user_id,
-                                     ScheduleDay.id.in_(schedule_days))
+                                     ScheduleDay.id.in_(schedule_days),
+                                     ScheduleYear.is_active == True)
                              .all()
                              )
 
@@ -89,9 +103,11 @@ class ScheduleMonthService(ServiceBase[ScheduleMonth,
 
         schedules = (db.query(ScheduleMonth)
                      .join(ScheduleMonth.days)
+                     .join(ScheduleYear)
                      .join(ScheduleYear.users)
                      .filter(User.id == user_id,
-                             ScheduleDay.id.in_(schedule_days))
+                             ScheduleDay.id.in_(schedule_days),
+                             ScheduleYear.is_active == True)
                      .all()
                      )
 

@@ -4,7 +4,7 @@ from datetime import date
 
 from schemas import (BaseModel,
                      NamedModel,
-                     UserShortRead,
+                     UserShortReadStatus,
                      StaffDivisionReadWithoutStaffUnit, )
 from .activity import ActivityRead
 from .schedule_day import ScheduleDayRead, ScheduleDayCreateWithString
@@ -56,7 +56,7 @@ class ScheduleMonthUpdate(ScheduleMonthBase):
 
 class ScheduleMonthRead(ScheduleMonthBase):
     id: Optional[uuid.UUID]
-    instructors: Optional[List[Optional[UserShortRead]]]
+    instructors: Optional[List[Optional[UserShortReadStatus]]]
     place: Optional[PlaceRead]
     days: Optional[List[Optional[ScheduleDayRead]]]
     activity: Optional[ActivityRead]

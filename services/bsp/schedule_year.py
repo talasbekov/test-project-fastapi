@@ -9,14 +9,23 @@ from schemas import (ScheduleYearCreate,
                      ScheduleYearRead, )
 from services.base import ServiceBase
 from services import staff_division_service
-from .plan import plan_service
 from .month import month_service
 from .schedule_month import schedule_month_service
 
 
 class ScheduleYearService(ServiceBase[ScheduleYear,
-ScheduleYearCreate,
-ScheduleYearUpdate]):
+                                      ScheduleYearCreate,
+                                      ScheduleYearUpdate]):
+
+    def get_multi(
+        self, db: Session, skip: int = 0, limit: int = 100
+    ):
+        return (db.query(self.model)
+                .flter(ScheduleYear.is_active == True)
+                .offset(skip)
+                .limit(limit)
+                .all())
+
     def get_all_by_plan_year(self,
                              db: Session,
                              year: int,
@@ -24,19 +33,21 @@ ScheduleYearUpdate]):
                              limit: int):
         schedules = (db.query(ScheduleYear)
                      .join(BspPlan, )
-                     .filter(BspPlan.year == year)
+                     .filter(BspPlan.year == year,
+                             ScheduleYear.is_active == True)
                      .offset(skip)
                      .limit(limit)
                      )
         return schedules
 
+
     def get_all_by_plan_id(self,
                            db: Session,
                            id: uuid.UUID):
-        plan_service.get_by_id(db, id)
         schedules = (db.query(ScheduleYear)
                      .join(BspPlan)
-                     .filter(BspPlan.id == id)
+                     .filter(BspPlan.id == id,
+                             ScheduleYear.is_active == True)
                      .all()
                      )
         return schedules
@@ -46,7 +57,8 @@ ScheduleYearUpdate]):
                                  month_id: uuid.UUID) -> ScheduleYearRead:
         month = schedule_month_service.get_by_id(db, month_id)
         year = (db.query(ScheduleYear)
-                .filter(ScheduleYear.id == month.schedule_id)
+                .filter(ScheduleYear.id == month.schedule_id,
+                        ScheduleYear.is_active == True)
                 .first()
                 )
         return year
@@ -57,7 +69,8 @@ ScheduleYearUpdate]):
         staff_division_service.get_by_id(db, id)
         schedules = (db.query(ScheduleYear)
                      .join(ScheduleYear.staff_divisions)
-                     .filter(StaffDivision.id == id)
+                     .filter(StaffDivision.id == id,
+                             ScheduleYear.is_active == True)
                      .all()
                      )
         return schedules
@@ -87,6 +100,11 @@ ScheduleYearUpdate]):
         db.flush()
 
         return res
+
+    def send_all_to_draft_by_plan(self, db: Session, plan_id: uuid.UUID):
+        (db.query(ScheduleYear)
+         .filter(ScheduleYear.plan_id == plan_id)
+         .update({self.model.is_active: False}))
 
 
 
