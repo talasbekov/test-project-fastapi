@@ -22,6 +22,7 @@ class OptionUpdate(OptionBase):
 class OptionRead(OptionBase, ReadTextModel):
     question_id: Optional[uuid.UUID]
     score: Optional[int]
+    answer_count: Optional[int]
 
     class Config:
         orm_mode = True
