@@ -16,8 +16,8 @@ from .exam import exam_service
 
 
 class ScheduleYearService(ServiceBase[ScheduleYear,
-ScheduleYearCreate,
-ScheduleYearUpdate]):
+                                      ScheduleYearCreate,
+                                      ScheduleYearUpdate]):
 
     def get_multi(
             self, db: Session, filter: str = '', skip: int = 0, limit: int = 100
@@ -34,9 +34,9 @@ ScheduleYearUpdate]):
 
         schedules = (
             schedules
+            .order_by(self.model.created_at.desc())
             .offset(skip)
             .limit(limit)
-            .order_by(self.model.created_at.desc())
             .all()
         )
 

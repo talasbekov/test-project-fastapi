@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
-from models import AttendedUser, ScheduleMonth, Attendance, ScheduleYear
+from models import AttendedUser, ScheduleMonth, Attendance, ScheduleYear, Activity
 from schemas import (AttendedUserCreate,
                      AttendedUserUpdate,
                      AttendanceChangeStatus,
@@ -34,8 +34,9 @@ class AttendedUserService(ServiceBase[AttendedUser,
         schedule_month_id = (
             db.query(ScheduleMonth.id)
             .join(ScheduleYear.months)
+            .join(ScheduleYear.activity)
             .filter(ScheduleMonth.schedule_id == body.schedule_id)
-            .filter(ScheduleYear.activity == body.activity)
+            .filter(Activity.name == body.activity)
             .first()
         )
         attendance_id = (
@@ -50,7 +51,7 @@ class AttendedUserService(ServiceBase[AttendedUser,
         user = (
             db.query(AttendedUser)
             .filter(AttendedUser.attendance_id == attendance_id)
-            .filter(AttendedUser.user_id == body.user_ids)
+            .filter(AttendedUser.user_id == body.user_id)
             .update(
                 {self.model.attendance_status: body.attendance_status,
                  self.model.reason: body.reason}
