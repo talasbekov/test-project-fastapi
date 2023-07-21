@@ -18,6 +18,10 @@ class Month(NamedModel):
 class ScheduleYear(Model):
     __tablename__ = 'schedule_years'
 
+    __mapper_args__ = {
+        'confirm_deleted_rows': False
+    }
+
     # Properties
     plan_id = Column(UUID(as_uuid=True), ForeignKey('bsp_plans.id'))
     activity_id = Column(UUID(as_uuid=True), ForeignKey('activities.id'))
@@ -36,5 +40,7 @@ class ScheduleYear(Model):
     activity_months = relationship('Month', secondary=schedule_year_months)
     exam_months = relationship('Month', secondary=schedule_exam_months)
     plan = relationship('BspPlan', back_populates='schedule_years')
-    months = relationship('ScheduleMonth', back_populates='schedule')
-    exams = relationship('ExamSchedule', back_populates='schedule')
+    months = relationship('ScheduleMonth', back_populates='schedule'
+                          , cascade='all,delete')
+    exams = relationship('ExamSchedule', back_populates='schedule'
+                         , cascade='all,delete')

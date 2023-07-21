@@ -42,4 +42,5 @@ class Attendance(Model):
 
     # Relationships
     schedule = relationship("ScheduleMonth")
-    attended_users = relationship("AttendedUser", back_populates="attendance")
+    attended_users = relationship("AttendedUser", back_populates="attendance"
+                                  , cascade='all,delete')

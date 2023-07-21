@@ -21,4 +21,5 @@ class BspPlan(Model):
     signed_at = Column(TIMESTAMP(timezone=True), nullable=True)
 
     creator = relationship('User')
-    schedule_years = relationship('ScheduleYear', back_populates='plan')
+    schedule_years = relationship('ScheduleYear', back_populates='plan'
+                                  , cascade='all,delete')
