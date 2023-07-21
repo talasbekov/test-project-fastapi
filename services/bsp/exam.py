@@ -48,6 +48,7 @@ class ExamService(ServiceBase[ExamSchedule, ExamScheduleCreate, ExamScheduleUpda
                                             start_time=body.start_time,
                                             end_time=body.end_time,
                                             place_id=body.place_id,
+                                            schedule_id=body.schedule_id
                                         ))
 
         instructors = [user_service.get_by_id(db, user_id)

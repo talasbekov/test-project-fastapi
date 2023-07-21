@@ -49,7 +49,8 @@ class ExamScheduleRead(ExamScheduleBase):
             place_id=orm_obj.place_id,
             place=orm_obj.place,
             instructors=orm_obj.instructors,
-            activity=orm_obj.schedule.activity
+            activity=(orm_obj.schedule.activity
+                      if orm_obj.schedule else None)
         )
 
 

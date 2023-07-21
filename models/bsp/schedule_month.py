@@ -25,4 +25,5 @@ class ScheduleMonth(Model):
     instructors = relationship("User", secondary=schedule_month_instructors)
     place = relationship("Place")
     schedule = relationship("ScheduleYear", back_populates="months")
-    days = relationship("ScheduleDay", back_populates="month")
+    days = relationship("ScheduleDay", back_populates="month"
+                        , cascade='all,delete')

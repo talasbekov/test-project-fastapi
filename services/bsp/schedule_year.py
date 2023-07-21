@@ -1,8 +1,9 @@
 import uuid
 
+from sqlalchemy import func, and_
 from sqlalchemy.orm import Session
 
-from models import ScheduleYear, BspPlan, StaffDivision
+from models import ScheduleYear, BspPlan, StaffDivision, Activity
 from schemas import (ScheduleYearCreate,
                      ScheduleYearUpdate,
                      ScheduleYearCreateString,
@@ -19,16 +20,27 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
                                       ScheduleYearUpdate]):
 
     def get_multi(
-            self, db: Session, skip: int = 0, limit: int = 100
+            self, db: Session, filter: str = '', skip: int = 0, limit: int = 100
     ):
         total = (db.query(self.model)
                  .filter(ScheduleYear.is_active == True)
-                 .count())
+                 )
         schedules = (db.query(self.model)
                      .filter(ScheduleYear.is_active == True)
-                     .offset(skip)
-                     .limit(limit)
-                     .all())
+                     )
+
+        if filter != '':
+            total = self._add_filter_to_query(total, filter)
+            schedules = self._add_filter_to_query(schedules, filter)
+
+        total = total.count()
+        schedules = (
+            schedules
+            .order_by(self.model.created_at.desc())
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
 
         schedules = [ScheduleYearRead.from_orm(schedule).dict()
                      for schedule in schedules]
@@ -86,6 +98,7 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
                      .join(BspPlan, )
                      .filter(BspPlan.year == year,
                              ScheduleYear.is_active == True)
+                     .order_by(self.model.created_at.desc())
                      .offset(skip)
                      .limit(limit)
                      )
@@ -103,6 +116,7 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
                      .join(BspPlan)
                      .filter(BspPlan.id == id,
                              ScheduleYear.is_active == True)
+                     .order_by(self.model.created_at.desc())
                      .all()
                      )
         total = (db.query(self.model)
@@ -135,6 +149,7 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
                      .join(ScheduleYear.staff_divisions)
                      .filter(StaffDivision.id == id,
                              ScheduleYear.is_active == True)
+                     .order_by(self.model.created_at.desc())
                      .all()
                      )
 
@@ -161,8 +176,7 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
         users = []
         for staff_division in staff_divisions:
             users.extend(user_service.get_users_by_staff_division(db, staff_division))
-        schedule_year.users = users
-
+        schedule_year.users = list(set(users))
 
         activity_months = month_service.get_months_by_names(db,
                                                             schedule.activity_months)
@@ -182,6 +196,21 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
         (db.query(ScheduleYear)
          .filter(ScheduleYear.plan_id == plan_id)
          .update({self.model.is_active: False}))
+
+    def _add_filter_to_query(self, query, filter):
+        key_words = filter.lower().split()
+        schedules = (
+            query
+            .join(self.model.activity)
+            .join(self.model.staff_divisions)
+            .filter(and_(func.concat(func.lower(Activity.name), ' ',
+                                     func.lower(StaffDivision.name), ' ',
+                                     func.lower(Activity.nameKZ), ' ',
+                                     func.lower(StaffDivision.nameKZ), ' ',
+                                     ).contains(name) for name in key_words)
+                    )
+        )
+        return schedules
 
 
 schedule_year_service = ScheduleYearService(ScheduleYear)

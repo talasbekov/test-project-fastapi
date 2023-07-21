@@ -74,7 +74,10 @@ class ScheduleMonthRead(ScheduleMonthBase):
             instructors=orm_obj.instructors,
             place=orm_obj.place,
             days=orm_obj.days,
-            activity=orm_obj.schedule.activity,
-            staff_divisions=orm_obj.schedule.staff_divisions,
-            activity_months=orm_obj.schedule.activity_months
+            activity=(orm_obj.schedule.activity
+                      if orm_obj.schedule else None),
+            staff_divisions=(orm_obj.schedule.staff_divisions
+                             if orm_obj.schedule else None),
+            activity_months=(orm_obj.schedule.activity_months
+                             if orm_obj.schedule else None)
         )
