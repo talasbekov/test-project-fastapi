@@ -18,6 +18,35 @@ from .. import user_service
 class ScheduleMonthService(ServiceBase[ScheduleMonth,
                                        ScheduleMonthCreate,
                                        ScheduleMonthUpdate]):
+    from datetime import datetime, timedelta
+
+    def _get_dates_of_weekday(start_date, end_date, weekday):
+        # Convert the weekday input to lowercase and get the corresponding weekday number
+        weekdays = {
+            'monday': 0,
+            'tuesday': 1,
+            'wednesday': 2,
+            'thursday': 3,
+            'friday': 4,
+            'saturday': 5,
+            'sunday': 6
+        }
+        weekday_number = weekdays.get(weekday.lower(), None)
+
+        if weekday_number is None:
+            raise ValueError(
+                "Invalid weekday. Please choose from: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, or Sunday.")
+
+        dates = []
+        current_date = start_date
+
+        # Iterate through the date range and find the dates that match the specified weekday
+        while current_date <= end_date:
+            if current_date.weekday() == weekday_number:
+                dates.append(current_date.strftime('%Y-%m-%d'))
+            current_date += timedelta(days=1)
+
+        return dates
 
     def get_multi(
         self, db: Session, skip: int = 0, limit: int = 100
@@ -94,6 +123,7 @@ class ScheduleMonthService(ServiceBase[ScheduleMonth,
                               month_number: int):
         schedules = (
             db.query(ScheduleMonth)
+            .join(ScheduleYear)
             .join(ScheduleYear.users)
             .filter(User.id == user_id,
                     extract('month', ScheduleMonth.start_date) == month_number,
