@@ -87,7 +87,7 @@ class AttendanceService(ServiceBase[Attendance, AttendanceCreate, AttendanceUpda
         attendances = (
             db.query(Attendance.id)
             .filter(Attendance.schedule_id.in_(schedule_months))
-            .all()
+            .subquery()
         )
 
         absent_users = (
