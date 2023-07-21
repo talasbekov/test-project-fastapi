@@ -176,7 +176,7 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
         users = []
         for staff_division in staff_divisions:
             users.extend(user_service.get_users_by_staff_division(db, staff_division))
-        schedule_year.users = users
+        schedule_year.users = list(set(users))
 
         activity_months = month_service.get_months_by_names(db,
                                                             schedule.activity_months)
