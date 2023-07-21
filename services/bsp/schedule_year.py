@@ -1,8 +1,9 @@
 import uuid
 
+from sqlalchemy import func, and_
 from sqlalchemy.orm import Session
 
-from models import ScheduleYear, BspPlan, StaffDivision
+from models import ScheduleYear, BspPlan, StaffDivision, Activity
 from schemas import (ScheduleYearCreate,
                      ScheduleYearUpdate,
                      ScheduleYearCreateString,
@@ -15,21 +16,29 @@ from .exam import exam_service
 
 
 class ScheduleYearService(ServiceBase[ScheduleYear,
-                                      ScheduleYearCreate,
-                                      ScheduleYearUpdate]):
+ScheduleYearCreate,
+ScheduleYearUpdate]):
 
     def get_multi(
-            self, db: Session, skip: int = 0, limit: int = 100
+            self, db: Session, filter: str = '', skip: int = 0, limit: int = 100
     ):
         total = (db.query(self.model)
                  .filter(ScheduleYear.is_active == True)
                  .count())
         schedules = (db.query(self.model)
                      .filter(ScheduleYear.is_active == True)
-                     .offset(skip)
-                     .limit(limit)
-                     .order_by(self.model.created_at.desc())
-                     .all())
+                     )
+
+        if filter != '':
+            schedules = self._add_filter_to_query(schedules, filter)
+
+        schedules = (
+            schedules
+            .offset(skip)
+            .limit(limit)
+            .order_by(self.model.created_at.desc())
+            .all()
+        )
 
         schedules = [ScheduleYearRead.from_orm(schedule).dict()
                      for schedule in schedules]
@@ -167,7 +176,6 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
             users.extend(user_service.get_users_by_staff_division(db, staff_division))
         schedule_year.users = users
 
-
         activity_months = month_service.get_months_by_names(db,
                                                             schedule.activity_months)
         schedule_year.activity_months = activity_months
@@ -186,6 +194,21 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
         (db.query(ScheduleYear)
          .filter(ScheduleYear.plan_id == plan_id)
          .update({self.model.is_active: False}))
+
+    def _add_filter_to_query(self, query, filter):
+        key_words = filter.lower().split()
+        schedules = (
+            query
+            .join(self.model.activity)
+            .join(self.model.staff_divisions)
+            .filter(and_(func.concat(func.lower(Activity.name), ' ',
+                                     func.lower(StaffDivision.name), ' ',
+                                     func.lower(Activity.nameKZ), ' ',
+                                     func.lower(StaffDivision.nameKZ), ' ',
+                                     ).contains(name) for name in key_words)
+                    )
+        )
+        return schedules
 
 
 schedule_year_service = ScheduleYearService(ScheduleYear)

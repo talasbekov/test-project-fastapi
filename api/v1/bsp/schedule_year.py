@@ -25,6 +25,7 @@ router = APIRouter(prefix="/schedule_year",
             summary="Get all ScheduleYear")
 async def get_all(*,
                   db: Session = Depends(get_db),
+                  filter = '',
                   skip: int = 0,
                   limit: int = 100,
                   Authorize: AuthJWT = Depends()
@@ -40,7 +41,7 @@ async def get_all(*,
         This parameter is optional and defaults to 100.
    """
     Authorize.jwt_required()
-    return schedule_year_service.get_multi(db, skip, limit)
+    return schedule_year_service.get_multi(db, filter.lstrip().rstrip(), skip, limit)
 
 @router.get("/plan/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=ScheduleYearReadPagination,
