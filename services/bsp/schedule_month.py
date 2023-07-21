@@ -18,7 +18,6 @@ from .. import user_service
 class ScheduleMonthService(ServiceBase[ScheduleMonth,
                                        ScheduleMonthCreate,
                                        ScheduleMonthUpdate]):
-
     def get_multi(
         self, db: Session, skip: int = 0, limit: int = 100
     ):
@@ -94,6 +93,7 @@ class ScheduleMonthService(ServiceBase[ScheduleMonth,
                               month_number: int):
         schedules = (
             db.query(ScheduleMonth)
+            .join(ScheduleYear)
             .join(ScheduleYear.users)
             .filter(User.id == user_id,
                     extract('month', ScheduleMonth.start_date) == month_number,
