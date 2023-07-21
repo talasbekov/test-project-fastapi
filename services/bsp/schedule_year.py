@@ -24,14 +24,16 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
     ):
         total = (db.query(self.model)
                  .filter(ScheduleYear.is_active == True)
-                 .count())
+                 )
         schedules = (db.query(self.model)
                      .filter(ScheduleYear.is_active == True)
                      )
 
         if filter != '':
+            total = self._add_filter_to_query(total, filter)
             schedules = self._add_filter_to_query(schedules, filter)
 
+        total = total.count()
         schedules = (
             schedules
             .order_by(self.model.created_at.desc())
