@@ -56,11 +56,11 @@ async def get_by_question(*,
 
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
-             response_model=OptionRead,
+             response_model=List[OptionRead],
              summary="Create")
 async def create(*,
                  db: Session = Depends(get_db),
-                 body: OptionCreate,
+                 body: List[OptionCreate],
                  Authorize: AuthJWT = Depends()
                  ):
     """
@@ -70,7 +70,7 @@ async def create(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    return option_service.create(db, body)
+    return option_service.create_list(db, body)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],

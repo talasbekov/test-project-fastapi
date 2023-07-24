@@ -105,7 +105,6 @@ class CandidateService(
             )
             if curator.id in top_curators:
                 top_curators[curator.id] += 1
-                # print("curator in top_curators")
             else:
                 top_curators[curator.id] = 1
             if curator.id in top_curators:
@@ -118,7 +117,6 @@ class CandidateService(
             if value is not None and value != ""
         }
         sorted_curators = sorted(top_curators.items(), key=lambda x: x[1], reverse=True)
-        print("111:  ", sorted_curators)
         return sorted_curators
 
     def get_top_curator_duration_by_candidates(self,
@@ -144,7 +142,6 @@ class CandidateService(
             if value is not None and value != ""
         }
         sorted_curators = sorted(top_curators.items(), key=lambda x: x[1], reverse=True)
-        print("222:  ", sorted_curators)
         return sorted_curators
 
     def get_multiple(self, db: Session,

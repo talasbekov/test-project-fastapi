@@ -7,7 +7,8 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import QuestionCreate, QuestionUpdate, QuestionRead, QuestionReadPagination
+from schemas import (QuestionUpdate, QuestionRead,
+                     QuestionReadPagination, QuestionCreate)
 from services import question_service
 
 router = APIRouter(prefix="/questions",
@@ -60,11 +61,11 @@ async def get_by_survey(*,
 
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
-             response_model=QuestionRead,
+             response_model=List[QuestionRead],
              summary="Create")
 async def create(*,
                  db: Session = Depends(get_db),
-                 body: QuestionCreate,
+                 body: List[QuestionCreate],
                  Authorize: AuthJWT = Depends()
                  ):
     """
@@ -74,7 +75,7 @@ async def create(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    return question_service.create(db, body)
+    return question_service.create_list(db, body)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],

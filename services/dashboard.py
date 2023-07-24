@@ -337,7 +337,6 @@ class DashboardService:
 
     def get_all_users_of_erp(self, db: Session) -> int:
         users: List[User] = user_service.get_multi(db)
-        print(len(users))
         return len(users)
 
     def get_all_new_users_at_week(self, db: Session) -> int:
@@ -346,14 +345,12 @@ class DashboardService:
         users = db.query(User).filter(
             User.created_at.between(start_date, end_date)
         ).all()
-        print(len(users))
         return len(users)
 
     def get_active_users(self, db: Session) -> int:
         active_users = db.query(User).filter(
             User.is_active.is_(True)
         ).all()
-        print(len(active_users))
         return len(active_users)
 
     # def get_users_at_three_day_by_active(self, db: Session):

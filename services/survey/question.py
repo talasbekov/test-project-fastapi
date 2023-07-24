@@ -1,3 +1,5 @@
+from typing import List
+
 from sqlalchemy.orm import Session
 
 from exceptions import BadRequestException
@@ -28,6 +30,16 @@ class QuestionService(ServiceBase[Question, QuestionCreate, QuestionUpdate]):
         self.__validate_kz_required(survey, body.textKZ)
         
         return super().create(db, body)
+    
+    def create_list(self,
+                    db: Session,
+                    body: List[QuestionCreate]):
+        
+        res = []
+        for question in body:
+            res.append(self.create(db, question))
+            
+        return res
     
     def update(self, db: Session, obj_from_db: Question, body: QuestionUpdate):
         self.__validate_question_type(body.question_type)
