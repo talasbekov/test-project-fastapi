@@ -29,6 +29,13 @@ class OptionService(ServiceBase[Option, OptionCreate, OptionUpdate]):
 
         return super().create(db, body)
     
+    def create_list(self, db: Session, body: List[OptionCreate]):
+        res = []
+        for option in body:
+            res.append(self.create(db, option))
+        
+        return res
+    
     def update(self, db: Session, obj_from_db: Option, body: OptionUpdate):
         question = question_service.get_by_id(db, body.question_id)
         survey = survey_service.get_by_id(db, question.survey_id)
