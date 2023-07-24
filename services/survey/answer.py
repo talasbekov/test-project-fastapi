@@ -5,7 +5,7 @@ from b64uuid import B64UUID
 from models import (Answer, QuestionTypeEnum, Question,
                     Survey, AnswerText,
                     SurveyTypeEnum)
-from schemas import AnswerCreate, AnswerUpdate, AnswerRead
+from schemas import AnswerCreate, AnswerUpdate
 from exceptions import BadRequestException
 from services.base import ServiceBase
 from .question import question_service
