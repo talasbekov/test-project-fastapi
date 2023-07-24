@@ -3,6 +3,7 @@ import uuid
 from typing import Optional, List
 from pydantic import BaseModel, Field
 from schemas import TextModel, ReadTextModel
+from .answer import AnswerRead
 
 
 class OptionBase(TextModel):
@@ -22,6 +23,7 @@ class OptionUpdate(OptionBase):
 class OptionRead(OptionBase, ReadTextModel):
     question_id: Optional[uuid.UUID]
     score: Optional[int]
+    answers: Optional[List[Optional[AnswerRead]]]
 
     class Config:
         orm_mode = True

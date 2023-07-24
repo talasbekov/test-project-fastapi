@@ -35,12 +35,3 @@ class AnswerText(Answer):
     __mapper_args__ = {
         "polymorphic_identity": "answer_text"
     }
-
-
-class AnswerSingleSelection(Answer):
-    option_id = Column(UUID(as_uuid=True), ForeignKey(
-        "options.id"), nullable=True)
-
-    __mapper_args__ = {
-        "polymorphic_identity": "answer_single_choice"
-    }
