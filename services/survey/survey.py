@@ -1,11 +1,12 @@
 import datetime
+import pytz
 
 from sqlalchemy.orm import Session
 
 from services.base import ServiceBase
 from models import (StaffUnit, SurveyStatusEnum, SurveyJurisdictionTypeEnum,
                     SurveyStaffPositionEnum, PositionNameEnum,
-                    Survey)
+                    Survey, SurveyRepeatTypeEnum)
 from services import (
     staff_division_service, staff_unit_service, user_service
 )
@@ -14,6 +15,7 @@ from exceptions import BadRequestException
 
 
 class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
+    
     
     ALL_MANAGING_STRUCTURE = {
         PositionNameEnum.HEAD_OF_DEPARTMENT.value,
@@ -63,6 +65,13 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
         return db.query(self.model).filter(
             self.model.status == SurveyStatusEnum.DRAFT.value
         ).count()
+        
+    def get_expired_by_repeat_type(self, db: Session, repeat_type: str):
+        return db.query(self.model).filter(
+            self.model.status == SurveyStatusEnum.ACTIVE.value,
+            self.model.repeat_type == repeat_type,
+            self.model.end_date < datetime.datetime.now()
+        ).all()
 
     def save_as_draft(self, db: Session, body: SurveyCreate):
         obj = Survey(**body.dict())
@@ -86,10 +95,8 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
 
         return obj
     
-    def duplicate(self, db: Session, id: str):
+    def duplicate(self, db: Session, id: str) -> Survey:
         survey_from_db = self.get_by_id(db, id)
-        
-        self.__validate_duplicate_status(survey_from_db)
         
         new_survey = survey_from_db.clone()
         
@@ -114,9 +121,52 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
 
         return new_survey
     
-    def __validate_duplicate_status(self, survey: Survey):
-        if survey.status == SurveyStatusEnum.ACTIVE.value:
-            raise BadRequestException("Duplicate is not allowed for active survey")
+    def repeat(self, db: Session, id: str) -> Survey:
+        survey_from_db = self.get_by_id(db, id)
+        
+        self.__check_survey_eligibility_for_repeat(survey_from_db)
+        
+        new_survey = self.duplicate(db, id)
+        
+        time_difference = self.__calculate_new_dates_for_repeat(survey_from_db)
+        
+        new_survey.start_date += time_difference
+        new_survey.end_date += time_difference
+        
+        survey_from_db.status = SurveyStatusEnum.ARCHIVE.value
+        
+        db.add(survey_from_db)
+        db.add(new_survey)
+        db.flush()
+        
+        return new_survey
+    
+    def __check_survey_eligibility_for_repeat(self, survey: Survey):
+        if survey.status != SurveyStatusEnum.ACTIVE.value:
+            raise BadRequestException(
+                "Repeat is not allowed for survey with status 'Draft' or 'Archive'"
+            )
+        
+        if survey.repeat_type == SurveyRepeatTypeEnum.NEVER.value:
+            raise BadRequestException(
+                "Repeat is not allowed for survey with repeat type 'Never'"
+            )
+        
+        if survey.end_date > datetime.datetime.now(pytz.UTC):
+            raise BadRequestException(
+                "Repeat is not allowed for survey with end date less than now"
+            )
+    
+    def __calculate_new_dates_for_repeat(self, survey: Survey):
+        repeat_deltas = {
+            SurveyRepeatTypeEnum.EVERY_WEEK.value: datetime.timedelta(days=7),
+            SurveyRepeatTypeEnum.EVERY_MONTH.value: datetime.timedelta(days=30),
+            SurveyRepeatTypeEnum.EVERY_YEAR.value: datetime.timedelta(days=365),
+        }
+
+        time_difference = repeat_deltas.get(survey.repeat_type)
+        
+        return time_difference
     
     def __set_jurisdiction(self, db: Session, obj: Survey, body):
         if body.jurisdiction_type == SurveyJurisdictionTypeEnum.STAFF_DIVISION.value:

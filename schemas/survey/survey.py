@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field
 
 from schemas import NamedModel, ReadNamedModel
 from models import (SurveyTypeEnum, SurveyJurisdictionTypeEnum, SurveyStaffPositionEnum,
-                    SurveyStatusEnum)
+                    SurveyStatusEnum, SurveyRepeatTypeEnum)
 from .question import QuestionRead
 
 
@@ -20,6 +20,7 @@ class SurveyBase(NamedModel):
     staff_position: SurveyStaffPositionEnum
     is_kz_translate_required: Optional[bool]
     is_anonymous: Optional[bool]
+    repeat_type: Optional[SurveyRepeatTypeEnum]
 
 
 class SurveyCreate(SurveyBase):
