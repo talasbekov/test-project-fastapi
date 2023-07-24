@@ -32,14 +32,6 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
         return db.query(self.model).filter(
             self.model.question_id.in_(question_ids)
         ).all()
-    
-    def get_by_option_id(self, db: Session, option_id: str) -> List[Answer]:
-        option = option_service.get_by_id(db, option_id)
-        
-        return db.query(self.model).filter(
-            (AnswerSingleSelection.option_id == option_id) |
-            (Answer.options.contains(option))
-        ).all()
 
     def create(self, db: Session, body: AnswerCreate, user_id: str) -> Answer:
         question = question_service.get_by_id(db, body.question_id)
