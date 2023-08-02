@@ -32,7 +32,7 @@ async def get_all(*,
         - **id**: UUID - the id of HrDocumentTemplate. This parameter is required.
     """
     Authorize.jwt_required()
-    return hr_document_step_service.get_all_by_document_template_id(db, id)
+    return hr_document_step_service.get_all_by_document_template_id(db, str(id))
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
@@ -72,7 +72,7 @@ async def get_by_id(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return hr_document_step_service.get_by_id(db, id)
+    return hr_document_step_service.get_by_id(db, str(id))
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -119,4 +119,4 @@ async def delete(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    hr_document_step_service.remove(db, id)
+    hr_document_step_service.remove(db, str(id))

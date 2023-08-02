@@ -25,8 +25,8 @@ class AttendedUser(Model):
     # Properties
     attendance_status = Column(Enum(AttendanceStatus))
     reason = Column(String)
-    user_id = Column(UUID(as_uuid=True), ForeignKey('users.id'))
-    attendance_id = Column(UUID(as_uuid=True), ForeignKey('attendances.id'))
+    user_id = Column(String(), ForeignKey('users.id'))
+    attendance_id = Column(String(), ForeignKey('attendances.id'))
     # Relationships
     user = relationship("User")
     attendance = relationship("Attendance", back_populates="attended_users")
@@ -38,7 +38,7 @@ class Attendance(Model):
     # Properties
     attendance_date = Column(Date)
     class_status = Column(Enum(ClassStatus))
-    schedule_id = Column(UUID(as_uuid=True), ForeignKey('schedule_months.id'))
+    schedule_id = Column(String(), ForeignKey('schedule_months.id'))
 
     # Relationships
     schedule = relationship("ScheduleMonth")

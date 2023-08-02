@@ -51,7 +51,7 @@ async def get(*,
               Authorize: AuthJWT = Depends()
               ):
     Authorize.jwt_required()
-    return family_profile_service.get_by_id(db, id)
+    return family_profile_service.get_by_id(db, str(id))
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -64,7 +64,7 @@ async def update(*,
                  ):
     Authorize.jwt_required()
     return family_profile_service.update(
-        db, db_obj=family_profile_service.get_by_id(db, id), obj_in=body)
+        db, db_obj=family_profile_service.get_by_id(db, str(id)), obj_in=body)
 
 
 @router.delete("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -97,4 +97,4 @@ async def get_by_profile_id(*,
                             Authorize: AuthJWT = Depends()
                             ):
     Authorize.jwt_required()
-    return profile_service.get_by_user_id(db, id).family_profile
+    return profile_service.get_by_user_id(db, str(id)).family_profile

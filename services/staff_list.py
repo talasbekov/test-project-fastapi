@@ -80,7 +80,7 @@ class StaffListService(
         )
         task.update_state(state=10)
         staff_list = super().create(db, create_staff_list)
-        staff_divisions = staff_division_service.get_all_except_special(
+        staff_divisions = staff_division_service.get_all_except_special_raw(
             db, 0, 100)
         
         task.update_state(state=30)
@@ -121,11 +121,11 @@ class StaffListService(
         self,
         task,
         db: Session,
-        staff_list_id: uuid.UUID,
+        staff_list_id: str,
         signed_by: str,
         document_creation_date: datetime.date,
-        current_user_id: uuid.UUID,
-        current_user_role_id: uuid.UUID,
+        current_user_id: str,
+        current_user_role_id: str,
         rank: str,
         document_number: str,
         document_link: str

@@ -76,7 +76,7 @@ async def get_by_id(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return recommender_user_service.get_by_id(db, id)
+    return recommender_user_service.get_by_id(db, str(id))
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -95,7 +95,7 @@ async def update(*,
         - **name**: required.
     """
     Authorize.jwt_required()
-    recommender_user = recommender_user_service.get_by_id(db, id)
+    recommender_user = recommender_user_service.get_by_id(db, str(id))
     return recommender_user_service.update(
         db, db_obj=recommender_user, obj_in=body)
 
@@ -114,4 +114,4 @@ async def delete(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    recommender_user_service.remove(db, id)
+    recommender_user_service.remove(db, str(id))

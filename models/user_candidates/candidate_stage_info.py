@@ -1,7 +1,6 @@
 import enum
 
-from sqlalchemy import Column, ForeignKey, TIMESTAMP, Boolean, Enum
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, ForeignKey, TIMESTAMP, Boolean, Enum, String
 from sqlalchemy.orm import relationship
 
 from models import Model
@@ -26,13 +25,11 @@ class CandidateStageInfo(Model):
         server_default=CandidateStageInfoStatusEnum.NOT_STARTED.value)
     date_sign = Column(TIMESTAMP(timezone=True), nullable=True, default=None)
     candidate_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("candidates.id"),
         nullable=True)
     candidate_stage_type_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("candidate_stage_types.id"),
         nullable=True)
     candidate_stage_type = relationship(

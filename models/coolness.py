@@ -1,6 +1,5 @@
 
-from sqlalchemy import Column, ForeignKey, Integer
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 from models import Model, NamedModel
@@ -22,7 +21,7 @@ class CoolnessStatusEnum(EnumBase):
 class CoolnessType(NamedModel):
 
     __tablename__ = "coolness_types"
-    order = Column(Integer, nullable=False)
+    order = Column('COOLNESS_ORDER', Integer, nullable=False)
 
     coolnesses = relationship("Coolness", back_populates="type")
 
@@ -30,10 +29,10 @@ class CoolnessType(NamedModel):
 class Coolness(Model):
 
     __tablename__ = "coolnesses"
-    type_id = Column(UUID(as_uuid=True), ForeignKey("coolness_types.id"))
+    type_id = Column(String(), ForeignKey("coolness_types.id"))
     type = relationship("CoolnessType", back_populates="coolnesses")
 
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
+    user_id = Column(String(), ForeignKey("users.id"))
     user = relationship("User", back_populates="coolnesses")
 
     history = relationship(

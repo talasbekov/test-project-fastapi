@@ -60,7 +60,7 @@ async def create(*,
     """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
-    profile = profile_service.get_by_user_id(db, user_id)
+    profile = profile_service.get_by_user_id(db, str(user_id))
     body.profile_id = profile.id
     return abroad_travel_service.create(db, body)
 
@@ -81,7 +81,7 @@ async def update(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    abroad_travel = abroad_travel_service.get_by_id(db, id)
+    abroad_travel = abroad_travel_service.get_by_id(db, str(id))
     return abroad_travel_service.update(db, abroad_travel, body)
 
 
@@ -100,5 +100,5 @@ async def delete(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    abroad_travel = abroad_travel_service.get_by_id(db, id)
+    abroad_travel = abroad_travel_service.get_by_id(db, str(id))
     return abroad_travel_service.delete(db, abroad_travel)

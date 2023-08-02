@@ -82,7 +82,7 @@ async def get_by_id(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return service_archive_staff_function_service.get_by_id(db, id)
+    return service_archive_staff_function_service.get_by_id(db, str(id))
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -103,7 +103,7 @@ async def update(*,
         - **spend_hours_per_week**: int - optional.
     """
     Authorize.jwt_required()
-    service_archive_staff_function_service.get_by_id(db, id)
+    service_archive_staff_function_service.get_by_id(db, str(id))
     return service_archive_staff_function_service.update_archive_staff_function(
         db,
         staff_function=service_archive_staff_function_service.get_by_id(
@@ -125,7 +125,7 @@ async def delete(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    service_archive_staff_function_service.remove(db, id)
+    service_archive_staff_function_service.remove(db, str(id))
 
 
 @router.post('/duplicate/{id}/', status_code=status.HTTP_201_CREATED,
@@ -141,4 +141,4 @@ async def duplicate(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return service_archive_staff_function_service.duplicate(db, id)
+    return service_archive_staff_function_service.duplicate(db, str(id))

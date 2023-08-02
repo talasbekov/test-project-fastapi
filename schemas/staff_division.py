@@ -118,7 +118,13 @@ class StaffUnitRead(ReadModel):
 #         orm_mode = True
 
 
-class StaffDivisionChildRead(StaffDivisionBase):
+class StaffDivisionChildRead(NamedModel):
+    parent_group_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    is_combat_unit: Optional[bool] = Field(None, nullable=True)
+    leader_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    is_active: Optional[bool] = True
+    type_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    staff_division_number: Optional[int] = Field(None, nullable=True)
     id: Optional[uuid.UUID]
     children: Optional[List]
     staff_units: Optional[List]
@@ -197,6 +203,17 @@ class StaffDivisionOptionRead(StaffDivisionBase, ReadNamedModel):
 
 class StaffUnitDivisionRead(StaffDivisionBase, ReadNamedModel):
     is_combat_unit: Optional[bool] = Field(None, nullable=True)
+
+    class Config:
+        orm_mode = True
+        
+class ShortStaffUnitDivisionRead(ReadNamedModel):
+    parent_group_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    is_combat_unit: Optional[bool] = Field(None, nullable=True)
+    leader_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    is_active: Optional[bool] = True
+    type_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    staff_division_number: Optional[int] = Field(None, nullable=True)
 
     class Config:
         orm_mode = True

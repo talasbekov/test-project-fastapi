@@ -26,7 +26,7 @@ async def get_all(
     *,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
-    hr_document_template_id: uuid.UUID = None,
+    hr_document_template_id: str = None,
     filter: str = "",
     skip: int = 0,
     limit: int = 10
@@ -172,7 +172,7 @@ async def get_all_by_staff_unit(*,
     - **id**: UUID - required and should exist in the database.
     """
     Authorize.jwt_required()
-    return user_service.get_all_by_staff_unit(db, id)
+    return user_service.get_all_by_staff_unit(db, str(id))
 
 
 @router.get(
@@ -191,7 +191,7 @@ async def get_all_by_position(*,
     - **id**: UUID - required and should exist in the database.
     """
     Authorize.jwt_required()
-    return user_service.get_all_by_position(db, id)
+    return user_service.get_all_by_position(db, str(id))
 
 
 @router.get(
@@ -272,7 +272,7 @@ async def get_by_id(
     - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return user_service.get_by_id(db, id)
+    return user_service.get_by_id(db, str(id))
 
 
 @router.get("/fields",
@@ -295,7 +295,7 @@ async def get_profile(
 ):
     Authorize.jwt_required()
     id = Authorize.get_jwt_subject()
-    return user_service.get_by_id(db, id)
+    return user_service.get_by_id(db, str(id))
 
 
 @router.get("/templates/{user_id}/")
@@ -308,7 +308,7 @@ async def get_templates(
     limit: int = 10
 ):
     Authorize.jwt_required()
-    return user_service.get_available_templates(db, user_id, skip, limit)
+    return user_service.get_available_templates(db, str(user_id), skip, limit)
 
 
 @router.get("/short/{id}/", response_model=UserShortRead)
@@ -319,4 +319,4 @@ async def get_short_user(
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
-    return user_service.get_by_id(db, id)
+    return user_service.get_by_id(db, str(id))

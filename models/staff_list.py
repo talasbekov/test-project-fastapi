@@ -19,7 +19,7 @@ class StaffList(NamedModel):
     __tablename__ = "staff_lists"
 
     is_signed: bool = Column(Boolean, nullable=False, default=False)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
+    user_id = Column(String(), ForeignKey("users.id"), nullable=True)
     document_signed_by = Column(String, nullable=True)
     document_signed_at = Column(TIMESTAMP(timezone=True),
                                 nullable=True, server_default=text("now()"))

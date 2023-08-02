@@ -55,7 +55,7 @@ async def get_by_id(*,
         - **id**: UUID - required.
     """
     Authorize.jwt_required()
-    return family_status_service.get_by_id(db, id)
+    return family_status_service.get_by_id(db, str(id))
 
 
 @router.get('/user/{user_id}', dependencies=[Depends(HTTPBearer())],
@@ -66,4 +66,4 @@ async def get_profile_by_id(*,
                             Authorize: AuthJWT = Depends()
                             ):
     Authorize.jwt_required()
-    return family_status_service.get_by_user_id(db, user_id)
+    return family_status_service.get_by_user_id(db, str(user_id))

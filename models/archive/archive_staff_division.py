@@ -1,5 +1,5 @@
-from sqlalchemy import Column, ForeignKey, Boolean, Integer
-from sqlalchemy.dialects.postgresql import UUID, JSON
+from sqlalchemy import Column, ForeignKey, Boolean, Integer, String
+from sqlalchemy.dialects.oracle import CLOB
 from sqlalchemy.orm import relationship
 
 from models import NamedNestedModel
@@ -10,27 +10,31 @@ class ArchiveStaffDivision(NamedNestedModel):
     __tablename__ = "archive_staff_divisions"
 
     # Properties
-    parent_group_id = Column(UUID(as_uuid=True), ForeignKey(
+    parent_group_id = Column(String(), ForeignKey(
         "archive_staff_divisions.id"), nullable=True)
-    description = Column(JSON(none_as_null=True))
+    description = Column(CLOB)
     is_combat_unit = Column(Boolean)
-    leader_id = Column(UUID(as_uuid=True), ForeignKey(
+    leader_id = Column(String(), ForeignKey(
         "archive_staff_units.id"), nullable=True)
     staff_division_number = Column(Integer)
-    type_id = Column(UUID(as_uuid=True), ForeignKey(
+    type_id = Column(String(), ForeignKey(
         "staff_division_types.id"), nullable=True)
     type = relationship("StaffDivisionType")
     staff_list_id = Column(
-        UUID(as_uuid=True),
+        String(),
         ForeignKey("staff_lists.id"),
         nullable=False)
     origin_id = Column(
-        UUID(as_uuid=True),
+        String(),
         ForeignKey("staff_divisions.id"),
         nullable=True)
 
     # Relationships
-    children = relationship("ArchiveStaffDivision", cascade="all, delete")
+    children = relationship(
+        "ArchiveStaffDivision",
+        foreign_keys="ArchiveStaffDivision.parent_group_id",
+        cascade="all, delete",
+        lazy="joined")
     staff_list = relationship('StaffList',
                               back_populates='archive_staff_divisions')
     staff_units = relationship(

@@ -75,7 +75,7 @@ class Position(NamedModel):
 
     __tablename__ = "positions"
 
-    max_rank_id = Column(UUID(as_uuid=True), ForeignKey("ranks.id"),
+    max_rank_id = Column(String(), ForeignKey("ranks.id"),
                          nullable=True)
     max_rank = relationship("Rank", cascade="all,delete")
     # TODO: enum was deleted because of LookupError: "C-S-1" is not among the

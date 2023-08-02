@@ -13,9 +13,9 @@ class CandidateStageAnswerBase(BaseModel):
     answer: Optional[str]
     document_link: Optional[str]
     document_number: Optional[str]
-    candidate_essay_type_id: Optional[uuid.UUID]
-    candidate_id: uuid.UUID
-    category_id: Optional[uuid.UUID]
+    candidate_essay_type_id: Optional[str]
+    candidate_id: str
+    category_id: Optional[str]
 
     class Config:
         orm_mode = True
@@ -23,9 +23,9 @@ class CandidateStageAnswerBase(BaseModel):
 
 
 class CandidateStageAnswerCreate(CandidateStageAnswerBase):
-    candidate_stage_question_id: uuid.UUID
+    candidate_stage_question_id: str
     sport_score: Optional[int]
-    answer_id: Optional[uuid.UUID]
+    answer_id: Optional[str]
 
 
 class CandidateStageListAnswerCreate(BaseModel):
@@ -33,7 +33,7 @@ class CandidateStageListAnswerCreate(BaseModel):
 
 
 class CandidateStageAnswerUpdate(CandidateStageAnswerBase):
-    candidate_stage_question_id: uuid.UUID
+    candidate_stage_question_id: str
 
 
 class CandidateStageQuestionRead(BaseModel):
@@ -46,14 +46,14 @@ class CandidateStageQuestionRead(BaseModel):
 
 
 class CandidateStageAnswerRead(CandidateStageAnswerBase):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     is_sport_passed: Optional[bool]
     created_at: Optional[datetime.datetime]
     updated_at: Optional[datetime.datetime]
-    candidate_stage_question_id: Optional[uuid.UUID]
+    candidate_stage_question_id: Optional[str]
     candidate_stage_question: Optional[CandidateStageQuestionRead]
 
 
 class CandidateStageAnswerIdRead(BaseModel):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     type: Optional[str]

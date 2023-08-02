@@ -25,8 +25,7 @@ class CandidateStageQuestion(Model):
     description = Column(TEXT, nullable=True)
 
     candidate_stage_type_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("candidate_stage_types.id"),
         nullable=True)
     candidate_stage_type = relationship(

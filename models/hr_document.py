@@ -1,7 +1,7 @@
 import enum
 
 from sqlalchemy import TIMESTAMP, Column, ForeignKey, String, TEXT
-from sqlalchemy.dialects.postgresql import JSON, UUID
+from sqlalchemy.dialects.oracle import CLOB
 from sqlalchemy.orm import relationship
 
 from models import Model
@@ -22,34 +22,31 @@ class HrDocument(Model):
 
     # Properties
     parent_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("hr_documents.id"),
         nullable=True)
 
     hr_document_template_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("hr_document_templates.id"),
         nullable=True)
     due_date = Column(TIMESTAMP(timezone=True), nullable=True)
-    properties = Column(JSON(none_as_null=True))
+    properties = Column(CLOB)
     reg_number = Column(String, unique=True)
     signed_at = Column(TIMESTAMP(timezone=True), nullable=True)
 
     initialized_by_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("users.id"),
         nullable=True)
     initialized_at = Column(TIMESTAMP(timezone=True), nullable=True)
     initial_comment = Column(TEXT(), nullable=True)
-    status_id = Column(UUID(as_uuid=True),
+    status_id = Column(String(),
                        ForeignKey("hr_document_statuses.id"))
 
-    last_step_id = Column(UUID(as_uuid=True),
+    last_step_id = Column(String(),
                           ForeignKey("hr_document_steps.id"))
-    old_history_id = Column(UUID(as_uuid=True), ForeignKey("histories.id"))
+    old_history_id = Column(String(), ForeignKey("histories.id"))
 
     # Relationships
     children = relationship("HrDocument", cascade="all,delete")

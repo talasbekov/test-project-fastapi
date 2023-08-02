@@ -59,7 +59,7 @@ async def get_by_id(
         - **id**: required and should exist in the database.
     """
     Authorize.jwt_required()
-    return candidate_stage_answer_service.get_by_id(db, id)
+    return candidate_stage_answer_service.get_by_id(db, str(id))
 
 
 @router.get("/all/candidate/{candidate_id}",
@@ -68,7 +68,7 @@ async def get_by_id(
 async def get_all_by_candidate_id(
         db: Session = Depends(get_db),
         Authorize: AuthJWT = Depends(),
-        candidate_id: uuid.UUID = None
+        candidate_id: str = None
 ):
     """
         Get all CandidateStageAnswer by candidate_id.
@@ -77,7 +77,7 @@ async def get_all_by_candidate_id(
     """
     Authorize.jwt_required()
     return candidate_stage_answer_service.get_all_by_candidate_id(
-        db, candidate_id)
+        db, str(candidate_id))
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
@@ -246,4 +246,4 @@ async def delete(
         - **id**: required and should exist in the database.
     """
     Authorize.jwt_required()
-    candidate_stage_answer_service.delete(db, id)
+    candidate_stage_answer_service.delete(db, str(id))

@@ -1,7 +1,7 @@
 import enum
 
 from sqlalchemy import Column, Enum, String, UUID, ForeignKey, Boolean
-from sqlalchemy.dialects.postgresql import JSON
+from sqlalchemy.dialects.oracle import CLOB
 from sqlalchemy.orm import relationship
 
 from models import NamedModel, isActiveModel
@@ -30,12 +30,12 @@ class HrDocumentTemplate(NamedModel, isActiveModel):
 
     # Properties
     path = Column(String(255))
-    pathKZ = Column(String(255))
+    pathKZ = Column('pathkz', String(255))
     subject_type = Column(Enum(SubjectType))
-    properties = Column(JSON(none_as_null=True))
-    description = Column(JSON(none_as_null=True))
-    actions = Column(JSON(none_as_null=True))
-    maintainer_id = Column(UUID(as_uuid=True), ForeignKey("staff_units.id"))
+    properties = Column(CLOB)
+    description = Column(CLOB)
+    actions = Column(CLOB)
+    maintainer_id = Column(String(), ForeignKey("staff_units.id"))
     is_visible = Column(Boolean(), default=True)
     is_due_date_required = Column(Boolean(), default=False)
     is_initial_comment_required = Column(Boolean(), default=False)

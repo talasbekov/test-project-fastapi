@@ -59,7 +59,7 @@ async def get_rand(*,
             This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    return personal_profile_service.get_rand(db, id)
+    return personal_profile_service.get_rand(db, str(id))
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
@@ -95,7 +95,7 @@ async def get_by_id(*,
         - **id**: UUID - required.
     """
     Authorize.jwt_required()
-    return personal_profile_service.get_by_id(db, id)
+    return personal_profile_service.get_by_id(db, str(id))
 
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
@@ -112,7 +112,7 @@ async def delete(*,
         - **id**: UUId - required
     """
     Authorize.jwt_required()
-    personal_profile_service.remove(db, id)
+    personal_profile_service.remove(db, str(id))
 
 
 @router.get("/profile", response_model=PersonalProfileRead)
@@ -125,7 +125,7 @@ async def get_profile(*,
     return profile.personal_profile
 
 
-@router.get('/profile/{id}', dependencies=[Depends(HTTPBearer())],
+@router.get('/profile/{id}', dependencies=[Depends(HTTPBearer())],  
             response_model=PersonalProfileRead)
 async def get_profile_by_id(*,
                             db: Session = Depends(get_db),
@@ -133,4 +133,4 @@ async def get_profile_by_id(*,
                             Authorize: AuthJWT = Depends()
                             ):
     Authorize.jwt_required()
-    return profile_service.get_by_user_id(db, id).personal_profile
+    return profile_service.get_by_user_id(db, str(id)).personal_profile

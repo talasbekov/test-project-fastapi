@@ -14,8 +14,7 @@ class Passport(Model):
     date_to = Column(TIMESTAMP(timezone=True))
     document_link = Column(TEXT, nullable=True)
     profile_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("personal_profiles.id"),
         nullable=False)
     issued_by = Column(String(255), nullable=False)

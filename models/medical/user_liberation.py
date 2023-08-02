@@ -15,8 +15,8 @@ class UserLiberation(Model):
     start_date = Column(TIMESTAMP(timezone=True))
     end_date = Column(TIMESTAMP(timezone=True))
     document_link = Column(TEXT, nullable=True)
-    profile_id = Column(UUID(as_uuid=True), ForeignKey("medical_profiles.id"))
-    liberation_id = Column(UUID(as_uuid=True), ForeignKey("liberations.id"))
+    profile_id = Column(String(), ForeignKey("medical_profiles.id"))
+    liberation_id = Column(String(), ForeignKey("liberations.id"))
 
     profile = relationship("MedicalProfile")
     liberations = relationship(

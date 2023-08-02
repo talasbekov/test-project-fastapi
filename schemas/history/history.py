@@ -20,6 +20,7 @@ from schemas import (
     ContractRead,
     BadgeRead,
     StaffDivisionRead,
+    StaffDivisionReadWithoutStaffUnit
 )
 
 
@@ -129,7 +130,7 @@ class HistoryRead(HistoryBase, ReadNamedModel):
     coolness: Optional[CoolnessRead]
     contract: Optional[ContractRead]
     badge: Optional[BadgeRead]
-    staff_division: Optional[StaffDivisionRead]
+    staff_division: Optional[StaffDivisionReadWithoutStaffUnit]
 
     class Config:
         from_attributes=True

@@ -85,7 +85,7 @@ async def update(*,
 
     """
     Authorize.jwt_required()
-    service_id = service_id_service.get_by_id(db, id)
+    service_id = service_id_service.get_by_id(db, str(id))
 
     return service_id_service.update(db, db_obj=service_id, obj_in=body)
 

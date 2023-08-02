@@ -1,5 +1,6 @@
 import uuid
-from typing import List, Dict, Any
+import json
+from typing import List, Dict, Any, Optional
 
 from sqlalchemy.orm import Session
 from sqlalchemy import distinct, func
@@ -28,6 +29,11 @@ class StaffDivisionService(
         if group is None:
             raise NotFoundException(
                 f"StaffDivision with id: {id} is not found!")
+        for staff_unit in group.staff_units:
+            if isinstance(staff_unit.requirements, str):
+                staff_unit.requirements = json.loads(staff_unit.requirements)
+        if isinstance(group.description, str):
+            group.description = json.loads(group.description)
         return group
 
     def delete(self, db: Session, id: str) -> StaffDivision:
@@ -94,6 +100,20 @@ class StaffDivisionService(
             StaffDivision.parent_group_id == None,
             self.model.name != StaffDivisionEnum.SPECIAL_GROUP.value
         ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
+        for parent in parents:
+            parent.description = json.loads(parent.description)
+            for staff_unit in parent.staff_units:
+                staff_unit.requirements = json.loads(staff_unit.requirements)
+        return parents
+    
+    def get_all_except_special_raw(self,
+                                   db: Session,
+                                   skip: int,
+                                   limit: int) -> List[StaffDivision]:
+        parents = db.query(self.model).filter(
+            StaffDivision.parent_group_id == None,
+            self.model.name != StaffDivisionEnum.SPECIAL_GROUP.value
+        ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
         return parents
 
     def get_child_groups(self,
@@ -101,9 +121,14 @@ class StaffDivisionService(
                          id: str,
                          skip: int,
                          limit: int) -> List[StaffDivision]:
-        return db.query(self.model).filter(
+        parents = db.query(self.model).filter(
             StaffDivision.parent_group_id == id
         ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
+        for parent in parents:
+            parent.description = json.loads(parent.description)
+            for staff_unit in parent.staff_units:
+                staff_unit.requirements = json.loads(staff_unit.requirements)
+        return parents
 
     def get_all_child_groups(self, db: Session,
                              id: str) -> List[StaffDivision]:
@@ -143,7 +168,7 @@ class StaffDivisionService(
 
     def get_department_id_from_staff_division_id(self,
                                                  db: Session,
-                                                 staff_division_id: uuid.UUID):
+                                                 staff_division_id: str):
 
         staff_division = self.get_by_id(db, staff_division_id)
 
@@ -161,7 +186,7 @@ class StaffDivisionService(
         return res_id
 
     def get_division_parents_by_id(
-            self, db: Session, staff_division_id: uuid.UUID):
+            self, db: Session, staff_division_id: str):
 
         staff_division = self.get_by_id(db, staff_division_id)
 
@@ -181,16 +206,17 @@ class StaffDivisionService(
     def get_by_option(self,
                       db: Session,
                       type: str,
-                      id: uuid.UUID,
+                      id: Optional[str],
                       skip: int, limit: int):
         if id is None:
+            print(id)
             all_except_special = self.get_all_except_special(db, skip, limit)
             return [StaffDivisionRead.from_orm(
                 i) for i in all_except_special]
         child_groups = self.get_child_groups(db, id, skip, limit)
         return [StaffDivisionRead.from_orm(i) for i in child_groups]
 
-    def get_full_name(self, db: Session, staff_division_id: uuid.UUID):
+    def get_full_name(self, db: Session, staff_division_id: str):
         staff_division = self.get_by_id(db, staff_division_id)
 
         parent_id = staff_division.parent_group_id

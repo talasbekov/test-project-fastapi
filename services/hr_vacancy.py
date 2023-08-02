@@ -1,5 +1,7 @@
 import uuid
+import json
 from typing import List
+from sqlalchemy import func, literal_column, select
 from sqlalchemy.orm import Session
 
 from exceptions.client import BadRequestException, ForbiddenException, NotFoundException
@@ -37,18 +39,28 @@ class HrVacancyService(
         staff_division = staff_division_service.get_by_id(
             db, staff_division_id)
         vacancies = self.get_vacancies_recursive(db, staff_division)
-
+        vacancies_loaded = []
+        
+        for vacancy in vacancies:
+            if self._check_exists_respond(db, vacancy.id, user_id):
+                if isinstance(vacancy.staff_unit.requirements, str):
+                    vacancy.staff_unit.requirements = json.loads(vacancy.staff_unit.requirements)
+                if isinstance(vacancy.staff_unit.staff_division.description, str):
+                    vacancy.staff_unit.staff_division.description = json.loads(vacancy.staff_unit.staff_division.description)
+                vacancies_loaded.append(HrVacancyRead.from_orm(vacancy).to_dict(is_responded=True))
+            else:
+                if isinstance(vacancy.staff_unit.requirements, str):
+                    vacancy.staff_unit.requirements = json.loads(vacancy.staff_unit.requirements)
+                if isinstance(vacancy.staff_unit.staff_division.description, str):
+                    vacancy.staff_unit.staff_division.description = json.loads(vacancy.staff_unit.staff_division.description)
+                vacancies_loaded.append(HrVacancyRead.from_orm(vacancy).to_dict(is_responded=False))
+        
         response = HrVacancyStaffDivisionRead(
             id=staff_division.id,
             staff_division_number=staff_division.staff_division_number,
             type_id=staff_division.type_id,
             type=staff_division.type,
-            vacancies=[HrVacancyRead.from_orm(vacancy).to_dict(is_responded=True)
-                       if self._check_exists_respond(db, vacancy.id, user_id)
-                       else
-                       HrVacancyRead.from_orm(vacancy).to_dict(is_responded=False)
-                       for vacancy in vacancies
-                       ]
+            vacancies=vacancies_loaded
         )
 
         return response
@@ -239,7 +251,6 @@ class HrVacancyService(
                 self.model.staff_unit_id == StaffUnit.id,
                 StaffUnit.staff_division_id == department.id
         ).all()
-
         # Recursively call this function for each child division
         for child in department.children:
             vacancies.extend(self.get_vacancies_recursive(db, child))

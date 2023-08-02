@@ -14,7 +14,7 @@ class ArchiveDocumentFunctionType(NamedModel):
 
     can_cancel = Column(Boolean, nullable=False)
 
-    origin_id = Column(UUID(as_uuid=True), ForeignKey(
+    origin_id = Column(String(), ForeignKey(
         "document_function_types.id"), nullable=True)
 
     staff_functions = relationship(
@@ -27,7 +27,7 @@ class ArchiveServiceFunctionType(NamedModel):
 
     __tablename__ = "archive_service_function_types"
 
-    origin_id = Column(UUID(as_uuid=True), ForeignKey(
+    origin_id = Column(String(), ForeignKey(
         "service_function_types.id"), nullable=True)
 
     staff_functions = relationship(
@@ -48,8 +48,7 @@ class ArchiveStaffFunction(NamedModel):
         secondary=archive_staff_unit_function)
 
     origin_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("staff_functions.id"),
         nullable=True)
 
@@ -63,11 +62,10 @@ class ArchiveStaffFunction(NamedModel):
 
 class ArchiveDocumentStaffFunction(ArchiveStaffFunction):
 
-    role_id = Column(UUID(as_uuid=True), ForeignKey(
+    role_id = Column(String(), ForeignKey(
         "archive_document_function_types.id"))
     jurisdiction_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("jurisdictions.id"))
 
     priority = Column(Integer)
@@ -85,7 +83,7 @@ class ArchiveDocumentStaffFunction(ArchiveStaffFunction):
 
 class ArchiveServiceStaffFunction(ArchiveStaffFunction):
 
-    type_id = Column(UUID(as_uuid=True), ForeignKey(
+    type_id = Column(String(), ForeignKey(
         "archive_service_function_types.id"))
 
     type = relationship("ArchiveServiceFunctionType", foreign_keys=type_id)

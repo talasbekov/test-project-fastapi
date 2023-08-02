@@ -1,5 +1,4 @@
-from sqlalchemy import Column, ForeignKey
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, ForeignKey, String
 from sqlalchemy.orm import relationship
 
 from models import isActiveModel
@@ -10,13 +9,11 @@ class HrVacancy(isActiveModel):
     __tablename__ = "hr_vacancies"
 
     staff_unit_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("staff_units.id"),
         nullable=True)
     archive_staff_unit_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("archive_staff_units.id"),
         nullable=True)
 

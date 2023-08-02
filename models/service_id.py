@@ -14,10 +14,10 @@ class ServiceID(Model):
 
     __tablename__ = "service_ids"
 
-    number = Column(String, nullable=True)
+    number = Column('service_number', String, nullable=True)
     date_to = Column(TIMESTAMP(timezone=True), nullable=True)
 
     token_status = Column(Enum(ServiceIDStatus), nullable=True)
     id_status = Column(Enum(ServiceIDStatus), nullable=True)
 
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
+    user_id = Column(String(), ForeignKey("users.id"))

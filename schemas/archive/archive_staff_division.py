@@ -17,6 +17,7 @@ class ArchiveStaffDivisionBase(NamedModel):
 
 
 class ArchiveStaffDivisionCreate(ArchiveStaffDivisionBase):
+    description: Optional[str]
     origin_id: Optional[uuid.UUID]
 
 
@@ -96,6 +97,7 @@ class ArchiveStaffDivisionRead(ArchiveStaffDivisionBase):
 class ArchiveStaffDivisionStepChildRead(ArchiveStaffDivisionBase):
     id: Optional[uuid.UUID]
     type: Optional[StaffDivisionTypeRead]
+    description: Optional[NamedModel]
 
     class Config:
         orm_mode = True

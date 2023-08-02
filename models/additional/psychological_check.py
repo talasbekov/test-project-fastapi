@@ -14,7 +14,7 @@ class PsychologicalCheck(Model):
     document_link = Column(String(255), nullable=False)
     document_number = Column(String(255), nullable=True)
 
-    profile_id = Column(UUID(as_uuid=True),
+    profile_id = Column(String(),
                         ForeignKey("additional_profiles.id"))
 
     profile = relationship(

@@ -84,7 +84,7 @@ async def get_signed(*,
 async def get_initialized(*,
                           db: Session = Depends(get_db),
                           Authorize: AuthJWT = Depends(),
-                          parent_id: uuid.UUID = None,
+                          parent_id: Optional[str] = None,
                           filter: str = '',
                           skip: int = 0,
                           limit: int = 10,
@@ -104,7 +104,7 @@ async def get_initialized(*,
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
     return hr_document_service.get_initialized_documents(
-        db, user_id, parent_id, filter.lstrip().rstrip(), skip, limit)
+        db, str(user_id), parent_id, filter.lstrip().rstrip(), skip, limit)
 
 
 @router.get("/all/",
@@ -283,7 +283,7 @@ async def update(*,
     Authorize.jwt_required()
     return hr_document_service.update_document(
         db=db,
-        hr_document=hr_document_service.get_by_id(db, id),
+        hr_document=hr_document_service.get_by_id(db, str(id)),
         hr_document_update=body)
 
 
@@ -300,14 +300,14 @@ async def delete(*,
         - **id**: UUID - required.
     """
     Authorize.jwt_required()
-    hr_document_service.remove(db, id)
+    hr_document_service.remove(db, str(id))
 
 
 @router.post("/{id}/", status_code=status.HTTP_200_OK,
              summary="Sign HrDocument")
 async def sign(*,
                db: Session = Depends(get_db),
-               id: uuid.UUID,
+               id: str,
                body: HrDocumentSign,
                Authorize: AuthJWT = Depends()
                ):
@@ -322,7 +322,7 @@ async def sign(*,
     """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
-    await hr_document_service.sign(db, id, body, user_id)
+    await hr_document_service.sign(db, str(id), body, user_id)
 
 
 @router.get("/{id}/", response_model=HrDocumentRead,
@@ -338,7 +338,7 @@ async def get_by_id(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return hr_document_service.get_by_id(db, id)
+    return hr_document_service.get_by_id(db, str(id))
 
 
 @router.get('/generate/{id}/', status_code=status.HTTP_200_OK,
@@ -396,7 +396,7 @@ async def get_data_by_option(*,
                              db: Session = Depends(get_db),
                              option: str,
                              data_taken: Optional[str] = None,
-                             id: Optional[uuid.UUID] = None,
+                             id: Optional[str] = None,
                              type: str = "write",
                              skip: int = 0,
                              limit: int = 10,
@@ -431,7 +431,7 @@ async def get_signee(*,
         - **id**: UUID - required.
     """
     Authorize.jwt_required()
-    return hr_document_service.get_signee(db, id)
+    return hr_document_service.get_signee(db, str(id))
 
 
 @router.post('/initialize/staff_list/{id}/', response_model=HrDocumentRead,

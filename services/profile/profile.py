@@ -1,3 +1,4 @@
+import json
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
@@ -20,6 +21,9 @@ class ProfileService(ServiceBase[Profile, ProfileCreate, ProfileUpdate]):
         if profile is None:
             raise NotFoundException(
                 detail=f"Profile with user_id: {id} is not found!")
+        profile.personal_profile.driving_license.category = (
+            profile.personal_profile.driving_license.category[1:-1].split(',')
+        )
         return profile
 
     # def generate_profile_doc(self, db: Session, user_id: str):

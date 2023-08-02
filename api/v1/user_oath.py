@@ -81,7 +81,7 @@ async def update(*,
     Authorize.jwt_required()
     return user_oath_service.update(
         db=db,
-        db_obj=user_oath_service.get_by_id(db, id),
+        db_obj=user_oath_service.get_by_id(db, str(id)),
         obj_in=body)
 
 
@@ -99,7 +99,7 @@ async def get_by_id(*,
         - **id** - UUID - required
     """
     Authorize.jwt_required()
-    return user_oath_service.get_by_id(db, id)
+    return user_oath_service.get_by_id(db, str(id))
 
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
@@ -116,4 +116,4 @@ async def delete(*,
         - **id** - UUID - required
     """
     Authorize.jwt_required()
-    user_oath_service.remove(db, id)
+    user_oath_service.remove(db, str(id))

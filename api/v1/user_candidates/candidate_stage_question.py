@@ -56,7 +56,7 @@ async def get_by_id(
         - **id**: UUID - required and should exist in the database.
     """
     Authorize.jwt_required()
-    return candidate_stage_question_service.get_by_id(db, id)
+    return candidate_stage_question_service.get_by_id(db, str(id))
 
 
 @router.post("", dependencies=[Depends(HTTPBearer())],
@@ -117,4 +117,4 @@ async def delete(
         - **id**: UUID - required and should exist in the database.
     """
     Authorize.jwt_required()
-    candidate_stage_question_service.remove(db, id)
+    candidate_stage_question_service.remove(db, str(id))

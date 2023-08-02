@@ -1,5 +1,4 @@
-from sqlalchemy import Column, ForeignKey
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, ForeignKey, String
 from sqlalchemy.orm import relationship
 
 from models import Model
@@ -10,8 +9,7 @@ class PersonalProfile(Model):
     __tablename__ = "personal_profiles"
 
     profile_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("profiles.id"),
         nullable=False)
 
@@ -31,7 +29,8 @@ class PersonalProfile(Model):
         "DrivingLicense",
         back_populates="profile",
         cascade="all,delete",
-        uselist=False)
+        uselist=False,
+        lazy="joined")
     passport = relationship(
         "Passport",
         back_populates="profile",

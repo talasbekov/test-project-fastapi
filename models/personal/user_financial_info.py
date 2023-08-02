@@ -12,8 +12,7 @@ class UserFinancialInfo(Model):
     iban = Column(String)
     housing_payments_iban = Column(String)
     profile_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("personal_profiles.id"),
         nullable=False)
 

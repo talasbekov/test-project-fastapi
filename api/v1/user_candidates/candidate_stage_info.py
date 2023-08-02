@@ -44,7 +44,7 @@ async def get_all(
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
     return candidate_stage_info_service.get_all_by_staff_unit_id(
-        db, filter.lstrip().rstrip(), skip, limit, role)
+        db, filter.lstrip().rstrip(), skip, limit, str(role))
 
 
 @router.get("/{id}", dependencies=[Depends(HTTPBearer())],
@@ -61,7 +61,7 @@ async def get_by_id(
         - **id**: UUID - required and should exist in the database.
     """
     Authorize.jwt_required()
-    return candidate_stage_info_service.get_by_id(db, id)
+    return candidate_stage_info_service.get_by_id(db, str(id))
 
 
 @router.get("/all/candidate/{candidate_id}", dependencies=[Depends(HTTPBearer())],
@@ -113,7 +113,7 @@ async def create(
 async def send_to_approval(
         db: Session = Depends(get_db),
         Authorize: AuthJWT = Depends(),
-        id: uuid.UUID = None,
+        id: str = None,
         body: CandidateStageInfoSendToApproval = None
 ):
     """
@@ -125,7 +125,7 @@ async def send_to_approval(
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
     return candidate_stage_info_service.send_to_approval(
-        db=db, id=id, body=body, staff_unit_id=role)
+        db=db, id=str(id), body=body, staff_unit_id=str(role))
 
 
 @router.put("/{id}/sign", dependencies=[Depends(HTTPBearer())],
@@ -135,7 +135,7 @@ async def send_to_approval(
 async def sign_candidate(
         db: Session = Depends(get_db),
         Authorize: AuthJWT = Depends(),
-        id: uuid.UUID = None,
+        id: str = None,
 ):
     """
         Sign a CandidateStageInfo
@@ -144,7 +144,7 @@ async def sign_candidate(
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
-    return candidate_stage_info_service.sign_candidate_info(db, id, role)
+    return candidate_stage_info_service.sign_candidate_info(db, str(id), str(role))
 
 
 @router.put("/{id}/reject", dependencies=[Depends(HTTPBearer())],
@@ -172,7 +172,7 @@ async def reject_candidate(
 async def update(
         db: Session = Depends(get_db),
         Authorize: AuthJWT = Depends(),
-        id: uuid.UUID = None,
+        id: str = None,
         body: CandidateStageInfoUpdate = None
 ):
     """
@@ -186,5 +186,5 @@ async def update(
     Authorize.jwt_required()
     return candidate_stage_info_service.update(db,
                                                db_obj=candidate_stage_info_service.get_by_id(
-                                                   db, id),
+                                                   db, str(id)),
                                                obj_in=body)

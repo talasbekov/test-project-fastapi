@@ -9,12 +9,12 @@ class SpecialCheck(Model):
 
     __tablename__ = "special_checks"
 
-    number = Column(String(255), nullable=False)
+    number = Column('special_number', String(255), nullable=False)
     issued_by = Column(String(255), nullable=False)
     date_of_issue = Column(TIMESTAMP(timezone=True), nullable=False)
     document_link = Column(String(255), nullable=False)
 
-    profile_id = Column(UUID(as_uuid=True),
+    profile_id = Column(String(),
                         ForeignKey("additional_profiles.id"))
 
     profile = relationship(

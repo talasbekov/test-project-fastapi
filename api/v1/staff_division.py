@@ -80,7 +80,7 @@ async def get_division_parents_by_id(*,
        - **id**: uuid - The id of staff division. This parameter is required.
    """
     Authorize.jwt_required()
-    return staff_division_service.get_division_parents_by_id(db, id)
+    return staff_division_service.get_division_parents_by_id(db, str(id))
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
@@ -117,7 +117,7 @@ async def get_by_id(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return staff_division_service.get_by_id(db, id)
+    return staff_division_service.get_by_id(db, str(id))
 
 @router.get("/one-level/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=StaffDivisionStepRead,
@@ -133,7 +133,7 @@ async def get_all_one_level_for_id(*,
     - **id**: uuid - The id of staff division. This parameter is required.
     """
     Authorize.jwt_required()
-    return staff_division_service.get_by_id(db, id)
+    return staff_division_service.get_by_id(db, str(id))
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -155,7 +155,7 @@ async def update(*,
     """
     Authorize.jwt_required()
     return staff_division_service.update(
-        db, db_obj=staff_division_service.get_by_id(db, id), obj_in=body)
+        db, db_obj=staff_division_service.get_by_id(db, str(id)), obj_in=body)
 
 
 @router.post("/{id}/", status_code=status.HTTP_202_ACCEPTED,
@@ -192,7 +192,7 @@ async def delete(*,
         - **id**: UUID - required
     """
     Authrorize.jwt_required()
-    staff_division_service.delete(db, id)
+    staff_division_service.delete(db, str(id))
 
 
 @router.get('/name/{id}', dependencies=[Depends(HTTPBearer())],
@@ -208,7 +208,7 @@ async def get_full_name_by_id(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    full_name, full_nameKZ = staff_division_service.get_full_name(db, id)
+    full_name, full_nameKZ = staff_division_service.get_full_name(db, str(id))
     return {"name": full_name, "nameKZ": full_nameKZ}
 
 
@@ -237,4 +237,4 @@ async def get_parent_ids(*,
                          Authorize: AuthJWT = Depends()
                          ):
     Authorize.jwt_required()
-    return staff_division_service.get_parent_ids(db, id)
+    return staff_division_service.get_parent_ids(db, str(id))

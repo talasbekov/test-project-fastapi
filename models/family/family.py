@@ -20,8 +20,8 @@ class Family(Model):
     address = Column(String)
     workplace = Column(String)
 
-    relation_id = Column(UUID(as_uuid=True), ForeignKey("family_relations.id"))
-    profile_id = Column(UUID(as_uuid=True), ForeignKey("family_profiles.id"))
+    relation_id = Column(String(), ForeignKey("family_relations.id"))
+    profile_id = Column(String(), ForeignKey("family_profiles.id"))
 
     profile = relationship("FamilyProfile", back_populates="family")
     relation = relationship("FamilyRelation")

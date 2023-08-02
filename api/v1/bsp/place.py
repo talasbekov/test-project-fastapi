@@ -57,7 +57,7 @@ async def get_by_id(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return place_service.get_by_id(db, id)
+    return place_service.get_by_id(db, str(id))
 
 @router.post("/", dependencies=[Depends(HTTPBearer())],
             response_model=PlaceRead,
@@ -90,7 +90,7 @@ async def update(*,
     Authorize.jwt_required()
     return place_service.update(
         db,
-        db_obj=place_service.get_by_id(db, id),
+        db_obj=place_service.get_by_id(db, str(id)),
         obj_in=body)
 
 @router.delete("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -106,4 +106,4 @@ async def delete(*,
 
     """
     Authorize.jwt_required()
-    return place_service.remove(db, id)
+    return place_service.remove(db, str(id))

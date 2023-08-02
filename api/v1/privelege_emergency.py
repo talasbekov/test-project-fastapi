@@ -93,7 +93,7 @@ async def update(*,
         **name** - required - str
     """
     Authorize.jwt_required()
-    privelege_emergency = privelege_emergency_service.get_by_id(db, id)
+    privelege_emergency = privelege_emergency_service.get_by_id(db, str(id))
     return privelege_emergency_service.update(db, privelege_emergency, body)
 
 
@@ -111,7 +111,7 @@ async def get_by_id(*,
         - **id** - UUID - required
     """
     Authorize.jwt_required()
-    return privelege_emergency_service.get_by_id(db, id)
+    return privelege_emergency_service.get_by_id(db, str(id))
 
 
 @router.get("/user/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -128,7 +128,7 @@ async def get_by_user_id(*,
         - **user_id** - UUID - required
     """
     Authorize.jwt_required()
-    return privelege_emergency_service.get_by_user_id(db, id)
+    return privelege_emergency_service.get_by_user_id(db, str(id))
 
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
@@ -145,4 +145,4 @@ async def delete(*,
         - **id** - UUID - required
     """
     Authorize.jwt_required()
-    privelege_emergency_service.remove(db, id)
+    privelege_emergency_service.remove(db, str(id))

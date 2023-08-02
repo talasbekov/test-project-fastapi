@@ -83,7 +83,7 @@ async def get_by_id(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return service_archive_staff_function_type_service.get_by_id(db, id)
+    return service_archive_staff_function_type_service.get_by_id(db, str(id))
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -106,7 +106,7 @@ async def update(*,
             This parameter is optional.
     """
     Authorize.jwt_required()
-    obj = service_archive_staff_function_type_service.get_by_id(db, id)
+    obj = service_archive_staff_function_type_service.get_by_id(db, str(id))
     return (
         service_archive_staff_function_type_service
         .update_archive_staff_function_type(db,
@@ -129,4 +129,4 @@ async def delete(*,
         - **id**: UUID - required
     """
     Authrorize.jwt_required()
-    service_archive_staff_function_type_service.remove(db, id)
+    service_archive_staff_function_type_service.remove(db, str(id))

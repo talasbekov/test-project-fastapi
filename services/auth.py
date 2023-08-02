@@ -195,11 +195,11 @@ class AuthService():
         user = user_service.create(db=db, obj_in=user_obj_in)
 
         candidate_service.create(db, body=CandidateCreate(
-            staff_unit_curator_id=current_user_staff_unit.id,
-            staff_unit_id=staff_unit.id
+            staff_unit_curator_id=str(current_user_staff_unit.id),
+            staff_unit_id=str(staff_unit.id)
         ))
 
-        self._create_profiles(db, user.id)
+        self._create_profiles(db, str(user.id))
 
         return user
 
@@ -262,10 +262,9 @@ class AuthService():
 
     def _set_last_signed_at(self, db: Session, user: User):
         user.last_signed_at = datetime.now()
-        
-        user_logging_activity_service.create(db, user.id)
-
+        user_logging_activity = user_logging_activity_service.create(db, user.id)
         db.add(user)
+        db.add(user_logging_activity)
         db.flush()
 
     def _extract_birth_date_from_iin(self, iin: str):

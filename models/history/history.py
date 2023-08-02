@@ -5,7 +5,8 @@ from enum import Enum as BaseEnum
 from typing import Union
 
 from sqlalchemy import TIMESTAMP, Column, ForeignKey, String, Double, Integer, Boolean
-from sqlalchemy.dialects.postgresql import TEXT, UUID
+from sqlalchemy.dialects.postgresql import TEXT
+from sqlalchemy.dialects.oracle import NCLOB, CLOB
 from sqlalchemy.orm import relationship, Session
 
 from exceptions import NotSupportedException, NotFoundException
@@ -58,10 +59,10 @@ class History(Model):
 
     date_from = Column(TIMESTAMP(timezone=True), nullable=True)
     date_to = Column(TIMESTAMP(timezone=True), nullable=True)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
-    document_link = Column(TEXT, nullable=True)
-    cancel_document_link = Column(TEXT, nullable=True)
-    confirm_document_link = Column(TEXT, nullable=True)
+    user_id = Column(String(), ForeignKey("users.id"))
+    document_link = Column(CLOB, nullable=True)
+    cancel_document_link = Column(CLOB, nullable=True)
+    confirm_document_link = Column(CLOB, nullable=True)
     document_number = Column(String, nullable=True)
     type = Column(String, nullable=True)
     document_style = Column(String, nullable=True)
@@ -85,7 +86,7 @@ class History(Model):
 
 class RankHistory(History):
 
-    rank_id = Column(UUID(as_uuid=True), ForeignKey("ranks.id"), nullable=True)
+    rank_id = Column(String(), ForeignKey("ranks.id"), nullable=True)
     rank = relationship("Rank", foreign_keys=[rank_id])
 
     rank_assigned_by = Column(String, nullable=True)
@@ -116,8 +117,7 @@ class RankHistory(History):
 class BadgeHistory(History):
 
     badge_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("badges.id"),
         nullable=True)
     badge = relationship("Badge", back_populates="history")
@@ -149,8 +149,7 @@ class BadgeHistory(History):
 class PenaltyHistory(History):
 
     penalty_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("penalties.id"),
         nullable=True)
     penalty = relationship("Penalty")
@@ -210,16 +209,14 @@ class EmergencyServiceHistory(History):
     percentage = Column(Integer, nullable=True)
 
     position_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("positions.id"),
         nullable=True)
     position = relationship("Position", foreign_keys=[position_id])
     reason = Column(String, nullable=True)
 
     staff_division_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("staff_divisions.id"),
         nullable=True)
     staff_division = relationship(
@@ -227,14 +224,14 @@ class EmergencyServiceHistory(History):
         foreign_keys=[staff_division_id])
 
     staff_division_name = Column(String, nullable=True)
-    staff_division_nameKZ = Column(String, nullable=True)
+    staff_division_nameKZ = Column('staff_division_namekz', String, nullable=True)
 
     contractor_signer_name = Column(String, nullable=True)
-    contractor_signer_nameKZ = Column(String, nullable=True)
+    contractor_signer_nameKZ = Column('contractor_signer_namekz', String, nullable=True)
 
     @classmethod
-    def create_history(self, db: Session, user_id: uuid.UUID,
-                       id: uuid.UUID, finish_last):
+    def create_history(self, db: Session, user_id: str,
+                       id: str, finish_last):
         staff_unit = db.query(StaffUnit).filter(StaffUnit.id == id).first()
         if staff_unit is None:
             raise NotFoundException(detail="Staff unit not found")
@@ -244,7 +241,6 @@ class EmergencyServiceHistory(History):
             if last_history.staff_division is not None:
                 last_history.staff_division_name = last_history.staff_division.name
                 last_history.staff_division_nameKZ = last_history.staff_division.nameKZ
-
             db.add(last_history)
 
         obj = EmergencyServiceHistory(
@@ -258,7 +254,6 @@ class EmergencyServiceHistory(History):
         db.add(obj)
         db.flush()
         db.refresh(obj)
-
         return obj
 
     __mapper_args__ = {
@@ -271,8 +266,7 @@ class ContractHistory(History):
     experience_years = Column(Integer, nullable=True)
 
     contract_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("contracts.id"),
         nullable=True)
     contract = relationship("Contract")
@@ -330,8 +324,7 @@ class ContractHistory(History):
 class CoolnessHistory(History):
 
     coolness_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("coolnesses.id"),
         nullable=True)
     coolness = relationship(
@@ -360,7 +353,7 @@ class CoolnessHistory(History):
     # coefficient = Column(Double, nullable=True)
     # percentage = Column(Integer, nullable=True)
 
-    # staff_division_id = Column(UUID(as_uuid=True),
+    # staff_division_id = Column(String(),
     # ForeignKey("staff_divisions.id"), nullable=True)
 
     __mapper_args__ = {
@@ -383,8 +376,7 @@ class WorkExperienceHistory(History):
 class SecondmentHistory(History):
 
     secondment_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("secondments.id"),
         nullable=True)
     secondment = relationship("Secondment")
@@ -438,8 +430,7 @@ class SecondmentHistory(History):
 class NameChangeHistory(History):
 
     name_change_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("name_changes.id"),
         nullable=True)
     name_change = relationship("NameChange",
@@ -453,8 +444,7 @@ class NameChangeHistory(History):
 class AttestationHistory(History):
 
     attestation_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("attestations.id"),
         nullable=True)
     attestation = relationship("Attestation")
@@ -488,8 +478,7 @@ class AttestationHistory(History):
 class ServiceCharacteristicHistory(History):
 
     characteristic_initiator_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("users.id"),
         nullable=True)
     characteristic_initiator = relationship(
@@ -503,12 +492,11 @@ class ServiceCharacteristicHistory(History):
 class StatusHistory(History):
 
     status_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("statuses.id"),
         nullable=True)
     status = relationship("Status", back_populates="history")
-    status_name = Column(String, nullable=True)
+    status_name = Column(NCLOB, nullable=True)
 
     @classmethod
     def create_history(cls, db: Session, user_id: uuid.UUID,

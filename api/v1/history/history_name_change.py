@@ -71,7 +71,7 @@ async def get_by_id(*,
        - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return history_name_change_service.get_by_id(db, id)
+    return history_name_change_service.get_by_id(db, str(id))
 
 
 @router.get("/user/{user_id}/", dependencies=[Depends(HTTPBearer())],
@@ -87,7 +87,7 @@ async def get_by_user_id(*,
        - **user_id**: UUID - required
     """
     Authorize.jwt_required()
-    return history_name_change_service.get_all_by_user_id(db, user_id)
+    return history_name_change_service.get_all_by_user_id(db, str(user_id))
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -107,7 +107,7 @@ async def update(*,
         - **quantity**: required
     """
     Authorize.jwt_required()
-    history_name_change = history_name_change_service.get_by_id(db, id)
+    history_name_change = history_name_change_service.get_by_id(db, str(id))
     return history_name_change_service.update(db,
                                               db_obj=history_name_change,
                                               obj_in=body)
@@ -127,4 +127,4 @@ async def delete(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    history_name_change_service.remove(db, id)
+    history_name_change_service.remove(db, str(id))

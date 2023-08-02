@@ -55,4 +55,4 @@ async def get_by_id(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return jurisdiction_service.get_by_id(db, id)
+    return jurisdiction_service.get_by_id(db, str(id))

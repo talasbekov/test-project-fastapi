@@ -139,7 +139,7 @@ async def create(*,
             summary="Get Staff List by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -148,7 +148,7 @@ async def get_by_id(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return staff_list_service.get_by_id(db, id)
+    return staff_list_service.get_by_id(db, str(id))
 
 
 @router.post("/apply/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -226,7 +226,7 @@ async def delete(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    staff_list_service.remove(db, id)
+    staff_list_service.remove(db, str(id))
 
 @router.post("/duplicate/{id}/",
              status_code=status.HTTP_201_CREATED,

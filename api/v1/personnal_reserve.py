@@ -93,7 +93,7 @@ async def update(*,
         **name** - required - str
     """
     Authorize.jwt_required()
-    personnal_reserve = personnal_reserve_service.get_by_id(db, id)
+    personnal_reserve = personnal_reserve_service.get_by_id(db, str(id))
     return personnal_reserve_service.update(db, personnal_reserve, body)
 
 
@@ -111,7 +111,7 @@ async def get_by_id(*,
         - **id** - UUID - required
     """
     Authorize.jwt_required()
-    return personnal_reserve_service.get_by_id(db, id)
+    return personnal_reserve_service.get_by_id(db, str(id))
 
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
@@ -128,4 +128,4 @@ async def delete(*,
         - **id** - UUID - required
     """
     Authorize.jwt_required()
-    personnal_reserve_service.remove(db, id)
+    personnal_reserve_service.remove(db, str(id))

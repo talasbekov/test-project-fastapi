@@ -61,7 +61,7 @@ async def create(*,
     """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
-    profile = profile_service.get_by_user_id(db, user_id)
+    profile = profile_service.get_by_user_id(db, str(user_id))
     return additional_profile_service.create(db, {"profile_id": profile.id})
 
 
@@ -81,7 +81,7 @@ async def update(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    abroad_travel = additional_profile_service.get_by_id(db, id)
+    abroad_travel = additional_profile_service.get_by_id(db, str(id))
     return additional_profile_service.update(db, abroad_travel, body)
 
 
@@ -100,7 +100,7 @@ async def delete(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    abroad_travel = additional_profile_service.get_by_id(db, id)
+    abroad_travel = additional_profile_service.get_by_id(db, str(id))
     return additional_profile_service.delete(db, abroad_travel)
 
 
@@ -118,7 +118,7 @@ async def get_by_id(*,
         - **name**: required
     """
     Authorize.jwt_required()
-    return additional_profile_service.get_by_id(db, id)
+    return additional_profile_service.get_by_id(db, str(id))
 
 
 @router.get("/profile", response_model=AdditionalProfileRead)
@@ -139,4 +139,4 @@ async def get_profile_by_id(*,
                             Authorize: AuthJWT = Depends()
                             ):
     Authorize.jwt_required()
-    return profile_service.get_by_user_id(db, id).additional_profile
+    return profile_service.get_by_user_id(db, str(id)).additional_profile

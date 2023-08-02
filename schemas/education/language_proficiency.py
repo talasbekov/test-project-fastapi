@@ -25,9 +25,4 @@ class LanguageProficiencyUpdate(LanguageProficiencyBase):
 
 
 class LanguageProficiencyRead(LanguageProficiencyBase):
-    id: Optional[uuid.UUID]
-    level: int
-    profile_id: Optional[uuid.UUID]
-    language_id: Optional[uuid.UUID]
-
     language: Optional[LanguageRead]

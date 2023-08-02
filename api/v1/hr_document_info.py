@@ -93,7 +93,7 @@ async def update(*,
     Authorize.jwt_required()
     return hr_document_info_service.update(
         db=db,
-        db_obj=hr_document_info_service.get_by_id(db, id),
+        db_obj=hr_document_info_service.get_by_id(db, str(id)),
         obj_in=body)
 
 
@@ -110,7 +110,7 @@ async def delete(*,
         - **id**: UUId - required
     """
     Authorize.jwt_required()
-    hr_document_info_service.remove(db, id)
+    hr_document_info_service.remove(db, str(id))
 
 
 @router.get("/{id}/", status_code=status.HTTP_200_OK,
@@ -126,14 +126,14 @@ async def get_by_id(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return hr_document_info_service.get_by_id(db, id)
+    return hr_document_info_service.get_by_id(db, str(id))
 
 
 @router.get('/history/{id}/', response_model=List[HrDocumentHistoryRead],
             summary="Get History by document id")
 async def get_history_by_document_id(*,
                                      db: Session = Depends(get_db),
-                                     id: uuid.UUID,
+                                     id: str,
                                      Authorize: AuthJWT = Depends()
                                      ):
     """
@@ -145,4 +145,4 @@ async def get_history_by_document_id(*,
         - **id**: UUID - required.
     """
     Authorize.jwt_required()
-    return hr_document_info_service.get_by_document_id(db, id)
+    return hr_document_info_service.get_by_document_id(db, str(id))

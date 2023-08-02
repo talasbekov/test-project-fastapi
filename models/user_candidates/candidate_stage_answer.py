@@ -11,8 +11,7 @@ class CandidateStageAnswer(Model):
     __tablename__ = "candidate_stage_answers"
 
     candidate_stage_question_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("candidate_stage_questions.id"),
         nullable=True)
     candidate_stage_question = relationship(
@@ -21,8 +20,7 @@ class CandidateStageAnswer(Model):
         foreign_keys=candidate_stage_question_id)
 
     candidate_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("candidates.id"),
         nullable=True)
     candidate = relationship(
@@ -78,8 +76,7 @@ class CandidateStageAnswerDocument(CandidateStageAnswer):
 class CandidateEssayAnswer(CandidateStageAnswer):
 
     candidate_essay_type_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("candidate_essay_types.id"),
         nullable=True)
     candidate_essay_type = relationship(
@@ -101,7 +98,7 @@ class CandidateSportAnswer(CandidateStageAnswer):
 
 
 class CandidateDropdownAnswer(CandidateStageAnswer):
-    category_id = Column(UUID(as_uuid=True), ForeignKey(
+    category_id = Column(String(), ForeignKey(
         "candidate_categories.id"), nullable=True)
     category = relationship("CandidateCategory", cascade="all, delete")
 

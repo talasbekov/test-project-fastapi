@@ -1,7 +1,6 @@
 from enum import Enum
 
-from sqlalchemy import Column, Enum as EnumType, ForeignKey, Integer
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, Enum as EnumType, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 from models import Model
@@ -40,7 +39,7 @@ class GeneralUserInformation(Model):
         EnumType(AgeGroup),
         nullable=True,
         default=AgeGroup.FIRST)
-    profile_id = Column(UUID(as_uuid=True), ForeignKey("medical_profiles.id"))
+    profile_id = Column(String(), ForeignKey("medical_profiles.id"))
     weight = Column(Integer)
 
     profile = relationship("MedicalProfile")

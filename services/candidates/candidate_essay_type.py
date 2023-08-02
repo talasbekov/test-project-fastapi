@@ -20,7 +20,7 @@ class CandidateEssayTypeService(
         candidate = db.query(Candidate).filter(
             Candidate.id == candidate_id
         ).first()
-
+        
         if body.id is not None and body.name is None:
             essay = self.get_by_id(db, body.id)
 

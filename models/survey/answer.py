@@ -10,9 +10,9 @@ class Answer(Model):
 
     __tablename__ = "answers"
 
-    question_id = Column(UUID(as_uuid=True), ForeignKey("questions.id"))
+    question_id = Column(String(), ForeignKey("questions.id"))
     discriminator = Column(String(255))
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
+    user_id = Column(String(), ForeignKey("users.id"), nullable=True)
     encrypted_used_id = Column(String(255), nullable=True)
     score = Column(Integer, nullable=True)
 

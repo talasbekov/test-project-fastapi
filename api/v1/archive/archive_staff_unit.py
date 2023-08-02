@@ -92,7 +92,7 @@ async def update(*,
     Authorize.jwt_required()
     return archive_staff_unit_service.update_staff_unit(
         db,
-        archive_staff_unit_service.get_by_id(db, id),
+        archive_staff_unit_service.get_by_id(db, str(id)),
         body)
 
 
@@ -131,7 +131,7 @@ async def get_by_id(*,
         - **id** - UUID - required
     """
     Authorize.jwt_required()
-    return archive_staff_unit_service.get_by_id(db, id)
+    return archive_staff_unit_service.get_by_id(db, str(id))
 
 
 @router.get("user/{user_id}/", dependencies=[Depends(HTTPBearer())],
@@ -148,7 +148,7 @@ async def get_by_user_id(*,
         - **id** - UUID - required
     """
     Authorize.jwt_required()
-    return archive_staff_unit_service.get_by_user(db, user_id)
+    return archive_staff_unit_service.get_by_user(db, str(user_id))
 
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
@@ -168,7 +168,7 @@ async def delete(*,
     increment_changes_size(
         db, archive_staff_unit_service.get_by_id(
             db, id).staff_division.staff_list)
-    archive_staff_unit_service.remove(db, id)
+    archive_staff_unit_service.remove(db, str(id))
 
 
 @router.get('/get-service-staff-functions/{id}', dependencies=[Depends(HTTPBearer())],
@@ -185,7 +185,7 @@ async def get_service_staff_functions(*,
         - **id** - UUID - required
     """
     Authorize.jwt_required()
-    return archive_staff_unit_service.get_service_staff_functions(db, id)
+    return archive_staff_unit_service.get_service_staff_functions(db, str(id))
 
 
 @router.post("/add-service-staff-function", dependencies=[Depends(HTTPBearer())],
@@ -232,7 +232,7 @@ async def get_document_staff_functions(*,
         - **id** - UUID - required
     """
     Authorize.jwt_required()
-    return archive_staff_unit_service.get_document_staff_functions(db, id)
+    return archive_staff_unit_service.get_document_staff_functions(db, str(id))
 
 
 @router.post("/add-document-staff-function", dependencies=[Depends(HTTPBearer())],

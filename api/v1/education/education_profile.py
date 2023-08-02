@@ -72,7 +72,7 @@ async def get_by_id(*,
         - **id**: UUID - required.
     """
     Authorize.jwt_required()
-    return educational_profile_service.get_by_id(db, id)
+    return educational_profile_service.get_by_id(db, str(id))
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -93,7 +93,7 @@ async def update(*,
     Authorize.jwt_required()
     return educational_profile_service.update(
         db,
-        db_obj=educational_profile_service.get_by_id(db, id),
+        db_obj=educational_profile_service.get_by_id(db, str(id)),
         obj_in=body)
 
 
@@ -111,7 +111,7 @@ async def delete(*,
         - **id**: UUId - required
     """
     Authorize.jwt_required()
-    educational_profile_service.remove(db, id)
+    educational_profile_service.remove(db, str(id))
 
 
 @router.get("/profile", dependencies=[Depends(HTTPBearer())],
@@ -134,4 +134,4 @@ async def get_profile_by_id(*,
                             Authorize: AuthJWT = Depends()
                             ):
     Authorize.jwt_required()
-    return profile_service.get_by_user_id(db, id).educational_profile
+    return profile_service.get_by_user_id(db, str(id)).educational_profile

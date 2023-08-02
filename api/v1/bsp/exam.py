@@ -79,7 +79,7 @@ async def get_by_id(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return exam_service.get_by_id(db, id)
+    return exam_service.get_by_id(db, str(id))
 
 @router.post("/", dependencies=[Depends(HTTPBearer())],
             response_model=ExamScheduleRead,
@@ -112,7 +112,7 @@ async def update(*,
     Authorize.jwt_required()
     return exam_service.update(
         db,
-        db_obj=exam_service.get_by_id(db, id),
+        db_obj=exam_service.get_by_id(db, str(id)),
         obj_in=body)
 
 @router.delete("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -128,4 +128,4 @@ async def delete(*,
 
     """
     Authorize.jwt_required()
-    return exam_service.remove(db, id)
+    return exam_service.remove(db, str(id))

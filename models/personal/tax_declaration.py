@@ -12,8 +12,7 @@ class TaxDeclaration(Model):
     year = Column(String)
     is_paid = Column(Boolean)
     profile_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("personal_profiles.id"),
         nullable=False)
 

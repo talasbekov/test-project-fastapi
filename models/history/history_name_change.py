@@ -11,7 +11,7 @@ class NameChange(Model):
     name_after = Column(String, nullable=True)
     name_type = Column(String, nullable=True)
 
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
+    user_id = Column(String(), ForeignKey("users.id"))
 
     name_change_histories = relationship(
         "NameChangeHistory", back_populates="name_change")

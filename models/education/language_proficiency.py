@@ -10,15 +10,14 @@ class LanguageProficiency(Model):
     __tablename__ = "language_proficiencies"
 
     language_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("languages.id"),
         nullable=True)
     language = relationship("Language", back_populates="language_proficiency")
 
-    level = Column(Integer)
+    level = Column('language_level', Integer)
 
-    profile_id = Column(UUID(as_uuid=True), ForeignKey(
+    profile_id = Column(String(), ForeignKey(
         "educational_profiles.id"), nullable=True)
     profile = relationship(
         "EducationalProfile",

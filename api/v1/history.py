@@ -72,7 +72,7 @@ async def get_by_id(*,
        - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return history_service.get_by_id(db, id)
+    return history_service.get_by_id(db, str(id))
 
 # get all by type
 
@@ -134,4 +134,4 @@ async def delete(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    history_service.remove(db, id)
+    history_service.remove(db, str(id))

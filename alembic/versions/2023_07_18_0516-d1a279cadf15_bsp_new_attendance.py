@@ -52,10 +52,10 @@ def downgrade() -> None:
     op.create_table('absent_users',
     sa.Column('reason', sa.VARCHAR(), autoincrement=False, nullable=False),
     sa.Column('absent_date', sa.DATE(), autoincrement=False, nullable=True),
-    sa.Column('user_id', sa.UUID(), autoincrement=False, nullable=True),
-    sa.Column('id', sa.UUID(), autoincrement=False, nullable=False),
-    sa.Column('created_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), autoincrement=False, nullable=False),
-    sa.Column('updated_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), autoincrement=False, nullable=False),
+    sa.Column('user_id', sa.String(), autoincrement=False, nullable=True),
+    sa.Column('id', sa.String(), autoincrement=False, nullable=False),
+    sa.Column('created_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), autoincrement=False, nullable=False),
+    sa.Column('updated_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), autoincrement=False, nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], name='absent_users_user_id_fkey'),
     sa.PrimaryKeyConstraint('id', name='absent_users_pkey')
     )

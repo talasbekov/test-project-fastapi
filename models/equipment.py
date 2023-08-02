@@ -27,7 +27,7 @@ class Equipment(Model):
                                 back_populates="equipments")
     inventory_count = Column(BigInteger, nullable=True)
     inventory_number = Column(String, nullable=True)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
+    user_id = Column(String(), ForeignKey("users.id"))
     user = relationship("User", back_populates="equipments")
 
     __mapper_args__ = {
@@ -41,8 +41,7 @@ class TypeArmyEquipmentModel(NamedModel):
     __tablename__ = "type_army_equipment_models"
 
     type_of_army_equipment_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("type_army_equipments.id"),
         nullable=True)
     army_equipments = relationship(
@@ -66,8 +65,7 @@ class TypeArmyEquipment(NamedModel):
 class ArmyEquipment(Equipment):
 
     type_of_army_equipment_model_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("type_army_equipment_models.id"),
         nullable=True)
     count_of_ammo = Column(BigInteger, nullable=True)
@@ -105,14 +103,14 @@ class TypeClothingEquipment(NamedModel):  # obj.
 class ClothingEquipmentTypesModels(Model):
     __tablename__ = 'clothing_equipment_types_models'
 
-    type_clothing_equipment_models_id = Column(UUID(as_uuid=True),
+    type_clothing_equipment_models_id = Column(String(),
                                     ForeignKey("type_clothing_equipment_models.id"),
                                     nullable=True)
     type_clothing_equipment_models = relationship("TypeClothingEquipmentModel",
                                     back_populates="clothing_equipment_types_models",
                                     uselist=False)
 
-    type_clothing_equipments_id = Column(UUID(as_uuid=True),
+    type_clothing_equipments_id = Column(String(),
                                     ForeignKey("type_clothing_equipments.id"),
                                     nullable=True)
     type_clothing_equipments = relationship("TypeClothingEquipment",
@@ -126,7 +124,7 @@ class ClothingEquipmentTypesModels(Model):
 
 class ClothingEquipment(Equipment):
 
-    clothing_equipment_types_models_id = Column(UUID(as_uuid=True), ForeignKey(
+    clothing_equipment_types_models_id = Column(String(), ForeignKey(
         "clothing_equipment_types_models.id"), nullable=True)
     clothing_equipment_types_models = relationship(
         "ClothingEquipmentTypesModels",
@@ -143,8 +141,7 @@ class TypeOtherEquipmentModel(NamedModel):
     __tablename__ = "type_other_equipment_models"
 
     type_of_other_equipment_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("type_other_equipments.id"),
         nullable=True)
     other_equipments = relationship(
@@ -167,8 +164,7 @@ class TypeOtherEquipment(NamedModel):
 class OtherEquipment(Equipment):
 
     type_of_other_equipment_model_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("type_other_equipment_models.id"),
         nullable=True)
     type_of_other_equipment_model = relationship(

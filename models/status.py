@@ -1,7 +1,6 @@
 from enum import Enum
 
-from sqlalchemy import Column, ForeignKey
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, ForeignKey, String
 from sqlalchemy.orm import relationship
 
 from models import NamedModel, Model
@@ -27,10 +26,10 @@ class Status(Model):
 
     __tablename__ = "statuses"
 
-    type_id = Column(UUID(as_uuid=True), ForeignKey("status_types.id"))
+    type_id = Column(String(), ForeignKey("status_types.id"))
     type = relationship("StatusType", back_populates="statuses")
 
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
+    user_id = Column(String(), ForeignKey("users.id"))
     user = relationship("User", back_populates="statuses")
 
     history = relationship(

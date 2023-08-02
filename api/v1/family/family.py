@@ -51,7 +51,7 @@ async def get(*,
               Authorize: AuthJWT = Depends()
               ):
     Authorize.jwt_required()
-    return family_service.get_by_id(db, id)
+    return family_service.get_by_id(db, str(id))
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -64,7 +64,7 @@ async def update(*,
                  ):
     Authorize.jwt_required()
     return family_service.update(
-        db, db_obj=family_service.get_by_id(db, id), obj_in=body)
+        db, db_obj=family_service.get_by_id(db, str(id)), obj_in=body)
 
 
 @router.delete("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -75,4 +75,4 @@ async def delete(*,
                  Authorize: AuthJWT = Depends()
                  ):
     Authorize.jwt_required()
-    return family_service.remove(db, id)
+    return family_service.remove(db, str(id))

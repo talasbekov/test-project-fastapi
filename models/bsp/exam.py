@@ -1,5 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Date, Integer, Time
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, ForeignKey, Date, Integer, Time, String
 from sqlalchemy.orm import relationship
 
 from models import Model
@@ -14,8 +13,8 @@ class ExamResult(Model):
     # Properties
     exam_date = Column(Date)
     grade = Column(Integer)
-    user_id = Column(UUID(as_uuid=True), ForeignKey('users.id'))
-    exam_id = Column(UUID(as_uuid=True), ForeignKey('exam_schedules.id'))
+    user_id = Column(String(), ForeignKey('users.id'))
+    exam_id = Column(String(), ForeignKey('exam_schedules.id'))
 
     # Relationships
     user = relationship("User", back_populates="exam_results")
@@ -31,8 +30,8 @@ class ExamSchedule(Model):
     end_date = Column(Date)
     start_time = Column(Time)
     end_time = Column(Time)
-    place_id = Column(UUID(as_uuid=True), ForeignKey("places.id"))
-    schedule_id = Column(UUID(as_uuid=True), ForeignKey("schedule_years.id"))
+    place_id = Column(String(), ForeignKey("places.id"))
+    schedule_id = Column(String(), ForeignKey("schedule_years.id"))
 
     # Relationships
     instructors = relationship("User", secondary=exam_schedule_instructors)

@@ -89,4 +89,4 @@ async def delete(*,
         Delete country
     """
     Authorize.jwt_required()
-    return country_service.remove(db, id)
+    return country_service.remove(db, str(id))

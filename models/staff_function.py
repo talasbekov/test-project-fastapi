@@ -68,11 +68,10 @@ class StaffFunction(NamedModel):
 
 class DocumentStaffFunction(StaffFunction):
 
-    role_id = Column(UUID(as_uuid=True),
+    role_id = Column(String(),
                      ForeignKey("document_function_types.id"))
     jurisdiction_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("jurisdictions.id"))
 
     priority = Column(Integer)
@@ -91,7 +90,7 @@ class DocumentStaffFunction(StaffFunction):
 
 class ServiceStaffFunction(StaffFunction):
 
-    type_id = Column(UUID(as_uuid=True),
+    type_id = Column(String(),
                      ForeignKey("service_function_types.id"))
 
     type = relationship(

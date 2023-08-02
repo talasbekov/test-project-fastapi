@@ -1,8 +1,11 @@
 import types
 import uuid
-from typing import List, Optional, Any
-from sqlalchemy.orm import Session, Query
+import json
+import datetime
+from typing import List, Optional, Any, Union, Dict
+from sqlalchemy.orm import Session, Query, joinedload
 from sqlalchemy import func, and_
+from fastapi.encoders import jsonable_encoder
 
 from exceptions import NotFoundException, InvalidOperationException, BadRequestException
 from models import (
@@ -17,6 +20,7 @@ from models import (
     HrDocumentInfo,
     HrDocumentTemplate,
     ScheduleYear,
+    Rank
 )
 from schemas import (
     UserCreate,
@@ -38,25 +42,32 @@ CALLABLES = types.FunctionType, types.MethodType
 
 
 class UserService(ServiceBase[User, UserCreate, UserUpdate]):
+    
+    def create(self, db: Session,
+               obj_in: Union[UserCreate, Dict[str, Any]]) -> User:
+        obj_in_data = jsonable_encoder(obj_in)
+        obj_in_data['date_birth'] = datetime.datetime.strptime(obj_in_data['date_birth'], '%Y-%m-%d')
+        db_obj = self.model(**obj_in_data)  # type: ignore
+        db.add(db_obj)
+        db.flush()
+        return db_obj
 
     def get_by_id(self, db: Session, id: str) -> User:
 
         user = super().get(db, id)
         if user is None:
             raise NotFoundException(detail="User is not found!")
-
         return user
 
     def get_all(self,
                 db: Session,
-                hr_document_template_id: uuid.UUID,
+                hr_document_template_id: str,
                 filter: str,
                 skip: int,
                 limit: int) -> List[User]:
         users = (
             db.query(self.model)
         )
-
         if filter != '':
             users = self._add_filter_to_query(users, filter)
 
@@ -68,16 +79,16 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
                                                    users,
                                                    hr_document_template_id)
                      .except_(excepted_users)
-                     .filter(self.model.is_active.is_(True)))
+                     .filter(self.model.is_active == True))
 
         users = (
             users
             .order_by(self.model.created_at.asc())
+            .distinct()
             .offset(skip)
             .limit(limit)
             .all()
         )
-
         return users
 
     def is_template_accessible_for_user(self,
@@ -107,7 +118,6 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             .limit(limit)
             .all()
         )
-
         return users, user_queue.count()
 
     def get_all_archived(self,
@@ -210,7 +220,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
                    and not key.startswith('_'))]
         return fields
 
-    def get_all_by_staff_unit(self, db: Session, staff_unit_id):
+    def get_all_by_staff_unit(self, db: Session, staff_unit_id: str):
 
         users = db.query(self.model).filter(
             self.model.staff_unit_id == staff_unit_id
@@ -394,7 +404,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         users = (
             db.query(self.model)
             .filter(
-                self.model.is_active.is_(is_active),
+                self.model.is_active == is_active,
                 self.model.id != user_id
             )
         )

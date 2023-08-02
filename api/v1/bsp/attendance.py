@@ -61,7 +61,7 @@ async def get_by_id(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return attendance_service.get_by_id(db, id)
+    return attendance_service.get_by_id(db, str(id))
 
 @router.get("/percentage", dependencies=[Depends(HTTPBearer())],
             response_model=List[AttendancePercentageRead],
@@ -77,7 +77,7 @@ async def get_attendance_percentage(*,
     """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
-    return attendance_service.get_percentage_by_user_id(db, user_id)
+    return attendance_service.get_percentage_by_user_id(db, str(user_id))
 
 @router.get("/absent/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=List[UserShortRead],
@@ -93,7 +93,7 @@ async def get_absent_users(*,
         - **id**: UUID - required. ScheduleYear id
     """
     Authorize.jwt_required()
-    return attendance_service.get_absent_users(db, id)
+    return attendance_service.get_absent_users(db, str(id))
 
 
 @router.post("/", dependencies=[Depends(HTTPBearer())],
@@ -156,7 +156,7 @@ async def update(*,
     Authorize.jwt_required()
     return attendance_service.update(
         db,
-        db_obj=attendance_service.get_by_id(db, id),
+        db_obj=attendance_service.get_by_id(db, str(id)),
         obj_in=body)
 
 @router.delete("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -172,4 +172,4 @@ async def delete(*,
 
     """
     Authorize.jwt_required()
-    return attendance_service.remove(db, id)
+    return attendance_service.remove(db, str(id))

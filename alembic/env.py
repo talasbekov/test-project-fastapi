@@ -8,12 +8,17 @@ from core import configs
 from core import Base
 from models import *
 
+import cx_Oracle
+cx_Oracle.init_oracle_client(lib_dir=r"../instantclient_21_10")
+
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
 
 config.set_main_option(
-    "sqlalchemy.url", f"postgresql://{configs.POSTGRES_USER}:{configs.POSTGRES_PASSWORD}@{configs.POSTGRES_HOSTNAME}:{configs.DATABASE_PORT}/{configs.POSTGRES_DB}"
+    #"sqlalchemy.url", f"postgresql://{configs.POSTGRES_USER}:{configs.POSTGRES_PASSWORD}@{configs.POSTGRES_HOSTNAME}:{configs.DATABASE_PORT}/{configs.POSTGRES_DB}"
+    "sqlalchemy.url", f"oracle://system:Oracle123@192.168.0.169:1521/MORAL" 
 )
 
 # Interpret the config file for Python logging.

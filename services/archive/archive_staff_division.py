@@ -1,4 +1,5 @@
 import uuid
+import json
 from typing import List
 
 from sqlalchemy.orm import Session
@@ -24,6 +25,13 @@ class ArchiveStaffDivisionService(
 
     def get_by_id(self, db: Session, id: str) -> ArchiveStaffDivision:
         group = super().get(db, id)
+        for child in group.children:
+            child.description = json.loads(child.description)
+            for staff_unit in child.staff_units:
+                staff_unit.requirements = json.loads(staff_unit.requirements)
+        group.description = json.loads(group.description)
+        for staff_unit in group.staff_units:
+            staff_unit.requirements = json.loads(staff_unit.requirements)
         if group is None:
             raise NotFoundException(
                 f"ArchiveStaffDivision with id: {id} is not found!")
@@ -43,7 +51,7 @@ class ArchiveStaffDivisionService(
     def get_departments(
             self,
             db: Session,
-            staff_list_id: uuid.UUID,
+            staff_list_id: str,
             skip: int = 0,
             limit: int = 100
     ) -> List[ArchiveStaffDivision]:
@@ -56,6 +64,14 @@ class ArchiveStaffDivisionService(
                                         StaffDivisionEnum.DISPOSITION.value,
                                         staff_list_id)
         archive_divisions.append(disposition_division)
+        for archive_division in archive_divisions:
+            for child in archive_division.children:
+                child.description = json.loads(child.description)
+                for staff_unit in child.staff_units:
+                    staff_unit.requirements = json.loads(staff_unit.requirements)
+            archive_division.description = json.loads(archive_division.description)
+            for staff_unit in archive_division.staff_units:
+                staff_unit.requirements = json.loads(staff_unit.requirements)
         return archive_divisions
 
     def get_parents(self, db: Session,

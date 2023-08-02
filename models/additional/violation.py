@@ -11,6 +11,7 @@ class Violation(Model):
 
     name = Column(String(255), nullable=False)
     date = Column(
+        'violation_date',
         TIMESTAMP(
             timezone=True),
         nullable=False,
@@ -20,7 +21,7 @@ class Violation(Model):
     consequence = Column(String(255), nullable=False)
     document_link = Column(String(255), nullable=False)
 
-    profile_id = Column(UUID(as_uuid=True),
+    profile_id = Column(String(),
                         ForeignKey("additional_profiles.id"))
 
     profile = relationship("AdditionalProfile", back_populates="violations")

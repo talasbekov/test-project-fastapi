@@ -76,7 +76,7 @@ async def update(*,
     Authorize.jwt_required()
     return military_unit_service.update(
         db=db,
-        db_obj=military_unit_service.get_by_id(db, id),
+        db_obj=military_unit_service.get_by_id(db, str(id)),
         obj_in=body)
 
 
@@ -94,7 +94,7 @@ async def get_by_id(*,
         - **id** - UUID - required
     """
     Authorize.jwt_required()
-    return military_unit_service.get_by_id(db, id)
+    return military_unit_service.get_by_id(db, str(id))
 
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
@@ -111,4 +111,4 @@ async def delete(*,
         - **id** - UUID - required
     """
     Authorize.jwt_required()
-    military_unit_service.remove(db, id)
+    military_unit_service.remove(db, str(id))

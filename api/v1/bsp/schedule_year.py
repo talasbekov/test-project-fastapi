@@ -62,8 +62,8 @@ async def get_all_by_plan(*,
         This parameter is optional and defaults to 100.
    """
     Authorize.jwt_required()
-    plan_service.get_by_id(db, id)
-    return schedule_year_service.get_all_by_plan_id(db, id)
+    plan_service.get_by_id(db, str(id))
+    return schedule_year_service.get_all_by_plan_id(db, str(id))
 
 @router.get("/staff_division/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=ScheduleYearReadPagination,
@@ -78,7 +78,7 @@ async def get_all_by_staff_division(*,
 
    """
     Authorize.jwt_required()
-    return schedule_year_service.get_all_by_division_id(db, id)
+    return schedule_year_service.get_all_by_division_id(db, str(id))
 
 @router.get("/year/", dependencies=[Depends(HTTPBearer())],
             response_model=ScheduleYearReadPagination,
@@ -118,7 +118,7 @@ async def get_by_id(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return schedule_year_service.get_by_id(db, id)
+    return schedule_year_service.get_by_id(db, str(id))
 
 @router.post("/", dependencies=[Depends(HTTPBearer())],
             response_model=ScheduleYearRead,
@@ -151,7 +151,7 @@ async def update(*,
     Authorize.jwt_required()
     return schedule_year_service.update(
         db,
-        db_obj=schedule_year_service.get_by_id(db, id),
+        db_obj=schedule_year_service.get_by_id(db, str(id)),
         obj_in=body)
 
 @router.delete("/{id}/", dependencies=[Depends(HTTPBearer())],

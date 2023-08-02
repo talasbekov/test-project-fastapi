@@ -57,7 +57,7 @@ async def get_by_id(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return document_staff_function_service.get_by_id(db, id)
+    return document_staff_function_service.get_by_id(db, str(id))
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -76,7 +76,7 @@ async def update(*,
     Authorize.jwt_required()
     return document_staff_function_service.update(
         db,
-        db_obj=document_staff_function_service.get_by_id(db, id),
+        db_obj=document_staff_function_service.get_by_id(db, str(id)),
         obj_in=body)
 
 
@@ -94,7 +94,7 @@ async def delete(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    document_staff_function_service.remove(db, id)
+    document_staff_function_service.remove(db, str(id))
 
 
 @router.post('/duplicate/{id}/', status_code=status.HTTP_201_CREATED,
@@ -105,7 +105,7 @@ def duplicate(*,
               Authorize: AuthJWT = Depends()
               ):
     Authorize.jwt_required()
-    return document_staff_function_service.duplicate(db, id)
+    return document_staff_function_service.duplicate(db, str(id))
 
 
 @router.post('', status_code=status.HTTP_201_CREATED,
@@ -138,7 +138,7 @@ async def get_staff_units_by_id(*,
                                 Authorize: AuthJWT = Depends()
                                 ):
     Authorize.jwt_required()
-    return document_staff_function_service.get_staff_units_by_id(db, id)
+    return document_staff_function_service.get_staff_units_by_id(db, str(id))
 
 
 @router.post('/append_to_staff_unit/', status_code=status.HTTP_201_CREATED)

@@ -146,7 +146,7 @@ async def duplicate(*,
         - **id**: required
     """
     Authorize.jwt_required()
-    return survey_service.duplicate(db, id)
+    return survey_service.duplicate(db, str(id))
 
 
 @router.post("/{id}/repeat", status_code=status.HTTP_201_CREATED,
@@ -164,7 +164,7 @@ async def repeat(*,
         - **id**: required
     """
     Authorize.jwt_required()
-    return survey_service.repeat(db, id)
+    return survey_service.repeat(db, str(id))
 
 
 @router.post("/draft", status_code=status.HTTP_201_CREATED,
@@ -200,7 +200,7 @@ async def get_by_id(*,
         - **id**: UUID - required.
     """
     Authorize.jwt_required()
-    return survey_service.get_by_id(db, id)
+    return survey_service.get_by_id(db, str(id))
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -221,7 +221,7 @@ async def update(*,
     """
     Authorize.jwt_required()
     return survey_service.update(db,
-                                 db_obj=survey_service.get_by_id(db, id),
+                                 db_obj=survey_service.get_by_id(db, str(id)),
                                  obj_in=body)
 
 
@@ -239,4 +239,4 @@ async def delete(*,
         - **id**: UUId - required
     """
     Authorize.jwt_required()
-    survey_service.remove(db, id)
+    survey_service.remove(db, str(id))

@@ -9,12 +9,12 @@ class ServiceHousing(Model):
 
     __tablename__ = "service_housings"
 
-    type_id = Column(UUID(as_uuid=True), ForeignKey("property_types.id"))
+    type_id = Column(String(), ForeignKey("property_types.id"))
     address = Column(String(255))
     issue_date = Column(TIMESTAMP(timezone=True))
     document_link = Column(String(255), nullable=False)
 
-    profile_id = Column(UUID(as_uuid=True),
+    profile_id = Column(String(),
                         ForeignKey("additional_profiles.id"))
     profile = relationship(
         "AdditionalProfile",

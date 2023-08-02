@@ -1,5 +1,4 @@
-from sqlalchemy import TEXT, Integer, Column, ForeignKey
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import TEXT, Integer, Column, ForeignKey, String
 from sqlalchemy.orm import relationship
 
 from models import TextModel
@@ -12,7 +11,7 @@ class Option(TextModel):
 
     text = Column(TEXT, nullable=True)
 
-    question_id = Column(UUID(as_uuid=True), ForeignKey("questions.id"))
+    question_id = Column(String(), ForeignKey("questions.id"))
     score = Column(Integer, nullable=True)
 
     question = relationship("Question", foreign_keys=[

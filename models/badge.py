@@ -17,8 +17,8 @@ class Badge(Model):
 
     __tablename__ = "badges"
 
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
-    type_id = Column(UUID(as_uuid=True), ForeignKey("badge_types.id"))
+    user_id = Column(String(), ForeignKey("users.id"))
+    type_id = Column(String(), ForeignKey("badge_types.id"))
     type = relationship("BadgeType", back_populates="badges")
     user = relationship("User", back_populates='badges')
 

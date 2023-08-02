@@ -35,7 +35,7 @@ async def get_all(*,
 
 
 @router.get("/department/{staff_division_id}", dependencies=[Depends(HTTPBearer())],
-            response_model=HrVacancyStaffDivisionRead,
+            #response_model=HrVacancyStaffDivisionRead,
             summary="Get all HrVacancies by department")
 async def get_all_by_department(*,
                                 db: Session = Depends(get_db),
@@ -49,7 +49,7 @@ async def get_all_by_department(*,
     """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
-    return hr_vacancy_service.get_by_staff_division(db, staff_division_id, user_id)
+    return hr_vacancy_service.get_by_staff_division(db, str(staff_division_id), str(user_id))
 
 
 @router.get("/not_active", dependencies=[Depends(HTTPBearer())],
@@ -79,7 +79,7 @@ async def get_not_active(*,
             response_model=List[HrVacancyCandidateRead],
             summary="Get all candidates of Vacancy")
 async def get_all_candidates(*,
-                             id: uuid.UUID,
+                             id: str,
                              db: Session = Depends(get_db),
                              Authorize: AuthJWT = Depends()
                              ):
@@ -90,7 +90,7 @@ async def get_all_candidates(*,
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
-    return hr_vacancy_service.get_candidates(db, id, role)
+    return hr_vacancy_service.get_candidates(db, str(id), str(role))
 
 
 @router.post("/{id}/respond", dependencies=[Depends(HTTPBearer())],
@@ -171,7 +171,7 @@ async def update(*,
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
-    hr_vacancy = hr_vacancy_service.get_by_id(db, id)
+    hr_vacancy = hr_vacancy_service.get_by_id(db, str(id))
     return hr_vacancy_service.update(db, hr_vacancy, body, role)
 
 
@@ -196,7 +196,7 @@ async def update_by_archieve_staff_unit(*,
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
-    hr_vacancy = hr_vacancy_service.get_by_id(db, id)
+    hr_vacancy = hr_vacancy_service.get_by_id(db, str(id))
     return hr_vacancy_service.update(db, hr_vacancy, body, role)
 
 
@@ -214,7 +214,7 @@ async def get_by_id(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return hr_vacancy_service.get_by_id(db, id)
+    return hr_vacancy_service.get_by_id(db, str(id))
 
 
 @router.get("/archieve-staff-unit/{archieve_staff_unit_id}/",

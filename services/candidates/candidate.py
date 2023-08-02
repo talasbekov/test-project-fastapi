@@ -26,7 +26,8 @@ class CandidateService(
         PositionNameEnum.PERSONNEL_HEAD.value,
         PositionNameEnum.DEPUTY_PERSONNEL_HEAD.value,
         PositionNameEnum.CANDIDATE_MANAGEMENT_HEAD.value,
-        PositionNameEnum.POLITICS_GOVERNMENT_SERVANT.value
+        PositionNameEnum.POLITICS_GOVERNMENT_SERVANT.value,
+        PositionNameEnum.HR.value
     }
 
     def get_all(self, db: Session):
@@ -210,15 +211,15 @@ class CandidateService(
             Creates a new candidate and associated CandidateStageInfo
             objects for each stage type.
         """
-        staff_unit_service.get_by_id(db, body.staff_unit_curator_id)
-        staff_unit_service.get_by_id(db, body.staff_unit_id)
+        staff_unit_service.get_by_id(db, str(body.staff_unit_curator_id))
+        staff_unit_service.get_by_id(db, str(body.staff_unit_id))
         candidate = super().create(db, body)
 
         stage_types = db.query(CandidateStageType).all()
         for stage_type in stage_types:
             candidate_stage_info = CandidateStageInfoCreate(
-                candidate_id=candidate.id,
-                candidate_stage_type_id=stage_type.id,
+                candidate_id=str(candidate.id),
+                candidate_stage_type_id=str(stage_type.id),
                 staff_unit_coordinate_id=None,
                 is_waits=False,
                 status=CandidateStageInfoStatusEnum.NOT_STARTED.value
@@ -331,7 +332,8 @@ class CandidateService(
             sets additional properties on the candidate object.
         """
         candidate_stage_info_count = db.query(CandidateStageType).count()
-
+        candidate['id'] = str(candidate['id'])
+        
         candidate_stage_info_success_count = db.query(
             CandidateStageInfo).filter(
             CandidateStageInfo.status == CandidateStageInfoStatusEnum.APPROVED.value,

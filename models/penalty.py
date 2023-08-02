@@ -1,6 +1,5 @@
 
-from sqlalchemy import Column, ForeignKey
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, ForeignKey, String
 from sqlalchemy.orm import relationship
 
 from models import NamedModel, Model
@@ -17,8 +16,8 @@ class Penalty(Model):
 
     __tablename__ = "penalties"
 
-    type_id = Column(UUID(as_uuid=True), ForeignKey("penalty_types.id"))
+    type_id = Column(String(), ForeignKey("penalty_types.id"))
     type = relationship("PenaltyType", back_populates="penalties")
 
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
+    user_id = Column(String(), ForeignKey("users.id"))
     user = relationship("User", back_populates="penalties")

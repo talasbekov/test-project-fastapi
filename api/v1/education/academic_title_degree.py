@@ -72,7 +72,7 @@ async def get_by_id(*,
         - **id**: UUID - required.
     """
     Authorize.jwt_required()
-    return academic_title_degree_service.get_by_id(db, id)
+    return academic_title_degree_service.get_by_id(db, str(id))
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -93,7 +93,7 @@ async def update(*,
     Authorize.jwt_required()
     return academic_title_degree_service.update(
         db,
-        db_obj=academic_title_degree_service.get_by_id(db, id),
+        db_obj=academic_title_degree_service.get_by_id(db, str(id)),
         obj_in=body)
 
 
@@ -111,4 +111,4 @@ async def delete(*,
         - **id**: UUId - required
     """
     Authorize.jwt_required()
-    academic_title_degree_service.remove(db, id)
+    academic_title_degree_service.remove(db, str(id))

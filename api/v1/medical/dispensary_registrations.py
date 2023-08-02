@@ -80,7 +80,7 @@ async def get_by_id(*,
         - **id**: UUID - required.
     """
     Authorize.jwt_required()
-    return dispensary_registration_service.get_by_id(db, id)
+    return dispensary_registration_service.get_by_id(db, str(id))
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -105,7 +105,7 @@ async def update(*,
     Authorize.jwt_required()
     return dispensary_registration_service.update(
         db,
-        db_obj=dispensary_registration_service.get_by_id(db, id),
+        db_obj=dispensary_registration_service.get_by_id(db, str(id)),
         obj_in=body)
 
 
@@ -122,4 +122,4 @@ async def delete(*,
         - **id**: UUId - required
     """
     Authorize.jwt_required()
-    dispensary_registration_service.remove(db, id)
+    dispensary_registration_service.remove(db, str(id))

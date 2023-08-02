@@ -38,8 +38,8 @@ class Model(Base, Cloneable):
 
     __abstract__ = True
 
-    id = Column(UUID(as_uuid=True), primary_key=True,
-                nullable=False, default=uuid.uuid4)
+    id = Column(String(), primary_key=True,
+                nullable=False, default=lambda: str(uuid.uuid4()))
 
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))
@@ -59,7 +59,7 @@ class NamedModel(Model):
     __abstract__ = True
 
     name = Column(String, nullable=False)
-    nameKZ = Column(String, nullable=True)
+    nameKZ = Column('namekz', String, nullable=True)
 
 
 """
@@ -106,4 +106,4 @@ class TextModel(Model):
     __abstract__ = True
 
     text = Column(TEXT, nullable=False)
-    textKZ = Column(TEXT, nullable=True)
+    textKZ = Column('textkz', TEXT, nullable=True)

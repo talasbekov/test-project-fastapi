@@ -1,4 +1,4 @@
-from sqlalchemy import Column, TEXT, ForeignKey, UUID
+from sqlalchemy import Column, TEXT, ForeignKey, String
 from sqlalchemy.orm import relationship
 
 from models import Model
@@ -10,12 +10,12 @@ class Notification(Model):
     message = Column(TEXT, nullable=False)
 
     sender_id = Column(
-        UUID,
+        String(),
         ForeignKey("users.id"),
         nullable=False,
         index=True)
     receiver_id = Column(
-        UUID,
+        String(),
         ForeignKey("users.id"),
         nullable=False,
         index=True)

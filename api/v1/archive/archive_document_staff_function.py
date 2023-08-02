@@ -57,7 +57,7 @@ async def get_by_id(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return document_archive_staff_function_service.get_by_id(db, id)
+    return document_archive_staff_function_service.get_by_id(db, str(id))
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -76,5 +76,5 @@ async def update(*,
     Authorize.jwt_required()
     return document_archive_staff_function_service.update(
         db,
-        db_obj=document_archive_staff_function_service.get_by_id(db, id),
+        db_obj=document_archive_staff_function_service.get_by_id(db, str(id)),
         obj_in=body)

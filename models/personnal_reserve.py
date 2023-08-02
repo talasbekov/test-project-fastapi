@@ -17,6 +17,6 @@ class PersonalReserve(Model):
     date_from = Column(TIMESTAMP(timezone=True), nullable=True)
     date_to = Column(TIMESTAMP(timezone=True), nullable=True)
 
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
+    user_id = Column(String(), ForeignKey("users.id"))
     document_link = Column(String, nullable=True)
     document_number = Column(String, nullable=True)

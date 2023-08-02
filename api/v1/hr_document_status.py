@@ -53,4 +53,4 @@ async def get_by_id(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return hr_document_status_service.get_by_id(db, id)
+    return hr_document_status_service.get_by_id(db, str(id))

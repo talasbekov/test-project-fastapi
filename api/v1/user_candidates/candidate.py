@@ -47,7 +47,7 @@ async def get_all(
     user_id = Authorize.get_jwt_subject()
     role = Authorize.get_raw_jwt()['role']
     return candidate_service.get_multiple(db, filter=filter.lstrip(
-    ).rstrip(), user_id=user_id, role_id=role, skip=skip, limit=limit)
+    ).rstrip(), user_id=str(user_id), role_id=str(role), skip=skip, limit=limit)
 
 
 @router.get("/drafts", dependencies=[Depends(HTTPBearer())],
@@ -89,7 +89,7 @@ async def get_by_id(
         - **id**: UUID - required and should exist in the database.
     """
     Authorize.jwt_required()
-    return candidate_service.get_by_id(db, id)
+    return candidate_service.get_by_id(db, str(id))
 
 
 @router.post("", dependencies=[Depends(HTTPBearer())],
@@ -186,4 +186,4 @@ async def delete(
         - **id**: required and should exist in the database.
     """
     Authorize.jwt_required()
-    candidate_service.remove(db, id)
+    candidate_service.remove(db, str(id))

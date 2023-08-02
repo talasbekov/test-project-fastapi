@@ -14,9 +14,9 @@ from schemas import Model, ReadModel
 
 
 class HrDocumentBase(Model):
-    hr_document_template_id: uuid.UUID
+    hr_document_template_id: str
     due_date: Optional[datetime] = None
-    parent_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    parent_id: Optional[str] = Field(None, nullable=True)
     properties: Optional[Dict[str, Any]]
     initial_comment: Optional[str] = None
 
@@ -37,7 +37,7 @@ class HrDocumentBase(Model):
 
 
 class DraftHrDocumentCreate(HrDocumentBase):
-    user_ids: Optional[List[uuid.UUID]]
+    user_ids: Optional[List[str]]
 
 
 class DraftHrDocumentInit(Model):

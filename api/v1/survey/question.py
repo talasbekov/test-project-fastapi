@@ -92,7 +92,7 @@ async def get_by_id(*,
         - **id**: UUID - required.
     """
     Authorize.jwt_required()
-    return question_service.get_by_id(db, id)
+    return question_service.get_by_id(db, str(id))
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -113,7 +113,7 @@ async def update(*,
     """
     Authorize.jwt_required()
     return question_service.update(db,
-                                   db_obj=question_service.get_by_id(db, id),
+                                   db_obj=question_service.get_by_id(db, str(id)),
                                    obj_in=body)
 
 
@@ -131,4 +131,4 @@ async def delete(*,
         - **id**: UUId - required
     """
     Authorize.jwt_required()
-    question_service.remove(db, id)
+    question_service.remove(db, str(id))

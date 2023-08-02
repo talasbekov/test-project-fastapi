@@ -27,7 +27,7 @@ class CandidateEssayTypeSetToCandidate(NamedModel):
         If candidate chooses from existing essay types then you can set id of essay
         If candidate creates a new essay you can set name of the new essay
     """
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     name: Optional[str]
     nameKZ: Optional[str]
 

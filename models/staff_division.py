@@ -1,7 +1,7 @@
 import enum
 
-from sqlalchemy import Column, ForeignKey, Boolean, Integer
-from sqlalchemy.dialects.postgresql import UUID, JSON
+from sqlalchemy import Column, ForeignKey, Boolean, Integer, String
+from sqlalchemy.dialects.oracle import CLOB
 from sqlalchemy.orm import relationship
 
 from models import NamedNestedModel, isActiveModel
@@ -25,14 +25,14 @@ class StaffDivision(NamedNestedModel, isActiveModel):
     __tablename__ = "staff_divisions"
 
     # Properties
-    parent_group_id = Column(UUID(as_uuid=True), ForeignKey(
+    parent_group_id = Column(String(), ForeignKey(
         "staff_divisions.id"), nullable=True)
-    description = Column(JSON(none_as_null=True))
+    description = Column(CLOB)
     is_combat_unit = Column(Boolean)
-    leader_id = Column(UUID(as_uuid=True), ForeignKey(
+    leader_id = Column(String(), ForeignKey(
         "staff_units.id"), nullable=True)
     staff_division_number = Column(Integer)
-    type_id = Column(UUID(as_uuid=True), ForeignKey("staff_division_types.id"))
+    type_id = Column(String(), ForeignKey("staff_division_types.id"))
     type = relationship("StaffDivisionType")
     # Relationships
     children = relationship("StaffDivision")

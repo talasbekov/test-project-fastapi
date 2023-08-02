@@ -78,7 +78,7 @@ async def get_by_id(*,
        - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return equipment_service.get_by_id(db, id)
+    return equipment_service.get_by_id(db, str(id))
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -118,7 +118,7 @@ async def delete(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    equipment_service.remove(db, id)
+    equipment_service.remove(db, str(id))
 
 
 @router.get("/type/clothing/", dependencies=[Depends(HTTPBearer())],

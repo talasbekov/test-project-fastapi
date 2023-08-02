@@ -1,19 +1,20 @@
 import datetime
 import uuid
+import json
 from typing import List, Optional
 
-from pydantic import EmailStr, Field
+from pydantic import EmailStr, Field, validator
 
 from schemas import (BadgeRead, PositionRead, PositionCreate,
                      RankRead, StaffUnitDivisionRead,
-                     StaffFunctionRead)
+                     StaffFunctionRead, ShortStaffUnitDivisionRead)
 from schemas import Model, ReadModel, NamedModel
 
 
 class StaffUnitRequirements(NamedModel):
     keys: Optional[List[Optional[dict]]] = Field(None, nullable=True)
-
-
+    
+    
 class StaffUnitBase(Model):
     position_id: uuid.UUID
     staff_division_id: Optional[uuid.UUID] = Field(None, nullable=True)
@@ -91,7 +92,7 @@ class StaffUnitRead(UserReplacingStaffUnitRead):
 
 class UserStaffUnitRead(StaffUnitBase, ReadModel):
     staff_division_id: Optional[uuid.UUID]
-    staff_division: Optional[StaffUnitDivisionRead]
+    staff_division: Optional[ShortStaffUnitDivisionRead]
     staff_functions: Optional[List[StaffFunctionRead]]
     position_id: Optional[uuid.UUID]
     position: Optional[PositionRead]
@@ -99,3 +100,15 @@ class UserStaffUnitRead(StaffUnitBase, ReadModel):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
+
+class ShortUserStaffUnitRead(ReadModel):
+    is_active: Optional[bool] = True
+    staff_division_id: Optional[uuid.UUID]
+    staff_division: Optional[ShortStaffUnitDivisionRead]
+    position_id: Optional[uuid.UUID]
+    position: Optional[PositionRead]
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
+    

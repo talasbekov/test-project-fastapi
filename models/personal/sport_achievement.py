@@ -1,6 +1,5 @@
 from sqlalchemy import (TIMESTAMP, Column, ForeignKey,
-                        TEXT)
-from sqlalchemy.dialects.postgresql import UUID
+                        TEXT, String)
 from sqlalchemy.orm import relationship
 
 from models import NamedModel
@@ -13,13 +12,11 @@ class SportAchievement(NamedModel):
     assignment_date = Column(TIMESTAMP(timezone=True))
     document_link = Column(TEXT, nullable=True)
     profile_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("personal_profiles.id"),
         nullable=False)
     sport_type_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("sport_types.id"),
         nullable=False)
 

@@ -1,4 +1,5 @@
 import logging
+import json
 
 from sqlalchemy.orm import Session
 
@@ -63,7 +64,7 @@ class PositionChangeHandler(BaseHandler):
         history.document_link = configs.GENERATE_IP + str(document.id)
 
         document.old_history_id = old_history.id
-
+        
         db.add(user)
         db.add(history)
         db.add(document)
@@ -131,6 +132,10 @@ class PositionChangeHandler(BaseHandler):
                         ):
         args, _, _ = self.get_args(action, properties)
         obj = staff_unit_service.get_by_id(db, args)
+        if isinstance(obj.requirements, str):
+            obj.requirements = json.loads(obj.requirements)
+        if isinstance(obj.staff_division.description, str):
+            obj.staff_division.description = json.loads(obj.staff_division.description)
         return StaffUnitRead.from_orm(obj)
 
 

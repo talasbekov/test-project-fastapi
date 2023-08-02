@@ -1,6 +1,9 @@
 import uuid
+import json
 from datetime import datetime
-from typing import List
+from typing import List, Dict, Union, Any
+
+from fastapi.encoders import jsonable_encoder
 
 from sqlalchemy.orm import Session
 
@@ -19,6 +22,15 @@ from .base import ServiceBase
 class HrDocumentInfoService(
         ServiceBase[HrDocumentInfo, HrDocumentInfoCreate, HrDocumentInfoUpdate]):
 
+    def create(self, db: Session,
+               obj_in: Union[HrDocumentInfoCreate, Dict[str, Any]]) -> HrDocumentInfo:
+        obj_in_data = jsonable_encoder(obj_in)
+        obj_in_data['signed_at'] = datetime.now()
+        db_obj = self.model(**obj_in_data)  # type: ignore
+        db.add(db_obj)
+        db.flush()
+        return db_obj
+    
     def get_by_id(self, db: Session, id: str):
 
         hr_document_info = db.query(HrDocumentInfo).filter(
@@ -52,7 +64,7 @@ class HrDocumentInfoService(
             order=order,
         )
 
-        return super().create(db, document_info)
+        return self.create(db, document_info)
 
     def get_by_document_id_and_step_id(
             self, db: Session, document_id: str, step_id: str) -> HrDocumentInfo:
@@ -131,7 +143,15 @@ class HrDocumentInfoService(
             .all()
 
         infos.extend(additional_infos)
-
+        for info in infos:
+            if isinstance(info.hr_document.properties, str):
+                info.hr_document.properties = json.loads(info.hr_document.properties)
+            if isinstance(info.hr_document.document_template.properties, str):
+                info.hr_document.document_template.properties = json.loads(info.hr_document.document_template.properties)
+            if isinstance(info.hr_document.document_template.description, str):
+                info.hr_document.document_template.description = json.loads(info.hr_document.document_template.description)
+            if isinstance(info.hr_document.document_template.actions, str):
+                info.hr_document.document_template.actions = json.loads(info.hr_document.document_template.actions)
         return infos
 
     def get_initialized_by_user_id(

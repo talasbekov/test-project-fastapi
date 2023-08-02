@@ -5,7 +5,7 @@ from typing import List, Optional
 from pydantic import BaseModel, EmailStr, Field, validator
 
 from schemas import (BadgeRead, RankRead, ReadModel,
-                     HrVacancyRead, Model, PositionRead)
+                     StaffUnitHrVacancyRead, Model, PositionRead)
 
 from .archive_staff_function import ArchiveStaffFunctionRead
 
@@ -28,6 +28,7 @@ class ArchiveStaffUnitBase(BaseModel):
 class ArchiveStaffUnitCreate(ArchiveStaffUnitBase):
     curator_of_id: Optional[uuid.UUID] = Field(None, nullable=True)
     origin_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    requirements: Optional[str]
 
 
 class ArchiveStaffUnitCreateWithStaffFunctions(ArchiveStaffUnitBase):
@@ -95,6 +96,7 @@ class UserRead(BaseModel):
         orm_mode = True
 
 
+
 class UserReplacingArchiveStaffUnitRead(ArchiveStaffUnitBase, ReadModel):
     id: Optional[uuid.UUID]
     staff_division_id: Optional[uuid.UUID]
@@ -103,7 +105,7 @@ class UserReplacingArchiveStaffUnitRead(ArchiveStaffUnitBase, ReadModel):
     position: Optional[PositionRead]
     user: Optional[UserRead] = Field(None, nullable=True)
     actual_user: Optional[UserRead] = Field(None, nullable=True)
-    hr_vacancy: Optional[List[Optional[HrVacancyRead]]]
+    hr_vacancy: Optional[List[Optional[StaffUnitHrVacancyRead]]]
 
     class Config:
         orm_mode = True

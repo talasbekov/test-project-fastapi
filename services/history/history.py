@@ -1,4 +1,5 @@
 import uuid
+import json
 from datetime import datetime, timedelta
 
 from sqlalchemy.orm import Session
@@ -105,6 +106,15 @@ def finish_last(db: Session, user_id: str, type: str):
 
 
 class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
+    
+    def get_by_id(self, db: Session, id: str) -> History:
+        history = self.get(db, id)
+        if type(history) == EmergencyServiceHistory:
+            history.staff_division.description = json.loads(history.staff_division.description)
+        if history is None:
+            raise NotFoundException(
+                detail=f"History with id {id} not found!")
+        return history
 
     def get_by_type(self, db: Session, type: str):
         histories = db.query(self.model).filter(self.model.type == type).all()
@@ -312,7 +322,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         else:
             coolness_read = CoolnessRead(
                 type_id=coolness.type_id,
-                date_to=coolness.history.date_to,
+                #date_to=coolness.history.date_to,
                 type=coolness.type,
                 id=coolness.id,
                 user_id=coolness.user_id,

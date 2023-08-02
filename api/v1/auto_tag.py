@@ -34,4 +34,4 @@ async def get_by_user_id(
     Returns:
         Any: Result from AutoTag
     """
-    return auto_tags.get(auto_tag).handle(db, user_id)
+    return auto_tags.get(auto_tag).handle(db, str(user_id))

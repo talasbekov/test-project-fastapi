@@ -8,7 +8,7 @@ from schemas import NamedModel, ReadNamedModel, UserShortRead
 
 
 class StaffListBase(NamedModel):
-    user_id: Optional[uuid.UUID]
+    user_id: Optional[str]
 
     class Config:
         orm_mode = True
@@ -28,7 +28,7 @@ class StaffListUserCreate(BaseModel):
 
 
 class StaffListRead(StaffListBase, ReadNamedModel):
-    user_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    user_id: Optional[str] = Field(None, nullable=True)
     document_signed_by: Optional[str] = Field(None, nullable=True)
     document_signed_at: Optional[date] = Field(None, nullable=True)
     changes_size: Optional[int] = Field(None, nullable=True)
@@ -38,7 +38,7 @@ class StaffListRead(StaffListBase, ReadNamedModel):
 
 
 class StaffListStatusRead(StaffListBase):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     status: Optional[str] = Field(None, nullable=True)
     updated_at: Optional[datetime]
     changes_size: Optional[int] = Field(None, nullable=True)
@@ -52,4 +52,4 @@ class StaffListStatusRead(StaffListBase):
         arbitrary_types_allowed = True
 
 class StaffListApplyRead(BaseModel):
-    task_id: uuid.UUID
+    task_id: str

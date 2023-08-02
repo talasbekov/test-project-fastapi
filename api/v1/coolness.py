@@ -87,7 +87,7 @@ async def update(*,
         **name** - required - str
     """
     Authorize.jwt_required()
-    coolness_emergency = coolness_service.get_by_id(db, id)
+    coolness_emergency = coolness_service.get_by_id(db, str(id))
     return coolness_service.update(db, db_obj=coolness_emergency, obj_in=body)
 
 
@@ -105,7 +105,7 @@ async def get_by_id(*,
         - **id** - UUID - required
     """
     Authorize.jwt_required()
-    return coolness_service.get_by_id(db, id)
+    return coolness_service.get_by_id(db, str(id))
 
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,

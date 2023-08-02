@@ -72,7 +72,7 @@ async def get_by_id(*,
         - **id**: UUID - required.
     """
     Authorize.jwt_required()
-    return badge_service.get_badge_by_id(db, id)
+    return badge_service.get_badge_by_id(db, str(id))
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -109,7 +109,7 @@ async def delete(*,
         - **id**: UUId - required
     """
     Authorize.jwt_required()
-    badge_service.delete_badge(db, id)
+    badge_service.delete_badge(db, str(id))
 
 
 @router.get('/black-beret', dependencies=[Depends(HTTPBearer())])

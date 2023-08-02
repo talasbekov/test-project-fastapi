@@ -267,7 +267,7 @@ class CandidateStageAnswerService(
         ).first()
 
         current_stage_info: CandidateStageInfo = db.query(CandidateStageInfo).filter(
-            CandidateStageInfo.candidate_id == candidate_id,
+            CandidateStageInfo.candidate_id == str(candidate_id),
             CandidateStageInfo.candidate_stage_type_id == candidate_stage_type.id
         ).first()
 

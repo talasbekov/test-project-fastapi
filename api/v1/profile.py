@@ -46,7 +46,7 @@ async def get_all(*,
 #         - **id**: UUID - required.
 #     """
 #     Authorize.jwt_required()
-#     generated_file_data = profile_service.generate_profile_doc(db, user_id)
+#     generated_file_data = profile_service.generate_profile_doc(db, str(user_id))
 
 # return FileResponse(path=generated_file_data["file_location"],
 # media_type='application/octet-stream',
@@ -88,7 +88,7 @@ async def get_by_id(*,
         - **id**: UUID - required.
     """
     Authorize.jwt_required()
-    return profile_service.get_by_id(db, id)
+    return profile_service.get_by_id(db, str(id))
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -107,7 +107,7 @@ async def update(*,
     Authorize.jwt_required()
     return profile_service.update(
         db,
-        db_obj=profile_service.get_by_id(db, id),
+        db_obj=profile_service.get_by_id(db, str(id)),
         obj_in=body)
 
 
@@ -125,4 +125,4 @@ async def delete(*,
         - **id**: UUId - required
     """
     Authorize.jwt_required()
-    profile_service.remove(db, id)
+    profile_service.remove(db, str(id))

@@ -1,5 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Boolean, Integer
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, ForeignKey, Boolean, Integer, String
 from sqlalchemy.orm import relationship
 
 from models import Model, NamedModel
@@ -23,8 +22,8 @@ class ScheduleYear(Model):
     }
 
     # Properties
-    plan_id = Column(UUID(as_uuid=True), ForeignKey('bsp_plans.id'))
-    activity_id = Column(UUID(as_uuid=True), ForeignKey('activities.id'))
+    plan_id = Column(String(), ForeignKey('bsp_plans.id'))
+    activity_id = Column(String(), ForeignKey('activities.id'))
     is_exam_required = Column(Boolean)
     retry_count = Column(Integer)
     is_active = Column(Boolean)

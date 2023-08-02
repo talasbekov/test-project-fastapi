@@ -36,7 +36,7 @@ class CandidateStageInfoService(
             filter: str,
             skip: int,
             limit: int,
-            staff_unit_id: uuid.UUID) -> CandidateStageInfoRead:
+            staff_unit_id: str) -> CandidateStageInfoRead:
         """
             Retrieves a list of CandidateStageInfo records for a specific staff_unit_id.
         """
@@ -48,10 +48,9 @@ class CandidateStageInfoService(
                         .query(candidate_stage_info_id)
                         .filter(staff_unit_candidate_id == staff_unit_id)
             )
-
             return db.query(CandidateStageInfo).filter(
                 CandidateStageInfo.id.in_(subquery),
-                CandidateStageInfo.is_waits == True
+                CandidateStageInfo.is_waits == 1
             ).order_by(self.model.id.asc()).offset(skip).limit(limit).all()
 
         key_words = filter.lower().split()

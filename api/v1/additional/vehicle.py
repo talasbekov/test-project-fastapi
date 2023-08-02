@@ -76,7 +76,7 @@ async def get_by_id(*,
         This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    return vehicle_service.get_by_id(db, id)
+    return vehicle_service.get_by_id(db, str(id))
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -97,7 +97,7 @@ async def update(*,
     Authorize.jwt_required()
     return vehicle_service.update(
         db,
-        db_obj=vehicle_service.get_by_id(db, id),
+        db_obj=vehicle_service.get_by_id(db, str(id)),
         obj_in=body
     )
 
@@ -117,5 +117,5 @@ async def delete(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    abroad_travel = vehicle_service.get_by_id(db, id)
+    abroad_travel = vehicle_service.get_by_id(db, str(id))
     return vehicle_service.delete(db, abroad_travel)

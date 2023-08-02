@@ -1,5 +1,4 @@
-from sqlalchemy import Column, ForeignKey, TIMESTAMP, Enum
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, ForeignKey, TIMESTAMP, Enum, String
 from sqlalchemy.orm import relationship
 
 from models import Model
@@ -19,5 +18,5 @@ class PrivilegeEmergency(Model):
     date_from = Column(TIMESTAMP(timezone=True), nullable=True)
     date_to = Column(TIMESTAMP(timezone=True), nullable=True)
 
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
+    user_id = Column(String(), ForeignKey("users.id"))
     user = relationship("User", back_populates="privelege_emergencies")

@@ -1,5 +1,5 @@
-from sqlalchemy import Column, ForeignKey, ARRAY
-from sqlalchemy.dialects.postgresql import UUID, JSON
+from sqlalchemy import Column, ForeignKey, ARRAY, String
+from sqlalchemy.dialects.oracle import CLOB
 from sqlalchemy.orm import relationship
 
 from models import Model
@@ -21,36 +21,31 @@ class ArchiveStaffUnit(Model):
 
     __tablename__ = "archive_staff_units"
 
-    requirements = Column(ARRAY(JSON(none_as_null=True)))
+    requirements = Column(ARRAY(CLOB))
 
     # Properties
     position_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("positions.id"),
         nullable=False)
     staff_division_id = Column(
-        UUID(as_uuid=True), ForeignKey("archive_staff_divisions.id"), nullable=False
+        String(), ForeignKey("archive_staff_divisions.id"), nullable=False
     )
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
+    user_id = Column(String(), ForeignKey("users.id"), nullable=True)
     curator_of_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("staff_divisions.id", ondelete='SET NULL'),
         nullable=True)
     actual_user_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("users.id"),
         nullable=True)
     origin_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("staff_units.id"),
         nullable=True)
     user_replacing_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("users.id"),
         nullable=True)
     user_replacing = relationship(

@@ -1,5 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, ForeignKey, Integer, String
 
 from models import Model
 
@@ -8,7 +7,7 @@ class UserStat(Model):
 
     __tablename__ = "user_stats"
 
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
+    user_id = Column(String(), ForeignKey("users.id"), nullable=True)
     physical_training = Column(Integer)
     fire_training = Column(Integer)
     attendance = Column(Integer)

@@ -38,4 +38,4 @@ async def get_by_id(*,
                     Authorize: AuthJWT = Depends()
                     ):
     Authorize.jwt_required()
-    return family_relation_service.get_by_id(db, id)
+    return family_relation_service.get_by_id(db, str(id))

@@ -9,21 +9,20 @@ class AcademicTitle(Model):
 
     __tablename__ = "academic_titles"
 
-    profile_id = Column(UUID(as_uuid=True), ForeignKey(
+    profile_id = Column(String(), ForeignKey(
         "educational_profiles.id"), nullable=True)
     profile = relationship(
         "EducationalProfile",
         back_populates="academic_title")
 
-    degree_id = Column(UUID(as_uuid=True), ForeignKey(
+    degree_id = Column(String(), ForeignKey(
         "academic_title_degrees.id"), nullable=True)
     degree = relationship(
         "AcademicTitleDegree",
         back_populates="academic_title")
 
     specialty_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("specialties.id"),
         nullable=True)
     specialty = relationship("Specialty", back_populates="academic_title")

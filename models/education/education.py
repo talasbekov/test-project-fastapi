@@ -1,5 +1,5 @@
-from sqlalchemy import Column, ForeignKey, Boolean
-from sqlalchemy.dialects.postgresql import UUID, DATE, TEXT
+from sqlalchemy import Column, ForeignKey, Boolean, String
+from sqlalchemy.dialects.postgresql import DATE, TEXT
 from sqlalchemy.orm import relationship
 
 from models import Model
@@ -9,14 +9,13 @@ class Education(Model):
 
     __tablename__ = "educations"
 
-    profile_id = Column(UUID(as_uuid=True), ForeignKey(
+    profile_id = Column(String(), ForeignKey(
         "educational_profiles.id"), nullable=True)
     profile = relationship("EducationalProfile", back_populates="education")
     is_military_school = Column(Boolean, nullable=True, default=False)
 
     specialty_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("specialties.id"),
         nullable=True)
     specialty = relationship("Specialty", back_populates="education")
@@ -29,13 +28,12 @@ class Education(Model):
     end_date = Column(DATE)
 
     institution_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("institutions.id"),
         nullable=True)
     institution = relationship("Institution", back_populates="education")
 
-    degree_id = Column(UUID(as_uuid=True),
+    degree_id = Column(String(),
                        ForeignKey("institution_degree_types.id"))
     degree = relationship(
         "InstitutionDegreeType",

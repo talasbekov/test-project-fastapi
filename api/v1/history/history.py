@@ -92,7 +92,7 @@ async def get_all_by_user_id(*,
         - **user_id**: UUID - required
     """
     Authorize.jwt_required()
-    return history_service.get_all_by_user_id(db, user_id)
+    return history_service.get_all_by_user_id(db, str(user_id))
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
@@ -128,7 +128,7 @@ async def get_by_id(*,
        - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return history_service.get_by_id(db, id)
+    return history_service.get_by_id(db, str(id))
 
 # get all by type
 
@@ -189,7 +189,7 @@ async def delete(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    history_service.remove(db, id)
+    history_service.remove(db, str(id))
 
 
 @router.get("/all/type/{type}/{user_id}", dependencies=[Depends(HTTPBearer())],

@@ -52,7 +52,7 @@ async def get_all(
 async def get_by_id(
         db: Session = Depends(get_db),
         Authorize: AuthJWT = Depends(),
-        id: uuid.UUID = None
+        id: str = None
 ):
     """
         Get a CandidateEssayType by id.
@@ -60,7 +60,7 @@ async def get_by_id(
         - **id**: required and should exist in the database.
     """
     Authorize.jwt_required()
-    return candidate_essay_type_service.get_by_id(db, id)
+    return candidate_essay_type_service.get_by_id(db, str(id))
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
@@ -87,7 +87,7 @@ async def create(
              response_model=CandidateEssayTypeRead)
 async def create_and_set_to_candidate(
         db: Session = Depends(get_db),
-        candidate_id: uuid.UUID = None,
+        candidate_id: str = None,
         body: CandidateEssayTypeSetToCandidate = None,
         Authorize: AuthJWT = Depends()
 ):
@@ -102,7 +102,7 @@ async def create_and_set_to_candidate(
     """
     Authorize.jwt_required()
     return candidate_essay_type_service.set_to_candidate(
-        db, body, candidate_id)
+        db, body, str(candidate_id))
 
 
 @router.put("/{id}", status_code=status.HTTP_201_CREATED,
@@ -142,4 +142,4 @@ async def delete(
         - **id**: required and should exist in the database.
     """
     Authorize.jwt_required()
-    candidate_essay_type_service.remove(db, id)
+    candidate_essay_type_service.remove(db, str(id))

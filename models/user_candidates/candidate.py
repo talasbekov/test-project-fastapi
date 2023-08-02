@@ -23,20 +23,17 @@ class Candidate(Model):
     is_physical_passed = Column(Boolean, nullable=True)
     attempt_number = Column(Integer, server_default='0', nullable=True)
     staff_unit_curator_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("staff_units.id"),
         nullable=True)
     staff_unit_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("staff_units.id"),
         nullable=True)
-    essay_id = Column(UUID(as_uuid=True), ForeignKey(
+    essay_id = Column(String(), ForeignKey(
         "candidate_essay_types.id"), nullable=True)
     recommended_by = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("users.id"),
         nullable=True)
 
@@ -52,7 +49,8 @@ class Candidate(Model):
     candidate_stage_infos = relationship(
         "CandidateStageInfo",
         back_populates="candidate",
-        cascade="all, delete")
+        cascade="all, delete",
+        lazy="joined")
     recommended_by_user = relationship("User", foreign_keys=recommended_by)
 
     @validates('debarment_reason')

@@ -15,8 +15,7 @@ class IdentificationCard(Model):
     issued_by = Column(String)
     document_link = Column(TEXT, nullable=True)
     profile_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey("personal_profiles.id"),
         nullable=False)
 

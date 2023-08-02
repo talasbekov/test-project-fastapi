@@ -1,5 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Boolean, Integer
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, ForeignKey, Boolean, Integer, String
 from sqlalchemy.orm import relationship
 
 from models import Model
@@ -11,16 +10,14 @@ class HrDocumentStep(Model):
 
     # Properties
     hr_document_template_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey(
             "hr_document_templates.id",
             ondelete='CASCADE',
             onupdate='CASCADE'),
         nullable=False)
     staff_function_id = Column(
-        UUID(
-            as_uuid=True),
+        String(),
         ForeignKey(
             "staff_functions.id",
             ondelete='CASCADE',

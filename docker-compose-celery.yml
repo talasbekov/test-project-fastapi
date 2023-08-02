@@ -36,7 +36,8 @@ services:
       - backend-dev
     
   celery-beat:
-    image: erp-sgo-backend-celery
+    build:
+      context: .
     command: celery -A tasks.celery_app beat --loglevel=info
     container_name: celery-beat
     depends_on:

@@ -146,15 +146,15 @@ async def get_by_id(*,
         - **id**: UUID - required.
     """
     Authorize.jwt_required()
-    return hr_document_template_service.get_by_id(db, id)
+    return hr_document_template_service.get_by_id(db, str(id))
 
 
 @router.get("/steps/{id}", dependencies=[Depends(HTTPBearer())],
             summary="Get HrDocumentTemplate by step id")
 async def get_steps_by_document_template_id(*,
                                             db: Session = Depends(get_db),
-                                            id: uuid.UUID,
-                                            user_id: uuid.UUID,
+                                            id: str,
+                                            user_id: str,
                                             Authorize: AuthJWT = Depends()
                                             ):
     """
@@ -164,7 +164,7 @@ async def get_steps_by_document_template_id(*,
     """
     Authorize.jwt_required()
     return hr_document_template_service.get_steps_by_document_template_id(
-        db, id, user_id)
+        db, str(id), str(user_id))
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -196,7 +196,7 @@ async def update(*,
     Authorize.jwt_required()
     return hr_document_template_service.update(
         db=db,
-        db_obj=hr_document_template_service.get_by_id(db, id),
+        db_obj=hr_document_template_service.get_by_id(db, str(id)),
         obj_in=body)
 
 
@@ -214,7 +214,7 @@ async def delete(*,
         - **id**: UUID - required.
     """
     Authorize.jwt_required()
-    hr_document_template_service.remove(db, id)
+    hr_document_template_service.remove(db, str(id))
 
 
 @router.get('/duplicate/{id}', status_code=status.HTTP_201_CREATED)
@@ -224,7 +224,7 @@ async def duplicate(*,
                     Authorize: AuthJWT = Depends()
                     ):
     Authorize.jwt_required()
-    hr_document_template_service.duplicate(db, id)
+    hr_document_template_service.duplicate(db, str(id))
 
 
 @router.post('/corrections/')

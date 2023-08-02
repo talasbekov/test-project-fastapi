@@ -71,7 +71,7 @@ async def get_by_id(*,
         Get SportType by id
     """
     Authorize.jwt_required()
-    return sport_type_service.get_by_id(db, id)
+    return sport_type_service.get_by_id(db, str(id))
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -90,7 +90,7 @@ async def update(*,
     """
     Authorize.jwt_required()
     return sport_type_service.update(
-        db, db_obj=sport_type_service.get_by_id(db, id), obj_in=body)
+        db, db_obj=sport_type_service.get_by_id(db, str(id)), obj_in=body)
 
 
 @router.delete("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -105,4 +105,4 @@ async def delete(*,
         Delete SportType by id
     """
     Authorize.jwt_required()
-    return sport_type_service.remove(db, id)
+    return sport_type_service.remove(db, str(id))

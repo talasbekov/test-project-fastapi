@@ -9,8 +9,7 @@ class UserLoggingActivityService:
         obj = UserLoggingActivity(user_id=user_id)
         
         db.add(obj)
-        db.flush()
-        
+
         return obj
 
     def get_activities_of_user(self, db: Session, user_id):

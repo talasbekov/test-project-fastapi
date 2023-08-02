@@ -112,7 +112,7 @@ async def update(*,
     Authorize.jwt_required()
     return staff_unit_service.update(
         db=db,
-        db_obj=staff_unit_service.get_by_id(db, id),
+        db_obj=staff_unit_service.get_by_id(db, str(id)),
         obj_in=body)
 
 
@@ -131,7 +131,7 @@ async def get_by_id(*,
         - **id** - UUID - required
     """
     Authorize.jwt_required()
-    return staff_unit_service.get_by_id(db, id)
+    return staff_unit_service.get_by_id(db, str(id))
 
 
 @router.delete("/{id}/",
@@ -149,7 +149,7 @@ async def delete(*,
         - **id** - UUID - required
     """
     Authorize.jwt_required()
-    staff_unit_service.remove(db, id)
+    staff_unit_service.remove(db, str(id))
 
 
 @router.get('/get-service-staff-functions/{id}',
@@ -167,7 +167,7 @@ async def get_service_staff_functions(*,
         - **id** - UUID - required
     """
     Authorize.jwt_required()
-    return staff_unit_service.get_service_staff_functions(db, id)
+    return staff_unit_service.get_service_staff_functions(db, str(id))
 
 
 @router.post("/add-service-staff-function", dependencies=[Depends(HTTPBearer())],
@@ -214,7 +214,7 @@ async def get_document_staff_functions(*,
         - **id** - UUID - required
     """
     Authorize.jwt_required()
-    return staff_unit_service.get_document_staff_functions(db, id)
+    return staff_unit_service.get_document_staff_functions(db, str(id))
 
 
 @router.post("/add-document-staff-function", dependencies=[Depends(HTTPBearer())],

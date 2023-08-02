@@ -80,7 +80,7 @@ async def update(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    abroad_travel = properties_service.get_by_id(db, id)
+    abroad_travel = properties_service.get_by_id(db, str(id))
     return properties_service.update(db, abroad_travel, body)
 
 
@@ -99,5 +99,5 @@ async def delete(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    properties = properties_service.get_by_id(db, id)
+    properties = properties_service.get_by_id(db, str(id))
     return properties_service.delete(db, properties)

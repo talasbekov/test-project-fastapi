@@ -47,9 +47,9 @@ async def get_all(*,
         This parameter is optional and defaults to 100.
    """
     Authorize.jwt_required()
-    staff_list_service.get_by_id(db, staff_list_id)
+    staff_list_service.get_by_id(db, str(staff_list_id))
     return archive_staff_division_service.get_departments(
-        db, staff_list_id, skip, limit)
+        db, str(staff_list_id), skip, limit)
 
 @router.get("/one-level/", dependencies=[Depends(HTTPBearer())],
             response_model=ArchiveStaffDivisionStepRead,
@@ -81,7 +81,7 @@ async def get_division_parents_by_id(*,
        - **id**: uuid - The id of staff division. This parameter is required.
    """
     Authorize.jwt_required()
-    return archive_staff_division_service.get_division_parents_by_id(db, id)
+    return archive_staff_division_service.get_division_parents_by_id(db, str(id))
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
@@ -118,7 +118,7 @@ async def duplicate(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return archive_staff_division_service.duplicate(db, id)
+    return archive_staff_division_service.duplicate(db, str(id))
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -135,7 +135,7 @@ async def get_by_id(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return archive_staff_division_service.get_by_id(db, id)
+    return archive_staff_division_service.get_by_id(db, str(id))
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -156,7 +156,7 @@ async def update(*,
         - **description**: a long description. This parameter is optional.
     """
     Authorize.jwt_required()
-    obj = archive_staff_division_service.get_by_id(db, id)
+    obj = archive_staff_division_service.get_by_id(db, str(id))
     return archive_staff_division_service.update_staff_division(db, obj, body)
 
 
@@ -197,4 +197,4 @@ async def delete(*,
     increment_changes_size(
         db, archive_staff_division_service.get_by_id(
             db, id).staff_list)
-    archive_staff_division_service.remove(db, id)
+    archive_staff_division_service.remove(db, str(id))

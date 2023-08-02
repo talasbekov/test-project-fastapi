@@ -2,9 +2,10 @@ import datetime
 import uuid
 from typing import List, Optional
 
-from pydantic import EmailStr, Field
+from pydantic import EmailStr, Field, root_validator, validator
 
-from schemas import BadgeRead, RankRead, UserStaffUnitRead, StatusRead
+from schemas import (BadgeRead, RankRead, UserStaffUnitRead,
+                     StatusRead, ShortUserStaffUnitRead)
 from schemas import Model, ReadModel, BaseModel
 
 
@@ -35,7 +36,6 @@ class UserBase(Model):
 class UserCreate(UserBase):
     password: Optional[str]
 
-
 class UserUpdate(UserBase):
     pass
 
@@ -43,13 +43,12 @@ class UserUpdate(UserBase):
 class UserGroupUpdate(Model):
     user_id: uuid.UUID
     group_id: uuid.UUID
-
-
+    
 class UserRead(UserBase, ReadModel):
     badges: Optional[List[BadgeRead]]
     is_military: Optional[bool]
-    staff_unit: Optional[UserStaffUnitRead]
-    actual_staff_unit: Optional[UserStaffUnitRead]
+    staff_unit: Optional[ShortUserStaffUnitRead]
+    actual_staff_unit: Optional[ShortUserStaffUnitRead]
     rank: Optional[RankRead]
     email: Optional[EmailStr]
     first_name: Optional[str]
@@ -61,16 +60,12 @@ class UserRead(UserBase, ReadModel):
     status_till: Optional[datetime.datetime]
     personal_id: Optional[str]
     badges: Optional[List[BadgeRead]]
-    staff_unit: Optional[UserStaffUnitRead]
-    actual_staff_unit: Optional[UserStaffUnitRead]
     date_birth: Optional[datetime.date]
     iin: Optional[str]
     statuses: Optional[List[StatusRead]]
-    status_till: Optional[datetime.datetime]
 
     class Config:
         orm_mode = True
-
 
 class UserShortRead(Model):
     id: Optional[uuid.UUID]

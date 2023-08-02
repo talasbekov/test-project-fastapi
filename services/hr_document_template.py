@@ -1,4 +1,5 @@
 import uuid
+import json
 
 from sqlalchemy.orm import Session
 from fastapi.encoders import jsonable_encoder
@@ -73,11 +74,15 @@ class HrDocumentTemplateService(
         return hr_document_template
 
     def get_by_id(self, db: Session, id: str) -> HrDocumentTemplate:
-        hr_document_template = super().get(db, id)
+        hr_document_template = super().get(db, str(id))
         if hr_document_template is None:
             raise NotFoundException(
                 detail=f"HrDocumentTemplate with id: {id} is not found!"
             )
+        
+        hr_document_template.properties = json.loads(hr_document_template.properties)
+        hr_document_template.description = json.loads(hr_document_template.description)
+        hr_document_template.actions = json.loads(hr_document_template.actions)
         return hr_document_template
 
     def get_steps_by_document_template_id(
@@ -136,7 +141,7 @@ class HrDocumentTemplateService(
 
     def get_all_by_name(self, db: Session, name: str, skip: int, limit: int):
         if name:
-            return (
+            hr_document_templates = (
                 db.query(HrDocumentTemplate)
                 .filter(
                     HrDocumentTemplate.is_active == True,
@@ -152,13 +157,20 @@ class HrDocumentTemplateService(
                 .limit(limit)
                 .all()
             )
+            
+            for template in hr_document_templates:
+                template.properties = json.loads(template.properties)
+                template.description = json.loads(template.description)
+                template.actions = json.loads(template.actions)
+            
+            return hr_document_templates
         return self.get_all_active(db, skip, limit)
     
 
     def get_all_active(
         self, db: Session, skip: int = 0, limit: int = 100
     ) -> List[HrDocumentTemplateRead]:
-        return (
+        hr_document_templates = (
             db.query(HrDocumentTemplate)
             .filter(HrDocumentTemplate.is_active == True)
             .filter(HrDocumentTemplate.is_visible == True)
@@ -167,12 +179,17 @@ class HrDocumentTemplateService(
             .limit(limit)
             .all()
         )
+        for template in hr_document_templates:
+            template.properties = json.loads(template.properties)
+            template.description = json.loads(template.description)
+            template.actions = json.loads(template.actions)
+        return hr_document_templates
         
     def get_all_drafts(
         self, db: Session, name: str, skip: int = 0, limit: int = 100
     ) -> List[HrDocumentTemplateRead]:
         if name:
-            return (
+            hr_document_templates = (
                 db.query(HrDocumentTemplate)
                 .filter(
                     HrDocumentTemplate.is_active == True,
@@ -188,8 +205,13 @@ class HrDocumentTemplateService(
                 .limit(limit)
                 .all()
             )
+            for template in hr_document_templates:
+                template.properties = json.loads(template.properties)
+                template.description = json.loads(template.description)
+                template.actions = json.loads(template.actions)
+            return hr_document_templates
         else:
-            return (
+            hr_document_templates = (
                 db.query(HrDocumentTemplate)
                 .filter(HrDocumentTemplate.is_draft == True)
                 .filter(HrDocumentTemplate.is_visible == True)
@@ -197,6 +219,11 @@ class HrDocumentTemplateService(
                 .limit(limit)
                 .all()
             )
+            for template in hr_document_templates:
+                template.properties = json.loads(template.properties)
+                template.description = json.loads(template.description)
+                template.actions = json.loads(template.actions)
+            return hr_document_templates
 
     def get_all_archived(self, db: Session, skip: int, limit: int):
         return (
@@ -209,7 +236,7 @@ class HrDocumentTemplateService(
         )
 
     def duplicate(self, db: Session, id: str):
-        template = self.get_by_id(db, id)
+        template = self.get_by_id(db, str(id))
         new_template = self.create(
             db,
             HrDocumentTemplateCreate(
@@ -326,8 +353,14 @@ class HrDocumentTemplateService(
         return self._get_all(db, ids).all()
 
     def get_all_skip(self, db: Session,
-                     ids: List[uuid.UUID], skip: int, limit: int):
-        return self._get_all(db, ids).offset(skip).limit(limit).all()
+                     ids: List[uuid.UUID], skip: int, limit: int):\
+                         
+        hr_document_templates = self._get_all(db, ids).offset(skip).limit(limit).all()
+        for hr_document_template in hr_document_templates:
+            hr_document_template.description = json.loads(hr_document_template.description)
+            hr_document_template.actions = json.loads(hr_document_template.actions)
+            hr_document_template.properties = json.loads(hr_document_template.properties)
+        return hr_document_templates
 
     def _get_all(self, db: Session, ids: List[uuid.UUID]):
         return (
