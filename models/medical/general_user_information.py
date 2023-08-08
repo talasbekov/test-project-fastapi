@@ -28,7 +28,7 @@ class AgeGroup(int, Enum):
 
 class GeneralUserInformation(Model):
 
-    __tablename__ = "general_user_informations"
+    __tablename__ = "hr_erp_general_user_info"
 
     height = Column(Integer)
     blood_group = Column(
@@ -39,7 +39,7 @@ class GeneralUserInformation(Model):
         EnumType(AgeGroup),
         nullable=True,
         default=AgeGroup.FIRST)
-    profile_id = Column(String(), ForeignKey("medical_profiles.id"))
+    profile_id = Column(String(), ForeignKey("hr_erp_medical_profiles.id"))
     weight = Column(Integer)
 
     profile = relationship("MedicalProfile")

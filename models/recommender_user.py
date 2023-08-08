@@ -5,13 +5,13 @@ from models import Model
 
 class RecommenderUser(Model):
 
-    __tablename__ = "recommender_users"
+    __tablename__ = "hr_erp_recommender_users"
 
     document_link = Column(TEXT, nullable=True)
     user_by_id = Column(
         String(),
-        ForeignKey("users.id"),
+        ForeignKey("hr_erp_users.id"),
         nullable=True)
     user_by = relationship("User", foreign_keys=user_by_id)
-    user_id = Column(String(), ForeignKey("users.id"), nullable=True)
+    user_id = Column(String(), ForeignKey("hr_erp_users.id"), nullable=True)
     user = relationship("User", foreign_keys=user_id)

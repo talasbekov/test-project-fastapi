@@ -5,10 +5,10 @@ from models import Model
 
 
 class HrVacancyCandidate(Model):
-    __tablename__ = "hr_vacancy_candidates"
+    __tablename__ = "hr_erp_hr_vacancy_candidates"
 
-    user_id = Column(String(), ForeignKey("users.id"))
-    hr_vacancy_id = Column(String(), ForeignKey("hr_vacancies.id"))
+    user_id = Column(String(), ForeignKey("hr_erp_users.id"))
+    hr_vacancy_id = Column(String(), ForeignKey("hr_erp_hr_vacancies.id"))
 
     user = relationship(
         "User",

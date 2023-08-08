@@ -4,77 +4,77 @@ from core import Base
 
 
 hr_document_equipments = Table(
-    "hr_document_equipments",
+    "hr_erp_hr_document_equipments",
     Base.metadata,
-    Column("document_id", ForeignKey("hr_documents.id")),
-    Column("subject_id", ForeignKey("equipments.id")),
+    Column("document_id", ForeignKey("hr_erp_hr_documents.id")),
+    Column("subject_id", ForeignKey("hr_erp_equipments.id")),
 )
 
 hr_documents_users = Table(
-    "hr_document_users",
+    "hr_erp_hr_document_users",
     Base.metadata,
-    Column("document_id", ForeignKey("hr_documents.id")),
-    Column("subject_id", ForeignKey("users.id"))
+    Column("document_id", ForeignKey("hr_erp_hr_documents.id")),
+    Column("subject_id", ForeignKey("hr_erp_users.id"))
 )
 
 staff_unit_function = Table(
-    "staff_unit_functions",
+    "hr_erp_staff_unit_functions",
     Base.metadata,
     Column(
         "staff_unit_id",
         ForeignKey(
-            "staff_units.id",
+            "hr_erp_staff_units.id",
             ondelete="CASCADE",
             onupdate="CASCADE"),
         primary_key=True),
     Column(
         "staff_function_id",
         ForeignKey(
-            "staff_functions.id",
+            "hr_erp_staff_functions.id",
             ondelete="CASCADE",
             onupdate="CASCADE"),
         primary_key=True)
 )
 
-user_liberations_liberations = Table(
-    "user_liberations_liberations",
+u_liber_liberations = Table(
+    "hr_erp_u_liber_liberations",
     Base.metadata,
-    Column("user_liberation_id", ForeignKey("user_liberations.id")),
-    Column("liberation_id", ForeignKey("liberations.id"))
+    Column("user_liberation_id", ForeignKey("hr_erp_user_liberations.id")),
+    Column("liberation_id", ForeignKey("hr_erp_liberations.id"))
 )
 
-staff_unit_candidate_stage_infos = Table(
-    "staff_unit_candidate_stage_infos",
+s_u_cand_stage_infos = Table(
+    "hr_erp_s_u_cand_stage_infos",
     Base.metadata,
-    Column("staff_unit_id", ForeignKey("staff_units.id")),
-    Column("candidate_stage_info_id", ForeignKey("candidate_stage_infos.id"))
+    Column("staff_unit_id", ForeignKey("hr_erp_staff_units.id")),
+    Column("candidate_stage_info_id", ForeignKey("hr_erp_candidate_stage_infos.id"))
 )
 
-hr_vacancy_hr_vacancy_requirements = Table(
-    "hr_vacancy_hr_vacancy_requirements",
+hr_v_hr_vacancy_req = Table(
+    "hr_erp_hr_v_hr_vacancy_req",
     Base.metadata,
-    Column("hr_vacancy_id", ForeignKey("hr_vacancies.id")),
+    Column("hr_vacancy_id", ForeignKey("hr_erp_hr_vacancies.id")),
     Column("hr_vacancy_requirement_id",
-           ForeignKey("hr_vacancies_requirements.id"))
+           ForeignKey("hr_erp_hr_vac_req.id"))
 )
 
 family_violation = Table(
-    "family_violations",
+    "hr_erp_family_violations",
     Base.metadata,
-    Column("family_id", ForeignKey("families.id")),
-    Column("violation_id", ForeignKey("violations.id"))
+    Column("family_id", ForeignKey("hr_erp_families.id")),
+    Column("violation_id", ForeignKey("hr_erp_violations.id"))
 )
 
 family_abroad_travel = Table(
-    "family_abroad_travels",
+    "hr_erp_family_abroad_travels",
     Base.metadata,
-    Column("family_id", ForeignKey("families.id")),
-    Column("abroad_travel_id", ForeignKey("abroad_travels.id"))
+    Column("family_id", ForeignKey("hr_erp_families.id")),
+    Column("abroad_travel_id", ForeignKey("hr_erp_abroad_travels.id"))
 )
 
 answers_options = Table(
-    "answers_options",
+    "hr_erp_answers_options",
     Base.metadata,
-    Column("option_id", ForeignKey("options.id")),
-    Column("answer_id", ForeignKey("answers.id"))
+    Column("option_id", ForeignKey("hr_erp_options.id")),
+    Column("answer_id", ForeignKey("hr_erp_answers.id"))
 )

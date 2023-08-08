@@ -370,7 +370,7 @@ async def generate(*,
             summary="Generate HrDocument")
 async def generate_html(*,
                         db: Session = Depends(get_db),
-                        id: uuid.UUID,
+                        id: str,
                         Authorize: AuthJWT = Depends()
                         ):
     """
@@ -387,7 +387,7 @@ async def generate_html(*,
         - **id**: UUID - required.
     """
     Authorize.jwt_required()
-    return await hr_document_service.generate_html(db, id, LanguageEnum.kz)
+    return await hr_document_service.generate_html(db, str(id), LanguageEnum.kz)
 
 
 @router.get('/options', status_code=status.HTTP_200_OK,

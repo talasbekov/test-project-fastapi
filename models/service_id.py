@@ -12,7 +12,7 @@ class ServiceIDStatus(BaseEnum):
 
 class ServiceID(Model):
 
-    __tablename__ = "service_ids"
+    __tablename__ = "hr_erp_service_ids"
 
     number = Column('service_number', String, nullable=True)
     date_to = Column(TIMESTAMP(timezone=True), nullable=True)
@@ -20,4 +20,4 @@ class ServiceID(Model):
     token_status = Column(Enum(ServiceIDStatus), nullable=True)
     id_status = Column(Enum(ServiceIDStatus), nullable=True)
 
-    user_id = Column(String(), ForeignKey("users.id"))
+    user_id = Column(String(), ForeignKey("hr_erp_users.id"))

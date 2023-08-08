@@ -412,7 +412,7 @@ left join HR_EMP_PHONES pphone on pphone.EMPLOYEE_ID = emp.ID and pphone.PHONE_T
     blood_group_enum = blood.get(blood_group, None)
 
     op.bulk_insert(
-        Base.metadata.tables["general_user_informations"],
+        Base.metadata.tables["general_user_info"],
         [
             {
                 "id": general_user_information_id,

@@ -13,10 +13,10 @@ class FormEnum(EnumBase):
 
 class PrivilegeEmergency(Model):
 
-    __tablename__ = "privelege_emergencies"
+    __tablename__ = "hr_erp_privelege_emergencies"
     form = Column(Enum(FormEnum), nullable=True)
     date_from = Column(TIMESTAMP(timezone=True), nullable=True)
     date_to = Column(TIMESTAMP(timezone=True), nullable=True)
 
-    user_id = Column(String(), ForeignKey("users.id"))
+    user_id = Column(String(), ForeignKey("hr_erp_users.id"))
     user = relationship("User", back_populates="privelege_emergencies")

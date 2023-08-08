@@ -5,7 +5,7 @@ from models import NamedModel
 
 class Specialty(NamedModel):
 
-    __tablename__ = "specialties"
+    __tablename__ = "hr_erp_specialties"
 
     academic_title = relationship("AcademicTitle", back_populates="specialty")
     academic_degree = relationship(

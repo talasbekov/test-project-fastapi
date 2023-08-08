@@ -26,7 +26,7 @@ class SubjectType(enum.IntEnum):
 
 
 class HrDocumentTemplate(NamedModel, isActiveModel):
-    __tablename__ = "hr_document_templates"
+    __tablename__ = "hr_erp_hr_document_templates"
 
     # Properties
     path = Column(String(255))
@@ -35,7 +35,7 @@ class HrDocumentTemplate(NamedModel, isActiveModel):
     properties = Column(CLOB)
     description = Column(CLOB)
     actions = Column(CLOB)
-    maintainer_id = Column(String(), ForeignKey("staff_units.id"))
+    maintainer_id = Column(String(), ForeignKey("hr_erp_staff_units.id"))
     is_visible = Column(Boolean(), default=True)
     is_due_date_required = Column(Boolean(), default=False)
     is_initial_comment_required = Column(Boolean(), default=False)

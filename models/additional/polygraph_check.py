@@ -7,7 +7,7 @@ from models import Model
 
 class PolygraphCheck(Model):
 
-    __tablename__ = "polygraph_checks"
+    __tablename__ = "hr_erp_polygraph_checks"
 
     number = Column('polygraph_number', String(255), nullable=False)
     issued_by = Column(String(255), nullable=False)
@@ -15,7 +15,7 @@ class PolygraphCheck(Model):
     document_link = Column(String(255), nullable=False)
 
     profile_id = Column(String(),
-                        ForeignKey("additional_profiles.id"))
+                        ForeignKey("hr_erp_additional_profiles.id"))
 
     profile = relationship(
         "AdditionalProfile",

@@ -3,4 +3,4 @@ from models import NamedModel
 
 class FamilyStatus(NamedModel):
 
-    __tablename__ = "family_statuses"
+    __tablename__ = "hr_erp_family_statuses"

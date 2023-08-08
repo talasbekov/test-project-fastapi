@@ -19,18 +19,18 @@ class CandidateStageQuestionTypeEnum(str, enum.Enum):
 
 class CandidateStageQuestion(Model):
 
-    __tablename__ = "candidate_stage_questions"
+    __tablename__ = "hr_erp_cand_stage_questions"
     question = Column(String, nullable=True)
     question_type = Column(Enum(CandidateStageQuestionTypeEnum), nullable=True)
     description = Column(TEXT, nullable=True)
 
     candidate_stage_type_id = Column(
         String(),
-        ForeignKey("candidate_stage_types.id"),
+        ForeignKey("hr_erp_candidate_stage_types.id"),
         nullable=True)
     candidate_stage_type = relationship(
         "CandidateStageType",
-        back_populates="candidate_stage_questions",
+        back_populates="cand_stage_questions",
         foreign_keys=candidate_stage_type_id)
 
     candidate_stage_answers = relationship(

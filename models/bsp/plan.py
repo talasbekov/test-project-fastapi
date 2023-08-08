@@ -12,10 +12,10 @@ class PlanStatus(IntEnum):
 
 
 class BspPlan(Model):
-    __tablename__ = 'bsp_plans'
+    __tablename__ = 'hr_erp_bsp_plans'
 
     year = Column(Integer)
-    creator_id = Column(String(), ForeignKey('users.id'))
+    creator_id = Column(String(), ForeignKey('hr_erp_users.id'))
     status = Column(Enum(PlanStatus))
     signed_at = Column(TIMESTAMP(timezone=True), nullable=True)
 

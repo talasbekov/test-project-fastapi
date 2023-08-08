@@ -8,7 +8,7 @@ from models import Model
 
 class Family(Model):
 
-    __tablename__ = "families"
+    __tablename__ = "hr_erp_families"
 
     first_name = Column(String)
     last_name = Column(String)
@@ -20,8 +20,8 @@ class Family(Model):
     address = Column(String)
     workplace = Column(String)
 
-    relation_id = Column(String(), ForeignKey("family_relations.id"))
-    profile_id = Column(String(), ForeignKey("family_profiles.id"))
+    relation_id = Column(String(), ForeignKey("hr_erp_family_relations.id"))
+    profile_id = Column(String(), ForeignKey("hr_erp_family_profiles.id"))
 
     profile = relationship("FamilyProfile", back_populates="family")
     relation = relationship("FamilyRelation")

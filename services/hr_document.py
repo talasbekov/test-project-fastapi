@@ -1111,7 +1111,7 @@ class HrDocumentService(
                     }
                     )
         response.new_value = new_val
-
+        print(response.document_template.description)
         return response
 
     def _to_response_super_doc(self, db: Session, document: HrDocument):

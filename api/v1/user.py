@@ -229,7 +229,7 @@ async def get_all_by_schedule_id(*,
 async def update_user_patch(
     *,
     db: Session = Depends(get_db),
-    id: uuid.UUID,
+    id: str,
     body: UserUpdate,
     Authorize: AuthJWT = Depends()
 ):
@@ -253,7 +253,7 @@ async def update_user_patch(
         of the employee will end. This parameter is optional.
     """
     Authorize.jwt_required()
-    return user_service.update_user_patch(db, id, body)
+    return user_service.update_user_patch(db, str(id), body)
 
 
 @router.get("/{id}/",

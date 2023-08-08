@@ -14,7 +14,7 @@ from models import (
     PositionNameEnum,
     CandidateStageType
 )
-from models.association import staff_unit_candidate_stage_infos
+from models.association import s_u_cand_stage_infos
 from schemas import (
     CandidateStageInfoRead,
     CandidateStageInfoCreate,
@@ -41,8 +41,8 @@ class CandidateStageInfoService(
             Retrieves a list of CandidateStageInfo records for a specific staff_unit_id.
         """
         candidate_stage_info_id = \
-            staff_unit_candidate_stage_infos.c.candidate_stage_info_id
-        staff_unit_candidate_id = staff_unit_candidate_stage_infos.c.staff_unit_id
+            s_u_cand_stage_infos.c.candidate_stage_info_id
+        staff_unit_candidate_id = s_u_cand_stage_infos.c.staff_unit_id
         if filter == '':
             subquery = (db
                         .query(candidate_stage_info_id)
@@ -320,9 +320,9 @@ class CandidateStageInfoService(
             records based on the provided staff_unit_id and key_words.
         """
         candidate_stage_info_id = \
-            staff_unit_candidate_stage_infos.c.candidate_stage_info_id
+            s_u_cand_stage_infos.c.candidate_stage_info_id
         staff_unit_candidate_id = \
-            staff_unit_candidate_stage_infos.c.staff_unit_id
+            s_u_cand_stage_infos.c.staff_unit_id
         subquery = (db
                     .query(candidate_stage_info_id)
                     .filter(staff_unit_candidate_id

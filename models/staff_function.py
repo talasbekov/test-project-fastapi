@@ -27,7 +27,7 @@ class DocumentFunctionTypeEnum(str, enum.Enum):
 
 class ServiceFunctionType(NamedModel):
 
-    __tablename__ = "service_function_types"
+    __tablename__ = "hr_erp_service_function_types"
 
     staff_functions = relationship(
         "ServiceStaffFunction",
@@ -37,7 +37,7 @@ class ServiceFunctionType(NamedModel):
 
 class DocumentFunctionType(NamedModel):
 
-    __tablename__ = "document_function_types"
+    __tablename__ = "hr_erp_document_function_types"
 
     can_cancel = Column(Boolean, nullable=False)
 
@@ -49,7 +49,7 @@ class DocumentFunctionType(NamedModel):
 
 class StaffFunction(NamedModel):
 
-    __tablename__ = "staff_functions"
+    __tablename__ = "hr_erp_staff_functions"
 
     hours_per_week = Column(Integer())
     discriminator = Column(String(255))
@@ -69,10 +69,10 @@ class StaffFunction(NamedModel):
 class DocumentStaffFunction(StaffFunction):
 
     role_id = Column(String(),
-                     ForeignKey("document_function_types.id"))
+                     ForeignKey("hr_erp_document_function_types.id"))
     jurisdiction_id = Column(
         String(),
-        ForeignKey("jurisdictions.id"))
+        ForeignKey("hr_erp_jurisdictions.id"))
 
     priority = Column(Integer)
 
@@ -91,7 +91,7 @@ class DocumentStaffFunction(StaffFunction):
 class ServiceStaffFunction(StaffFunction):
 
     type_id = Column(String(),
-                     ForeignKey("service_function_types.id"))
+                     ForeignKey("hr_erp_service_function_types.id"))
 
     type = relationship(
         "ServiceFunctionType",

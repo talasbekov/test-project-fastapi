@@ -7,16 +7,16 @@ from models import Model
 
 class Education(Model):
 
-    __tablename__ = "educations"
+    __tablename__ = "hr_erp_educations"
 
     profile_id = Column(String(), ForeignKey(
-        "educational_profiles.id"), nullable=True)
+        "hr_erp_educational_profiles.id"), nullable=True)
     profile = relationship("EducationalProfile", back_populates="education")
     is_military_school = Column(Boolean, nullable=True, default=False)
 
     specialty_id = Column(
         String(),
-        ForeignKey("specialties.id"),
+        ForeignKey("hr_erp_specialties.id"),
         nullable=True)
     specialty = relationship("Specialty", back_populates="education")
 
@@ -29,12 +29,12 @@ class Education(Model):
 
     institution_id = Column(
         String(),
-        ForeignKey("institutions.id"),
+        ForeignKey("hr_erp_institutions.id"),
         nullable=True)
     institution = relationship("Institution", back_populates="education")
 
     degree_id = Column(String(),
-                       ForeignKey("institution_degree_types.id"))
+                       ForeignKey("hr_erp_inst_degree_types.id"))
     degree = relationship(
         "InstitutionDegreeType",
         back_populates="education",

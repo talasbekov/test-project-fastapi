@@ -7,13 +7,13 @@ from models import Model
 
 class TaxDeclaration(Model):
 
-    __tablename__ = "tax_declarations"
+    __tablename__ = "hr_erp_tax_declarations"
 
     year = Column(String)
     is_paid = Column(Boolean)
     profile_id = Column(
         String(),
-        ForeignKey("personal_profiles.id"),
+        ForeignKey("hr_erp_personal_profiles.id"),
         nullable=False)
 
     profile = relationship(

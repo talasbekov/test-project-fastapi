@@ -15,7 +15,7 @@ class CandidateStatusEnum(str, enum.Enum):
 
 class Candidate(Model):
 
-    __tablename__ = "candidates"
+    __tablename__ = "hr_erp_candidates"
 
     status = Column(Enum(CandidateStatusEnum),
                     server_default=CandidateStatusEnum.ACTIVE)
@@ -24,17 +24,17 @@ class Candidate(Model):
     attempt_number = Column(Integer, server_default='0', nullable=True)
     staff_unit_curator_id = Column(
         String(),
-        ForeignKey("staff_units.id"),
+        ForeignKey("hr_erp_staff_units.id"),
         nullable=True)
     staff_unit_id = Column(
         String(),
-        ForeignKey("staff_units.id"),
+        ForeignKey("hr_erp_staff_units.id"),
         nullable=True)
     essay_id = Column(String(), ForeignKey(
-        "candidate_essay_types.id"), nullable=True)
+        "hr_erp_candidate_essay_types.id"), nullable=True)
     recommended_by = Column(
         String(),
-        ForeignKey("users.id"),
+        ForeignKey("hr_erp_users.id"),
         nullable=True)
 
     staff_unit_curator = relationship(

@@ -8,11 +8,11 @@ from models.association import answers_options
 
 class Answer(Model):
 
-    __tablename__ = "answers"
+    __tablename__ = "hr_erp_answers"
 
-    question_id = Column(String(), ForeignKey("questions.id"))
+    question_id = Column(String(), ForeignKey("hr_erp_questions.id"))
     discriminator = Column(String(255))
-    user_id = Column(String(), ForeignKey("users.id"), nullable=True)
+    user_id = Column(String(), ForeignKey("hr_erp_users.id"), nullable=True)
     encrypted_used_id = Column(String(255), nullable=True)
     score = Column(Integer, nullable=True)
 

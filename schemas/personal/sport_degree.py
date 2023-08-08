@@ -10,9 +10,9 @@ from schemas import NamedModel, ReadNamedModel
 
 class SportDegreeBase(NamedModel):
     assignment_date: datetime.date
-    sport_type_id: uuid.UUID
+    sport_type_id: str
     document_link: Optional[AnyUrl]
-    profile_id: uuid.UUID
+    profile_id: str
 
     class Config:
         orm_mode = True

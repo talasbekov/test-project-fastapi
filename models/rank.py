@@ -5,7 +5,7 @@ from models import NamedModel
 
 class Rank(NamedModel):
 
-    __tablename__ = "ranks"
+    __tablename__ = "hr_erp_ranks"
 
     rank_order = Column(Integer, nullable=True)
     military_url = Column(TEXT, nullable=True)

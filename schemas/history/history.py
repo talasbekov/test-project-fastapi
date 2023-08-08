@@ -636,10 +636,10 @@ class TypeOfClothingEquipmentModelRead(ReadModel):
     def from_orm(cls, orm_obj):
         return cls(
             id=orm_obj.id,
-            type_of_equipment={"name": orm_obj.type_clothing_equipments.name,
-                               "nameKZ": orm_obj.type_clothing_equipments.nameKZ},
-            model_of_equipment={"name": orm_obj.type_clothing_equipment_models.name,
-                                "nameKZ": orm_obj.type_clothing_equipment_models.nameKZ}
+            type_of_equipment={"name": orm_obj.type_cloth_equipmets.name,
+                               "nameKZ": orm_obj.type_cloth_equipmets.nameKZ},
+            model_of_equipment={"name": orm_obj.type_cloth_eq_models.name,
+                                "nameKZ": orm_obj.type_cloth_eq_models.nameKZ}
         )
 
 
@@ -669,14 +669,14 @@ class EquipmentRead(ReadModel):
     inventory_count: Optional[int]
     count_of_ammo: Optional[int]
     clothing_size: Optional[str]
-    clothing_equipment_types_models_id: Optional[uuid.UUID]
+    cloth_eq_types_models_id: Optional[uuid.UUID]
     type_of_other_equipment_model_id: Optional[uuid.UUID]
     document_link: Optional[str]
     document_number: Optional[str]
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     type_of_army_equipment_model: Optional[TypeOfArmyEquipmentModelRead]
-    clothing_equipment_types_models: Optional[TypeOfClothingEquipmentModelRead]
+    cloth_eq_types_models: Optional[TypeOfClothingEquipmentModelRead]
     type_of_other_equipment_model: Optional[TypeOfOtherEquipmentModelRead]
 
     class Config:

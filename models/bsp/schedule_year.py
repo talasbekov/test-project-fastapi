@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 
 from models import Model, NamedModel
 from .association import (
-    schedule_year_staff_divisions,
+    schedule_year_s_d,
     schedule_year_months,
     schedule_exam_months,
     schedule_year_users,
@@ -11,19 +11,19 @@ from .association import (
 
 class Month(NamedModel):
     order = Column(Integer)
-    __tablename__ = 'months'
+    __tablename__ = 'hr_erp_months'
 
 
 class ScheduleYear(Model):
-    __tablename__ = 'schedule_years'
+    __tablename__ = 'hr_erp_schedule_years'
 
     __mapper_args__ = {
         'confirm_deleted_rows': False
     }
 
     # Properties
-    plan_id = Column(String(), ForeignKey('bsp_plans.id'))
-    activity_id = Column(String(), ForeignKey('activities.id'))
+    plan_id = Column(String(), ForeignKey('hr_erp_bsp_plans.id'))
+    activity_id = Column(String(), ForeignKey('hr_erp_activities.id'))
     is_exam_required = Column(Boolean)
     retry_count = Column(Integer)
     is_active = Column(Boolean)
@@ -31,7 +31,7 @@ class ScheduleYear(Model):
     # Relationships
     staff_divisions = relationship(
         'StaffDivision',
-        secondary=schedule_year_staff_divisions)
+        secondary=schedule_year_s_d)
     users = relationship(
         'User',
         secondary=schedule_year_users)

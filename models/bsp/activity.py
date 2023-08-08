@@ -6,11 +6,11 @@ from models import NamedModel
 
 
 class Activity(NamedModel):
-    __tablename__ = 'activities'
+    __tablename__ = 'hr_erp_activities'
 
     # Properties
     parent_group_id = Column(String(), ForeignKey(
-        "activities.id"), nullable=True)
+        "hr_erp_activities.id"), nullable=True)
     instructions = Column(TEXT())
 
     # Relationships

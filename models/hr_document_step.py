@@ -6,20 +6,20 @@ from models import Model
 
 class HrDocumentStep(Model):
 
-    __tablename__ = "hr_document_steps"
+    __tablename__ = "hr_erp_hr_document_steps"
 
     # Properties
     hr_document_template_id = Column(
         String(),
         ForeignKey(
-            "hr_document_templates.id",
+            "hr_erp_hr_document_templates.id",
             ondelete='CASCADE',
             onupdate='CASCADE'),
         nullable=False)
     staff_function_id = Column(
         String(),
         ForeignKey(
-            "staff_functions.id",
+            "hr_erp_staff_functions.id",
             ondelete='CASCADE',
             onupdate='CASCADE'),
         nullable=False)

@@ -14,7 +14,7 @@ from .association import hr_document_equipments
 
 class Equipment(Model):
 
-    __tablename__ = "equipments"
+    __tablename__ = "hr_erp_equipments"
 
     date_from = Column(TIMESTAMP, nullable=True)
     document_number = Column(String, nullable=True)
@@ -27,7 +27,7 @@ class Equipment(Model):
                                 back_populates="equipments")
     inventory_count = Column(BigInteger, nullable=True)
     inventory_number = Column(String, nullable=True)
-    user_id = Column(String(), ForeignKey("users.id"))
+    user_id = Column(String(), ForeignKey("hr_erp_users.id"))
     user = relationship("User", back_populates="equipments")
 
     __mapper_args__ = {
@@ -38,11 +38,11 @@ class Equipment(Model):
 
 class TypeArmyEquipmentModel(NamedModel):
     """Type of equipment. Example: AK-47, RPG-7, etc."""
-    __tablename__ = "type_army_equipment_models"
+    __tablename__ = "hr_erp_type_ar_equip_models"
 
     type_of_army_equipment_id = Column(
         String(),
-        ForeignKey("type_army_equipments.id"),
+        ForeignKey("hr_erp_type_army_equipments.id"),
         nullable=True)
     army_equipments = relationship(
         "ArmyEquipment",
@@ -55,7 +55,7 @@ class TypeArmyEquipmentModel(NamedModel):
 class TypeArmyEquipment(NamedModel):
     """Type of army equipment. Example:
     Автомат, РПГ, etc."""
-    __tablename__ = "type_army_equipments"
+    __tablename__ = "hr_erp_type_army_equipments"
 
     type_of_army_equipment_models = relationship(
         "TypeArmyEquipmentModel",
@@ -66,7 +66,7 @@ class ArmyEquipment(Equipment):
 
     type_of_army_equipment_model_id = Column(
         String(),
-        ForeignKey("type_army_equipment_models.id"),
+        ForeignKey("hr_erp_type_ar_equip_models.id"),
         nullable=True)
     count_of_ammo = Column(BigInteger, nullable=True)
 
@@ -83,50 +83,49 @@ class ArmyEquipment(Equipment):
 class TypeClothingEquipmentModel(NamedModel):
     """Type of equipment. Example:
     ШАПКА, ПОЛУЧЕК, ПОЛУЧЕК, etc."""
-    __tablename__ = "type_clothing_equipment_models"
+    __tablename__ = "hr_erp_type_cloth_eq_models"
 
-    clothing_equipment_types_models = relationship(
+    cloth_eq_types_models = relationship(
         "ClothingEquipmentTypesModels",
-        back_populates="type_clothing_equipment_models")
+        back_populates="type_cloth_eq_models")
 
 
 class TypeClothingEquipment(NamedModel):  # obj.
     """Type of clothing equipment. Example:
     ПАРАДНАЯ, ПОВСЕДНЕВНО-ПОСТОВАЯ, ТАКТИЧЕСКАЯ, etc."""
-    __tablename__ = "type_clothing_equipments"
+    __tablename__ = "hr_erp_type_cloth_equipmets"
 
-    clothing_equipment_types_models = relationship(
+    cloth_eq_types_models = relationship(
         "ClothingEquipmentTypesModels",
-        back_populates="type_clothing_equipments"
+        back_populates="type_cloth_equipmets"
 )
 
 class ClothingEquipmentTypesModels(Model):
-    __tablename__ = 'clothing_equipment_types_models'
+    __tablename__ = 'hr_erp_cloth_eq_types_models'
 
-    type_clothing_equipment_models_id = Column(String(),
-                                    ForeignKey("type_clothing_equipment_models.id"),
+    type_cloth_eq_models_id = Column(String(),
+                                    ForeignKey("hr_erp_type_cloth_eq_models.id"),
                                     nullable=True)
-    type_clothing_equipment_models = relationship("TypeClothingEquipmentModel",
-                                    back_populates="clothing_equipment_types_models",
+    type_cloth_eq_models = relationship("TypeClothingEquipmentModel",
+                                    back_populates="cloth_eq_types_models",
                                     uselist=False)
 
-    type_clothing_equipments_id = Column(String(),
-                                    ForeignKey("type_clothing_equipments.id"),
+    type_cloth_equipmets_id = Column(String(),
+                                    ForeignKey("hr_erp_type_cloth_equipmets.id"),
                                     nullable=True)
-    type_clothing_equipments = relationship("TypeClothingEquipment",
-                                    back_populates="clothing_equipment_types_models",
+    type_cloth_equipmets = relationship("TypeClothingEquipment",
+                                    back_populates="cloth_eq_types_models",
                                     uselist=False)
 
     clothing_equipments = relationship(
         "ClothingEquipment",
-        back_populates="clothing_equipment_types_models")
+        back_populates="cloth_eq_types_models")
 
 
 class ClothingEquipment(Equipment):
-
-    clothing_equipment_types_models_id = Column(String(), ForeignKey(
-        "clothing_equipment_types_models.id"), nullable=True)
-    clothing_equipment_types_models = relationship(
+    cloth_eq_types_models_id = Column(String(), ForeignKey(
+        "hr_erp_cloth_eq_types_models.id"), nullable=True)
+    cloth_eq_types_models = relationship(
         "ClothingEquipmentTypesModels",
         back_populates="clothing_equipments",
         uselist=False)
@@ -138,11 +137,11 @@ class ClothingEquipment(Equipment):
 
 class TypeOtherEquipmentModel(NamedModel):
     """Type of equipment. Example: HP laserjet 1020, HP laserjet 1020, etc."""
-    __tablename__ = "type_other_equipment_models"
+    __tablename__ = "hr_erp_type_oth_eq_models"
 
     type_of_other_equipment_id = Column(
         String(),
-        ForeignKey("type_other_equipments.id"),
+        ForeignKey("hr_erp_type_other_equipments.id"),
         nullable=True)
     other_equipments = relationship(
         "OtherEquipment",
@@ -154,7 +153,7 @@ class TypeOtherEquipmentModel(NamedModel):
 
 class TypeOtherEquipment(NamedModel):
     """Type of clothing equipment. Example: КОМПЬЮТЕР, КОМПЬЮТЕР, КОМПЬЮТЕР, etc."""
-    __tablename__ = "type_other_equipments"
+    __tablename__ = "hr_erp_type_other_equipments"
 
     type_of_other_equipment_models = relationship(
         "TypeOtherEquipmentModel",
@@ -165,7 +164,7 @@ class OtherEquipment(Equipment):
 
     type_of_other_equipment_model_id = Column(
         String(),
-        ForeignKey("type_other_equipment_models.id"),
+        ForeignKey("hr_erp_type_oth_eq_models.id"),
         nullable=True)
     type_of_other_equipment_model = relationship(
         "TypeOtherEquipmentModel",

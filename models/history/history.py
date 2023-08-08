@@ -55,11 +55,11 @@ class HistoryEnum(BaseEnum):
 
 class History(Model):
 
-    __tablename__ = "histories"
+    __tablename__ = "hr_erp_histories"
 
     date_from = Column(TIMESTAMP(timezone=True), nullable=True)
     date_to = Column(TIMESTAMP(timezone=True), nullable=True)
-    user_id = Column(String(), ForeignKey("users.id"))
+    user_id = Column(String(), ForeignKey("hr_erp_users.id"))
     document_link = Column(CLOB, nullable=True)
     cancel_document_link = Column(CLOB, nullable=True)
     confirm_document_link = Column(CLOB, nullable=True)
@@ -86,7 +86,7 @@ class History(Model):
 
 class RankHistory(History):
 
-    rank_id = Column(String(), ForeignKey("ranks.id"), nullable=True)
+    rank_id = Column(String(), ForeignKey("hr_erp_ranks.id"), nullable=True)
     rank = relationship("Rank", foreign_keys=[rank_id])
 
     rank_assigned_by = Column(String, nullable=True)
@@ -118,7 +118,7 @@ class BadgeHistory(History):
 
     badge_id = Column(
         String(),
-        ForeignKey("badges.id"),
+        ForeignKey("hr_erp_badges.id"),
         nullable=True)
     badge = relationship("Badge", back_populates="history")
 
@@ -150,7 +150,7 @@ class PenaltyHistory(History):
 
     penalty_id = Column(
         String(),
-        ForeignKey("penalties.id"),
+        ForeignKey("hr_erp_penalties.id"),
         nullable=True)
     penalty = relationship("Penalty")
 
@@ -210,14 +210,14 @@ class EmergencyServiceHistory(History):
 
     position_id = Column(
         String(),
-        ForeignKey("positions.id"),
+        ForeignKey("hr_erp_positions.id"),
         nullable=True)
     position = relationship("Position", foreign_keys=[position_id])
     reason = Column(String, nullable=True)
 
     staff_division_id = Column(
         String(),
-        ForeignKey("staff_divisions.id"),
+        ForeignKey("hr_erp_staff_divisions.id"),
         nullable=True)
     staff_division = relationship(
         "StaffDivision",
@@ -267,7 +267,7 @@ class ContractHistory(History):
 
     contract_id = Column(
         String(),
-        ForeignKey("contracts.id"),
+        ForeignKey("hr_erp_contracts.id"),
         nullable=True)
     contract = relationship("Contract")
 
@@ -325,7 +325,7 @@ class CoolnessHistory(History):
 
     coolness_id = Column(
         String(),
-        ForeignKey("coolnesses.id"),
+        ForeignKey("hr_erp_coolnesses.id"),
         nullable=True)
     coolness = relationship(
         "Coolness",
@@ -354,7 +354,7 @@ class CoolnessHistory(History):
     # percentage = Column(Integer, nullable=True)
 
     # staff_division_id = Column(String(),
-    # ForeignKey("staff_divisions.id"), nullable=True)
+    # ForeignKey("hr_erp_staff_divisions.id"), nullable=True)
 
     __mapper_args__ = {
         'polymorphic_identity': 'coolness_history'
@@ -377,7 +377,7 @@ class SecondmentHistory(History):
 
     secondment_id = Column(
         String(),
-        ForeignKey("secondments.id"),
+        ForeignKey("hr_erp_secondments.id"),
         nullable=True)
     secondment = relationship("Secondment")
 
@@ -431,7 +431,7 @@ class NameChangeHistory(History):
 
     name_change_id = Column(
         String(),
-        ForeignKey("name_changes.id"),
+        ForeignKey("hr_erp_name_changes.id"),
         nullable=True)
     name_change = relationship("NameChange",
                                back_populates="name_change_histories")
@@ -445,7 +445,7 @@ class AttestationHistory(History):
 
     attestation_id = Column(
         String(),
-        ForeignKey("attestations.id"),
+        ForeignKey("hr_erp_attestations.id"),
         nullable=True)
     attestation = relationship("Attestation")
 
@@ -479,7 +479,7 @@ class ServiceCharacteristicHistory(History):
 
     characteristic_initiator_id = Column(
         String(),
-        ForeignKey("users.id"),
+        ForeignKey("hr_erp_users.id"),
         nullable=True)
     characteristic_initiator = relationship(
         "User", foreign_keys=[characteristic_initiator_id])
@@ -493,7 +493,7 @@ class StatusHistory(History):
 
     status_id = Column(
         String(),
-        ForeignKey("statuses.id"),
+        ForeignKey("hr_erp_statuses.id"),
         nullable=True)
     status = relationship("Status", back_populates="history")
     status_name = Column(NCLOB, nullable=True)

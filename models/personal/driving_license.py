@@ -7,7 +7,7 @@ from models import Model
 
 class DrivingLicense(Model):
 
-    __tablename__ = "driving_licenses"
+    __tablename__ = "hr_erp_driving_licenses"
 
     document_number = Column(String)
     category = Column(ARRAY(String))
@@ -16,7 +16,7 @@ class DrivingLicense(Model):
     document_link = Column(TEXT, nullable=True)
     profile_id = Column(
         String(),
-        ForeignKey("personal_profiles.id"),
+        ForeignKey("hr_erp_personal_profiles.id"),
         nullable=False)
 
     profile = relationship("PersonalProfile", back_populates="driving_license")

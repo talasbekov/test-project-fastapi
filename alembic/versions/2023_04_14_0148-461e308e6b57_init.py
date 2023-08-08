@@ -135,13 +135,13 @@ def upgrade() -> None:
         sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
         sa.PrimaryKeyConstraint('id', name='pk_hr_document_statuses')
     )
-    op.create_table('institution_degree_types',
+    op.create_table('inst_degree_types',
         sa.Column('name', sa.String(length=255), nullable=False),
         sa.Column('nameKZ', sa.String(length=255), nullable=True),
         sa.Column('id', sa.String(length=36), nullable=False),
         sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
         sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
-        sa.PrimaryKeyConstraint('id', name='pk_institution_degree_types')
+        sa.PrimaryKeyConstraint('id', name='pk_inst_degree_types')
     )
     op.create_table('institutions',
         sa.Column('name', sa.String(length=255), nullable=False),
@@ -337,13 +337,13 @@ def upgrade() -> None:
         sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
         sa.PrimaryKeyConstraint('id', name='pk_type_army_equipments')
     )
-    op.create_table('type_clothing_equipments',
+    op.create_table('type_cloth_equipmets',
         sa.Column('name', sa.String(length=255), nullable=False),
         sa.Column('nameKZ', sa.String(length=255), nullable=True),
         sa.Column('id', sa.String(length=36), nullable=False),
         sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
         sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
-        sa.PrimaryKeyConstraint('id', name='pk_type_clothing_equipments')
+        sa.PrimaryKeyConstraint('id', name='pk_type_cloth_equipmets')
     )
     op.create_table('type_other_equipments',
         sa.Column('name', sa.String(length=255), nullable=False),
@@ -353,7 +353,7 @@ def upgrade() -> None:
         sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
         sa.PrimaryKeyConstraint('id', name='type_other_equipments')
     )
-    op.create_table('archive_document_function_types',
+    op.create_table('arch_doc_fun_types',
         sa.Column('can_cancel', sa.Boolean(), nullable=False),
         sa.Column('origin_id', sa.String(), nullable=True),
         sa.Column('name', sa.String(length=255), nullable=False),
@@ -361,20 +361,20 @@ def upgrade() -> None:
         sa.Column('id', sa.String(length=36), nullable=False),
         sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
         sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
-        sa.ForeignKeyConstraint(['origin_id'], ['document_function_types.id'], name='fk_archive_document_function_types_origin_id'),  # Adding a name to the foreign key constraint
-        sa.PrimaryKeyConstraint('id', name='pk_archive_document_function_types')  # Adding a name to the primary key constraint
+        sa.ForeignKeyConstraint(['origin_id'], ['document_function_types.id'], name='fk_arch_doc_fun_types_origin_id'),  # Adding a name to the foreign key constraint
+        sa.PrimaryKeyConstraint('id', name='pk_arch_doc_fun_types')  # Adding a name to the primary key constraint
     )
-    op.create_table('archive_service_function_types',
+    op.create_table('arch_ser_func_type',
         sa.Column('origin_id', sa.String(), nullable=True),
         sa.Column('name', sa.String(length=255), nullable=False),
         sa.Column('nameKZ', sa.String(length=255), nullable=True),
         sa.Column('id', sa.String(length=36), nullable=False),
         sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
         sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
-        sa.ForeignKeyConstraint(['origin_id'], ['service_function_types.id'], name='fk_archive_service_function_types_origin_id'),  # Adding a name to the foreign key constraint
-        sa.PrimaryKeyConstraint('id', name='pk_archive_service_function_types')  # Adding a name to the primary key constraint
+        sa.ForeignKeyConstraint(['origin_id'], ['service_function_types.id'], name='fk_arch_ser_func_type_origin_id'),  # Adding a name to the foreign key constraint
+        sa.PrimaryKeyConstraint('id', name='pk_arch_ser_func_type')  # Adding a name to the primary key constraint
     )
-    op.create_table('candidate_stage_questions',
+    op.create_table('cand_stage_questions',
         sa.Column('question', sa.String(), nullable=True),
         sa.Column('question_type', sa.Enum('STRING_TYPE', 'CHOICE_TYPE', 'TEXT_TYPE', 'DOCUMENT_TYPE', 'ESSAY_TYPE', 'SPORT_SCORE_TYPE', 'DROPDOWN_TYPE', name='candidatestagequestiontypeenum'), nullable=True),
         sa.Column('description', sa.TEXT(), nullable=True),
@@ -382,8 +382,8 @@ def upgrade() -> None:
         sa.Column('id', sa.String(length=36), nullable=False),
         sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
         sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
-        sa.ForeignKeyConstraint(['candidate_stage_type_id'], ['candidate_stage_types.id'], name='fk_candidate_stage_questions_candidate_stage_type_id'),  # Adding a name to the foreign key constraint
-        sa.PrimaryKeyConstraint('id', name='pk_candidate_stage_questions')  # Adding a name to the primary key constraint
+        sa.ForeignKeyConstraint(['candidate_stage_type_id'], ['candidate_stage_types.id'], name='fk_cand_stage_questions_candidate_stage_type_id'),  # Adding a name to the foreign key constraint
+        sa.PrimaryKeyConstraint('id', name='pk_cand_stage_questions')  # Adding a name to the primary key constraint
     )
     op.create_table('users',
         sa.Column('email', sa.String(length=150), nullable=True),
@@ -456,7 +456,7 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['type_id'], ['service_function_types.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('type_army_equipment_models',
+    op.create_table('type_ar_equip_models',
     sa.Column('type_of_army_equipment_id', sa.String(), nullable=True),
     sa.Column('name', sa.String(length=255), nullable=False),
     sa.Column('nameKZ', sa.String(length=255), nullable=True),
@@ -466,7 +466,7 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['type_of_army_equipment_id'], ['type_army_equipments.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('type_clothing_equipment_models',
+    op.create_table('type_cloth_eq_models',
     sa.Column('name', sa.String(length=255), nullable=False),
     sa.Column('nameKZ', sa.String(length=255), nullable=True),
     sa.Column('id', sa.String(length=36), nullable=False),
@@ -474,17 +474,17 @@ def upgrade() -> None:
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('clothing_equipment_types_models',
+    op.create_table('cloth_eq_types_models',
     sa.Column('id', sa.String(length=36), nullable=False),
-    sa.Column('type_clothing_equipments_id', sa.String(), nullable=True),
-    sa.Column('type_clothing_equipment_models_id', sa.String(), nullable=True),
-    sa.ForeignKeyConstraint(['type_clothing_equipments_id'], ['type_clothing_equipments.id'], ),
-    sa.ForeignKeyConstraint(['type_clothing_equipment_models_id'], ['type_clothing_equipment_models.id'], ),
+    sa.Column('type_cloth_equipmets_id', sa.String(), nullable=True),
+    sa.Column('type_cloth_eq_models_id', sa.String(), nullable=True),
+    sa.ForeignKeyConstraint(['type_cloth_equipmets_id'], ['type_cloth_equipmets.id'], ),
+    sa.ForeignKeyConstraint(['type_cloth_eq_models_id'], ['type_cloth_eq_models.id'], ),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('type_other_equipment_models',
+    op.create_table('type_oth_eq_models',
     sa.Column('type_of_other_equipment_id', sa.String(), nullable=True),
     sa.Column('name', sa.String(length=255), nullable=False),
     sa.Column('nameKZ', sa.String(length=255), nullable=True),
@@ -509,8 +509,8 @@ def upgrade() -> None:
     sa.Column('type_id', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['jurisdiction_id'], ['jurisdictions.id'], ),
     sa.ForeignKeyConstraint(['origin_id'], ['staff_functions.id'], ),
-    sa.ForeignKeyConstraint(['role_id'], ['archive_document_function_types.id'], ),
-    sa.ForeignKeyConstraint(['type_id'], ['archive_service_function_types.id'], ),
+    sa.ForeignKeyConstraint(['role_id'], ['arch_doc_fun_types.id'], ),
+    sa.ForeignKeyConstraint(['type_id'], ['arch_ser_func_type.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('attestations',
@@ -548,7 +548,7 @@ def upgrade() -> None:
     sa.Column('category_id', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['candidate_essay_type_id'], ['candidate_essay_types.id'], ),
     sa.ForeignKeyConstraint(['candidate_id'], ['candidates.id'], ),
-    sa.ForeignKeyConstraint(['candidate_stage_question_id'], ['candidate_stage_questions.id'], ),
+    sa.ForeignKeyConstraint(['candidate_stage_question_id'], ['cand_stage_questions.id'], ),
     sa.ForeignKeyConstraint(['category_id'], ['candidate_categories.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -599,11 +599,11 @@ def upgrade() -> None:
     sa.Column('count_of_ammo', sa.BigInteger(), nullable=True),
     sa.Column('inventory_count', sa.BigInteger(), nullable=True),
     sa.Column('clothing_size', sa.String(), nullable=True),
-    sa.Column('clothing_equipment_types_models_id', sa.String(), nullable=True),
+    sa.Column('cloth_eq_types_models_id', sa.String(), nullable=True),
     sa.Column('type_of_other_equipment_model_id', sa.String(), nullable=True),
-    sa.ForeignKeyConstraint(['type_of_army_equipment_model_id'], ['type_army_equipment_models.id'], ),
-    sa.ForeignKeyConstraint(['clothing_equipment_types_models_id'], ['clothing_equipment_types_models.id'], ),
-    sa.ForeignKeyConstraint(['type_of_other_equipment_model_id'], ['type_other_equipment_models.id'], ),
+    sa.ForeignKeyConstraint(['type_of_army_equipment_model_id'], ['type_ar_equip_models.id'], ),
+    sa.ForeignKeyConstraint(['cloth_eq_types_models_id'], ['cloth_eq_types_models.id'], ),
+    sa.ForeignKeyConstraint(['type_of_other_equipment_model_id'], ['type_oth_eq_models.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -743,7 +743,7 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['staff_unit_id'], ['staff_units.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('staff_unit_id', 'staff_function_id')
     )
-    op.create_table('staff_unit_candidate_stage_infos',
+    op.create_table('s_u_cand_stage_infos',
     sa.Column('staff_unit_id', sa.String(), nullable=True),
     sa.Column('candidate_stage_info_id', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['candidate_stage_info_id'], ['candidate_stage_infos.id'], ),
@@ -1002,7 +1002,7 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('archive_staff_unit_candidate_stage_infos',
+    op.create_table('a_s_u_cand_stage_infos',
     sa.Column('archive_staff_unit_id', sa.String(), nullable=True),
     sa.Column('candidate_stage_info_id', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['candidate_stage_info_id'], ['candidate_stage_infos.id'], ),
@@ -1040,7 +1040,7 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['profile_id'], ['educational_profiles.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('dispensary_registrations',
+    op.create_table('disp_registrations',
     sa.Column('initiator', sa.String(), nullable=True),
     sa.Column('start_date', postgresql.TIMESTAMP(timezone=True), nullable=True),
     sa.Column('end_date', postgresql.TIMESTAMP(timezone=True), nullable=True),
@@ -1082,7 +1082,7 @@ def upgrade() -> None:
     sa.Column('id', sa.String(length=36), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
-    sa.ForeignKeyConstraint(['degree_id'], ['institution_degree_types.id'], ),
+    sa.ForeignKeyConstraint(['degree_id'], ['inst_degree_types.id'], ),
     sa.ForeignKeyConstraint(['institution_id'], ['institutions.id'], ),
     sa.ForeignKeyConstraint(['profile_id'], ['educational_profiles.id'], ),
     sa.ForeignKeyConstraint(['specialty_id'], ['specialties.id'], ),
@@ -1107,7 +1107,7 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['relation_id'], ['family_relations.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('general_user_informations',
+    op.create_table('general_user_info',
     sa.Column('height', sa.Integer(), nullable=True),
     sa.Column('blood_group', sa.Enum('O_PLUS', 'O_MINUS', 'A_PLUS', 'A_MINUS', 'B_PLUS', 'B_MINUS', 'AB_PLUS', 'AB_MINUS', name='bloodtype'), nullable=True),
     sa.Column('age_group', sa.Enum('FIRST', 'SECOND', 'THIRD', 'FOURTH', 'FIFTH', 'SIXTH', name='agegroup'), nullable=True),
@@ -1366,20 +1366,20 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['family_id'], ['families.id'], ),
     sa.ForeignKeyConstraint(['abroad_travel_id'], ['abroad_travels.id'], )
     )
-    op.create_table('archive_staff_unit_functions',
+    op.create_table('a_s_u_func',
     sa.Column('staff_unit_id', sa.String(), nullable=False),
     sa.Column('staff_function_id', sa.String(), nullable=False),
     sa.ForeignKeyConstraint(['staff_function_id'], ['archive_staff_functions.id']),
     sa.ForeignKeyConstraint(['staff_unit_id'], ['archive_staff_units.id']),
     sa.PrimaryKeyConstraint('staff_unit_id', 'staff_function_id')
     )
-    op.create_table('user_liberations_liberations',
+    op.create_table('u_liber_liberations',
     sa.Column('user_liberation_id', sa.String(), nullable=True),
     sa.Column('liberation_id', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['liberation_id'], ['liberations.id'], ),
     sa.ForeignKeyConstraint(['user_liberation_id'], ['user_liberations.id'], )
     )
-    op.create_table('hr_vacancies_requirements',
+    op.create_table('hr_vac_req',
     sa.Column('name', sa.String(length=255), nullable=False),
     sa.Column('nameKZ', sa.String(length=255), nullable=True),
     sa.Column('id', sa.String(length=36), nullable=False),
@@ -1404,19 +1404,19 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['hr_vacancy_id'], ['hr_vacancies.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], )
     )
-    op.create_table('hr_vacancy_hr_vacancy_requirements',
+    op.create_table('hr_v_hr_vacancy_req',
     sa.Column('hr_vacancy_id', sa.String(), nullable=True),
     sa.Column('hr_vacancy_requirement_id', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['hr_vacancy_id'], ['hr_vacancies.id'], ),
-    sa.ForeignKeyConstraint(['hr_vacancy_requirement_id'], ['hr_vacancies_requirements.id'], )
+    sa.ForeignKeyConstraint(['hr_vacancy_requirement_id'], ['hr_vac_req.id'], )
     )
     # ### end Alembic commands ###
 
 
 def downgrade() -> None:
     # ### commands auto generated by Alembic - please adjust! ###
-    op.drop_table('user_liberations_liberations')
-    op.drop_table('archive_staff_unit_functions')
+    op.drop_table('u_liber_liberations')
+    op.drop_table('a_s_u_func')
     op.drop_table('violations')
     op.drop_table('user_vehicles')
     op.drop_table('user_liberations')
@@ -1436,11 +1436,11 @@ def downgrade() -> None:
     op.drop_table('hr_document_infos')
     op.drop_table('hr_document_equipments')
     op.drop_table('hospital_datas')
-    op.drop_table('general_user_informations')
+    op.drop_table('general_user_info')
     op.drop_table('families')
     op.drop_table('educations')
     op.drop_table('driving_licenses')
-    op.drop_table('dispensary_registrations')
+    op.drop_table('disp_registrations')
     op.drop_table('courses')
     op.drop_table('biographic_infos')
     op.drop_table('archive_staff_units')
@@ -1480,17 +1480,17 @@ def downgrade() -> None:
     op.drop_table('attestations')
     op.drop_table('archive_staff_functions')
     op.drop_table('users')
-    op.drop_table('type_other_equipment_models')
-    op.drop_table('type_clothing_equipment_models')
-    op.drop_table('type_army_equipment_models')
+    op.drop_table('type_oth_eq_models')
+    op.drop_table('type_cloth_eq_models')
+    op.drop_table('type_ar_equip_models')
     op.drop_table('staff_functions')
     op.drop_table('positions')
     op.drop_table('candidates')
-    op.drop_table('candidate_stage_questions')
-    op.drop_table('archive_service_function_types')
-    op.drop_table('archive_document_function_types')
+    op.drop_table('cand_stage_questions')
+    op.drop_table('arch_ser_func_type')
+    op.drop_table('arch_doc_fun_types')
     op.drop_table('type_other_equipments')
-    op.drop_table('type_clothing_equipments')
+    op.drop_table('type_cloth_equipmets')
     op.drop_table('type_army_equipments')
     op.drop_table('status_types')
     op.drop_table('staff_units')
@@ -1507,7 +1507,7 @@ def downgrade() -> None:
     op.drop_table('languages')
     op.drop_table('jurisdictions')
     op.drop_table('institutions')
-    op.drop_table('institution_degree_types')
+    op.drop_table('inst_degree_types')
     op.drop_table('hr_document_templates')
     op.drop_table('hr_document_statuses')
     op.drop_table('family_statuses')
@@ -1523,8 +1523,8 @@ def downgrade() -> None:
     op.drop_table('badge_types')
     op.drop_table('academic_title_degrees')
     op.drop_table('academic_degree_degrees')
-    op.drop_table('hr_vacancy_hr_vacancy_requirements')
+    op.drop_table('hr_v_hr_vacancy_req')
     op.drop_table('hr_vacancies')
-    op.drop_table('hr_vacancies_requirements')
+    op.drop_table('hr_vac_req')
     op.drop_table('hr_vacancy_candidates')
     # ### end Alembic commands ###

@@ -266,7 +266,7 @@ def upgrade() -> None:
     ).fetchone()[0]
 
     op.bulk_insert(
-        Base.metadata.tables['schedule_year_staff_divisions'],
+        Base.metadata.tables['schedule_year_s_d'],
         [
         {
             "schedule_year_id": schedule_id1,
@@ -490,7 +490,7 @@ def upgrade() -> None:
 
 
     op.bulk_insert(
-        Base.metadata.tables['schedule_year_staff_divisions'],
+        Base.metadata.tables['schedule_year_s_d'],
         [
         {
             "schedule_year_id": schedule_id1,
@@ -569,7 +569,7 @@ def upgrade() -> None:
     ).fetchone()[0]
 
     op.bulk_insert(
-        Base.metadata.tables['schedule_month_instructors'],
+        Base.metadata.tables['schedule_month_instr'],
         [
         {
             "schedule_month_id": schedule_month_id1,
@@ -636,7 +636,7 @@ def upgrade() -> None:
     )
 
     op.bulk_insert(
-        Base.metadata.tables['exam_schedule_instructors'],
+        Base.metadata.tables['exam_schedule_inst'],
         [
         {
             "exam_schedule_id": exam_schedule_id1,

@@ -6,9 +6,9 @@ from models import NamedModel
 
 class Event(NamedModel):
 
-    __tablename__ = "events"
+    __tablename__ = "hr_erp_events"
 
-    user_id = Column(String(), ForeignKey("users.id"))
+    user_id = Column(String(), ForeignKey("hr_erp_users.id"))
     description = Column(TEXT())
     date_since = Column(TIMESTAMP(timezone=True))
     date_to = Column(TIMESTAMP(timezone=True))

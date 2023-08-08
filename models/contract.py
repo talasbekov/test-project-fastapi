@@ -5,7 +5,7 @@ from models import Model, NamedModel
 
 
 class ContractType(NamedModel):
-    __tablename__ = "contract_types"
+    __tablename__ = "hr_erp_contract_types"
     is_finite = Column(Boolean, nullable=False)
     years = Column(Integer, nullable=False)
 
@@ -13,10 +13,10 @@ class ContractType(NamedModel):
 
 
 class Contract(Model):
-    __tablename__ = "contracts"
+    __tablename__ = "hr_erp_contracts"
 
-    type_id = Column(String(), ForeignKey("contract_types.id"))
+    type_id = Column(String(), ForeignKey("hr_erp_contract_types.id"))
     type = relationship("ContractType", back_populates="contracts")
 
-    user_id = Column(String(), ForeignKey("users.id"))
+    user_id = Column(String(), ForeignKey("hr_erp_users.id"))
     user = relationship("User", back_populates="contracts")

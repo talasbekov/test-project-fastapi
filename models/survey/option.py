@@ -7,11 +7,11 @@ from models.association import answers_options
 
 class Option(TextModel):
 
-    __tablename__ = "options"
+    __tablename__ = "hr_erp_options"
 
     text = Column(TEXT, nullable=True)
 
-    question_id = Column(String(), ForeignKey("questions.id"))
+    question_id = Column(String(), ForeignKey("hr_erp_questions.id"))
     score = Column(Integer, nullable=True)
 
     question = relationship("Question", foreign_keys=[

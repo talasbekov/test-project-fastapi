@@ -7,18 +7,18 @@ from models import Model
 
 class LanguageProficiency(Model):
 
-    __tablename__ = "language_proficiencies"
+    __tablename__ = "hr_erp_language_proficiencies"
 
     language_id = Column(
         String(),
-        ForeignKey("languages.id"),
+        ForeignKey("hr_erp_languages.id"),
         nullable=True)
     language = relationship("Language", back_populates="language_proficiency")
 
     level = Column('language_level', Integer)
 
     profile_id = Column(String(), ForeignKey(
-        "educational_profiles.id"), nullable=True)
+        "hr_erp_educational_profiles.id"), nullable=True)
     profile = relationship(
         "EducationalProfile",
         back_populates="language_proficiency")

@@ -7,15 +7,15 @@ from models import NamedModel
 
 class Course(NamedModel):
 
-    __tablename__ = "courses"
+    __tablename__ = "hr_erp_courses"
 
     profile_id = Column(String(), ForeignKey(
-        "educational_profiles.id"), nullable=True)
+        "hr_erp_educational_profiles.id"), nullable=True)
     profile = relationship("EducationalProfile", back_populates="course")
 
     course_provider_id = Column(
         String(),
-        ForeignKey("course_providers.id"),
+        ForeignKey("hr_erp_course_providers.id"),
         nullable=True)
     course_provider = relationship("CourseProvider", back_populates="course")
 

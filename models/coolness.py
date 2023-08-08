@@ -20,7 +20,7 @@ class CoolnessStatusEnum(EnumBase):
 
 class CoolnessType(NamedModel):
 
-    __tablename__ = "coolness_types"
+    __tablename__ = "hr_erp_coolness_types"
     order = Column('COOLNESS_ORDER', Integer, nullable=False)
 
     coolnesses = relationship("Coolness", back_populates="type")
@@ -28,11 +28,11 @@ class CoolnessType(NamedModel):
 
 class Coolness(Model):
 
-    __tablename__ = "coolnesses"
-    type_id = Column(String(), ForeignKey("coolness_types.id"))
+    __tablename__ = "hr_erp_coolnesses"
+    type_id = Column(String(), ForeignKey("hr_erp_coolness_types.id"))
     type = relationship("CoolnessType", back_populates="coolnesses")
 
-    user_id = Column(String(), ForeignKey("users.id"))
+    user_id = Column(String(), ForeignKey("hr_erp_users.id"))
     user = relationship("User", back_populates="coolnesses")
 
     history = relationship(

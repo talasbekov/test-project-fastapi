@@ -6,9 +6,9 @@ from models import Model
 
 class Attestation(Model):
 
-    __tablename__ = "attestations"
+    __tablename__ = "hr_erp_attestations"
 
-    user_id = Column(String(), ForeignKey("users.id"))
+    user_id = Column(String(), ForeignKey("hr_erp_users.id"))
     user = relationship("User", back_populates="attestations")
     attestation_history = relationship(
         "AttestationHistory",

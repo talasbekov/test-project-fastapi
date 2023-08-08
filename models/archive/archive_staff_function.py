@@ -10,12 +10,12 @@ from .association import archive_staff_unit_function
 
 class ArchiveDocumentFunctionType(NamedModel):
 
-    __tablename__ = "archive_document_function_types"
+    __tablename__ = "hr_erp_arch_doc_fun_types"
 
     can_cancel = Column(Boolean, nullable=False)
 
     origin_id = Column(String(), ForeignKey(
-        "document_function_types.id"), nullable=True)
+        "hr_erp_document_function_types.id"), nullable=True)
 
     staff_functions = relationship(
         "ArchiveDocumentStaffFunction",
@@ -25,10 +25,10 @@ class ArchiveDocumentFunctionType(NamedModel):
 
 class ArchiveServiceFunctionType(NamedModel):
 
-    __tablename__ = "archive_service_function_types"
+    __tablename__ = "hr_erp_arch_ser_func_type"
 
     origin_id = Column(String(), ForeignKey(
-        "service_function_types.id"), nullable=True)
+        "hr_erp_service_function_types.id"), nullable=True)
 
     staff_functions = relationship(
         "ArchiveServiceStaffFunction",
@@ -38,7 +38,7 @@ class ArchiveServiceFunctionType(NamedModel):
 
 class ArchiveStaffFunction(NamedModel):
 
-    __tablename__ = "archive_staff_functions"
+    __tablename__ = "hr_erp_archive_staff_functions"
 
     hours_per_week = Column(Integer())
     discriminator = Column(String(255))
@@ -49,7 +49,7 @@ class ArchiveStaffFunction(NamedModel):
 
     origin_id = Column(
         String(),
-        ForeignKey("staff_functions.id"),
+        ForeignKey("hr_erp_staff_functions.id"),
         nullable=True)
 
     origin = relationship("StaffFunction", back_populates="archived")
@@ -63,10 +63,10 @@ class ArchiveStaffFunction(NamedModel):
 class ArchiveDocumentStaffFunction(ArchiveStaffFunction):
 
     role_id = Column(String(), ForeignKey(
-        "archive_document_function_types.id"))
+        "hr_erp_arch_doc_fun_types.id"))
     jurisdiction_id = Column(
         String(),
-        ForeignKey("jurisdictions.id"))
+        ForeignKey("hr_erp_jurisdictions.id"))
 
     priority = Column(Integer)
 
@@ -84,7 +84,7 @@ class ArchiveDocumentStaffFunction(ArchiveStaffFunction):
 class ArchiveServiceStaffFunction(ArchiveStaffFunction):
 
     type_id = Column(String(), ForeignKey(
-        "archive_service_function_types.id"))
+        "hr_erp_arch_ser_func_type.id"))
 
     type = relationship("ArchiveServiceFunctionType", foreign_keys=type_id)
 

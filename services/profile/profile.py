@@ -67,7 +67,7 @@ class ProfileService(ServiceBase[Profile, ProfileCreate, ProfileUpdate]):
     #         "sport_degrees": list(sport_degrees),
     #         "categories": list(profile.personal_profile.driving_license.category),
     #         "blood_group":
-    #           profile.medical_profile.general_user_informations[0].blood_group.value
+    #           profile.medical_profile.general_user_info[0].blood_group.value
     #     }
 
     #     template_path = configs.TEMPLATE_FILE_PATH+"Послужной список.docx"

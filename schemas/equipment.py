@@ -11,7 +11,7 @@ class EquipmentBase(Model):
     inventory_number: Optional[str]
     inventory_count: Optional[int]
     count_of_ammo: Optional[int]
-    clothing_equipment_types_models_id: Optional[uuid.UUID]
+    cloth_eq_types_models_id: Optional[uuid.UUID]
     type_of_other_equipment_model_id: Optional[uuid.UUID]
     clothing_size: Optional[str]
     document_link: Optional[str]
@@ -59,7 +59,7 @@ class TypeClothingEquipmentModel(ReadNamedModel):
 
 
 class TypeClothingEquipmentRead(ReadNamedModel):
-    type_clothing_equipment_models: Optional[List[TypeClothingEquipmentModel]]
+    type_cloth_eq_models: Optional[List[TypeClothingEquipmentModel]]
 
     class Config:
         orm_mode = True
@@ -68,8 +68,8 @@ class TypeClothingEquipmentRead(ReadNamedModel):
 
 class ClothingEquipmentTypesModelsRead(ReadNamedModel):
 
-    type_clothing_equipment_models: Optional[List[TypeClothingEquipmentModel]]
-    type_clothing_equipments: Optional[List[TypeClothingEquipmentRead]]
+    type_cloth_eq_models: Optional[List[TypeClothingEquipmentModel]]
+    type_cloth_equipmets: Optional[List[TypeClothingEquipmentRead]]
 
     class Config:
         orm_mode = True

@@ -14,13 +14,13 @@ class QuestionTypeEnum(str, enum.Enum):
 
 class Question(TextModel):
 
-    __tablename__ = "questions"
+    __tablename__ = "hr_erp_questions"
 
     is_required = Column(Boolean, nullable=False, default=True)
     question_type = Column(Enum(QuestionTypeEnum), nullable=False)
     diagram_description = Column(TEXT, nullable=True)
     report_description = Column(TEXT, nullable=True)
-    survey_id = Column(String(), ForeignKey("surveys.id"), nullable=True)
+    survey_id = Column(String(), ForeignKey("hr_erp_surveys.id"), nullable=True)
     score = Column(Integer, nullable=True)
 
     options = relationship("Option", cascade="all,delete",

@@ -8,11 +8,11 @@ from models.user_candidates import CandidateStageQuestionTypeEnum
 
 class CandidateStageAnswer(Model):
 
-    __tablename__ = "candidate_stage_answers"
+    __tablename__ = "hr_erp_candidate_stage_answers"
 
     candidate_stage_question_id = Column(
         String(),
-        ForeignKey("candidate_stage_questions.id"),
+        ForeignKey("hr_erp_cand_stage_questions.id"),
         nullable=True)
     candidate_stage_question = relationship(
         "CandidateStageQuestion",
@@ -21,7 +21,7 @@ class CandidateStageAnswer(Model):
 
     candidate_id = Column(
         String(),
-        ForeignKey("candidates.id"),
+        ForeignKey("hr_erp_candidates.id"),
         nullable=True)
     candidate = relationship(
         "Candidate",
@@ -77,7 +77,7 @@ class CandidateEssayAnswer(CandidateStageAnswer):
 
     candidate_essay_type_id = Column(
         String(),
-        ForeignKey("candidate_essay_types.id"),
+        ForeignKey("hr_erp_candidate_essay_types.id"),
         nullable=True)
     candidate_essay_type = relationship(
         "CandidateEssayType",
@@ -99,7 +99,7 @@ class CandidateSportAnswer(CandidateStageAnswer):
 
 class CandidateDropdownAnswer(CandidateStageAnswer):
     category_id = Column(String(), ForeignKey(
-        "candidate_categories.id"), nullable=True)
+        "hr_erp_candidate_categories.id"), nullable=True)
     category = relationship("CandidateCategory", cascade="all, delete")
 
     __mapper_args__ = {

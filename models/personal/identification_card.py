@@ -7,7 +7,7 @@ from models import Model
 
 class IdentificationCard(Model):
 
-    __tablename__ = "identification_cards"
+    __tablename__ = "hr_erp_identification_cards"
 
     document_number = Column(String)
     date_of_issue = Column(TIMESTAMP(timezone=True))
@@ -16,7 +16,7 @@ class IdentificationCard(Model):
     document_link = Column(TEXT, nullable=True)
     profile_id = Column(
         String(),
-        ForeignKey("personal_profiles.id"),
+        ForeignKey("hr_erp_personal_profiles.id"),
         nullable=False)
 
     profile = relationship(

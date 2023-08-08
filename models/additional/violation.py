@@ -7,7 +7,7 @@ from models import Model
 
 class Violation(Model):
 
-    __tablename__ = "violations"
+    __tablename__ = "hr_erp_violations"
 
     name = Column(String(255), nullable=False)
     date = Column(
@@ -22,6 +22,6 @@ class Violation(Model):
     document_link = Column(String(255), nullable=False)
 
     profile_id = Column(String(),
-                        ForeignKey("additional_profiles.id"))
+                        ForeignKey("hr_erp_additional_profiles.id"))
 
     profile = relationship("AdditionalProfile", back_populates="violations")

@@ -5,7 +5,7 @@ from models import NamedModel
 
 class Country(NamedModel):
 
-    __tablename__ = "countries"
+    __tablename__ = "hr_erp_countries"
 
     abroad_travels = relationship(
         "AbroadTravel",

@@ -7,7 +7,7 @@ from models import Model
 
 class PsychologicalCheck(Model):
 
-    __tablename__ = "psychological_checks"
+    __tablename__ = "hr_erp_psychological_checks"
 
     issued_by = Column(String(255), nullable=False)
     date_of_issue = Column(TIMESTAMP(timezone=True), nullable=False)
@@ -15,7 +15,7 @@ class PsychologicalCheck(Model):
     document_number = Column(String(255), nullable=True)
 
     profile_id = Column(String(),
-                        ForeignKey("additional_profiles.id"))
+                        ForeignKey("hr_erp_additional_profiles.id"))
 
     profile = relationship(
         "AdditionalProfile",

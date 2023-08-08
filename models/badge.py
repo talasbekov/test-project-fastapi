@@ -6,7 +6,7 @@ from models import Model, NamedModel
 
 
 class BadgeType(NamedModel):
-    __tablename__ = "badge_types"
+    __tablename__ = "hr_erp_badge_types"
 
     url = Column(String, nullable=True)
 
@@ -15,10 +15,10 @@ class BadgeType(NamedModel):
 
 class Badge(Model):
 
-    __tablename__ = "badges"
+    __tablename__ = "hr_erp_badges"
 
-    user_id = Column(String(), ForeignKey("users.id"))
-    type_id = Column(String(), ForeignKey("badge_types.id"))
+    user_id = Column(String(), ForeignKey("hr_erp_users.id"))
+    type_id = Column(String(), ForeignKey("hr_erp_badge_types.id"))
     type = relationship("BadgeType", back_populates="badges")
     user = relationship("User", back_populates='badges')
 

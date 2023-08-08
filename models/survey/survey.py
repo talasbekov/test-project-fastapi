@@ -39,7 +39,7 @@ class SurveyRepeatTypeEnum(str, enum.Enum):
 
 class Survey(NamedModel):
 
-    __tablename__ = "surveys"
+    __tablename__ = "hr_erp_surveys"
     
     description = Column(TEXT, nullable=True)
     start_date = Column(TIMESTAMP(timezone=True), nullable=False)
@@ -52,10 +52,10 @@ class Survey(NamedModel):
     jurisdiction_type = Column(Enum(SurveyJurisdictionTypeEnum), nullable=False)
     is_kz_translate_required = Column(Boolean(), default=False, nullable=True)
     is_anonymous = Column(Boolean(), default=False, nullable=True)
-    certain_member_id = Column(String(), ForeignKey("users.id"))
-    staff_division_id = Column(String(), ForeignKey("staff_divisions.id"))
+    certain_member_id = Column(String(), ForeignKey("hr_erp_users.id"))
+    staff_division_id = Column(String(), ForeignKey("hr_erp_staff_divisions.id"))
     staff_position = Column(Enum(SurveyStaffPositionEnum), nullable=False)
-    owner_id = Column(String(), ForeignKey("users.id"))
+    owner_id = Column(String(), ForeignKey("hr_erp_users.id"))
     type = Column(Enum(SurveyTypeEnum), nullable=False)
     repeat_type = Column(Enum(SurveyRepeatTypeEnum), nullable=False,
                          server_default=SurveyRepeatTypeEnum.NEVER.value)

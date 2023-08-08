@@ -7,7 +7,7 @@ from .association import hr_documents_users
 
 
 class User(isActiveModel):
-    __tablename__ = "users"
+    __tablename__ = "hr_erp_users"
 
     # Properties
     email = Column(String(150), nullable=True, unique=True)
@@ -20,20 +20,20 @@ class User(isActiveModel):
     id_number = Column(String(255), unique=True)
     phone_number = Column(String(32))
     address = Column(String(255))
-    rank_id = Column(String(), ForeignKey("ranks.id"), nullable=True)
+    rank_id = Column(String(), ForeignKey("hr_erp_ranks.id"), nullable=True)
     last_signed_at = Column(TIMESTAMP(timezone=True), nullable=True)
 
     staff_unit_id = Column(
         String(),
-        ForeignKey("staff_units.id"),
+        ForeignKey("hr_erp_staff_units.id"),
         nullable=False,)
     actual_staff_unit_id = Column(
         String(),
-        ForeignKey("staff_units.id"),
+        ForeignKey("hr_erp_staff_units.id"),
         nullable=False)
     supervised_by = Column(
         String(),
-        ForeignKey("users.id"),
+        ForeignKey("hr_erp_users.id"),
         nullable=True)
 
     description = Column(TEXT, nullable=True)

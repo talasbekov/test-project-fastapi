@@ -20,4 +20,4 @@ class CandidateStageTypeUpdate(CandidateStageTypeBase):
 
 
 class CandidateStageTypeRead(CandidateStageTypeBase, ReadNamedModel):
-    candidate_stage_questions: Optional[List[CandidateStageQuestionRead]]
+    cand_stage_questions: Optional[List[CandidateStageQuestionRead]]

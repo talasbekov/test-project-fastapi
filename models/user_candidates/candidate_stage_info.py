@@ -4,8 +4,8 @@ from sqlalchemy import Column, ForeignKey, TIMESTAMP, Boolean, Enum, String
 from sqlalchemy.orm import relationship
 
 from models import Model
-from models.association import staff_unit_candidate_stage_infos
-from models.archive.association import archive_staff_unit_candidate_stage_infos
+from models.association import s_u_cand_stage_infos
+from models.archive.association import a_s_u_cand_stage_infos
 
 
 class CandidateStageInfoStatusEnum(str, enum.Enum):
@@ -17,7 +17,7 @@ class CandidateStageInfoStatusEnum(str, enum.Enum):
 
 class CandidateStageInfo(Model):
 
-    __tablename__ = "candidate_stage_infos"
+    __tablename__ = "hr_erp_candidate_stage_infos"
 
     status = Column(
         Enum(CandidateStageInfoStatusEnum),
@@ -26,11 +26,11 @@ class CandidateStageInfo(Model):
     date_sign = Column(TIMESTAMP(timezone=True), nullable=True, default=None)
     candidate_id = Column(
         String(),
-        ForeignKey("candidates.id"),
+        ForeignKey("hr_erp_candidates.id"),
         nullable=True)
     candidate_stage_type_id = Column(
         String(),
-        ForeignKey("candidate_stage_types.id"),
+        ForeignKey("hr_erp_candidate_stage_types.id"),
         nullable=True)
     candidate_stage_type = relationship(
         "CandidateStageType",
@@ -42,14 +42,14 @@ class CandidateStageInfo(Model):
                              back_populates="candidate_stage_infos")
     staff_unit_coordinate_ids = relationship(
         "StaffUnit",
-        secondary=staff_unit_candidate_stage_infos,
+        secondary=s_u_cand_stage_infos,
         back_populates="candidate_stage_infos",
         cascade="all,delete",
     )
 
     archive_staff_unit_coordinate_ids = relationship(
         "ArchiveStaffUnit",
-        secondary=archive_staff_unit_candidate_stage_infos,
+        secondary=a_s_u_cand_stage_infos,
         back_populates="candidate_stage_infos",
         cascade="all,delete",
     )

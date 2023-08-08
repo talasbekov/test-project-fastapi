@@ -9,7 +9,7 @@ from models import Model
 
 class AbroadTravel(Model):
 
-    __tablename__ = "abroad_travels"
+    __tablename__ = "hr_erp_abroad_travels"
 
     id = Column(
         String(),
@@ -21,7 +21,7 @@ class AbroadTravel(Model):
     vehicle_type = Column(String(255), nullable=False)
     destination_country_id = Column(
         String(),
-        ForeignKey('countries.id'),
+        ForeignKey('hr_erp_countries.id'),
         nullable=False)
     date_from = Column(TIMESTAMP(timezone=True), nullable=False)
     date_to = Column(TIMESTAMP(timezone=True), nullable=False)
@@ -29,7 +29,7 @@ class AbroadTravel(Model):
     document_link = Column(String(255), nullable=False, default="")
 
     profile_id = Column(String(), ForeignKey(
-        "additional_profiles.id"), nullable=True)
+        "hr_erp_additional_profiles.id"), nullable=True)
 
     profile = relationship(
         "AdditionalProfile",

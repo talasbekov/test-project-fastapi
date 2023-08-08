@@ -34,6 +34,8 @@ class PositionNameEnum(str, EnumBase):
     HEAD_OF_DEPARTMENT = 'Начальник департамента'
     MANAGEMENT_HEAD = 'Начальник управления'
     HEAD_OF_OTDEL = 'Начальник отдела'
+    CANDIDATE = 'Кандидат'
+    OUT_STAFF = 'Внештатный сотрудник'
 
 
 class CategoryCodeEnum(str, EnumBase):
@@ -73,9 +75,9 @@ class FormEnum(EnumBase):
 
 class Position(NamedModel):
 
-    __tablename__ = "positions"
+    __tablename__ = "hr_erp_positions"
 
-    max_rank_id = Column(String(), ForeignKey("ranks.id"),
+    max_rank_id = Column(String(), ForeignKey("hr_erp_ranks.id"),
                          nullable=True)
     max_rank = relationship("Rank", cascade="all,delete")
     # TODO: enum was deleted because of LookupError: "C-S-1" is not among the

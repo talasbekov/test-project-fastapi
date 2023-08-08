@@ -2,4 +2,4 @@ from models import NamedModel
 
 
 class CandidateCategory(NamedModel):
-    __tablename__ = "candidate_categories"
+    __tablename__ = "hr_erp_candidate_categories"

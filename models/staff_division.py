@@ -18,21 +18,22 @@ class StaffDivisionEnum(str, enum.Enum):
     PERISHED = "Погиб"
     SERVICE = 'СГО РК'
     DISPOSITION = 'В распоряжении'
+    OUT_STAFF = 'Внештатный сотрудник'
 
 
 class StaffDivision(NamedNestedModel, isActiveModel):
 
-    __tablename__ = "staff_divisions"
+    __tablename__ = "hr_erp_staff_divisions"
 
     # Properties
     parent_group_id = Column(String(), ForeignKey(
-        "staff_divisions.id"), nullable=True)
+        "hr_erp_staff_divisions.id"), nullable=True)
     description = Column(CLOB)
     is_combat_unit = Column(Boolean)
     leader_id = Column(String(), ForeignKey(
-        "staff_units.id"), nullable=True)
+        "hr_erp_staff_units.id"), nullable=True)
     staff_division_number = Column(Integer)
-    type_id = Column(String(), ForeignKey("staff_division_types.id"))
+    type_id = Column(String(), ForeignKey("hr_erp_staff_division_types.id"))
     type = relationship("StaffDivisionType")
     # Relationships
     children = relationship("StaffDivision")

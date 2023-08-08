@@ -6,10 +6,10 @@ from models import Model
 
 class EducationalProfile(Model):
 
-    __tablename__ = "educational_profiles"
+    __tablename__ = "hr_erp_educational_profiles"
 
     profile_id = Column(String(), ForeignKey(
-        "profiles.id"), nullable=True)
+        "hr_erp_profiles.id"), nullable=True)
     profile = relationship("Profile", back_populates="educational_profile")
 
     academic_degree = relationship(

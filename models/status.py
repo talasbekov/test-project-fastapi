@@ -17,19 +17,19 @@ class StatusEnum(Enum):
 
 class StatusType(NamedModel):
 
-    __tablename__ = "status_types"
+    __tablename__ = "hr_erp_status_types"
 
     statuses = relationship("Status", back_populates="type")
 
 
 class Status(Model):
 
-    __tablename__ = "statuses"
+    __tablename__ = "hr_erp_statuses"
 
-    type_id = Column(String(), ForeignKey("status_types.id"))
+    type_id = Column(String(), ForeignKey("hr_erp_status_types.id"))
     type = relationship("StatusType", back_populates="statuses")
 
-    user_id = Column(String(), ForeignKey("users.id"))
+    user_id = Column(String(), ForeignKey("hr_erp_users.id"))
     user = relationship("User", back_populates="statuses")
 
     history = relationship(

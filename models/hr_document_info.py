@@ -7,20 +7,20 @@ from models import Model
 
 class HrDocumentInfo(Model):
 
-    __tablename__ = "hr_document_infos"
+    __tablename__ = "hr_erp_hr_document_infos"
 
     hr_document_step_id = Column(
         String(),
-        ForeignKey("hr_document_steps.id"),
+        ForeignKey("hr_erp_hr_document_steps.id"),
         nullable=False)
 
     assigned_to_id = Column(
         String(),
-        ForeignKey("users.id"),
+        ForeignKey("hr_erp_users.id"),
         nullable=True)
     signed_by_id = Column(
         String(),
-        ForeignKey("users.id"),
+        ForeignKey("hr_erp_users.id"),
         nullable=True)
 
     comment = Column('DOCUMENT_COMMENT', TEXT())
@@ -33,7 +33,7 @@ class HrDocumentInfo(Model):
 
     hr_document_id = Column(
         String(),
-        ForeignKey("hr_documents.id"),
+        ForeignKey("hr_erp_hr_documents.id"),
         nullable=False)
 
     hr_document_step = relationship(

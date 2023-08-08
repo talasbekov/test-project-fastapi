@@ -1107,7 +1107,7 @@ def upgrade() -> None:
     )
 
     op.bulk_insert(
-        Base.metadata.tables['institution_degree_types'],
+        Base.metadata.tables['inst_degree_types'],
         [{
             'id': institution_degree_type1_id,
             'name': "Среднее",
@@ -4105,7 +4105,7 @@ def upgrade() -> None:
     type_army_equipment_model3_id = get_uuid()
 
     op.bulk_insert(
-        Base.metadata.tables['type_army_equipment_models'],
+        Base.metadata.tables['type_ar_equip_models'],
         [{
             'id': type_army_equipment_model_id,
             'name': 'AK-74',
@@ -4136,7 +4136,7 @@ def upgrade() -> None:
     type_of_clothing_equipment8_id = get_uuid()
 
     op.bulk_insert(
-        Base.metadata.tables['type_clothing_equipments'],
+        Base.metadata.tables['type_cloth_equipmets'],
         [{
             'id': type_of_clothing_equipment_id,
             'name': 'Шапка',
@@ -4183,7 +4183,7 @@ def upgrade() -> None:
     type_of_clothing_equipment_model3_id = get_uuid()
 
     op.bulk_insert(
-        Base.metadata.tables['type_clothing_equipment_models'],
+        Base.metadata.tables['type_cloth_eq_models'],
         [{
             'id': type_of_clothing_equipment_model_id,
             'name': 'Военная',
@@ -4210,26 +4210,26 @@ def upgrade() -> None:
     clothing_equipment_types_model4_id = get_uuid()
 
     op.bulk_insert(
-        Base.metadata.tables['clothing_equipment_types_models'],
+        Base.metadata.tables['cloth_eq_types_models'],
         [{
             'id': clothing_equipment_types_model_id,
-            'type_clothing_equipments_id': type_of_clothing_equipment_id,
-            'type_clothing_equipment_models_id': type_of_clothing_equipment_model_id
+            'type_cloth_equipmets_id': type_of_clothing_equipment_id,
+            'type_cloth_eq_models_id': type_of_clothing_equipment_model_id
         },
             {
                 'id': clothing_equipment_types_model2_id,
-                'type_clothing_equipments_id': type_of_clothing_equipment2_id,
-                'type_clothing_equipment_models_id': type_of_clothing_equipment_model_id
+                'type_cloth_equipmets_id': type_of_clothing_equipment2_id,
+                'type_cloth_eq_models_id': type_of_clothing_equipment_model_id
         },
             {
                 'id': clothing_equipment_types_model3_id,
-                'type_clothing_equipments_id': type_of_clothing_equipment2_id,
-                'type_clothing_equipment_models_id': type_of_clothing_equipment_model2_id
+                'type_cloth_equipmets_id': type_of_clothing_equipment2_id,
+                'type_cloth_eq_models_id': type_of_clothing_equipment_model2_id
         },
             {
                 'id': clothing_equipment_types_model4_id,
-                'type_clothing_equipments_id': type_of_clothing_equipment_id,
-                'type_clothing_equipment_models_id': type_of_clothing_equipment_model2_id
+                'type_cloth_equipmets_id': type_of_clothing_equipment_id,
+                'type_cloth_eq_models_id': type_of_clothing_equipment_model2_id
         },
         ])
 
@@ -4255,7 +4255,7 @@ def upgrade() -> None:
     type_other_equipment_model4_id = get_uuid()
 
     op.bulk_insert(
-        Base.metadata.tables['type_other_equipment_models'],
+        Base.metadata.tables['type_oth_eq_models'],
         [{
             'id': type_other_equipment_model_id,
             'name': 'HP LaserJet N7100',
@@ -4301,7 +4301,7 @@ def upgrade() -> None:
             'clothing_size': None,
             'user_id': user1_id,
             'type_of_equipment': 'army_equipment',
-            'clothing_equipment_types_models_id': None,
+            'cloth_eq_types_models_id': None,
             'type_of_other_equipment_model_id': None,
             'document_link': f'{base_s3_url}/static/example.txt',
             'document_number': '123456789',
@@ -4310,7 +4310,7 @@ def upgrade() -> None:
         },
             {
                 'id': clothing_equipment_id,
-                'clothing_equipment_types_models_id': clothing_equipment_types_model_id,
+                'cloth_eq_types_models_id': clothing_equipment_types_model_id,
                 'user_id': user1_id,
                 'type_of_equipment': 'clothing_equipment',
                 'count_of_ammo': None,
@@ -4326,7 +4326,7 @@ def upgrade() -> None:
         },
             {
                 'id': clothing_equipment2_id,
-                'clothing_equipment_types_models_id': clothing_equipment_types_model2_id,
+                'cloth_eq_types_models_id': clothing_equipment_types_model2_id,
                 'user_id': user1_id,
                 'type_of_equipment': 'clothing_equipment',
                 'count_of_ammo': None,
@@ -4342,7 +4342,7 @@ def upgrade() -> None:
         },
             {
                 'id': clothing_equipment3_id,
-                'clothing_equipment_types_models_id': clothing_equipment_types_model3_id,
+                'cloth_eq_types_models_id': clothing_equipment_types_model3_id,
                 'user_id': user1_id,
                 'type_of_equipment': 'clothing_equipment',
                 'count_of_ammo': None,
@@ -4358,7 +4358,7 @@ def upgrade() -> None:
         },
             {
                 'id': clothing_equipment4_id,
-                'clothing_equipment_types_models_id': clothing_equipment_types_model4_id,
+                'cloth_eq_types_models_id': clothing_equipment_types_model4_id,
                 'user_id': user1_id,
                 'type_of_equipment': 'clothing_equipment',
                 'count_of_ammo': None,
@@ -4382,7 +4382,7 @@ def upgrade() -> None:
                 'inventory_count': 1,
                 'clothing_size': None,
                 'type_of_army_equipment_model_id': None,
-                'clothing_equipment_types_models_id': None,
+                'cloth_eq_types_models_id': None,
                 'document_link': f'{base_s3_url}/static/example.txt',
                 'document_number': '123456789',
                 'date_from': '2023-04-11T19:43:02.556000',
@@ -4398,7 +4398,7 @@ def upgrade() -> None:
                 'inventory_count': 1,
                 'clothing_size': None,
                 'type_of_army_equipment_model_id': None,
-                'clothing_equipment_types_models_id': None,
+                'cloth_eq_types_models_id': None,
                 'document_link': f'{base_s3_url}/static/example.txt',
                 'document_number': '123456789',
                 'date_from': '2023-04-11T19:43:02.556000',
@@ -5743,7 +5743,7 @@ def upgrade() -> None:
     candidate_stage_question28_id = get_uuid()
 
     op.bulk_insert(
-        Base.metadata.tables['candidate_stage_questions'],
+        Base.metadata.tables['cand_stage_questions'],
         [{
             'id': candidate_stage_question1_id,
             'question_type': 'Document',
@@ -6470,7 +6470,7 @@ def upgrade() -> None:
     )
 
     op.bulk_insert(
-        Base.metadata.tables['hr_vacancy_hr_vacancy_requirements'],
+        Base.metadata.tables['hr_v_hr_vacancy_req'],
         [{
             'hr_vacancy_id': hr_vacancy_id,
             'hr_vacancy_requirement_id': hr_vacancy_requirement_id
@@ -7108,7 +7108,7 @@ def create_user(id,
     general_user_information_id = get_uuid()
 
     op.bulk_insert(
-        Base.metadata.tables['general_user_informations'],
+        Base.metadata.tables['general_user_info'],
         [{
             'id': general_user_information_id,
             'height': 189,
@@ -7134,13 +7134,13 @@ def create_user(id,
         }]
     )
 
-    dispensary_registrations_id = get_uuid()
-    dispensary_registrations1_id = get_uuid()
+    disp_registrations_id = get_uuid()
+    disp_registrations1_id = get_uuid()
 
     op.bulk_insert(
-        Base.metadata.tables['dispensary_registrations'],
+        Base.metadata.tables['disp_registrations'],
         [{
-            'id': dispensary_registrations_id,
+            'id': disp_registrations_id,
             'name': "Астма",
             'nameKZ': 'Демікпе',
             'initiator': 'Республиканская больница',
@@ -7148,7 +7148,7 @@ def create_user(id,
             'profile_id': medical_profile_id,
             'document_link': f"{base_s3_url}/static/example.txt"
         }, {
-            'id': dispensary_registrations1_id,
+            'id': disp_registrations1_id,
             'name': "Сахарный Диабет",
             'nameKZ': "Қант Диабеті",
             'initiator': 'Клиника "Нурсултан"',

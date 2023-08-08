@@ -3,18 +3,18 @@ from sqlalchemy.orm import relationship
 
 from models import Model
 from .association import (
-    exam_schedule_instructors,
+    exam_schedule_inst,
 )
 
 
 class ExamResult(Model):
-    __tablename__ = "exam_results"
+    __tablename__ = "hr_erp_exam_results"
 
     # Properties
     exam_date = Column(Date)
     grade = Column(Integer)
-    user_id = Column(String(), ForeignKey('users.id'))
-    exam_id = Column(String(), ForeignKey('exam_schedules.id'))
+    user_id = Column(String(), ForeignKey('hr_erp_users.id'))
+    exam_id = Column(String(), ForeignKey('hr_erp_exam_schedules.id'))
 
     # Relationships
     user = relationship("User", back_populates="exam_results")
@@ -23,17 +23,17 @@ class ExamResult(Model):
 
 
 class ExamSchedule(Model):
-    __tablename__ = "exam_schedules"
+    __tablename__ = "hr_erp_exam_schedules"
 
     # Properties
     start_date = Column(Date)
     end_date = Column(Date)
     start_time = Column(Time)
     end_time = Column(Time)
-    place_id = Column(String(), ForeignKey("places.id"))
-    schedule_id = Column(String(), ForeignKey("schedule_years.id"))
+    place_id = Column(String(), ForeignKey("hr_erp_places.id"))
+    schedule_id = Column(String(), ForeignKey("hr_erp_schedule_years.id"))
 
     # Relationships
-    instructors = relationship("User", secondary=exam_schedule_instructors)
+    instructors = relationship("User", secondary=exam_schedule_inst)
     place = relationship("Place")
     schedule = relationship("ScheduleYear", back_populates="exams")

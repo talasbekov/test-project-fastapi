@@ -5,18 +5,18 @@ from models import Model
 
 
 class Notification(Model):
-    __tablename__ = "notifications"
+    __tablename__ = "hr_erp_notifications"
 
     message = Column(TEXT, nullable=False)
 
     sender_id = Column(
         String(),
-        ForeignKey("users.id"),
+        ForeignKey("hr_erp_users.id"),
         nullable=False,
         index=True)
     receiver_id = Column(
         String(),
-        ForeignKey("users.id"),
+        ForeignKey("hr_erp_users.id"),
         nullable=False,
         index=True)
 

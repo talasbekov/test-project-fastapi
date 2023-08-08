@@ -3,30 +3,30 @@ from sqlalchemy.dialects.oracle import CLOB
 from sqlalchemy.orm import relationship
 
 from models import isActiveModel
-from .association import staff_unit_function, staff_unit_candidate_stage_infos
+from .association import staff_unit_function, s_u_cand_stage_infos
 
 
 class StaffUnit(isActiveModel):
 
-    __tablename__ = "staff_units"
+    __tablename__ = "hr_erp_staff_units"
 
     # Properties
     requirements = Column(ARRAY(CLOB), nullable=True)
     position_id = Column(
         String(),
-        ForeignKey("positions.id"),
+        ForeignKey("hr_erp_positions.id"),
         nullable=False)
     staff_division_id = Column(
         String(),
-        ForeignKey("staff_divisions.id"),
+        ForeignKey("hr_erp_staff_divisions.id"),
         nullable=True)
     user_replacing_id = Column(
         String(),
-        ForeignKey("users.id"),
+        ForeignKey("hr_erp_users.id"),
         nullable=True)
     curator_of_id = Column(
         String(),
-        ForeignKey("staff_divisions.id", ondelete='SET NULL'),
+        ForeignKey("hr_erp_staff_divisions.id", ondelete='SET NULL'),
         nullable=True)
 
     # Relationships
@@ -62,7 +62,7 @@ class StaffUnit(isActiveModel):
     )
     candidate_stage_infos = relationship(
         "CandidateStageInfo",
-        secondary=staff_unit_candidate_stage_infos,
+        secondary=s_u_cand_stage_infos,
         back_populates="staff_unit_coordinate_ids",
         cascade="all,delete",
         lazy="joined"

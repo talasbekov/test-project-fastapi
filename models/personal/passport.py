@@ -7,7 +7,7 @@ from models import Model
 
 class Passport(Model):
 
-    __tablename__ = "passports"
+    __tablename__ = "hr_erp_passports"
 
     document_number = Column(String)
     date_of_issue = Column(TIMESTAMP(timezone=True))
@@ -15,7 +15,7 @@ class Passport(Model):
     document_link = Column(TEXT, nullable=True)
     profile_id = Column(
         String(),
-        ForeignKey("personal_profiles.id"),
+        ForeignKey("hr_erp_personal_profiles.id"),
         nullable=False)
     issued_by = Column(String(255), nullable=False)
 

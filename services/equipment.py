@@ -57,16 +57,16 @@ class EquipmentService(
             self, db: Session,
             skip: int = 0, limit: int = 10):
 
-        type_clothing_equipments_list = (db.query(TypeClothingEquipment)
+        type_cloth_equipmets_list = (db.query(TypeClothingEquipment)
                                          .offset(skip).limit(limit).all())
 
-        if not type_clothing_equipments_list:
+        if not type_cloth_equipmets_list:
             raise NotFoundException("Equipment not found")
-        type_clothing_equipments_read_list = []
-        for type_clothing_equipment in type_clothing_equipments_list:
+        type_cloth_equipmets_read_list = []
+        for type_clothing_equipment in type_cloth_equipmets_list:
             clothing_equipment_models = (db.query(TypeClothingEquipmentModel)
                         .join(ClothingEquipmentTypesModels)
-                        .filter(ClothingEquipmentTypesModels.type_clothing_equipments_id
+                        .filter(ClothingEquipmentTypesModels.type_cloth_equipmets_id
                                 == type_clothing_equipment.id)
                         .offset(skip)
                         .limit(limit)
@@ -74,13 +74,13 @@ class EquipmentService(
             )
             type_clothing_equipment_read = TypeClothingEquipmentRead.from_orm(
                 type_clothing_equipment)
-            type_clothing_equipment_read.type_clothing_equipment_models = (
+            type_clothing_equipment_read.type_cloth_eq_models = (
                 clothing_equipment_models
             )
-            type_clothing_equipments_read_list.append(
+            type_cloth_equipmets_read_list.append(
                 type_clothing_equipment_read)
 
-        return type_clothing_equipments_read_list
+        return type_cloth_equipmets_read_list
 
     def get_all_clothing_equipment_models(self, db: Session):
         return db.query(TypeClothingEquipmentModel).all()
@@ -90,7 +90,7 @@ class EquipmentService(
         res = (
             db.query(TypeClothingEquipmentModel.name,
                      func.count(
-                         ClothingEquipmentTypesModels.type_clothing_equipments_id)
+                         ClothingEquipmentTypesModels.type_cloth_equipmets_id)
                      )
             .join(ClothingEquipmentTypesModels)
             .join(ClothingEquipment)

@@ -5,9 +5,9 @@ from models import Model
 
 class UserStat(Model):
 
-    __tablename__ = "user_stats"
+    __tablename__ = "hr_erp_user_stats"
 
-    user_id = Column(String(), ForeignKey("users.id"), nullable=True)
+    user_id = Column(String(), ForeignKey("hr_erp_users.id"), nullable=True)
     physical_training = Column(Integer)
     fire_training = Column(Integer)
     attendance = Column(Integer)

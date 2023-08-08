@@ -18,17 +18,17 @@ class HrDocumentStatusEnum(str, enum.Enum):
 
 
 class HrDocument(Model):
-    __tablename__ = "hr_documents"
+    __tablename__ = "hr_erp_hr_documents"
 
     # Properties
     parent_id = Column(
         String(),
-        ForeignKey("hr_documents.id"),
+        ForeignKey("hr_erp_hr_documents.id"),
         nullable=True)
 
     hr_document_template_id = Column(
         String(),
-        ForeignKey("hr_document_templates.id"),
+        ForeignKey("hr_erp_hr_document_templates.id"),
         nullable=True)
     due_date = Column(TIMESTAMP(timezone=True), nullable=True)
     properties = Column(CLOB)
@@ -37,16 +37,16 @@ class HrDocument(Model):
 
     initialized_by_id = Column(
         String(),
-        ForeignKey("users.id"),
+        ForeignKey("hr_erp_users.id"),
         nullable=True)
     initialized_at = Column(TIMESTAMP(timezone=True), nullable=True)
     initial_comment = Column(TEXT(), nullable=True)
     status_id = Column(String(),
-                       ForeignKey("hr_document_statuses.id"))
+                       ForeignKey("hr_erp_hr_document_statuses.id"))
 
     last_step_id = Column(String(),
-                          ForeignKey("hr_document_steps.id"))
-    old_history_id = Column(String(), ForeignKey("histories.id"))
+                          ForeignKey("hr_erp_hr_document_steps.id"))
+    old_history_id = Column(String(), ForeignKey("hr_erp_histories.id"))
 
     # Relationships
     children = relationship("HrDocument", cascade="all,delete")

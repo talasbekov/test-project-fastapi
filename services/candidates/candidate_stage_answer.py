@@ -75,7 +75,7 @@ class CandidateStageAnswerService(
             self, db: Session, candidate_id: str) -> List[CandidateStageAnswerRead]:
         stage_types = db.query(CandidateStageType).all()
         for stage_type in stage_types:
-            questions = stage_type.candidate_stage_questions
+            questions = stage_type.cand_stage_questions
             for question in questions:
                 question.answer = (db
                                    .query(CandidateStageAnswer)
@@ -263,7 +263,7 @@ class CandidateStageAnswerService(
         ).first()
 
         candidate_stage_type = db.query(CandidateStageType).filter(
-            CandidateStageType.candidate_stage_questions.contains(question),
+            CandidateStageType.cand_stage_questions.contains(question),
         ).first()
 
         current_stage_info: CandidateStageInfo = db.query(CandidateStageInfo).filter(

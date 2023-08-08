@@ -7,7 +7,7 @@ from models import Model
 
 class SpecialCheck(Model):
 
-    __tablename__ = "special_checks"
+    __tablename__ = "hr_erp_special_checks"
 
     number = Column('special_number', String(255), nullable=False)
     issued_by = Column(String(255), nullable=False)
@@ -15,7 +15,7 @@ class SpecialCheck(Model):
     document_link = Column(String(255), nullable=False)
 
     profile_id = Column(String(),
-                        ForeignKey("additional_profiles.id"))
+                        ForeignKey("hr_erp_additional_profiles.id"))
 
     profile = relationship(
         "AdditionalProfile",

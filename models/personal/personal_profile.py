@@ -6,11 +6,11 @@ from models import Model
 
 class PersonalProfile(Model):
 
-    __tablename__ = "personal_profiles"
+    __tablename__ = "hr_erp_personal_profiles"
 
     profile_id = Column(
         String(),
-        ForeignKey("profiles.id"),
+        ForeignKey("hr_erp_profiles.id"),
         nullable=False)
 
     profile = relationship("Profile", back_populates="personal_profile")
