@@ -101,9 +101,11 @@ class StaffDivisionService(
             self.model.name != StaffDivisionEnum.SPECIAL_GROUP.value
         ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
         for parent in parents:
-            parent.description = json.loads(parent.description)
+            if isinstance(parent.description, str):
+                parent.description = json.loads(parent.description)
             for staff_unit in parent.staff_units:
-                staff_unit.requirements = json.loads(staff_unit.requirements)
+                if isinstance(staff_unit.requirements, str):
+                    staff_unit.requirements = json.loads(staff_unit.requirements)
         return parents
     
     def get_all_except_special_raw(self,

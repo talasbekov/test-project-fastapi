@@ -7,7 +7,7 @@ from schemas import NamedModel, ReadNamedModel
 
 
 class VehicleBase(NamedModel):
-    number: str
+    number: Optional[str]
     date_from: datetime
     profile_id: uuid.UUID
     document_link: Optional[str]

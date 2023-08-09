@@ -28,7 +28,7 @@ class History(Model):
 
 
 class StatusBase(Model):
-    type_id: uuid.UUID
+    type_id: Optional[uuid.UUID]
     user_id: uuid.UUID
 
 

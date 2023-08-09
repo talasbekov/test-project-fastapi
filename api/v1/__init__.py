@@ -43,6 +43,7 @@ from .hr_vacancy_requirement import router as hr_vacancy_requirement_router
 from .position import router as position_router
 from .auto_tag import router as auto_tag_router
 from .dashboard import router as dashboard_router
+from .permission import router as permission_router
 
 from .survey import *
 from .bsp import *
@@ -128,5 +129,5 @@ router.include_router(plan_router)
 router.include_router(schedule_day_router)
 router.include_router(schedule_month_router)
 router.include_router(schedule_year_router)
-
+router.include_router(permission_router)
 router.include_router(dashboard_router)

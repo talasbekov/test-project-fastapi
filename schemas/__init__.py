@@ -16,7 +16,7 @@ from .hr_document_template import (HrDocumentTemplateCreate,
                                    HrDocumentTemplateUpdate,
                                    SuggestCorrections)
 from .permission import (PermissionCreate, PermissionRead, PermissionUpdate,
-                         UserPermission)
+                         UserPermission, PermissionTypeRead, PermissionType)
 
 from .rank import RankCreate, RankRead, RankUpdate
 from .position import PositionCreate, PositionUpdate, PositionRead
@@ -67,7 +67,7 @@ from .personnal_reserve import (
     PersonnalReserveUpdate)
 from .coolness import *
 from .user_stat import UserStatCreate, UserStatRead, UserStatUpdate
-from .auth import LoginForm, RegistrationForm, CandidateRegistrationForm
+from .auth import LoginForm, RegistrationForm, CandidateRegistrationForm, EcpLoginForm
 from .staff_list import (
     StaffListCreate,
     StaffListRead,

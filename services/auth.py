@@ -22,7 +22,8 @@ from schemas import (
     FamilyProfileCreate,
     CandidateRegistrationForm,
     StaffUnitCreate,
-    CandidateCreate
+    CandidateCreate,
+    EcpLoginForm
 )
 from services import (
     staff_unit_service,
@@ -41,6 +42,31 @@ from utils import hash_password, is_valid_phone_number, verify_password
 
 
 class AuthService():
+
+    def login_ecp(self, body: EcpLoginForm, db: Session, Authorize: AuthJWT):
+        url = configs.ECP_SERVICE_URL+'api/certificate/validate/'
+        request_body = {'certificate_blob': body.certificate_blob}
+
+        res = requests.post(url=url, json=request_body)
+        dict_res = json.loads(res.text)
+
+        if res.status_code == 400:
+            raise BadRequestException(detail=res.text)
+
+        if not dict_res['is_valid']:
+            raise BadRequestException(detail="Not valid iin!")
+
+        user = user_service.get_by_iin(db, dict_res['data']['IIN'])
+
+        if not user:
+            raise BadRequestException(detail="User not found in database!")
+
+        self._set_last_signed_at(db, user)
+
+        access_token, refresh_token = self._generate_tokens(Authorize, user)
+
+        return {"access_token": access_token, "refresh_token": refresh_token}
+
 
     def login(self, form: LoginForm, db: Session, Authorize: AuthJWT):
         user = user_service.get_by_email(db, EmailStr(form.email).lower())

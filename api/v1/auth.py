@@ -4,7 +4,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import LoginForm, RegistrationForm, CandidateRegistrationForm
+from schemas import LoginForm, RegistrationForm, CandidateRegistrationForm, EcpLoginForm
 from services import auth_service
 
 router = APIRouter(prefix="/auth", tags=["Authorization"])
@@ -21,6 +21,18 @@ async def login(form: LoginForm,
     - **password**: required.
     """
     return auth_service.login(form, db, Authorize)
+
+@router.post("/login/ecp", summary="Login by ecp")
+async def login_ecp(body: EcpLoginForm,
+                db: Session = Depends(get_db),
+                Authorize: AuthJWT = Depends()):
+    """
+    Login to the system.
+
+    - **certificate_blob**: required. auth_certificate.
+    """
+    return auth_service.login_ecp(body, db, Authorize)
+
 
 
 @router.post("/register", summary="Register")

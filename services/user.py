@@ -419,11 +419,10 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         users = (
             user_query
             .filter(
-                and_(func.concat(
-                    func.lower(User.first_name), ' ',
-                    func.lower(User.last_name), ' ',
+                and_(func.concat(func.concat(func.concat(func.lower(User.first_name), ' '),
+                    func.concat(func.lower(User.last_name), ' ')),
                     func.lower(User.father_name)).contains(name) for name in key_words)
-            )
+            )        
         )
         return users
 

@@ -10,6 +10,9 @@ class LoginForm(Model):
     email: EmailStr
     password: str
 
+class EcpLoginForm(Model):
+    certificate_blob: str
+
 
 class RegistrationForm(Model):
     email: EmailStr

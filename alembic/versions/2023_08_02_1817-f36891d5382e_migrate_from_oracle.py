@@ -7,6 +7,7 @@ Create Date: 2023-06-05 18:17:57.957698
 """
 import re
 import uuid
+import json
 import logging
 from datetime import datetime, timedelta
 import importlib
@@ -30,7 +31,7 @@ db = Session(bind=op.get_bind())
 
 # revision identifiers, used by Alembic.
 revision = "f36891d5382e"
-down_revision = "dac7288a7141"
+down_revision = "3da03f49674d"
 branch_labels = None
 depends_on = None
 
@@ -38,7 +39,7 @@ division_context = {}
 rank_context = {}
 
 def get_uuid():
-    return uuid.uuid4()
+    return str(uuid.uuid4())
 
 
 def extract_integers(string):
@@ -47,6 +48,8 @@ def extract_integers(string):
     floats = [float(match.replace(",", ".")) for match in matches]
     if len(floats) > 1:
         return floats[0] + (floats[1] * 0.1)
+    elif len(floats) == 0:
+        return 0
     return floats[0]
 
 
@@ -209,7 +212,7 @@ left join HR_EMP_PHONES pphone on pphone.EMPLOYEE_ID = emp.ID and pphone.PHONE_T
 
             position_id = get_uuid()
             op.bulk_insert(
-                Base.metadata.tables["positions"],
+                Base.metadata.tables["hr_erp_positions"],
                 [{
                     "id": position_id,
                     'name': my_position_name,
@@ -235,7 +238,7 @@ left join HR_EMP_PHONES pphone on pphone.EMPLOYEE_ID = emp.ID and pphone.PHONE_T
         position_id = db.query(Position).filter(Position.name == PositionNameEnum.DEAD.value).first().id
 
     op.bulk_insert(
-        Base.metadata.tables["staff_units"],
+        Base.metadata.tables["hr_erp_staff_units"],
         [
             {
                 "id": staff_unit_id,
@@ -243,7 +246,7 @@ left join HR_EMP_PHONES pphone on pphone.EMPLOYEE_ID = emp.ID and pphone.PHONE_T
                 "position_id": position_id,
                 "staff_division_id": division_id,
                 "user_replacing_id": None,
-                "requirements": [
+                "requirements": json.dumps([
                     {
                         "name": "Требования к образованию",
                         "nameKZ": "Білім талаптары",
@@ -309,7 +312,7 @@ left join HR_EMP_PHONES pphone on pphone.EMPLOYEE_ID = emp.ID and pphone.PHONE_T
                             },
                         ],
                     },
-                ],
+                ]),
             }
         ],
     )
@@ -324,7 +327,7 @@ left join HR_EMP_PHONES pphone on pphone.EMPLOYEE_ID = emp.ID and pphone.PHONE_T
     if found_rank is None:
         found_rank = db.query(Rank).filter(Rank.name == "Рядовой").first()
     op.bulk_insert(
-        Base.metadata.tables["users"],
+        Base.metadata.tables["hr_erp_users"],
         [
             {
                 "id": id,
@@ -356,7 +359,7 @@ left join HR_EMP_PHONES pphone on pphone.EMPLOYEE_ID = emp.ID and pphone.PHONE_T
     profile_id = get_uuid()
 
     op.bulk_insert(
-        Base.metadata.tables["profiles"],
+        Base.metadata.tables["hr_erp_profiles"],
         [
             {
                 "id": profile_id,
@@ -368,7 +371,7 @@ left join HR_EMP_PHONES pphone on pphone.EMPLOYEE_ID = emp.ID and pphone.PHONE_T
     personal_profile_id = get_uuid()
 
     op.bulk_insert(
-        Base.metadata.tables["personal_profiles"],
+        Base.metadata.tables["hr_erp_personal_profiles"],
         [
             {
                 "id": personal_profile_id,
@@ -380,28 +383,28 @@ left join HR_EMP_PHONES pphone on pphone.EMPLOYEE_ID = emp.ID and pphone.PHONE_T
     educational_profile_id = get_uuid()
 
     op.bulk_insert(
-        Base.metadata.tables["educational_profiles"],
+        Base.metadata.tables["hr_erp_educational_profiles"],
         [{"id": educational_profile_id, "profile_id": profile_id}],
     )
 
     medical_profile_id = get_uuid()
 
     op.bulk_insert(
-        Base.metadata.tables["medical_profiles"],
+        Base.metadata.tables["hr_erp_medical_profiles"],
         [{"id": medical_profile_id, "profile_id": profile_id}],
     )
 
     additional_profile_id = get_uuid()
 
     op.bulk_insert(
-        Base.metadata.tables["additional_profiles"],
+        Base.metadata.tables["hr_erp_additional_profiles"],
         [{"id": additional_profile_id, "profile_id": profile_id}],
     )
 
     family_profile_id = get_uuid()
 
     op.bulk_insert(
-        Base.metadata.tables["family_profiles"],
+        Base.metadata.tables["hr_erp_family_profiles"],
         [{"id": family_profile_id, "profile_id": profile_id}],
     )
 
@@ -412,7 +415,7 @@ left join HR_EMP_PHONES pphone on pphone.EMPLOYEE_ID = emp.ID and pphone.PHONE_T
     blood_group_enum = blood.get(blood_group, None)
 
     op.bulk_insert(
-        Base.metadata.tables["general_user_info"],
+        Base.metadata.tables["hr_erp_general_user_info"],
         [
             {
                 "id": general_user_information_id,
@@ -434,7 +437,7 @@ left join HR_EMP_PHONES pphone on pphone.EMPLOYEE_ID = emp.ID and pphone.PHONE_T
     anthropometric_data_id = get_uuid()
 
     op.bulk_insert(
-        Base.metadata.tables["anthropometric_data"],
+        Base.metadata.tables["hr_erp_anthropometric_data"],
         [
             {
                 "id": anthropometric_data_id,
@@ -483,7 +486,7 @@ left join HR_EMP_PHONES pphone on pphone.EMPLOYEE_ID = emp.ID and pphone.PHONE_T
     biographic_info_id = get_uuid()
 
     op.bulk_insert(
-        Base.metadata.tables["biographic_infos"],
+        Base.metadata.tables["hr_erp_biographic_infos"],
         [
             {
                 "id": biographic_info_id,
@@ -506,7 +509,7 @@ left join HR_EMP_PHONES pphone on pphone.EMPLOYEE_ID = emp.ID and pphone.PHONE_T
     tax_declaration5_id = get_uuid()
 
     op.bulk_insert(
-        Base.metadata.tables["tax_declarations"],
+        Base.metadata.tables["hr_erp_tax_declarations"],
         [
             {
                 "id": tax_declaration1_id,
@@ -544,7 +547,7 @@ left join HR_EMP_PHONES pphone on pphone.EMPLOYEE_ID = emp.ID and pphone.PHONE_T
     user_financial_info_id = get_uuid()
 
     op.bulk_insert(
-        Base.metadata.tables["user_financial_infos"],
+        Base.metadata.tables["hr_erp_user_financial_infos"],
         [
             {
                 "id": user_financial_info_id,
@@ -572,7 +575,7 @@ left join HR_EMP_PHONES pphone on pphone.EMPLOYEE_ID = emp.ID and pphone.PHONE_T
         if document_type_id == 1000000001:  # TODO: ID
             identification_card_id = get_uuid()
             op.bulk_insert(
-                Base.metadata.tables["identification_cards"],
+                Base.metadata.tables["hr_erp_identification_cards"],
                 [
                     {
                         "id": identification_card_id,
@@ -588,7 +591,7 @@ left join HR_EMP_PHONES pphone on pphone.EMPLOYEE_ID = emp.ID and pphone.PHONE_T
         elif document_type_id == 1000000003:  # TODO: Passport
             passport_id = get_uuid()
             op.bulk_insert(
-                Base.metadata.tables["passports"],
+                Base.metadata.tables["hr_erp_passports"],
                 [
                     {
                         "id": passport_id,
@@ -619,12 +622,12 @@ left join HR_EMP_PHONES pphone on pphone.EMPLOYEE_ID = emp.ID and pphone.PHONE_T
                 category_array = category.split(",")
             driving_licence_id = get_uuid()
             op.bulk_insert(
-                Base.metadata.tables["driving_licenses"],
+                Base.metadata.tables["hr_erp_driving_licenses"],
                 [
                     {
                         "id": driving_licence_id,
                         "document_number": document_number,
-                        "category": category_array,
+                        "category": json.dumps(category_array),
                         "date_of_issue": date_of_issue,
                         "date_to": date_to,
                         "document_link": "https://10.15.3.180/s3/static/example.txt",
@@ -656,7 +659,7 @@ left join HR_EMP_PHONES pphone on pphone.EMPLOYEE_ID = emp.ID and pphone.PHONE_T
         if found_sport is None:
             found_sport_id = get_uuid()
             op.bulk_insert(
-                Base.metadata.tables["sport_types"],
+                Base.metadata.tables["hr_erp_sport_types"],
                 [
                     {
                         "id": found_sport_id,
@@ -668,7 +671,7 @@ left join HR_EMP_PHONES pphone on pphone.EMPLOYEE_ID = emp.ID and pphone.PHONE_T
         else:
             found_sport_id = found_sport.id
         op.bulk_insert(
-            Base.metadata.tables["sport_degrees"],
+            Base.metadata.tables["hr_erp_sport_degrees"],
             [
                 {
                     "id": get_uuid(),
@@ -731,7 +734,7 @@ left join HR_EMP_PHONES pphone on pphone.EMPLOYEE_ID = emp.ID and pphone.PHONE_T
         if institution is None:
             institution_id = get_uuid()
             op.bulk_insert(
-                Base.metadata.tables["institutions"],
+                Base.metadata.tables["hr_erp_institutions"],
                 [
                     {
                         "id": institution_id,
@@ -744,7 +747,7 @@ left join HR_EMP_PHONES pphone on pphone.EMPLOYEE_ID = emp.ID and pphone.PHONE_T
             institution_id = institution.id
         education_id = get_uuid()
         op.bulk_insert(
-            Base.metadata.tables["educations"],
+            Base.metadata.tables["hr_erp_educations"],
             [
                 {
                     "id": education_id,
@@ -798,7 +801,7 @@ left join HR_EMP_PHONES pphone on pphone.EMPLOYEE_ID = emp.ID and pphone.PHONE_T
         if provider is None:
             course_provider_id = get_uuid()
             op.bulk_insert(
-                Base.metadata.tables["course_providers"],
+                Base.metadata.tables["hr_erp_course_providers"],
                 [
                     {
                         "id": course_provider_id,
@@ -810,7 +813,7 @@ left join HR_EMP_PHONES pphone on pphone.EMPLOYEE_ID = emp.ID and pphone.PHONE_T
         else:
             course_provider_id = provider.id
         op.bulk_insert(
-            Base.metadata.tables["courses"],
+            Base.metadata.tables["hr_erp_courses"],
             [
                 {
                     "id": course_id,
@@ -880,7 +883,7 @@ left join HR_EMP_PHONES pphone on pphone.EMPLOYEE_ID = emp.ID and pphone.PHONE_T
         issue_date = datetime(year=issue_date, month=1, day=1)
         vehicle_id = get_uuid()
         op.bulk_insert(
-            Base.metadata.tables["user_vehicles"],
+            Base.metadata.tables["hr_erp_user_vehicles"],
             [
                 {
                     "id": vehicle_id,
@@ -985,7 +988,7 @@ where emp.ID = {emp_id}"""
         if found_badge_type is None:
             found_badge_type_id = get_uuid()
             op.bulk_insert(
-                Base.metadata.tables["badge_types"],
+                Base.metadata.tables["hr_erp_badge_types"],
                 [
                     {
                         "id": found_badge_type_id,
@@ -1043,7 +1046,7 @@ where emp.ID = {emp_id}"""
         if found_penalty_type is None:
             found_penalty_type_id = get_uuid()
             op.bulk_insert(
-                Base.metadata.tables["penalty_types"],
+                Base.metadata.tables["hr_erp_penalty_types"],
                 [
                     {
                         "id": found_penalty_type_id,
@@ -1060,14 +1063,18 @@ where emp.ID = {emp_id}"""
             user_id=id,
         )
         db.add(new_penalty)
+        if date_to is not None:
+            date_to = date_to
+        elif date_from is None:
+            date_to = None
+        else:
+            date_to = date_from + timedelta(weeks=25)
         new_penalty_history = PenaltyHistory(
             id=get_uuid(),
             date_from=date_from,
             document_number=pen_number,
             date_credited=date_from,
-            date_to=date_to
-            if date_to is not None
-            else date_from + timedelta(weeks=25),
+            date_to=date_to,
             penalty_id=str(new_penalty.id),
         )
         db.add(new_penalty_history)
@@ -1091,7 +1098,6 @@ where emp.ID = {emp_id}"""
             date_credited=date_from,
             attestation_id=str(new_attestation.id),
             attestation_status=conclusion,
-            attestation_statusKZ=conclusionKZ,
         )
         db.add(new_history)
 
@@ -1338,8 +1344,7 @@ where rl.employee_id = {emp_id}
         db.add(new_status)
         new_status_history = StatusHistory(
             id=get_uuid(),
-            name=nameRU,
-            nameKZ=nameKZ,
+            status_name=nameRU,
             status_id=new_status.id,
             document_number=order_number
         )
@@ -1399,7 +1404,7 @@ where rl.employee_id = {emp_id}
 
 def upgrade() -> None:
     conn = oracledb.connect(
-        user="admin_sop", password="welcome1", dsn="10.15.3.165/SOPPROD"
+        user="admin_sop", password="welcome1", dsn="10.15.3.31/SOPPROD"
     )
     cursor: Cursor = conn.cursor()
 
@@ -1415,7 +1420,7 @@ def upgrade() -> None:
         ) = i
         new_rank_id = get_uuid()
         op.bulk_insert(
-            Base.metadata.tables["ranks"],
+            Base.metadata.tables["hr_erp_ranks"],
             [{
                 "id": new_rank_id,
                 'name': rank_name,
@@ -1437,7 +1442,7 @@ def upgrade() -> None:
         ) = i
         new_division_id = get_uuid()
         op.bulk_insert(
-            Base.metadata.tables["staff_divisions"],
+            Base.metadata.tables["hr_erp_staff_divisions"],
             [{
                 'id': new_division_id,
                 'name': name,

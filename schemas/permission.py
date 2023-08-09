@@ -1,11 +1,17 @@
-import uuid
 from typing import List
 
-from schemas import NamedModel, ReadNamedModel
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 
-class PermissionBase(NamedModel):
+class PermissionType(NamedModel):
     pass
+
+class PermissionTypeRead(ReadNamedModel):
+    pass
+
+class PermissionBase(Model):
+    type_id: str
+    user_id: str
 
 
 class PermissionCreate(PermissionBase):
@@ -17,11 +23,12 @@ class PermissionUpdate(PermissionBase):
 
 
 class UserPermission(ReadNamedModel):
-    user_id: uuid.UUID
-    permission_ids: List[uuid.UUID]
+    user_id: str
+    permission_ids: List[PermissionTypeRead]
 
 
-class PermissionRead(PermissionBase, ReadNamedModel):
-
+class PermissionRead(PermissionBase, ReadModel):
+    type: PermissionTypeRead
+    
     class Config:
         orm_mode = True
