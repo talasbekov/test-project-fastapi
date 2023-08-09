@@ -13,6 +13,7 @@ from models import (
     User,
     HrDocumentTemplateEnum,
     StaffDivisionEnum,
+    StaffUnit,
 )
 
 from schemas import (
@@ -46,16 +47,26 @@ class HrDocumentTemplateService(
     def create_template(
         self, db: Session, body: HrDocumentTemplateCreate, role: str
     ) -> HrDocumentTemplateRead:
-        current_user_staff_unit_id = staff_unit_service.get_by_id(db, role)
+        current_user_staff_unit_id = db.query(StaffUnit).filter(StaffUnit.id == role).first()
 
         obj_in_data = jsonable_encoder(body)
         hr_document_template = self.model(**obj_in_data)
-
+        if isinstance(hr_document_template.properties, dict):
+            hr_document_template.properties = json.dumps(hr_document_template.properties)
+        if isinstance(hr_document_template.actions, dict):
+            hr_document_template.actions= json.dumps(hr_document_template.actions)
+        if isinstance(hr_document_template.description, dict):
+            hr_document_template.description= json.dumps(hr_document_template.description)
         hr_document_template.maintainer_id = current_user_staff_unit_id.id
         hr_document_template.is_draft = False
         db.add(hr_document_template)
-        db.flush()
-
+        db.commit()
+        if isinstance(hr_document_template.properties, str):
+            hr_document_template.properties = json.loads(hr_document_template.properties)
+        if isinstance(hr_document_template.actions, str):
+            hr_document_template.actions= json.loads(hr_document_template.actions)
+        if isinstance(hr_document_template.description, str):
+            hr_document_template.description= json.loads(hr_document_template.description)
         return hr_document_template
     
     def create_template_draft(
@@ -65,13 +76,60 @@ class HrDocumentTemplateService(
 
         obj_in_data = jsonable_encoder(body)
         hr_document_template = self.model(**obj_in_data)
+        if isinstance(hr_document_template.properties, dict):
+            hr_document_template.properties = json.dumps(hr_document_template.properties)
+        if isinstance(hr_document_template.actions, dict):
+            hr_document_template.actions= json.dumps(hr_document_template.actions)
+        if isinstance(hr_document_template.description, dict):
+            hr_document_template.description= json.dumps(hr_document_template.description)
+        hr_document_template.maintainer_id = current_user_staff_unit_id.id
+        hr_document_template.is_draft = False
 
         hr_document_template.maintainer_id = current_user_staff_unit_id.id
         hr_document_template.is_draft = True
         db.add(hr_document_template)
-        db.flush()
+        db.commit()
+        if isinstance(hr_document_template.properties, str):
+            hr_document_template.properties = json.loads(hr_document_template.properties)
+        if isinstance(hr_document_template.actions, str):
+            hr_document_template.actions= json.loads(hr_document_template.actions)
+        if isinstance(hr_document_template.description, str):
+            hr_document_template.description= json.loads(hr_document_template.description)
 
         return hr_document_template
+    
+    def update(
+        self,
+        db: Session,
+        *,
+        hr_document_template: HrDocumentTemplate,
+        obj_in: HrDocumentTemplateUpdate
+    ) -> HrDocumentTemplate:
+        obj_data = jsonable_encoder(hr_document_template)
+        if isinstance(obj_in, dict):
+            update_data = obj_in
+        else:
+            update_data = obj_in.dict(exclude_unset=True)
+        for field in obj_data:
+            if field in update_data:
+                setattr(hr_document_template, field, update_data[field])
+        if isinstance(hr_document_template.properties, dict):
+            hr_document_template.properties = json.dumps(hr_document_template.properties)
+        if isinstance(hr_document_template.actions, dict):
+            hr_document_template.actions= json.dumps(hr_document_template.actions)
+        if isinstance(hr_document_template.description, dict):
+            hr_document_template.description= json.dumps(hr_document_template.description)
+        hr_document_template.is_draft = False
+        db.add(hr_document_template)
+        db.commit()
+        if isinstance(hr_document_template.properties, str):
+            hr_document_template.properties = json.loads(hr_document_template.properties)
+        if isinstance(hr_document_template.actions, str):
+            hr_document_template.actions= json.loads(hr_document_template.actions)
+        if isinstance(hr_document_template.description, str):
+            hr_document_template.description= json.loads(hr_document_template.description)
+        return hr_document_template
+    
 
     def get_by_id(self, db: Session, id: str) -> HrDocumentTemplate:
         hr_document_template = super().get(db, str(id))
@@ -86,8 +144,8 @@ class HrDocumentTemplateService(
         return hr_document_template
 
     def get_steps_by_document_template_id(
-        self, db: Session, document_template_id: str, user_id: uuid.UUID
-    ) -> dict[str, Union[Union[uuid.UUID, Dict[int, uuid.UUID]], list[uuid.UUID]]]:
+        self, db: Session, document_template_id: str, user_id: str
+    ) -> dict[str, Union[Union[str, Dict[int, str]], list[str]]]:
         user = db.query(User).filter(User.id == user_id).first()
         if user is None:
             raise NotFoundException(
@@ -129,7 +187,7 @@ class HrDocumentTemplateService(
                     raise NotFoundException(
                         detail=f"Category with id: {step.category} is not found!"
                     )
-                steps[str(function.priority)] = category.handle(db, user_id)
+                steps[str(function.priority)] = category.handle(db, str(user_id))
                 continue
             staff_units_ids = [unit.id for unit in function.staff_units]
             user = (

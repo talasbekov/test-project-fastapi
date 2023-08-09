@@ -106,6 +106,16 @@ class StaffUnitRead(ReadModel):
         orm_mode = True
         arbitrary_types_allowed = True
 
+class StaffUnitOptionRead(ReadModel):
+    staff_division_id: Optional[uuid.UUID]
+    position_id: Optional[uuid.UUID]
+    position: Optional[PositionRead]
+    users: Optional[List[Optional[UserRead]]]
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
+
 
 # class StaffDivisionRead(StaffDivisionBase, ReadNamedModel):
 #     is_combat_unit: Optional[bool] = Field(None, nullable=True)
@@ -191,11 +201,56 @@ class StaffDivisionReadWithoutStaffUnit(StaffDivisionBase):
         orm_mode = True
 
 
-class StaffDivisionOptionRead(StaffDivisionBase, ReadNamedModel):
+class StaffDivisionOptionChildRead(ReadNamedModel):
+    parent_group_id: Optional[str] = Field(None, nullable=True)
     is_combat_unit: Optional[bool] = Field(None, nullable=True)
-    staff_units: Optional[List[StaffUnitRead]]
-    children: Optional[List['StaffDivisionOptionRead']]
+    is_active: Optional[bool] = True
+    type_id: Optional[str] = Field(None, nullable=True)
+    staff_division_number: Optional[int] = Field(None, nullable=True)
+    staff_units: Optional[List]
+    children: Optional[List]
 
+    @validator('children')
+    def validate_children(cls, children):
+        if children == []:
+            return None
+        else:
+            return []
+
+    @validator('staff_units')
+    def validate_staff_units(cls, staff_units):
+        if staff_units == []:
+            return None
+        else:
+            return []
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
+
+class StaffDivisionOptionRead(ReadNamedModel):
+    parent_group_id: Optional[str] = Field(None, nullable=True)
+    is_combat_unit: Optional[bool] = Field(None, nullable=True)
+    is_active: Optional[bool] = True
+    type_id: Optional[str] = Field(None, nullable=True)
+    staff_division_number: Optional[int] = Field(None, nullable=True)
+    children: Optional[List[StaffDivisionOptionChildRead]]
+    staff_units: Optional[List[StaffUnitOptionRead]]
+
+    @validator('children')
+    def validate_children(cls, children):
+        if children == []:
+            return None
+        else:
+            return children
+
+    @validator('staff_units')
+    def validate_staff_units(cls, staff_units):
+        if staff_units == []:
+            return None
+        else:
+            return staff_units
+    
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True

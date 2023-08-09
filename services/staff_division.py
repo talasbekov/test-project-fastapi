@@ -15,7 +15,9 @@ from schemas import (
     StaffDivisionRead,
     StaffDivisionUpdate,
     StaffDivisionUpdateParentGroup,
-    StaffDivisionVacancyRead
+    StaffDivisionVacancyRead,
+    StaffDivisionOptionRead,
+    StaffDivisionOptionChildRead
 )
 
 from .base import ServiceBase
@@ -127,9 +129,11 @@ class StaffDivisionService(
             StaffDivision.parent_group_id == id
         ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
         for parent in parents:
-            parent.description = json.loads(parent.description)
+            if isinstance(parent.description, str):
+                parent.description = json.loads(parent.description)
             for staff_unit in parent.staff_units:
-                staff_unit.requirements = json.loads(staff_unit.requirements)
+                if isinstance(staff_unit.requirements, str):
+                    staff_unit.requirements = json.loads(staff_unit.requirements)
         return parents
 
     def get_all_child_groups(self, db: Session,
@@ -213,10 +217,10 @@ class StaffDivisionService(
         if id is None:
             print(id)
             all_except_special = self.get_all_except_special(db, skip, limit)
-            return [StaffDivisionRead.from_orm(
+            return [StaffDivisionOptionRead.from_orm(
                 i) for i in all_except_special]
         child_groups = self.get_child_groups(db, id, skip, limit)
-        return [StaffDivisionRead.from_orm(i) for i in child_groups]
+        return [StaffDivisionOptionRead.from_orm(i) for i in child_groups]
 
     def get_full_name(self, db: Session, staff_division_id: str):
         staff_division = self.get_by_id(db, staff_division_id)

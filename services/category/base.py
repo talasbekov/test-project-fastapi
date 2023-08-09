@@ -13,17 +13,17 @@ from exceptions import NotSupportedException
 class BaseCategory:
     __handler__ = 0
 
-    def handle(self, db: Session, user_id: uuid.UUID) -> list[uuid.UUID]:
+    def handle(self, db: Session, user_id: str) -> list[str]:
         raise NotSupportedException(
             f"Don't use this class: {self.__class__.__name__} directly")
 
     def get_templates(
         self,
         db: Session,
-        role_id: uuid.UUID,
-        user_id: uuid.UUID,
+        role_id: str,
+        user_id: str,
         handler: int
-    ) -> List[uuid.UUID]:
+    ) -> List[str]:
         functions = (
             db.query(DocumentStaffFunction)
             .join(HrDocumentStep)

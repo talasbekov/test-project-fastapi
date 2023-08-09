@@ -17,7 +17,7 @@ from .base import BaseCategory
 class CuratorCategory(BaseCategory):
     __handler__ = 1
 
-    def handle(self, db: Session, user_id: uuid.UUID) -> list[uuid.UUID]:
+    def handle(self, db: Session, user_id: str) -> list[str]:
         staff_division = staff_division_service.get_by_name(
             db, StaffDivisionEnum.SERVICE.value)
         groups = (
@@ -29,8 +29,11 @@ class CuratorCategory(BaseCategory):
             .all()
         )
         res = set()
+        print(groups)
         for group in groups:
             for staff_unit in group.curators:
+                if staff_unit.users == []:
+                    continue
                 first_user = staff_unit.users[0]
                 if first_user is not None:
                     res.add(first_user.id)
@@ -39,9 +42,9 @@ class CuratorCategory(BaseCategory):
     def get_templates(
         self,
         db: Session,
-        role_id: uuid.UUID,
-        user_id: uuid.UUID,
-    ) -> List[uuid.UUID]:
+        role_id: str,
+        user_id: str,
+    ) -> List[str]:
         if not self.validate(db, user_id):
             return []
         return super().get_templates(db, role_id, user_id, self.__handler__)
@@ -49,7 +52,7 @@ class CuratorCategory(BaseCategory):
     def validate(
         self,
         db: Session,
-        user_id: uuid.UUID,
+        user_id: str,
     ) -> bool:
         user = db.query(User).filter(User.id == user_id).first()
         if user is None:

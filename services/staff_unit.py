@@ -1,5 +1,6 @@
 import datetime
 import uuid
+import json
 
 from sqlalchemy.orm import Session
 
@@ -24,6 +25,8 @@ class StaffUnitService(
         if position is None:
             raise NotFoundException(
                 detail=f"StaffUnit  with position id: {id} is not found!")
+        if isinstance(position.requirements, str):
+            position.requirements = json.loads(position.requirements)
         return position
 
     def create_with_position(self, db: Session,

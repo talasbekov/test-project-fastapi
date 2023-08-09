@@ -172,7 +172,7 @@ async def get_steps_by_document_template_id(*,
             summary="Update HrDocumentTemplate")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: HrDocumentTemplateUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -196,7 +196,7 @@ async def update(*,
     Authorize.jwt_required()
     return hr_document_template_service.update(
         db=db,
-        db_obj=hr_document_template_service.get_by_id(db, str(id)),
+        hr_document_template=hr_document_template_service.get_by_id(db, str(id)),
         obj_in=body)
 
 

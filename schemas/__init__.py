@@ -40,7 +40,7 @@ from .staff_division import (StaffDivisionCreate, StaffDivisionRead,
                              StaffDivisionOptionRead, StaffUnitDivisionRead,
                              StaffDivisionReadWithoutStaffUnit,
                              StaffDivisionVacancyRead,
-                             ShortStaffUnitDivisionRead,)
+                             ShortStaffUnitDivisionRead, StaffDivisionOptionChildRead)
 from .staff_unit import StaffUnitCreate, StaffUnitRead, StaffUnitUpdate, UserStaffUnitRead, StaffUnitCreateWithPosition, ShortUserStaffUnitRead
 from .state_body import StateBodyCreate, StateBodyRead, StateBodyUpdate
 from .hr_document_step import (HrDocumentStepCreate, HrDocumentStepRead,
