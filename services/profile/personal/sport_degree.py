@@ -16,7 +16,6 @@ class SportDegreeService(
                obj_in: Union[SportDegreeCreate, Dict[str, Any]]) -> SportDegree:
         obj_in_data = jsonable_encoder(obj_in)
         obj_in_data['assignment_date'] = datetime.strptime(obj_in_data['assignment_date'], '%Y-%m-%d')
-        print(obj_in_data['assignment_date'])
         db_obj = self.model(**obj_in_data) 
         db.add(db_obj)
         db.flush()

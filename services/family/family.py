@@ -5,6 +5,9 @@ from exceptions.client import NotFoundException
 from models import Family
 from schemas import FamilyCreate, FamilyUpdate
 from services import ServiceBase
+from typing import Union, Dict, Any
+from fastapi.encoders import jsonable_encoder
+from datetime import datetime
 
 
 class FamilyService(ServiceBase[Family, FamilyCreate, FamilyUpdate]):
@@ -28,6 +31,15 @@ class FamilyService(ServiceBase[Family, FamilyCreate, FamilyUpdate]):
         family = db.query(Family).filter(
             Family.relation_id == relation_id).first()
         return family
-
+    
+    def create(self, db: Session,
+            obj_in: Union[FamilyCreate, Dict[str, Any]]) -> Family:
+        obj_in_data = jsonable_encoder(obj_in)
+        obj_in_data['birthday'] = datetime.strptime(obj_in_data['birthday'], '%Y-%m-%dT%H:%M:%S.%f%z')
+        obj_in_data['death_day'] = datetime.strptime(obj_in_data['death_day'], '%Y-%m-%dT%H:%M:%S.%f%z')
+        db_obj = self.model(**obj_in_data) 
+        db.add(db_obj)
+        db.flush()
+        return db_obj
 
 family_service = FamilyService(Family)

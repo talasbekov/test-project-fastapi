@@ -10,7 +10,7 @@ class AnthropometricDataBase(BaseModel):
     neck_circumference: int
     shape_size: int
     bust_size: int
-    profile_id: uuid.UUID
+    profile_id: str
 
 
 class AnthropometricDataCreate(AnthropometricDataBase):
@@ -22,13 +22,13 @@ class AnthropometricDataUpdate(AnthropometricDataBase):
 
 
 class AnthropometricDataRead(AnthropometricDataBase):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     head_circumference: Optional[int]
     shoe_size: Optional[int]
     neck_circumference: Optional[int]
     shape_size: Optional[int]
     bust_size: Optional[int]
-    profile_id: Optional[uuid.UUID]
+    profile_id: Optional[str]
 
     class Config:
         orm_mode = True

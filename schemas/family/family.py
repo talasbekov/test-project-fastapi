@@ -9,7 +9,7 @@ from schemas import ViolationRead, AbroadTravelRead
 
 
 class FamilyBase(BaseModel):
-    relation_id: uuid.UUID
+    relation_id: str
     first_name: str
     last_name: str
     father_name: Optional[str]
@@ -20,7 +20,7 @@ class FamilyBase(BaseModel):
     address: str
     workplace: str
 
-    profile_id: uuid.UUID
+    profile_id: str
 
     class Config:
         orm_mode = True
@@ -37,8 +37,8 @@ class FamilyUpdate(FamilyBase):
 
 class FamilyRead(FamilyBase):
 
-    id: Optional[uuid.UUID]
-    relation_id: Optional[uuid.UUID]
+    id: Optional[str]
+    relation_id: Optional[str]
     relation: Optional[FamilyRelationRead]
     first_name: Optional[str]
     last_name: Optional[str]
@@ -48,7 +48,7 @@ class FamilyRead(FamilyBase):
     birthplace: Optional[str]
     address: Optional[str]
     workplace: Optional[str]
-    profile_id: Optional[uuid.UUID]
+    profile_id: Optional[str]
 
     birthplace: Optional[str]
     violation: Optional[List[ViolationRead]]

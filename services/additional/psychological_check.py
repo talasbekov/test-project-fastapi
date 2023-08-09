@@ -5,6 +5,9 @@ from models import PsychologicalCheck
 from schemas import PsychologicalCheckCreate, PsychologicalCheckUpdate
 from services import profile_service
 from services.base import ServiceBase
+from typing import Union, Dict, Any
+from fastapi.encoders import jsonable_encoder
+from datetime import datetime
 
 
 class PsychologicalService(
@@ -19,8 +22,14 @@ class PsychologicalService(
                 detail=f"Violation with id: {id} is not found!")
         return rank
 
-    def create(self, db: Session, obj_in: PsychologicalCheckCreate):
-        return super().create(db, obj_in)
+    def create(self, db: Session,
+            obj_in: Union[PsychologicalCheckCreate, Dict[str, Any]]) -> PsychologicalCheck:
+        obj_in_data = jsonable_encoder(obj_in)
+        obj_in_data['date_of_issue'] = datetime.strptime(obj_in_data['date_of_issue'], '%Y-%m-%dT%H:%M:%S.%f%z')
+        db_obj = self.model(**obj_in_data) 
+        db.add(db_obj)
+        db.flush()
+        return db_obj
 
     def update(self, db: Session, db_obj: PsychologicalCheck,
                obj_in: PsychologicalCheckUpdate):

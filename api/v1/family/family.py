@@ -8,7 +8,9 @@ from sqlalchemy.orm import Session
 
 from core import get_db
 from schemas import FamilyCreate, FamilyRead, FamilyUpdate
+from models import Profile, FamilyProfile
 from services import family_service
+from exceptions import NotFoundException
 
 router = APIRouter(
     prefix="/families",
@@ -40,6 +42,11 @@ async def create(*,
                  Authorize: AuthJWT = Depends()
                  ):
     Authorize.jwt_required()
+    family_profile = db.query(FamilyProfile).filter(
+        FamilyProfile.profile_id == body.profile_id).first()
+    if not family_profile:
+        raise NotFoundException("Profile not found")
+    body.profile_id = family_profile.id
     return family_service.create(db, obj_in=body)
 
 

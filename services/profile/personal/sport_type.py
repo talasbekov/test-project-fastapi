@@ -13,6 +13,6 @@ class SportTypeService(ServiceBase):
         if not sport_type:
             raise NotFoundException("Sport type not found")
         return sport_type
-
+        
 
 sport_type_service = SportTypeService(SportType)
