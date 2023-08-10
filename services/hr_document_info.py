@@ -25,7 +25,8 @@ class HrDocumentInfoService(
     def create(self, db: Session,
                obj_in: Union[HrDocumentInfoCreate, Dict[str, Any]]) -> HrDocumentInfo:
         obj_in_data = jsonable_encoder(obj_in)
-        obj_in_data['signed_at'] = datetime.now()
+        if obj_in_data['signed_at'] is not None:
+            obj_in_data['signed_at'] = datetime.now()
         db_obj = self.model(**obj_in_data)  # type: ignore
         db.add(db_obj)
         db.flush()

@@ -6,6 +6,7 @@ from fastapi.security import HTTPBearer
 from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
+from utils import get_access_token_by_user_id
 from core import get_db
 from models import LanguageEnum
 from schemas import (HrDocumentInit,
@@ -13,7 +14,10 @@ from schemas import (HrDocumentInit,
                      HrDocumentSign,
                      HrDocumentUpdate,
                      DraftHrDocumentCreate,
-                     UserRead)
+                     UserRead,
+                     HrDocumentInitEcp,
+                     HrDocumentSignEcp,
+                     HrDocumentSignEcpWithIds)
 from services import hr_document_service
 
 router = APIRouter(
@@ -138,6 +142,88 @@ async def get_all(*,
     return hr_document_service.get_all_documents(
         db, user_id, filter.lstrip().rstrip(), skip, limit)
 
+@router.post("/ecp_sign/all/", status_code=status.HTTP_200_OK,
+             summary="Sign HrDocument with ecp")
+def sign_ecp_all(*,
+                 db: Session = Depends(get_db),
+                 body: HrDocumentSignEcpWithIds,
+                 Authorize: AuthJWT = Depends()
+                 ):
+    """
+        Sign HrDocument
+
+        The user must have a role that allows them to sign this HR document.
+
+        - **id**: UUID - the ID of HrDocument. This is required.
+        - **comment**: A comment on the signed document.
+        - **is_signed**: bool - indicating whether the document is signed.
+    """
+    Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
+    access_token = get_access_token_by_user_id(Authorize, db, user_id)
+    byte_body = pickle.dumps(body)
+    task = task_sign_document_with_certificate.delay(byte_body,
+                                                     str(user_id),
+                                                     access_token)
+
+
+@router.post("/ecp_sign/{id}/", status_code=status.HTTP_200_OK,
+             summary="Sign HrDocument with ecp")
+def sign_ecp(*,
+             db: Session = Depends(get_db),
+             id: str,
+             body: HrDocumentSignEcp,
+             Authorize: AuthJWT = Depends()
+             ):
+    """
+        Sign HrDocument
+
+        The user must have a role that allows them to sign this HR document.
+
+        - **id**: UUID - the ID of HrDocument. This is required.
+        - **comment**: A comment on the signed document.
+        - **is_signed**: bool - indicating whether the document is signed.
+    """
+    Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
+    access_token = get_access_token_by_user_id(Authorize, db, user_id)
+    hr_document_service.sign_with_certificate(db, str(id), body, str(user_id), access_token)
+
+@router.post("/ecp_initialize",
+             status_code=status.HTTP_201_CREATED,
+             response_model=HrDocumentRead,
+             summary="Initialize HrDocument")
+async def initialize_with_certificate(*,
+                     db: Session = Depends(get_db),
+                     body: HrDocumentInitEcp,
+                     Authorize: AuthJWT = Depends()
+                     ):
+    """
+        Initialize HrDocument
+
+        The user must have a role that allows them to create HR documents.
+
+        - **hr_document_template_id**: UUID - required.
+            HrDocument will be initialized based on HrDocumentTemplate.
+        - **due_date**: the end date of this document - format (YYYY-MM-DD).
+            This parameter is required.
+        - **properties**: A dictionary containing properties for the HrDocument.
+        - **user_ids**: UUID - required and should exist in database.
+            A list of user IDs to be assigned to the HrDocument.
+        - **document_step_users_ids**: UUID - required and should exist in database.
+            Dictionary of priority to user IDs to be assigned to the HrDocument.
+        - **certificate_blob**: string - required.
+            The certificate's string representation.
+    """
+    Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
+    role = Authorize.get_raw_jwt()['role']
+    access_token = get_access_token_by_user_id(Authorize, db, user_id)
+    return await hr_document_service.initialize_with_certificate(db,
+                                                                 body,
+                                                                 str(user_id),
+                                                                 str(role),
+                                                                 access_token)
 
 @router.post("",
              status_code=status.HTTP_201_CREATED,

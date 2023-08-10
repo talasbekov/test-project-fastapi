@@ -1,4 +1,4 @@
-from .password import verify_password, hash_password
+from .password import verify_password, hash_password, get_access_token_by_user_id
 from .checker import (
     is_valid_phone_number,
     is_owner,

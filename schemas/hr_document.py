@@ -79,28 +79,43 @@ class HrDocumentInit(DraftHrDocumentCreate, DraftHrDocumentInit):
     pass
 
 
+class HrDocumentInitEcp(DraftHrDocumentCreate, DraftHrDocumentInit):
+    certificate_blob: str
+
+class HrDocumentSign(Model):
+    comment: Optional[str]
+    is_signed: bool
+
+class HrDocumentSignEcp(HrDocumentSign):
+    certificate_blob: str
+
+
+class HrDocumentSignEcpWithIds(HrDocumentSignEcp):
+    document_ids: List[Optional[str]]
+
+
 class HrDocumentSign(Model):
     comment: Optional[str]
     is_signed: bool
 
 
 class HrDocumentCreate(HrDocumentBase):
-    status_id: uuid.UUID
+    status_id: str
     initialized_at: Optional[datetime]
 
 
 class HrDocumentUpdate(HrDocumentBase):
-    user_ids: List[uuid.UUID]
-    status_id: uuid.UUID
+    user_ids: List[str]
+    status_id: str
 
 
 class HrDocumentRead(HrDocumentBase, ReadModel):
     properties: Optional[dict]
     document_template: Optional[HrDocumentTemplateRead]
-    hr_document_template_id: Optional[uuid.UUID]
-    status_id: Optional[uuid.UUID]
+    hr_document_template_id: Optional[str]
+    status_id: Optional[str]
     status: Optional[HrDocumentStatusRead]
-    initialized_by_id: Optional[uuid.UUID]
+    initialized_by_id: Optional[str]
     initialized_by: Optional[UserRead]
     due_date: Optional[datetime]
     properties: Optional[Union[dict, None]]
@@ -110,7 +125,7 @@ class HrDocumentRead(HrDocumentBase, ReadModel):
     updated_at: Optional[datetime]
     last_step: Optional[HrDocumentStepRead]
     new_value: Optional[list]
-    old_history_id: Optional[uuid.UUID]
+    old_history_id: Optional[str]
     children: Optional[List["HrDocumentRead"]]
 
     class Config:

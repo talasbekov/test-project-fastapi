@@ -4,6 +4,8 @@ import random
 import tempfile
 import uuid
 import json
+import requests
+from core import configs
 from datetime import datetime, timedelta
 from typing import List, Union, Dict, Any, Optional
 
@@ -53,6 +55,8 @@ from schemas import (
     PenaltyTypeRead,
     ContractTypeRead,
     ArchiveStaffUnitRead,
+    HrDocumentInitEcp,
+    HrDocumentSignEcp,
 )
 from services import (
     badge_service,
@@ -417,7 +421,7 @@ class HrDocumentService(
                          body: HrDocumentInit,
                          user_id: str,
                          role: str,
-                         parent_id: uuid.UUID = None):
+                         parent_id: str = None):
 
         template = hr_document_template_service.get_by_id(
             db, body.hr_document_template_id
@@ -440,7 +444,8 @@ class HrDocumentService(
             step=step, all_steps=all_steps, users=users)
 
         current_user = user_service.get_by_id(db, user_id)
-
+        if isinstance(current_user.staff_unit.requirements, list):
+            current_user.staff_unit.requirements = json.dumps(current_user.staff_unit.requirements)
         status = hr_document_status_service.get_by_name(
             db, HrDocumentStatusEnum.IN_PROGRESS.value)
         
@@ -485,6 +490,8 @@ class HrDocumentService(
                 template_properties = json.loads(document.document_template.properties)
 
             for user in users_document:
+                if isinstance(user.staff_unit.requirements, list):
+                    user.staff_unit.requirements = json.dumps(user.staff_unit.requirements)
                 for i in document_actions['args']:
                     action_name = list(i)[0]
                     action = i[action_name]
@@ -500,7 +507,7 @@ class HrDocumentService(
             document.users = users_document
 
             if len(all_steps) == 0:
-                await self._finish_document(db, document, document.users)
+                self._finish_document(db, document, document.users)
 
         self._create_hr_document_info_for_all_steps(
             db, document, users, all_steps)
@@ -520,14 +527,97 @@ class HrDocumentService(
             )
         db.add(document)
         db.commit()
-        document.properties = json.loads(document.properties)
-        document.document_template.properties = json.loads(document.document_template.properties)
-        document.document_template.description = json.loads(document.document_template.description)
-        document.document_template.actions = json.loads(document.document_template.actions)
+        for user in document.users:
+            if isinstance(user.staff_unit.requirements, str):
+                user.staff_unit.requirements = json.loads(user.staff_unit.requirements)
+        if isinstance(current_user.staff_unit.requirements, str):
+            current_user.staff_unit.requirements = json.loads(current_user.staff_unit.requirements)
+        if isinstance(document.properties, str):
+            document.properties = json.loads(document.properties)
+        if isinstance(document.document_template.properties, str):
+            document.document_template.properties = json.loads(document.document_template.properties)
+        if isinstance(document.document_template.description, str):
+            document.document_template.description = json.loads(document.document_template.description)
+        if isinstance(document.document_template.actions, str):
+            document.document_template.actions = json.loads(document.document_template.actions)
         
         return document
+    
+    async def initialize_with_certificate(self,
+                         db: Session,
+                         body: HrDocumentInitEcp,
+                         user_id: str,
+                         role: str,
+                         access_token,
+                         parent_id: uuid.UUID = None,
+                         ):
+        document = await self.initialize(
+               db,
+               HrDocumentInit(
+                   document_step_users_ids=body.document_step_users_ids,
+                   user_ids=body.user_ids,
+                   hr_document_template_id=body.hr_document_template_id,
+                   due_date=body.due_date,
+                   parent_id=body.parent_id,
+                   properties=body.properties,
+                   initial_comment=body.initial_comment
+               ),
+               user_id,
+               role,
+               parent_id
+        )
 
-    async def sign(
+        url = configs.ECP_SERVICE_URL+'api/hr_document_step_signer/create/template/'
+        request_body = {
+            'hr_document_template_id': str(body.hr_document_template_id),
+            'user_id': str(user_id),
+            'certificate_blob': body.certificate_blob
+        }
+         
+        headers = {"Authorization": 'Bearer ' + access_token}
+	
+        res = requests.post(url=url, json=request_body, headers=headers)
+        print(res.text)
+        if res.status_code == 400:
+            raise BadRequestException(detail=res.text)
+
+        return document
+
+    def sign_with_certificate(
+            self,
+            db: Session,
+            document_id: str,
+            body: HrDocumentSignEcp,
+            user_id: str,
+            access_token
+    ):
+        document = self.sign(
+            db,
+            document_id,
+            HrDocumentSign(
+                comment=body.comment,
+                is_signed=body.is_signed
+            ),
+            user_id
+        )
+
+        url = configs.ECP_SERVICE_URL+'api/hr_document_step_signer/create/'
+        request_body = {
+            'hr_document_template_signer_id': str(document.hr_document_template_id),
+            'user_id': str(user_id),
+            'step_id': str(document.last_step_id),
+            'certificate_blob': body.certificate_blob
+        }
+        headers = {"Authorization": access_token}
+
+        res = requests.post(url=url, json=request_body, headers=headers)
+
+        if res.status_code == 400:
+            raise BadRequestException(detail=res.text)
+
+        return document
+
+    def sign(
             self,
             db: Session,
             document_id: str,
@@ -556,7 +646,7 @@ class HrDocumentService(
         next_step = self._set_next_step(db, document_id, info)
 
         if self._is_superdoc(db, document):
-            return await self._sign_super_document(db,
+            return self._sign_super_document(db,
                                                    document,
                                                    next_step,
                                                    body.is_signed,
@@ -566,7 +656,7 @@ class HrDocumentService(
 
         if body.is_signed:
             if next_step is None:
-                return await self._finish_document(db, document, document.users)
+                return self._finish_document(db, document, document.users)
 
             document.last_step_id = next_step.id
             document.status_id = hr_document_status_service.get_by_name(
@@ -587,10 +677,25 @@ class HrDocumentService(
             document.last_step = steps[0]
             document.status_id = hr_document_status_service.get_by_name(
                 db, HrDocumentStatusEnum.ON_REVISION.value).id
-
+        if isinstance(document.properties, dict):
+            document.properties = json.dumps(document.properties)
+        if isinstance(document.document_template.properties, dict):
+            document.document_template.properties = json.dumps(document.document_template.properties)
+        if isinstance(document.document_template.description, dict):
+            document.document_template.description = json.dumps(document.document_template.description)
+        if isinstance(document.document_template.actions, dict):
+            document.document_template.actions = json.dumps(document.document_template.actions)
         db.add(document)
-        db.flush()
+        db.commit()
 
+        if isinstance(document.properties, str):
+            document.properties = json.loads(document.properties)
+        if isinstance(document.document_template.properties, str):
+            document.document_template.properties = json.loads(document.document_template.properties)
+        if isinstance(document.document_template.description, str):
+            document.document_template.description = json.loads(document.document_template.description)
+        if isinstance(document.document_template.actions, str):
+            document.document_template.actions = json.loads(document.document_template.actions)
         return document
 
     async def generate_html(self, db: Session, id: str, language: LanguageEnum):
@@ -774,7 +879,7 @@ class HrDocumentService(
             .all()
         )
 
-    async def _finish_document(self,
+    def _finish_document(self,
                                db: Session,
                                document: HrDocument,
                                users: List[User]):
@@ -896,7 +1001,7 @@ class HrDocumentService(
     #    await self.initialize(db, child_body, user_id, role, parent_id=document.id)
     #     return document
 
-    async def _sign_super_document(self,
+    def _sign_super_document(self,
                                    db: Session,
                                    super_document: HrDocument,
                                    super_document_next_step: HrDocumentStep,
@@ -913,7 +1018,7 @@ class HrDocumentService(
 
         if is_signed:
             if super_document_next_step is None:
-                return await self._finish_super_document(db, super_document)
+                return self._finish_super_document(db, super_document)
 
             in_progress_status = hr_document_status_service.get_by_name(
                 db, HrDocumentStatusEnum.IN_PROGRESS.value)
@@ -988,7 +1093,7 @@ class HrDocumentService(
         db.flush()
         return super_document
 
-    async def _finish_super_document(self, db: Session, super_document: HrDocument):
+    def _finish_super_document(self, db: Session, super_document: HrDocument):
         completed_status = hr_document_status_service.get_by_name(
             db, HrDocumentStatusEnum.COMPLETED.value)
 
