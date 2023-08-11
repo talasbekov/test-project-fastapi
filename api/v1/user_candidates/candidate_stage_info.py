@@ -10,8 +10,9 @@ from core import get_db
 from schemas import (CandidateStageInfoCreate,
                      CandidateStageInfoRead,
                      CandidateStageInfoUpdate,
-                     CandidateStageInfoSendToApproval)
+                     CandidateStageInfoSendToApproval, CandidateStageInfoSignEcp)
 from services import candidate_stage_info_service
+from utils import get_access_token_by_user_id
 
 router = APIRouter(
     prefix="/candidate_stage_info",
@@ -145,6 +146,33 @@ async def sign_candidate(
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
     return candidate_stage_info_service.sign_candidate_info(db, str(id), str(role))
+
+
+@router.post("/sign_ecp/{id}/", dependencies=[Depends(HTTPBearer())],
+            summary="Sign a CandidateStageInfo",
+            status_code=status.HTTP_202_ACCEPTED,
+            response_model=CandidateStageInfoRead)
+async def sign_ecp(*,
+       db: Session = Depends(get_db),
+       id: uuid.UUID,
+       body: CandidateStageInfoSignEcp,
+       Authorize: AuthJWT = Depends()
+):
+    """
+        Sign a CandidateStageInfo
+
+        - **id**: UUID - required.
+    """
+    Authorize.jwt_required()
+    role = Authorize.get_raw_jwt()['role']
+    user_id = Authorize.get_jwt_subject()
+    access_token = get_access_token_by_user_id(Authorize, db, user_id)
+    return await candidate_stage_info_service.sign_with_certificate(db,
+                                                                    id,
+                                                                    body,
+                                                                    access_token,
+                                                                    role,
+                                                                    user_id)
 
 
 @router.put("/{id}/reject", dependencies=[Depends(HTTPBearer())],

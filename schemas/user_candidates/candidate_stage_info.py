@@ -21,6 +21,10 @@ class CandidateStageInfoCreate(CandidateStageInfoBase):
     pass
 
 
+class CandidateStageInfoSignEcp(BaseModel):
+    certificate_blob: str
+
+
 class CandidateStageInfoUpdate(CandidateStageInfoBase):
     candidate_id: Optional[str]
     candidate_stage_type_id: Optional[str]
