@@ -145,6 +145,8 @@ class StaffListService(
         new_staff_divisions = []
         task.update_state(state=30)
         for staff_division in staff_divisions:
+            if isinstance(staff_division.description, dict):
+                staff_division.description = json.dumps(staff_division.description)
             new_staff_division = self._create_staff_division(
                 db, staff_division, None, current_user_role_id)
             new_staff_divisions.append(new_staff_division)
@@ -289,7 +291,8 @@ class StaffListService(
         if staff_division.staff_units:
             for staff_unit in staff_division.staff_units:
                 staff_unit: StaffUnit
-
+                if isinstance(staff_unit.requirements, list):
+                    staff_unit.requirements = json.dumps(staff_unit.requirements)
                 staff_unit_user_id = (staff_unit.users[0].id
                                       if staff_unit.users else None)
                 staff_unit_actual_user_id = staff_unit.actual_users[
@@ -349,8 +352,8 @@ class StaffListService(
                     body.hr_vacancy_requirements_ids = None
                     body.staff_unit_id = None
 
-                    hr_vacancy_service.update(db, hr_vacancy, body,
-                                              current_user_role_id)
+                    # hr_vacancy_service.update(db, hr_vacancy, body,
+                    #                           current_user_role_id)
                 archive_division.staff_units.append(archive_staff_unit)
 
         if is_leader_needed:

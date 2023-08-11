@@ -391,7 +391,7 @@ async def delete(*,
 
 @router.post("/{id}/", status_code=status.HTTP_200_OK,
              summary="Sign HrDocument")
-async def sign(*,
+def sign(*,
                db: Session = Depends(get_db),
                id: str,
                body: HrDocumentSign,
@@ -408,7 +408,7 @@ async def sign(*,
     """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
-    await hr_document_service.sign(db, str(id), body, user_id)
+    hr_document_service.sign(db, str(id), body, user_id)
 
 
 @router.get("/{id}/", response_model=HrDocumentRead,

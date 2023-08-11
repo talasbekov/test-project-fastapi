@@ -42,7 +42,7 @@ app.conf.beat_schedule = {
 }
 
 #SQLALCHEMY_DATABASE_URL = f"postgresql://{configs.POSTGRES_USER}:{configs.POSTGRES_PASSWORD}@{configs.POSTGRES_HOSTNAME}:{configs.DATABASE_PORT}/{configs.POSTGRES_DB}"
-SQLALCHEMY_DATABASE_URL = f"oracle://system:Oracle123@localhost:1521/MORAL"
+SQLALCHEMY_DATABASE_URL = f"oracle://system:Oracle123@192.168.0.169:1521/MORAL"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
@@ -90,7 +90,7 @@ def task_apply_staff_list(
     SessionLocal = sessionmaker(bind=engine)
     db = SessionLocal()
     staff_list = staff_list_service.apply_staff_list(self, db,
-                                                     id,
+                                                     str(id),
                                                      signed_by,
                                                      document_creation_date,
                                                      current_user_id,
