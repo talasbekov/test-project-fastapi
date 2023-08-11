@@ -578,7 +578,7 @@ class HrDocumentService(
 	
         res = requests.post(url=url, json=request_body, headers=headers)
         print(res.text)
-        if res.status_code == 400:
+        if res.status_code >= 400:
             raise BadRequestException(detail=res.text)
 
         return document
@@ -612,7 +612,7 @@ class HrDocumentService(
 
         res = requests.post(url=url, json=request_body, headers=headers)
 
-        if res.status_code == 400:
+        if res.status_code >= 400:
             raise BadRequestException(detail=res.text)
 
         return document

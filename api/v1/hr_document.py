@@ -1,3 +1,4 @@
+import pickle
 import uuid
 from typing import List, Optional
 
@@ -19,6 +20,7 @@ from schemas import (HrDocumentInit,
                      HrDocumentSignEcp,
                      HrDocumentSignEcpWithIds)
 from services import hr_document_service
+from tasks import task_sign_document_with_certificate
 
 router = APIRouter(
     prefix="/hr-documents",
@@ -142,7 +144,7 @@ async def get_all(*,
     return hr_document_service.get_all_documents(
         db, user_id, filter.lstrip().rstrip(), skip, limit)
 
-@router.post("/ecp_sign/all/", status_code=status.HTTP_200_OK,
+@router.post("/ecp_sign_all/", status_code=status.HTTP_200_OK,
              summary="Sign HrDocument with ecp")
 def sign_ecp_all(*,
                  db: Session = Depends(get_db),
@@ -162,9 +164,9 @@ def sign_ecp_all(*,
     user_id = Authorize.get_jwt_subject()
     access_token = get_access_token_by_user_id(Authorize, db, user_id)
     byte_body = pickle.dumps(body)
-    task = task_sign_document_with_certificate.delay(byte_body,
-                                                     str(user_id),
-                                                     access_token)
+    task_sign_document_with_certificate.delay(byte_body,
+                                              str(user_id),
+                                              access_token)
 
 
 @router.post("/ecp_sign/{id}/", status_code=status.HTTP_200_OK,
@@ -187,7 +189,11 @@ def sign_ecp(*,
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
     access_token = get_access_token_by_user_id(Authorize, db, user_id)
-    hr_document_service.sign_with_certificate(db, str(id), body, str(user_id), access_token)
+    hr_document_service.sign_with_certificate(db,
+                                              str(id),
+                                              body,
+                                              str(user_id),
+                                              access_token)
 
 @router.post("/ecp_initialize",
              status_code=status.HTTP_201_CREATED,
