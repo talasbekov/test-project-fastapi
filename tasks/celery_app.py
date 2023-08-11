@@ -1,4 +1,5 @@
 import datetime
+import pickle
 
 from celery import Celery
 from celery.schedules import crontab
@@ -8,7 +9,8 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import sessionmaker
 
 from core import configs
-from services import staff_list_service, survey_service
+from schemas import HrDocumentRead
+from services import staff_list_service, survey_service, hr_document_service
 from schemas.staff_list import StaffListUserCreate, StaffListRead
 from models import UserLoggingActivity, SurveyRepeatTypeEnum
 
@@ -156,3 +158,37 @@ def task_repeat_surveys(status: str):
             db.close()
     
     return True
+
+@app.task(bind=True)
+def task_sign_document_with_certificate(
+    self,
+    byte_body,
+    user_id,
+    access_token,
+):
+    SessionLocal = sessionmaker(bind=engine)
+    db = SessionLocal()
+    body = pickle.loads(byte_body)
+    state_counter = 0
+    self.update_state(state=state_counter)
+    hr_documents = []
+    percent_per_document = 100/len(body.document_ids)
+    for document_id in body.document_ids:
+        state_counter += percent_per_document
+        hr_document = hr_document_service.sign_with_certificate(
+                      db,
+                      document_id,
+                      body,
+                      user_id,
+                      access_token)
+        hr_documents.append(HrDocumentRead.from_orm(hr_document).dict())
+        self.update_state(state=state_counter)
+    try:
+        db.commit()
+    except SQLAlchemyError as e:
+        db.rollback()
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if db:
+            db.close()
+    return hr_documents
