@@ -1,9 +1,11 @@
 import uuid
 from datetime import datetime
 
+import requests
 from sqlalchemy import func, and_
 from sqlalchemy.orm import Session
 
+from core import configs
 from exceptions import ForbiddenException, BadRequestException
 from models import (
     CandidateStageInfo,
@@ -19,7 +21,7 @@ from schemas import (
     CandidateStageInfoRead,
     CandidateStageInfoCreate,
     CandidateStageInfoUpdate,
-    CandidateStageInfoSendToApproval
+    CandidateStageInfoSendToApproval, CandidateStageInfoSignEcp
 )
 from services import ServiceBase, staff_unit_service, position_service
 from .candidate_stage_type import candidate_stage_type_service
@@ -173,6 +175,31 @@ class CandidateStageInfoService(
 
         db.add(candidate_stage_info)
         db.flush()
+
+        return candidate_stage_info
+
+    async def sign_with_certificate(self,
+                                    db: Session,
+                                    id: uuid.UUID,
+                                    body: CandidateStageInfoSignEcp,
+                                    access_token,
+                                    role,
+                                    user_id):
+        candidate_stage_info = self.sign_candidate_info(db, id, role)
+
+        url = configs.ECP_SERVICE_URL + 'api/candidate_stage_signer/create/'
+        request_body = {
+            'candidates_stage_id': str(id),
+            'user_id': str(user_id),
+            'certificate_blob': body.certificate_blob,
+            'xml_sign': None
+        }
+        headers = {"Authorization": access_token}
+
+        res = requests.post(url=url, json=request_body, headers=headers)
+
+        if res.status_code >= 400:
+            raise BadRequestException(detail=res.text)
 
         return candidate_stage_info
 
