@@ -30,8 +30,6 @@ class CuratorCategory(BaseCategory):
         )
         res = set()
         for group in groups:
-            print("ANIME")
-            print(group.curators)
             for staff_unit in group.curators:
                 if staff_unit.users == []:
                     continue

@@ -50,7 +50,7 @@ class IncreaseRankHandler(BaseHandler):
         rank = rank_service.get_by_id(db, rank_id)
         user_rank = rank_service.get_by_id(db, user.rank_id)
 
-        if user_rank.order >= rank.order:
+        if user_rank.rank_order >= rank.rank_order:
             raise ForbiddenException(
                 detail=f"You can not increase rank to {rank.name}")
 
@@ -64,7 +64,7 @@ class IncreaseRankHandler(BaseHandler):
             .join(Position, StaffUnit.position_id == Position.id)
             .join(Position.max_rank.of_type(position_rank))
             .join(User.rank.of_type(user_rank))
-            .filter(position_rank.order > user_rank.order)
+            .filter(position_rank.rank_order > user_rank.rank_order)
         )
 
     def get_args(self, action, properties):

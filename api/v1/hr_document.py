@@ -1,12 +1,11 @@
 import pickle
 import uuid
-from typing import List, Optional
 
 from fastapi import APIRouter, Depends, status
 from fastapi.security import HTTPBearer
 from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
-
+from typing import List, Union, Dict, Any, Optional
 from utils import get_access_token_by_user_id
 from core import get_db
 from models import LanguageEnum
@@ -164,9 +163,10 @@ def sign_ecp_all(*,
     user_id = Authorize.get_jwt_subject()
     access_token = get_access_token_by_user_id(Authorize, db, user_id)
     byte_body = pickle.dumps(body)
-    task_sign_document_with_certificate.delay(byte_body,
+    task = task_sign_document_with_certificate.delay(byte_body,
                                               str(user_id),
                                               access_token)
+    return task.id
 
 
 @router.post("/ecp_sign/{id}/", status_code=status.HTTP_200_OK,
@@ -193,7 +193,9 @@ def sign_ecp(*,
                                               str(id),
                                               body,
                                               str(user_id),
-                                              access_token)
+                                              access_token,
+                                              Authorize
+                                              )
 
 @router.post("/ecp_initialize",
              status_code=status.HTTP_201_CREATED,
@@ -229,7 +231,8 @@ async def initialize_with_certificate(*,
                                                                  body,
                                                                  str(user_id),
                                                                  str(role),
-                                                                 access_token)
+                                                                 access_token,
+                                                                 Authorize)
 
 @router.post("",
              status_code=status.HTTP_201_CREATED,
@@ -437,7 +440,7 @@ async def get_by_id(*,
             summary="Generate HrDocument")
 async def generate(*,
                    db: Session = Depends(get_db),
-                   id: uuid.UUID,
+                   id: str,
                    Authorize: AuthJWT = Depends()
                    ):
     """
@@ -455,7 +458,7 @@ async def generate(*,
         - **id**: UUID - required.
     """
     Authorize.jwt_required()
-    return await hr_document_service.generate(db, id, LanguageEnum.kz)
+    return await hr_document_service.generate(db, str(id), LanguageEnum.kz)
 
 
 @router.get('/generate-html/{id}/', status_code=status.HTTP_200_OK,

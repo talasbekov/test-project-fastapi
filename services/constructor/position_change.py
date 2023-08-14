@@ -86,9 +86,12 @@ class PositionChangeHandler(BaseHandler):
             staff_division_service.get_by_name(
                 db, StaffDivisionEnum.CANDIDATES.value)
         )
-        
+        if isinstance(candidate_staff_division.description, str):
+            candidate_staff_division.description = json.dumps(candidate_staff_division.description)
         position_id = self.get_args(action, props)[0]
-        
+        if isinstance(user.staff_unit.staff_division.description, str):
+            user.staff_unit.staff_division.description = json.dumps(user.staff_unit.staff_division.description)
+
         if user.staff_unit.staff_division_id != candidate_staff_division.id:
             percent = self.get_args(action, props)[1]
 

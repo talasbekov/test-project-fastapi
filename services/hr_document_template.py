@@ -137,10 +137,12 @@ class HrDocumentTemplateService(
             raise NotFoundException(
                 detail=f"HrDocumentTemplate with id: {id} is not found!"
             )
-        
-        hr_document_template.properties = json.loads(hr_document_template.properties)
-        hr_document_template.description = json.loads(hr_document_template.description)
-        hr_document_template.actions = json.loads(hr_document_template.actions)
+        if isinstance(hr_document_template.properties, str):
+            hr_document_template.properties = json.loads(hr_document_template.properties)
+        if isinstance(hr_document_template.description, str):
+            hr_document_template.description = json.loads(hr_document_template.description)
+        if isinstance(hr_document_template.actions, str):
+            hr_document_template.actions = json.loads(hr_document_template.actions)
         return hr_document_template
 
     def get_steps_by_document_template_id(

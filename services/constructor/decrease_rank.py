@@ -48,7 +48,7 @@ class DecreaseRankHandler(BaseHandler):
     ):
         rank_id = self.get_args(action, props)
         rank = rank_service.get_by_id(db, rank_id)
-        if user.rank.order <= rank.order:
+        if user.rank.rank_order <= rank.rank_order:
             raise ForbiddenException(
                 detail=f"You can not decrease rank to {rank.name}")
 

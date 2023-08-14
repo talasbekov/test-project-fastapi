@@ -27,6 +27,8 @@ class StaffUnitService(
                 detail=f"StaffUnit  with position id: {id} is not found!")
         if isinstance(position.requirements, str):
             position.requirements = json.loads(position.requirements)
+        if isinstance(position.staff_division.description, str):
+            position.staff_division.description = json.loads(position.staff_division.description)
         return position
 
     def create_with_position(self, db: Session,

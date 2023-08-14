@@ -6,7 +6,7 @@ from schemas import NamedModel, ReadNamedModel
 
 
 class RankBase(NamedModel):
-    order: int
+    rank_order: int
     military_url: AnyUrl
     employee_url: AnyUrl
 
@@ -20,7 +20,7 @@ class RankUpdate(RankBase):
 
 
 class RankRead(RankBase, ReadNamedModel):
-    order: Optional[int]
+    rank_order: Optional[int]
     military_url: Optional[str]
     employee_url: Optional[str]
 

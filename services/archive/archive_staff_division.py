@@ -26,12 +26,16 @@ class ArchiveStaffDivisionService(
     def get_by_id(self, db: Session, id: str) -> ArchiveStaffDivision:
         group = super().get(db, id)
         for child in group.children:
-            child.description = json.loads(child.description)
+            if isinstance(child.description, str):
+                child.description = json.loads(child.description)
             for staff_unit in child.staff_units:
-                staff_unit.requirements = json.loads(staff_unit.requirements)
-        group.description = json.loads(group.description)
+                if isinstance(staff_unit.requirements, str):
+                    staff_unit.requirements = json.loads(staff_unit.requirements)
+        if isinstance(group.description, str):
+             group.description = json.loads(group.description)
         for staff_unit in group.staff_units:
-            staff_unit.requirements = json.loads(staff_unit.requirements)
+            if isinstance(staff_unit.requirements, str):
+                staff_unit.requirements = json.loads(staff_unit.requirements)
         if group is None:
             raise NotFoundException(
                 f"ArchiveStaffDivision with id: {id} is not found!")
@@ -66,12 +70,16 @@ class ArchiveStaffDivisionService(
         archive_divisions.append(disposition_division)
         for archive_division in archive_divisions:
             for child in archive_division.children:
-                child.description = json.loads(child.description)
+                if isinstance(child.description, str):
+                    child.description = json.loads(child.description)
                 for staff_unit in child.staff_units:
-                    staff_unit.requirements = json.loads(staff_unit.requirements)
-            archive_division.description = json.loads(archive_division.description)
+                    if isinstance(staff_unit.requirements, str):
+                        staff_unit.requirements = json.loads(staff_unit.requirements)
+            if isinstance(archive_division.description, str):
+                archive_division.description = json.loads(archive_division.description)
             for staff_unit in archive_division.staff_units:
-                staff_unit.requirements = json.loads(staff_unit.requirements)
+                if isinstance(staff_unit.requirements, str):
+                    staff_unit.requirements = json.loads(staff_unit.requirements)
         return archive_divisions
 
     def get_parents(self, db: Session,

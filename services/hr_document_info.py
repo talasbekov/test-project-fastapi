@@ -27,8 +27,9 @@ class HrDocumentInfoService(
         obj_in_data = jsonable_encoder(obj_in)
         if obj_in_data['signed_at'] is not None:
             obj_in_data['signed_at'] = datetime.now()
-        db_obj = self.model(**obj_in_data)  # type: ignore
+        db_obj = self.model(**obj_in_data)
         db.add(db_obj)
+        print(db_obj.assigned_to)
         db.flush()
         return db_obj
     
@@ -64,7 +65,7 @@ class HrDocumentInfoService(
             signed_at=signed_at,
             order=order,
         )
-
+        print(document_info)
         return self.create(db, document_info)
 
     def get_by_document_id_and_step_id(
