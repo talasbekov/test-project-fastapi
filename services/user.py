@@ -35,6 +35,7 @@ from services import (
     hr_document_status_service,
     hr_document_template_service,
     categories,
+    hr_document_step_service,
 )
 from .base import ServiceBase
 
@@ -336,19 +337,34 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
     def _get_excepted_users_by_document_in_progress(self,
                                                     db: Session,
-                                                    hr_document_template_id: uuid.UUID):
+                                                    hr_document_template_id: str):
         forbidden_statuses = hr_document_status_service.get_by_names(
-            db, ["Завершен", "Отменен"])
+            db, ["Завершен", "Отменен", "На доработке"])
+
         excepted_users = (
             db.query(self.model)
             .distinct(self.model.id)
             .join(HrDocument.users)
             .join(HrDocumentInfo, HrDocument.id == HrDocumentInfo.hr_document_id)
+        )
+        steps = hr_document_step_service.get_all_by_document_template_id(
+            db,
+            hr_document_template_id)
+        for step in steps:
+            if step.is_direct_supervisor:
+                excepted_users = (
+                    excepted_users
+                    .join(StaffUnit, StaffUnit.id == User.staff_unit_id)
+                    .join(StaffDivision, StaffDivision.id == StaffUnit.staff_division_id)
+                    .filter(StaffDivision.leader_id.is_(None)))
+                break
+        excepted_users = (
+            excepted_users
             .filter(HrDocument.hr_document_template_id == hr_document_template_id,
-                    HrDocumentInfo.signed_by_id.is_(None),
-                    and_(*[HrDocument.status_id !=
-                           status.id for status in forbidden_statuses])
-                    )
+            HrDocumentInfo.signed_by_id.is_(None),
+            and_(*[HrDocument.status_id !=
+                   status.id for status in forbidden_statuses])
+            )
         )
         return excepted_users
 

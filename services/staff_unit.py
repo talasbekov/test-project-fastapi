@@ -3,6 +3,7 @@ import uuid
 import json
 
 from sqlalchemy.orm import Session
+from sqlalchemy.sql import text
 
 from exceptions.client import BadRequestException, NotFoundException
 from models import (StaffUnit, Position, User, EmergencyServiceHistory,
@@ -123,9 +124,13 @@ class StaffUnitService(
         return [StaffUnitRead.from_orm(item).dict() for item in staff_units]
 
     def create_relation(self, db: Session, user: User,
-                        staff_unit_id: uuid.UUID):
+                        staff_unit_id: str):
         staff_unit = self.get_by_id(db, staff_unit_id)
-        staff_unit.users.append(user)
+        if isinstance(staff_unit.staff_division.description, dict):
+            staff_unit.staff_division.description = json.dumps(staff_unit.staff_division.description)
+        if isinstance(staff_unit.requirements, list):
+            staff_unit.requirements = json.dumps(staff_unit.requirements)
+        db.execute(text(f"UPDATE HR_ERP_USERS SET staff_unit_id = '{staff_unit.id}' WHERE id = '{user.id}'"))
         db.add(staff_unit)
         db.flush()
         return staff_unit

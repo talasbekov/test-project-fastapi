@@ -99,16 +99,13 @@ class HrDocumentInfoService(
 
     def sign(self, db: Session, info: HrDocumentInfo,
              user: User, comment: str, is_signed: bool):
-
         info.signed_by = user
         info.comment = comment
         info.is_signed = is_signed
         info.updated_at = datetime.now()
         info.signed_at = datetime.now()
-
         db.add(info)
         db.flush()
-
         return info
 
     def get_signed_by_user_id(

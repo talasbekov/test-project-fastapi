@@ -8,6 +8,7 @@ from sqlalchemy import TIMESTAMP, Column, ForeignKey, String, Double, Integer, B
 from sqlalchemy.dialects.postgresql import TEXT
 from sqlalchemy.dialects.oracle import NCLOB, CLOB
 from sqlalchemy.orm import relationship, Session
+from sqlalchemy.sql import text
 
 from exceptions import NotSupportedException, NotFoundException
 from models import (
@@ -93,7 +94,7 @@ class RankHistory(History):
 
     @classmethod
     def create_history(cls, db: Session, user_id: uuid.UUID,
-                       id: uuid.UUID, finish_last):
+                       id: str, finish_last):
         rank = db.query(Rank).filter(Rank.id == id).first()
         if rank is None:
             raise NotFoundException(detail="Rank not found")
@@ -232,7 +233,8 @@ class EmergencyServiceHistory(History):
     @classmethod
     def create_history(self, db: Session, user_id: str,
                        id: str, finish_last):
-        staff_unit = db.query(StaffUnit).filter(StaffUnit.id == id).first()
+        query = db.execute(text(f"SELECT HR_ERP_STAFF_UNITS.id, HR_ERP_STAFF_UNITS.position_id, HR_ERP_STAFF_UNITS.staff_division_id FROM HR_ERP_STAFF_UNITS JOIN HR_ERP_USERS ON HR_ERP_STAFF_UNITS.id=HR_ERP_USERS.staff_unit_id WHERE HR_ERP_STAFF_UNITS.id = '{id}' AND HR_ERP_USERS.id = '{user_id}'"))
+        staff_unit = query.fetchone()
         if staff_unit is None:
             raise NotFoundException(detail="Staff unit not found")
         last_history: EmergencyServiceHistory = finish_last(

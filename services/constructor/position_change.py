@@ -2,10 +2,11 @@ import logging
 import json
 
 from sqlalchemy.orm import Session
+from sqlalchemy.sql import text
 
 from core import configs
 from models import (User, HrDocument, EmergencyServiceHistory,
-                    StaffDivisionEnum, CandidateStatusEnum)
+                    StaffDivisionEnum, CandidateStatusEnum, StaffUnit)
 from schemas import StaffUnitRead
 from .base import BaseHandler
 from services import (staff_unit_service, history_service,
@@ -28,35 +29,23 @@ class PositionChangeHandler(BaseHandler):
     ):
         self.handle_validation(
             db, user, action, template_props, props, document)
-        
-        candidate_staff_division = (
-            staff_division_service.get_by_name(
-                db, StaffDivisionEnum.CANDIDATES.value)
-        )
-        
-        if user.staff_unit.staff_division_id == candidate_staff_division.id:
-            candidate = candidate_service.get_by_staff_unit_id(db, user.staff_unit_id)
-            
-            position_id = self.get_args(action, props)[0]
-            
-            percent = None
-            reason = None
-            
-            candidate.status = CandidateStatusEnum.COMPLETED.value
-            
-            db.add(candidate)
-        else:
-            position_id, percent, reason = self.get_args(action, props)
-        
+        position_id, percent, reason = self.get_args(action, props)
         old_history = staff_unit_service.get_last_history(db, user.id)
 
         if old_history is None:
             staff_unit = user.staff_unit
+            if isinstance(staff_unit.staff_division.description, dict):
+                staff_unit.staff_division.description = json.dumps(staff_unit.staff_division.description)
             history: EmergencyServiceHistory = history_service.create_history(
                 db, user.id, staff_unit)
             old_history = staff_unit_service.get_last_history(db, user.id)
+        
+        res = staff_unit_service.create_relation(db, user, position_id)        
+        if isinstance(res.staff_division.description, dict):
+            res.staff_division.description = json.dumps(res.staff_division.description)
+        if isinstance(res.requirements, list):
+            res.requirements = json.dumps(res.requirements)
 
-        res = staff_unit_service.create_relation(db, user, position_id)
         history: EmergencyServiceHistory = history_service.create_history(
             db, user.id, res)
         history.percentage = percent
@@ -64,7 +53,9 @@ class PositionChangeHandler(BaseHandler):
         history.document_link = configs.GENERATE_IP + str(document.id)
 
         document.old_history_id = old_history.id
-        
+        if isinstance(user.staff_unit.staff_division.description, dict):
+            user.staff_unit.staff_division.description = json.dumps(user.staff_unit.staff_division.description)
+        print('animeee3')
         db.add(user)
         db.add(history)
         db.add(document)
@@ -82,30 +73,7 @@ class PositionChangeHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        candidate_staff_division = (
-            staff_division_service.get_by_name(
-                db, StaffDivisionEnum.CANDIDATES.value)
-        )
-        if isinstance(candidate_staff_division.description, str):
-            candidate_staff_division.description = json.dumps(candidate_staff_division.description)
-        position_id = self.get_args(action, props)[0]
-        if isinstance(user.staff_unit.staff_division.description, str):
-            user.staff_unit.staff_division.description = json.dumps(user.staff_unit.staff_division.description)
-
-        if user.staff_unit.staff_division_id != candidate_staff_division.id:
-            percent = self.get_args(action, props)[1]
-
-            staff_unit_service.get_by_id(db, position_id)
-            
-            if percent < 0 or percent > 100:
-                raise BadRequestException(
-                    f"Percentage must be between 0 and 100: {percent}")
-        
-        if staff_unit_service.exists_relation(db, user.id, position_id):
-            raise BadRequestException(
-                ("This position is already assigned to this user:"
-                f" {user.first_name}, {user.last_name}")
-            )
+        pass
 
     def get_args(self, action, properties):
         try:
