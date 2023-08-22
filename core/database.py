@@ -8,13 +8,8 @@ from fastapi import HTTPException
 
 from .config import configs
 import cx_Oracle
-#cx_Oracle.init_oracle_client(lib_dir=r"C:\oracle\instantclient_21_10")
 
-# logging.basicConfig()
-# logging.getLogger('sqlalchemy.engine').setLevel(logging.DEBUG)
-
-#SQLALCHEMY_DATABASE_URL = f"postgresql://{configs.POSTGRES_USER}:{configs.POSTGRES_PASSWORD}@{configs.POSTGRES_HOSTNAME}:{configs.DATABASE_PORT}/{configs.POSTGRES_DB}"
-SQLALCHEMY_DATABASE_URL = f"oracle://system:Oracle123@172.20.0.2:1521/MORAL"
+SQLALCHEMY_DATABASE_URL = f"oracle://system:Oracle123@192.168.0.169:1521/MORAL"
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
     pool_size=20,
