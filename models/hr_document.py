@@ -53,7 +53,8 @@ class HrDocument(Model):
 
     document_template = relationship(
         "HrDocumentTemplate",
-        back_populates="documents")
+        back_populates="documents",
+        lazy="joined")
     equipments = relationship(
         "Equipment",
         secondary=hr_document_equipments,

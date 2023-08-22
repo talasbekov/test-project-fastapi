@@ -59,8 +59,8 @@ async def is_template_accessible_for_user(
     *,
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
-    user_id: uuid.UUID,
-    hr_document_template_id: uuid.UUID
+    user_id: str,
+    hr_document_template_id: str
 ):
     """
     Check if user has access to template

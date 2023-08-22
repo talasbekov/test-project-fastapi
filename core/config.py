@@ -7,13 +7,6 @@ class Settings(BaseSettings):
     VERSION: str
     API_V1_PREFIX: str
 
-    DATABASE_PORT: int
-    POSTGRES_PASSWORD: str
-    POSTGRES_USER: str
-    POSTGRES_DB: str
-    POSTGRES_HOST: str
-    POSTGRES_HOSTNAME: str
-
     AUTHJWT_SECRET_KEY: str
     REFRESH_TOKEN_EXPIRES_IN: int
     ACCESS_TOKEN_EXPIRES_IN: int
@@ -21,6 +14,7 @@ class Settings(BaseSettings):
 
     DEBUG: bool = False
     SENTRY_DSN: str = None
+    ECP_SERVICE_URL: str = None
 
     GENERATE_IP: str = None
     SQLALCHEMY_ECHO: bool = False

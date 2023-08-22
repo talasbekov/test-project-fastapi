@@ -3,7 +3,7 @@ version: '3'
 services:
   rabbitmq:
     image: rabbitmq:3.9.4
-    container_name: rabbitmq-oracle
+    container_name: rabbitmq
     ports:
       - '5672:5673'
     restart: always
@@ -11,7 +11,7 @@ services:
 
   redis:
     image: redis
-    container_name: redis-oracle
+    container_name: redis
     ports:
       - '6379:6380'
     restart: always
@@ -21,7 +21,7 @@ services:
     build:
       context: .
     command: celery -A tasks.celery_app worker --loglevel=info
-    container_name: celery-oracle
+    container_name: celery
     user: "1000"
     depends_on:
       - redis
@@ -36,7 +36,7 @@ services:
     build:
       context: .
     command: celery -A tasks.celery_app beat --loglevel=info
-    container_name: celery-beat-oracle
+    container_name: celery-beat
     depends_on:
       - redis
       - rabbitmq
@@ -49,7 +49,7 @@ services:
 
   flower:
     image: "mher/flower"
-    container_name: flower-oracle
+    container_name: flower
     environment:
       CELERY_BROKER_URL: amqp://rabbitmq:5672/
     ports:

@@ -227,6 +227,7 @@ async def initialize_with_certificate(*,
     user_id = Authorize.get_jwt_subject()
     role = Authorize.get_raw_jwt()['role']
     access_token = get_access_token_by_user_id(Authorize, db, user_id)
+    print(access_token)
     return await hr_document_service.initialize_with_certificate(db,
                                                                  body,
                                                                  str(user_id),
@@ -351,7 +352,7 @@ async def initialize_draft_document(*,
             summary="Update HrDocument")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: HrDocumentUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -424,7 +425,7 @@ def sign(*,
             summary="Get HrDocument by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -433,7 +434,7 @@ async def get_by_id(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return hr_document_service.get_by_id(db, str(id))
+    return hr_document_service.get_by_id_for_api(db, str(id))
 
 
 @router.get('/generate/{id}/', status_code=status.HTTP_200_OK,

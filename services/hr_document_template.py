@@ -219,9 +219,12 @@ class HrDocumentTemplateService(
             )
             
             for template in hr_document_templates:
-                template.properties = json.loads(template.properties)
-                template.description = json.loads(template.description)
-                template.actions = json.loads(template.actions)
+                if isinstance(template.properties, str):
+                    template.properties = json.loads(template.properties)
+                if isinstance(template.description , str):
+                    template.description = json.loads(template.description)
+                if isinstance(template.actions , str):
+                    template.actions = json.loads(template.actions)
             
             return hr_document_templates
         return self.get_all_active(db, skip, limit)
@@ -240,9 +243,13 @@ class HrDocumentTemplateService(
             .all()
         )
         for template in hr_document_templates:
-            template.properties = json.loads(template.properties)
-            template.description = json.loads(template.description)
-            template.actions = json.loads(template.actions)
+            if isinstance(template.properties, str):
+                template.properties = json.loads(template.properties)
+            if isinstance(template.description , str):
+                template.description = json.loads(template.description)
+            if isinstance(template.actions , str):
+                template.actions = json.loads(template.actions)
+            print(template.actions)
         return hr_document_templates
         
     def get_all_drafts(

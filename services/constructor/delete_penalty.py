@@ -43,9 +43,9 @@ class DeletePenaltyHandler(BaseHandler):
             props: dict,
             document: HrDocument,
     ):
-        penalty_id = self.get_args(action, props)
-
-        penalty_service.get_by_id(db, penalty_id)
+        penalty_type_id = self.get_args(action, props)
+        penalty = penalty_service.get_by_type_and_user(db, str(penalty_type_id), user.id)
+        penalty_service.get_by_id(db, str(penalty.id))
 
     def handle_filter(self, db: Session, user_query: Query[Any]):
         return user_query.filter(
@@ -66,7 +66,7 @@ class DeletePenaltyHandler(BaseHandler):
                         ):
         penalty_id = self.get_args(action, properties)
         penalty_type_id = penalty_service.get_by_id(
-            db=db, id=penalty_id).type_id
+            db=db, id=str(penalty_id)).type_id
         obj = penalty_type_service.get_by_id(db, penalty_type_id)
         penalty_type = {'name': obj.name, 'nameKZ': obj.nameKZ}
         history = (db.query(PenaltyHistory)

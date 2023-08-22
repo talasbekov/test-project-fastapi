@@ -520,7 +520,6 @@ class HrDocumentService(
                 self._finish_document(db, document, document.users)
         self._create_hr_document_info_for_all_steps(
             db, document, users, all_steps)
-        print('anime1707')
         if len(all_steps) == 0:
             document.last_step_id = None
         else:
@@ -559,7 +558,7 @@ class HrDocumentService(
                          role: str,
                          access_token,
                          Authorize,
-                         parent_id: uuid.UUID = None,
+                         parent_id: str = None,
                          ):
         document = await self.initialize(
                db,
@@ -637,12 +636,10 @@ class HrDocumentService(
     ):
         document = self.get_by_id(db, document_id)
         self._validate_document_for_completed(db, document)
-
         current_user = user_service.get_by_id(db, user_id)
         info = hr_document_info_service.get_by_document_id_and_step_id(
             db, document_id, document.last_step_id)
         self._validate_document_for_user_step(info, current_user)
-
         step: HrDocumentStep = hr_document_step_service.get_initial_step_for_template(
             db, document.hr_document_template_id)
         document_staff_function = document_staff_function_service.get_by_id(
@@ -650,10 +647,9 @@ class HrDocumentService(
 
         if document_staff_function.role.name == DocumentFunctionTypeEnum.EXPERT.value:
             body.is_signed = True
-
+        print('1111')
         hr_document_info_service.sign(
             db, info, current_user, body.comment, body.is_signed)
-
         next_step = self._set_next_step(db, document_id, info)
         
         if self._is_superdoc(db, document):
@@ -664,7 +660,7 @@ class HrDocumentService(
                                                    body.comment,
                                                    info,
                                                    current_user)
-
+        print('222222')
         if body.is_signed:
             if next_step is None:
                 if isinstance(document.properties, dict):
@@ -675,13 +671,22 @@ class HrDocumentService(
                      document.document_template.description = json.dumps(document.document_template.description)
                 if isinstance(document.document_template.actions, dict):
                      document.document_template.actions = json.dumps(document.document_template.actions)
+                print('3333')
                 return self._finish_document(db, document, document.users)
-
+            print('4444')
             document.last_step_id = next_step.id
             query = db.execute(text(f"SELECT id FROM HR_ERP_HR_DOCUMENT_STATUSES WHERE name = '{HrDocumentStatusEnum.IN_PROGRESS.value}'"))
             document.status_id = query.fetchone()[0]
         else:
             if next_step is None:
+                if isinstance(document.properties, dict):
+                     document.properties = json.dumps(document.properties)
+                if isinstance(document.document_template.properties, dict):
+                     document.document_template.properties = json.dumps(document.document_template.properties)
+                if isinstance(document.document_template.description, dict):
+                     document.document_template.description = json.dumps(document.document_template.description)
+                if isinstance(document.document_template.actions, dict):
+                     document.document_template.actions = json.dumps(document.document_template.actions)
                 return self._cancel_document(db, document)
 
             steps = (
@@ -914,12 +919,15 @@ class HrDocumentService(
 
         document_properties: dict = document.properties
         
-        document.document_template.actions = json.dumps(template.actions)
-        document.document_template.properties = json.dumps(template.properties)
-        document.document_template.description = json.dumps(template.description)
+        if isinstance(document.document_template.actions, dict):
+            document.document_template.actions = json.dumps(template.actions)
+        if isinstance(document.document_template.properties, dict):
+            document.document_template.properties = json.dumps(template.properties)
+        if isinstance(document.document_template.description, dict):
+            document.document_template.description = json.dumps(template.description)
         
-        document_actions = json.loads(template.actions)
-        
+        if isinstance(document.properties, str):
+            document_actions = json.loads(template.actions)
         if isinstance(document.properties, str):
             document_properties = json.loads(document.properties)
         if isinstance(document.document_template.properties, str):
@@ -930,16 +938,15 @@ class HrDocumentService(
                 + "-"
                 + str(random.randint(1, 10000))
                 + "")
-
         for user in users:
-            for i in json.loads(document_actions)['args']:
+            for i in document_actions['args']:
                 action_name = list(i)[0]
                 action = i[action_name]
                 if handlers.get(action_name) is None:
                     raise InvalidOperationException(
                         f"Action {action_name} is not supported!"
                     )
-
+                print(action_name)
                 handlers[action_name].handle_action(
                     db, user, action, template_properties, document_properties, document)
 
@@ -947,9 +954,13 @@ class HrDocumentService(
 
         document.last_step_id = None
         
-        # document.document_template.actions = json.dumps(template.actions)
-        # document.document_template.properties = json.dumps(template.properties)
-        # document.document_template.description = json.dumps(template.description)
+        if isinstance(document.document_template.actions, dict):
+            document.document_template.actions = json.dumps(template.actions)
+        if isinstance(document.document_template.properties, dict):
+            document.document_template.properties = json.dumps(template.properties)
+        if isinstance(document.document_template.description, dict):
+            document.document_template.description = json.dumps(template.description)
+
         db.add(document)
         db.flush()
         return document
@@ -1449,9 +1460,22 @@ class HrDocumentService(
             )
 
     def _cancel_document(self, db: Session, document: HrDocument):
+        template: HrDocumentTemplate = document.document_template
+        if isinstance(document.properties, str):
+            document_actions = json.loads(template.actions)
+        if isinstance(document.properties, str):
+            document_properties = json.loads(document.properties)
+        if isinstance(document.document_template.properties, str):
+            template_properties = json.loads(document.document_template.properties)
         document.status_id = hr_document_status_service.get_by_name(
             db, HrDocumentStatusEnum.CANCELED.value).id
         document.last_step = None
+        if isinstance(document.document_template.actions, dict):
+            document.document_template.actions = json.dumps(template.actions)
+        if isinstance(document.document_template.properties, dict):
+            document.document_template.properties = json.dumps(template.properties)
+        if isinstance(document.document_template.description, dict):
+            document.document_template.description = json.dumps(template.description)
         db.add(document)
         db.flush()
         return document

@@ -12,12 +12,29 @@ from .base import ServiceBase
 
 class PenaltyService(ServiceBase[Penalty, PenaltyCreate, PenaltyUpdate]):
     def create_relation(self, db: Session, user_id: uuid.UUID,
-                        type_id: uuid.UUID):
+                        type_id: str):
         penalty = super().create(db, PenaltyCreate(type_id=type_id, user_id=user_id))
         return penalty
 
+    def get_by_id(self, db: Session, id: str) -> Penalty:
+        res = self.get(db, str(id))
+        if res is None:
+            raise NotFoundException(
+                detail=f"{self.model.__name__} with id {id} not found!")
+        return res
+
+
+    def get_by_type_and_user(self, db: Session, type_id: str, user_id: str) -> Penalty:
+        res = (
+               db.query(Penalty)
+               .filter(Penalty.user_id == user_id)
+               .filter(Penalty.type_id == type_id)
+              )
+        return res
+
+    
     def get_by_option(
-        self, db: Session, type: str, id: uuid.UUID, skip: int, limit: int
+        self, db: Session, type: str, id: str, skip: int, limit: int
     ):
         if type == "write":
             return [
@@ -50,23 +67,24 @@ class PenaltyService(ServiceBase[Penalty, PenaltyCreate, PenaltyUpdate]):
         else:
             return db.query(Penalty).filter(Penalty.id == id).first().type
 
-    def stop_relation(self, db: Session, user_id: uuid.UUID, id: uuid.UUID):
-        penalty = (
+    def stop_relation(self, db: Session, user_id: uuid.UUID, id: str):
+        # penalty = self.get_by_type_and_user(id, user_id)
+        penalty_history = (
             db.query(PenaltyHistory)
             .filter(
                 PenaltyHistory.penalty_id == id,
                 PenaltyHistory.user_id == user_id
             ).first()
         )
-        if penalty is None:
+        if penalty_history is None:
             raise NotFoundException(
                 detail=f"Penalty with id: {id} is not found!")
-        penalty.date_to = datetime.now()
-        db.add(penalty)
+        penalty_history.date_to = datetime.now()
+        db.add(penalty_history)
         db.flush()
-        return penalty
+        return penalty_history
 
-    def exists_relation(self, db: Session, user_id: str, id: uuid.UUID):
+    def exists_relation(self, db: Session, user_id: str, id: str):
         return (
             db.query(Penalty)
             .filter(Penalty.user_id == user_id)
