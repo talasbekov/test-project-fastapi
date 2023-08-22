@@ -7,7 +7,8 @@ from schemas.medical import (AnthropometricDataRead,
                              DispensaryRegistrationRead,
                              GeneralUserInformationRead,
                              HospitalDataRead,
-                             UserLiberationRead)
+                             UserLiberationRead,
+                             GeneralUserInformationRead)
 
 
 class MedicalProfileBase(BaseModel):
@@ -33,3 +34,4 @@ class MedicalProfileRead(MedicalProfileBase):
     anthropometric_datas: Optional[List[AnthropometricDataRead]]
     hospital_datas: Optional[List[HospitalDataRead]]
     user_liberations: Optional[List[UserLiberationRead]]
+    general_user_info: Optional[List[GeneralUserInformationRead]]
