@@ -1412,7 +1412,6 @@ class HrDocumentService(
             hr_document_info_service.create_info_for_step(
                 db, document.id, step.id, user_id, None, None, None
             )
-        print('animeaaa')
 
     def _create_hr_document_info_for_initiator(
             self,
@@ -1566,7 +1565,7 @@ class HrDocumentService(
 
         last_info = hr_document_info_service.find_by_document_id_and_step_id_signed(
             db, document.id, last_step.id)
-        print('anime4')
+
         if last_info is not None and last_info.signed_at is not None:
             context['approving_rank'] = last_info.signed_by.rank.name
             context['approving_name'] = (
