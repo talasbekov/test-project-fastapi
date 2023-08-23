@@ -10,10 +10,10 @@ from .specialty import SpecialtyRead
 
 
 class AcademicDegreeBase(BaseModel):
-    profile_id: uuid.UUID
-    degree_id: uuid.UUID
-    science_id: uuid.UUID
-    specialty_id: uuid.UUID
+    profile_id: str
+    degree_id: str
+    science_id: str
+    specialty_id: str
     document_number: str
     document_link: Optional[AnyUrl]
     assignment_date: date
@@ -32,11 +32,12 @@ class AcademicDegreeUpdate(AcademicDegreeBase):
 
 
 class AcademicDegreeRead(AcademicDegreeBase):
-    id: Optional[uuid.UUID]
-    profile_id: Optional[uuid.UUID]
-    degree_id: Optional[uuid.UUID]
-    science_id: Optional[uuid.UUID]
-    specialty_id: Optional[uuid.UUID]
+    id: Optional[str]
+    profile_id: Optional[str]
+    degree_id: Optional[str]
+    science_id: Optional[str]
+    specialty_id: Optional[str]
+    specialty: Optional[SpecialtyRead]
     document_number: Optional[str]
     document_link: Optional[str]
     assignment_date: Optional[date]

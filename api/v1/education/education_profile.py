@@ -130,7 +130,7 @@ async def get_profile(*,
             response_model=EducationalProfileRead)
 async def get_profile_by_id(*,
                             db: Session = Depends(get_db),
-                            id: uuid.UUID,
+                            id: str,
                             Authorize: AuthJWT = Depends()
                             ):
     Authorize.jwt_required()
