@@ -8,11 +8,16 @@ services:
     container_name: sgo-erp-oracle
     restart: always
     ports:
-      - "8003:8002"
+      - "8002:8002"
     volumes:
       - .:/app
-    network_mode: "oracle"
+    networks:
+      - backend-dev
     deploy:
       resources:
         limits:
           memory: 4g
+
+networks:
+  backend-dev:
+    driver: bridge

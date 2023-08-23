@@ -11,7 +11,7 @@ from .language_proficiency import LanguageProficiencyRead
 
 
 class EducationalProfileBase(BaseModel):
-    profile_id: Optional[uuid.UUID]
+    profile_id: Optional[str]
 
     class Config:
         orm_mode = True
