@@ -916,24 +916,17 @@ async def get_all_actions():
         },
     },
     {
-        'action_name': 'Отпуск по болезни',
-        'action_nameKZ': 'Ауру демалысы',
-        'action_type': 'sick_leave',
+        'action_name': 'Зачисление кандидата на службу',
+        'action_nameKZ': 'Кандидатты қызметке қабылдау',
+        'action_type': 'apply_candidate',
         'children': [
             {
-                'alias_name': 'Дата начала',
-                'alias_nameKZ': 'Басталу күні',
-                'tagname': 'date_from',
-                'data_taken': 'manual',
-                'data_type': 'date',
-            },
-            {
-                'alias_name': 'Дата конца',
-                'alias_nameKZ': 'Аяқталу күні',
-                'tagname': 'date_to',
-                'data_taken': 'manual',
-                'data_type': 'date',
-            },
+                'alias_name': 'Новая должность',
+                'alias_nameKZ': 'Жаңа қызмет атауы',
+                'tagname': 'staff_unit',
+                'data_taken': 'dropdown',
+                'field_name': 'staff_unit',
+            }
         ],
         'properties': {
             "surname":{
