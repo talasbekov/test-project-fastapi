@@ -16,31 +16,31 @@ class StaffUnitRequirements(NamedModel):
     
     
 class StaffUnitBase(Model):
-    position_id: uuid.UUID
-    staff_division_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    position_id: str
+    staff_division_id: Optional[str] = Field(None, nullable=True)
     is_active: Optional[bool] = True
     requirements: Optional[List[StaffUnitRequirements]
                            ] = Field(None, nullable=True)
 
 
 class StaffUnitCreate(StaffUnitBase):
-    curator_of_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    curator_of_id: Optional[str] = Field(None, nullable=True)
 
 
 class StaffUnitCreateWithPosition(PositionCreate):
-    staff_division_id: uuid.UUID
+    staff_division_id: str
     is_active: Optional[bool] = True
     requirements: Optional[List[dict]] = Field(None, nullable=True)
 
 
 class StaffUnitUpdate(StaffUnitBase):
-    curator_of_id: Optional[uuid.UUID] = Field(None, nullable=True)
-    user_replacing_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    curator_of_id: Optional[str] = Field(None, nullable=True)
+    user_replacing_id: Optional[str] = Field(None, nullable=True)
 
 
 class HrVacancyRead(ReadModel):
     is_active: Optional[bool] = True
-    staff_unit_id: Optional[uuid.UUID]
+    staff_unit_id: Optional[str]
 
     class Config:
         orm_mode = True
@@ -52,7 +52,7 @@ class UserRead(ReadModel):
     email: Optional[EmailStr] = Field(None, nullable=True)
     first_name: Optional[str] = Field(None, nullable=True)
     last_name: Optional[str] = Field(None, nullable=True)
-    staff_unit_id: Optional[uuid.UUID]
+    staff_unit_id: Optional[str]
     call_sign: Optional[str]
     id_number: Optional[str]
     icon: Optional[str] = Field(None, nullable=True)
@@ -64,10 +64,10 @@ class UserRead(ReadModel):
 
 
 class UserReplacingStaffUnitRead(StaffUnitBase, ReadModel):
-    staff_division_id: Optional[uuid.UUID]
+    staff_division_id: Optional[str]
     staff_division: Optional[StaffUnitDivisionRead]
     staff_functions: Optional[List[StaffFunctionRead]]
-    position_id: Optional[uuid.UUID]
+    position_id: Optional[str]
     position: Optional[PositionRead]
     users: Optional[List[Optional[UserRead]]]
     actual_users: Optional[List[Optional[UserRead]]]
@@ -87,14 +87,14 @@ class UserReplacingRead(UserRead):
 
 class StaffUnitRead(UserReplacingStaffUnitRead):
     user_replacing: Optional[UserReplacingRead] = Field(None, nullable=True)
-    user_replacing_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    user_replacing_id: Optional[str] = Field(None, nullable=True)
 
 
 class UserStaffUnitRead(StaffUnitBase, ReadModel):
-    staff_division_id: Optional[uuid.UUID]
+    staff_division_id: Optional[str]
     staff_division: Optional[ShortStaffUnitDivisionRead]
     staff_functions: Optional[List[StaffFunctionRead]]
-    position_id: Optional[uuid.UUID]
+    position_id: Optional[str]
     position: Optional[PositionRead]
 
     class Config:
@@ -103,9 +103,9 @@ class UserStaffUnitRead(StaffUnitBase, ReadModel):
 
 class ShortUserStaffUnitRead(ReadModel):
     is_active: Optional[bool] = True
-    staff_division_id: Optional[uuid.UUID]
+    staff_division_id: Optional[str]
     staff_division: Optional[ShortStaffUnitDivisionRead]
-    position_id: Optional[uuid.UUID]
+    position_id: Optional[str]
     position: Optional[PositionRead]
 
     class Config:

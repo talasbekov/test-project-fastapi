@@ -71,7 +71,7 @@ async def create(*,
             summary="Update HrDocumentInfo")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: HrDocumentInfoUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -101,7 +101,7 @@ async def update(*,
                summary="Delete HrDocumentInfo")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """
@@ -117,7 +117,7 @@ async def delete(*,
             summary="Get HrDocumentInfo by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """

@@ -54,7 +54,7 @@ async def get_all(
 async def get_by_id(
         db: Session = Depends(get_db),
         Authorize: AuthJWT = Depends(),
-        id: uuid.UUID = None
+        id: str = None
 ):
     """
         Get a CandidateStageInfo by id.
@@ -70,7 +70,7 @@ async def get_by_id(
             summary="Get all CandidateStageInfo by candidate_id")
 async def get_all_by_candidate_id(
         db: Session = Depends(get_db),
-        candidate_id: uuid.UUID = None,
+        candidate_id: str = None,
         skip: int = 0,
         limit: int = 100,
         Authorize: AuthJWT = Depends(),
@@ -154,7 +154,7 @@ async def sign_candidate(
             response_model=CandidateStageInfoRead)
 async def sign_ecp(*,
        db: Session = Depends(get_db),
-       id: uuid.UUID,
+       id: str,
        body: CandidateStageInfoSignEcp,
        Authorize: AuthJWT = Depends()
 ):
@@ -182,7 +182,7 @@ async def sign_ecp(*,
 async def reject_candidate(
         db: Session = Depends(get_db),
         Authorize: AuthJWT = Depends(),
-        id: uuid.UUID = None,
+        id: str = None,
 ):
     """
         Reject a CandidateStageInfo

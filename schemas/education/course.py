@@ -9,8 +9,8 @@ from .course_provider import CourseProviderRead
 
 
 class CourseBase(NamedModel):
-    profile_id: Optional[uuid.UUID]
-    course_provider_id: Optional[uuid.UUID]
+    profile_id: Optional[str]
+    course_provider_id: Optional[str]
     start_date: Optional[datetime.date]
     end_date: Optional[datetime.date]
     document_link: Optional[AnyUrl]
@@ -29,8 +29,8 @@ class CourseUpdate(CourseBase):
 
 
 class CourseRead(CourseBase, ReadNamedModel):
-    profile_id: Optional[uuid.UUID]
-    course_provider_id: Optional[uuid.UUID]
+    profile_id: Optional[str]
+    course_provider_id: Optional[str]
     start_date: Optional[datetime.date]
     end_date: Optional[datetime.date]
     document_link: Optional[str]

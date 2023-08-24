@@ -46,7 +46,7 @@ class HrDocumentStepService(
         return steps
 
     def get_all_by_document_template_id(
-            self, db: Session, template_id: uuid.UUID, notifiers: bool = True):
+            self, db: Session, template_id: str, notifiers: bool = True):
 
         steps_query = db.query(self.model)\
             .filter(self.model.hr_document_template_id == template_id)\
@@ -71,7 +71,7 @@ class HrDocumentStepService(
         return step
 
     def get_all_notifiers_by_template_id(
-            self, db: Session, template_id: uuid.UUID):
+            self, db: Session, template_id: str):
         return (
             db.query(self.model)
             .join(DocumentStaffFunction)
@@ -83,7 +83,7 @@ class HrDocumentStepService(
         )
 
     def get_all_by_document_template_id_without_notifiers(
-            self, db: Session, template_id: uuid.UUID):
+            self, db: Session, template_id: str):
         return (
             db.query(self.model)
             .join(DocumentStaffFunction)
@@ -95,7 +95,7 @@ class HrDocumentStepService(
         )
 
     def get_last_step_document_template_id(
-            self, db: Session, template_id: uuid.UUID):
+            self, db: Session, template_id: str):
         res = (
             db.query(self.model)
             .join(DocumentStaffFunction)

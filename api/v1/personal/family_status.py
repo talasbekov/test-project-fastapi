@@ -46,7 +46,7 @@ async def get_all(*,
             summary="Get FamilyStatus by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -62,7 +62,7 @@ async def get_by_id(*,
             response_model=FamilyStatusRead)
 async def get_profile_by_id(*,
                             db: Session = Depends(get_db),
-                            user_id: uuid.UUID,
+                            user_id: str,
                             Authorize: AuthJWT = Depends()
                             ):
     Authorize.jwt_required()

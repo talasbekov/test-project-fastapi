@@ -18,7 +18,7 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
                 detail=f"Badge with id: {id} is not found!")
         return badge
 
-    def get_badge_by_type(self, db: Session, type_id: uuid.UUID):
+    def get_badge_by_type(self, db: Session, type_id: str):
         badge = db.query(Badge).filter(Badge.type_id == type_id).first()
         if badge is None:
             raise NotFoundException(
@@ -51,7 +51,7 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
         return badge
 
     def create_relation(self, db: Session, user_id: str,
-                        badge_type_id: uuid.UUID):
+                        badge_type_id: str):
         if db.query(BadgeType).filter(
                 BadgeType.id == badge_type_id).first() is None:
             raise NotFoundException(
@@ -64,7 +64,7 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
         return badge
 
     def exists_relation(self, db: Session, user_id: str,
-                        badge_type_id: uuid.UUID):
+                        badge_type_id: str):
         return (
             db.query(Badge)
             .filter(Badge.user_id == user_id)
@@ -75,7 +75,7 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
             .first()
         ) is not None
 
-    def stop_relation(self, db: Session, user_id: str, badge_id: uuid.UUID):
+    def stop_relation(self, db: Session, user_id: str, badge_id: str):
         res = (
             db.query(BadgeHistory)
             .filter(BadgeHistory.badge_id == badge_id,
@@ -133,7 +133,7 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
         db.flush()
 
     def get_by_option(
-        self, db: Session, type: str, id: uuid.UUID, skip: int, limit: int
+        self, db: Session, type: str, id: str, skip: int, limit: int
     ):
         user = db.query(User).filter(User.id == id).first()
         if user is None:

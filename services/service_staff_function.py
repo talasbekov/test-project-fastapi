@@ -37,7 +37,7 @@ class ServiceStaffFunctionService(
 
         return staff_functions
 
-    def duplicate(self, db: Session, id: uuid.UUID):
+    def duplicate(self, db: Session, id: str):
         func = self.get_by_id(db, id)
         copy = super().create(db, ServiceStaffFunctionCreate(
             name=func.name,
@@ -52,7 +52,7 @@ class ServiceStaffFunctionService(
             self,
             db,
             archive_staff_function: ArchiveServiceStaffFunction,
-            new_type_id: uuid.UUID):
+            new_type_id: str):
         service_staff_function = self.get_by_id(
             db, archive_staff_function.origin_id)
 
@@ -73,7 +73,7 @@ class ServiceStaffFunctionService(
             self,
             db,
             archive_staff_function: ArchiveServiceStaffFunction,
-            new_type_id: uuid.UUID):
+            new_type_id: str):
         res = super().create(
             db, ServiceStaffFunctionCreate(
                 name=archive_staff_function.name,
@@ -89,7 +89,7 @@ class ServiceStaffFunctionService(
             self,
             db: Session,
             archive_service_staff_function: ArchiveServiceStaffFunction,
-            new_type_id: uuid.UUID):
+            new_type_id: str):
         if archive_service_staff_function.origin_id is None:
             return self._create_from_archive(
                 db, archive_service_staff_function, new_type_id)

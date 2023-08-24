@@ -17,16 +17,16 @@ class CandidateStageQuestionBase(BaseModel):
 
 
 class CandidateStageQuestionCreate(CandidateStageQuestionBase):
-    candidate_stage_type_id: Optional[uuid.UUID]
+    candidate_stage_type_id: Optional[str]
 
 
 class CandidateStageQuestionUpdate(CandidateStageQuestionBase):
-    candidate_stage_type_id: Optional[uuid.UUID]
+    candidate_stage_type_id: Optional[str]
 
 
 class CandidateStageQuestionRead(CandidateStageQuestionBase):
-    id: Optional[uuid.UUID]
-    candidate_stage_type_id: Optional[uuid.UUID]
+    id: Optional[str]
+    candidate_stage_type_id: Optional[str]
     question: Optional[str]
     question_type: Optional[str]
     created_at: Optional[datetime.datetime]
@@ -34,7 +34,7 @@ class CandidateStageQuestionRead(CandidateStageQuestionBase):
 
 
 class CandidateStageQuestionReadIn(BaseModel):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     answer: Optional[CandidateStageAnswerRead]
     question: Optional[str]
     question_type: Optional[str]
@@ -45,14 +45,14 @@ class CandidateStageQuestionReadIn(BaseModel):
 
 
 class CandidateStageInfoReadAnswer(BaseModel):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     status: Optional[str]
     date_sign: Optional[datetime.date]
     created_at: Optional[datetime.datetime]
     updated_at: Optional[datetime.datetime]
     is_waits: Optional[bool]
-    candidate_stage_type_id: Optional[uuid.UUID]
-    staff_unit_coordinate_id: Optional[uuid.UUID]
+    candidate_stage_type_id: Optional[str]
+    staff_unit_coordinate_id: Optional[str]
 
     class Config:
         orm_mode = True

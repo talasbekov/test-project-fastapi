@@ -155,7 +155,7 @@ async def get_by_id(*,
              response_model=StaffListApplyRead,
              summary="Apply Staff List")
 async def apply_staff_list(*,
-                           id: uuid.UUID,
+                           id: str,
                            signed_by: str,
                            document_creation_date: datetime.date,
                            rank: str,
@@ -193,7 +193,7 @@ async def apply_staff_list(*,
             summary="Update Staff List")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: StaffListUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -217,7 +217,7 @@ async def update(*,
                summary="Delete Staff List")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """
@@ -235,7 +235,7 @@ async def delete(*,
              summary="Duplicate Staff List")
 async def duplicate(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     body: StaffListUserCreate,
                     Authorize: AuthJWT = Depends()
                     ):

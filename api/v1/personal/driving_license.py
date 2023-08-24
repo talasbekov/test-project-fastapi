@@ -59,7 +59,7 @@ async def create(*,
         - **date_of_issue**: datetime.date
         - **date_to**: datetime.date
         - **document_link**: str
-        - **profile_id**: uuid.UUID
+        - **profile_id**: str
     """
     Authorize.jwt_required()
     return driving_license_service.create(db, body)
@@ -70,7 +70,7 @@ async def create(*,
             summary="Get DrivingLicense by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -87,7 +87,7 @@ async def get_by_id(*,
             summary="Update DrivingLicense")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: DrivingLicenseUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -109,7 +109,7 @@ async def update(*,
                summary="Delete DrivingLicense")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """
@@ -126,7 +126,7 @@ async def delete(*,
             summary='Update DrivingLicense document_link')
 async def update_document_link(*,
                                db: Session = Depends(get_db),
-                               id: uuid.UUID,
+                               id: str,
                                body: DrivingLicenseLinkUpdate,
                                Authorize: AuthJWT = Depends()
                                ):

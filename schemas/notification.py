@@ -6,8 +6,8 @@ from schemas import Model, ReadModel
 
 class NotificationBase(Model):
     message: str
-    sender_id: uuid.UUID
-    receiver_id: uuid.UUID
+    sender_id: str
+    receiver_id: str
 
     class Config():
         orm_mode = True
@@ -24,5 +24,5 @@ class NotificationUpdate(NotificationBase):
 
 class NotificationRead(ReadModel, NotificationBase):
     message: Optional[str]
-    sender_id: Optional[uuid.UUID]
-    receiver_id: Optional[uuid.UUID]
+    sender_id: Optional[str]
+    receiver_id: Optional[str]

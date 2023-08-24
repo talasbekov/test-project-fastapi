@@ -26,8 +26,8 @@ class BadgeTypeRead(BadgeTypeBase, ReadNamedModel):
 
 
 class BadgeBase(Model):
-    user_id: uuid.UUID
-    type_id: uuid.UUID
+    user_id: str
+    type_id: str
 
 
 class BadgeCreate(BadgeBase):

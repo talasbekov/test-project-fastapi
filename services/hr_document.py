@@ -195,7 +195,7 @@ class HrDocumentService(
             self,
             db: Session,
             user_id: str,
-            parent_id: uuid.UUID,
+            parent_id: str,
             filter: str,
             skip: int,
             limit: int
@@ -246,7 +246,7 @@ class HrDocumentService(
             self,
             db: Session,
             user_id: str,
-            parent_id: uuid.UUID,
+            parent_id: str,
             filter: str,
             skip: int,
             limit: int
@@ -400,7 +400,7 @@ class HrDocumentService(
             current_user.id))
 
         users = [v for _, v in step_from_template.items()]
-        subject_users_ids: List[uuid.UUID] = []
+        subject_users_ids: List[str] = []
 
         for user in body.user_ids:
             subject_users_ids.append(user)
@@ -764,7 +764,7 @@ class HrDocumentService(
             db: Session,
             option: str,
             data_taken: str,
-            id: uuid.UUID,
+            id: str,
             type: str,
             skip: int,
             limit: int
@@ -779,10 +779,10 @@ class HrDocumentService(
 
     def _create_staff_unit_document_body(self,
                                          db: Session,
-                                         user_id: uuid.UUID,
+                                         user_id: str,
                                          staff_unit: ArchiveStaffUnit,
-                                         template_id: uuid.UUID,
-                                         parent_id: uuid.UUID):
+                                         template_id: str,
+                                         parent_id: str):
         steps = hr_document_template_service.get_steps_by_document_template_id(
             db, template_id)
         body = HrDocumentInit(
@@ -807,8 +807,8 @@ class HrDocumentService(
                            body: HrDocumentInit,
                            role: str,
                            step: HrDocumentStep,
-                           users: List[uuid.UUID],
-                           user_id: uuid.UUID = None):
+                           users: List[str],
+                           user_id: str = None):
 
         staff_unit: StaffUnit = staff_unit_service.get_by_id(db, role)
 
@@ -887,8 +887,8 @@ class HrDocumentService(
     def _exists_user_document_in_progress(
             self,
             db: Session,
-            hr_document_template_id: uuid.UUID,
-            user_ids: List[uuid.UUID]):
+            hr_document_template_id: str,
+            user_ids: List[str]):
 
         if user_ids is None:
             return None
@@ -1246,7 +1246,7 @@ class HrDocumentService(
             db: Session,
             staff_unit: StaffUnit,
             document_staff_function: DocumentStaffFunction,
-            subject_user_ids: List[uuid.UUID]
+            subject_user_ids: List[str]
     ) -> bool:
         jurisdiction = jurisdiction_service.get_by_id(
             db, document_staff_function.jurisdiction_id)
@@ -1384,7 +1384,7 @@ class HrDocumentService(
         db.flush()
         return hr_document
 
-    def get_signee(self, db: Session, id: uuid.UUID) -> User:
+    def get_signee(self, db: Session, id: str) -> User:
         document = self.get_by_id(db, id)
         if (document.status.name
                 != HrDocumentStatusEnum.COMPLETED.value):

@@ -26,15 +26,15 @@ class MonthUpdate(MonthBase):
 
 
 class MonthRead(MonthBase):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     has_schedule_month: bool = True
 
 
 class ScheduleYearBase(BaseModel):
     is_exam_required: Optional[bool]
     retry_count: Optional[int]
-    plan_id: Optional[uuid.UUID]
-    activity_id: Optional[uuid.UUID]
+    plan_id: Optional[str]
+    activity_id: Optional[str]
 
     class Config:
         orm_mode = True
@@ -44,7 +44,7 @@ class ScheduleYearBase(BaseModel):
 class ScheduleYearCreateString(ScheduleYearBase):
     activity_months: Optional[List[Optional[str]]]
     exam_months: Optional[List[Optional[str]]]
-    staff_division_ids: List[uuid.UUID]
+    staff_division_ids: List[str]
 
 
 class ScheduleYearCreate(ScheduleYearBase):
@@ -56,7 +56,7 @@ class ScheduleYearUpdate(ScheduleYearBase):
 
 
 class ScheduleYearRead(ScheduleYearBase):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     created_at: Optional[datetime]
     staff_divisions: Optional[List[StaffDivisionReadWithoutStaffUnit]]
     users: Optional[List[Optional[UserShortReadStatus]]]

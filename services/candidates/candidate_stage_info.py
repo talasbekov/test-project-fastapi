@@ -143,7 +143,7 @@ class CandidateStageInfoService(
 
         return candidate_stage_info
 
-    def sign_candidate_info(self, db: Session, id: uuid.UUID, role: str):
+    def sign_candidate_info(self, db: Session, id: str, role: str):
         """
             This method updates the CandidateStageInfo record with the provided
             id and sets its status to APPROVED.
@@ -180,7 +180,7 @@ class CandidateStageInfoService(
 
     async def sign_with_certificate(self,
                                     db: Session,
-                                    id: uuid.UUID,
+                                    id: str,
                                     body: CandidateStageInfoSignEcp,
                                     access_token,
                                     role,
@@ -203,7 +203,7 @@ class CandidateStageInfoService(
 
         return candidate_stage_info
 
-    def reject_candidate_info(self, db: Session, id: uuid.UUID, role: str):
+    def reject_candidate_info(self, db: Session, id: str, role: str):
         """
             This updates the CandidateStageInfo record with the provided id
             and sets its status to DECLINED.

@@ -21,7 +21,7 @@ class DrivingLicenseService(
                 detail=f"DrivingLicense with id: {id} is not found!")
         return driving_licence
 
-    def update_document_link(self, db: Session, id: uuid.UUID,
+    def update_document_link(self, db: Session, id: str,
                              body: DrivingLicenseLinkUpdate):
         license = self.get_by_id(db, id)
         license.document_link = body.document_link

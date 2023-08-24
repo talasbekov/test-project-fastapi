@@ -109,7 +109,7 @@ async def get_by_month(*,
             summary="Get ScheduleMonth by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -140,7 +140,7 @@ async def create(*,
             summary="Update ScheduleMonth")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: ScheduleMonthUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -159,7 +159,7 @@ async def update(*,
             summary="Delete ScheduleMonth")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

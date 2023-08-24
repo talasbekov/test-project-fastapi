@@ -29,7 +29,7 @@ class TextModel(Model):
 
 
 class ReadModel(Model):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     created_at: Optional[datetime.datetime]
     updated_at: Optional[datetime.datetime]
 

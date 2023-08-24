@@ -70,7 +70,7 @@ async def create(*,
             summary="Update Abroad Travel by id")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: AdditionalProfileUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -90,7 +90,7 @@ async def update(*,
                summary="Delete Abroad Travel by id")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """
@@ -109,7 +109,7 @@ async def delete(*,
             summary="Get Additional Profile by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -135,7 +135,7 @@ async def get_profile(*,
 @router.get('/profile/{id}/', response_model=AdditionalProfileRead)
 async def get_profile_by_id(*,
                             db: Session = Depends(get_db),
-                            id: uuid.UUID,
+                            id: str,
                             Authorize: AuthJWT = Depends()
                             ):
     Authorize.jwt_required()

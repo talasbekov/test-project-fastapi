@@ -16,12 +16,12 @@ class DocumentArchiveStaffFunctionTypeBase(BaseModel):
 
 class DocumentArchiveStaffFunctionTypeCreate(
         DocumentArchiveStaffFunctionTypeBase):
-    origin_id: Optional[uuid.UUID]
+    origin_id: Optional[str]
 
 
 class DocumentArchiveStaffFunctionTypeUpdate(
         DocumentArchiveStaffFunctionTypeBase):
-    origin_id: Optional[uuid.UUID]
+    origin_id: Optional[str]
 
 
 class NewDocumentArchiveStaffFunctionTypeCreate(
@@ -36,6 +36,6 @@ class NewDocumentArchiveStaffFunctionTypeUpdate(
 
 class DocumentArchiveStaffFunctionTypeRead(
         DocumentArchiveStaffFunctionTypeBase):
-    id: uuid.UUID
+    id: str
     created_at: datetime.datetime
     updated_at: datetime.datetime

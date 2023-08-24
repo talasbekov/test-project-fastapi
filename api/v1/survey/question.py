@@ -44,7 +44,7 @@ async def get_all(*,
             summary="Get all Questions by survey id")
 async def get_by_survey(*,
                   db: Session = Depends(get_db),
-                  survey_id: uuid.UUID,
+                  survey_id: str,
                   Authorize: AuthJWT = Depends()
                   ):
     """
@@ -83,7 +83,7 @@ async def create(*,
             summary="Get Question by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -100,7 +100,7 @@ async def get_by_id(*,
             summary="Update Question")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: QuestionUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -122,7 +122,7 @@ async def update(*,
                summary="Delete Question")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

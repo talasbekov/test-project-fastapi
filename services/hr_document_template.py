@@ -361,7 +361,7 @@ class HrDocumentTemplateService(
         return new_template
 
     async def suggest_corrections(
-        self, db: Session, body: SuggestCorrections, current_user_id: uuid.UUID
+        self, db: Session, body: SuggestCorrections, current_user_id: str
     ):
         template = self.get_by_id(db, body.hr_document_template_id)
         for i in template.maintainer.actual_users:
@@ -416,11 +416,11 @@ class HrDocumentTemplateService(
             )
         return res
 
-    def get_all(self, db: Session, ids: List[uuid.UUID]):
+    def get_all(self, db: Session, ids: List[str]):
         return self._get_all(db, ids).all()
 
     def get_all_skip(self, db: Session,
-                     ids: List[uuid.UUID], skip: int, limit: int):\
+                     ids: List[str], skip: int, limit: int):\
                          
         hr_document_templates = self._get_all(db, ids).offset(skip).limit(limit).all()
         for hr_document_template in hr_document_templates:
@@ -429,7 +429,7 @@ class HrDocumentTemplateService(
             hr_document_template.properties = json.loads(hr_document_template.properties)
         return hr_document_templates
 
-    def _get_all(self, db: Session, ids: List[uuid.UUID]):
+    def _get_all(self, db: Session, ids: List[str]):
         return (
             db.query(self.model)
             .filter(
@@ -442,9 +442,9 @@ class HrDocumentTemplateService(
     def get_all_supervisors(
         self,
         db: Session,
-        step_id: uuid.UUID,
+        step_id: str,
         is_direct: bool,
-        template_id: uuid.UUID,
+        template_id: str,
         user: User,
     ):
         count = 1

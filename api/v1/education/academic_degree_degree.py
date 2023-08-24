@@ -63,7 +63,7 @@ async def create(*,
             summary="Get AcademicDegreeDegree by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -80,7 +80,7 @@ async def get_by_id(*,
             summary="Update AcademicDegreeDegree")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: AcademicDegreeDegreeUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -103,7 +103,7 @@ async def update(*,
                summary="Delete AcademicDegreeDegree")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

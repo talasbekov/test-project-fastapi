@@ -48,7 +48,7 @@ async def get_all(*,
             summary="Get all ScheduleYear by plan id")
 async def get_all_by_plan(*,
                   db: Session = Depends(get_db),
-                  id: uuid.UUID,
+                  id: str,
                   Authorize: AuthJWT = Depends()
                   ):
     """
@@ -70,7 +70,7 @@ async def get_all_by_plan(*,
             summary="Get all ScheduleYear by staff_division id")
 async def get_all_by_staff_division(*,
                   db: Session = Depends(get_db),
-                  id: uuid.UUID,
+                  id: str,
                   Authorize: AuthJWT = Depends()
                   ):
     """
@@ -109,7 +109,7 @@ async def get_all_by_year(*,
             summary="Get ScheduleYear by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -140,7 +140,7 @@ async def create(*,
             summary="Update ScheduleYear")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: ScheduleYearUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -159,8 +159,8 @@ async def update(*,
             summary="Delete ScheduleYear")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
-                 division_id: uuid.UUID,
+                 id: str,
+                 division_id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

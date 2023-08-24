@@ -51,7 +51,7 @@ async def get_all(
 async def get_by_id(
         db: Session = Depends(get_db),
         Authorize: AuthJWT = Depends(),
-        id: uuid.UUID = None
+        id: str = None
 ):
     """
         Get a CandidateStageAnswer by id.
@@ -183,7 +183,7 @@ async def create_list(
 async def update(
         db: Session = Depends(get_db),
         Authorize: AuthJWT = Depends(),
-        id: uuid.UUID = None,
+        id: str = None,
         body: CandidateStageAnswerUpdate = None
 ):
     """
@@ -238,7 +238,7 @@ async def update(
 async def delete(
         db: Session = Depends(get_db),
         Authorize: AuthJWT = Depends(),
-        id: uuid.UUID = None
+        id: str = None
 ):
     """
         Delete a CandidateStageAnswer.

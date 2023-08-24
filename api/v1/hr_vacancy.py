@@ -40,7 +40,7 @@ async def get_all(*,
 async def get_all_by_department(*,
                                 db: Session = Depends(get_db),
                                 Authorize: AuthJWT = Depends(),
-                                staff_division_id: uuid.UUID
+                                staff_division_id: str
                                 ):
     """
         Get all HrVacancies by department
@@ -97,7 +97,7 @@ async def get_all_candidates(*,
              response_model=HrVacancyRead,
              summary="Respond to Candidate (Отклик)")
 async def respond(*,
-                  id: uuid.UUID,
+                  id: str,
                   db: Session = Depends(get_db),
                   Authorize: AuthJWT = Depends()
                   ):
@@ -156,7 +156,7 @@ async def create_by_archieve_staff_unit(*,
             summary="Update HrVacancy")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: HrVacancyUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -181,7 +181,7 @@ async def update(*,
             summary="Update HrVacancy")
 async def update_by_archieve_staff_unit(*,
                             db: Session = Depends(get_db),
-                            id: uuid.UUID,
+                            id: str,
                             body: HrVacancyUpdate,
                             Authorize: AuthJWT = Depends()
 ):
@@ -205,7 +205,7 @@ async def update_by_archieve_staff_unit(*,
             summary="Get HrVacancy by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -223,7 +223,7 @@ async def get_by_id(*,
             summary="Get HrVacancy by archieve staff unit")
 async def get_by_archieve_staff_unit_id(*,
                             db: Session = Depends(get_db),
-                            archieve_staff_unit_id: uuid.UUID,
+                            archieve_staff_unit_id: str,
                             Authorize: AuthJWT = Depends()
 ):
     """

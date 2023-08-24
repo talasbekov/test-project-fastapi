@@ -7,22 +7,22 @@ from .archive_staff_unit import ArchiveStaffUnitRead
 
 
 class ArchiveStaffDivisionBase(NamedModel):
-    parent_group_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    parent_group_id: Optional[str] = Field(None, nullable=True)
     description: Optional[NamedModel]
-    staff_list_id: uuid.UUID
+    staff_list_id: str
     is_combat_unit: Optional[bool] = Field(None, nullable=True)
-    leader_id: Optional[uuid.UUID] = Field(None, nullable=True)
-    type_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    leader_id: Optional[str] = Field(None, nullable=True)
+    type_id: Optional[str] = Field(None, nullable=True)
     staff_division_number: Optional[int] = Field(None, nullable=True)
 
 
 class ArchiveStaffDivisionCreate(ArchiveStaffDivisionBase):
     description: Optional[str]
-    origin_id: Optional[uuid.UUID]
+    origin_id: Optional[str]
 
 
 class ArchiveStaffDivisionUpdate(ArchiveStaffDivisionBase):
-    origin_id: Optional[uuid.UUID]
+    origin_id: Optional[str]
 
 
 class NewArchiveStaffDivisionCreate(ArchiveStaffDivisionBase):
@@ -34,11 +34,11 @@ class NewArchiveStaffDivisionUpdate(ArchiveStaffDivisionBase):
 
 
 class ArchiveStaffDivisionUpdateParentGroup(BaseModel):
-    parent_group_id: uuid.UUID
+    parent_group_id: str
 
 
 # class ArchiveStaffDivisionRead(ArchiveStaffDivisionBase):
-#     id: Optional[uuid.UUID]
+#     id: Optional[str]
 #     children: Optional[List['ArchiveStaffDivisionRead']]
 #     staff_units: Optional[List['ArchiveStaffUnitRead']]
 #     type: Optional[StaffDivisionTypeRead]
@@ -48,7 +48,7 @@ class ArchiveStaffDivisionUpdateParentGroup(BaseModel):
 
 
 class ArchiveStaffDivisionChildRead(ArchiveStaffDivisionBase):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     children: Optional[List]
     staff_units: Optional[List]
     type: Optional[StaffDivisionTypeRead]
@@ -72,7 +72,7 @@ class ArchiveStaffDivisionChildRead(ArchiveStaffDivisionBase):
 
 
 class ArchiveStaffDivisionRead(ArchiveStaffDivisionBase):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     children: Optional[List['ArchiveStaffDivisionChildRead']]
     staff_units: Optional[List['ArchiveStaffUnitRead']]
     type: Optional[StaffDivisionTypeRead]
@@ -95,7 +95,7 @@ class ArchiveStaffDivisionRead(ArchiveStaffDivisionBase):
         orm_mode = True
 
 class ArchiveStaffDivisionStepChildRead(ArchiveStaffDivisionBase):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     type: Optional[StaffDivisionTypeRead]
     description: Optional[NamedModel]
 
@@ -103,7 +103,7 @@ class ArchiveStaffDivisionStepChildRead(ArchiveStaffDivisionBase):
         orm_mode = True
 
 class ArchiveStaffDivisionStepRead(ArchiveStaffDivisionBase):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     children: Optional[List['ArchiveStaffDivisionStepChildRead']]
     staff_units: Optional[List['ArchiveStaffUnitRead']]
     type: Optional[StaffDivisionTypeRead]

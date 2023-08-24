@@ -10,7 +10,7 @@ from schemas import Model, ReadModel
 
 
 class AdditionalProfileBase(Model):
-    profile_id: uuid.UUID
+    profile_id: str
 
     class Config:
         orm_mode = True
@@ -26,7 +26,7 @@ class AdditionalProfileUpdate(AdditionalProfileBase):
 
 
 class AdditionalProfileRead(AdditionalProfileBase, ReadModel):
-    profile_id: uuid.UUID
+    profile_id: str
     polygraph_checks: Optional[List[PolygraphCheckRead]]
     violations: Optional[List[ViolationRead]]
     abroad_travels: Optional[List[AbroadTravelRead]]

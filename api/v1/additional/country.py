@@ -63,7 +63,7 @@ async def create(*,
             summary="Update")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: CountryUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -82,7 +82,7 @@ async def update(*,
                summary="Delete")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

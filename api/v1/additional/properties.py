@@ -69,7 +69,7 @@ async def create(*,
             summary="Update Abroad Travel by id")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: PropertiesUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -89,7 +89,7 @@ async def update(*,
                summary="Delete properties by id")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

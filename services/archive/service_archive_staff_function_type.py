@@ -26,14 +26,14 @@ class ServiceArchiveStaffFunctionTypeService(
         return type
 
     def get_by_origin_id(self, db: Session,
-                         origin_id: uuid.UUID) -> ArchiveServiceFunctionType:
+                         origin_id: str) -> ArchiveServiceFunctionType:
         if origin_id is None:
             return None
         return db.query(self.model).filter(
             self.model.origin_id == origin_id
         ).first()
 
-    def exists_by_origin_id(self, db: Session, origin_id: uuid.UUID) -> bool:
+    def exists_by_origin_id(self, db: Session, origin_id: str) -> bool:
         return db.query(self.model).filter(
             self.model.origin_id == origin_id
         ).first() is not None

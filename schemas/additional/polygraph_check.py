@@ -19,7 +19,7 @@ class PolygraphCheckBase(Model):
 
 
 class PolygraphCheckCreate(PolygraphCheckBase):
-    profile_id: Optional[uuid.UUID]
+    profile_id: Optional[str]
 
 
 class PolygraphCheckUpdate(PolygraphCheckBase):
@@ -27,5 +27,5 @@ class PolygraphCheckUpdate(PolygraphCheckBase):
 
 
 class PolygraphCheckRead(PolygraphCheckBase, ReadModel):
-    profile_id: uuid.UUID
+    profile_id: str
     document_link: Optional[str]

@@ -12,7 +12,7 @@ class HospitalDataBase(BaseModel):
     start_date: datetime.datetime
     end_date: datetime.datetime
     document_link: Optional[AnyUrl]
-    profile_id: uuid.UUID
+    profile_id: str
 
 
 class HospitalDataCreate(HospitalDataBase):
@@ -24,7 +24,7 @@ class HospitalDataUpdate(HospitalDataBase):
 
 
 class HospitalDataRead(HospitalDataBase):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
 
     document_link: Optional[str]
     code: Optional[str]
@@ -32,7 +32,7 @@ class HospitalDataRead(HospitalDataBase):
     place: Optional[str]
     start_date: Optional[datetime.datetime]
     end_date: Optional[datetime.datetime]
-    profile_id: Optional[uuid.UUID]
+    profile_id: Optional[str]
 
     class Config:
         orm_mode = True

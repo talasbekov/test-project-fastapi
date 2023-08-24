@@ -11,7 +11,7 @@ from schemas.medical import (AnthropometricDataRead,
 
 
 class MedicalProfileBase(BaseModel):
-    profile_id: uuid.UUID
+    profile_id: str
 
     class Config:
         orm_mode = True
@@ -27,7 +27,7 @@ class MedicalProfileUpdate(MedicalProfileBase):
 
 
 class MedicalProfileRead(MedicalProfileBase):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     general_user_info: Optional[List[GeneralUserInformationRead]]
     dispensary_registrations: Optional[List[DispensaryRegistrationRead]]
     anthropometric_datas: Optional[List[AnthropometricDataRead]]

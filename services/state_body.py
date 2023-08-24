@@ -12,7 +12,7 @@ class StateBodyService(
     def get_by_option(self,
                       db: Session,
                       type: str,
-                      id: uuid.UUID,
+                      id: str,
                       skip: int,
                       limit: int):
         body = db.query(self.model).offset(skip).limit(limit).all()

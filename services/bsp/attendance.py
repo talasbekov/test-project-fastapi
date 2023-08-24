@@ -37,7 +37,7 @@ class AttendanceService(ServiceBase[Attendance, AttendanceCreate, AttendanceUpda
 
         return attendance
 
-    def get_percentage_by_user_id(self, db: Session, user_id: uuid.UUID):
+    def get_percentage_by_user_id(self, db: Session, user_id: str):
         attendances_count = (db.query(func.count('id'), Attendance.schedule_id)
                              .join(Attendance.attended_users)
                              .filter(AttendedUser.user_id == user_id)
@@ -77,7 +77,7 @@ class AttendanceService(ServiceBase[Attendance, AttendanceCreate, AttendanceUpda
 
         return attendances_percentages
 
-    def get_absent_users(self, db: Session, schedule_id: uuid.UUID):
+    def get_absent_users(self, db: Session, schedule_id: str):
         schedule_months = (
             db.query(ScheduleMonth.id)
             .join(ScheduleYear.months)

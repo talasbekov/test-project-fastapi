@@ -54,7 +54,7 @@ async def create(*,
             response_model=FamilyRead)
 async def get(*,
               db: Session = Depends(get_db),
-              id: uuid.UUID,
+              id: str,
               Authorize: AuthJWT = Depends()
               ):
     Authorize.jwt_required()
@@ -65,7 +65,7 @@ async def get(*,
             response_model=FamilyRead)
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: FamilyUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -78,7 +78,7 @@ async def update(*,
                status_code=status.HTTP_204_NO_CONTENT)
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     Authorize.jwt_required()

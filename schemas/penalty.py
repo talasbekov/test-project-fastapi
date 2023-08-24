@@ -26,8 +26,8 @@ class PenaltyTypeRead(PenaltyTypeBase, ReadNamedModel):
 
 
 class PenaltyBase(BaseModel):
-    user_id: uuid.UUID
-    type_id: uuid.UUID
+    user_id: str
+    type_id: str
 
     class Config:
         orm_mode = True
@@ -43,11 +43,11 @@ class PenaltyUpdate(PenaltyBase):
 
 
 class PenaltyRead(PenaltyBase):
-    id: uuid.UUID
+    id: str
     type: Optional[PenaltyTypeRead]
 
 class PenaltyReadForOption(PenaltyBase):
-    id: uuid.UUID
+    id: str
     type.name: Optional[str]
     type.nameKZ: Optional[str]
 

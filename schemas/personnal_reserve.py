@@ -11,7 +11,7 @@ class PersonnalReserveBase(Model):
     reserve: Optional[Enum]
     date_from: Optional[datetime]
     date_to: Optional[datetime]
-    user_id: Optional[uuid.UUID]
+    user_id: Optional[str]
     document_link: Optional[str]
     document_number: Optional[str]
 

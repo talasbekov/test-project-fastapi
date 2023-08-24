@@ -14,8 +14,8 @@ from services import render_service
 morph = pymorphy2.MorphAnalyzer()
 
 class ConvertCandidateTemplate(BaseModel):
-    hr_document_template_id: uuid.UUID
-    candidate_id: uuid.UUID
+    hr_document_template_id: str
+    candidate_id: str
 
 
 router = APIRouter(

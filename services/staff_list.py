@@ -71,7 +71,7 @@ class StaffListService(
             raise NotFoundException(detail="Staff list is not found!")
         return staff_list
 
-    def create_by_user_id(self, task, db: Session, user_id: uuid.UUID,
+    def create_by_user_id(self, task, db: Session, user_id: str,
                           obj_in: StaffListUserCreate, current_user_role_id: str):
         task.update_state(state=0)
         create_staff_list = StaffListCreate(
@@ -98,7 +98,7 @@ class StaffListService(
         db.flush()
         return staff_list
 
-    def duplicate(self, db: Session, staff_list_id: uuid.UUID, user_id: uuid.UUID,
+    def duplicate(self, db: Session, staff_list_id: str, user_id: str,
                   obj_in: StaffListUserCreate, current_user_role_id: str):
         create_staff_list = StaffListCreate(
             name=obj_in.name,
@@ -131,6 +131,7 @@ class StaffListService(
         document_link: str
     ):
         staff_list = self.get_by_id(db, staff_list_id)
+        print(staff_list.id)
         task.update_state(state=10)
         staff_division_service.make_all_inactive(db)
         exclude_staff_division_ids = [
@@ -138,10 +139,17 @@ class StaffListService(
         staff_unit_service.make_all_inactive(db, exclude_staff_division_ids)
         service_staff_function_service.make_all_inactive(db)
         task.update_state(state=20)
-        staff_divisions: list[ArchiveStaffDivision] = (
-            archive_staff_division_service.get_departments(
-                db, staff_list_id, 0, 100)
-        )
+        
+        staff_divisions = db.query(self.model).filter(
+            ArchiveStaffDivision.staff_list_id == staff_list_id,
+            ArchiveStaffDivision.parent_group_id == None,
+            ArchiveStaffDivision.name != StaffDivisionEnum.DISPOSITION.value
+        ).all()
+        disposition_division = self.get_by_name(db,
+                                        StaffDivisionEnum.DISPOSITION.value,
+                                        staff_list_id)
+        staff_divisions.append(disposition_division)
+        
         new_staff_divisions = []
         task.update_state(state=30)
         for staff_division in staff_divisions:
@@ -149,6 +157,8 @@ class StaffListService(
                 staff_division.description = json.dumps(staff_division.description)
             new_staff_division = self._create_staff_division(
                 db, staff_division, None, current_user_role_id)
+            if isinstance(new_staff_division.description, dict):
+                new_staff_division.description = json.dumps(new_staff_division.description)
             new_staff_divisions.append(new_staff_division)
         task.update_state(state=90)
         staff_list.document_signed_by = signed_by
@@ -168,8 +178,8 @@ class StaffListService(
 
     def _create_staff_division(self, db: Session,
                                staff_division: ArchiveStaffDivision,
-                               parent_id: Optional[uuid.UUID],
-                               current_user_role_id: uuid.UUID,
+                               parent_id: Optional[str],
+                               current_user_role_id: str,
                                ) -> StaffDivision:
         is_leader_needed = None
         leader_id = None
@@ -258,8 +268,8 @@ class StaffListService(
 
     def _create_archive_staff_division(self, db: Session,
                                        staff_division: StaffDivision,
-                                       staff_list_id: uuid.UUID,
-                                       parent_group_id: Optional[uuid.UUID],
+                                       staff_list_id: str,
+                                       parent_group_id: Optional[str],
                                        current_user_role_id: str):
 
         archive_division = (archive_staff_division_service
@@ -367,9 +377,9 @@ class StaffListService(
     async def create_disposition_doc_by_staff_list_id(
             self,
             db: Session,
-            staff_list_id: uuid.UUID,
-            user_ids: uuid.UUID,
-            current_user_id: uuid.UUID,
+            staff_list_id: str,
+            user_ids: str,
+            current_user_id: str,
             current_user_role_id: str,
     ):
         hr_document_template = hr_document_template_service.get_disposition(
@@ -392,7 +402,7 @@ class StaffListService(
 
     def get_disposition_user_ids_by_staff_list_id(self,
                                                   db: Session,
-                                                  staff_list_id: uuid.UUID):
+                                                  staff_list_id: str):
         disposition_division = archive_staff_division_service.get_by_name(
             db, StaffDivisionEnum.DISPOSITION.value, staff_list_id)
 
@@ -410,7 +420,7 @@ class StaffListService(
     def get_super_doc_by_staff_list_id(
             self,
             db: Session,
-            id: uuid.UUID
+            id: str
     ):
         hr_document_template = hr_document_template_service.get_staff_list(
             db=db)
@@ -458,7 +468,7 @@ class StaffListService(
 
         return staff_lists
 
-    def update(self, db: Session, staff_list_id: uuid.UUID,
+    def update(self, db: Session, staff_list_id: str,
                body: StaffListUpdate):
         staff_list = self.get_by_id(db, staff_list_id)
         return super().update(

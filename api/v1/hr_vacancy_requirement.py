@@ -63,7 +63,7 @@ async def create(*,
             summary="Get HrVacancyRequirements by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -79,7 +79,7 @@ async def get_by_id(*,
             response_model=HrVacancyRequirementsRead,
             summary="Update HrVacancyRequirements")
 async def update(*,
-                 id: uuid.UUID,
+                 id: str,
                  body: HrVacancyRequirementsUpdate,
                  db: Session = Depends(get_db),
                  Authorize: AuthJWT = Depends()
@@ -94,7 +94,7 @@ async def update(*,
                dependencies=[Depends(HTTPBearer())],
                summary="Delete HrVacancyRequirements")
 async def delete(*,
-                 id: uuid.UUID,
+                 id: str,
                  db: Session = Depends(get_db),
                  Authorize: AuthJWT = Depends()
                  ):

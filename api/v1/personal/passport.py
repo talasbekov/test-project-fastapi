@@ -57,7 +57,7 @@ async def create(*,
         - **date_of_issue**: datetime.date
         - **date_to**: datetime.date
         - **document_link**: str
-        - **profile_id**: uuid.UUID
+        - **profile_id**: str
     """
     Authorize.jwt_required()
     return passport_service.create(db, body)
@@ -68,7 +68,7 @@ async def create(*,
             summary="Get Passport by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -85,7 +85,7 @@ async def get_by_id(*,
             summary="Update Passport")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: PassportUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -107,7 +107,7 @@ async def update(*,
                summary="Delete Passport")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

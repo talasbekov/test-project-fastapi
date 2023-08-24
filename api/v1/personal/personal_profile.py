@@ -45,7 +45,7 @@ async def get_all(*,
             summary="Get random personal document")
 async def get_rand(*,
                    db: Session = Depends(get_db),
-                   id: uuid.UUID,
+                   id: str,
                    Authorize: AuthJWT = Depends()
                    ):
     """
@@ -86,7 +86,7 @@ async def create(*,
             summary="Get PersonalProfiles by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -103,7 +103,7 @@ async def get_by_id(*,
                summary="Delete PersonalProfiles")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """
@@ -129,7 +129,7 @@ async def get_profile(*,
             response_model=PersonalProfileRead)
 async def get_profile_by_id(*,
                             db: Session = Depends(get_db),
-                            id: uuid.UUID,
+                            id: str,
                             Authorize: AuthJWT = Depends()
                             ):
     Authorize.jwt_required()

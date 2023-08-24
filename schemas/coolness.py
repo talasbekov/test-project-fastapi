@@ -24,8 +24,8 @@ class CoolnessTypeRead(CoolnessTypeBase, ReadNamedModel):
 
 
 class CoolnessBase(Model):
-    type_id: Optional[uuid.UUID]
-    user_id: Optional[uuid.UUID]
+    type_id: Optional[str]
+    user_id: Optional[str]
 
     class Config:
         orm_mode = True

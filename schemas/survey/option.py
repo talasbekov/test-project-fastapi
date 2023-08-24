@@ -8,7 +8,7 @@ from .answer import AnswerRead
 
 class OptionBase(TextModel):
     text: Optional[str]
-    question_id: uuid.UUID
+    question_id: str
     score: Optional[int]
 
 
@@ -17,11 +17,11 @@ class OptionCreate(OptionBase):
 
 
 class OptionUpdate(OptionBase):
-    question_id: Optional[uuid.UUID]
+    question_id: Optional[str]
 
 
 class OptionRead(OptionBase, ReadTextModel):
-    question_id: Optional[uuid.UUID]
+    question_id: Optional[str]
     score: Optional[int]
     answers: Optional[List[Optional[AnswerRead]]]
 

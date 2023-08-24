@@ -7,18 +7,18 @@ from .staff_unit import StaffUnitRead
 
 
 class HrVacancyBase(Model):
-    staff_unit_id: uuid.UUID
+    staff_unit_id: str
     is_active: bool
 
 
 class HrVacancyCreate(HrVacancyBase):
-    hr_vacancy_requirements_ids: Optional[List[uuid.UUID]]
+    hr_vacancy_requirements_ids: Optional[List[str]]
 
 
 class HrVacancyUpdate(HrVacancyBase):
-    staff_unit_id: Optional[uuid.UUID]
-    archive_staff_unit_id: Optional[uuid.UUID]
-    hr_vacancy_requirements_ids: Optional[List[uuid.UUID]]
+    staff_unit_id: Optional[str]
+    archive_staff_unit_id: Optional[str]
+    hr_vacancy_requirements_ids: Optional[List[str]]
     is_active: Optional[bool]
 
 
@@ -29,8 +29,8 @@ class StaffUnitHrVacancyRead(HrVacancyBase, ReadModel):
     is_responded: Optional[bool]
 
 class HrVacancyRead(HrVacancyBase, ReadModel):
-    staff_unit_id: Optional[uuid.UUID]
-    archive_staff_unit_id: Optional[uuid.UUID]
+    staff_unit_id: Optional[str]
+    archive_staff_unit_id: Optional[str]
     is_active: Optional[bool]
     hr_vacancy_requirements: Optional[List[HrVacancyRequirementsRead]]
     staff_unit: Optional[StaffUnitRead]
@@ -59,8 +59,8 @@ class HrVacancyRead(HrVacancyBase, ReadModel):
 
 
 class HrVacancyStaffDivisionRead(Model):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     staff_division_number: Optional[int]
-    type_id: Optional[uuid.UUID]
+    type_id: Optional[str]
     type: Optional[StaffDivisionTypeRead]
     vacancies: Optional[List[HrVacancyRead]]

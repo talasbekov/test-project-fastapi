@@ -6,9 +6,9 @@ from schemas import Model, ReadModel
 
 
 class AnswerBase(Model):
-    question_id: uuid.UUID
+    question_id: str
     text: Optional[str]
-    option_ids: Optional[List[uuid.UUID]]
+    option_ids: Optional[List[str]]
 
 
 class AnswerCreate(AnswerBase):
@@ -16,13 +16,13 @@ class AnswerCreate(AnswerBase):
 
 
 class AnswerUpdate(AnswerBase):
-    question_id: Optional[uuid.UUID]
+    question_id: Optional[str]
 
 
 # read
 class AnswerRead(AnswerBase, ReadModel):
-    question_id: Optional[uuid.UUID]
-    user_id: Optional[uuid.UUID]
+    question_id: Optional[str]
+    user_id: Optional[str]
     encrypted_used_id: Optional[str]
     score: Optional[int]
 

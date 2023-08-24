@@ -10,7 +10,7 @@ from schemas import PrivelegeEmergencyRead, PersonnalReserveRead, CoolnessRead
 
 class OathRead(ReadModel):
     date: Optional[datetime]
-    military_id: Optional[uuid.UUID]
+    military_id: Optional[str]
     military_name: Optional[str]
 
     class Config:

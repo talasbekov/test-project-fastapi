@@ -10,7 +10,7 @@ from .property_type import PropertyTypeRead
 
 class ServiceHousingBase(Model):
 
-    type_id: uuid.UUID
+    type_id: str
     address: str
     document_link: Optional[AnyUrl]
     issue_date: datetime.datetime
@@ -29,7 +29,7 @@ class ServiceHousingUpdate(ServiceHousingBase):
 
 
 class ServiceHousingRead(ServiceHousingBase, ReadModel):
-    type_id: Optional[uuid.UUID]
+    type_id: Optional[str]
     address: Optional[str]
     issue_date: Optional[datetime.datetime]
 

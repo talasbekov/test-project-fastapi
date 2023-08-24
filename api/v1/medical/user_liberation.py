@@ -62,7 +62,7 @@ async def create(*,
         - **initiator**: str
         - **start_date**: datetime.datetime
         - **end_date**: datetime.datetime
-        - **profile_id**: uuid.UUID
+        - **profile_id**: str
     """
     Authorize.jwt_required()
     return user_liberations_service.create(db, body)
@@ -73,7 +73,7 @@ async def create(*,
             summary="Get UserLiberation by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -90,7 +90,7 @@ async def get_by_id(*,
             summary="Update UserLiberation")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: UserLiberationUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -103,7 +103,7 @@ async def update(*,
         - **initiator**: str
         - **start_date**: datetime.datetime
         - **end_date**: datetime.datetime
-        - **profile_id**: uuid.UUID
+        - **profile_id**: str
     """
     Authorize.jwt_required()
     return user_liberations_service.update(
@@ -117,7 +117,7 @@ async def update(*,
                summary="Delete UserLiberation")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

@@ -6,7 +6,7 @@ from schemas import Model, ReadModel
 
 
 class ProfileBase(Model):
-    user_id: uuid.UUID
+    user_id: str
 
 
 class ProfileCreate(ProfileBase):
@@ -18,7 +18,7 @@ class ProfileUpdate(ProfileBase):
 
 
 class ProfileRead(ProfileBase, ReadModel):
-    user_id: Optional[uuid.UUID]
+    user_id: Optional[str]
     user: Optional[UserRead]
 
     class Config:

@@ -8,7 +8,7 @@ from .family import FamilyRead
 
 class FamilyProfileBase(BaseModel):
 
-    profile_id: Optional[uuid.UUID]
+    profile_id: Optional[str]
 
     class Config:
         orm_mode = True
@@ -25,7 +25,7 @@ class FamilyProfileUpdate(FamilyProfileBase):
 
 class FamilyProfileRead(FamilyProfileBase):
 
-    id: Optional[uuid.UUID]
-    profile_id: Optional[uuid.UUID]
+    id: Optional[str]
+    profile_id: Optional[str]
 
     family: Optional[List[FamilyRead]]

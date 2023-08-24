@@ -64,7 +64,7 @@ async def create(*,
             summary="Update Military Unit")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: MilitaryUnitUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -85,7 +85,7 @@ async def update(*,
             summary="Get Military Unit by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -102,7 +102,7 @@ async def get_by_id(*,
                summary="Delete Military Unit")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

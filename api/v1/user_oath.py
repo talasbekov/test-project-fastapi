@@ -67,7 +67,7 @@ async def create(*,
             summary="Update User Oath")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: UserOathUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -90,7 +90,7 @@ async def update(*,
             summary="Get User Oath by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -107,7 +107,7 @@ async def get_by_id(*,
                summary="Delete User Oath")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

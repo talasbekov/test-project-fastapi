@@ -5,13 +5,13 @@ from schemas import Model, ReadModel, UserRead
 
 
 class HrVacancyCandidateBase(Model):
-    user_id: uuid.UUID
-    hr_vacancy_id: uuid.UUID
+    user_id: str
+    hr_vacancy_id: str
 
 
 class HrVacancyCandidateRead(HrVacancyCandidateBase, ReadModel):
-    user_id: Optional[uuid.UUID]
-    hr_vacancy_id: Optional[uuid.UUID]
+    user_id: Optional[str]
+    hr_vacancy_id: Optional[str]
     user: Optional[UserRead]
 
     class Config:

@@ -10,7 +10,7 @@ class PsychologicalCheckBase(Model):
     issued_by: str
     date_of_issue: datetime
     document_link: Optional[AnyUrl]
-    profile_id: uuid.UUID
+    profile_id: str
     document_number: Optional[str]
 
     class Config:

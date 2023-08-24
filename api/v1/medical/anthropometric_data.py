@@ -62,7 +62,7 @@ async def create(*,
         - **neck_circumference**: int
         - **shape_size**: int
         - **bust_size**: int
-        - **profile_id**: uuid.UUID
+        - **profile_id**: str
     """
     Authorize.jwt_required()
     return anthropometric_data_service.create(db, body)
@@ -73,7 +73,7 @@ async def create(*,
             summary="Get AnthropometricData by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -89,7 +89,7 @@ async def get_by_id(*,
             summary="Update AnthropometricData")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: AnthropometricDataUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -102,7 +102,7 @@ async def update(*,
         - **neck_circumference**: int
         - **shape_size**: int
         - **bust_size**: int
-        - **profile_id**: uuid.UUID
+        - **profile_id**: str
     """
     Authorize.jwt_required()
     return anthropometric_data_service.update(
@@ -116,7 +116,7 @@ async def update(*,
                summary="Delete AnthropometricData")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

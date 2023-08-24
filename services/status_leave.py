@@ -11,7 +11,7 @@ class StatusLeaveService:
     def get_by_option(self,
                       db: Session,
                       type: str,
-                      id: uuid.UUID,
+                      id: str,
                       skip: int,
                       limit: int):
         res = (

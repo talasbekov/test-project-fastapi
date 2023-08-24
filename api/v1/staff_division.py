@@ -71,7 +71,7 @@ async def get_departments(*,
             summary="Get Staff Division and all his parents")
 async def get_division_parents_by_id(*,
                                      db: Session = Depends(get_db),
-                                     id: uuid.UUID,
+                                     id: str,
                                      Authorize: AuthJWT = Depends()
                                      ):
     """
@@ -108,7 +108,7 @@ async def create(*,
             summary="Get Staff Division by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -124,7 +124,7 @@ async def get_by_id(*,
             summary="Get Staff Division one level by id")
 async def get_all_one_level_for_id(*,
                   db: Session = Depends(get_db),
-                  id: uuid.UUID,
+                  id: str,
                   Authorize: AuthJWT = Depends()
                   ):
     """
@@ -141,7 +141,7 @@ async def get_all_one_level_for_id(*,
             summary="Update Staff Division")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: StaffDivisionUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -164,7 +164,7 @@ async def update(*,
              summary="Update parent of Staff Division")
 async def update_parent(*,
                         db: Session = Depends(get_db),
-                        id: uuid.UUID,
+                        id: str,
                         body: StaffDivisionUpdateParentGroup,
                         Authorize: AuthJWT = Depends()
                         ):
@@ -183,7 +183,7 @@ async def update_parent(*,
                summary="Delete Staff Division")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authrorize: AuthJWT = Depends()
                  ):
     """
@@ -199,7 +199,7 @@ async def delete(*,
             summary="Get Staff Division by id")
 async def get_full_name_by_id(*,
                               db: Session = Depends(get_db),
-                              id: uuid.UUID,
+                              id: str,
                               Authorize: AuthJWT = Depends()
                               ):
     """
@@ -229,11 +229,11 @@ async def get_division_types(*,
 
 
 @router.get('/ids/{id}/', dependencies=[Depends(HTTPBearer())],
-            response_model=List[uuid.UUID],
+            response_model=List[str],
             summary="Get ids of all parents of Staff Division")
 async def get_parent_ids(*,
                          db: Session = Depends(get_db),
-                         id: uuid.UUID,
+                         id: str,
                          Authorize: AuthJWT = Depends()
                          ):
     Authorize.jwt_required()

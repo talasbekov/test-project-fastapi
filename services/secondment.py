@@ -15,7 +15,7 @@ from .base import ServiceBase
 class SecondmentService(
         ServiceBase[Secondment, SecondmentCreate, SecondmentUpdate]):
 
-    def create_relation(self, db: Session, user_id: uuid.UUID, value):
+    def create_relation(self, db: Session, user_id: str, value):
         if isinstance(value, Base):
             if isinstance(value, StaffDivision):
                 status = super().create(
@@ -56,7 +56,7 @@ class SecondmentService(
                 StaffDivision.id == value).first()
         return db.query(self.model).filter(self.model.name == value).first()
 
-    def stop_relation(self, db: Session, user_id: uuid.UUID, id: uuid.UUID):
+    def stop_relation(self, db: Session, user_id: str, id: str):
         (db
          .query(SecondmentHistory)
          .filter(SecondmentHistory.secondment_id == id)

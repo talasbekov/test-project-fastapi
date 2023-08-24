@@ -11,13 +11,13 @@ from .base import ServiceBase
 
 class ContractService(ServiceBase[Contract, ContractCreate, ContractUpdate]):
 
-    def create_relation(self, db: Session, user_id: uuid.UUID,
-                        type_id: uuid.UUID):
+    def create_relation(self, db: Session, user_id: str,
+                        type_id: str):
         contract = super().create(db, ContractCreate(type_id=type_id, user_id=user_id))
         return contract
 
     def get_by_option(self, db: Session, type: str,
-                      id: uuid.UUID, skip: int, limit: int):
+                      id: str, skip: int, limit: int):
         if type == 'write':
             return [ContractTypeRead.from_orm(i).dict() for i in db.query(
                 ContractType).offset(skip).limit(limit).all()]
@@ -35,12 +35,12 @@ class ContractService(ServiceBase[Contract, ContractCreate, ContractUpdate]):
         else:
             return db.query(Contract).filter(Contract.id == id).first().type
 
-    def stop_relation(self, db: Session, user_id: uuid.UUID, id: uuid.UUID):
+    def stop_relation(self, db: Session, user_id: str, id: str):
         db.query(ContractHistory).filter(ContractHistory.contract_id ==
                                          id).update({'date_to': datetime.now()})
 
     def exists_relation(self, db: Session, user_id: str,
-                        contract_type_id: uuid.UUID):
+                        contract_type_id: str):
         return (
             db.query(Contract)
             .filter(Contract.user_id == user_id)

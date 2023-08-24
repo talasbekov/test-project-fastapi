@@ -7,9 +7,9 @@ from schemas import NamedModel, ReadNamedModel
 
 class SecondmentBase(NamedModel):
     name: Optional[str]
-    user_id: uuid.UUID
-    staff_division_id: Optional[uuid.UUID]
-    state_body_id: Optional[uuid.UUID]
+    user_id: str
+    staff_division_id: Optional[str]
+    state_body_id: Optional[str]
 
     class Config:
         orm_mode = True

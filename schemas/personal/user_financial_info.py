@@ -8,7 +8,7 @@ from pydantic import BaseModel
 class UserFinancialInfoBase(BaseModel):
     iban: str
     housing_payments_iban: str
-    profile_id: uuid.UUID
+    profile_id: str
 
 
 class UserFinancialInfoCreate(UserFinancialInfoBase):
@@ -20,10 +20,10 @@ class UserFinancialInfoUpdate(UserFinancialInfoBase):
 
 
 class UserFinancialInfoRead(UserFinancialInfoBase):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     iban: Optional[str]
     housing_payments_iban: Optional[str]
-    profile_id: Optional[uuid.UUID]
+    profile_id: Optional[str]
     created_at: Optional[datetime.date]
     updated_at: Optional[datetime.date]
 

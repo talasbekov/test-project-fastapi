@@ -5,7 +5,7 @@ from schemas import Model, ReadModel
 
 
 class UserStatBase(Model):
-    user_id: uuid.UUID
+    user_id: str
     physical_training: int
     fire_training: int
     attendance: int
@@ -23,7 +23,7 @@ class UserStatUpdate(UserStatBase):
 
 
 class UserStatRead(UserStatBase, ReadModel):
-    user_id: Optional[uuid.UUID]
+    user_id: Optional[str]
     physical_training: Optional[int]
     fire_training: Optional[int]
     attendance: Optional[int]

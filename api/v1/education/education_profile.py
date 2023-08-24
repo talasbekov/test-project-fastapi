@@ -63,7 +63,7 @@ async def create(*,
             summary="Get EducationalProfile by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -80,7 +80,7 @@ async def get_by_id(*,
             summary="Update EducationalProfile")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: EducationalProfileUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -102,7 +102,7 @@ async def update(*,
                summary="Delete EducationalProfile")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

@@ -86,7 +86,7 @@ class EquipmentService(
         return db.query(TypeClothingEquipmentModel).all()
 
     def get_clothing_equipment_models_count_by_user(
-            self, db: Session, user_id: uuid.UUID):
+            self, db: Session, user_id: str):
         res = (
             db.query(TypeClothingEquipmentModel.name,
                      func.count(

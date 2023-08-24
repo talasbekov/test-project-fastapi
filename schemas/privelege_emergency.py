@@ -11,7 +11,7 @@ class PrivelegeEmergency(Model):
     form: Optional[str]
     date_from: Optional[datetime]
     date_to: Optional[datetime]
-    user_id: Optional[uuid.UUID]
+    user_id: Optional[str]
 
     class Config:
         orm_mode = True

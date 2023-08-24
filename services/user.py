@@ -94,8 +94,8 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
     def is_template_accessible_for_user(self,
                                         db: Session,
-                                        user_id: uuid.UUID,
-                                        template_id: uuid.UUID) -> bool:
+                                        user_id: str,
+                                        template_id: str) -> bool:
         user = self.get_by_id(db, user_id)
 
         unavailable_users = self._get_excepted_users_by_document_in_progress(
@@ -238,7 +238,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         return users
     
     def get_by_schedule_id(self, db: Session,
-                           schedule_id: uuid.UUID,
+                           schedule_id: str,
                            skip: int,
                            limit: int):
 
@@ -445,7 +445,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
     def _filter_for_eligible_actions(self,
                                      db: Session,
                                      user_query: Query[Any],
-                                     hr_document_template_id: uuid.UUID):
+                                     hr_document_template_id: str):
         from .constructor import handlers
         template = hr_document_template_service.get_by_id(
             db, hr_document_template_id
@@ -464,7 +464,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
     def get_available_templates(self,
                                 db: Session,
-                                user_id: uuid.UUID,
+                                user_id: str,
                                 skip: int,
                                 limit: int) -> List[HrDocumentTemplate]:
         initiator_role = document_staff_function_type_service.get_initiator(db)
@@ -498,7 +498,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
                 f"call_sign {call_sign} is already assigned to {user_name}!"
             )
 
-    def get_all_by_position(self, db: Session, position_id: uuid.UUID):
+    def get_all_by_position(self, db: Session, position_id: str):
 
         users = (db.query(User)
                  .join(StaffUnit.users)

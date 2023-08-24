@@ -71,8 +71,8 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
         return {'total': total, 'objects': schedules}
 
     def remove_staff_division_from_schedule(self, db: Session,
-                                            schedule_id: uuid.UUID,
-                                            division_id: uuid.UUID):
+                                            schedule_id: str,
+                                            division_id: str):
         staff_division_service.get_by_id(db, division_id)
         self.get_by_id(db, schedule_id)
         obj = (db.query(ScheduleYear)
@@ -111,7 +111,7 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
 
     def get_all_by_plan_id(self,
                            db: Session,
-                           id: uuid.UUID):
+                           id: str):
         schedules = (db.query(ScheduleYear)
                      .join(BspPlan)
                      .filter(BspPlan.id == id,
@@ -128,7 +128,7 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
 
     def get_by_schedule_month_id(self,
                                  db: Session,
-                                 month_id: uuid.UUID) -> ScheduleYearRead:
+                                 month_id: str) -> ScheduleYearRead:
         month = schedule_month_service.get_by_id(db, month_id)
         year = (db.query(ScheduleYear)
                 .filter(ScheduleYear.id == month.schedule_id,
@@ -143,7 +143,7 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
 
     def get_all_by_division_id(self,
                                db: Session,
-                               id: uuid.UUID):
+                               id: str):
         staff_division_service.get_by_id(db, id)
         schedules = (db.query(ScheduleYear)
                      .join(ScheduleYear.staff_divisions)
@@ -192,7 +192,7 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
 
         return schedule_year
 
-    def send_all_to_draft_by_plan(self, db: Session, plan_id: uuid.UUID):
+    def send_all_to_draft_by_plan(self, db: Session, plan_id: str):
         (db.query(ScheduleYear)
          .filter(ScheduleYear.plan_id == plan_id)
          .update({self.model.is_active: False}))

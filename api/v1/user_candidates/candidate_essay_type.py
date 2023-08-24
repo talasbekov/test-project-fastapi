@@ -112,7 +112,7 @@ async def create_and_set_to_candidate(
 async def update(
         db: Session = Depends(get_db),
         Authorize: AuthJWT = Depends(),
-        id: uuid.UUID = None,
+        id: str = None,
         body: CandidateEssayTypeUpdate = None
 ):
     """
@@ -134,7 +134,7 @@ async def update(
 async def delete(
         db: Session = Depends(get_db),
         Authorize: AuthJWT = Depends(),
-        id: uuid.UUID = None
+        id: str = None
 ):
     """
         Delete a CandidateEssayType.

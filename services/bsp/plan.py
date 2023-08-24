@@ -102,7 +102,7 @@ class BspPlanService(ServiceBase[BspPlan, BspPlanCreate, BspPlanUpdate]):
             self.create_exam_schedules_by_schedule_year(db,
                                                         schedule_year)
 
-    def duplicate(self, db: Session, plan_id: uuid.UUID):
+    def duplicate(self, db: Session, plan_id: str):
         plan = self.get_by_id(db, plan_id)
         new_plan = super().create(db, BspPlanCreate(
             year=plan.year,
@@ -118,7 +118,7 @@ class BspPlanService(ServiceBase[BspPlan, BspPlanCreate, BspPlanUpdate]):
 
         return new_plan
 
-    def sign(self, db: Session, id: uuid.UUID):
+    def sign(self, db: Session, id: str):
         plan = self.get_by_id(db, id)
         plan.status = PlanStatus.ACTIVE
         plan.signed_at = datetime.datetime.now()
@@ -128,7 +128,7 @@ class BspPlanService(ServiceBase[BspPlan, BspPlanCreate, BspPlanUpdate]):
 
         return plan
 
-    def send_to_draft(self, db: Session, id: uuid.UUID):
+    def send_to_draft(self, db: Session, id: str):
         plan = self.get_by_id(db, id)
         plan.status = PlanStatus.DRAFT
 
@@ -155,7 +155,7 @@ class BspPlanService(ServiceBase[BspPlan, BspPlanCreate, BspPlanUpdate]):
         total = db.query(self.model).filter(BspPlan.status == PlanStatus.ACTIVE).count()
         return {'total': total, 'objects': signed_plans}
 
-    def send_to_draft_full(self, db: Session, plan_id: uuid.UUID):
+    def send_to_draft_full(self, db: Session, plan_id: str):
         plan = self.get_by_id(db, plan_id)
 
         plan.status = PlanStatus.DRAFT

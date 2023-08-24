@@ -13,7 +13,7 @@ from .base import BaseCategory
 class PgsCategory(BaseCategory):
     __handler__ = 2
 
-    def handle(self, db: Session, user_id: uuid.UUID) -> list[uuid.UUID]:
+    def handle(self, db: Session, user_id: str) -> list[str]:
         staff_divisions = (staff_division_service
                            .get_all_by_name(db,
                                             StaffDivisionEnum.SERVICE.value)
@@ -29,9 +29,9 @@ class PgsCategory(BaseCategory):
     def get_templates(
         self,
         db: Session,
-        role_id: uuid.UUID,
-        user_id: uuid.UUID,
-    ) -> List[uuid.UUID]:
+        role_id: str,
+        user_id: str,
+    ) -> List[str]:
         if not self.validate(db, user_id):
             return []
         return super().get_templates(db, role_id, user_id, self.__handler__)
@@ -39,7 +39,7 @@ class PgsCategory(BaseCategory):
     def validate(
         self,
         db: Session,
-        user_id: uuid.UUID,
+        user_id: str,
     ) -> bool:
         user = db.query(User).filter(User.id == user_id).first()
         if user is None:

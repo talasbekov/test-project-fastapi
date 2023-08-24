@@ -9,7 +9,7 @@ from .schedule_year import ScheduleYearRead
 
 class BspPlanBase(BaseModel):
     year: Optional[int]
-    creator_id: Optional[uuid.UUID]
+    creator_id: Optional[str]
     status: Optional[Enum]
     signed_at: Optional[datetime]
 
@@ -27,7 +27,7 @@ class BspPlanUpdate(BspPlanBase):
 
 class BspPlanRead(BspPlanBase):
     created_at: Optional[datetime]
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     creator: Optional[UserShortReadStatus]
     schedule_years: Optional[List[ScheduleYearRead]]
 

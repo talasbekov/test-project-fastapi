@@ -95,7 +95,7 @@ async def create_with_position(*,
             summary="Update Staff Unit")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: StaffUnitUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -122,7 +122,7 @@ async def update(*,
             summary="Get Staff Unit by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -140,7 +140,7 @@ async def get_by_id(*,
                summary="Delete Staff Unit")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """
@@ -158,7 +158,7 @@ async def delete(*,
             summary="Get ServiceStaffFunctions by StaffUnit id")
 async def get_service_staff_functions(*,
                                       db: Session = Depends(get_db),
-                                      id: uuid.UUID,
+                                      id: str,
                                       Authorize: AuthJWT = Depends()
                                       ):
     """
@@ -205,7 +205,7 @@ async def remove_service_staff_function(*,
             summary="Get DocumentStaffFunctions by StaffUnit id")
 async def get_document_staff_functions(*,
                                        db: Session = Depends(get_db),
-                                       id: uuid.UUID,
+                                       id: str,
                                        Authorize: AuthJWT = Depends()
                                        ):
     """

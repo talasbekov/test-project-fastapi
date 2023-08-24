@@ -61,7 +61,7 @@ async def create(*,
         - **start_date**: datetime.datetime
         - **end_date**: datetime.datetime
         - **document_link**: str
-        - **profile_id**: uuid.UUID
+        - **profile_id**: str
     """
     Authorize.jwt_required()
     return dispensary_registration_service.create(db, body)
@@ -72,7 +72,7 @@ async def create(*,
             summary="Get DispensaryRegistration by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -88,7 +88,7 @@ async def get_by_id(*,
             summary="Update DispensaryRegistration")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: DispensaryRegistrationUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -100,7 +100,7 @@ async def update(*,
         - **start_date**: datetime.datetime
         - **end_date**: datetime.datetime
         - **document_link**: str
-        - **profile_id**: uuid.UUID
+        - **profile_id**: str
     """
     Authorize.jwt_required()
     return dispensary_registration_service.update(
@@ -114,7 +114,7 @@ async def update(*,
                summary="Delete DispensaryRegistration")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

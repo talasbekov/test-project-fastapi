@@ -26,7 +26,7 @@ class PersonalProfileService(
                 detail=f"PersonalProfile with id: {id} is not found!")
         return personal_profile
 
-    def get_rand(self, db: Session, id: uuid.UUID):
+    def get_rand(self, db: Session, id: str):
         personal_documents = [
             DrivingLicense,
             IdentificationCard,
@@ -42,7 +42,7 @@ class PersonalProfileService(
 
         return rand_document
 
-    def get_by_user_id(self, db: Session, user_id: uuid.UUID):
+    def get_by_user_id(self, db: Session, user_id: str):
         personal_profile = (
             db.query(PersonalProfile)
             .join(Profile,

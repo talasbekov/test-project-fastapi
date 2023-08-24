@@ -17,33 +17,33 @@ class StaffUnitRequirements(Model):
 
 
 class ArchiveStaffUnitBase(BaseModel):
-    position_id: uuid.UUID
-    staff_division_id: uuid.UUID
-    user_id: Optional[uuid.UUID] = Field(None, nullable=True)
-    actual_user_id: Optional[uuid.UUID] = Field(None, nullable=True)
-    user_replacing_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    position_id: str
+    staff_division_id: str
+    user_id: Optional[str] = Field(None, nullable=True)
+    actual_user_id: Optional[str] = Field(None, nullable=True)
+    user_replacing_id: Optional[str] = Field(None, nullable=True)
     requirements: Optional[List[StaffUnitRequirements]]
 
 
 class ArchiveStaffUnitCreate(ArchiveStaffUnitBase):
-    curator_of_id: Optional[uuid.UUID] = Field(None, nullable=True)
-    origin_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    curator_of_id: Optional[str] = Field(None, nullable=True)
+    origin_id: Optional[str] = Field(None, nullable=True)
     requirements: Optional[str]
 
 
 class ArchiveStaffUnitCreateWithStaffFunctions(ArchiveStaffUnitBase):
-    origin_id: Optional[uuid.UUID]
+    origin_id: Optional[str]
     staff_functions: Optional[List[ArchiveStaffFunctionRead]]
 
 
 class ArchiveStaffUnitUpdate(ArchiveStaffUnitBase):
-    origin_id: Optional[uuid.UUID]
-    user_replacing: Optional[uuid.UUID] = Field(None, nullable=True)
-    curator_of_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    origin_id: Optional[str]
+    user_replacing: Optional[str] = Field(None, nullable=True)
+    curator_of_id: Optional[str] = Field(None, nullable=True)
 
 
 class NewArchiveStaffUnitCreate(ArchiveStaffUnitBase):
-    curator_of_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    curator_of_id: Optional[str] = Field(None, nullable=True)
     @validator('user_replacing_id')
     def validate_user_replacing_id(cls, user_replacing_id, values):
         user_id = values.get('user_id')
@@ -59,7 +59,7 @@ class NewArchiveStaffUnitCreateWithStaffFunctions(ArchiveStaffUnitBase):
 
 
 class NewArchiveStaffUnitUpdate(ArchiveStaffUnitBase):
-    curator_of_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    curator_of_id: Optional[str] = Field(None, nullable=True)
 
     @validator('user_replacing_id')
     def validate_user_replacing_id(cls, user_replacing_id, values):
@@ -72,19 +72,19 @@ class NewArchiveStaffUnitUpdate(ArchiveStaffUnitBase):
 
 
 class ArchiveStaffUnitUpdateDispose(BaseModel):
-    staff_unit_ids: List[uuid.UUID]
-    staff_list_id: uuid.UUID
+    staff_unit_ids: List[str]
+    staff_list_id: str
 
 
 class UserRead(BaseModel):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     badges: Optional[List[BadgeRead]]
     rank: Optional[RankRead]
     email: Optional[EmailStr]
     first_name: Optional[str]
     last_name: Optional[str]
     father_name: Optional[str]
-    staff_unit_id: Optional[uuid.UUID]
+    staff_unit_id: Optional[str]
     call_sign: Optional[str]
     id_number: Optional[str]
     status: Optional[str]
@@ -98,10 +98,10 @@ class UserRead(BaseModel):
 
 
 class UserReplacingArchiveStaffUnitRead(ArchiveStaffUnitBase, ReadModel):
-    id: Optional[uuid.UUID]
-    staff_division_id: Optional[uuid.UUID]
+    id: Optional[str]
+    staff_division_id: Optional[str]
     staff_functions: Optional[List[ArchiveStaffFunctionRead]]
-    position_id: Optional[uuid.UUID]
+    position_id: Optional[str]
     position: Optional[PositionRead]
     user: Optional[UserRead] = Field(None, nullable=True)
     actual_user: Optional[UserRead] = Field(None, nullable=True)

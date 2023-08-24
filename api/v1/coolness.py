@@ -77,7 +77,7 @@ async def get_all_forms(*,
             summary="Update Coolness")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: SpecialtyEnum,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -96,7 +96,7 @@ async def update(*,
             summary="Get Coolness by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -113,7 +113,7 @@ async def get_by_id(*,
                summary="Delete Coolness ")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

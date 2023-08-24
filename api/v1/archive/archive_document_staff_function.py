@@ -48,7 +48,7 @@ async def get_all(*,
             summary="Get ArchiveDocumentStaffFunction by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -65,7 +65,7 @@ async def get_by_id(*,
             summary="Update ArchiveDocumentStaffFunction")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: ArchiveDocumentStaffFunctionUpdate,
                  Authorize: AuthJWT = Depends()
                  ):

@@ -64,7 +64,7 @@ async def create(*,
             summary="Get Vehicle by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -84,7 +84,7 @@ async def get_by_id(*,
             summary="Update Vehicle by id")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: VehicleUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -107,7 +107,7 @@ async def update(*,
                summary="Delete Vehicle by id")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

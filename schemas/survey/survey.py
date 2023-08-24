@@ -15,8 +15,8 @@ class SurveyBase(NamedModel):
     start_date: datetime.datetime
     end_date: datetime.datetime
     jurisdiction_type: SurveyJurisdictionTypeEnum
-    certain_member_id: Optional[uuid.UUID]
-    staff_division_id: Optional[uuid.UUID]
+    certain_member_id: Optional[str]
+    staff_division_id: Optional[str]
     staff_position: SurveyStaffPositionEnum
     is_kz_translate_required: Optional[bool]
     is_anonymous: Optional[bool]

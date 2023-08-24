@@ -28,8 +28,8 @@ class ContractTypeRead(ContractTypeBase, ReadNamedModel):
 
 class ContractBase(BaseModel):
 
-    type_id: uuid.UUID
-    user_id: uuid.UUID
+    type_id: str
+    user_id: str
 
     class Config:
         orm_mode = True
@@ -45,6 +45,6 @@ class ContractUpdate(ContractBase):
 
 
 class ContractRead(ContractBase):
-    id: uuid.UUID
+    id: str
 
     type: Optional[ContractTypeRead]

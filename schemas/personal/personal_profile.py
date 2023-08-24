@@ -14,7 +14,7 @@ from schemas import ProfileRead
 
 # base
 class PersonalProfileBase(BaseModel):
-    profile_id: uuid.UUID
+    profile_id: str
 
 
 # create
@@ -29,11 +29,11 @@ class PersonalProfileUpdate(PersonalProfileBase):
 
 # read
 class PersonalProfileRead(PersonalProfileBase):
-    id: Optional[uuid.UUID]
-    profile_id: Optional[uuid.UUID]
+    id: Optional[str]
+    profile_id: Optional[str]
     created_at: Optional[datetime.date]
     updated_at: Optional[datetime.date]
-    profile_id: Optional[uuid.UUID]
+    profile_id: Optional[str]
     profile: Optional[ProfileRead]
 
     identification_card: Optional[IdentificationCardRead]

@@ -60,7 +60,7 @@ async def create(*,
         - **height**: int
         - **blood_group**: str
         - **age_group**: int
-        - **profile_id**: uuid.UUID
+        - **profile_id**: str
     """
     Authorize.jwt_required()
     return general_user_information_service.create(db, body)
@@ -71,7 +71,7 @@ async def create(*,
             summary="Get GeneralUserInformation by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -88,7 +88,7 @@ async def get_by_id(*,
             summary="Update GeneralUserInformation")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: GeneralUserInformationUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -99,7 +99,7 @@ async def update(*,
         - **height**: int
         - **blood_group**: str
         - **age_group**: int
-        - **profile_id**: uuid.UUID
+        - **profile_id**: str
     """
     Authorize.jwt_required()
     return general_user_information_service.update(
@@ -113,7 +113,7 @@ async def update(*,
                summary="Delete GeneralUserInformation")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

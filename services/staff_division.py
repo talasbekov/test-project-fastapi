@@ -241,8 +241,8 @@ class StaffDivisionService(
     def create_from_archive(self,
                             db: Session,
                             archive_staff_division: ArchiveStaffDivision,
-                            parent_id: uuid.UUID,
-                            leader_id: uuid.UUID):
+                            parent_id: str,
+                            leader_id: str):
         self._validate_parent(db, parent_id)
         if archive_staff_division.name == StaffDivisionEnum.DISPOSITION.value:
             parent_id = self.get_by_name(
@@ -264,8 +264,8 @@ class StaffDivisionService(
 
     def update_from_archive(self, db: Session,
                             archive_staff_division: ArchiveStaffDivision,
-                            parent_id: uuid.UUID,
-                            leader_id: uuid.UUID):
+                            parent_id: str,
+                            leader_id: str):
         self._validate_parent(db, parent_id)
         staff_division = self.get_by_id(db, archive_staff_division.origin_id)
         if archive_staff_division.name == StaffDivisionEnum.DISPOSITION.value:
@@ -291,7 +291,7 @@ class StaffDivisionService(
     def create_or_update_from_archive(self,
                                       db: Session,
                                       archive_staff_division: ArchiveStaffDivision,
-                                      parent_id: uuid.UUID, leader_id: uuid.UUID):
+                                      parent_id: str, leader_id: str):
         if archive_staff_division.origin_id is None:
             return self.create_from_archive(db,
                                             archive_staff_division,
@@ -379,7 +379,7 @@ class StaffDivisionService(
 
         return count_vacancies
 
-    def _validate_parent(self, db: Session, parent_id: uuid.UUID):
+    def _validate_parent(self, db: Session, parent_id: str):
         parent = super().get(db, parent_id)
         if parent is None and parent_id:
             raise BadRequestException(
@@ -390,7 +390,7 @@ class StaffDivisionService(
             self.model.name == name
         ).all()
 
-    def get_parent_ids(self, db: Session, id: uuid.UUID) -> List[uuid.UUID]:
+    def get_parent_ids(self, db: Session, id: str) -> List[str]:
         staff_division = self.get_by_id(db, id)
 
         parent_id = staff_division.parent_group_id
