@@ -134,7 +134,9 @@ class HrDocumentService(
         obj_in_data['properties'] = json.dumps(obj_in_data['properties'])
         obj_in_data['initialized_at'] = datetime.now()
         format_string = "%Y-%m-%dT%H:%M:%S.%f%z"
-        obj_in_data['due_date'] = datetime.strptime(obj_in_data['due_date'], format_string)
+        due_date = obj_in_data.get('due_date', None)
+        if due_date is not None:
+            obj_in_data['due_date'] = datetime.strptime(obj_in_data['due_date'], format_string)
         print(obj_in_data['due_date'])
         
         db_obj = self.model(**obj_in_data)  # type: ignore
