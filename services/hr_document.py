@@ -133,6 +133,10 @@ class HrDocumentService(
         obj_in_data = jsonable_encoder(obj_in)
         obj_in_data['properties'] = json.dumps(obj_in_data['properties'])
         obj_in_data['initialized_at'] = datetime.now()
+        format_string = "%Y-%m-%dT%H:%M:%S.%f%z"
+        obj_in_data['due_date'] = datetime.strptime(obj_in_data['due_date'], format_string)
+        print(obj_in_data['due_date'])
+        
         db_obj = self.model(**obj_in_data)  # type: ignore
         db.add(db_obj)
         db.flush()
@@ -295,7 +299,7 @@ class HrDocumentService(
     def get_draft_documents(self,
                             db: Session,
                             user_id: str,
-                            parent_id: uuid.UUID,
+                            parent_id: str,
                             filter: str,
                             skip: int = 0,
                             limit: int = 100):
