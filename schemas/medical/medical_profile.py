@@ -28,7 +28,7 @@ class MedicalProfileUpdate(MedicalProfileBase):
 
 class MedicalProfileRead(MedicalProfileBase):
     id: Optional[uuid.UUID]
-    general_user_informations: Optional[List[GeneralUserInformationRead]]
+    general_user_info: Optional[List[GeneralUserInformationRead]]
     dispensary_registrations: Optional[List[DispensaryRegistrationRead]]
     anthropometric_datas: Optional[List[AnthropometricDataRead]]
     hospital_datas: Optional[List[HospitalDataRead]]

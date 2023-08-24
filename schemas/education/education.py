@@ -1,24 +1,24 @@
 import datetime
-import uuid
 from typing import Optional
 
 from pydantic import AnyUrl
 
 from .institution import InstitutionRead
+from .specialty import SpecialtyRead
 from .institution_degree_type import InstitutionDegreeTypeRead
 
 from schemas import Model
 
 
 class EducationBase(Model):
-    profile_id: Optional[uuid.UUID]
-    institution_id: Optional[uuid.UUID]
-    degree_id: Optional[uuid.UUID]
+    profile_id: Optional[str]
+    institution_id: Optional[str]
+    degree_id: Optional[str]
     start_date: Optional[datetime.date]
     end_date: Optional[datetime.date]
     document_link: Optional[AnyUrl]
     is_military_school: Optional[bool]
-    specialty_id: Optional[uuid.UUID]
+    specialty_id: Optional[str]
     type_of_top: Optional[str]
     document_number: Optional[str]
     date_of_issue: Optional[datetime.date]
@@ -37,13 +37,13 @@ class EducationUpdate(EducationBase):
 
 
 class EducationRead(EducationBase):
-    id: Optional[uuid.UUID]
-    profile_id: Optional[uuid.UUID]
-    institution_id: Optional[uuid.UUID]
-    degree_id: Optional[uuid.UUID]
+    id: Optional[str]
+    profile_id: Optional[str]
+    institution_id: Optional[str]
+    degree_id: Optional[str]
     start_date: Optional[datetime.date]
     end_date: Optional[datetime.date]
     document_link: Optional[str]
-
+    specialty: Optional[SpecialtyRead]
     institution: Optional[InstitutionRead]
     degree: Optional[InstitutionDegreeTypeRead]
