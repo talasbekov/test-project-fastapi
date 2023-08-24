@@ -226,10 +226,14 @@ class HrDocumentService(
             .all()
         )
         for document in documents:
-            document.properties = json.loads(document.properties)
-            document.document_template.properties = json.loads(document.document_template.properties)
-            document.document_template.description = json.loads(document.document_template.description)
-            document.document_template.actions = json.loads(document.document_template.actions)
+            if isinstance(document.properties, str):
+                document.properties = json.loads(document.properties)
+            if isinstance(document.document_template.properties, str):
+                document.document_template.properties = json.loads(document.document_template.properties)
+            if isinstance(document.document_template.description, str):
+                document.document_template.description = json.loads(document.document_template.description)
+            if isinstance(document.document_template.actions, str):
+                document.document_template.actions = json.loads(document.document_template.actions)
         return self._return_correctly(db, documents, user)
 
     def get_signed_documents(
@@ -647,7 +651,6 @@ class HrDocumentService(
 
         if document_staff_function.role.name == DocumentFunctionTypeEnum.EXPERT.value:
             body.is_signed = True
-        print('1111')
         hr_document_info_service.sign(
             db, info, current_user, body.comment, body.is_signed)
         next_step = self._set_next_step(db, document_id, info)
@@ -660,7 +663,6 @@ class HrDocumentService(
                                                    body.comment,
                                                    info,
                                                    current_user)
-        print('222222')
         if body.is_signed:
             if next_step is None:
                 if isinstance(document.properties, dict):
@@ -671,9 +673,7 @@ class HrDocumentService(
                      document.document_template.description = json.dumps(document.document_template.description)
                 if isinstance(document.document_template.actions, dict):
                      document.document_template.actions = json.dumps(document.document_template.actions)
-                print('3333')
                 return self._finish_document(db, document, document.users)
-            print('4444')
             document.last_step_id = next_step.id
             query = db.execute(text(f"SELECT id FROM HR_ERP_HR_DOCUMENT_STATUSES WHERE name = '{HrDocumentStatusEnum.IN_PROGRESS.value}'"))
             document.status_id = query.fetchone()[0]
