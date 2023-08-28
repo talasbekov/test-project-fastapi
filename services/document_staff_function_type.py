@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from typing import List
 
 from exceptions.client import NotFoundException
 from models import DocumentFunctionType, DocumentFunctionTypeEnum
@@ -10,6 +11,11 @@ class DocumentStaffFunctionTypeService(
         ServiceBase[DocumentFunctionType,
                      DocumentStaffFunctionTypeCreate,
                      DocumentStaffFunctionTypeUpdate]):
+    def get_multi(
+        self, db: Session, skip: int = 0, limit: int = 100
+    ) -> List[DocumentFunctionType]:
+        return db.query(self.model).order_by(self.model.show_order).offset(skip).limit(limit).all()
+    
     def get_by_id(self, db: Session, id: str) -> DocumentFunctionType:
         document_staff_function_type = super().get(db, id)
         if document_staff_function_type is None:
