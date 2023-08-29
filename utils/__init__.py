@@ -5,4 +5,5 @@ from .checker import (
     is_valid_uuid,
     convert_str_to_datetime,
 )
-from .date import convert_days
+from .date import (convert_days,
+                   get_iso_weekdays_between_dates)

@@ -2,6 +2,8 @@ import uuid
 from typing import Optional, List
 from datetime import date
 
+from pydantic import Field
+
 from schemas import BaseModel, UserShortReadStatus
 from .schedule_month import ScheduleMonthRead
 from .activity import ActivityRead
@@ -30,11 +32,15 @@ class AttendedUserRead(AttendedUserBase):
     user: Optional[UserShortReadStatus]
 
 
-class AttendanceChangeStatus(BaseModel):
-    attendance_id: str
+class AttendanceUserStatus(BaseModel):
     attendance_status: Optional[str]
     reason: Optional[str]
-    user_ids: List[str]
+    user_id: Optional[str]
+
+
+class AttendanceChangeStatus(BaseModel):
+    attendance_id: str
+    user_status: Optional[List[AttendanceUserStatus]]
 
 
 class AttendanceChangeStatusWithSchedule(BaseModel):
@@ -67,8 +73,14 @@ class AttendanceRead(AttendanceBase):
     id: Optional[str]
     schedule: Optional[ScheduleMonthRead]
     attended_users: Optional[List[AttendedUserRead]]
+    class_status: Optional[str]
 
 
 class AttendancePercentageRead(BaseModel):
     activity: Optional[ActivityRead]
     percentage: Optional[int]
+
+
+class AttendanceReadPagination(BaseModel):
+    total: int = Field(0, nullable=False)
+    objects: List[AttendanceRead] = Field([], nullable=False)

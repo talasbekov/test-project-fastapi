@@ -2,10 +2,9 @@ from typing import List
 from sqlalchemy.orm import Session
 
 from services.base import ServiceBase
-from models import (Option, QuestionTypeEnum, SurveyTypeEnum)
+from models import (Option, QuestionTypeEnum, SurveyTypeEnum, Question)
 from schemas import (OptionCreate, OptionUpdate)
 from exceptions import BadRequestException
-from .question import question_service
 from .survey import survey_service
 
 
@@ -20,8 +19,11 @@ class OptionService(ServiceBase[Option, OptionCreate, OptionUpdate]):
         ).all()
 
     def create(self, db: Session, body: OptionCreate) -> Option:
-        question = question_service.get_by_id(db, body.question_id)
-        survey = survey_service.get_by_id(db, question.survey_id)
+        question = db.query(Question).filter(
+            Question.id == str(body.question_id)
+        ).first()
+        
+        survey = survey_service.get_by_id(db, str(question.survey_id))
         
         self.__validate_question_type(question.question_type)
         self.__validate_score(survey, body.score)
@@ -37,8 +39,11 @@ class OptionService(ServiceBase[Option, OptionCreate, OptionUpdate]):
         return res
     
     def update(self, db: Session, obj_from_db: Option, body: OptionUpdate):
-        question = question_service.get_by_id(db, body.question_id)
-        survey = survey_service.get_by_id(db, question.survey_id)
+        question = db.query(Question).filter(
+            Question.id == body.question_id
+        ).first()
+        
+        survey = survey_service.get_by_id(db, str(question.survey_id))
         
         self.__validate_question_type(question.question_type)
         self.__validate_score(survey, body.score)
@@ -64,10 +69,10 @@ class OptionService(ServiceBase[Option, OptionCreate, OptionUpdate]):
                                db: Session,
                                survey_id: str,
                                textKZ: str):        
-        survey = survey_service.get_by_id(db, survey_id)
+        survey = survey_service.get_by_id(db, str(survey_id))
 
-        if survey.is_kz_translate_required and not textKZ:
-            raise BadRequestException("KZ translation is required")
+        if survey.is_kz_translate_required and textKZ is None:
+            raise BadRequestException("Option KZ translation is required")
             
 
 option_service = OptionService(Option)

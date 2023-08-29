@@ -51,7 +51,7 @@ async def get_by_question(*,
 
     """
     Authorize.jwt_required()
-    return option_service.get_by_question(db, question_id)
+    return option_service.get_by_question(db, str(question_id))
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,

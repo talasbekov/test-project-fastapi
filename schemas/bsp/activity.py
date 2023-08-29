@@ -9,6 +9,8 @@ from schemas import NamedModel
 class ActivityBase(NamedModel):
     parent_group_id: Optional[str]
     instructions: Optional[str]
+    is_time_required: bool = False
+    normative_img: Optional[str]
 
     class Config:
         orm_mode = True

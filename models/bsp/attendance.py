@@ -26,10 +26,11 @@ class AttendedUser(Model):
     attendance_status = Column(Enum(AttendanceStatus))
     reason = Column(String)
     user_id = Column(String(), ForeignKey('hr_erp_users.id'))
-    attendance_id = Column(String(), ForeignKey('hr_erp_attendances.id'))
+    attendance_id = Column(String(), ForeignKey('hr_erp_attendances.id',
+                                                          ondelete="CASCADE"))
     # Relationships
     user = relationship("User")
-    attendance = relationship("Attendance", back_populates="attended_users")
+    attendance = relationship("Attendance", back_populates="attended_users",)
 
 
 class Attendance(Model):
@@ -38,9 +39,11 @@ class Attendance(Model):
     # Properties
     attendance_date = Column(Date)
     class_status = Column(Enum(ClassStatus))
-    schedule_id = Column(String(), ForeignKey('hr_erp_schedule_months.id'))
+    schedule_id = Column(String(), ForeignKey('hr_erp_schedule_months.id',
+                                                        ondelete="CASCADE"))
 
     # Relationships
-    schedule = relationship("ScheduleMonth")
-    attended_users = relationship("AttendedUser", back_populates="attendance"
-                                  , cascade='all,delete')
+    schedule = relationship("ScheduleMonth", back_populates='attendances',
+                            cascade='all,delete')
+    attended_users = relationship("AttendedUser", back_populates="attendance",
+                                  cascade='all,delete')

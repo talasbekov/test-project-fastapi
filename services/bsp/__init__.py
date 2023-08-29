@@ -1,6 +1,7 @@
 from .activity import activity_service
 from .attended_user import attended_user_service
 from .attendance import attendance_service
+from .exam_result import exam_result_service
 from .exam import exam_service
 from .place import place_service
 from .plan import plan_service

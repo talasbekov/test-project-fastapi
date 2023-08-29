@@ -49,7 +49,8 @@ from .hr_document_step import (HrDocumentStepCreate, HrDocumentStepRead,
 from .user import (UserCreate, UserRead, UserUpdate,
                    UserGroupUpdate, UserShortRead,
                    UserShortReadStatus, TableUserRead,
-                   UserShortReadStatusPagination)
+                   UserShortReadStatusPagination,
+                   UserShortReadAgeCategory)
 from .profile import ProfileCreate, ProfileUpdate, ProfileRead
 from .hr_document_status import HrDocumentStatusRead, HrDocumentStatusCreate, HrDocumentStatusUpdate
 from .hr_document import (HrDocumentCreate, HrDocumentInit, HrDocumentRead,

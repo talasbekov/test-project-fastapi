@@ -98,7 +98,7 @@ async def sign(*,
        Sign BspPlan
    """
     Authorize.jwt_required()
-    return plan_service.sign(db, str(id))
+    return plan_service.sign(db, id)
 
 @router.post("/draft/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=BspPlanRead,
@@ -112,7 +112,7 @@ async def send_to_draft(*,
        Send BspPlan to draft
    """
     Authorize.jwt_required()
-    return plan_service.send_to_draft_full(db, str(id))
+    return plan_service.send_to_draft_full(db, id)
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=BspPlanRead,
@@ -144,7 +144,7 @@ async def duplicate(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return plan_service.duplicate(db, str(id))
+    return plan_service.duplicate(db, id)
 
 @router.post("/", dependencies=[Depends(HTTPBearer())],
             response_model=BspPlanRead,
@@ -193,4 +193,4 @@ async def delete(*,
 
     """
     Authorize.jwt_required()
-    return plan_service.remove(db, str(id))
+    return plan_service.remove(db, id)

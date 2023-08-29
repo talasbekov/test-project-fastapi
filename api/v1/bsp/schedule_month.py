@@ -14,6 +14,7 @@ from schemas import (ScheduleMonthRead,
                      ScheduleMonthCreateWithDay,)
 
 from services import schedule_month_service
+from services import attendance_service
 
 
 router = APIRouter(prefix="/schedule_month",
@@ -120,8 +121,7 @@ async def get_by_id(*,
     Authorize.jwt_required()
     return schedule_month_service.get_by_id(db, str(id))
 
-@router.post("/", dependencies=[Depends(HTTPBearer())],
-            response_model=ScheduleMonthRead,
+@router.post("", dependencies=[Depends(HTTPBearer())],
             summary="Create ScheduleMonth")
 async def create(*,
                  db: Session = Depends(get_db),
@@ -133,7 +133,9 @@ async def create(*,
 
     """
     Authorize.jwt_required()
-    return schedule_month_service.create(db, body)
+    schedule_month = schedule_month_service.create(db, body)
+    attendance_service.create_by_schedule_month(db, schedule_month)
+    return schedule_month
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=ScheduleMonthRead,
@@ -167,4 +169,4 @@ async def delete(*,
 
     """
     Authorize.jwt_required()
-    return schedule_month_service.remove(db, str(id))
+    return schedule_month_service.remove(db, id)

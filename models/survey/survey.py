@@ -1,6 +1,6 @@
 import enum
 
-from sqlalchemy import (Column, ForeignKey, TEXT,
+from sqlalchemy import (Column, ForeignKey, CLOB,
                         TIMESTAMP, Boolean, Enum,
                         String)
 from sqlalchemy.orm import relationship
@@ -12,17 +12,6 @@ class SurveyStatusEnum(str, enum.Enum):
     ACTIVE = "Активный"
     ARCHIVE = "Архивный"
     DRAFT = "Черновик"
-
-
-class SurveyJurisdictionTypeEnum(str, enum.Enum):
-    STAFF_DIVISION = "Штатное подразделение"
-    CERTAIN_MEMBER = "Определенный участник"
-
-
-class SurveyStaffPositionEnum(str, enum.Enum):
-    EVERYONE = "Все"
-    ONLY_PERSONNAL_STURCTURE = "Только личный состав"
-    ONLY_MANAGING_STRUCTURE = "Только руководящий состав"
 
 
 class SurveyTypeEnum(str, enum.Enum):
@@ -41,20 +30,29 @@ class Survey(NamedModel):
 
     __tablename__ = "hr_erp_surveys"
     
-    description = Column(TEXT, nullable=True)
-    start_date = Column(TIMESTAMP(timezone=True), nullable=False)
-    end_date = Column(TIMESTAMP(timezone=True), nullable=False)
+    def __init__(self, **kwargs):
+        self.name = kwargs.get("name")
+        self.nameKZ = kwargs.get("nameKZ")
+        self.description = kwargs.get("description")
+        self.start_date = kwargs.get("start_date")
+        self.end_date = kwargs.get("end_date")
+        self.is_anonymous = kwargs.get("is_anonymous")
+        self.is_kz_translate_required = kwargs.get("is_kz_translate_required")
+        self.status = SurveyStatusEnum.ACTIVE.value
+        self.owner_id = kwargs.get("owner_id")
+        self.type = kwargs.get("type")
+        self.repeat_type = kwargs.get("repeat_type")
+    
+    description = Column(CLOB, nullable=True)
+    start_date = Column(TIMESTAMP(timezone=True), nullable=True)
+    end_date = Column(TIMESTAMP(timezone=True), nullable=True)
+    is_anonymous = Column(Boolean(), default=False, nullable=True)
+    is_kz_translate_required = Column(Boolean(), default=False, nullable=True)
     status = Column(
         Enum(SurveyStatusEnum),
-        default=SurveyStatusEnum.ACTIVE.value,
+        server_default=SurveyStatusEnum.ACTIVE.value,
         nullable=False
     )
-    jurisdiction_type = Column(Enum(SurveyJurisdictionTypeEnum), nullable=False)
-    is_kz_translate_required = Column(Boolean(), default=False, nullable=True)
-    is_anonymous = Column(Boolean(), default=False, nullable=True)
-    certain_member_id = Column(String(), ForeignKey("hr_erp_users.id"))
-    staff_division_id = Column(String(), ForeignKey("hr_erp_staff_divisions.id"))
-    staff_position = Column(Enum(SurveyStaffPositionEnum), nullable=False)
     owner_id = Column(String(), ForeignKey("hr_erp_users.id"))
     type = Column(Enum(SurveyTypeEnum), nullable=False)
     repeat_type = Column(Enum(SurveyRepeatTypeEnum), nullable=False,
@@ -62,3 +60,5 @@ class Survey(NamedModel):
         
     questions = relationship(
         "Question", cascade="all, delete", back_populates="survey")
+    jurisdictions = relationship(
+        "SurveyJurisdiction", cascade="all, delete", back_populates="survey")
