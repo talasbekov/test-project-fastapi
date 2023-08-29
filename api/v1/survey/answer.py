@@ -7,7 +7,8 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import AnswerCreate, AnswerUpdate, AnswerRead, AnswerReadPagination
+from schemas import (AnswerCreate, AnswerUpdate, AnswerRead,
+                     AnswerReadPagination)
 from services import answer_service
 
 router = APIRouter(prefix="/answers",
@@ -41,8 +42,39 @@ async def get_all(*,
 @router.get("/survey/{survey_id}", dependencies=[Depends(HTTPBearer())],
             response_model=List[AnswerRead],
             summary="Get all by survey")
-async def get_all_by_survey(*,
+async def get_by_survey_id(*,
                   db: Session = Depends(get_db),
+                  survey_id: uuid.UUID,
+                  user_id: uuid.UUID = None,
+                  Authorize: AuthJWT = Depends()):
+    """
+        Get all Answer by survey
+
+        - **skip**: int - The number of answers to skip before returning the results. 
+                This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of answers to return in the response. 
+            This parameter is optional and defaults to 100.
+    """
+    Authorize.jwt_required()
+    return answer_service.get_by_survey_id(db, str(survey_id), str(user_id))
+
+
+@router.get("/survey/{survey_id}/users", dependencies=[Depends(HTTPBearer())],
+            summary="Get responded users")
+async def get_responded_users(*,
+                  db: Session = Depends(get_db),
+                  survey_id: uuid.UUID,
+                  Authorize: AuthJWT = Depends()):
+    """
+        Get responded users
+    """
+    Authorize.jwt_required()
+    return answer_service.get_responded_users(db, str(survey_id))
+
+
+@router.get("/survey/{survey_id}/statistics", dependencies=[Depends(HTTPBearer())],
+            summary="Get all by survey")
+async def analyze_by_staff_division(*,
                   survey_id: uuid.UUID,
                   Authorize: AuthJWT = Depends()
                   ):
@@ -55,17 +87,36 @@ async def get_all_by_survey(*,
             This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    return answer_service.get_by_survey_id(db, survey_id)
+    return answer_service.analyze_by_staff_division(str(survey_id))
+
+
+@router.get("/survey/{survey_id}/questions", dependencies=[Depends(HTTPBearer())],
+            summary="Get all by question")
+async def analyze_by_questions(*,
+                survey_id: uuid.UUID,
+                db: Session = Depends(get_db),
+                Authorize: AuthJWT = Depends()
+                ):
+    """
+        Get all Answer by question
+
+        - **skip**: int - The number of answers to skip before returning the results. 
+                This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of answers to return in the response. 
+            This parameter is optional and defaults to 100.
+    """
+    Authorize.jwt_required()
+    return answer_service.analyze_by_question(db, str(survey_id))
 
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
-             response_model=AnswerRead,
+             response_model=List[AnswerRead],
              summary="Create")
 async def create(*,
                  db: Session = Depends(get_db),
-                 body: AnswerCreate,
+                 body: List[AnswerCreate],
                  Authorize: AuthJWT = Depends()
                  ):
     """
@@ -76,7 +127,7 @@ async def create(*,
     """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
-    return answer_service.create(db, body, user_id)
+    return answer_service.create_list(db, body, user_id)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],

@@ -13,12 +13,26 @@ class QuestionBase(TextModel):
     question_type: QuestionTypeEnum
     survey_id: Optional[uuid.UUID]
     score: Optional[int]
+
+
+class OptionBase(TextModel):
+    text: Optional[str]
+    score: Optional[int]
     diagram_description: Optional[str]
+    diagram_descriptionKZ: Optional[str]
     report_description: Optional[str]
+    report_descriptionKZ: Optional[str]
+
+
+class OptionCreate(OptionBase):
+    pass
 
 
 class QuestionCreate(QuestionBase):
     pass
+
+class QuestionCreateList(QuestionCreate):
+    options: Optional[List[OptionCreate]]
 
 
 class QuestionUpdate(QuestionBase):

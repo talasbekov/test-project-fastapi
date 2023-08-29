@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from core import get_db
 from schemas import (QuestionUpdate, QuestionRead,
-                     QuestionReadPagination, QuestionCreate)
+                     QuestionReadPagination, QuestionCreateList)
 from services import question_service
 
 router = APIRouter(prefix="/questions",
@@ -65,7 +65,7 @@ async def get_by_survey(*,
              summary="Create")
 async def create(*,
                  db: Session = Depends(get_db),
-                 body: List[QuestionCreate],
+                 body: List[QuestionCreateList],
                  Authorize: AuthJWT = Depends()
                  ):
     """

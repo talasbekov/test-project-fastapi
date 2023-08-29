@@ -1,26 +1,26 @@
-import uuid
 import datetime
 
 from typing import Optional, List
 from pydantic import BaseModel, Field
 
 from schemas import NamedModel, ReadNamedModel
-from models import (SurveyTypeEnum, SurveyJurisdictionTypeEnum, SurveyStaffPositionEnum,
-                    SurveyStatusEnum, SurveyRepeatTypeEnum)
+from models import (SurveyTypeEnum, SurveyStatusEnum, SurveyRepeatTypeEnum)
 from .question import QuestionRead
+from .survey_jurisdiction import SurveyJurisdictionRead, SurveyJurisdictionBase
 
 
 class SurveyBase(NamedModel):
     description: Optional[str]
-    start_date: datetime.datetime
-    end_date: datetime.datetime
-    jurisdiction_type: SurveyJurisdictionTypeEnum
-    certain_member_id: Optional[uuid.UUID]
-    staff_division_id: Optional[uuid.UUID]
-    staff_position: SurveyStaffPositionEnum
+    start_date: Optional[datetime.datetime]
+    end_date: Optional[datetime.datetime]
     is_kz_translate_required: Optional[bool]
     is_anonymous: Optional[bool]
     repeat_type: Optional[SurveyRepeatTypeEnum]
+
+
+class SurveyCreateWithJurisdiction(SurveyBase):
+    type: SurveyTypeEnum
+    jurisdictions: List[SurveyJurisdictionBase]
 
 
 class SurveyCreate(SurveyBase):
@@ -32,8 +32,6 @@ class SurveyUpdate(SurveyBase):
     start_date: Optional[datetime.datetime]
     end_date: Optional[datetime.datetime]
     status: Optional[SurveyStatusEnum]
-    jurisdiction_type: Optional[SurveyJurisdictionTypeEnum]
-    staff_position: Optional[SurveyStaffPositionEnum]
 
 
 class SurveyRead(SurveyBase, ReadNamedModel):
@@ -41,9 +39,8 @@ class SurveyRead(SurveyBase, ReadNamedModel):
     end_date: Optional[datetime.datetime]
     status: Optional[SurveyStatusEnum]
     questions: Optional[List[QuestionRead]]
-    jurisdiction_type: Optional[SurveyJurisdictionTypeEnum]
-    staff_position: Optional[SurveyStaffPositionEnum]
     type: Optional[SurveyTypeEnum]
+    jurisdictions: Optional[List[SurveyJurisdictionRead]]
 
     class Config:
         orm_mode = True

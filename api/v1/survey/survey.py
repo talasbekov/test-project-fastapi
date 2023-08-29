@@ -6,8 +6,9 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import (SurveyCreate, SurveyUpdate,
-                     SurveyRead, SurveyReadPagination)
+from schemas import (SurveyUpdate, SurveyRead,
+                     SurveyReadPagination, SurveyCreateWithJurisdiction)
+from models import SurveyStatusEnum
 from services import survey_service
 
 router = APIRouter(prefix="/surveys",
@@ -33,8 +34,11 @@ async def get_all_active(*,
     """
     Authorize.jwt_required()
     return {
-        'total': survey_service.get_count_actives(db),
-        'objects': survey_service.get_all_active(db, skip, limit)
+        'total': survey_service.get_count(db, SurveyStatusEnum.ACTIVE),
+        'objects': survey_service.get_all_by_status(db,
+                                                    SurveyStatusEnum.ACTIVE,
+                                                    skip,
+                                                    limit)
     }
 
 
@@ -57,8 +61,11 @@ async def get_all_archives(*,
     """
     Authorize.jwt_required()
     return {
-        'total': survey_service.get_count_archives(db),
-        'objects': survey_service.get_all_archives(db, skip, limit)
+        'total': survey_service.get_count(db, SurveyStatusEnum.ARCHIVE),
+        'objects': survey_service.get_all_by_status(db,
+                                                    SurveyStatusEnum.ARCHIVE,
+                                                    skip,
+                                                    limit)
     }
 
 
@@ -81,8 +88,11 @@ async def get_all_draft(*,
     """
     Authorize.jwt_required()
     return {
-        'total': survey_service.get_count_drafts(db),
-        'objects': survey_service.get_all_draft(db, skip, limit)
+        'total': survey_service.get_count(db, SurveyStatusEnum.DRAFT),
+        'objects': survey_service.get_all_by_status(db,
+                                                    SurveyStatusEnum.DRAFT,
+                                                    skip,
+                                                    limit)
     }
 
 
@@ -118,7 +128,7 @@ async def get_by_jurisdiction(*,
              summary="Create")
 async def create(*,
                  db: Session = Depends(get_db),
-                 body: SurveyCreate,
+                 body: SurveyCreateWithJurisdiction,
                  Authorize: AuthJWT = Depends()
                  ):
     """
@@ -173,7 +183,7 @@ async def repeat(*,
              summary="Save as draft")
 async def save_as_draft(*,
                  db: Session = Depends(get_db),
-                 body: SurveyCreate,
+                 body: SurveyCreateWithJurisdiction,
                  Authorize: AuthJWT = Depends()
                  ):
     """
