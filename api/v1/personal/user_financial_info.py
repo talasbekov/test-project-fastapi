@@ -59,7 +59,7 @@ async def create(*,
 
         - **iban**: str
         - **housing_payments_iban**: str
-        - **profile_id**: uuid.UUID
+        - **profile_id**: str
     """
     Authorize.jwt_required()
     return user_financial_info_service.create(db, body)
@@ -70,7 +70,7 @@ async def create(*,
             summary="Get UserFinancialInfo by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -87,7 +87,7 @@ async def get_by_id(*,
             summary="Update UserFinancialInfo")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: UserFinancialInfoUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -97,7 +97,7 @@ async def update(*,
         - **id**: UUID - the ID of UserFinancialInfo to update. This is required.
         - **iban**: str
         - **housing_payments_iban**: str
-        - **profile_id**: uuid.UUID
+        - **profile_id**: str
     """
     Authorize.jwt_required()
     return user_financial_info_service.update(
@@ -111,7 +111,7 @@ async def update(*,
                summary="Delete UserFinancialInfo")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

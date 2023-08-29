@@ -133,6 +133,12 @@ class HrDocumentService(
         obj_in_data = jsonable_encoder(obj_in)
         obj_in_data['properties'] = json.dumps(obj_in_data['properties'])
         obj_in_data['initialized_at'] = datetime.now()
+        format_string = "%Y-%m-%dT%H:%M:%S.%f%z"
+        due_date = obj_in_data.get('due_date', None)
+        if due_date is not None:
+            obj_in_data['due_date'] = datetime.strptime(obj_in_data['due_date'], format_string)
+        print(obj_in_data['due_date'])
+        
         db_obj = self.model(**obj_in_data)  # type: ignore
         db.add(db_obj)
         db.flush()
@@ -189,7 +195,7 @@ class HrDocumentService(
             self,
             db: Session,
             user_id: str,
-            parent_id: uuid.UUID,
+            parent_id: str,
             filter: str,
             skip: int,
             limit: int
@@ -226,17 +232,21 @@ class HrDocumentService(
             .all()
         )
         for document in documents:
-            document.properties = json.loads(document.properties)
-            document.document_template.properties = json.loads(document.document_template.properties)
-            document.document_template.description = json.loads(document.document_template.description)
-            document.document_template.actions = json.loads(document.document_template.actions)
+            if isinstance(document.properties, str):
+                document.properties = json.loads(document.properties)
+            if isinstance(document.document_template.properties, str):
+                document.document_template.properties = json.loads(document.document_template.properties)
+            if isinstance(document.document_template.description, str):
+                document.document_template.description = json.loads(document.document_template.description)
+            if isinstance(document.document_template.actions, str):
+                document.document_template.actions = json.loads(document.document_template.actions)
         return self._return_correctly(db, documents, user)
 
     def get_signed_documents(
             self,
             db: Session,
             user_id: str,
-            parent_id: uuid.UUID,
+            parent_id: str,
             filter: str,
             skip: int,
             limit: int
@@ -291,7 +301,7 @@ class HrDocumentService(
     def get_draft_documents(self,
                             db: Session,
                             user_id: str,
-                            parent_id: uuid.UUID,
+                            parent_id: str,
                             filter: str,
                             skip: int = 0,
                             limit: int = 100):
@@ -390,7 +400,7 @@ class HrDocumentService(
             current_user.id))
 
         users = [v for _, v in step_from_template.items()]
-        subject_users_ids: List[uuid.UUID] = []
+        subject_users_ids: List[str] = []
 
         for user in body.user_ids:
             subject_users_ids.append(user)
@@ -647,7 +657,6 @@ class HrDocumentService(
 
         if document_staff_function.role.name == DocumentFunctionTypeEnum.EXPERT.value:
             body.is_signed = True
-        print('1111')
         hr_document_info_service.sign(
             db, info, current_user, body.comment, body.is_signed)
         next_step = self._set_next_step(db, document_id, info)
@@ -660,7 +669,6 @@ class HrDocumentService(
                                                    body.comment,
                                                    info,
                                                    current_user)
-        print('222222')
         if body.is_signed:
             if next_step is None:
                 if isinstance(document.properties, dict):
@@ -671,9 +679,7 @@ class HrDocumentService(
                      document.document_template.description = json.dumps(document.document_template.description)
                 if isinstance(document.document_template.actions, dict):
                      document.document_template.actions = json.dumps(document.document_template.actions)
-                print('3333')
                 return self._finish_document(db, document, document.users)
-            print('4444')
             document.last_step_id = next_step.id
             query = db.execute(text(f"SELECT id FROM HR_ERP_HR_DOCUMENT_STATUSES WHERE name = '{HrDocumentStatusEnum.IN_PROGRESS.value}'"))
             document.status_id = query.fetchone()[0]
@@ -758,7 +764,7 @@ class HrDocumentService(
             db: Session,
             option: str,
             data_taken: str,
-            id: uuid.UUID,
+            id: str,
             type: str,
             skip: int,
             limit: int
@@ -773,10 +779,10 @@ class HrDocumentService(
 
     def _create_staff_unit_document_body(self,
                                          db: Session,
-                                         user_id: uuid.UUID,
+                                         user_id: str,
                                          staff_unit: ArchiveStaffUnit,
-                                         template_id: uuid.UUID,
-                                         parent_id: uuid.UUID):
+                                         template_id: str,
+                                         parent_id: str):
         steps = hr_document_template_service.get_steps_by_document_template_id(
             db, template_id)
         body = HrDocumentInit(
@@ -801,8 +807,8 @@ class HrDocumentService(
                            body: HrDocumentInit,
                            role: str,
                            step: HrDocumentStep,
-                           users: List[uuid.UUID],
-                           user_id: uuid.UUID = None):
+                           users: List[str],
+                           user_id: str = None):
 
         staff_unit: StaffUnit = staff_unit_service.get_by_id(db, role)
 
@@ -881,8 +887,8 @@ class HrDocumentService(
     def _exists_user_document_in_progress(
             self,
             db: Session,
-            hr_document_template_id: uuid.UUID,
-            user_ids: List[uuid.UUID]):
+            hr_document_template_id: str,
+            user_ids: List[str]):
 
         if user_ids is None:
             return None
@@ -1240,7 +1246,7 @@ class HrDocumentService(
             db: Session,
             staff_unit: StaffUnit,
             document_staff_function: DocumentStaffFunction,
-            subject_user_ids: List[uuid.UUID]
+            subject_user_ids: List[str]
     ) -> bool:
         jurisdiction = jurisdiction_service.get_by_id(
             db, document_staff_function.jurisdiction_id)
@@ -1378,7 +1384,7 @@ class HrDocumentService(
         db.flush()
         return hr_document
 
-    def get_signee(self, db: Session, id: uuid.UUID) -> User:
+    def get_signee(self, db: Session, id: str) -> User:
         document = self.get_by_id(db, id)
         if (document.status.name
                 != HrDocumentStatusEnum.COMPLETED.value):
@@ -1412,7 +1418,6 @@ class HrDocumentService(
             hr_document_info_service.create_info_for_step(
                 db, document.id, step.id, user_id, None, None, None
             )
-        print('animeaaa')
 
     def _create_hr_document_info_for_initiator(
             self,
@@ -1566,7 +1571,7 @@ class HrDocumentService(
 
         last_info = hr_document_info_service.find_by_document_id_and_step_id_signed(
             db, document.id, last_step.id)
-        print('anime4')
+
         if last_info is not None and last_info.signed_at is not None:
             context['approving_rank'] = last_info.signed_by.rank.name
             context['approving_name'] = (

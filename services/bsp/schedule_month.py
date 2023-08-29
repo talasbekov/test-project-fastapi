@@ -60,7 +60,7 @@ class ScheduleMonthService(ServiceBase[ScheduleMonth,
 
     def get_nearest_schedules(self,
                               db: Session,
-                              user_id: uuid.UUID,
+                              user_id: str,
                               limit: int):
         current_time = datetime.datetime.now().time()
         today_weekday = datetime.date.today().isoweekday()
@@ -89,7 +89,7 @@ class ScheduleMonthService(ServiceBase[ScheduleMonth,
 
     def get_schedules_by_month(self,
                               db: Session,
-                              user_id: uuid.UUID,
+                              user_id: str,
                               month_number: int):
         schedules = (
             db.query(ScheduleMonth)
@@ -106,7 +106,7 @@ class ScheduleMonthService(ServiceBase[ScheduleMonth,
     def get_by_month_and_schedule_year(self,
                               db: Session,
                               month_numbers: int,
-                              schedule_id: uuid.UUID):
+                              schedule_id: str):
         schedule = (
             db.query(ScheduleMonth)
             .join(ScheduleYear)
@@ -121,7 +121,7 @@ class ScheduleMonthService(ServiceBase[ScheduleMonth,
 
     def get_by_schedule_year_id(self,
                               db: Session,
-                              schedule_id: uuid.UUID):
+                              schedule_id: str):
         schedules = (
             db.query(ScheduleMonth)
             .filter(ScheduleMonth.schedule_id == schedule_id)
@@ -133,7 +133,7 @@ class ScheduleMonthService(ServiceBase[ScheduleMonth,
 
     def get_schedule_by_day(self,
                             db: Session,
-                            user_id: uuid.UUID,
+                            user_id: str,
                             date: datetime.date,
                             limit: int):
         date_weekday = date.isoweekday()

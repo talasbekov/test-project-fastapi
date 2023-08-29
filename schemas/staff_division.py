@@ -10,12 +10,12 @@ from schemas import (PositionRead, RankRead, StaffFunctionRead,
 
 
 class StaffDivisionBase(NamedModel):
-    parent_group_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    parent_group_id: Optional[str] = Field(None, nullable=True)
     description: Optional[NamedModel]
     is_combat_unit: Optional[bool] = Field(None, nullable=True)
-    leader_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    leader_id: Optional[str] = Field(None, nullable=True)
     is_active: Optional[bool] = True
-    type_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    type_id: Optional[str] = Field(None, nullable=True)
     staff_division_number: Optional[int] = Field(None, nullable=True)
 
 
@@ -28,7 +28,7 @@ class StaffDivisionUpdate(StaffDivisionBase):
 
 
 class StaffDivisionUpdateParentGroup(BaseModel):
-    parent_group_id: uuid.UUID
+    parent_group_id: str
 
 
 class UserRead(ReadModel):
@@ -37,14 +37,14 @@ class UserRead(ReadModel):
     address: Optional[str] = Field(None, nullable=True)
     cabinet: Optional[str]
     service_phone_number: Optional[str]
-    supervised_by: Optional[uuid.UUID]
+    supervised_by: Optional[str]
     is_military: Optional[bool]
     rank: Optional[RankRead]
     email: Optional[EmailStr]
     first_name: Optional[str]
     last_name: Optional[str]
     last_signed_at: Optional[datetime.datetime]
-    staff_unit_id: Optional[uuid.UUID]
+    staff_unit_id: Optional[str]
     call_sign: Optional[str]
     id_number: Optional[str]
     personal_id: Optional[str]
@@ -60,19 +60,19 @@ class UserRead(ReadModel):
 
 class HrVacancyRead(ReadModel):
     is_active: Optional[bool]
-    staff_unit_id: Optional[uuid.UUID]
+    staff_unit_id: Optional[str]
 
     class Config:
         orm_mode = True
 
 
 class UserReplacingStaffUnitRead(ReadModel):
-    position_id: uuid.UUID
-    staff_division_id: uuid.UUID
+    position_id: str
+    staff_division_id: str
     is_active: Optional[bool] = True
     requirements: Optional[List[dict]]
-    staff_division_id: Optional[uuid.UUID]
-    position_id: Optional[uuid.UUID]
+    staff_division_id: Optional[str]
+    position_id: Optional[str]
     position: Optional[PositionRead]
     users: Optional[List[Optional[UserRead]]]
     actual_users: Optional[List[Optional[UserRead]]]
@@ -91,8 +91,8 @@ class UserReplacingRead(UserRead):
 
 
 class StaffUnitRead(ReadModel):
-    staff_division_id: Optional[uuid.UUID]
-    position_id: Optional[uuid.UUID]
+    staff_division_id: Optional[str]
+    position_id: Optional[str]
     position: Optional[PositionRead]
     users: Optional[List[Optional[UserRead]]]
     actual_users: Optional[List[Optional[UserRead]]]
@@ -100,15 +100,15 @@ class StaffUnitRead(ReadModel):
     requirements: Optional[List[dict]]
     staff_functions: Optional[List[StaffFunctionRead]]
     user_replacing: Optional[UserReplacingRead]
-    user_replacing_id: Optional[uuid.UUID]
+    user_replacing_id: Optional[str]
 
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
 
 class StaffUnitOptionRead(ReadModel):
-    staff_division_id: Optional[uuid.UUID]
-    position_id: Optional[uuid.UUID]
+    staff_division_id: Optional[str]
+    position_id: Optional[str]
     position: Optional[PositionRead]
     users: Optional[List[Optional[UserRead]]]
 
@@ -129,13 +129,13 @@ class StaffUnitOptionRead(ReadModel):
 
 
 class StaffDivisionChildRead(NamedModel):
-    parent_group_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    parent_group_id: Optional[str] = Field(None, nullable=True)
     is_combat_unit: Optional[bool] = Field(None, nullable=True)
-    leader_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    leader_id: Optional[str] = Field(None, nullable=True)
     is_active: Optional[bool] = True
-    type_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    type_id: Optional[str] = Field(None, nullable=True)
     staff_division_number: Optional[int] = Field(None, nullable=True)
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     children: Optional[List]
     staff_units: Optional[List]
     type: Optional[StaffDivisionTypeRead]
@@ -159,7 +159,7 @@ class StaffDivisionChildRead(NamedModel):
 
 
 class StaffDivisionRead(StaffDivisionBase):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     children: Optional[List['StaffDivisionChildRead']]
     staff_units: Optional[List['StaffUnitRead']]
     type: Optional[StaffDivisionTypeRead]
@@ -184,7 +184,7 @@ class StaffDivisionRead(StaffDivisionBase):
 
 
 class StaffDivisionReadWithoutStaffUnit(StaffDivisionBase):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     children: Optional[List['StaffDivisionChildRead']]
     type: Optional[StaffDivisionTypeRead]
     count_vacancies: Optional[int]
@@ -263,25 +263,25 @@ class StaffUnitDivisionRead(StaffDivisionBase, ReadNamedModel):
         orm_mode = True
         
 class ShortStaffUnitDivisionRead(ReadNamedModel):
-    parent_group_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    parent_group_id: Optional[str] = Field(None, nullable=True)
     is_combat_unit: Optional[bool] = Field(None, nullable=True)
-    leader_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    leader_id: Optional[str] = Field(None, nullable=True)
     is_active: Optional[bool] = True
-    type_id: Optional[uuid.UUID] = Field(None, nullable=True)
+    type_id: Optional[str] = Field(None, nullable=True)
     staff_division_number: Optional[int] = Field(None, nullable=True)
 
     class Config:
         orm_mode = True
 
 class StaffDivisionStepChildRead(StaffDivisionBase):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     type: Optional[StaffDivisionTypeRead]
 
     class Config:
         orm_mode = True
 
 class StaffDivisionStepRead(StaffDivisionBase):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     children: Optional[List['StaffDivisionStepChildRead']]
     staff_units: Optional[List['StaffUnitRead']]
     type: Optional[StaffDivisionTypeRead]
@@ -290,7 +290,7 @@ class StaffDivisionStepRead(StaffDivisionBase):
         orm_mode = True
 
 class StaffDivisionVacancyRead(BaseModel):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     staff_division_number: Optional[int] = Field(None, nullable=True)
     type: Optional[StaffDivisionTypeRead]
     count_vacancies: Optional[int]

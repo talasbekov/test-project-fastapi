@@ -9,7 +9,7 @@ from schemas import NamedModel, ReadNamedModel
 class VehicleBase(NamedModel):
     number: Optional[str]
     date_from: datetime
-    profile_id: uuid.UUID
+    profile_id: str
     document_link: Optional[str]
     vin_code: str
 

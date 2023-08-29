@@ -56,7 +56,7 @@ async def create(*,
         - **name**: str
         - **assignment_date**: datetime.date
         - **document_link**: str
-        - **profile_id**: uuid.UUID
+        - **profile_id**: str
     """
     Authorize.jwt_required()
     return sport_degree_service.create(db, body)
@@ -67,7 +67,7 @@ async def create(*,
             summary="Get SportDegree by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -84,7 +84,7 @@ async def get_by_id(*,
             summary="Update SportDegree")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: SportDegreeUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -95,7 +95,7 @@ async def update(*,
         - **name**: str
         - **assignment_date**: datetime.date
         - **document_link**: str
-        - **profile_id**: uuid.UUID
+        - **profile_id**: str
     """
     Authorize.jwt_required()
     return sport_degree_service.update(
@@ -109,7 +109,7 @@ async def update(*,
                summary="Delete SportDegree")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

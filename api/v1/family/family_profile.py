@@ -47,7 +47,7 @@ async def create(*,
             response_model=FamilyProfileRead)
 async def get(*,
               db: Session = Depends(get_db),
-              id: uuid.UUID,
+              id: str,
               Authorize: AuthJWT = Depends()
               ):
     Authorize.jwt_required()
@@ -58,7 +58,7 @@ async def get(*,
             response_model=FamilyProfileRead)
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: FamilyProfileUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -71,7 +71,7 @@ async def update(*,
                status_code=status.HTTP_204_NO_CONTENT)
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     Authorize.jwt_required()
@@ -93,7 +93,7 @@ async def get_by_profile(*,
             response_model=FamilyProfileRead)
 async def get_by_profile_id(*,
                             db: Session = Depends(get_db),
-                            id: uuid.UUID,
+                            id: str,
                             Authorize: AuthJWT = Depends()
                             ):
     Authorize.jwt_required()

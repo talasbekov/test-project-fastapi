@@ -8,7 +8,7 @@ from pydantic import BaseModel
 class TaxDeclarationBase(BaseModel):
     year: str
     is_paid: bool
-    profile_id: uuid.UUID
+    profile_id: str
 
 
 class TaxDeclarationCreate(TaxDeclarationBase):
@@ -20,10 +20,10 @@ class TaxDeclarationUpdate(TaxDeclarationBase):
 
 
 class TaxDeclarationRead(TaxDeclarationBase):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     year: Optional[str]
     is_paid: Optional[bool]
-    profile_id: Optional[uuid.UUID]
+    profile_id: Optional[str]
     created_at: Optional[datetime.date]
     updated_at: Optional[datetime.date]
 

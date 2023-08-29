@@ -56,7 +56,7 @@ async def create(*,
         - **id**: UUID - the ID of TaxDeclaration to update. This is required.
         - **year**: str
         - **is_paid**: bool
-        - **profile_id**: uuid.UUID
+        - **profile_id**: str
     """
     Authorize.jwt_required()
     return tax_declaration_service.create(db, body)
@@ -67,7 +67,7 @@ async def create(*,
             summary="Get TaxDeclaration by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -84,7 +84,7 @@ async def get_by_id(*,
             summary="Update TaxDeclaration")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: TaxDeclarationUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -93,7 +93,7 @@ async def update(*,
 
         - **year**: str
         - **is_paid**: bool
-        - **profile_id**: uuid.UUID
+        - **profile_id**: str
     """
     Authorize.jwt_required()
     return tax_declaration_service.update(
@@ -107,7 +107,7 @@ async def update(*,
                summary="Delete TaxDeclaration")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

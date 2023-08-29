@@ -52,7 +52,7 @@ async def get_all(*,
             summary="Get Attendance by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -84,7 +84,7 @@ async def get_attendance_percentage(*,
             summary="Get all absent users for the ScheduleYear")
 async def get_absent_users(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -145,7 +145,7 @@ async def change_attendance_status_by_schedule(*,
             summary="Update Attendance")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: AttendanceUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -164,7 +164,7 @@ async def update(*,
             summary="Delete Attendance")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

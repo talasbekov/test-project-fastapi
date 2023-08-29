@@ -65,7 +65,7 @@ async def create(*,
             summary="Update Abroad Travel by id")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: PsychologicalCheckUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -85,7 +85,7 @@ async def update(*,
                summary="Delete Abroad Travel by id")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

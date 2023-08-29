@@ -23,18 +23,18 @@ class PlaceUpdate(PlaceBase):
 
 
 class PlaceRead(PlaceBase):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
 
 
 class MonthRead(NamedModel):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
 
 
 class ScheduleMonthBase(BaseModel):
     start_date: date
     end_date: date
-    place_id: uuid.UUID
-    schedule_id: uuid.UUID
+    place_id: str
+    schedule_id: str
 
     class Config:
         orm_mode = True
@@ -47,7 +47,7 @@ class ScheduleMonthCreate(ScheduleMonthBase):
 
 class ScheduleMonthCreateWithDay(ScheduleMonthBase):
     days: List[ScheduleDayCreateWithString]
-    instructor_ids: List[Optional[uuid.UUID]]
+    instructor_ids: List[Optional[str]]
 
 
 class ScheduleMonthUpdate(ScheduleMonthBase):
@@ -55,7 +55,7 @@ class ScheduleMonthUpdate(ScheduleMonthBase):
 
 
 class ScheduleMonthRead(ScheduleMonthBase):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     instructors: Optional[List[Optional[UserShortReadStatus]]]
     place: Optional[PlaceRead]
     days: Optional[List[Optional[ScheduleDayRead]]]

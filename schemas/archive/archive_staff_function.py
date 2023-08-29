@@ -12,21 +12,21 @@ class ArchiveStaffFunctionBase(NamedModel):
 
 class ArchiveDocumentStaffFunctionBase(ArchiveStaffFunctionBase):
     priority: int
-    role_id: uuid.UUID
-    jurisdiction_id: uuid.UUID
+    role_id: str
+    jurisdiction_id: str
 
 
 class ArchiveServiceStaffFunctionBase(ArchiveStaffFunctionBase):
 
-    type_id: Optional[uuid.UUID]
+    type_id: Optional[str]
 
 
 class ArchiveStaffFunctionCreate(ArchiveStaffFunctionBase):
-    origin_id: Optional[uuid.UUID]
+    origin_id: Optional[str]
 
 
 class ArchiveDocumentStaffFunctionCreate(ArchiveDocumentStaffFunctionBase):
-    origin_id: Optional[uuid.UUID]
+    origin_id: Optional[str]
 
 
 class NewArchiveStaffFunctionCreate(ArchiveStaffFunctionBase):
@@ -38,15 +38,15 @@ class NewArchiveDocumentStaffFunctionCreate(ArchiveDocumentStaffFunctionBase):
 
 
 class ArchiveDocumentStaffFunctionAdd(ArchiveDocumentStaffFunctionBase):
-    hr_document_template_id: uuid.UUID
+    hr_document_template_id: str
 
 
 class ArchiveServiceStaffFunctionCreate(ArchiveServiceStaffFunctionBase):
-    origin_id: Optional[uuid.UUID]
+    origin_id: Optional[str]
 
 
 class ArchiveStaffFunctionUpdate(ArchiveStaffFunctionBase):
-    origin_id: Optional[uuid.UUID]
+    origin_id: Optional[str]
 
 
 class NewArchiveServiceStaffFunctionCreate(ArchiveServiceStaffFunctionBase):
@@ -58,11 +58,11 @@ class NewArchiveStaffFunctionUpdate(ArchiveStaffFunctionBase):
 
 
 class ArchiveServiceStaffFunctionUpdate(ArchiveServiceStaffFunctionBase):
-    origin_id: Optional[uuid.UUID]
+    origin_id: Optional[str]
 
 
 class ArchiveDocumentStaffFunctionUpdate(ArchiveDocumentStaffFunctionBase):
-    origin_id: Optional[uuid.UUID]
+    origin_id: Optional[str]
 
 
 class NewArchiveServiceStaffFunctionUpdate(ArchiveServiceStaffFunctionBase):
@@ -74,12 +74,12 @@ class NewArchiveDocumentStaffFunctionUpdate(ArchiveDocumentStaffFunctionBase):
 
 
 class ArchiveStaffUnitFunctions(BaseModel):
-    staff_unit_id: uuid.UUID
-    staff_function_ids: List[uuid.UUID]
+    staff_unit_id: str
+    staff_function_ids: List[str]
 
 
 class ArchiveStaffFunctionRead(ArchiveStaffFunctionBase):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     name: Optional[str]
     hours_per_week: Optional[int]
     discriminator: Optional[str]
@@ -91,7 +91,7 @@ class ArchiveStaffFunctionRead(ArchiveStaffFunctionBase):
 
 class ArchiveDocumentStaffFunctionTemplate(BaseModel):
 
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     name: Optional[str]
 
     class Config:
@@ -100,7 +100,7 @@ class ArchiveDocumentStaffFunctionTemplate(BaseModel):
 
 class ArchiveDocumentStaffFunctionStep(BaseModel):
 
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     hr_document_template: Optional[ArchiveDocumentStaffFunctionTemplate]
 
     class Config:
@@ -111,10 +111,10 @@ class ArchiveDocumentStaffFunctionRead(ArchiveStaffFunctionRead,
                                        ArchiveDocumentStaffFunctionBase):
 
     priority: Optional[int]
-    role_id: Optional[uuid.UUID]
+    role_id: Optional[str]
     role: Optional[ArchiveStaffFunctionRead]
 
-    jurisdiction_id: Optional[uuid.UUID]
+    jurisdiction_id: Optional[str]
     jurisdiction: Optional[JurisdictionRead]
 
     hr_document_step: Optional[ArchiveDocumentStaffFunctionStep]
@@ -123,7 +123,7 @@ class ArchiveDocumentStaffFunctionRead(ArchiveStaffFunctionRead,
 class ArchiveServiceStaffFunctionRead(ArchiveStaffFunctionRead,
                                       ArchiveServiceStaffFunctionBase):
 
-    type_id: Optional[uuid.UUID]
+    type_id: Optional[str]
     type: Optional[ServiceStaffFunctionTypeRead]
 
 

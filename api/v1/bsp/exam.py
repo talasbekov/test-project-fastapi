@@ -70,7 +70,7 @@ async def get_exam_results(*,
             summary="Get ExamSchedule by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -101,7 +101,7 @@ async def create(*,
             summary="Update ExamSchedule")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: ExamScheduleUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -120,7 +120,7 @@ async def update(*,
             summary="Delete ExamSchedule")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

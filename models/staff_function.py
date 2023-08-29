@@ -40,6 +40,8 @@ class DocumentFunctionType(NamedModel):
     __tablename__ = "hr_erp_document_function_types"
 
     can_cancel = Column(Boolean, nullable=False)
+    
+    show_order = Column(Integer())
 
     staff_functions = relationship(
         "DocumentStaffFunction",

@@ -37,7 +37,7 @@ async def get_all(*,
 #             summary="Get Profile Document by user_id")
 # async def get_document_by_user(*,
 #                                db: Session = Depends(get_db),
-#                                user_id: uuid.UUID,
+#                                user_id: str,
 #                                Authorize: AuthJWT = Depends()
 #                                ):
 #     """
@@ -79,7 +79,7 @@ async def create(*,
             summary="Get Profile by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -96,7 +96,7 @@ async def get_by_id(*,
             summary="Update Profile")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: ProfileUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -116,7 +116,7 @@ async def update(*,
                summary="Delete Profile")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

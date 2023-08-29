@@ -28,7 +28,7 @@ class ExamService(ServiceBase[ExamSchedule, ExamScheduleCreate, ExamScheduleUpda
         return {'total': total, 'objects': exams}
 
     def get_exam_results_by_user_id(self, db: Session,
-                                    user_id: uuid.UUID,
+                                    user_id: str,
                                     skip: int,
                                     limit: int):
         results = (db.query(ExamResult)
@@ -63,7 +63,7 @@ class ExamService(ServiceBase[ExamSchedule, ExamScheduleCreate, ExamScheduleUpda
     def get_by_month_and_schedule_year(self,
                               db: Session,
                               month_numbers: int,
-                              schedule_id: uuid.UUID):
+                              schedule_id: str):
         schedule = (
             db.query(ExamSchedule)
             .join(ScheduleYear)

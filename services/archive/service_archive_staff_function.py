@@ -36,7 +36,7 @@ class ArchiveServiceStaffFunctionService(
 
         return staff_funcions
 
-    def duplicate(self, db: Session, id: uuid.UUID):
+    def duplicate(self, db: Session, id: str):
         func = self.get_by_id(db, id)
         copy = super().create(db, ArchiveServiceStaffFunctionCreate(
             name=func.name,
@@ -51,7 +51,7 @@ class ArchiveServiceStaffFunctionService(
             self,
             db: Session,
             staff_function: ServiceStaffFunction,
-            type_id: uuid.UUID):
+            type_id: str):
         return super().create(db, ArchiveServiceStaffFunctionCreate(
             name=staff_function.name,
             nameKZ=staff_function.nameKZ,

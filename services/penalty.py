@@ -11,7 +11,7 @@ from .base import ServiceBase
 
 
 class PenaltyService(ServiceBase[Penalty, PenaltyCreate, PenaltyUpdate]):
-    def create_relation(self, db: Session, user_id: uuid.UUID,
+    def create_relation(self, db: Session, user_id: str,
                         type_id: str):
         penalty = super().create(db, PenaltyCreate(type_id=type_id, user_id=user_id))
         return penalty
@@ -67,7 +67,7 @@ class PenaltyService(ServiceBase[Penalty, PenaltyCreate, PenaltyUpdate]):
         else:
             return db.query(Penalty).filter(Penalty.id == id).first().type
 
-    def stop_relation(self, db: Session, user_id: uuid.UUID, id: str):
+    def stop_relation(self, db: Session, user_id: str, id: str):
         # penalty = self.get_by_type_and_user(id, user_id)
         penalty_history = (
             db.query(PenaltyHistory)

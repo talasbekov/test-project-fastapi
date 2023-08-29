@@ -42,7 +42,7 @@ class ArchiveStaffDivisionService(
         return group
 
     def get_by_name(self, db: Session, name: str,
-                    staff_list_id: uuid.UUID) -> ArchiveStaffDivision:
+                    staff_list_id: str) -> ArchiveStaffDivision:
         group = db.query(self.model).filter(
             self.model.name == name,
             self.model.staff_list_id == staff_list_id
@@ -83,7 +83,7 @@ class ArchiveStaffDivisionService(
         return archive_divisions
 
     def get_parents(self, db: Session,
-                    staff_list_id: uuid.UUID) -> List[ArchiveStaffDivision]:
+                    staff_list_id: str) -> List[ArchiveStaffDivision]:
         return db.query(self.model).filter(
             ArchiveStaffDivision.staff_list_id == staff_list_id,
             ArchiveStaffDivision.parent_group_id == None,
@@ -104,7 +104,7 @@ class ArchiveStaffDivisionService(
         return group
 
     def get_department_id_from_staff_division_id(
-            self, db: Session, staff_division_id: uuid.UUID):
+            self, db: Session, staff_division_id: str):
 
         staff_division = self.get_by_id(db, staff_division_id)
 
@@ -120,7 +120,7 @@ class ArchiveStaffDivisionService(
         return res_id
 
     def get_division_parents_by_id(
-            self, db: Session, archive_staff_division_id: uuid.UUID):
+            self, db: Session, archive_staff_division_id: str):
 
         archive_staff_division = self.get_by_id(db, archive_staff_division_id)
 
@@ -141,8 +141,8 @@ class ArchiveStaffDivisionService(
             self,
             db: Session,
             staff_division: StaffDivision,
-            staff_list_id: uuid.UUID,
-            parent_group_id: uuid.UUID):
+            staff_list_id: str,
+            parent_group_id: str):
         self._validate_parent(db, parent_group_id)
         return super().create(db, ArchiveStaffDivisionCreate(
             parent_group_id=parent_group_id,
@@ -199,7 +199,7 @@ class ArchiveStaffDivisionService(
         increment_changes_size(db, res.staff_list)
         return res
 
-    def duplicate(self, db: Session, id: uuid.UUID):
+    def duplicate(self, db: Session, id: str):
         archive_staff_division = archive_staff_division_service.get_by_id(
             db, str(id))
 
@@ -232,7 +232,7 @@ class ArchiveStaffDivisionService(
         # Return the duplicated division
         return duplicate_division
 
-    def _validate_parent(self, db: Session, parent_id: uuid.UUID):
+    def _validate_parent(self, db: Session, parent_id: str):
         parent = super().get(db, parent_id)
         if parent is None and parent_id:
             raise BadRequestException(

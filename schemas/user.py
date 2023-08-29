@@ -41,8 +41,8 @@ class UserUpdate(UserBase):
 
 
 class UserGroupUpdate(Model):
-    user_id: uuid.UUID
-    group_id: uuid.UUID
+    user_id: str
+    group_id: str
     
 class UserRead(UserBase, ReadModel):
     badges: Optional[List[BadgeRead]]
@@ -54,7 +54,7 @@ class UserRead(UserBase, ReadModel):
     first_name: Optional[str]
     last_name: Optional[str]
     last_signed_at: Optional[datetime.datetime]
-    staff_unit_id: Optional[uuid.UUID]
+    staff_unit_id: Optional[str]
     call_sign: Optional[str]
     id_number: Optional[str]
     status_till: Optional[datetime.datetime]
@@ -68,7 +68,7 @@ class UserRead(UserBase, ReadModel):
         orm_mode = True
 
 class UserShortRead(Model):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     first_name: Optional[str]
     last_name: Optional[str]
     father_name: Optional[str]
@@ -81,7 +81,7 @@ class UserShortRead(Model):
 
 
 class UserShortReadStatus(Model):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     first_name: Optional[str]
     last_name: Optional[str]
     father_name: Optional[str]

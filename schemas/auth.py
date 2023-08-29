@@ -26,9 +26,9 @@ class RegistrationForm(Model):
     id_number: str
     phone_number: str
     address: str
-    rank_id: Optional[uuid.UUID]
-    staff_unit_id: uuid.UUID
-    actual_staff_unit_id: uuid.UUID
+    rank_id: Optional[str]
+    staff_unit_id: str
+    actual_staff_unit_id: str
     cabinet: Optional[str]
     service_phone_number: Optional[str]
     is_military: Optional[bool]

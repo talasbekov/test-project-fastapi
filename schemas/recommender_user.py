@@ -6,8 +6,8 @@ from schemas import Model, ReadModel
 
 class RecommenderUserBase(Model):
     document_link: Optional[str]
-    user_by_id: uuid.UUID
-    user_id: uuid.UUID
+    user_by_id: str
+    user_id: str
 
     class Config:
         orm_mode = True

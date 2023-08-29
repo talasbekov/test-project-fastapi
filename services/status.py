@@ -29,7 +29,7 @@ class StatusService(ServiceBase[Status, StatusCreate, StatusUpdate]):
         users = db.query(Status).filter(Status.type_id == id).all()
         return users
 
-    def create_relation(self, db: Session, user_id: uuid.UUID, type_id: str):
+    def create_relation(self, db: Session, user_id: str, type_id: str):
         status = super().create(db, StatusCreate(type_id=type_id, user_id=user_id))
         return status
 
@@ -42,7 +42,7 @@ class StatusService(ServiceBase[Status, StatusCreate, StatusUpdate]):
     def get_by_option(self,
                       db: Session,
                       type: str,
-                      id: uuid.UUID,
+                      id: str,
                       skip: int,
                       limit: int):
         user = user_service.get_by_id(db, id)
@@ -53,8 +53,8 @@ class StatusService(ServiceBase[Status, StatusCreate, StatusUpdate]):
             return [StatusRead.from_orm(status).dict()
                     for status in user.statuses]
 
-    def stop_relation(self, db: Session, user_id: uuid.UUID,
-                      status_id: uuid.UUID):
+    def stop_relation(self, db: Session, user_id: str,
+                      status_id: str):
         history = (db.query(StatusHistory)
                    .filter(StatusHistory.status_id == status_id)
                    .order_by(StatusHistory.created_at.desc()).first())
@@ -67,7 +67,7 @@ class StatusService(ServiceBase[Status, StatusCreate, StatusUpdate]):
         return history
 
     def exists_relation(self, db: Session, user_id: str,
-                        badge_type_id: uuid.UUID):
+                        badge_type_id: str):
         return (
             db.query(Status)
             .filter(Status.user_id == user_id)
@@ -86,7 +86,7 @@ class StatusService(ServiceBase[Status, StatusCreate, StatusUpdate]):
 
     def get_active_status_of_user(self,
                                   db: Session,
-                                  user_id: uuid.UUID,
+                                  user_id: str,
                                   status_name: str):
         return (
             db.query(StatusHistory)

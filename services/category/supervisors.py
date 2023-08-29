@@ -13,7 +13,7 @@ from .base import BaseCategory
 class SupervisorCategory(BaseCategory):
     __handler__ = 3
 
-    def handle(self, db: Session, user_id: uuid.UUID) -> list[uuid.UUID]:
+    def handle(self, db: Session, user_id: str) -> list[str]:
         users = (
             db.query(User)
             .join(User.staff_unit)
@@ -34,9 +34,9 @@ class SupervisorCategory(BaseCategory):
     def get_templates(
         self,
         db: Session,
-        role_id: uuid.UUID,
-        user_id: uuid.UUID,
-    ) -> List[uuid.UUID]:
+        role_id: str,
+        user_id: str,
+    ) -> List[str]:
         if not self.validate(db, user_id):
             return []
         return super().get_templates(db, role_id, user_id, self.__handler__)
@@ -44,7 +44,7 @@ class SupervisorCategory(BaseCategory):
     def validate(
         self,
         db: Session,
-        user_id: uuid.UUID,
+        user_id: str,
     ) -> bool:
         user = db.query(User).filter(User.id == user_id).first()
         if user is None:

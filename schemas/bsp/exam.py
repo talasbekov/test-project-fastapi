@@ -12,8 +12,8 @@ class ExamScheduleBase(BaseModel):
     end_date: Optional[date]
     start_time: Optional[time]
     end_time: Optional[time]
-    place_id: Optional[uuid.UUID]
-    schedule_id: Optional[uuid.UUID]
+    place_id: Optional[str]
+    schedule_id: Optional[str]
 
     class Config:
         orm_mode = True
@@ -21,7 +21,7 @@ class ExamScheduleBase(BaseModel):
 
 
 class ExamScheduleCreateWithInstructors(ExamScheduleBase):
-    instructor_ids: List[Optional[uuid.UUID]]
+    instructor_ids: List[Optional[str]]
 
 
 class ExamScheduleCreate(ExamScheduleBase):
@@ -32,7 +32,7 @@ class ExamScheduleUpdate(ExamScheduleBase):
 
 
 class ExamScheduleRead(ExamScheduleBase):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     instructors: Optional[List[Optional[UserShortReadStatus]]]
     place: Optional[PlaceRead]
     activity: Optional[ActivityRead]
@@ -57,8 +57,8 @@ class ExamScheduleRead(ExamScheduleBase):
 class ExamResultBase(BaseModel):
     exam_date: Optional[date]
     grade: Optional[int]
-    user_id: Optional[uuid.UUID]
-    exam_id: Optional[uuid.UUID]
+    user_id: Optional[str]
+    exam_id: Optional[str]
 
 
     class Config:
@@ -75,7 +75,7 @@ class ExamResultUpdate(ExamResultBase):
 
 
 class ExamResultRead(ExamResultBase):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     user: Optional[UserShortReadStatus]
     exam: Optional[ExamScheduleRead]
 

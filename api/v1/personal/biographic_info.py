@@ -59,7 +59,7 @@ async def create(*,
         - **nationality**: str
         - **family_status**: str
         - **address**: str
-        - **profile_id**: uuid.UUID
+        - **profile_id**: str
     """
     Authorize.jwt_required()
     return biographic_info_service.create(db, body)
@@ -70,7 +70,7 @@ async def create(*,
             summary="Get BiographicInfo by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -87,7 +87,7 @@ async def get_by_id(*,
             summary="Update BiographicInfo")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: BiographicInfoUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -109,7 +109,7 @@ async def update(*,
                summary="Delete BiographicInfo")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

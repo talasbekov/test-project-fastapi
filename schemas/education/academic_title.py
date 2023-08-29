@@ -9,9 +9,9 @@ from .specialty import SpecialtyRead
 
 
 class AcademicTitleBase(BaseModel):
-    profile_id: Optional[uuid.UUID]
-    degree_id: Optional[uuid.UUID]
-    specialty_id: Optional[uuid.UUID]
+    profile_id: Optional[str]
+    degree_id: Optional[str]
+    specialty_id: Optional[str]
     document_number: str
     document_link: Optional[AnyUrl]
     assignment_date: Optional[datetime.date]
@@ -26,10 +26,10 @@ class AcademicTitleUpdate(AcademicTitleBase):
 
 
 class AcademicTitleRead(AcademicTitleBase):
-    id: Optional[uuid.UUID]
-    profile_id: Optional[uuid.UUID]
-    degree_id: Optional[uuid.UUID]
-    specialty_id: Optional[uuid.UUID]
+    id: Optional[str]
+    profile_id: Optional[str]
+    degree_id: Optional[str]
+    specialty_id: Optional[str]
     document_number: str
     document_link: Optional[str]
     assignment_date: Optional[datetime.date]

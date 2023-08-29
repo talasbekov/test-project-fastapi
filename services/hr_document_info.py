@@ -109,7 +109,7 @@ class HrDocumentInfoService(
         return info
 
     def get_signed_by_user_id(
-            self, db: Session, user_id: uuid.UUID, skip: int, limit: int):
+            self, db: Session, user_id: str, skip: int, limit: int):
 
         infos = db.query(self.model).filter(
             self.model.signed_by == user_id

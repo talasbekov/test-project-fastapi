@@ -7,7 +7,7 @@ from .question import QuestionRead
 from .option import OptionRead
 
 class AnswerBase(Model):
-    question_id: uuid.UUID
+    question_id: str
     text: Optional[str]
 
 
@@ -22,8 +22,8 @@ class AnswerUpdate(AnswerBase):
 
 # read
 class AnswerRead(AnswerBase, ReadModel):
-    question_id: Optional[uuid.UUID]
-    user_id: Optional[uuid.UUID]
+    question_id: Optional[str]
+    user_id: Optional[str]
     encrypted_used_id: Optional[str]
     score: Optional[int]
     question: Optional[QuestionRead]

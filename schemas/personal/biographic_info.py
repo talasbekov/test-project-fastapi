@@ -12,10 +12,10 @@ class BiographicInfoBase(BaseModel):
     gender: bool
     citizenship: str
     nationality: str
-    family_status_id: uuid.UUID
+    family_status_id: str
     address: str
     residence_address: str
-    profile_id: uuid.UUID
+    profile_id: str
 
 
 class BiographicInfoCreate(BiographicInfoBase):
@@ -27,15 +27,15 @@ class BiographicInfoUpdate(BaseModel):
 
 
 class BiographicInfoRead(BiographicInfoBase):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     place_birth: Optional[str]
     gender: Optional[bool]
     citizenship: Optional[str]
     nationality: Optional[str]
-    family_status_id: Optional[uuid.UUID]
+    family_status_id: Optional[str]
     address: Optional[str]
     residence_address: Optional[str]
-    profile_id: Optional[uuid.UUID]
+    profile_id: Optional[str]
     created_at: Optional[datetime.datetime]
     updated_at: Optional[datetime.datetime]
     family_status: Optional[FamilyStatusRead]

@@ -1,5 +1,6 @@
 import datetime
 import pickle
+import logging
 
 from celery import Celery
 from celery.schedules import crontab
@@ -43,12 +44,12 @@ app.conf.beat_schedule = {
     }
 }
 
-#SQLALCHEMY_DATABASE_URL = f"postgresql://{configs.POSTGRES_USER}:{configs.POSTGRES_PASSWORD}@{configs.POSTGRES_HOSTNAME}:{configs.DATABASE_PORT}/{configs.POSTGRES_DB}"
-SQLALCHEMY_DATABASE_URL = f"oracle://system:Oracle123@172.20.0.9:1521/MORAL"
+SQLALCHEMY_DATABASE_URL = f"oracle://system:Oracle123@192.168.0.169:1521/MORAL"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
-    echo=configs.SQLALCHEMY_ECHO
+    echo=configs.SQLALCHEMY_ECHO,
+    pool_size=10
 )
 
 
@@ -57,7 +58,7 @@ def task_create_draft(self,
                       user_id: str,
                       obj_in: dict,
                       current_user_role_id: str):
-    SessionLocal = sessionmaker(bind=engine)
+    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     db = SessionLocal()
     staff_list = staff_list_service.create_by_user_id(self, db,
                                                       user_id,
@@ -89,7 +90,9 @@ def task_apply_staff_list(
     document_link
 ):
     self.update_state(state=0)
-    SessionLocal = sessionmaker(bind=engine)
+    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    logging.basicConfig()
+    logging.getLogger('sqlalchemy.engine').setLevel(logging.DEBUG)
     db = SessionLocal()
     staff_list = staff_list_service.apply_staff_list(self, db,
                                                      str(id),
@@ -115,7 +118,7 @@ def task_apply_staff_list(
 @app.task
 def task_clear_user_logging_activities_table_every_3_days():
     SessionLocal = sessionmaker(bind=engine)
-    db = SessionLocal()
+    db = SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     try:
         now_date = datetime.datetime.now()
         delete_objects = (
@@ -139,7 +142,7 @@ def task_clear_user_logging_activities_table_every_3_days():
 
 @app.task
 def task_repeat_surveys(status: str):
-    SessionLocal = sessionmaker(bind=engine)
+    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     db = SessionLocal()
     try:
         expired_surveys = (
@@ -166,7 +169,7 @@ def task_sign_document_with_certificate(
     user_id,
     access_token,
 ):
-    SessionLocal = sessionmaker(bind=engine)
+    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     db = SessionLocal()
     body = pickle.loads(byte_body)
     state_counter = 0

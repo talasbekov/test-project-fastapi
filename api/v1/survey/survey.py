@@ -147,7 +147,7 @@ async def create(*,
              summary="Duplicate")
 async def duplicate(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """
@@ -165,7 +165,7 @@ async def duplicate(*,
              summary="Repeat")
 async def repeat(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """
@@ -201,7 +201,7 @@ async def save_as_draft(*,
             summary="Get Survey by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -218,7 +218,7 @@ async def get_by_id(*,
             summary="Update Survey")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: SurveyUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -240,7 +240,7 @@ async def update(*,
                summary="Delete Survey")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

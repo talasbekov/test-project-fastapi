@@ -62,7 +62,7 @@ async def create(*,
             summary="Get History by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -95,7 +95,7 @@ async def get_by_user_id(*,
             summary="Update History")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: HistoryNameChangeUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -118,7 +118,7 @@ async def update(*,
                summary="Delete History Name Change")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

@@ -46,7 +46,7 @@ async def get_all(*,
             summary="Get Jurisdiction by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """

@@ -11,7 +11,7 @@ class ServiceIDBase(Model):
     date_to: Optional[datetime]
     token_status: Optional[ServiceIDStatus]
     id_status: Optional[ServiceIDStatus]
-    user_id: uuid.UUID
+    user_id: str
 
     class Config:
         orm_mode = True

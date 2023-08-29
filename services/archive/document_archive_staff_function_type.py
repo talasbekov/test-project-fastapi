@@ -26,7 +26,7 @@ class DocumentArchiveStaffFunctionTypeService(
         return type
 
     def get_by_origin_id(self, db: Session,
-                         origin_id: uuid.UUID) -> ArchiveDocumentFunctionType:
+                         origin_id: str) -> ArchiveDocumentFunctionType:
         return db.query(self.model).filter(
             self.model.origin_id == origin_id
         ).first()

@@ -69,7 +69,7 @@ async def create(*,
             summary="Get Equipment by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -86,7 +86,7 @@ async def get_by_id(*,
             summary="Update Equipment")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: EquipmentUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -109,7 +109,7 @@ async def update(*,
                summary="Delete Equipment")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """
@@ -209,7 +209,7 @@ async def get_all_types(*,
             summary="Get all available Equipments for user")
 async def get_all_available(*,
                             db: Session = Depends(get_db),
-                            user_id: uuid.UUID,
+                            user_id: str,
                             Authorize: AuthJWT = Depends(),
                             skip: int = 0,
                             limit: int = 10

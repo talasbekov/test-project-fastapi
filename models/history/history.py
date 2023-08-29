@@ -93,7 +93,7 @@ class RankHistory(History):
     rank_assigned_by = Column(String, nullable=True)
 
     @classmethod
-    def create_history(cls, db: Session, user_id: uuid.UUID,
+    def create_history(cls, db: Session, user_id: str,
                        id: str, finish_last):
         rank = db.query(Rank).filter(Rank.id == id).first()
         if rank is None:
@@ -124,8 +124,8 @@ class BadgeHistory(History):
     badge = relationship("Badge", back_populates="history")
 
     @classmethod
-    def create_history(cls, db: Session, user_id: uuid.UUID,
-                       id: uuid.UUID, finish_last):
+    def create_history(cls, db: Session, user_id: str,
+                       id: str, finish_last):
         badge = db.query(Badge).filter(Badge.id == id).first()
         if badge is None:
             raise NotFoundException(detail="Badge not found")
@@ -156,8 +156,8 @@ class PenaltyHistory(History):
     penalty = relationship("Penalty")
 
     @classmethod
-    def create_history(cls, db: Session, user_id: uuid.UUID,
-                       id: uuid.UUID, finish_last):
+    def create_history(cls, db: Session, user_id: str,
+                       id: str, finish_last):
         penalty = db.query(Penalty).filter(Penalty.id == id).first()
         if penalty is None:
             raise NotFoundException(detail="Penalty not found")
@@ -180,8 +180,8 @@ class PenaltyHistory(History):
     def create_timeline_history(
         cls,
         db: Session,
-        user_id: uuid.UUID,
-        id: uuid.UUID,
+        user_id: str,
+        id: str,
         finish_last,
         date_from,
         date_to
@@ -274,8 +274,8 @@ class ContractHistory(History):
     contract = relationship("Contract")
 
     @classmethod
-    def create_history(cls, db: Session, user_id: uuid.UUID,
-                       id: uuid.UUID, finish_last):
+    def create_history(cls, db: Session, user_id: str,
+                       id: str, finish_last):
         contract = db.query(Contract).filter(Contract.id == id).first()
         if contract is None:
             raise NotFoundException(detail="Contract not found")
@@ -297,8 +297,8 @@ class ContractHistory(History):
     def create_timeline_history(
         cls,
         db: Session,
-        user_id: uuid.UUID,
-        id: uuid.UUID,
+        user_id: str,
+        id: str,
         finish_last,
         date_from, date_to
     ):
@@ -335,8 +335,8 @@ class CoolnessHistory(History):
         uselist=False)
 
     @classmethod
-    def create_history(cls, db: Session, user_id: uuid.UUID,
-                       id: uuid.UUID, finish_last):
+    def create_history(cls, db: Session, user_id: str,
+                       id: str, finish_last):
         if db.query(Coolness).filter(Coolness.id == id).first() is None:
             raise NotFoundException(detail="Coolness not found")
         finish_last(db, user_id, cls.__mapper_args__["polymorphic_identity"])
@@ -384,8 +384,8 @@ class SecondmentHistory(History):
     secondment = relationship("Secondment")
 
     @classmethod
-    def create_history(cls, db: Session, user_id: uuid.UUID,
-                       id: uuid.UUID, finish_last):
+    def create_history(cls, db: Session, user_id: str,
+                       id: str, finish_last):
         secondment = db.query(Secondment).filter(Secondment.id == id).first()
         if secondment is None:
             raise NotFoundException(detail="Secondment not found")
@@ -405,8 +405,8 @@ class SecondmentHistory(History):
     def create_timeline_history(
         cls,
         db: Session,
-        user_id: uuid.UUID,
-        id: uuid.UUID,
+        user_id: str,
+        id: str,
         finish_last,
         date_from,
         date_to
@@ -454,8 +454,8 @@ class AttestationHistory(History):
     attestation_status = Column(String, nullable=True)
 
     @classmethod
-    def create_history(cls, db: Session, user_id: uuid.UUID,
-                       id: uuid.UUID, finish_last):
+    def create_history(cls, db: Session, user_id: str,
+                       id: str, finish_last):
         attestation = db.query(Attestation).filter(
             Attestation.id == id).first()
         if attestation is None:
@@ -501,9 +501,9 @@ class StatusHistory(History):
     status_name = Column(NCLOB, nullable=True)
 
     @classmethod
-    def create_history(cls, db: Session, user_id: uuid.UUID,
-                       id: Union[uuid.UUID, str], finish_last):
-        if isinstance(id, uuid.UUID):
+    def create_history(cls, db: Session, user_id: str,
+                       id: Union[str, str], finish_last):
+        if isinstance(id, str):
             status = db.query(Status).filter(Status.id == id).first()
             if status is None:
                 raise NotFoundException(detail="Status not found")
@@ -531,8 +531,8 @@ class StatusHistory(History):
     def create_timeline_history(
         cls,
         db: Session,
-        user_id: uuid.UUID,
-        id: uuid.UUID,
+        user_id: str,
+        id: str,
         finish_last,
         date_from,
         date_to,

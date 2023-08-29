@@ -9,8 +9,8 @@ from .candidate_essay_type import CandidateEssayTypeRead
 
 
 class CandidateBase(BaseModel):
-    staff_unit_curator_id: uuid.UUID
-    staff_unit_id: uuid.UUID
+    staff_unit_curator_id: str
+    staff_unit_id: str
 
     class Config:
         orm_mode = True
@@ -18,7 +18,7 @@ class CandidateBase(BaseModel):
 
 
 class CandidateUserRead(BaseModel):
-    id: uuid.UUID
+    id: str
     first_name: Optional[str]
     last_name: Optional[str]
     father_name: Optional[str]
@@ -29,7 +29,7 @@ class CandidateUserRead(BaseModel):
 
 
 class StaffUnitCandidateRead(BaseModel):
-    id: uuid.UUID
+    id: str
     users: Optional[List[CandidateUserRead]] = None
 
     class Config:
@@ -42,12 +42,12 @@ class CandidateCreate(CandidateBase):
 
 
 class CandidateUpdate(CandidateBase):
-    staff_unit_curator_id: Optional[uuid.UUID]
-    staff_unit_id: Optional[uuid.UUID]
+    staff_unit_curator_id: Optional[str]
+    staff_unit_id: Optional[str]
     status: Optional[str]
     debarment_reason: Optional[str]
     is_physical_passed: Optional[bool]
-    recommended_by: Optional[uuid.UUID]
+    recommended_by: Optional[str]
 
     @validator('debarment_reason', pre=True)
     def validate_debarment_reason(cls, value, values):
@@ -62,13 +62,13 @@ class CandidateUpdate(CandidateBase):
 
 
 class CandidateEssayUpdate(BaseModel):
-    essay_id: Optional[uuid.UUID]
+    essay_id: Optional[str]
     name: Optional[str]
     nameKZ: Optional[str]
 
 
 class CandidateRead(CandidateBase):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     created_at: Optional[datetime.datetime]
     updated_at: Optional[datetime.datetime]
     status: Optional[str]
@@ -77,12 +77,12 @@ class CandidateRead(CandidateBase):
     debarment_reason: Optional[str]
     progress: Optional[int]
     current_stage: Optional[str]
-    essay_id: Optional[uuid.UUID]
+    essay_id: Optional[str]
     essay: Optional[CandidateEssayTypeRead]
     last_edit_date: Optional[datetime.date]
-    staff_unit_curator_id: Optional[uuid.UUID]
+    staff_unit_curator_id: Optional[str]
     staff_unit_curator: Optional[StaffUnitCandidateRead]
-    staff_unit_id: Optional[uuid.UUID]
+    staff_unit_id: Optional[str]
     staff_unit: Optional[StaffUnitCandidateRead]
-    recommended_by: Optional[uuid.UUID]
+    recommended_by: Optional[str]
     recommended_by_user: Optional[CandidateUserRead]

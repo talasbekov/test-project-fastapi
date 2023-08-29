@@ -62,7 +62,7 @@ async def create(*,
         - **date_to: datetime**.date
         - **issued_by**: str
         - **document_link**: str
-        - **profile_id**: uuid.UUID
+        - **profile_id**: str
     """
     Authorize.jwt_required()
     return identification_card_service.create(db, body)
@@ -73,7 +73,7 @@ async def create(*,
             summary="Get IdentificationCard by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -90,7 +90,7 @@ async def get_by_id(*,
             summary="Update IdentificationCard")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: IdentificationCardUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -112,7 +112,7 @@ async def update(*,
                summary="Delete IdentificationCard")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

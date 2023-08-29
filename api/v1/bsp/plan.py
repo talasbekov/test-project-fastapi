@@ -91,7 +91,7 @@ async def get_all_signed(*,
             summary="Get all BspPlan")
 async def sign(*,
                   db: Session = Depends(get_db),
-                  id: uuid.UUID,
+                  id: str,
                   Authorize: AuthJWT = Depends()
                   ):
     """
@@ -105,7 +105,7 @@ async def sign(*,
             summary="Send BspPlan to draft")
 async def send_to_draft(*,
                   db: Session = Depends(get_db),
-                  id: uuid.UUID,
+                  id: str,
                   Authorize: AuthJWT = Depends()
                   ):
     """
@@ -119,7 +119,7 @@ async def send_to_draft(*,
             summary="Get BspPlan by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -135,7 +135,7 @@ async def get_by_id(*,
             summary="Duplicate BspPlan by id")
 async def duplicate(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -166,7 +166,7 @@ async def create(*,
             summary="Update BspPlan")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: BspPlanUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -185,7 +185,7 @@ async def update(*,
             summary="Delete BspPlan")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

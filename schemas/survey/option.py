@@ -7,7 +7,7 @@ from schemas import TextModel, ReadTextModel
 
 class OptionBase(TextModel):
     text: Optional[str]
-    question_id: uuid.UUID
+    question_id: str
     score: Optional[int]
     diagram_description: Optional[str]
     diagram_descriptionKZ: Optional[str]
@@ -20,11 +20,11 @@ class OptionCreate(OptionBase):
 
 
 class OptionUpdate(OptionBase):
-    question_id: Optional[uuid.UUID]
+    question_id: Optional[str]
 
 
 class OptionRead(OptionBase, ReadTextModel):
-    question_id: Optional[uuid.UUID]
+    question_id: Optional[str]
     score: Optional[int]
 
     class Config:

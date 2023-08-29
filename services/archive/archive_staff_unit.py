@@ -33,8 +33,8 @@ class ArchiveStaffUnitService(
     def dispose_all_units(
             self,
             db: Session,
-            archive_staff_unit_ids: List[uuid.UUID],
-            archive_staff_division_id: uuid.UUID):
+            archive_staff_unit_ids: List[str],
+            archive_staff_division_id: str):
         (db.query(self.model)
            .filter(self.model.id.in_(archive_staff_unit_ids))
            .update(
@@ -47,7 +47,7 @@ class ArchiveStaffUnitService(
     def get_by_archive_staff_division_id(
             self,
             db: Session,
-            archive_staff_division_id: uuid.UUID) -> ArchiveStaffUnit:
+            archive_staff_division_id: str) -> ArchiveStaffUnit:
         archive_staff_units = (db.query(ArchiveStaffUnit)
                                .filter(ArchiveStaffUnit.staff_division_id
                                        == archive_staff_division_id)
@@ -61,8 +61,8 @@ class ArchiveStaffUnitService(
     def duplicate_archive_staff_units_by_division_id(
             self,
             db: Session,
-            duplicate_division_id: uuid.UUID,
-            division_id: uuid.UUID):
+            duplicate_division_id: str,
+            division_id: str):
 
         archive_staff_units = self.get_by_archive_staff_division_id(
             db, division_id)
@@ -128,7 +128,7 @@ class ArchiveStaffUnitService(
         db.add(staff_unit)
         db.flush()
 
-    def remove(self, db: Session, id: uuid.UUID) -> ArchiveStaffUnit:
+    def remove(self, db: Session, id: str) -> ArchiveStaffUnit:
         self._validate_leader(db, id)
         super().remove(db, str(id))
 
@@ -168,11 +168,11 @@ class ArchiveStaffUnitService(
             self,
             db: Session,
             staff_unit: StaffUnit,
-            curator_of_id: uuid.UUID,
-            user_id: uuid.UUID,
-            position_id: uuid.UUID,
-            actual_user_id: uuid.UUID,
-            user_replacing_id: uuid.UUID,
+            curator_of_id: str,
+            user_id: str,
+            position_id: str,
+            actual_user_id: str,
+            user_replacing_id: str,
             archive_staff_division: ArchiveStaffDivision):
         return super().create(db, ArchiveStaffUnitCreate(
             position_id=position_id,
@@ -222,11 +222,11 @@ class ArchiveStaffUnitService(
         return res
 
     def _validate_archive_staff_position(
-            self, db: Session, position_id: uuid.UUID):
+            self, db: Session, position_id: str):
         position_service.get_by_id(db, position_id)
 
     def get_service_staff_functions(
-            self, db: Session, staff_unit_id: uuid.UUID):
+            self, db: Session, staff_unit_id: str):
         staff_unit = self.get_by_id(db, staff_unit_id)
         # filter so that only service staff functions are returned
         # discriminator field is different
@@ -236,7 +236,7 @@ class ArchiveStaffUnitService(
                 == "service_staff_function"]
 
     def get_document_staff_functions(
-            self, db: Session, staff_unit_id: uuid.UUID):
+            self, db: Session, staff_unit_id: str):
         staff_unit = self.get_by_id(db, staff_unit_id)
         # filter so that only document staff functions are returned
         # discriminator field is different
@@ -245,11 +245,11 @@ class ArchiveStaffUnitService(
                 if staff_function.discriminator
                 == "document_staff_function"]
 
-    def get_object(self, db: Session, id: uuid.UUID, type: str):
+    def get_object(self, db: Session, id: str, type: str):
         return db.query(ArchiveStaffUnit).filter(
             ArchiveStaffUnit.id == id).first()
 
-    def _validate_leader(self, db: Session, staff_unit_id: uuid.UUID):
+    def _validate_leader(self, db: Session, staff_unit_id: str):
         # get staff_division by staff unit id, if staff_unit is staff_division
         # leader, raise Exception
         staff_division = (db.query(ArchiveStaffDivision) .filter(

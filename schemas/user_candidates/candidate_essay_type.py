@@ -33,4 +33,4 @@ class CandidateEssayTypeSetToCandidate(NamedModel):
 
 
 class CandidateEssayTypeRead(CandidateEssayTypeBase, NamedModel):
-    id: Optional[uuid.UUID]
+    id: Optional[str]

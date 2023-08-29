@@ -9,8 +9,8 @@ from .activity import ActivityRead
 
 class AttendedUserBase(BaseModel):
     attendance_status: Optional[str]
-    user_id: Optional[uuid.UUID]
-    attendance_id: Optional[uuid.UUID]
+    user_id: Optional[str]
+    attendance_id: Optional[str]
 
     class Config:
         orm_mode = True
@@ -26,29 +26,29 @@ class AttendedUserUpdate(AttendedUserBase):
 
 
 class AttendedUserRead(AttendedUserBase):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     user: Optional[UserShortReadStatus]
 
 
 class AttendanceChangeStatus(BaseModel):
-    attendance_id: uuid.UUID
+    attendance_id: str
     attendance_status: Optional[str]
     reason: Optional[str]
-    user_ids: List[uuid.UUID]
+    user_ids: List[str]
 
 
 class AttendanceChangeStatusWithSchedule(BaseModel):
-    schedule_id: uuid.UUID
+    schedule_id: str
     attendance_status: Optional[str]
     reason: Optional[str]
-    user_id: uuid.UUID
+    user_id: str
     date: date
     activity: Optional[str]
 
 
 class AttendanceBase(BaseModel):
     attendance_date: Optional[date]
-    schedule_id: Optional[uuid.UUID]
+    schedule_id: Optional[str]
 
     class Config:
         orm_mode = True
@@ -64,7 +64,7 @@ class AttendanceUpdate(AttendanceBase):
 
 
 class AttendanceRead(AttendanceBase):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     schedule: Optional[ScheduleMonthRead]
     attended_users: Optional[List[AttendedUserRead]]
 

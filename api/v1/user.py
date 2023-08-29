@@ -165,7 +165,7 @@ async def get_all_by_jurisdiction(
 async def get_all_by_staff_unit(*,
                                 db: Session = Depends(get_db),
                                 Authorize: AuthJWT = Depends(),
-                                id: uuid.UUID):
+                                id: str):
     """
      Get all Users by Staff Unit
 
@@ -184,7 +184,7 @@ async def get_all_by_staff_unit(*,
 async def get_all_by_position(*,
                                 db: Session = Depends(get_db),
                                 Authorize: AuthJWT = Depends(),
-                                id: uuid.UUID):
+                                id: str):
     """
      Get all Users by Position
 
@@ -203,7 +203,7 @@ async def get_all_by_position(*,
 async def get_all_by_schedule_id(*,
                              db: Session = Depends(get_db),
                              Authorize: AuthJWT = Depends(),
-                             id: uuid.UUID,
+                             id: str,
                              skip: int,
                              limit: int
                                  ):
@@ -263,7 +263,7 @@ async def update_user_patch(
 async def get_by_id(
     *,
     db: Session = Depends(get_db),
-    id: uuid.UUID,
+    id: str,
     Authorize: AuthJWT = Depends()
 ):
     """
@@ -302,7 +302,7 @@ async def get_profile(
 async def get_templates(
     *,
     db: Session = Depends(get_db),
-    user_id: uuid.UUID,
+    user_id: str,
     Authorize: AuthJWT = Depends(),
     skip: int = 0,
     limit: int = 10
@@ -315,7 +315,7 @@ async def get_templates(
 async def get_short_user(
     *,
     db: Session = Depends(get_db),
-    id: uuid.UUID,
+    id: str,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()

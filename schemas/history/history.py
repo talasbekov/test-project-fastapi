@@ -219,7 +219,7 @@ class HistoryPersonalRead(ReadModel):
     cancel_document_link: Optional[str]
     document_number: Optional[str]
     name_of_organization: Optional[str]
-    user_id: uuid.UUID
+    user_id: str
     type: str
     coefficent: Optional[Decimal]
 
@@ -341,7 +341,7 @@ class RankServiceDetailRead(ReadNamedModel):
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     document_style: Optional[str]
-    rank_id: Optional[uuid.UUID]
+    rank_id: Optional[str]
 
     class Config:
         from_attributes=True
@@ -435,7 +435,7 @@ class CharacteristicRead(ReadModel):
     cancel_document_link: Optional[str]
     document_number: Optional[str]
     characteristic_initiator: Optional[str]
-    characteristic_initiator_id: Optional[uuid.UUID]
+    characteristic_initiator_id: Optional[str]
 
     class Config:
         from_attributes=True
@@ -493,11 +493,11 @@ class EmergencyContactRead(ReadModel):
     percentage: Optional[int]  # ПРОЦЕНТ
     staff_division: Optional[dict]
     position: Optional[dict]
-    position_id: Optional[uuid.UUID]
-    emergency_rank_id: Optional[uuid.UUID]
+    position_id: Optional[str]
+    emergency_rank_id: Optional[str]
     document_link: Optional[str]
     document_number: Optional[str]
-    staff_division_id: Optional[uuid.UUID]
+    staff_division_id: Optional[str]
     document_style: Optional[str]
     contractor_signer_name: Optional[dict]
 
@@ -663,14 +663,14 @@ class TypeOfOtherEquipmentModelRead(ReadNamedModel):
 
 class EquipmentRead(ReadModel):
     type_of_equipment: Optional[str]
-    user_id: Optional[uuid.UUID]
-    type_of_army_equipment_model_id: Optional[uuid.UUID]
+    user_id: Optional[str]
+    type_of_army_equipment_model_id: Optional[str]
     inventory_number: Optional[str]
     inventory_count: Optional[int]
     count_of_ammo: Optional[int]
     clothing_size: Optional[str]
-    cloth_eq_types_models_id: Optional[uuid.UUID]
-    type_of_other_equipment_model_id: Optional[uuid.UUID]
+    cloth_eq_types_models_id: Optional[str]
+    type_of_other_equipment_model_id: Optional[str]
     document_link: Optional[str]
     document_number: Optional[str]
     date_from: Optional[datetime]

@@ -11,7 +11,7 @@ from .option import OptionRead
 class QuestionBase(TextModel):
     is_required: Optional[bool]
     question_type: QuestionTypeEnum
-    survey_id: Optional[uuid.UUID]
+    survey_id: Optional[str]
     score: Optional[int]
 
 

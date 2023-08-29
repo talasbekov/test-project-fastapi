@@ -23,10 +23,10 @@ class DayRead(DayBase):
 
 
 class ScheduleDayBase(BaseModel):
-    day_id: Optional[uuid.UUID]
+    day_id: Optional[str]
     start_time: Optional[time]
     end_time: Optional[time]
-    month_id: Optional[uuid.UUID]
+    month_id: Optional[str]
 
     class Config:
         orm_mode = True
@@ -48,5 +48,5 @@ class ScheduleDayUpdate(ScheduleDayBase):
 
 
 class ScheduleDayRead(ScheduleDayBase):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     day: Optional[DayRead]

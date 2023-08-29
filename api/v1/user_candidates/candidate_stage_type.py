@@ -51,7 +51,7 @@ async def get_all(
 async def get_by_id(
         db: Session = Depends(get_db),
         Authorize: AuthJWT = Depends(),
-        id: uuid.UUID = None
+        id: str = None
 ):
     """
         Get a CandidateStageType by id.
@@ -86,7 +86,7 @@ async def create(
 async def update(
         db: Session = Depends(get_db),
         Authorize: AuthJWT = Depends(),
-        id: uuid.UUID = None,
+        id: str = None,
         body: CandidateStageTypeUpdate = None
 ):
     """
@@ -108,7 +108,7 @@ async def update(
 async def delete(
         db: Session = Depends(get_db),
         Authorize: AuthJWT = Depends(),
-        id: uuid.UUID = None
+        id: str = None
 ):
     """
         Delete a CandidateStageType.

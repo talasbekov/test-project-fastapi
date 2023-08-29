@@ -80,7 +80,7 @@ async def get_all_draft_candidates(
             summary="Get a Candidate by id")
 async def get_by_id(
         db: Session = Depends(get_db),
-        id: uuid.UUID = None,
+        id: str = None,
         Authorize: AuthJWT = Depends()
 ):
     """
@@ -117,7 +117,7 @@ async def create(
 async def update(
         db: Session = Depends(get_db),
         Authorize: AuthJWT = Depends(),
-        id: uuid.UUID = None,
+        id: str = None,
         body: CandidateUpdate = None
 ):
     """
@@ -141,7 +141,7 @@ async def update(
 async def update_essay(
         db: Session = Depends(get_db),
         Authorize: AuthJWT = Depends(),
-        id: uuid.UUID = None,
+        id: str = None,
         body: CandidateEssayUpdate = None
 ):
     """
@@ -159,7 +159,7 @@ async def update_essay(
 async def finish_candidate(
         db: Session = Depends(get_db),
         Authorize: AuthJWT = Depends(),
-        id: uuid.UUID = None,
+        id: str = None,
 ):
     """
         Finish studying the candidate.
@@ -178,7 +178,7 @@ async def finish_candidate(
 async def delete(
         db: Session = Depends(get_db),
         Authorize: AuthJWT = Depends(),
-        id: uuid.UUID = None
+        id: str = None
 ):
     """
         Delete a Candidate.

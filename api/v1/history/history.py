@@ -61,7 +61,7 @@ async def get_all_enums(*,
             summary="Get all Histories by user id")
 async def get_all_personal(*,
                            db: Session = Depends(get_db),
-                           user_id: uuid.UUID,
+                           user_id: str,
                            Authorize: AuthJWT = Depends(),
                            date_from: datetime.date = None,
                            skip: int = 0,
@@ -83,7 +83,7 @@ async def get_all_personal(*,
             summary="Get all Service and Details by user id")
 async def get_all_by_user_id(*,
                              db: Session = Depends(get_db),
-                             user_id: uuid.UUID,
+                             user_id: str,
                              Authorize: AuthJWT = Depends()
                              ):
     """
@@ -119,7 +119,7 @@ async def create(*,
             summary="Get History by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -160,7 +160,7 @@ async def get_all_by_type(*,
             summary="Update History")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: HistoryUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -180,7 +180,7 @@ async def update(*,
                summary="Delete History")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """
@@ -197,7 +197,7 @@ async def delete(*,
 async def get_all_by_type_and_user_id(*,
                                       db: Session = Depends(get_db),
                                       type: str,
-                                      user_id: uuid.UUID,
+                                      user_id: str,
                                       Authorize: AuthJWT = Depends(),
                                       skip: int = 0,
                                       limit: int = 10

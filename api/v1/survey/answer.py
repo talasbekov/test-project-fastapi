@@ -135,7 +135,7 @@ async def create(*,
             summary="Get Answer by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -152,7 +152,7 @@ async def get_by_id(*,
             summary="Update Answer")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: AnswerUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -174,7 +174,7 @@ async def update(*,
                summary="Delete Answer")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

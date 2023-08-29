@@ -34,7 +34,7 @@ async def get_all(*,
             response_model=FamilyRelationRead)
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     Authorize.jwt_required()

@@ -7,7 +7,7 @@ from schemas import NamedModel
 
 
 class ActivityBase(NamedModel):
-    parent_group_id: Optional[uuid.UUID]
+    parent_group_id: Optional[str]
     instructions: Optional[str]
 
     class Config:
@@ -24,7 +24,7 @@ class ActivityUpdate(ActivityBase):
 
 
 class ActivityChildRead(ActivityBase):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     children: Optional[List]
 
     @validator('children')
@@ -39,7 +39,7 @@ class ActivityChildRead(ActivityBase):
 
 
 class ActivityRead(ActivityBase):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     children: Optional[List['ActivityChildRead']]
 
     @validator('children')

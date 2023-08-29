@@ -43,7 +43,7 @@ async def get_all(*,
             summary="Get all Options by question id")
 async def get_by_question(*,
                           db: Session = Depends(get_db),
-                          question_id: uuid.UUID,
+                          question_id: str,
                           Authorize: AuthJWT = Depends()
                           ):
     """
@@ -78,7 +78,7 @@ async def create(*,
             summary="Get Option by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -95,7 +95,7 @@ async def get_by_id(*,
             summary="Update Option")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: OptionUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -117,7 +117,7 @@ async def update(*,
                summary="Delete Option")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

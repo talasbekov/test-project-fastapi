@@ -137,7 +137,7 @@ async def create_draft(*,
             summary="Get HrDocumentTemplate by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -205,7 +205,7 @@ async def update(*,
                summary="Delete HrDocumentTemplate")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """
@@ -220,7 +220,7 @@ async def delete(*,
 @router.get('/duplicate/{id}', status_code=status.HTTP_201_CREATED)
 async def duplicate(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     Authorize.jwt_required()

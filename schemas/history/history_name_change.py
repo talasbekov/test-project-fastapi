@@ -7,7 +7,7 @@ from schemas import Model, ReadModel
 class HistoryNameChangeBase(Model):
     name_before: Optional[str]
     name_after: Optional[str]
-    user_id: uuid.UUID
+    user_id: str
     name_type: str
 
     class Config:
@@ -26,5 +26,5 @@ class HistoryNameChangeUpdate(HistoryNameChangeBase):
 class HistoryNameChangeRead(HistoryNameChangeBase, ReadModel):
     name_before: Optional[str]
     name_after: Optional[str]
-    user_id: Optional[uuid.UUID]
+    user_id: Optional[str]
     name_type: Optional[str]

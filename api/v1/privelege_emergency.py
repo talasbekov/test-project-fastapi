@@ -83,7 +83,7 @@ async def get_all_forms(*,
             summary="Update Privelege Emergency")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: PrivelegeEmergencyUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -102,7 +102,7 @@ async def update(*,
             summary="Get Privelege Emergency Unit by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -119,7 +119,7 @@ async def get_by_id(*,
             summary="Get Privelege Emergency Unit by user id")
 async def get_by_user_id(*,
                          db: Session = Depends(get_db),
-                         id: uuid.UUID,
+                         id: str,
                          Authorize: AuthJWT = Depends()
                          ):
     """
@@ -136,7 +136,7 @@ async def get_by_user_id(*,
                summary="Delete Privelege Emergency ")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

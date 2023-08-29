@@ -11,7 +11,7 @@ class SpecialCheckBase(Model):
     issued_by: str
     date_of_issue: datetime
     document_link: Optional[AnyUrl]
-    profile_id: uuid.UUID
+    profile_id: str
 
     class Config:
         orm_mode = True
@@ -23,7 +23,7 @@ class SpecialCheckCreate(SpecialCheckBase):
 
 
 class SpecialCheckUpdate(SpecialCheckBase):
-    id: uuid.UUID
+    id: str
 
 
 class SpecialCheckRead(SpecialCheckBase, ReadModel):

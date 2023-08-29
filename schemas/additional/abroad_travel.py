@@ -11,12 +11,12 @@ from .country import CountryRead
 
 class AbroadTravelBase(Model):
     vehicle_type: str
-    destination_country_id: uuid.UUID
+    destination_country_id: str
     date_from: datetime
     date_to: datetime
     reason: str
     document_link: Optional[AnyUrl]
-    profile_id: Optional[uuid.UUID]
+    profile_id: Optional[str]
 
     class Config:
         orm_mode = True

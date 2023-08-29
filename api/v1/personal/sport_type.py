@@ -64,7 +64,7 @@ async def create(*,
             summary="Get SportType by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -79,7 +79,7 @@ async def get_by_id(*,
             summary="Update SportType by id")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: SportTypeUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -98,7 +98,7 @@ async def update(*,
                summary="Delete SportType by id")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

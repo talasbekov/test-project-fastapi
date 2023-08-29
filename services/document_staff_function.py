@@ -40,7 +40,7 @@ class DocumentStaffFunctionService(
 
         return staff_functions
 
-    def duplicate(self, db: Session, id: uuid.UUID):
+    def duplicate(self, db: Session, id: str):
         func = self.get_by_id(db, id)
 
         res = super().create(db, DocumentStaffFunctionCreate(
@@ -117,7 +117,7 @@ class DocumentStaffFunctionService(
         db.flush()
         return res
 
-    def get_staff_units_by_id(self, db: Session, id: uuid.UUID):
+    def get_staff_units_by_id(self, db: Session, id: str):
         staff_function = self.get_by_id(db, id)
         return [i.id for i in staff_function.staff_units]
 

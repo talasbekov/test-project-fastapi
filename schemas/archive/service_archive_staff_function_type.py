@@ -26,15 +26,15 @@ class NewServiceArchiveStaffFunctionTypeUpdate(
 
 class ServiceArchiveStaffFunctionTypeCreate(
         ServiceArchiveStaffFunctionTypeBase):
-    origin_id: Optional[uuid.UUID]
+    origin_id: Optional[str]
 
 
 class ServiceArchiveStaffFunctionTypeUpdate(
         ServiceArchiveStaffFunctionTypeBase):
-    origin_id: Optional[uuid.UUID]
+    origin_id: Optional[str]
 
 
 class ServiceArchiveStaffFunctionTypeRead(ServiceArchiveStaffFunctionTypeBase):
-    id: uuid.UUID
+    id: str
     created_at: datetime.datetime
     updated_at: datetime.datetime

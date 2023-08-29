@@ -35,7 +35,7 @@ router = APIRouter(
 async def get_not_signed(*,
                          db: Session = Depends(get_db),
                          Authorize: AuthJWT = Depends(),
-                         parent_id: uuid.UUID = None,
+                         parent_id: str = None,
                          filter: str = '',
                          skip: int = 0,
                          limit: int = 10,
@@ -62,7 +62,7 @@ async def get_not_signed(*,
 async def get_signed(*,
                      db: Session = Depends(get_db),
                      Authorize: AuthJWT = Depends(),
-                     parent_id: uuid.UUID = None,
+                     parent_id: str = None,
                      filter: str = '',
                      skip: int = 0,
                      limit: int = 10,
@@ -118,7 +118,7 @@ async def get_initialized(*,
 async def get_all(*,
                   db: Session = Depends(get_db),
                   Authorize: AuthJWT = Depends(),
-                  user_id: uuid.UUID = None,
+                  user_id: str = None,
                   filter: str = '',
                   skip: int = 0,
                   limit: int = 10,
@@ -270,7 +270,7 @@ async def initialize(*,
 async def get_draft_documents(*,
                               db: Session = Depends(get_db),
                               Authorize: AuthJWT = Depends(),
-                              parent_id: uuid.UUID = None,
+                              parent_id: str = None,
                               filter: str = '',
                               skip: int = 0,
                               limit: int = 10,
@@ -327,7 +327,7 @@ async def initialize_draft_document(*,
                         db: Session = Depends(get_db),
                         body: DraftHrDocumentCreate,
                         Authorize: AuthJWT = Depends(),
-                        id: uuid.UUID
+                        id: str
 ):
     """
         Initialize Draft HrDocument
@@ -387,7 +387,7 @@ async def update(*,
                summary="Delete HrDocument")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """
@@ -518,7 +518,7 @@ async def get_data_by_option(*,
 @router.get('/signee/{id}/', response_model=UserRead)
 async def get_signee(*,
                      db: Session = Depends(get_db),
-                     id: uuid.UUID,
+                     id: str,
                      Authorize: AuthJWT = Depends()
                      ):
     """
@@ -534,7 +534,7 @@ async def get_signee(*,
              summary="Initialize HrDocument from staff list")
 async def initialize_from_staff_list(*,
                                      db: Session = Depends(get_db),
-                                     id: uuid.UUID,
+                                     id: str,
                                      Authorize: AuthJWT = Depends()
                                      ):
     """

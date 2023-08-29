@@ -19,7 +19,7 @@ def is_owner(user_role: str):
 
 def is_valid_uuid(uuid_str):
     try:
-        uuid_obj = uuid.UUID(uuid_str, version=4)
+        uuid_obj = str(uuid_str, version=4)
     except ValueError:
         return False
     return str(uuid_obj) == uuid_str

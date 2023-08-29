@@ -23,12 +23,12 @@ class CoolnessService(ServiceBase[Coolness, CoolnessCreate, CoolnessUpdate]):
             self.model.user_id == user_id).first()
         return coolness
 
-    def create_relation(self, db: Session, user_id: str, type_id: uuid.UUID):
+    def create_relation(self, db: Session, user_id: str, type_id: str):
         coolness = super().create(db, CoolnessCreate(user_id=user_id, type_id=type_id))
         return coolness
 
     def get_by_option(
-        self, db: Session, type: str, id: uuid.UUID, skip: int, limit: int
+        self, db: Session, type: str, id: str, skip: int, limit: int
     ):
         if type == "write":
             return [
@@ -55,7 +55,7 @@ class CoolnessService(ServiceBase[Coolness, CoolnessCreate, CoolnessUpdate]):
         else:
             return db.query(Coolness).filter(Coolness.id == id).first().type
 
-    def stop_relation(self, db: Session, user_id: uuid.UUID, id: uuid.UUID):
+    def stop_relation(self, db: Session, user_id: str, id: str):
         res = (
             db.query(CoolnessHistory).filter(
                 CoolnessHistory.coolness_id == id).first()
@@ -70,7 +70,7 @@ class CoolnessService(ServiceBase[Coolness, CoolnessCreate, CoolnessUpdate]):
         return res
 
     def exists_relation(self, db: Session, user_id: str,
-                        coolness_type_id: uuid.UUID):
+                        coolness_type_id: str):
         return (
             db.query(Coolness)
             .filter(Coolness.user_id == user_id)
@@ -79,7 +79,7 @@ class CoolnessService(ServiceBase[Coolness, CoolnessCreate, CoolnessUpdate]):
         ) is not None
 
     def get_relation(self, db: Session, user_id: str,
-                     coolness_type_id: uuid.UUID):
+                     coolness_type_id: str):
         return (
             db.query(Coolness)
             .filter(Coolness.user_id == user_id)

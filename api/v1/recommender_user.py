@@ -67,7 +67,7 @@ async def create(*,
             summary="Get Recommender User by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -84,7 +84,7 @@ async def get_by_id(*,
             summary="Update Recommender User")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: RecommenderUserUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -105,7 +105,7 @@ async def update(*,
                summary="Delete Recommender User")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

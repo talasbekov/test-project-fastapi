@@ -119,7 +119,7 @@ class StaffUnitService(
         ).all()
 
     def get_by_option(self, db: Session,
-                      type: str, id: uuid.UUID, skip: int, limit: int):
+                      type: str, id: str, skip: int, limit: int):
         staff_units = super().get_multi(db, skip, limit)
         return [StaffUnitRead.from_orm(item).dict() for item in staff_units]
 
@@ -136,7 +136,7 @@ class StaffUnitService(
         return staff_unit
 
     def exists_relation(self, db: Session, user_id: str,
-                        staff_unit_id: uuid.UUID):
+                        staff_unit_id: str):
         return (
             db.query(StaffUnit)
             .join(StaffUnit.users)
@@ -178,7 +178,7 @@ class StaffUnitService(
             )
             .first())
 
-    def get_last_history(self, db: Session, user_id: uuid.UUID):
+    def get_last_history(self, db: Session, user_id: str):
         return (
             db.query(EmergencyServiceHistory)
             .filter(
@@ -190,7 +190,7 @@ class StaffUnitService(
         )
 
     def create_from_archive(self, db: Session, archive_staff_unit: ArchiveStaffUnit,
-                            staff_division_id: uuid.UUID):
+                            staff_division_id: str):
         res = super().create(
             db, StaffUnitCreate(
                 position_id=archive_staff_unit.position_id,
@@ -204,7 +204,7 @@ class StaffUnitService(
         return res
 
     def update_from_archive(self, db: Session, archive_staff_unit: ArchiveStaffUnit,
-                            staff_division_id: uuid.UUID):
+                            staff_division_id: str):
         staff_unit = self.get_by_id(db, archive_staff_unit.origin_id)
         res = super().update(
             db,
@@ -222,7 +222,7 @@ class StaffUnitService(
 
     def create_or_update_from_archive(self, db: Session,
                                       archive_staff_unit: ArchiveStaffUnit,
-                                      staff_division_id: uuid.UUID):
+                                      staff_division_id: str):
         if archive_staff_unit.origin_id is None:
             return self.create_from_archive(
                 db, archive_staff_unit, staff_division_id)
@@ -230,7 +230,7 @@ class StaffUnitService(
             db, archive_staff_unit, staff_division_id)
 
     def make_all_inactive(self, db: Session,
-                          exclude_ids: list[uuid.UUID] = []):
+                          exclude_ids: list[str] = []):
         (db.query(self.model)
          .filter(
             self.model.staff_division_id.not_in(exclude_ids)
@@ -239,33 +239,33 @@ class StaffUnitService(
         db.flush()
 
     def delete_all_inactive(self, db: Session,
-                            exclude_ids: list[uuid.UUID] = []):
+                            exclude_ids: list[str] = []):
         db.query(self.model).filter(
             self.model.staff_division_id.not_in(exclude_ids),
             self.model.is_active == False
         ).update({self.model.staff_division_id: None})
         db.flush()
 
-    def get_all(self, db: Session, users: list[uuid.UUID]):
+    def get_all(self, db: Session, users: list[str]):
         return db.query(self.model).filter(
             self.model.users.any(User.id.in_(users))
         ).all()
 
     def get_service_staff_functions(
-            self, db: Session, staff_unit_id: uuid.UUID):
+            self, db: Session, staff_unit_id: str):
         staff_unit = self.get_by_id(db, staff_unit_id)
         return service_staff_function_service.get_by_staff_unit(db, staff_unit)
 
     def get_document_staff_functions(
-            self, db: Session, staff_unit_id: uuid.UUID):
+            self, db: Session, staff_unit_id: str):
         staff_unit = self.get_by_id(db, staff_unit_id)
         return document_staff_function_service.get_by_staff_unit(
             db, staff_unit)
 
     def has_staff_function(self,
                            db: Session,
-                           staff_unit_id: uuid.UUID,
-                           staff_function_id: uuid.UUID):
+                           staff_unit_id: str,
+                           staff_function_id: str):
         return db.query(StaffUnit).filter(
             StaffUnit.id == staff_unit_id,
             StaffUnit.staff_functions.any(id=staff_function_id)
@@ -301,7 +301,7 @@ class StaffUnitService(
 
     def _add_document_staff_function_to_curator(self,
                                                 db: Session,
-                                                department: uuid.UUID,
+                                                department: str,
                                                 staff_function_ids: list):
         """
             Эта функция добавляет должностную функцию
@@ -330,7 +330,7 @@ class StaffUnitService(
 
     def _add_document_staff_function_to_head_of_department(self,
                                                            db: Session,
-                                                           department: uuid.UUID,
+                                                           department: str,
                                                            staff_function_ids: list):
         """
             Эта функция добавляет должностную функцию
@@ -355,7 +355,7 @@ class StaffUnitService(
 
     def _add_document_staff_function_to_irrelevant_head(self,
                                                         db: Session,
-                                                        department: uuid.UUID,
+                                                        department: str,
                                                         staff_function_ids: list):
         """
             Эта функция добавляет должностную функцию в штатную единицу по должности

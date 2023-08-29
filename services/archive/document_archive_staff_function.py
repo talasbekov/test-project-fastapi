@@ -29,7 +29,7 @@ class DocumentArchiveStaffFunction(
             self,
             db: Session,
             staff_function: DocumentStaffFunction,
-            role_id: uuid.UUID):
+            role_id: str):
         return super().create(db, ArchiveDocumentStaffFunctionCreate(
             name=staff_function.name,
             nameKZ=staff_function.nameKZ,

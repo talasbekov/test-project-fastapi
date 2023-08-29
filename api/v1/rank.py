@@ -64,7 +64,7 @@ async def create(*,
             summary="Get Rank by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -81,7 +81,7 @@ async def get_by_id(*,
             summary="Update Rank")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: RankUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -103,7 +103,7 @@ async def update(*,
                summary="Delete Rank")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """

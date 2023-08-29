@@ -33,7 +33,7 @@ class HrVacancyService(
     def get_by_staff_division(self,
                           db: Session,
                           staff_division_id: str,
-                          user_id: uuid.UUID
+                          user_id: str
                           ):
 
         staff_division = staff_division_service.get_by_id(
@@ -89,7 +89,7 @@ class HrVacancyService(
         return hr_vacancy
 
     def get_by_staff_unit(self, db: Session,
-                          staff_unit_id: uuid.UUID) -> HrVacancy:
+                          staff_unit_id: str) -> HrVacancy:
         hr_vacancy = db.query(self.model).filter(
             self.model.staff_unit_id == staff_unit_id
         ).first()

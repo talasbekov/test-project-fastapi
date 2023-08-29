@@ -11,7 +11,7 @@ from .language_proficiency import LanguageProficiencyRead
 
 
 class EducationalProfileBase(BaseModel):
-    profile_id: Optional[uuid.UUID]
+    profile_id: Optional[str]
 
     class Config:
         orm_mode = True
@@ -27,8 +27,8 @@ class EducationalProfileUpdate(EducationalProfileBase):
 
 
 class EducationalProfileRead(EducationalProfileBase):
-    id: Optional[uuid.UUID]
-    profile_id: Optional[uuid.UUID]
+    id: Optional[str]
+    profile_id: Optional[str]
 
     academic_degree: Optional[List[AcademicDegreeRead]]
     academic_title: Optional[List[AcademicTitleRead]]

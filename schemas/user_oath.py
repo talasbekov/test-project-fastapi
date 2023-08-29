@@ -9,8 +9,8 @@ from schemas import Model, ReadModel
 
 class UserOath(Model):
     date: Optional[datetime]
-    user_id: uuid.UUID
-    military_unit_id: uuid.UUID
+    user_id: str
+    military_unit_id: str
 
     class Config:
         orm_mode = True

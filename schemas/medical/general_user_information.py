@@ -10,7 +10,7 @@ class GeneralUserInformationBase(BaseModel):
     height: int
     blood_group: str
     age_group: AgeGroup
-    profile_id: uuid.UUID
+    profile_id: str
     weight: int
 
     class Config:
@@ -27,11 +27,11 @@ class GeneralUserInformationUpdate(GeneralUserInformationBase):
 
 
 class GeneralUserInformationRead(GeneralUserInformationBase):
-    id: Optional[uuid.UUID]
+    id: Optional[str]
     height: Optional[int]
     blood_group: Optional[str]
     age_group: Optional[AgeGroup]
-    profile_id: Optional[uuid.UUID]
+    profile_id: Optional[str]
     weight: Optional[int]
 
     class Config:

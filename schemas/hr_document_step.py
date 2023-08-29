@@ -6,8 +6,8 @@ from schemas import (DocumentStaffFunctionRead, JurisdictionRead)
 
 
 class HrDocumentStepBase(Model):
-    hr_document_template_id: uuid.UUID
-    staff_function_id: uuid.UUID
+    hr_document_template_id: str
+    staff_function_id: str
     is_direct_supervisor: Optional[bool] = None
     category: Optional[int] = None
 
@@ -21,10 +21,10 @@ class HrDocumentStepUpdate(HrDocumentStepBase):
 
 
 class HrDocumentStepRead(HrDocumentStepBase, ReadModel):
-    hr_document_template_id: Optional[uuid.UUID]
-    staff_function_id: Optional[uuid.UUID]
+    hr_document_template_id: Optional[str]
+    staff_function_id: Optional[str]
     staff_function: Optional[DocumentStaffFunctionRead]
-    jurisdiction_id: Optional[uuid.UUID]
+    jurisdiction_id: Optional[str]
     jurisdiction: Optional[JurisdictionRead]
 
     class Config:

@@ -48,7 +48,7 @@ async def get_all(*,
             summary="Get DocumentStaffFunction by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -65,7 +65,7 @@ async def get_by_id(*,
             summary="Update DocumentStaffFunction")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: DocumentStaffFunctionUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -85,7 +85,7 @@ async def update(*,
                summary="Delete DocumentStaffFunction")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """
@@ -101,7 +101,7 @@ async def delete(*,
              response_model=DocumentStaffFunctionRead)
 def duplicate(*,
               db: Session = Depends(get_db),
-              id: uuid.UUID,
+              id: str,
               Authorize: AuthJWT = Depends()
               ):
     Authorize.jwt_required()
@@ -134,7 +134,7 @@ async def create_function_for_constructor(*,
 @router.get('/staff_unit/{id}')
 async def get_staff_units_by_id(*,
                                 db: Session = Depends(get_db),
-                                id: uuid.UUID,
+                                id: str,
                                 Authorize: AuthJWT = Depends()
                                 ):
     Authorize.jwt_required()

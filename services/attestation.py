@@ -10,5 +10,5 @@ from .base import ServiceBase
 class AttestationService(
         ServiceBase[Attestation, AttestationCreate, AttestationUpdate]):
 
-    def create_relation(self, db: Session, user_id: uuid.UUID, value):
+    def create_relation(self, db: Session, user_id: str, value):
         pass

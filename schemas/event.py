@@ -6,7 +6,7 @@ from schemas import NamedModel, ReadNamedModel
 
 
 class EventBase(NamedModel):
-    user_id: uuid.UUID
+    user_id: str
     date_since: datetime
     date_to: datetime
 
@@ -20,7 +20,7 @@ class EventUpdate(EventBase):
 
 
 class EventRead(EventBase, ReadNamedModel):
-    user_id: Optional[uuid.UUID]
+    user_id: Optional[str]
     date_since: Optional[datetime]
     date_to: Optional[datetime]
 

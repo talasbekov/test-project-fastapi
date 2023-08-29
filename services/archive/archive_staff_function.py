@@ -37,7 +37,7 @@ class ArchiveStaffFunctionService(
                 detail=f"ArchiveStaffFunction with id: {id} is not found!")
         return service_staff_function
 
-    def exists_by_origin_id(self, db: Session, origin_id: uuid.UUID):
+    def exists_by_origin_id(self, db: Session, origin_id: str):
         return db.query(self.model).filter(
             self.model.origin_id == origin_id
         ).first() is not None

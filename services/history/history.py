@@ -145,7 +145,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         return db.query(self.model).filter(self.model.type == type)
 
     def get_all_by_type_and_user_id(
-            self, db: Session, type: str, user_id: uuid.UUID, skip: int, limit: int):
+            self, db: Session, type: str, user_id: str, skip: int, limit: int):
         if type == 'beret_history':
             black_beret = badge_service.get_black_beret_by_user_id(db, user_id)
             if black_beret is None:
@@ -382,7 +382,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
 
         return general_information_read
 
-    def create_history(self, db: Session, user_id: uuid.UUID, object):
+    def create_history(self, db: Session, user_id: str, object):
         diff = classes.get(type(object))
         if diff is None:
             raise NotSupportedException(
@@ -396,7 +396,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
     def create_timeline_history(
         self,
         db: Session,
-        user_id: uuid.UUID,
+        user_id: str,
         object,
         date_from: datetime,
         date_to: datetime,
@@ -418,7 +418,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             db, user_id, object.id, finish_last, date_from, date_to
         )
 
-    def update(self, db: Session, id: uuid.UUID, object: HistoryUpdate):
+    def update(self, db: Session, id: str, object: HistoryUpdate):
         history = self.get_by_id(db, id)
         if history is None:
             raise NotFoundException(
@@ -429,7 +429,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         db.flush()
         return history
 
-    def get_all_personal(self, db: Session, user_id: uuid.UUID,
+    def get_all_personal(self, db: Session, user_id: str,
                          date_from, skip: int = 0, limit: int = 100):
         if date_from is None:
             histories = (

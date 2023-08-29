@@ -5,17 +5,19 @@ services:
     image: rabbitmq:3.9.4
     container_name: rabbitmq
     ports:
-      - '5672:5673'
+      - '5672:5672'
     restart: always
-    network_mode: "oracle"
+    networks:
+      - backend-dev
 
   redis:
     image: redis
     container_name: redis
     ports:
-      - '6379:6380'
+      - '6379:6379'
     restart: always
-    network_mode: "oracle"
+    networks:
+      - backend-dev
 
   celery:
     build:
@@ -30,7 +32,8 @@ services:
       - C_FORCE_ROOT=false
       - CELERY_BROKER_URL=amqp://rabbitmq:5672/
     restart: always
-    network_mode: "oracle"
+    networks:
+      - backend-dev
     
   celery-beat:
     build:
@@ -43,7 +46,8 @@ services:
     environment:
       - CELERY_BROKER_URL=amqp://rabbitmq:5672/
     restart: always
-    network_mode: "oracle"
+    networks:
+      - backend-dev
     volumes:
       - .:/app
 
@@ -55,10 +59,11 @@ services:
     ports:
       - "5555:5556"
     restart: always
-    network_mode: "oracle"
+    networks:
+      - backend-dev
     depends_on:
       - rabbitmq
 
-#networks:
-#  backend-oracle:
-#    driver: bridge
+networks:
+  backend-dev:
+    driver: bridge

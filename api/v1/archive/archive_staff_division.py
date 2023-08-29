@@ -31,7 +31,7 @@ router = APIRouter(
             summary="Get all Staff Divisions")
 async def get_all(*,
                   db: Session = Depends(get_db),
-                  staff_list_id: uuid.UUID,
+                  staff_list_id: str,
                   skip: int = 0,
                   limit: int = 100,
                   Authorize: AuthJWT = Depends()
@@ -56,7 +56,7 @@ async def get_all(*,
             summary="Get Staff Division one level by id")
 async def get_all_one_level_for_id(*,
                   db: Session = Depends(get_db),
-                  staff_division_id: uuid.UUID,
+                  staff_division_id: str,
                   Authorize: AuthJWT = Depends()
                   ):
     """
@@ -72,7 +72,7 @@ async def get_all_one_level_for_id(*,
             summary="Get Archive Staff Division and all his parents")
 async def get_division_parents_by_id(*,
                                      db: Session = Depends(get_db),
-                                     id: uuid.UUID,
+                                     id: str,
                                      Authorize: AuthJWT = Depends()
                                      ):
     """
@@ -109,7 +109,7 @@ async def create(*,
             summary="Duplicate Staff Division by id")
 async def duplicate(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -126,7 +126,7 @@ async def duplicate(*,
             summary="Get Staff Division by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
-                    id: uuid.UUID,
+                    id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -143,7 +143,7 @@ async def get_by_id(*,
             summary="Update Staff Division")
 async def update(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  body: NewArchiveStaffDivisionUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
@@ -166,7 +166,7 @@ async def update(*,
              summary="Update parent of Staff Division")
 async def update_parent(*,
                         db: Session = Depends(get_db),
-                        id: uuid.UUID,
+                        id: str,
                         body: ArchiveStaffDivisionUpdateParentGroup,
                         Authorize: AuthJWT = Depends()
                         ):
@@ -185,7 +185,7 @@ async def update_parent(*,
                summary="Delete Staff Division")
 async def delete(*,
                  db: Session = Depends(get_db),
-                 id: uuid.UUID,
+                 id: str,
                  Authrorize: AuthJWT = Depends()
                  ):
     """
