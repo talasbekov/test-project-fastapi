@@ -10,7 +10,7 @@ from .association import (
 )
 
 class Month(NamedModel):
-    order = Column(Integer)
+    month_order = Column(Integer)
     __tablename__ = 'hr_erp_months'
 
 
@@ -24,9 +24,9 @@ class ScheduleYear(Model):
     # Properties
     plan_id = Column(String(), ForeignKey('hr_erp_bsp_plans.id'))
     activity_id = Column(String(), ForeignKey('hr_erp_activities.id'))
-    is_exam_required = Column(Boolean)
+    is_exam_required = Column(Boolean())
     retry_count = Column(Integer)
-    is_active = Column(Boolean)
+    is_active = Column(Boolean())
 
     # Relationships
     staff_divisions = relationship(

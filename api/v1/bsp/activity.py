@@ -106,4 +106,4 @@ async def delete(*,
 
     """
     Authorize.jwt_required()
-    return activity_service.remove(db, str(id))
+    return activity_service.remove(db, id)

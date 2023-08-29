@@ -14,7 +14,9 @@ from schemas import (AttendanceRead,
                      AttendancePercentageRead,
                      AttendanceChangeStatus,
                      AttendanceChangeStatusWithSchedule,
-                     UserShortRead,)
+                     UserShortRead,
+                     AttendanceReadPagination,
+                     AttendedUserRead,)
 
 from services import attendance_service, attended_user_service
 
@@ -46,6 +48,43 @@ async def get_all(*,
     Authorize.jwt_required()
     return attendance_service.get_multi(db, skip, limit)
 
+@router.get("/nearest", dependencies=[Depends(HTTPBearer())],
+            response_model=AttendanceReadPagination,
+            summary="Get all nearest Attendances")
+async def get_all_nearest(*,
+                  db: Session = Depends(get_db),
+                  skip: int = 0,
+                  limit: int = 100,
+                  is_mine: bool = False,
+                  Authorize: AuthJWT = Depends()
+                  ):
+    """
+       Get all Attendance
+
+    - **skip**: int - The number of Attendance
+        to skip before returning the results.
+        This parameter is optional and defaults to 0.
+    - **limit**: int - The maximum number of Attendance
+        to return in the response.
+        This parameter is optional and defaults to 100.
+   """
+    Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
+    return attendance_service.get_nearest_attendances(db, is_mine, user_id, skip, limit)
+
+@router.get("/users/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=List[AttendedUserRead],
+            summary="Get all users in Attendance")
+async def get_attendance_users(*,
+                  db: Session = Depends(get_db),
+                  Authorize: AuthJWT = Depends(),
+                  id: uuid.UUID
+                  ):
+    """
+       Get all users by attendance
+   """
+    Authorize.jwt_required()
+    return attendance_service.get_attendance_users(db, id)
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=AttendanceRead,
@@ -77,7 +116,7 @@ async def get_attendance_percentage(*,
     """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
-    return attendance_service.get_percentage_by_user_id(db, str(user_id))
+    return attendance_service.get_percentage_by_user_id(db, user_id)
 
 @router.get("/absent/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=List[UserShortRead],
@@ -93,7 +132,7 @@ async def get_absent_users(*,
         - **id**: UUID - required. ScheduleYear id
     """
     Authorize.jwt_required()
-    return attendance_service.get_absent_users(db, str(id))
+    return attendance_service.get_absent_users(db, id)
 
 
 @router.post("/", dependencies=[Depends(HTTPBearer())],
@@ -123,8 +162,8 @@ async def change_attendance_status(*,
 
     """
     Authorize.jwt_required()
-    attendance_service.get_by_id(db, body.attendance_id)
-    return attended_user_service.change_attendance_status(db, body)
+    attendance_service.get_by_id(db, str(body.attendance_id))
+    attended_user_service.change_attendance_status(db, body)
 
 @router.post("/status_change/schedule", dependencies=[Depends(HTTPBearer())],
             summary="Change Attendance status by schedule and date")
@@ -172,4 +211,4 @@ async def delete(*,
 
     """
     Authorize.jwt_required()
-    return attendance_service.remove(db, str(id))
+    return attendance_service.remove(db, id)

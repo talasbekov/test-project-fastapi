@@ -1,3 +1,5 @@
+from datetime import timedelta, datetime
+
 # Define the number of days in each month as a list
 days_in_month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
@@ -24,3 +26,30 @@ def convert_days(days):
             break
 
     return years, months, remaining_days
+
+
+def get_iso_weekdays_between_dates(start_date, end_date, target_iso_weekday):
+    # Convert the start_date and end_date to datetime objects
+    start_datetime = datetime.combine(start_date, datetime.min.time())
+    end_datetime = datetime.combine(end_date, datetime.min.time())
+
+    current_date = start_datetime + timedelta(
+        days=(target_iso_weekday - start_datetime.isoweekday() + 7) % 7)
+
+    iso_weekdays = []
+
+    while current_date <= end_datetime:
+        iso_weekdays.append(current_date.strftime("%Y-%m-%d"))
+        current_date += timedelta(days=7)
+
+    return iso_weekdays
+
+
+def get_last_date_of_month(year, month):
+    if month == 12:
+        last_date = datetime(year, month, 31)
+    else:
+        last_date = datetime(year, month + 1, 1) + timedelta(days=-1)
+
+    return last_date.strftime("%Y-%m-%d")
+

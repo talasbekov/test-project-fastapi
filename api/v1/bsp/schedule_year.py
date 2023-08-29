@@ -12,8 +12,9 @@ from schemas import (ScheduleYearRead,
                      ScheduleYearCreateString,
                      ScheduleYearReadPagination)
 
-from services import schedule_year_service, plan_service
-
+from services import (schedule_year_service,
+                      plan_service,
+                      staff_division_service)
 
 router = APIRouter(prefix="/schedule_year",
                    tags=["ScheduleYear"],
@@ -79,6 +80,25 @@ async def get_all_by_staff_division(*,
    """
     Authorize.jwt_required()
     return schedule_year_service.get_all_by_division_id(db, str(id))
+
+@router.get("/division_plan/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=ScheduleYearReadPagination,
+            summary="Get all ScheduleYear by staff_division_id and plan_id")
+async def get_all_by_staff_division_and_plan(*,
+                  db: Session = Depends(get_db),
+                  id: uuid.UUID,
+                  plan_id: uuid.UUID,
+                  Authorize: AuthJWT = Depends()
+                  ):
+    """
+       Get all ScheduleYears by staff_division_id and plan_id
+
+   """
+    Authorize.jwt_required()
+    staff_division_service.get_by_id(db, str(id))
+    plan_service.get_by_id(db, str(plan_id))
+    return schedule_year_service.get_all_by_division_id_and_plan_id(db, id, plan_id)
+
 
 @router.get("/year/", dependencies=[Depends(HTTPBearer())],
             response_model=ScheduleYearReadPagination,

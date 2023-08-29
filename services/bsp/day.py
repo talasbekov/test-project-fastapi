@@ -1,6 +1,7 @@
 from typing import List
 
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 
 from models import Day
 from schemas import DayCreate, DayUpdate
@@ -12,7 +13,7 @@ class DayService(ServiceBase[Day,
                              DayUpdate]):
     def get_day_by_name(self, db: Session, name: List[str]):
         day = (db.query(Day)
-               .filter(Day.name == name)
+               .filter(func.to_char(Day.name) == name)
                .order_by(Day.created_at.desc())
                .first())
         return day
