@@ -14,7 +14,7 @@ from .exam import ExamScheduleRead
 
 
 class MonthBase(NamedModel):
-    order: Optional[int]
+    month_order: Optional[int]
 
 
 class MonthCreate(MonthBase):

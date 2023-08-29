@@ -5,9 +5,26 @@ from datetime import date
 from schemas import (BaseModel,
                      NamedModel,
                      UserShortReadStatus,
-                     StaffDivisionReadWithoutStaffUnit, )
+                     StaffDivisionReadWithoutStaffUnit,)
 from .activity import ActivityRead
 from .schedule_day import ScheduleDayRead, ScheduleDayCreateWithString
+
+
+def get_nearest_future_date(date_array):
+    current_date = date.today()
+    sorted_dates = sorted(
+    date_array,
+    key=lambda x: x.activity_date
+    )
+    for date_obj in sorted_dates:
+        activity_date = date_obj.activity_date
+        print('activity_date:', activity_date, 'type:', type(activity_date))
+        print('current_date:', current_date, 'type:', type(current_date))
+        if activity_date > current_date:
+            print('obj:', activity_date, 'type:', type(activity_date))
+            return activity_date
+
+    return None
 
 
 class PlaceBase(NamedModel):
@@ -47,7 +64,7 @@ class ScheduleMonthCreate(ScheduleMonthBase):
 
 class ScheduleMonthCreateWithDay(ScheduleMonthBase):
     days: List[ScheduleDayCreateWithString]
-    instructor_ids: List[Optional[str]]
+    instructor_ids: Optional[List[Optional[str]]]
 
 
 class ScheduleMonthUpdate(ScheduleMonthBase):
@@ -62,9 +79,14 @@ class ScheduleMonthRead(ScheduleMonthBase):
     activity: Optional[ActivityRead]
     staff_divisions: Optional[List[StaffDivisionReadWithoutStaffUnit]]
     activity_months: Optional[List[MonthRead]]
+    nearest_date: Optional[date]
 
     @classmethod
     def from_orm(cls, orm_obj):
+        all_dates = []
+        for day in orm_obj.days:
+            all_dates.extend(day.activity_dates)
+        nearest_date = get_nearest_future_date(all_dates)
         return cls(
             id=orm_obj.id,
             start_date=orm_obj.start_date,
@@ -79,5 +101,6 @@ class ScheduleMonthRead(ScheduleMonthBase):
             staff_divisions=(orm_obj.schedule.staff_divisions
                              if orm_obj.schedule else None),
             activity_months=(orm_obj.schedule.activity_months
-                             if orm_obj.schedule else None)
+                             if orm_obj.schedule else None),
+            nearest_date=nearest_date
         )

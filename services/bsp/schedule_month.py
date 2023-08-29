@@ -1,18 +1,31 @@
 import datetime
+import json
 import uuid
 
-from sqlalchemy import extract
+from sqlalchemy import extract, or_, and_, func
+from sqlalchemy.sql import text
 from sqlalchemy.orm import Session
+from utils import get_iso_weekdays_between_dates
 
-from models import ScheduleMonth, ScheduleDay, ScheduleYear, User, Day
+from models import (ScheduleMonth,
+                    ScheduleDay,
+                    ScheduleYear,
+                    User,
+                    Day,
+                    ActivityDate,)
 from schemas import (ScheduleMonthCreate,
                      ScheduleMonthUpdate,
                      ScheduleMonthCreateWithDay,
-                     ScheduleDayCreate)
+                     ScheduleDayCreate,
+                     ActivityDateCreate,)
+
 from services.base import ServiceBase
+
 from .schedule_day import schedule_day_service
+from .activity_date import activity_day_service
 from .day import day_service
-from .. import user_service
+from .month import month_service
+from services import user_service
 
 
 class ScheduleMonthService(ServiceBase[ScheduleMonth,
@@ -27,34 +40,53 @@ class ScheduleMonthService(ServiceBase[ScheduleMonth,
                      .offset(skip)
                      .limit(limit)
                      .all())
+        for schedule_month in schedules:
+            for group in schedule_month.schedule.staff_divisions:
+                if isinstance(group.description, str):
+                    group.description = json.loads(group.description)
 
         return schedules
 
     def create(self, db: Session, body: ScheduleMonthCreateWithDay):
-        schedule_month = super().create(db,
-                                        ScheduleMonthCreate(
-                                            start_date=body.start_date,
-                                            end_date=body.end_date,
-                                            place_id=body.place_id,
-                                            schedule_id=body.schedule_id
-                                        ))
-
-        instructors = [user_service.get_by_id(db, user_id)
-                       for user_id in body.instructor_ids]
-        schedule_month.instructors = instructors
-
-        for schedule_day in body.days:
-            day = day_service.get_day_by_name(db, schedule_day.day)
-            schedule_day_service.create(db,
-                                        ScheduleDayCreate(
-                                            day_id=day.id,
-                                            start_time=schedule_day.start_time,
-                                            end_time=schedule_day.end_time,
-                                            month_id=schedule_month.id
-                                        ))
+        # schedule_month = super().create(db,
+        #                                 ScheduleMonthCreate(
+        #                                     start_date=body.start_date,
+        #                                     end_date=body.end_date,
+        #                                     place_id=body.place_id,
+        #                                     schedule_id=body.schedule_id
+        #                                 ))
+        params = {'start_date': str(body.start_date),
+                  'end_date': str(body.end_date),
+                  'place_id': str(body.place_id),
+                  'schedule_id': str(body.schedule_id),
+                  'id': str(uuid.uuid4())}
+        db.execute(text("""
+                        INSERT INTO HR_ERP_SCHEDULE_MONTHS
+                        (start_date, end_date, place_id, schedule_id, id)
+                        VALUES(TO_DATE(:start_date, 'YYYY-MM-DD'),
+                               TO_DATE(:end_date, 'YYYY-MM-DD'),
+                               :place_id,
+                               :schedule_id,
+                               :id)
+                        """),
+                   params)
+        db.flush()
+        schedule_month = self.get_by_id(db, params['id'])
+        if body.instructor_ids != [] and body.instructor_ids is not None:
+            instructors = [user_service.get_by_id(db, str(user_id))
+                           for user_id in body.instructor_ids]
+            schedule_month.instructors = instructors
 
         db.add(schedule_month)
         db.flush()
+
+        schedule_day_service.create_schedule_days(db, schedule_month, body.days)
+
+        db.commit()
+
+        for group in schedule_month.schedule.staff_divisions:
+            if isinstance(group.description, str):
+                group.description = json.loads(group.description)
 
         return schedule_month
 
@@ -63,26 +95,31 @@ class ScheduleMonthService(ServiceBase[ScheduleMonth,
                               user_id: str,
                               limit: int):
         current_time = datetime.datetime.now().time()
-        today_weekday = datetime.date.today().isoweekday()
-
-        schedule_days = (db.query(ScheduleDay.id)
-                         .join(Day)
-                         .filter(Day.order >= today_weekday,
-                                 ScheduleDay.start_time > current_time)
-                         .order_by(Day.order, ScheduleDay.start_time)
-                         .limit(limit)
-                         .subquery()
-                         )
+        current_date = datetime.date.today()
 
         closest_schedules = (db.query(ScheduleMonth)
                              .join(ScheduleMonth.days)
                              .join(ScheduleYear)
                              .join(ScheduleYear.users)
+                             .join(ScheduleDay.activity_dates)
+                             .join(Day)
+                             .filter(or_((ActivityDate.activity_date > current_date),
+                                     and_(ActivityDate.activity_date == current_date,
+                                          func.to_char(ScheduleDay.start_time, 'HH24:MI:SS') > str(current_time)))
+                                     )
+                             .filter(ScheduleMonth.end_date >= current_date)
                              .filter(User.id == user_id,
-                                     ScheduleDay.id.in_(schedule_days),
                                      ScheduleYear.is_active == True)
+                             .order_by(ActivityDate.activity_date,
+                                       func.to_char(ScheduleDay.start_time, 'HH24:MI:SS'))
+                             .limit(limit)
                              .all()
                              )
+
+        for schedule_month in closest_schedules:
+            for group in schedule_month.schedule.staff_divisions:
+                if isinstance(group.description, str):
+                    group.description = json.loads(group.description)
 
         return closest_schedules
 
@@ -91,15 +128,22 @@ class ScheduleMonthService(ServiceBase[ScheduleMonth,
                               db: Session,
                               user_id: str,
                               month_number: int):
+        current_year = datetime.date.today().year
         schedules = (
             db.query(ScheduleMonth)
             .join(ScheduleYear)
             .join(ScheduleYear.users)
             .filter(User.id == user_id,
                     extract('month', ScheduleMonth.start_date) == month_number,
+                    extract('year', ScheduleMonth.start_date) == current_year,
                     ScheduleYear.is_active == True)
             .all()
         )
+
+        for schedule_month in schedules:
+            for group in schedule_month.schedule.staff_divisions:
+                if isinstance(group.description, str):
+                    group.description = json.loads(group.description)
 
         return schedules
 
@@ -115,6 +159,10 @@ class ScheduleMonthService(ServiceBase[ScheduleMonth,
                     ScheduleYear.is_active == True)
             .first()
         )
+        if schedule is not None and schedule.schedule is not None:
+            for group in schedule.schedule.staff_divisions:
+                if isinstance(group.description, str):
+                    group.description = json.loads(group.description)
 
         return schedule
 
@@ -128,6 +176,11 @@ class ScheduleMonthService(ServiceBase[ScheduleMonth,
             .all()
         )
 
+        for schedule_month in schedules:
+            for group in schedule_month.schedule.staff_divisions:
+                if isinstance(group.description, str):
+                    group.description = json.loads(group.description)
+
         return schedules
 
 
@@ -136,27 +189,28 @@ class ScheduleMonthService(ServiceBase[ScheduleMonth,
                             user_id: str,
                             date: datetime.date,
                             limit: int):
-        date_weekday = date.isoweekday()
-
-        schedule_days = (db.query(ScheduleDay.id)
-                         .join(Day)
-                         .filter(Day.order == date_weekday)
-                         .order_by(ScheduleDay.start_time)
-                         .limit(limit)
-                         .subquery()
-                         )
-
         schedules = (db.query(ScheduleMonth)
-                     .join(ScheduleMonth.days)
-                     .join(ScheduleYear)
-                     .join(ScheduleYear.users)
-                     .filter(User.id == user_id,
-                             ScheduleDay.id.in_(schedule_days),
-                             ScheduleYear.is_active == True,
-                             ScheduleMonth.start_date <= date,
-                             ScheduleMonth.end_date >= date)
-                     .all()
-                     )
+                             .join(ScheduleMonth.days)
+                             .join(ScheduleYear)
+                             .join(ScheduleYear.users)
+                             .join(ScheduleDay.activity_dates)
+                             .join(Day)
+                             .filter(ActivityDate.activity_date == date,
+                                     ScheduleMonth.start_date <= date,
+                                     ScheduleMonth.end_date >= date,
+                                     )
+                             .filter(User.id == user_id,
+                                     ScheduleYear.is_active == True)
+                             .order_by(ActivityDate.activity_date,
+                                       func.to_char(ScheduleDay.start_time, 'HH24:MI:SS'))
+                             .limit(limit)
+                             .all()
+                             )
+
+        for schedule_month in schedules:
+            for group in schedule_month.schedule.staff_divisions:
+                if isinstance(group.description, str):
+                    group.description = json.loads(group.description)
 
         return schedules
 

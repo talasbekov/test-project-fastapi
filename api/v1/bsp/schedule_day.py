@@ -106,4 +106,4 @@ async def delete(*,
 
     """
     Authorize.jwt_required()
-    return schedule_day_service.remove(db, str(id))
+    return schedule_day_service.remove(db, id)
