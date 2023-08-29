@@ -18,10 +18,7 @@ def get_nearest_future_date(date_array):
     )
     for date_obj in sorted_dates:
         activity_date = date_obj.activity_date
-        print('activity_date:', activity_date, 'type:', type(activity_date))
-        print('current_date:', current_date, 'type:', type(current_date))
         if activity_date > current_date:
-            print('obj:', activity_date, 'type:', type(activity_date))
             return activity_date
 
     return None
