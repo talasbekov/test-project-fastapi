@@ -17,7 +17,7 @@ from .exam import exam_service
 class ExamResultService(ServiceBase[ExamResult, ExamResultCreate, ExamResultUpdate]):
 
     def get_users_results_by_exam(self, db: Session,
-                                    exam_id: uuid.UUID):
+                                    exam_id: str):
 
         exam_schedule = exam_service.get_by_id(db, str(exam_id))
 
@@ -34,7 +34,7 @@ class ExamResultService(ServiceBase[ExamResult, ExamResultCreate, ExamResultUpda
 
 
     def get_exam_results_by_user_id(self, db: Session,
-                                    user_id: uuid.UUID,
+                                    user_id: str,
                                     skip: int,
                                     limit: int):
         results = (db.query(ExamResult)

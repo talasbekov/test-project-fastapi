@@ -125,7 +125,7 @@ class AttendanceService(ServiceBase[Attendance, AttendanceCreate, AttendanceUpda
 
     def get_nearest_attendances(self, db: Session,
                                 is_mine: bool,
-                                user_id: uuid.UUID,
+                                user_id: str,
                                 skip: int,
                                 limit: int):
         current_date = datetime.date.today()
@@ -165,7 +165,7 @@ class AttendanceService(ServiceBase[Attendance, AttendanceCreate, AttendanceUpda
 
         return {"objects": attendances, "total": total}
 
-    def get_attendance_users(self, db: Session, attendance_id: uuid.UUID):
+    def get_attendance_users(self, db: Session, attendance_id: str):
         absent_users = (
             db.query(AttendedUser)
             .filter(AttendedUser.attendance_id == attendance_id)

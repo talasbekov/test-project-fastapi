@@ -211,20 +211,20 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
 
     def get_all_by_division_id_and_plan_id(self,
                                db: Session,
-                               id: uuid.UUID,
-                               plan_id: uuid.UUID):
+                               id: str,
+                               plan_id: str):
         schedules = (db.query(ScheduleYear)
                      .join(ScheduleYear.staff_divisions)
-                     .filter(StaffDivision.id == str(id),
-                             ScheduleYear.plan_id == str(plan_id))
+                     .filter(StaffDivision.id == id,
+                             ScheduleYear.plan_id == plan_id)
                      .order_by(self.model.created_at.desc())
                      .all()
                      )
 
         total = (db.query(self.model)
                  .join(ScheduleYear.staff_divisions)
-                 .filter(StaffDivision.id == str(id),
-                         ScheduleYear.plan_id == str(plan_id))
+                 .filter(StaffDivision.id == id,
+                         ScheduleYear.plan_id == plan_id)
                  .count())
 
         for schedule in schedules:

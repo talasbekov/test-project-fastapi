@@ -48,13 +48,6 @@ class ScheduleMonthService(ServiceBase[ScheduleMonth,
         return schedules
 
     def create(self, db: Session, body: ScheduleMonthCreateWithDay):
-        # schedule_month = super().create(db,
-        #                                 ScheduleMonthCreate(
-        #                                     start_date=body.start_date,
-        #                                     end_date=body.end_date,
-        #                                     place_id=body.place_id,
-        #                                     schedule_id=body.schedule_id
-        #                                 ))
         params = {'start_date': str(body.start_date),
                   'end_date': str(body.end_date),
                   'place_id': str(body.place_id),
