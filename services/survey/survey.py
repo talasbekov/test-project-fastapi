@@ -1,16 +1,21 @@
 import datetime
 import pytz
 
+from b64uuid import B64UUID
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 
 from services.base import ServiceBase
 from models import (StaffUnit, SurveyStatusEnum, SurveyJurisdictionTypeEnum,
                     SurveyStaffPositionEnum, PositionNameEnum,
-                    Survey, SurveyRepeatTypeEnum)
+                    Survey, SurveyRepeatTypeEnum, Answer,
+                    Question, Option, SurveyJurisdiction)
 from services import (
-    staff_division_service, staff_unit_service, user_service
+    staff_division_service, staff_unit_service
 )
-from schemas import SurveyCreate, SurveyUpdate
+from .survey_jurisdiction import survey_jurisdiction_service
+from schemas import SurveyCreate, SurveyUpdate, SurveyCreateWithJurisdiction
+from schemas.survey.survey_jurisdiction import SurveyJurisdictionCreate
 from exceptions import BadRequestException
 
 
@@ -28,75 +33,80 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
                             role_id: str,
                             skip: int = 0,
                             limit: int = 100):
-        staff_unit = staff_unit_service.get_by_id(db, role_id)
+        staff_unit = staff_unit_service.get_by_id(db, str(role_id))
         user = staff_unit.users[0]
         
-        objects = self.__get_by_certaint_member(db, user.id, skip, limit)
-        objects.extend(self.__get_by_staff_division(db, staff_unit, skip, limit))
+        participated_surveys_ids = self.__get_participated_surveys(db, str(user.id))
+        certaint_member_query = self.__get_by_certaint_member(db, str(user.id))
+        staff_division_query = self.__get_by_staff_division(db, staff_unit)
         
-        return objects
+        return (
+            certaint_member_query.union_all(staff_division_query)
+            .filter(
+                func.to_char(self.model.status) == SurveyStatusEnum.ACTIVE.name,
+                self.model.start_date <= func.current_date(),
+                self.model.end_date >= func.current_date(),
+                self.model.id.notin_(participated_surveys_ids)
+            )
+            .offset(skip).limit(limit).all()
+        )
 
-    def get_all_active(self, db: Session, skip: int = 0, limit: int = 100):
+    def get_all_by_status(self,
+                          db: Session,
+                          status: SurveyStatusEnum,
+                          skip: int = 0,
+                          limit: int = 100):
         return db.query(self.model).filter(
-            self.model.status == SurveyStatusEnum.ACTIVE.value
-        ).offset(skip).limit(limit).all()
-
-    def get_count_actives(self, db: Session) -> int:
-        return db.query(self.model).filter(
-            self.model.status == SurveyStatusEnum.ACTIVE.value
-        ).count()
-
-    def get_all_archives(self, db: Session, skip: int = 0, limit: int = 100):
-        return db.query(self.model).filter(
-            self.model.status == SurveyStatusEnum.ARCHIVE.value
+            func.to_char(self.model.status) == status.name
         ).offset(skip).limit(limit).all()
     
-    def get_count_archives(self, db: Session) -> int:
-        return db.query(self.model).filter(
-            self.model.status == SurveyStatusEnum.ARCHIVE.value
-        ).count()
-
-    def get_all_draft(self, db: Session, skip: int = 0, limit: int = 100):
-        return db.query(self.model).filter(
-            self.model.status == SurveyStatusEnum.DRAFT.value
-        ).offset(skip).limit(limit).all()
+    def get_count(self, db: Session, status: SurveyStatusEnum) -> int:
+        return db.query(func.count(self.model.id)).filter(
+            func.to_char(self.model.status) == status.name
+        ).scalar()
     
-    def get_count_drafts(self, db: Session) -> int:
-        return db.query(self.model).filter(
-            self.model.status == SurveyStatusEnum.DRAFT.value
-        ).count()
-        
     def get_expired_by_repeat_type(self, db: Session, repeat_type: str):
         return db.query(self.model).filter(
             self.model.status == SurveyStatusEnum.ACTIVE.value,
             self.model.repeat_type == repeat_type,
             self.model.end_date < datetime.datetime.now()
         ).all()
-
-    def save_as_draft(self, db: Session, body: SurveyCreate):
-        obj = Survey(**body.dict())
-        
-        obj.status = SurveyStatusEnum.DRAFT.value
-        
-        self.__set_jurisdiction(db, obj, body)
-
-        db.add(obj)
-        db.flush()
-
-        return obj
     
-    def create(self, db: Session, body: SurveyCreate):
-        obj = Survey(**body.dict())
+    def get_expired(self, db: Session):
+        return db.query(self.model).filter(
+            self.model.status == SurveyStatusEnum.ACTIVE.value,
+            self.model.end_date < datetime.datetime.now()
+        ).all()
+
+    def save_as_draft(self, db: Session, body: SurveyCreateWithJurisdiction):
+        survey = self.model(**body.dict())
         
-        self.__set_jurisdiction(db, obj, body)
-
-        db.add(obj)
+        survey.status = SurveyStatusEnum.DRAFT.value
+        
+        db.add(survey)
         db.flush()
-
-        return obj
+        
+        return survey
+    
+    def create(self, db: Session, body: SurveyCreateWithJurisdiction):
+        survey = self.model(**body.dict())
+        db.add(survey)
+        db.flush()
+        
+        for jurisdiction in body.jurisdictions:
+            survey_jurisdiction_service.create(db,
+                                               SurveyJurisdictionCreate(
+                                                   survey_id=str(survey.id),
+                                                   jurisdiction_type=jurisdiction.jurisdiction_type,
+                                                   staff_position=jurisdiction.staff_position,
+                                                   staff_division_id=str(jurisdiction.staff_division_id),
+                                                   certain_member_id=jurisdiction.certain_member_id
+                                               ))
+        
+        return survey
     
     def duplicate(self, db: Session, id: str) -> Survey:
-        survey_from_db = self.get_by_id(db, id)
+        survey_from_db = self.get_by_id(db, str(id))
         
         new_survey = survey_from_db.clone()
         
@@ -113,16 +123,23 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
             
             new_questions.append(new_question)
         
+        new_jurisdictions = []
+        for jurisdiction in survey_from_db.jurisdictions:
+            new_jurisdiction = jurisdiction.clone(survey_id=new_survey.id)
+            
+            new_jurisdictions.append(new_jurisdiction)
+        
         db.add(new_survey)
         db.add_all(new_questions)
         db.add_all(new_options)
+        db.add_all(new_jurisdictions)
         
         db.flush()
 
         return new_survey
     
     def repeat(self, db: Session, id: str) -> Survey:
-        survey_from_db = self.get_by_id(db, id)
+        survey_from_db = self.get_by_id(db, str(id))
         
         self.__check_survey_eligibility_for_repeat(survey_from_db)
         
@@ -143,6 +160,7 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
     
     def __check_survey_eligibility_for_repeat(self, survey: Survey):
         if survey.status != SurveyStatusEnum.ACTIVE.value:
+            print(survey.status)
             raise BadRequestException(
                 "Repeat is not allowed for survey with status 'Draft' or 'Archive'"
             )
@@ -152,7 +170,7 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
                 "Repeat is not allowed for survey with repeat type 'Never'"
             )
         
-        if survey.end_date > datetime.datetime.now(pytz.UTC):
+        if survey.end_date > datetime.datetime.now():
             raise BadRequestException(
                 "Repeat is not allowed for survey with end date less than now"
             )
@@ -168,89 +186,78 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
         
         return time_difference
     
-    def __set_jurisdiction(self, db: Session, obj: Survey, body):
-        if body.jurisdiction_type == SurveyJurisdictionTypeEnum.STAFF_DIVISION.value:
-            staff_division = (
-                staff_division_service.get_by_id(db, body.staff_division_id)
-            )
-            
-            obj.staff_division_id = staff_division.id
-        else:
-            user = user_service.get_by_id(db, body.certain_member_id)
-            
-            obj.certain_member_id = user.id
-            
-        obj.staff_position = body.staff_position
-        
-        return obj
-    
     def __get_by_certaint_member(self,
                                  db: Session,
-                                 user_id: str,
-                                 skip: int,
-                                 limit: int):
+                                 user_id: str):
         query = (
-            db.query(self.model).filter(
-                self.model.status == SurveyStatusEnum.ACTIVE.value,
-                self.model.jurisdiction_type == 
-                    SurveyJurisdictionTypeEnum.CERTAIN_MEMBER.value,
-                self.model.certain_member_id == user_id
-            )
+            db.query(self.model)
+                .join(SurveyJurisdiction, SurveyJurisdiction.survey_id == self.model.id)
+                .filter(
+                    func.to_char(SurveyJurisdiction.jurisdiction_type) == 
+                        SurveyJurisdictionTypeEnum.CERTAIN_MEMBER.name,
+                    SurveyJurisdiction.certain_member_id == user_id
+                )
         )
         
-        query = self.__filter_by_date(query)
-        
-        return query.offset(skip).limit(limit).all()
+        return query
         
     def __get_by_staff_division(self,
                                 db: Session,
-                                staff_unit: StaffUnit,
-                                skip: int,
-                                limit: int):
+                                staff_unit: StaffUnit):
+        staff_division_id = staff_unit.staff_division_id
+        
+        parent_groups = staff_division_service.get_parent_ids(db, staff_division_id)
         query = (
-            db.query(self.model).filter(
-                self.model.status == SurveyStatusEnum.ACTIVE.value,
-                self.model.jurisdiction_type == 
-                    SurveyJurisdictionTypeEnum.STAFF_DIVISION.value,
-                self.model.staff_division_id == staff_unit.staff_division_id
-            )
+            db.query(self.model)
+                .join(SurveyJurisdiction, SurveyJurisdiction.survey_id == self.model.id)
+                .filter(
+                    (func.to_char(SurveyJurisdiction.jurisdiction_type) == 
+                        SurveyJurisdictionTypeEnum.STAFF_DIVISION.name),
+                    (SurveyJurisdiction.staff_division_id == str(staff_division_id)) |
+                    (SurveyJurisdiction.staff_division_id.in_(parent_groups))
+                )
         )
         
-        query = self.__filter_by_date(query)
         query = self.__filter_by_staff_position(staff_unit, query)
         
-        return query.offset(skip).limit(limit).all()
+        return query
     
     def __filter_by_staff_position(self, staff_unit: StaffUnit, query):
         if staff_unit.position.name in self.ALL_MANAGING_STRUCTURE:
             query = (
                 query.filter(
-                    (self.model.staff_position ==
-                        SurveyStaffPositionEnum.ONLY_MANAGING_STRUCTURE.value) |
-                    (self.model.staff_position ==
-                        SurveyStaffPositionEnum.EVERYONE.value)
+                    (func.to_char(SurveyJurisdiction.staff_position) ==
+                        SurveyStaffPositionEnum.ONLY_MANAGING_STRUCTURE.name) |
+                    (func.to_char(SurveyJurisdiction.staff_position) ==
+                        SurveyStaffPositionEnum.EVERYONE.name)
                 )
             )
         else:
             query = (
                 query.filter(
-                    (self.model.staff_position ==
-                        SurveyStaffPositionEnum.ONLY_PERSONNAL_STURCTURE.value) |
-                    (self.model.staff_position ==
-                        SurveyStaffPositionEnum.EVERYONE.value)
+                    (func.to_char(SurveyJurisdiction.staff_position) ==
+                        SurveyStaffPositionEnum.ONLY_PERSONNAL_STURCTURE.name) |
+                    (func.to_char(SurveyJurisdiction.staff_position) ==
+                        SurveyStaffPositionEnum.EVERYONE.name)
                 )
             )
             
         return query
     
-    def __filter_by_date(self, query):
-        query = (
-            query.filter(
-                self.model.start_date <= datetime.datetime.now(),
-                self.model.end_date >= datetime.datetime.now()
-            )
-        )
+    def __get_participated_surveys(self, db: Session, user_id: str):
+        encoded_user_id = B64UUID(user_id).string
         
-        return query
+        return [
+            i.id for i in (
+                db.query(self.model.id)\
+                    .join(Question, Survey.id == Question.survey_id)
+                    .join(Option, Question.id == Option.question_id)
+                    .join(Answer, Option.answers)
+                    .filter(
+                        (Answer.user_id == str(user_id)) |
+                        (Answer.encrypted_used_id == str(encoded_user_id))
+                    ).all()
+            )
+        ]
 
 survey_service = SurveyService(Survey)

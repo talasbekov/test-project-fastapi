@@ -2,24 +2,24 @@ from fastapi import APIRouter, Depends
 from fastapi.security import HTTPBearer
 from fastapi_jwt_auth import AuthJWT
 
-from models import SurveyJurisdictionTypeEnum
+from models import SurveyRepeatTypeEnum
 
 router = APIRouter(
-    prefix="/survey_jurisdiction_type",
-    tags=["SurveyJurisdictionType"],
+    prefix="/survey_repeat_type",
+    tags=["SurveyRepeatType"],
     dependencies=[
         Depends(
             HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            summary="Get all SurveyJurisdictionType")
+            summary="Get all SurveyRepeatType")
 async def get_all(*,
                   Authorize: AuthJWT = Depends()
                   ):
     """
-        Get all SurveyJurisdictionTypeEnum (Опрос проводится в рамках)
+        Get all SurveyRepeatTypeEnum (Виды повторения опроса)
 
     """
     Authorize.jwt_required()
-    return [ag.value for ag in SurveyJurisdictionTypeEnum]
+    return [ag.value for ag in SurveyRepeatTypeEnum]

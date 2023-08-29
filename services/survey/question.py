@@ -3,10 +3,12 @@ from typing import List
 from sqlalchemy.orm import Session
 
 from exceptions import BadRequestException
-from models import Question, SurveyTypeEnum, Survey, QuestionTypeEnum
-from schemas import (QuestionCreate, QuestionUpdate)
+from models import Question, SurveyTypeEnum, Survey
+from schemas import (QuestionCreate, QuestionUpdate, OptionCreate,
+                     QuestionCreateList)
 from services.base import ServiceBase
 from .survey import survey_service
+from .option import option_service
 
 class QuestionService(ServiceBase[Question, QuestionCreate, QuestionUpdate]):
     
@@ -14,7 +16,7 @@ class QuestionService(ServiceBase[Question, QuestionCreate, QuestionUpdate]):
         return db.query(self.model).count()
 
     def get_by_survey(self, db: Session, survey_id: str):
-        survey = survey_service.get_by_id(db, survey_id)
+        survey = survey_service.get_by_id(db, str(survey_id))
         
         return db.query(self.model).filter(
             self.model.survey_id == survey.id
@@ -23,9 +25,7 @@ class QuestionService(ServiceBase[Question, QuestionCreate, QuestionUpdate]):
     def create(self,
                db: Session,
                body: QuestionCreate):
-        self.__validate_question_type(body.question_type)
-        
-        survey = survey_service.get_by_id(db, body.survey_id)
+        survey = survey_service.get_by_id(db, str(body.survey_id))
         self.__validate_score(survey, body.score)
         self.__validate_kz_required(survey, body.textKZ)
         
@@ -33,27 +33,47 @@ class QuestionService(ServiceBase[Question, QuestionCreate, QuestionUpdate]):
     
     def create_list(self,
                     db: Session,
-                    body: List[QuestionCreate]):
+                    body: List[QuestionCreateList]):
         
         res = []
         for question in body:
-            res.append(self.create(db, question))
+            question_obj = self.create(db, QuestionCreate(
+                text=question.text,
+                textKZ=question.textKZ,
+                is_required=question.is_required,
+                question_type=question.question_type,
+                survey_id=str(question.survey_id),
+                score=question.score
+            ))
+
+            if question.options is not None:
+                for option in question.options:
+                    option_service.create(db, OptionCreate(
+                        text=option.text,
+                        textKZ=option.textKZ,
+                        question_id=str(question_obj.id),
+                        score=option.score,
+                        diagram_description=option.diagram_description,
+                        diagram_descriptionKZ=option.diagram_descriptionKZ,
+                        report_description=option.report_description,
+                        report_descriptionKZ=option.report_descriptionKZ
+                    ))
+
+            
+            res.append(question_obj)
             
         return res
     
     def update(self, db: Session, obj_from_db: Question, body: QuestionUpdate):
-        self.__validate_question_type(body.question_type)
-        
-        survey = survey_service.get_by_id(db, body.survey_id)
+        survey = survey_service.get_by_id(db, str(body.survey_id))
         self.__validate_score(survey, body.score)
         self.__validate_kz_required(survey, body.textKZ)
         
         return super().update(db, obj_from_db, body)
 
-
     def __validate_kz_required(self, survey: Survey, textKZ: str):
         if survey.is_kz_translate_required and not textKZ:
-            raise BadRequestException("KZ translation is required")
+            raise BadRequestException("Question KZ translation is required")
     
     def __validate_score(self, survey: Survey, score: int):
         if survey.type == SurveyTypeEnum.SURVEY.value and score:
@@ -64,11 +84,5 @@ class QuestionService(ServiceBase[Question, QuestionCreate, QuestionUpdate]):
             raise BadRequestException(
                 "Score is required for quiz"
             )
-
-    def __validate_question_type(self, question_type: str):
-        try:
-            return QuestionTypeEnum(question_type)
-        except ValueError:
-            raise BadRequestException(f"Invalid question type {question_type}")
 
 question_service = QuestionService(Question)

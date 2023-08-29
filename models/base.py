@@ -1,7 +1,7 @@
 import uuid
 import datetime
 
-from sqlalchemy import TIMESTAMP, Column, String, text, TEXT
+from sqlalchemy import TIMESTAMP, Column, String, text, TEXT, CLOB
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql.sqltypes import Boolean
 from abc import abstractmethod
@@ -24,10 +24,13 @@ class Cloneable():
         new_obj = self.__class__()
         
         for c in self.__table__.c:
-            setattr(new_obj, c.name, getattr(self, c.name))
+            if c.name == 'namekz':
+                setattr(new_obj, 'nameKZ', getattr(self, 'nameKZ'))
+            else:
+                setattr(new_obj, c.name, getattr(self, c.name))
                 
         new_obj.__dict__.update(attr)
-        new_obj.id = uuid.uuid4()
+        new_obj.id = str(uuid.uuid4())
         new_obj.created_at = datetime.datetime.now()
         new_obj.updated_at = datetime.datetime.now()
         
@@ -105,5 +108,5 @@ class TextModel(Model):
 
     __abstract__ = True
 
-    text = Column(TEXT, nullable=False)
-    textKZ = Column('textkz', TEXT, nullable=True)
+    text = Column(CLOB, nullable=False)
+    textKZ = Column('textkz', CLOB, nullable=True)

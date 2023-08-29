@@ -3,17 +3,20 @@ import uuid
 from typing import Optional, List
 from pydantic import BaseModel, Field
 from schemas import TextModel, ReadTextModel
-from .answer import AnswerRead
 
 
 class OptionBase(TextModel):
     text: Optional[str]
     question_id: str
     score: Optional[int]
+    diagram_description: Optional[str]
+    diagram_descriptionKZ: Optional[str]
+    report_description: Optional[str]
+    report_descriptionKZ: Optional[str]
 
 
 class OptionCreate(OptionBase):
-    pass
+    textKZ: Optional[str]
 
 
 class OptionUpdate(OptionBase):
@@ -23,7 +26,6 @@ class OptionUpdate(OptionBase):
 class OptionRead(OptionBase, ReadTextModel):
     question_id: Optional[str]
     score: Optional[int]
-    answers: Optional[List[Optional[AnswerRead]]]
 
     class Config:
         orm_mode = True
