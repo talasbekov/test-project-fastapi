@@ -1,11 +1,12 @@
+import json
 import uuid
 
-from sqlalchemy import extract
+from sqlalchemy import extract, text
 from sqlalchemy.orm import Session
-from models import ExamSchedule, ExamResult, ScheduleYear
+from models import ExamSchedule, ScheduleYear, User, ExamResult
 from schemas import (ExamScheduleCreate,
                      ExamScheduleUpdate,
-                     ExamScheduleCreateWithInstructors,)
+                     ExamScheduleCreateWithInstructors)
 from services import user_service
 from services.base import ServiceBase
 
@@ -21,11 +22,28 @@ class ExamService(ServiceBase[ExamSchedule, ExamScheduleCreate, ExamScheduleUpda
                  .offset(skip)
                  .limit(limit)
                  .all())
+
         total = (db.query(self.model)
                  .join(ScheduleYear)
                  .filter(ScheduleYear.is_active == True)
                  .count())
+        if exams is not None or exams != []:
+            for exam_schedule in exams:
+                for group in exam_schedule.schedule.staff_divisions:
+                    if isinstance(group.description, str):
+                        group.description = json.loads(group.description)
+
         return {'total': total, 'objects': exams}
+
+    def get_users_by_exam(self,
+                          db: Session,
+                          exam_id: str):
+        users = (db.query(User.id)
+                   .join(ScheduleYear.users)
+                   .join(ScheduleYear.exams)
+                   .filter(ExamSchedule.id == exam_id)
+                   .all())
+        return users
 
     def get_exam_results_by_user_id(self, db: Session,
                                     user_id: str,
@@ -38,22 +56,51 @@ class ExamService(ServiceBase[ExamSchedule, ExamScheduleCreate, ExamScheduleUpda
                    .limit(limit)
                    .all())
         total = db.query(self.model).filter(ExamResult.user_id == user_id).count()
+        if results is not None or results != []:
+            for exam_schedule in results:
+                for group in exam_schedule.schedule.staff_divisions:
+                    if isinstance(group.description, str):
+                        group.description = json.loads(group.description)
+
         return {'total': total, 'objects': results}
 
-    def create(self, db: Session, body: ExamScheduleCreateWithInstructors):
-        exam_schedule = super().create(db,
-                                        ExamScheduleCreate(
-                                            start_date=body.start_date,
-                                            end_date=body.end_date,
-                                            start_time=body.start_time,
-                                            end_time=body.end_time,
-                                            place_id=body.place_id,
-                                            schedule_id=body.schedule_id
-                                        ))
 
-        instructors = [user_service.get_by_id(db, user_id)
-                       for user_id in body.instructor_ids]
-        exam_schedule.instructors = instructors
+    def create(self, db: Session, body: ExamScheduleCreateWithInstructors):
+        # exam_schedule = super().create(db,
+        #                                 ExamScheduleCreate(
+        #                                     start_date=body.start_date,
+        #                                     end_date=body.end_date,
+        #                                     start_time=body.start_time,
+        #                                     end_time=body.end_time,
+        #                                     place_id=body.place_id,
+        #                                     schedule_id=body.schedule_id
+        #                                 ))
+        params = {'start_date': str(body.start_date),
+                  'end_date': str(body.end_date),
+                  'start_time': str(body.start_time),
+                  'end_time': str(body.end_time),
+                  'place_id': str(body.place_id),
+                  'schedule_id': str(body.schedule_id),
+                  'id': str(uuid.uuid4())}
+        db.execute(text("""
+                        INSERT INTO HR_ERP_EXAM_SCHEDULES
+                        (start_date, end_date, start_time, end_time, place_id, schedule_id, id)
+                        VALUES(TO_DATE(:start_date, 'YYYY-MM-DD'),
+                               TO_DATE(:end_date, 'YYYY-MM-DD'),
+                               TO_DATE(:start_time, 'HH24:MI:SS'),
+                               TO_DATE(:end_time, 'HH24:MI:SS'),
+                               :place_id,
+                               :schedule_id,
+                               :id)
+                        """),
+                   params)
+        db.flush()
+        exam_schedule = self.get_by_id(db, params['id'])
+
+        if body.instructor_ids != [] and body.instructor_ids is not None:
+            instructors = [user_service.get_by_id(db, str(user_id))
+                           for user_id in body.instructor_ids]
+            exam_schedule.instructors = instructors
 
         db.add(exam_schedule)
         db.flush()
@@ -61,9 +108,9 @@ class ExamService(ServiceBase[ExamSchedule, ExamScheduleCreate, ExamScheduleUpda
         return exam_schedule
 
     def get_by_month_and_schedule_year(self,
-                              db: Session,
-                              month_numbers: int,
-                              schedule_id: str):
+                                       db: Session,
+                                       month_numbers: int,
+                                       schedule_id: str):
         schedule = (
             db.query(ExamSchedule)
             .join(ScheduleYear)
@@ -72,6 +119,10 @@ class ExamService(ServiceBase[ExamSchedule, ExamScheduleCreate, ExamScheduleUpda
                     ScheduleYear.is_active == True)
             .first()
         )
+        if schedule is not None:
+            for group in schedule.schedule.staff_divisions:
+                if isinstance(group.description, str):
+                    group.description = json.loads(group.description)
 
         return schedule
 

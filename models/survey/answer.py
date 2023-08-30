@@ -1,5 +1,4 @@
-from sqlalchemy import Column, ForeignKey, String, TEXT, Integer
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, ForeignKey, String, CLOB, Integer
 from sqlalchemy.orm import relationship
 
 from models import Model
@@ -30,7 +29,7 @@ class Answer(Model):
 
 
 class AnswerText(Answer):
-    text = Column(TEXT, nullable=True)
+    text = Column(CLOB, nullable=True)
 
     __mapper_args__ = {
         "polymorphic_identity": "answer_text"
