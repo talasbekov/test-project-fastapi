@@ -5,7 +5,7 @@ from b64uuid import B64UUID
 
 from models import (Answer, QuestionTypeEnum, Question,
                     Survey, AnswerText,SurveyTypeEnum, 
-                    Option, answers_options)
+                    Option, answers_options, User)
 from core.database import engine
 from schemas import AnswerCreate, AnswerUpdate
 from exceptions import BadRequestException
@@ -158,15 +158,18 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
                      Option.id.label("option_id"),
                      func.to_char(Option.text).label("option_text"),
                      func.to_char(Option.textKZ).label("option_textKZ"),
-                     func.count(Answer.id).label("answer_count"))
+                     func.count(Answer.id).label("answer_count"),
+                     User.first_name, User.last_name, User.id)\
                 .join(answers_options, self.model.id == answers_options.c.answer_id)
                 .join(Option, answers_options.c.option_id == Option.id)
                 .join(Question, Option.question_id == Question.id)
+                .join(User, self.model.user_id == User.id)
                 .filter(
                     Question.survey_id == survey_id
                 )
                 .group_by(Question.id, func.to_char(Question.text), func.to_char(Question.textKZ),
-                          Option.id, func.to_char(Option.text), func.to_char(Option.textKZ))
+                          Option.id, func.to_char(Option.text), func.to_char(Option.textKZ),
+                          User.first_name, User.last_name, User.id)
                 .all()
         )
 
@@ -185,10 +188,19 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
                 "option_id": result.option_id,
                 "option_text": result.option_text,
                 "option_textKZ": result.option_textKZ,
-                "answer_count": result.answer_count
+                "answer_count": result.answer_count,
+                "responded_users": []
             }
 
             organized_results[question_id]["options"].append(option)
+            
+            responded_users = {
+                "id": result.id,
+                "first_name": result.first_name,
+                "last_name": result.last_name
+            }
+            
+            organized_results[question_id]["options"][-1]["responded_users"].append(responded_users)
 
         return list(organized_results.values())
 
