@@ -66,10 +66,6 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
                 filter: str,
                 skip: int,
                 limit: int) -> List[User]:
-        template = hr_document_template_service.get_by_id(
-            db, hr_document_template_id
-        )
-        
         users = (
             db.query(self.model)
         )
@@ -77,6 +73,11 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             users = self._add_filter_to_query(users, filter)
 
         if hr_document_template_id is not None:
+            template = (
+                hr_document_template_service.get_by_id(
+                    db, hr_document_template_id
+                )
+            )
             excepted_users = self._get_excepted_users_by_document_in_progress(
                 db, hr_document_template_id)
             users = (self
@@ -84,19 +85,19 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
                                                    users,
                                                    hr_document_template_id)
                      .except_(excepted_users)
-                     .filter(self.model.is_active.is_(True)))
+                     .filter(self.model.is_active == True))
             
-        if template.subject_type == SubjectType.CANDIDATE.value:
-            candidate_staff_division = (
-                staff_division_service.get_by_name(
-                    db, StaffDivisionEnum.CANDIDATES.value
+            if template.subject_type == SubjectType.CANDIDATE.value:
+                candidate_staff_division = (
+                    staff_division_service.get_by_name(
+                        db, StaffDivisionEnum.CANDIDATES.value
+                    )
                 )
-            )
-            users = (
-                users
-                .join(StaffUnit, StaffUnit.id == self.model.staff_unit_id)
-                .filter(StaffUnit.staff_division_id == candidate_staff_division.id)
-            )
+                users = (
+                    users
+                    .join(StaffUnit, StaffUnit.id == self.model.staff_unit_id)
+                    .filter(StaffUnit.staff_division_id == candidate_staff_division.id)
+                )
 
         users = (
             users
@@ -106,7 +107,6 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             .limit(limit)
             .all()
         )
-
         return users
 
     def is_template_accessible_for_user(self,

@@ -146,6 +146,10 @@ class BspPlanService(ServiceBase[BspPlan, BspPlanCreate, BspPlanUpdate]):
         if plan.schedule_years != [] or plan.schedule_years is not None:
             for schedule_year in plan.schedule_years:
                 for group in schedule_year.staff_divisions:
+                    for staff_unit in group.staff_units:
+                        if isinstance(staff_unit.requirements, list):
+                            staff_unit.requirements = json.dumps(
+                                staff_unit.requirements)
                     if isinstance(group.description, dict):
                         group.description = json.dumps(group.description)
 
@@ -225,7 +229,10 @@ class BspPlanService(ServiceBase[BspPlan, BspPlanCreate, BspPlanUpdate]):
                 for group in year.staff_divisions:
                     if isinstance(group.description, str):
                         group.description = json.loads(group.description)
+        db.add(plan)
+        db.flush()
 
+        db.commit()
         return plan
 
     def get_by_id(self, db: Session, id: str):
