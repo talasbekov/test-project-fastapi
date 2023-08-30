@@ -9,7 +9,8 @@ from services.base import ServiceBase
 from models import (StaffUnit, SurveyStatusEnum, SurveyJurisdictionTypeEnum,
                     SurveyStaffPositionEnum, PositionNameEnum,
                     Survey, SurveyRepeatTypeEnum, Answer,
-                    Question, Option, SurveyJurisdiction)
+                    Question, Option, SurveyJurisdiction,
+                    QuestionTypeEnum)
 from services import (
     staff_division_service, staff_unit_service
 )
@@ -247,7 +248,7 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
     def __get_participated_surveys(self, db: Session, user_id: str):
         encoded_user_id = B64UUID(user_id).string
         
-        return [
+        participated_surveys_ids = [
             i.id for i in (
                 db.query(self.model.id)\
                     .join(Question, Survey.id == Question.survey_id)
@@ -259,5 +260,14 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
                     ).all()
             )
         ]
+        
+        participated_surveys_ids.append(
+            db.query(self.model.id).join(Answer).filter(
+                func.to_char(Question.question_type) == QuestionTypeEnum.TEXT.name,
+                Answer.user_id == str(user_id)
+            ).all()
+        )
+        
+        return participated_surveys_ids
 
 survey_service = SurveyService(Survey)
