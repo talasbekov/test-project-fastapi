@@ -41,9 +41,10 @@ class AttendedUserService(ServiceBase[AttendedUser,
             .join(ScheduleYear.months)
             .join(ScheduleYear.activity)
             .filter(ScheduleMonth.schedule_id == str(body.schedule_id))
-            .filter(Activity.name == body.activity)
+            .filter(func.to_char(Activity.name) == body.activity)
             .first()
         )
+        print(schedule_month)
         if schedule_month is None:
             raise NotFoundException(
                 detail=f"ScheduleMonth with id {id} not found!")
@@ -55,13 +56,13 @@ class AttendedUserService(ServiceBase[AttendedUser,
         )
         if attendance is None:
             raise NotFoundException(
-                detail=f"Attendance with id {id} not found!")
+                detail=f"Attendance with schedule_id {schedule_month.id} not found!")
         user = (
             db.query(AttendedUser)
             .filter(AttendedUser.attendance_id == str(attendance.id))
             .filter(AttendedUser.user_id == body.user_id)
             .update(
-                {func.to_char(self.model.attendance_status): body.attendance_status,
+                {self.model.attendance_status: body.attendance_status,
                  self.model.reason: body.reason}
             )
         )
