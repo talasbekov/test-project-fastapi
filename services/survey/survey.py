@@ -261,11 +261,19 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
             )
         ]
         
-        participated_surveys_ids.append(
-            db.query(self.model.id).join(Answer).filter(
-                func.to_char(Question.question_type) == QuestionTypeEnum.TEXT.name,
-                Answer.user_id == str(user_id)
-            ).all()
+        participated_surveys_ids.extend(
+            [
+                i.id for i in (
+                    db.query(self.model.id)
+                    .join(Question, Survey.id == Question.survey_id)
+                    .join(Answer, Answer.question_id == Question.id)
+                    .filter(
+                        func.to_char(Question.question_type) == QuestionTypeEnum.TEXT.name,
+                        (Answer.user_id == str(user_id)) |
+                        (Answer.encrypted_used_id == str(encoded_user_id))
+                    ).all()
+                )
+            ]
         )
         
         return participated_surveys_ids
