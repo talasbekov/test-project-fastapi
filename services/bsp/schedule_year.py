@@ -246,6 +246,9 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
         staff_divisions = [staff_division_service.get_by_id(db, str(division_id))
                            for division_id in schedule.staff_division_ids]
         for group in staff_divisions:
+            for staff_unit in group.staff_units:
+                if isinstance(staff_unit.requirements, list):
+                    staff_unit.requirements = json.dumps(staff_unit.requirements)
             if isinstance(group.description, dict):
                 group.description = json.dumps(group.description)
         schedule_year.staff_divisions = staff_divisions
