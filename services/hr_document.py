@@ -149,6 +149,20 @@ class HrDocumentService(
         if document is None:
             raise NotFoundException(detail="Document is not found!")
         return document
+    
+    def get_by_id_for_api(self, db: Session, id: str) -> HrDocument:
+        document = super().get(db, id)
+        if document is None:
+            raise NotFoundException(detail="Document is not found!")
+        if isinstance(document.properties, str):
+            document.properties = json.loads(document.properties)
+        if isinstance(document.document_template.properties, str):
+            document.document_template.properties = json.loads(document.document_template.properties)
+        if isinstance(document.document_template.description, str):
+            document.document_template.description = json.loads(document.document_template.description)
+        if isinstance(document.document_template.actions, str):
+            document.document_template.actions = json.loads(document.document_template.actions)
+        return document
 
     def get_initialized_documents(self,
                                   db: Session,
