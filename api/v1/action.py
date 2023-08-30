@@ -915,82 +915,54 @@ async def get_all_actions():
             ],
         },
     },
-    {
-        'action_name': 'Зачисление кандидата на службу',
-        'action_nameKZ': 'Кандидатты қызметке қабылдау',
+        {
+        'action_name': 'Назначение кандидата на должность',
+        'action_nameKZ': 'Үміткерді қызметке тағайындау',
         'action_type': 'apply_candidate',
         'children': [
             {
                 'alias_name': 'Новая должность',
                 'alias_nameKZ': 'Жаңа қызмет атауы',
-                'tagname': 'staff_unit',
+                'tagname': 'new_position',
                 'data_taken': 'dropdown',
                 'field_name': 'staff_unit',
+            }, {
+                'alias_name': 'Контракт',
+                'alias_nameKZ': 'Контракт',
+                'tagname': 'contract',
+                'data_taken': 'dropdown',
+                'field_name': 'contracts'
+            }, {
+                'alias_name': 'Новое звание',
+                'alias_nameKZ': 'Жаңа лауазым',
+                'tagname': 'new_rank',
+                'data_taken': 'dropdown',
+                'field_name': 'rank'
             }
         ],
         'properties': {
-            "surname":{
-                "alias_nameKZ":"Тегі",
-                "data_taken":"auto",
-                "type":"write",
-                "field_name":"surname",
-                "to_tags":{
-                    "titleKZ":"Тегі",
-                    "isHidden":"false"
-                }
+            'new_position': {
+                'alias_name': 'Новая должность',
+                'alias_nameKZ': 'Жаңа қызмет атауы',
+                'type': 'write',
+                'data_taken': 'dropdown',
+                'field_name': 'staff_unit',
             },
-            "name":{
-                "alias_nameKZ":"Аты",
-                "data_taken":"auto",
-                "type":"write",
-                "field_name":"name",
-                "to_tags":{
-                    "titleKZ":"Аты",
-                    "isHidden":False
-                }
-            },
-            "father":{
-                "alias_nameKZ":"Әкесінің аты",
-                "data_taken":"auto",
-                "type":"write",
-                "field_name":"father_name",
-                "to_tags":{
-                    "foundInText":"Отчество субъекта",
-                    "titleKZ":"Әкесінің аты",
-                    "isHidden":False,
-                    "cases":0
-                }
+            'new_rank': {
+                'alias_name': 'Новое звание',
+                'alias_nameKZ': 'Жаңа лауазым',
+                'type': 'write',
+                'data_taken': 'dropdown',
+                'field_name': 'rank',
             },
             "contract":{
-                "to_tags":{
-                    "tagname":"contract",
-                    "titleKZ":"Контракт",
-                    "idToChange":"1687429527959",
-                    "id":"1687429527959",
-                    "foundInText":"{{contract - term}}",
-                    "isHidden":False,
-                    "cases":0,
-                    "action_type":"[renew_contract]"
-                },
-                "alias_name":"Контракт",
-                "alias_nameKZ":"Контракт",
-                "type":"write",
-                "data_taken":"dropdown",
-                "field_name":"contracts",
-                "isHidden":False
-            },
-            "new_position":{
-                "alias_nameKZ":"Жаңа позиция",
-                "data_taken":"dropdown",
-                "type":"write",
-                "field_name":"staff_unit",
-                "to_tags":{
-                    "titleKZ":"Жаңа позиция",
-                    "directory":"staff_unit",
-                    "isHidden":"false"
-                }
+                'alias_name': 'Контракт',
+                'alias_nameKZ': 'Контракт',
+                'type': 'write',
+                'data_taken': 'dropdown',
+                'field_name': 'contracts'
             }
-            },
+        },
         'actions': {
             'args': [
                 {
@@ -1004,6 +976,11 @@ async def get_all_actions():
                             "tagname":"contract_type",
                             "alias_name":"Контракт",
                             "alias_nameKZ":"Контракт"
+                        },
+                        "rank":{
+                            "tagname":"new_rank",
+                            "alias_name":"Новое звание",
+                            "alias_nameKZ":"Жаңа лауазым"
                         },
                     },
                 },

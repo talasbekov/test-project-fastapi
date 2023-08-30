@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from core import configs
 from models import (User, ContractType, ContractHistory, 
                     HrDocument, StaffDivisionEnum, CandidateStatusEnum,
-                    EmergencyServiceHistory)
+                    EmergencyServiceHistory, Rank)
 from .base import BaseHandler
 from services import (contract_service, history_service, 
                       staff_division_service, staff_unit_service)
@@ -42,7 +42,8 @@ class ApplyCandidateHandler(BaseHandler):
         (contract_type,
             date_from,
             date_to,
-            new_position) = self.get_args(db, action, props)
+            new_position,
+            new_rank) = self.get_args(db, action, props)
 
         candidate = candidate_service.get_by_staff_unit_id(db, user.staff_unit_id)
         candidate.status = CandidateStatusEnum.COMPLETED.value
@@ -55,6 +56,8 @@ class ApplyCandidateHandler(BaseHandler):
             position_history: EmergencyServiceHistory = history_service.create_history(
                 db, user.id, staff_unit)
             position_old_history = staff_unit_service.get_last_history(db, user.id)
+            
+        user.rank_id = new_rank.id
 
         res = staff_unit_service.create_relation(db, user, new_position)
 
@@ -127,7 +130,15 @@ class ApplyCandidateHandler(BaseHandler):
         except KeyError:
             raise BadRequestException(
                 f"Position is not defined for this action: {self.__handler__}")
-        return contract_type, date_from, date_to, position_id
+        try:
+            rank_id = props[action["rank"]["tagname"]]["value"]
+            rank = db.query(Rank).filter(
+                Rank.id == rank_id
+            ).first()
+        except Exception:
+            raise BadRequestException(
+                detail=f'Invalid props for action: {self.__handler__}')
+        return contract_type, date_from, date_to, position_id, rank
 
     def handle_response(self, db: Session,
                         user: User,

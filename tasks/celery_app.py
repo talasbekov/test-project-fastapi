@@ -44,7 +44,7 @@ app.conf.beat_schedule = {
     }
 }
 
-SQLALCHEMY_DATABASE_URL = f"oracle://system:Oracle123@192.168.0.169:1521/MORAL"
+SQLALCHEMY_DATABASE_URL = f"oracle://system:Oracle123@172.20.0.6:1521/MORAL"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,

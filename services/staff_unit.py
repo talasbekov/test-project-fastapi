@@ -90,6 +90,13 @@ class StaffUnitService(
     def add_document_staff_function(
             self, db: Session, body: StaffUnitFunctions):
         staff_unit = self.get_by_id(db, body.staff_unit_id)
+        
+        if isinstance(staff_unit.staff_division.description, dict):
+            staff_unit.staff_division.description = (
+                json.dumps(staff_unit.staff_division.description)
+            )
+        if isinstance(staff_unit.requirements, list):
+            staff_unit.requirements = json.dumps(staff_unit.requirements)
 
         for id in body.staff_function_ids:
             staff_function = document_staff_function_service.get_by_id(db, id)

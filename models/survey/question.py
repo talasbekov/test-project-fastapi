@@ -1,6 +1,6 @@
 import enum
 
-from sqlalchemy import Column, ForeignKey, Boolean, TEXT, Enum, Integer, String
+from sqlalchemy import Column, ForeignKey, Boolean, Enum, Integer, String
 from sqlalchemy.orm import relationship
 
 from models import TextModel
@@ -18,8 +18,6 @@ class Question(TextModel):
 
     is_required = Column(Boolean, nullable=False, default=True)
     question_type = Column(Enum(QuestionTypeEnum), nullable=False)
-    diagram_description = Column(TEXT, nullable=True)
-    report_description = Column(TEXT, nullable=True)
     survey_id = Column(String(), ForeignKey("hr_erp_surveys.id"), nullable=True)
     score = Column(Integer, nullable=True)
 
