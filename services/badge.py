@@ -161,10 +161,10 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
         else:
             return [BadgeRead.from_orm(badge).dict() for badge in (
                 db.query(Badge)
-                .filter(Badge.user_id == id)
                 .join(BadgeHistory,
-                      and_(Badge.id == BadgeHistory.badge_id,
-                           BadgeHistory.date_to is None))
+                      Badge.id == BadgeHistory.badge_id)
+                .filter(Badge.user_id == id)
+                .filter(BadgeHistory.date_to == None)
                 .all()
             )]
 
