@@ -122,7 +122,7 @@ async def get_attendance_percentage(*,
 @router.get("/user/absent/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=List[AttendanceReadShort],
             summary="Get all absent days by user for the ScheduleYear")
-async def get_absent_users(*,
+async def get_absent_days_by_user(*,
                     db: Session = Depends(get_db),
                     id: str,
                     user_id: str,
