@@ -29,7 +29,7 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
         PositionNameEnum.HEAD_OF_OTDEL.value
     }
     
-    def get_surveys_and_quizzes_by_jurisdiction(self,
+    def get_by_jurisdiction(self,
                             db: Session,
                             role_id: str,
                             skip: int = 0,
@@ -44,7 +44,6 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
         return (
             certaint_member_query.union_all(staff_division_query)
             .filter(
-                func.to_char(self.model.type) != SurveyTypeEnum.COMPETENCE_FORM.name,
                 func.to_char(self.model.status) == SurveyStatusEnum.ACTIVE.name,
                 self.model.start_date <= func.current_date(),
                 self.model.end_date >= func.current_date(),
@@ -52,54 +51,18 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
             )
             .offset(skip).limit(limit).all()
         )
-        
-    def get_competence_forms_by_jurisdiction(self,
-                            db: Session,
-                            role_id: str,
-                            skip: int = 0,
-                            limit: int = 100):
-        staff_unit = staff_unit_service.get_by_id(db, str(role_id))
-        user = staff_unit.users[0]
-        
-        participated_competence_forms_ids = self.__get_participated_surveys(db, str(user.id))
-        certaint_member_query = self.__get_by_certaint_member(db, str(user.id))
-        staff_division_query = self.__get_by_staff_division(db, staff_unit)
-        
-        return (
-            certaint_member_query.union_all(staff_division_query)
-            .filter(
-                func.to_char(self.model.type) == SurveyTypeEnum.COMPETENCE_FORM.name,
-                func.to_char(self.model.status) == SurveyStatusEnum.ACTIVE.name,
-                self.model.start_date <= func.current_date(),
-                self.model.end_date >= func.current_date(),
-                self.model.id.notin_(participated_competence_forms_ids)
-            )
-            .offset(skip).limit(limit).all()
-        )
 
-    def get_all_surveys_and_quizzes_by_status(self,
+    def get_all_by_status(self,
                           db: Session,
                           status: SurveyStatusEnum,
                           skip: int = 0,
                           limit: int = 100):
         return db.query(self.model).filter(
-            func.to_char(self.model.type) != SurveyTypeEnum.COMPETENCE_FORM.name,
-            func.to_char(self.model.status) == status.name
-        ).offset(skip).limit(limit).all()
-        
-    def get_all_competence_forms_by_status(self,
-                          db: Session,
-                          status: SurveyStatusEnum,
-                          skip: int = 0,
-                          limit: int = 100):
-        return db.query(self.model).filter(
-            func.to_char(self.model.type) == SurveyTypeEnum.COMPETENCE_FORM.name,
             func.to_char(self.model.status) == status.name
         ).offset(skip).limit(limit).all()
     
-    def get_count_surveys_and_quizzes(self, db: Session, status: SurveyStatusEnum) -> int:
+    def get_count(self, db: Session, status: SurveyStatusEnum) -> int:
         return db.query(func.count(self.model.id)).filter(
-            func.to_char(self.model.type) != SurveyTypeEnum.COMPETENCE_FORM.name,
             func.to_char(self.model.status) == status.name
         ).scalar()
     
@@ -198,6 +161,7 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
     
     def __check_survey_eligibility_for_repeat(self, survey: Survey):
         if survey.status != SurveyStatusEnum.ACTIVE.value:
+            print(survey.status)
             raise BadRequestException(
                 "Repeat is not allowed for survey with status 'Draft' or 'Archive'"
             )
@@ -230,6 +194,7 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
             db.query(self.model)
                 .join(SurveyJurisdiction, SurveyJurisdiction.survey_id == self.model.id)
                 .filter(
+                    func.to_char(self.model.type) != SurveyTypeEnum.COMPETENCE_FORM.name,
                     func.to_char(SurveyJurisdiction.jurisdiction_type) == 
                         SurveyJurisdictionTypeEnum.CERTAIN_MEMBER.name,
                     SurveyJurisdiction.certain_member_id == user_id
@@ -248,6 +213,7 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
             db.query(self.model)
                 .join(SurveyJurisdiction, SurveyJurisdiction.survey_id == self.model.id)
                 .filter(
+                    func.to_char(self.model.type) != SurveyTypeEnum.COMPETENCE_FORM.name,
                     (func.to_char(SurveyJurisdiction.jurisdiction_type) == 
                         SurveyJurisdictionTypeEnum.STAFF_DIVISION.name),
                     (SurveyJurisdiction.staff_division_id == str(staff_division_id)) |
@@ -291,6 +257,7 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
                     .join(Option, Question.id == Option.question_id)
                     .join(Answer, Option.answers)
                     .filter(
+                        func.to_char(self.model.type) != SurveyTypeEnum.COMPETENCE_FORM.name,
                         (Answer.user_id == str(user_id)) |
                         (Answer.encrypted_used_id == str(encoded_user_id))
                     ).all()
@@ -304,6 +271,7 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
                     .join(Question, Survey.id == Question.survey_id)
                     .join(Answer, Answer.question_id == Question.id)
                     .filter(
+                        func.to_char(self.model.type) != SurveyTypeEnum.COMPETENCE_FORM.name,
                         func.to_char(Question.question_type) == QuestionTypeEnum.TEXT.name,
                         (Answer.user_id == str(user_id)) |
                         (Answer.encrypted_used_id == str(encoded_user_id))

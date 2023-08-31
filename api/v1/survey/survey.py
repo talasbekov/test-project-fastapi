@@ -34,8 +34,9 @@ async def get_all_active(*,
     """
     Authorize.jwt_required()
     return {
-        'total': survey_service.get_count(db, SurveyStatusEnum.ACTIVE),
-        'objects': survey_service.get_all_by_status(db,
+        'total': survey_service.get_count_surveys_and_quizzes(db, SurveyStatusEnum.ACTIVE),
+        'objects': survey_service.get_all_surveys_and_quizzes_by_status(
+                                                    db,
                                                     SurveyStatusEnum.ACTIVE,
                                                     skip,
                                                     limit)
@@ -61,8 +62,9 @@ async def get_all_archives(*,
     """
     Authorize.jwt_required()
     return {
-        'total': survey_service.get_count(db, SurveyStatusEnum.ARCHIVE),
-        'objects': survey_service.get_all_by_status(db,
+        'total': survey_service.get_count_surveys_and_quizzes(db, SurveyStatusEnum.ARCHIVE),
+        'objects': survey_service.get_all_surveys_and_quizzes_by_status(
+                                                    db,
                                                     SurveyStatusEnum.ARCHIVE,
                                                     skip,
                                                     limit)
@@ -88,8 +90,9 @@ async def get_all_draft(*,
     """
     Authorize.jwt_required()
     return {
-        'total': survey_service.get_count(db, SurveyStatusEnum.DRAFT),
-        'objects': survey_service.get_all_by_status(db,
+        'total': survey_service.get_count_surveys_and_quizzes(db, SurveyStatusEnum.DRAFT),
+        'objects': survey_service.get_all_surveys_and_quizzes_by_status(
+                                                    db,
                                                     SurveyStatusEnum.DRAFT,
                                                     skip,
                                                     limit)
@@ -98,8 +101,8 @@ async def get_all_draft(*,
 
 @router.get("/my", dependencies=[Depends(HTTPBearer())],
             response_model=SurveyReadPagination,
-            summary="Get all Surveys by jurisdiction")
-async def get_by_jurisdiction(*,
+            summary="Get Surveys & Quizzes by jurisdiction")
+async def get_surveys_and_quizzes_by_jurisdiction(*,
                   db: Session = Depends(get_db),
                   skip: int = 0,
                   limit: int = 100,
@@ -115,7 +118,33 @@ async def get_by_jurisdiction(*,
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
-    objects = survey_service.get_by_jurisdiction(db, role, skip, limit)
+    objects = survey_service.get_surveys_and_quizzes_by_jurisdiction(db, role, skip, limit)
+    return {
+        'total': len(objects),
+        'objects': objects
+    }
+
+
+@router.get("/my/competence-forms", dependencies=[Depends(HTTPBearer())],
+            response_model=SurveyReadPagination,
+            summary="Get Surveys & Quizzes by jurisdiction")
+async def get_competence_forms_by_jurisdiction(*,
+                  db: Session = Depends(get_db),
+                  skip: int = 0,
+                  limit: int = 100,
+                  Authorize: AuthJWT = Depends()
+                  ):
+    """
+        Get all Surveys by jurisdiction
+
+        - **skip**: int - The number of surveys to skip before returning the results. 
+                This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of surveys to return in the response. 
+            This parameter is optional and defaults to 100.
+    """
+    Authorize.jwt_required()
+    role = Authorize.get_raw_jwt()['role']
+    objects = survey_service.get_competence_forms_by_jurisdiction(db, role, skip, limit)
     return {
         'total': len(objects),
         'objects': objects

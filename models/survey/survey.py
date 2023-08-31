@@ -17,6 +17,7 @@ class SurveyStatusEnum(str, enum.Enum):
 class SurveyTypeEnum(str, enum.Enum):
     SURVEY = "Опрос"
     QUIZ = "Тест"
+    COMPETENCE_FORM = "Бланк компетенций"
     
 
 class SurveyRepeatTypeEnum(str, enum.Enum):
