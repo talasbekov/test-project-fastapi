@@ -109,6 +109,25 @@ async def analyze_by_questions(*,
     return answer_service.analyze_by_question(db, str(survey_id))
 
 
+@router.get("/question-text/{question_id}/", dependencies=[Depends(HTTPBearer())],
+            summary="Analyze question with text type")
+async def analyze_by_questions(*,
+                question_id: uuid.UUID,
+                db: Session = Depends(get_db),
+                Authorize: AuthJWT = Depends()
+                ):
+    """
+        Get all Answer by question
+
+        - **skip**: int - The number of answers to skip before returning the results. 
+                This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of answers to return in the response. 
+            This parameter is optional and defaults to 100.
+    """
+    Authorize.jwt_required()
+    return answer_service.analyze_by_question_with_text_type(db, str(question_id))
+
+
 
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
