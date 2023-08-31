@@ -204,6 +204,54 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
 
         return list(organized_results.values())
 
+    def analyze_by_question_with_text_type(self, db: Session, question_id: str):      
+        results = (
+            db.query(Question.id.label("question_id"),
+                     func.to_char(Question.text).label("question_text"),
+                     func.to_char(Question.textKZ).label("question_textKZ"),
+                     func.count(Answer.id).label("answer_count"),
+                     func.to_char(AnswerText.text).label("answer_text"),
+                     User.first_name, User.last_name, User.id)\
+                .join(Question, Answer.question_id == Question.id)
+                .join(User, self.model.user_id == User.id)
+                .filter(
+                    Question.id == question_id,
+                    func.to_char(Question.question_type) == QuestionTypeEnum.TEXT.name
+                )
+                .group_by(Question.id, func.to_char(Question.text), func.to_char(Question.textKZ),
+                          func.to_char(AnswerText.text),
+                          User.first_name, User.last_name, User.id)
+                .all()
+        )
+
+        organized_results = {}
+        for result in results:
+            question_id = result.question_id
+            if question_id not in organized_results:
+                organized_results[question_id] = {
+                    "question_id": result.question_id,
+                    "question_text": result.question_text,
+                    "question_textKZ": result.question_textKZ,
+                    "answers": []
+                }
+            
+            answer = {
+                "answer_text": result.answer_text,
+                "answer_count": result.answer_count,
+                "responded_users": []
+            }
+
+            organized_results[question_id]["answers"].append(answer)
+            
+            responded_users = {
+                "id": result.id,
+                "first_name": result.first_name,
+                "last_name": result.last_name
+            }
+            
+            organized_results[question_id]["answers"][-1]["responded_users"].append(responded_users)
+
+        return list(organized_results.values())
     
     
     def create(self, db: Session, body: AnswerCreate, user_id: str) -> Answer:
