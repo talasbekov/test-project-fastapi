@@ -99,10 +99,6 @@ class HrVacancyService(
     def create(self, db: Session, body: HrVacancyCreate,
                role_id: str) -> HrVacancy:
 
-        if not self._check_by_role(db, role_id):
-            raise ForbiddenException(
-                "You don't have permission to manage vacancy!")
-
         staff_unit = staff_unit_service.get_by_id(db, body.staff_unit_id)
 
         vacancy = self.model()  # init object
@@ -122,10 +118,6 @@ class HrVacancyService(
     def create_by_archive_staff_unit(
             self, db: Session, body: HrVacancyCreate, role_id: str) -> HrVacancy:
 
-        if not self._check_by_role(db, role_id):
-            raise ForbiddenException(
-                "You don't have permission to manage vacancy!")
-
         archieve_staff_unit = archive_staff_unit_service.get_by_id(
             db, body.staff_unit_id)
 
@@ -144,10 +136,6 @@ class HrVacancyService(
 
     def get_candidates(self, db: Session, id: str,
                        role_id: str) -> List[HrVacancyCandidateRead]:
-
-        if not self._check_by_role(db, role_id):
-            raise ForbiddenException(
-                "You don't have permission to manage vacancy!")
 
         vacancy = self.get_by_id(db, id)
 
@@ -188,10 +176,6 @@ class HrVacancyService(
 
     def unactive(self, db: Session, id: str, role_id: str) -> HrVacancy:
 
-        if not self._check_by_role(db, role_id):
-            raise ForbiddenException(
-                "You don't have permission to manage vacancy!")
-
         vacancy = self.get_by_id(db, id)
 
         vacancy.is_active = False
@@ -203,10 +187,6 @@ class HrVacancyService(
 
     def update(self, db: Session, hr_vacancy: HrVacancy,
                body: HrVacancyUpdate, role_id: str) -> HrVacancy:
-
-        if not self._check_by_role(db, role_id):
-            raise ForbiddenException(
-                "You don't have permission to manage vacancy!")
 
         if body.hr_vacancy_requirements_ids is not None:
             hr_vacancy.hr_vacancy_requirements = self._set_requirements_to_vacancy(
