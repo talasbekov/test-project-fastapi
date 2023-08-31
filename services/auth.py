@@ -8,6 +8,7 @@ from fastapi import HTTPException, status
 from fastapi_jwt_auth import AuthJWT
 from pydantic import EmailStr
 from sqlalchemy.orm import Session
+from sqlalchemy.sql import text
 
 from core import configs
 from exceptions import BadRequestException
@@ -142,15 +143,21 @@ class AuthService():
         current_user_staff_unit: StaffUnit = staff_unit_service.get_by_id(
             db, staff_unit_id)
         current_user: User = current_user_staff_unit.actual_users[0]
-
+        if isinstance(current_user_staff_unit.staff_division.description, dict):
+            current_user_staff_unit.staff_division.description = json.dumps(current_user_staff_unit.staff_division.description)
+        if isinstance(current_user_staff_unit.requirements, list):
+            current_user_staff_unit.requirements = json.dumps(current_user_staff_unit.requirements)
         # Create new staff unit for candidate
         special_candidate_group = staff_division_service.get_by_name(
             db, StaffDivisionEnum.CANDIDATES.value)
+        if isinstance(special_candidate_group.description, dict):
+            special_candidate_group.description = json.dumps(special_candidate_group.description)
         staff_unit = staff_unit_service.create(db, obj_in=StaffUnitCreate(
             position_id=current_user_staff_unit.position_id,
             staff_division_id=special_candidate_group.id
         ))
-
+        if isinstance(staff_unit.staff_division.description, dict):
+            staff_unit.staff_division.description = json.dumps(staff_unit.staff_division.description)
         # Generate fake personal information for candidate
         first_names = [
             "Канат",
@@ -219,9 +226,7 @@ class AuthService():
             password=None,
             is_active=True
         )
-
         user = user_service.create(db=db, obj_in=user_obj_in)
-
         candidate_service.create(db, body=CandidateCreate(
             staff_unit_curator_id=str(current_user_staff_unit.id),
             staff_unit_id=str(staff_unit.id)

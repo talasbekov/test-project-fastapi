@@ -211,8 +211,8 @@ class CandidateService(
             Creates a new candidate and associated CandidateStageInfo
             objects for each stage type.
         """
-        staff_unit_service.get_by_id(db, str(body.staff_unit_curator_id))
-        staff_unit_service.get_by_id(db, str(body.staff_unit_id))
+        # staff_unit_service.get_by_id(db, str(body.staff_unit_curator_id))
+        # staff_unit_service.get_by_id(db, str(body.staff_unit_id))
         candidate = super().create(db, body)
 
         stage_types = db.query(CandidateStageType).all()
