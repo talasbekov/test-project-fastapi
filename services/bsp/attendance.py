@@ -1,4 +1,5 @@
 import datetime
+import json
 import uuid
 
 from sqlalchemy import func, or_, text
@@ -22,9 +23,30 @@ from .attended_user import attended_user_service
 class AttendanceService(ServiceBase[Attendance, AttendanceCreate, AttendanceUpdate]):
 
     def create(self, db: Session, attendance: AttendanceCreate):
-        attendance = super().create(db, attendance)
+        params = {'attendance_date': str(attendance.attendance_date),
+                  'schedule_id': str(attendance.schedule_id),
+                  'id': str(uuid.uuid4())}
+        db.execute(text("""
+                        INSERT INTO HR_ERP_ATTENDANCES
+                        (attendance_date, schedule_id, id)
+                        VALUES(TO_DATE(:attendance_date, 'YYYY-MM-DD'),
+                               :schedule_id,
+                               :id)
+                        """),
+                   params)
+
+        attendance = self.get_by_id(db, params['id'])
+
         month_id = attendance.schedule_id
         schedule_year = schedule_year_service.get_by_schedule_month_id(db, month_id)
+
+        for group in schedule_year['objects'].staff_divisions:
+            for staff_unit in group.staff_units:
+                if isinstance(staff_unit.requirements, list):
+                    staff_unit.requirements = json.dumps(staff_unit.requirements)
+            if isinstance(group.description, dict):
+                group.description = json.dumps(group.description)
+
         users = schedule_year['objects'].users
         attended_users = []
         for user in users:
@@ -41,23 +63,24 @@ class AttendanceService(ServiceBase[Attendance, AttendanceCreate, AttendanceUpda
         db.flush()
 
         db.commit()
+
         return attendance
 
     def create_by_schedule_month(self, db: Session, schedule_month):
+        for group in schedule_month.schedule.staff_divisions:
+            for staff_unit in group.staff_units:
+                if isinstance(staff_unit.requirements, list):
+                    staff_unit.requirements = json.dumps(staff_unit.requirements)
+            if isinstance(group.description, dict):
+                group.description = json.dumps(group.description)
+
         for schedule_day in schedule_month.days:
             for weekday_date in schedule_day.activity_dates:
-                params = {'attendance_date': str(weekday_date.activity_date),
-                          'schedule_id': str(schedule_month.id),
-                          'id': str(uuid.uuid4())}
-                db.execute(text("""
-                                INSERT INTO HR_ERP_ATTENDANCES
-                                (attendance_date, schedule_id, id)
-                                VALUES(TO_DATE(:attendance_date, 'YYYY-MM-DD'),
-                                       :schedule_id,
-                                       :id)
-                                """),
-                           params)
-
+                self.create(db, AttendanceCreate(
+                    attendance_date=weekday_date.activity_date,
+                    schedule_id=schedule_month.id
+                ))
+                db.commit()
 
     def get_percentage_by_user_id(self, db: Session, user_id: str):
         attendances_count = (db.query(func.count('id'), Attendance.schedule_id)
@@ -105,13 +128,15 @@ class AttendanceService(ServiceBase[Attendance, AttendanceCreate, AttendanceUpda
         schedule_months = (
             db.query(ScheduleMonth.id)
             .join(ScheduleYear.months)
-            .filter(ScheduleMonth.schedule_id == schedule_id)
+            .filter(ScheduleMonth.schedule_id == str(schedule_id))
         )
+        print(schedule_months)
         attendances = (
             db.query(Attendance.id)
             .filter(Attendance.schedule_id.in_(schedule_months))
         )
-
+        print(schedule_months.all())
+        print(attendances)
         absent_users = (
             db.query(User)
             .join(AttendedUser)
@@ -120,6 +145,8 @@ class AttendanceService(ServiceBase[Attendance, AttendanceCreate, AttendanceUpda
                     == AttendanceStatus.ABSENT_REASON.name)
             .all()
         )
+        print(attendances.all())
+        print(absent_users)
 
         return absent_users
 

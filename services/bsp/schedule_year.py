@@ -215,16 +215,16 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
                                plan_id: str):
         schedules = (db.query(ScheduleYear)
                      .join(ScheduleYear.staff_divisions)
-                     .filter(StaffDivision.id == id,
-                             ScheduleYear.plan_id == plan_id)
+                     .filter(StaffDivision.id == str(id),
+                             ScheduleYear.plan_id == str(plan_id))
                      .order_by(self.model.created_at.desc())
                      .all()
                      )
 
-        total = (db.query(self.model)
+        total = (db.query(ScheduleYear)
                  .join(ScheduleYear.staff_divisions)
-                 .filter(StaffDivision.id == id,
-                         ScheduleYear.plan_id == plan_id)
+                 .filter(StaffDivision.id == str(id),
+                         ScheduleYear.plan_id == str(plan_id))
                  .count())
 
         for schedule in schedules:
