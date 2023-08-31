@@ -76,6 +76,11 @@ class AttendanceRead(AttendanceBase):
     class_status: Optional[str]
 
 
+class AttendanceReadShort(AttendanceBase):
+    id: Optional[str]
+    class_status: Optional[str]
+
+
 class AttendancePercentageRead(BaseModel):
     activity: Optional[ActivityRead]
     percentage: Optional[int]

@@ -2,7 +2,7 @@ import uuid
 import json
 import datetime
 
-from sqlalchemy import func, or_
+from sqlalchemy import func, or_, text
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
@@ -94,24 +94,37 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
 
         return {'total': total, 'objects': schedules}
 
-    def remove_staff_division_from_schedule(self, db: Session,
-                                            schedule_id: str,
-                                            division_id: str):
-        staff_division_service.get_by_id(db, str(division_id))
-        self.get_by_id(db, str(schedule_id))
-        obj = (db.query(ScheduleYear)
-               .join(ScheduleYear.staff_divisions)
-               .filter(ScheduleYear.id == schedule_id,
-                       StaffDivision.id == division_id)
-               .first()
-               )
-        if obj.staff_divisions is None:
-            super().remove(db, str(schedule_id))
+    def remove_schedule_with_staff_divisions(self, db: Session,
+                                            schedule_id: str):
+        schedule_year = self.get_by_id(db, str(schedule_id))
+        for group in schedule_year.staff_divisions:
+            for staff_unit in group.staff_units:
+                if isinstance(staff_unit.requirements, list):
+                    staff_unit.requirements = json.dumps(
+                        staff_unit.requirements)
+            if isinstance(group.description, dict):
+                group.description = json.dumps(group.description)
 
-        db.delete(obj)
+        schedule_months = schedule_month_service.get_by_schedule_year_id(db, schedule_id)
+
+        for schedule_month in schedule_months:
+            schedule_month_service.remove(db, schedule_month.id)
+
+        exam_months = exam_service.get_by_schedule_year_id(db, schedule_id)
+
+        if exam_months is not None:
+            for exam_month in exam_months:
+                exam_service.remove(db, exam_month.id)
+
+        db.delete(schedule_year)
         db.flush()
+        db.commit()
 
-        return obj
+        for group in schedule_year.staff_divisions:
+            if isinstance(group.description, str):
+                group.description = json.loads(group.description)
+
+        return schedule_year
 
     def get_all_by_plan_year(self,
                              db: Session,
@@ -176,10 +189,10 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
                  .filter(ScheduleYear.id == month.schedule_id,
                          ScheduleYear.is_active == True)
                  .count())
-
-        for group in year.staff_divisions:
-            if isinstance(group.description, str):
-                group.description = json.loads(group.description)
+        if year is not None:
+            for group in year.staff_divisions:
+                if isinstance(group.description, str):
+                    group.description = json.loads(group.description)
 
         return {'total': total, 'objects': year}
 
@@ -281,6 +294,7 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
         (db.query(ScheduleYear)
          .filter(ScheduleYear.plan_id == plan_id)
          .update({self.model.is_active: False}))
+
 
     def _add_filter_to_query(self, query, filter):
         key_words = [word + '%' for word in filter.lower().split()]

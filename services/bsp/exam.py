@@ -66,15 +66,6 @@ class ExamService(ServiceBase[ExamSchedule, ExamScheduleCreate, ExamScheduleUpda
 
 
     def create(self, db: Session, body: ExamScheduleCreateWithInstructors):
-        # exam_schedule = super().create(db,
-        #                                 ExamScheduleCreate(
-        #                                     start_date=body.start_date,
-        #                                     end_date=body.end_date,
-        #                                     start_time=body.start_time,
-        #                                     end_time=body.end_time,
-        #                                     place_id=body.place_id,
-        #                                     schedule_id=body.schedule_id
-        #                                 ))
         params = {'start_date': str(body.start_date),
                   'end_date': str(body.end_date),
                   'start_time': str(body.start_time),
@@ -125,6 +116,41 @@ class ExamService(ServiceBase[ExamSchedule, ExamScheduleCreate, ExamScheduleUpda
                     group.description = json.loads(group.description)
 
         return schedule
+
+    def get_by_schedule_year_id(self,
+                                db: Session,
+                                schedule_id: str):
+        schedules = (
+            db.query(ExamSchedule)
+            .filter(ExamSchedule.schedule_id == schedule_id)
+            .all()
+        )
+        if schedules is not None:
+            for exam in schedules:
+                for group in exam.schedule.staff_divisions:
+                    if isinstance(group.description, str):
+                        group.description = json.loads(group.description)
+
+        return schedules
+
+    def remove(self, db: Session, id: str):
+        exam = self.get_by_id(db, id)
+        if exam.schedule is not None:
+            for group in exam.schedule.staff_divisions:
+                for staff_unit in group.staff_units:
+                    if isinstance(staff_unit.requirements, list):
+                        staff_unit.requirements = json.dumps(
+                            staff_unit.requirements)
+                if isinstance(group.description, dict):
+                    group.description = json.dumps(group.description)
+        db.delete(exam)
+        db.flush()
+        if exam.schedule is not None:
+            for group in exam.schedule.staff_divisions:
+                if isinstance(group.description, str):
+                    group.description = json.loads(group.description)
+        return exam
+
 
 
 exam_service = ExamService(ExamSchedule)

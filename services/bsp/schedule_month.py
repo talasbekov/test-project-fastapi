@@ -207,5 +207,22 @@ class ScheduleMonthService(ServiceBase[ScheduleMonth,
 
         return schedules
 
+    def remove(self, db: Session, id: str):
+        schedule_month = self.get_by_id(db, id)
+        if schedule_month.schedule is not None:
+            for group in schedule_month.schedule.staff_divisions:
+                for staff_unit in group.staff_units:
+                    if isinstance(staff_unit.requirements, list):
+                        staff_unit.requirements = json.dumps(
+                            staff_unit.requirements)
+                if isinstance(group.description, dict):
+                    group.description = json.dumps(group.description)
+        db.delete(schedule_month)
+        db.flush()
+        if schedule_month.schedule is not None:
+            for group in schedule_month.schedule.staff_divisions:
+                if isinstance(group.description, str):
+                    group.description = json.loads(group.description)
+        return schedule_month
 
 schedule_month_service = ScheduleMonthService(ScheduleMonth)

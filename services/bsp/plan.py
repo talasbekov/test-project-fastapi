@@ -222,17 +222,27 @@ class BspPlanService(ServiceBase[BspPlan, BspPlanCreate, BspPlanUpdate]):
 
         plan.status = PlanStatus.DRAFT.name
 
+        for year in plan.schedule_years:
+            for group in year.staff_divisions:
+                for staff_unit in group.staff_units:
+                    if isinstance(staff_unit.requirements, list):
+                        staff_unit.requirements = json.dumps(staff_unit.requirements)
+                if isinstance(group.description, dict):
+                    group.description = json.dumps(group.description)
+
         schedule_year_service.send_all_to_draft_by_plan(db, plan.id)
+
+        db.add(plan)
+        db.flush()
+
+        db.commit()
 
         if plan.schedule_years != [] or plan.schedule_years is not None:
             for year in plan.schedule_years:
                 for group in year.staff_divisions:
                     if isinstance(group.description, str):
                         group.description = json.loads(group.description)
-        db.add(plan)
-        db.flush()
 
-        db.commit()
         return plan
 
     def get_by_id(self, db: Session, id: str):
@@ -248,6 +258,31 @@ class BspPlanService(ServiceBase[BspPlan, BspPlanCreate, BspPlanUpdate]):
                         group.description = json.loads(group.description)
 
         return res
+
+    def remove(self, db: Session, id: str):
+        obj = self.get_by_id(db, id)
+
+        for schedule_year in obj.schedule_years:
+
+            for group in schedule_year.staff_divisions:
+                for staff_unit in group.staff_units:
+                    if isinstance(staff_unit.requirements, list):
+                        staff_unit.requirements = json.dumps(
+                            staff_unit.requirements)
+                if isinstance(group.description, dict):
+                    group.description = json.dumps(group.description)
+
+            schedule_year_service.remove_schedule_with_staff_divisions(db,
+                                                                       schedule_year.id)
+
+        db.delete(obj)
+        db.flush()
+        for schedule_year in obj.schedule_years:
+            for group in schedule_year.staff_divisions:
+                if isinstance(group.description, str):
+                    group.description = json.loads(group.description)
+        return obj
+
 
 
 
