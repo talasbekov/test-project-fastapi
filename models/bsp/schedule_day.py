@@ -14,6 +14,9 @@ class Day(NamedModel):
 class ActivityDate(Model):
     __tablename__ = "hr_erp_activity_dates"
     activity_date = Column(Date)
+    schedule_day = relationship("ScheduleDay",
+                                  secondary=activity_date_days,
+                                  cascade='all,delete')
 
 
 class ScheduleDay(Model):

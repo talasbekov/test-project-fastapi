@@ -16,7 +16,8 @@ from schemas import (AttendanceRead,
                      AttendanceChangeStatusWithSchedule,
                      UserShortRead,
                      AttendanceReadPagination,
-                     AttendedUserRead,)
+                     AttendedUserRead,
+                     AttendanceReadShort)
 
 from services import attendance_service, attended_user_service
 
@@ -117,6 +118,24 @@ async def get_attendance_percentage(*,
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
     return attendance_service.get_percentage_by_user_id(db, user_id)
+
+@router.get("/user/absent/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=List[AttendanceReadShort],
+            summary="Get all absent days by user for the ScheduleYear")
+async def get_absent_days_by_user(*,
+                    db: Session = Depends(get_db),
+                    id: str,
+                    user_id: str,
+                    Authorize: AuthJWT = Depends()
+                    ):
+    """
+        Get all absent users for the ScheduleYear
+
+        - **id**: String - required. ScheduleYear id
+        - **user_id**: String - required. User id
+    """
+    Authorize.jwt_required()
+    return attendance_service.get_absent_days_by_user(db, user_id, id)
 
 @router.get("/absent/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=List[UserShortRead],

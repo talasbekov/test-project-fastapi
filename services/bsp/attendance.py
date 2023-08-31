@@ -130,13 +130,10 @@ class AttendanceService(ServiceBase[Attendance, AttendanceCreate, AttendanceUpda
             .join(ScheduleYear.months)
             .filter(ScheduleMonth.schedule_id == str(schedule_id))
         )
-        print(schedule_months)
         attendances = (
             db.query(Attendance.id)
             .filter(Attendance.schedule_id.in_(schedule_months))
         )
-        print(schedule_months.all())
-        print(attendances)
         absent_users = (
             db.query(User)
             .join(AttendedUser)
@@ -145,8 +142,6 @@ class AttendanceService(ServiceBase[Attendance, AttendanceCreate, AttendanceUpda
                     == AttendanceStatus.ABSENT_REASON.name)
             .all()
         )
-        print(attendances.all())
-        print(absent_users)
 
         return absent_users
 
@@ -200,6 +195,31 @@ class AttendanceService(ServiceBase[Attendance, AttendanceCreate, AttendanceUpda
         )
 
         return absent_users
+
+
+    def get_absent_days_by_user(self, db: Session, user_id: str, schedule_id: str):
+        schedule_months = (
+            db.query(ScheduleMonth.id)
+            .join(ScheduleYear.months)
+            .filter(ScheduleMonth.schedule_id == str(schedule_id))
+        )
+        attendances = (
+            db.query(Attendance)
+            .join(AttendedUser)
+            .filter(AttendedUser.user_id == str(user_id))
+            .filter(Attendance.schedule_id.in_(schedule_months),
+                    func.to_char(AttendedUser.attendance_status)
+                    == str(AttendanceStatus.ABSENT_REASON.name))
+            .all()
+        )
+        for attendance in attendances:
+            schedule_month = attendance.schedule
+            if schedule_month is not None:
+                for group in schedule_month.schedule.staff_divisions:
+                    if isinstance(group.description, str):
+                        group.description = json.loads(group.description)
+
+        return attendances
 
 
 attendance_service = AttendanceService(Attendance)
