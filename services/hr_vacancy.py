@@ -175,8 +175,15 @@ class HrVacancyService(
         )
 
         db.add(hr_vacancy_candidate)
-        db.flush()
+        db.commit()
 
+        if isinstance(current_user.staff_unit.requirements, str):
+            current_user.staff_unit.requirements = json.loads(current_user.staff_unit.requirements)
+        if isinstance(vacancy.staff_unit.requirements, str):
+            vacancy.staff_unit.requirements = json.loads(vacancy.staff_unit.requirements)
+        if isinstance(vacancy.staff_unit.staff_division.description, str):
+            vacancy.staff_unit.staff_division.description = json.loads(vacancy.staff_unit.staff_division.description)
+        
         return vacancy
 
     def unactive(self, db: Session, id: str, role_id: str) -> HrVacancy:
