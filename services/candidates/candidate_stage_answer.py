@@ -73,7 +73,7 @@ class CandidateStageAnswerService(
 
     def get_all_by_candidate_id(
             self, db: Session, candidate_id: str) -> List[CandidateStageAnswerRead]:
-        stage_types = db.query(CandidateStageType).all()
+        stage_types = db.query(CandidateStageType).order_by(CandidateStageType.stage_order).all()
         for stage_type in stage_types:
             questions = stage_type.cand_stage_questions
             for question in questions:

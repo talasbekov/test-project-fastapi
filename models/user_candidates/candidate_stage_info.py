@@ -22,7 +22,7 @@ class CandidateStageInfo(Model):
     status = Column(
         Enum(CandidateStageInfoStatusEnum),
         nullable=True,
-        server_default=CandidateStageInfoStatusEnum.NOT_STARTED.value)
+        default=CandidateStageInfoStatusEnum.NOT_STARTED.value)
     date_sign = Column(TIMESTAMP(timezone=True), nullable=True, default=None)
     candidate_id = Column(
         String(),

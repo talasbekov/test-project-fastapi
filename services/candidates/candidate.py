@@ -215,7 +215,8 @@ class CandidateService(
         # staff_unit_service.get_by_id(db, str(body.staff_unit_id))
         candidate = super().create(db, body)
 
-        stage_types = db.query(CandidateStageType).all()
+        stage_types = db.query(CandidateStageType).order_by(
+            CandidateStageType.stage_order).all()
         for stage_type in stage_types:
             candidate_stage_info = CandidateStageInfoCreate(
                 candidate_id=str(candidate.id),
