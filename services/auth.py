@@ -142,7 +142,7 @@ class AuthService():
         # Get current user and staff unit
         current_user_staff_unit: StaffUnit = staff_unit_service.get_by_id(
             db, staff_unit_id)
-        current_user: User = current_user_staff_unit.actual_users[0]
+        current_user: User = current_user_staff_unit.users[0]
         if isinstance(current_user_staff_unit.staff_division.description, dict):
             current_user_staff_unit.staff_division.description = json.dumps(current_user_staff_unit.staff_division.description)
         if isinstance(current_user_staff_unit.requirements, list):
