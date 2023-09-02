@@ -102,6 +102,12 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
             func.to_char(self.model.type) != SurveyTypeEnum.COMPETENCE_FORM.name,
             func.to_char(self.model.status) == status.name
         ).scalar()
+        
+    def get_count_competence_forms(self, db: Session, status: SurveyStatusEnum) -> int:
+        return db.query(func.count(self.model.id)).filter(
+            func.to_char(self.model.type) == SurveyTypeEnum.COMPETENCE_FORM.name,
+            func.to_char(self.model.status) == status.name
+        ).scalar()
     
     def get_expired_by_repeat_type(self, db: Session, repeat_type: str):
         return db.query(self.model).filter(

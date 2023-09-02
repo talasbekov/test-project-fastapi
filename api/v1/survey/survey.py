@@ -41,7 +41,34 @@ async def get_all_active(*,
                                                     skip,
                                                     limit)
     }
+    
 
+@router.get("/competence_forms", dependencies=[Depends(HTTPBearer())],
+            response_model=SurveyReadPagination,
+            summary="Get all competence forms")
+async def get_all_competence_forms(*,
+                                   db: Session = Depends(get_db),
+                                   skip: int = 0,
+                                   limit: int = 100,
+                                   Authorize: AuthJWT = Depends()
+                                   ):
+    """
+        Get all competence forms
+
+        - **skip**: int - The number of surveys to skip before returning the results. 
+                This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of surveys to return in the response. 
+            This parameter is optional and defaults to 100.
+    """
+    Authorize.jwt_required()
+    return {
+        'total': survey_service.get_count_competence_forms(db, SurveyStatusEnum.ACTIVE),
+        'objects': survey_service.get_all_competence_forms_by_status(
+                                                    db,
+                                                    SurveyStatusEnum.ACTIVE,
+                                                    skip,
+                                                    limit)
+    }
 
 @router.get("/archives", dependencies=[Depends(HTTPBearer())],
             response_model=SurveyReadPagination,
