@@ -18,7 +18,7 @@ class Candidate(Model):
     __tablename__ = "hr_erp_candidates"
 
     status = Column(Enum(CandidateStatusEnum),
-                    server_default=CandidateStatusEnum.ACTIVE)
+                    default=CandidateStatusEnum.ACTIVE)
     debarment_reason = Column(String, nullable=True)
     is_physical_passed = Column(Boolean, nullable=True)
     attempt_number = Column(Integer, server_default='0', nullable=True)
