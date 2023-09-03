@@ -213,9 +213,10 @@ class StaffUnitService(
     def update_from_archive(self, db: Session, archive_staff_unit: ArchiveStaffUnit,
                             staff_division_id: str):
         staff_unit = self.get_by_id(db, archive_staff_unit.origin_id)
-        res = super().update(
+        res = self._update(
             db,
             db_obj=staff_unit,
+            obj_data=staff_unit.__dict__,
             obj_in=StaffUnitUpdate(
                 position_id=archive_staff_unit.position_id,
                 curator_of_id=archive_staff_unit.curator_of_id,
@@ -306,6 +307,25 @@ class StaffUnitService(
         else:
             raise BadRequestException('Должность не найдена')
 
+    def _update(
+        self,
+        db: Session,
+        *,
+        db_obj: StaffUnit,
+        obj_data: dict,
+        obj_in: StaffUnitUpdate
+    ) -> StaffUnit:
+        if isinstance(obj_in, dict):
+            update_data = obj_in
+        else:
+            update_data = obj_in.dict(exclude_unset=True)
+        for field in obj_data:
+            if field in update_data:
+                setattr(db_obj, field, update_data[field])
+        db.add(db_obj)
+        db.flush()
+        return db_obj
+    
     def _add_document_staff_function_to_curator(self,
                                                 db: Session,
                                                 department: str,

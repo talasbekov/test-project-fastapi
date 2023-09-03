@@ -37,7 +37,7 @@ class StaffDivisionService(
         if isinstance(group.description, str):
             group.description = json.loads(group.description)
         return group
-
+    
     def delete(self, db: Session, id: str) -> StaffDivision:
         staff_division = self.get_by_id(db, id)
         (db.query(ArchiveStaffDivision)
@@ -270,9 +270,10 @@ class StaffDivisionService(
         if archive_staff_division.name == StaffDivisionEnum.DISPOSITION.value:
             parent_id = self.get_by_name(
                 db, StaffDivisionEnum.SPECIAL_GROUP.value).id
-        res = super().update(
+        res = self._update(
             db,
             db_obj=staff_division,
+            obj_data=staff_division.__dict__,
             obj_in=StaffDivisionUpdate(
                 name=archive_staff_division.name,
                 nameKZ=archive_staff_division.nameKZ,
@@ -335,6 +336,25 @@ class StaffDivisionService(
             super().remove(db, staff_division.id)
         db.flush()
 
+    def _update(
+        self,
+        db: Session,
+        *,
+        db_obj: StaffDivision,
+        obj_data: dict,
+        obj_in: StaffDivisionUpdate
+    ) -> StaffDivision:
+        if isinstance(obj_in, dict):
+            update_data = obj_in
+        else:
+            update_data = obj_in.dict(exclude_unset=True)
+        for field in obj_data:
+            if field in update_data:
+                setattr(db_obj, field, update_data[field])
+        db.add(db_obj)
+        db.flush()
+        return db_obj
+    
     def _replace_secondment_division_id_with_name(self,
                                                   db,
                                                   staff_division: StaffDivision):
