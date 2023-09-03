@@ -131,7 +131,6 @@ class StaffListService(
         document_link: str
     ):
         staff_list = self.get_by_id(db, staff_list_id)
-        print(staff_list.id)
         task.update_state(state=10)
         staff_division_service.make_all_inactive(db)
         exclude_staff_division_ids = [

@@ -44,7 +44,6 @@ class AttendedUserService(ServiceBase[AttendedUser,
             .filter(func.to_char(Activity.name) == body.activity)
             .first()
         )
-        print(schedule_month)
         if schedule_month is None:
             raise NotFoundException(
                 detail=f"ScheduleMonth with id {id} not found!")

@@ -215,7 +215,6 @@ class StaffDivisionService(
                       id: Optional[str],
                       skip: int, limit: int):
         if id is None:
-            print(id)
             all_except_special = self.get_all_except_special(db, skip, limit)
             return [StaffDivisionOptionRead.from_orm(
                 i) for i in all_except_special]

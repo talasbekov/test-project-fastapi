@@ -55,7 +55,6 @@ class PositionChangeHandler(BaseHandler):
         document.old_history_id = old_history.id
         if isinstance(user.staff_unit.staff_division.description, dict):
             user.staff_unit.staff_division.description = json.dumps(user.staff_unit.staff_division.description)
-        print('animeee3')
         db.add(user)
         db.add(history)
         db.add(document)

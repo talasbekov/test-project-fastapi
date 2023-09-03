@@ -227,7 +227,6 @@ async def initialize_with_certificate(*,
     user_id = Authorize.get_jwt_subject()
     role = Authorize.get_raw_jwt()['role']
     access_token = get_access_token_by_user_id(Authorize, db, user_id)
-    print(access_token)
     return await hr_document_service.initialize_with_certificate(db,
                                                                  body,
                                                                  str(user_id),

@@ -137,7 +137,6 @@ class HrDocumentService(
         due_date = obj_in_data.get('due_date', None)
         if due_date is not None:
             obj_in_data['due_date'] = datetime.strptime(obj_in_data['due_date'], format_string)
-        print(obj_in_data['due_date'])
         
         db_obj = self.model(**obj_in_data)  # type: ignore
         db.add(db_obj)
@@ -698,15 +697,15 @@ class HrDocumentService(
             query = db.execute(text(f"SELECT id FROM HR_ERP_HR_DOCUMENT_STATUSES WHERE name = '{HrDocumentStatusEnum.IN_PROGRESS.value}'"))
             document.status_id = query.fetchone()[0]
         else:
-            if next_step is None:
-                if isinstance(document.properties, dict):
+            if isinstance(document.properties, dict):
                      document.properties = json.dumps(document.properties)
-                if isinstance(document.document_template.properties, dict):
-                     document.document_template.properties = json.dumps(document.document_template.properties)
-                if isinstance(document.document_template.description, dict):
-                     document.document_template.description = json.dumps(document.document_template.description)
-                if isinstance(document.document_template.actions, dict):
-                     document.document_template.actions = json.dumps(document.document_template.actions)
+            if isinstance(document.document_template.properties, dict):
+                    document.document_template.properties = json.dumps(document.document_template.properties)
+            if isinstance(document.document_template.description, dict):
+                    document.document_template.description = json.dumps(document.document_template.description)
+            if isinstance(document.document_template.actions, dict):
+                    document.document_template.actions = json.dumps(document.document_template.actions)
+            if next_step is None:
                 return self._cancel_document(db, document)
 
             steps = (
@@ -966,7 +965,6 @@ class HrDocumentService(
                     raise InvalidOperationException(
                         f"Action {action_name} is not supported!"
                     )
-                print(action_name)
                 handlers[action_name].handle_action(
                     db, user, action, template_properties, document_properties, document)
 

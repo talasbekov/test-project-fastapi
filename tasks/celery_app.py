@@ -44,7 +44,7 @@ app.conf.beat_schedule = {
     }
 }
 
-SQLALCHEMY_DATABASE_URL = f"oracle://system:Oracle123@172.20.0.6:1521/MORAL"
+SQLALCHEMY_DATABASE_URL = f"oracle://system:Oracle123@172.20.0.3:1521/MORAL"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
@@ -174,17 +174,17 @@ def task_sign_document_with_certificate(
     body = pickle.loads(byte_body)
     state_counter = 0
     self.update_state(state=state_counter)
-    hr_documents = []
+    #hr_documents = []
     percent_per_document = 100/len(body.document_ids)
     for document_id in body.document_ids:
         state_counter += percent_per_document
-        hr_document = hr_document_service.sign_with_certificate(
+        hr_document_service.sign_with_certificate(
                       db,
                       document_id,
                       body,
                       user_id,
                       access_token)
-        hr_documents.append(HrDocumentRead.from_orm(hr_document).dict())
+        #hr_documents.append(HrDocumentRead.from_orm(hr_document).dict())
         self.update_state(state=state_counter)
     try:
         db.commit()
@@ -194,4 +194,4 @@ def task_sign_document_with_certificate(
     finally:
         if db:
             db.close()
-    return hr_documents
+    #return hr_documents

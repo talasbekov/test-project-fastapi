@@ -161,7 +161,6 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
     
     def __check_survey_eligibility_for_repeat(self, survey: Survey):
         if survey.status != SurveyStatusEnum.ACTIVE.value:
-            print(survey.status)
             raise BadRequestException(
                 "Repeat is not allowed for survey with status 'Draft' or 'Archive'"
             )

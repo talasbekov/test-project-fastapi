@@ -249,7 +249,6 @@ class HrDocumentTemplateService(
                 template.description = json.loads(template.description)
             if isinstance(template.actions , str):
                 template.actions = json.loads(template.actions)
-            print(template.actions)
         return hr_document_templates
         
     def get_all_drafts(
