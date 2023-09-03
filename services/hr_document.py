@@ -470,17 +470,32 @@ class HrDocumentService(
         )
         users = [v for _, v in body.document_step_users_ids.items()]
 
-        self._validate_document(db, body=body, role=role,
-                                step=step, users=body.user_ids,
-                                user_id=user_id)
-        self._validate_document_for_steps(
-            step=step, all_steps=all_steps, users=users)
+        users_in_revision = self._exists_user_document_in_revision(
+            db, body.hr_document_template_id, body.user_ids)
+        print(users_in_revision)
+        revision_doc = None
+        
+        if users_in_revision:
+            for user in users_in_revision:
+                doc = (db.query(HrDocument)
+                .filter(HrDocument.users.contains(user),
+                        HrDocument.hr_document_template_id == body.hr_document_template_id)
+                .scalar()
+                )
+
+                revision_status = hr_document_status_service.get_by_name(db, 'На доработке')
+                if doc.status != revision_status:
+                    break
+                else:
+                    revision_doc = doc
+        else:
+            self._validate_document(db, body=body, role=role,
+                                    step=step, users=body.user_ids,
+                                    user_id=user_id)
+            self._validate_document_for_steps(
+                step=step, all_steps=all_steps, users=users)
 
         current_user = user_service.get_by_id(db, user_id)
-        if(current_user.staff_unit.staff_division.description, str):
-            current_user.staff_unit.staff_division.description = json.dumps(current_user.staff_unit.staff_division.description)
-        if isinstance(current_user.staff_unit.requirements, list):
-            current_user.staff_unit.requirements = json.dumps(current_user.staff_unit.requirements)
         status = hr_document_status_service.get_by_name(
             db, HrDocumentStatusEnum.IN_PROGRESS.value)
         
@@ -556,22 +571,13 @@ class HrDocumentService(
             hr_document_info_service.sign(
                 db, document_info_initiator, current_user, None, True
             )
-    
+        
+        if revision_doc:
+            super().remove(db, revision_doc.id)
+        
         db.add(document)
         db.commit()
-        for user in document.users:
-            if isinstance(user.staff_unit.requirements, str):
-                user.staff_unit.requirements = json.loads(user.staff_unit.requirements)
-        if isinstance(current_user.staff_unit.requirements, str):
-            current_user.staff_unit.requirements = json.loads(current_user.staff_unit.requirements)
-        if isinstance(document.properties, str):
-            document.properties = json.loads(document.properties)
-        if isinstance(document.document_template.properties, str):
-            document.document_template.properties = json.loads(document.document_template.properties)
-        if isinstance(document.document_template.description, str):
-            document.document_template.description = json.loads(document.document_template.description)
-        if isinstance(document.document_template.actions, str):
-            document.document_template.actions = json.loads(document.document_template.actions)
+        
         return document
     
     async def initialize_with_certificate(self,
@@ -684,27 +690,11 @@ class HrDocumentService(
                                                    current_user)
         if body.is_signed:
             if next_step is None:
-                if isinstance(document.properties, dict):
-                     document.properties = json.dumps(document.properties)
-                if isinstance(document.document_template.properties, dict):
-                     document.document_template.properties = json.dumps(document.document_template.properties)
-                if isinstance(document.document_template.description, dict):
-                     document.document_template.description = json.dumps(document.document_template.description)
-                if isinstance(document.document_template.actions, dict):
-                     document.document_template.actions = json.dumps(document.document_template.actions)
                 return self._finish_document(db, document, document.users)
             document.last_step_id = next_step.id
             query = db.execute(text(f"SELECT id FROM HR_ERP_HR_DOCUMENT_STATUSES WHERE name = '{HrDocumentStatusEnum.IN_PROGRESS.value}'"))
             document.status_id = query.fetchone()[0]
         else:
-            if isinstance(document.properties, dict):
-                     document.properties = json.dumps(document.properties)
-            if isinstance(document.document_template.properties, dict):
-                    document.document_template.properties = json.dumps(document.document_template.properties)
-            if isinstance(document.document_template.description, dict):
-                    document.document_template.description = json.dumps(document.document_template.description)
-            if isinstance(document.document_template.actions, dict):
-                    document.document_template.actions = json.dumps(document.document_template.actions)
             if next_step is None:
                 return self._cancel_document(db, document)
 
@@ -920,6 +910,30 @@ class HrDocumentService(
                     and_(*[HrDocument.status_id !=
                            status.id for status in forbidden_statuses])
                     )
+            .all()
+           )
+        
+    def _exists_user_document_in_revision(
+            self,
+            db: Session,
+            hr_document_template_id: str,
+            user_ids: List[str]):
+
+        if user_ids is None:
+            return None
+
+        revision_status = hr_document_status_service.get_by_name(
+            db, "На доработке")
+
+        return (
+            db.query(User)
+            .distinct(User.id)
+            .join(HrDocument.users)
+            .join(HrDocumentInfo, HrDocument.id == HrDocumentInfo.hr_document_id)
+            .filter(HrDocument.hr_document_template_id == hr_document_template_id,
+                    User.id.in_(user_ids),
+                    HrDocumentInfo.signed_by_id.is_(None),
+                    HrDocument.status_id == revision_status.id)
             .all()
            )
 
