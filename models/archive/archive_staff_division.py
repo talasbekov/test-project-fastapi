@@ -1,6 +1,9 @@
+import json
+
 from sqlalchemy import Column, ForeignKey, Boolean, Integer, String
 from sqlalchemy.dialects.oracle import CLOB
 from sqlalchemy.orm import relationship
+from sqlalchemy.event import listens_for
 
 from models import NamedNestedModel
 
@@ -46,3 +49,13 @@ class ArchiveStaffDivision(NamedNestedModel):
         cascade="all, delete",
         foreign_keys=leader_id,
         post_update=True)
+
+@listens_for(ArchiveStaffDivision, 'before_update')
+def description_set_listener(mapper, connection, target):
+    if isinstance(target.description, dict):
+        target.description = json.dumps(target.description)
+        
+@listens_for(ArchiveStaffDivision, 'before_insert')
+def description_set_listener(mapper, connection, target):
+    if isinstance(target.description, dict):
+        target.description = json.dumps(target.description)

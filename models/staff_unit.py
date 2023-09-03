@@ -87,3 +87,8 @@ class StaffUnit(isActiveModel):
 def description_set_listener(mapper, connection, target):
     if isinstance(target.requirements, list):
         target.requirements = json.dumps(target.requirements)
+        
+@listens_for(StaffUnit, 'before_insert')
+def description_set_listener(mapper, connection, target):
+    if isinstance(target.requirements, list):
+        target.requirements = json.dumps(target.requirements)

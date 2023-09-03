@@ -1,6 +1,9 @@
+import json
+
 from sqlalchemy import Column, ForeignKey, ARRAY, String
 from sqlalchemy.dialects.oracle import CLOB
 from sqlalchemy.orm import relationship
+from sqlalchemy.event import listens_for
 
 from models import Model
 from .association import (
@@ -81,3 +84,13 @@ class ArchiveStaffUnit(Model):
         back_populates="archive_staff_unit",
         cascade="all,delete"
     )
+
+@listens_for(ArchiveStaffUnit, 'before_update')
+def description_set_listener(mapper, connection, target):
+    if isinstance(target.requirements, list):
+        target.requirements = json.dumps(target.requirements)
+        
+@listens_for(ArchiveStaffUnit, 'before_insert')
+def description_set_listener(mapper, connection, target):
+    if isinstance(target.requirements, list):
+        target.requirements = json.dumps(target.requirements)

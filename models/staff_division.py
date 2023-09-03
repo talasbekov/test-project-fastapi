@@ -52,3 +52,8 @@ class StaffDivision(NamedNestedModel, isActiveModel):
 def description_set_listener(mapper, connection, target):
     if isinstance(target.description, dict):
         target.description = json.dumps(target.description)
+        
+@listens_for(StaffDivision, 'before_insert')
+def description_set_listener(mapper, connection, target):
+    if isinstance(target.description, dict):
+        target.description = json.dumps(target.description)
