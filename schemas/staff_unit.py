@@ -1,7 +1,7 @@
 import datetime
 import uuid
 import json
-from typing import List, Optional
+from typing import List, Optional, Any
 
 from pydantic import EmailStr, Field, validator
 
@@ -34,6 +34,7 @@ class StaffUnitCreateWithPosition(PositionCreate):
 
 
 class StaffUnitUpdate(StaffUnitBase):
+    requirements: Optional[Any] = Field(None, nullable=True)
     curator_of_id: Optional[str] = Field(None, nullable=True)
     user_replacing_id: Optional[str] = Field(None, nullable=True)
 

@@ -1,6 +1,6 @@
 import datetime
 import uuid
-from typing import List, Optional
+from typing import List, Optional, Any
 
 from pydantic import BaseModel, EmailStr, Field, validator
 
@@ -20,10 +20,12 @@ class StaffDivisionBase(NamedModel):
 
 
 class StaffDivisionCreate(StaffDivisionBase):
+    description: Optional[Any]
     pass
 
 
 class StaffDivisionUpdate(StaffDivisionBase):
+    description: Optional[Any]
     pass
 
 
