@@ -1,6 +1,9 @@
+import json
+
 from sqlalchemy import Column, ForeignKey, ARRAY, String
 from sqlalchemy.dialects.oracle import CLOB
 from sqlalchemy.orm import relationship
+from sqlalchemy.event import listens_for
 
 from models import isActiveModel
 from .association import staff_unit_function, s_u_cand_stage_infos
@@ -79,3 +82,8 @@ class StaffUnit(isActiveModel):
         foreign_keys=[curator_of_id],
         lazy="joined"
     )
+
+@listens_for(StaffUnit, 'before_update')
+def description_set_listener(mapper, connection, target):
+    if isinstance(target.requirements, list):
+        target.requirements = json.dumps(target.requirements)

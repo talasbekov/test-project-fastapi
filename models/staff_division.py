@@ -1,8 +1,10 @@
 import enum
+import json
 
 from sqlalchemy import Column, ForeignKey, Boolean, Integer, String
 from sqlalchemy.dialects.oracle import CLOB
 from sqlalchemy.orm import relationship
+from sqlalchemy.event import listens_for
 
 from models import NamedNestedModel, isActiveModel
 
@@ -45,3 +47,8 @@ class StaffDivision(NamedNestedModel, isActiveModel):
     curators = relationship(
         "StaffUnit", back_populates="courted_group",
         foreign_keys="StaffUnit.curator_of_id")
+
+@listens_for(StaffDivision, 'before_update')
+def description_set_listener(mapper, connection, target):
+    if isinstance(target.description, dict):
+        target.description = json.dumps(target.description)
