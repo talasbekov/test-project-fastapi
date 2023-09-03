@@ -138,26 +138,15 @@ class StaffListService(
         staff_unit_service.make_all_inactive(db, exclude_staff_division_ids)
         service_staff_function_service.make_all_inactive(db)
         task.update_state(state=20)
-        
-        staff_divisions = db.query(self.model).filter(
-            ArchiveStaffDivision.staff_list_id == staff_list_id,
-            ArchiveStaffDivision.parent_group_id == None,
-            ArchiveStaffDivision.name != StaffDivisionEnum.DISPOSITION.value
-        ).all()
-        disposition_division = self.get_by_name(db,
-                                        StaffDivisionEnum.DISPOSITION.value,
-                                        staff_list_id)
-        staff_divisions.append(disposition_division)
-        
+        staff_divisions: list[ArchiveStaffDivision] = (
+            archive_staff_division_service.get_departments(
+                db, staff_list_id, 0, 100)
+        )
         new_staff_divisions = []
         task.update_state(state=30)
         for staff_division in staff_divisions:
-            if isinstance(staff_division.description, dict):
-                staff_division.description = json.dumps(staff_division.description)
             new_staff_division = self._create_staff_division(
                 db, staff_division, None, current_user_role_id)
-            if isinstance(new_staff_division.description, dict):
-                new_staff_division.description = json.dumps(new_staff_division.description)
             new_staff_divisions.append(new_staff_division)
         task.update_state(state=90)
         staff_list.document_signed_by = signed_by
@@ -300,8 +289,6 @@ class StaffListService(
         if staff_division.staff_units:
             for staff_unit in staff_division.staff_units:
                 staff_unit: StaffUnit
-                if isinstance(staff_unit.requirements, list):
-                    staff_unit.requirements = json.dumps(staff_unit.requirements)
                 staff_unit_user_id = (staff_unit.users[0].id
                                       if staff_unit.users else None)
                 staff_unit_actual_user_id = staff_unit.actual_users[
