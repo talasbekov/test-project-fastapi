@@ -137,16 +137,28 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
             ).all()
         )
         
-        users = {}
+        user_ids += (
+            db.query(self.model.user_id)
+            .join(Question, self.model.question_id == Question.id)
+            .filter(
+                self.model.discriminator == 'answer_text',
+                Question.survey_id == survey.id
+            ).all()
+        )
+        
+        user_ids = set(user_ids)
+        
+        users = []
         
         for (user_id,) in user_ids:
             if user_id not in users:
                 user = user_service.get_by_id(db, str(user_id))
-                users[user_id] = {
+                users.append({
+                    "user_id": user_id,
                     "last_name": user.last_name,
                     "first_name": user.first_name,
                     "father_name": user.father_name
-                }
+                })
 
         return users
     
