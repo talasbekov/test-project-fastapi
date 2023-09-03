@@ -450,6 +450,10 @@ class HrDocumentTemplateService(
         all_steps = {}
         if is_direct:
             if user.staff_unit.staff_division.leader_id != user.staff_unit_id:
+                if len(user.staff_unit.staff_division.leader.users) == 0:
+                    raise NotFoundException(
+                        detail="Leader for staff division of this user is not found!"
+                    )
                 all_steps[count] = user.staff_unit.staff_division.leader.users[0].id
             else:
                 staff_division = staff_division_service.get_by_id(
