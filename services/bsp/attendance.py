@@ -1,5 +1,5 @@
-import datetime
 import json
+import datetime
 import uuid
 
 from sqlalchemy import func, or_, text
@@ -40,13 +40,6 @@ class AttendanceService(ServiceBase[Attendance, AttendanceCreate, AttendanceUpda
         month_id = attendance.schedule_id
         schedule_year = schedule_year_service.get_by_schedule_month_id(db, month_id)
 
-        for group in schedule_year['objects'].staff_divisions:
-            for staff_unit in group.staff_units:
-                if isinstance(staff_unit.requirements, list):
-                    staff_unit.requirements = json.dumps(staff_unit.requirements)
-            if isinstance(group.description, dict):
-                group.description = json.dumps(group.description)
-
         users = schedule_year['objects'].users
         attended_users = []
         for user in users:
@@ -67,13 +60,6 @@ class AttendanceService(ServiceBase[Attendance, AttendanceCreate, AttendanceUpda
         return attendance
 
     def create_by_schedule_month(self, db: Session, schedule_month):
-        for group in schedule_month.schedule.staff_divisions:
-            for staff_unit in group.staff_units:
-                if isinstance(staff_unit.requirements, list):
-                    staff_unit.requirements = json.dumps(staff_unit.requirements)
-            if isinstance(group.description, dict):
-                group.description = json.dumps(group.description)
-
         for schedule_day in schedule_month.days:
             for weekday_date in schedule_day.activity_dates:
                 self.create(db, AttendanceCreate(

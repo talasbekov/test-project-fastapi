@@ -1,8 +1,7 @@
-import uuid
 import json
 import datetime
 
-from sqlalchemy import func, or_, text
+from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
@@ -97,13 +96,6 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
     def remove_schedule_with_staff_divisions(self, db: Session,
                                             schedule_id: str):
         schedule_year = self.get_by_id(db, str(schedule_id))
-        for group in schedule_year.staff_divisions:
-            for staff_unit in group.staff_units:
-                if isinstance(staff_unit.requirements, list):
-                    staff_unit.requirements = json.dumps(
-                        staff_unit.requirements)
-            if isinstance(group.description, dict):
-                group.description = json.dumps(group.description)
 
         schedule_months = schedule_month_service.get_by_schedule_year_id(db, schedule_id)
 
@@ -258,12 +250,7 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
         ))
         staff_divisions = [staff_division_service.get_by_id(db, str(division_id))
                            for division_id in schedule.staff_division_ids]
-        for group in staff_divisions:
-            for staff_unit in group.staff_units:
-                if isinstance(staff_unit.requirements, list):
-                    staff_unit.requirements = json.dumps(staff_unit.requirements)
-            if isinstance(group.description, dict):
-                group.description = json.dumps(group.description)
+
         schedule_year.staff_divisions = staff_divisions
 
         users = []

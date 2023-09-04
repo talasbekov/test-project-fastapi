@@ -86,8 +86,8 @@ async def get_all_by_staff_division(*,
             summary="Get all ScheduleYear by staff_division_id and plan_id")
 async def get_all_by_staff_division_and_plan(*,
                   db: Session = Depends(get_db),
-                  id: uuid.UUID,
-                  plan_id: uuid.UUID,
+                  id: str,
+                  plan_id: str,
                   Authorize: AuthJWT = Depends()
                   ):
     """
@@ -95,8 +95,8 @@ async def get_all_by_staff_division_and_plan(*,
 
    """
     Authorize.jwt_required()
-    staff_division_service.get_by_id(db, str(id))
-    plan_service.get_by_id(db, str(plan_id))
+    staff_division_service.get_by_id(db, id)
+    plan_service.get_by_id(db, plan_id)
     return schedule_year_service.get_all_by_division_id_and_plan_id(db, id, plan_id)
 
 

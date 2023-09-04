@@ -5,7 +5,6 @@ import uuid
 from sqlalchemy import extract, or_, and_, func
 from sqlalchemy.sql import text
 from sqlalchemy.orm import Session
-from utils import get_iso_weekdays_between_dates
 
 from models import (ScheduleMonth,
                     ScheduleDay,
@@ -15,16 +14,11 @@ from models import (ScheduleMonth,
                     ActivityDate,)
 from schemas import (ScheduleMonthCreate,
                      ScheduleMonthUpdate,
-                     ScheduleMonthCreateWithDay,
-                     ScheduleDayCreate,
-                     ActivityDateCreate,)
+                     ScheduleMonthCreateWithDay,)
 
 from services.base import ServiceBase
 
 from .schedule_day import schedule_day_service
-from .activity_date import activity_day_service
-from .day import day_service
-from .month import month_service
 from services import user_service
 
 
@@ -209,14 +203,6 @@ class ScheduleMonthService(ServiceBase[ScheduleMonth,
 
     def remove(self, db: Session, id: str):
         schedule_month = self.get_by_id(db, id)
-        if schedule_month.schedule is not None:
-            for group in schedule_month.schedule.staff_divisions:
-                for staff_unit in group.staff_units:
-                    if isinstance(staff_unit.requirements, list):
-                        staff_unit.requirements = json.dumps(
-                            staff_unit.requirements)
-                if isinstance(group.description, dict):
-                    group.description = json.dumps(group.description)
         db.delete(schedule_month)
         db.flush()
         if schedule_month.schedule is not None:

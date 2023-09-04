@@ -1,5 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Time, Integer, Date, String
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, ForeignKey, Time, Integer, Date, String, event
 from sqlalchemy.orm import relationship
 
 from models import Model, NamedModel
@@ -14,9 +13,6 @@ class Day(NamedModel):
 class ActivityDate(Model):
     __tablename__ = "hr_erp_activity_dates"
     activity_date = Column(Date)
-    schedule_day = relationship("ScheduleDay",
-                                  secondary=activity_date_days,
-                                  cascade='all,delete')
 
 
 class ScheduleDay(Model):
@@ -39,4 +35,13 @@ class ScheduleDay(Model):
     activity_month = relationship("Month")
     activity_dates = relationship("ActivityDate",
                                   secondary=activity_date_days,
+                                  overlaps="schedule_day",
                                   cascade='all,delete')
+
+@event.listens_for(ScheduleDay, 'after_delete')
+def delete_schedule_day_activity_date_days(mapper, connection, target):
+    connection.execute(
+        activity_date_days.delete().where(
+            activity_date_days.c.schedule_day_id == target.id
+        )
+    )
