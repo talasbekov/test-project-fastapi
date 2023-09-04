@@ -113,7 +113,7 @@ class AnswerService(ServiceBase[Answer, AnswerCreate, AnswerUpdate]):
             )
         )
         
-        if not user_id:
+        if user_id is not None:
             encoded_user_id = B64UUID(user_id).string
             return answers.filter(
                 (self.model.user_id == user_id) |
