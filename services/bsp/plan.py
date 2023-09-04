@@ -1,6 +1,5 @@
 import datetime
 import json
-import uuid
 
 from sqlalchemy.orm import Session
 from sqlalchemy import func
@@ -143,15 +142,6 @@ class BspPlanService(ServiceBase[BspPlan, BspPlanCreate, BspPlanUpdate]):
         plan = self.get_by_id(db, str(id))
         plan.status = PlanStatus.ACTIVE.name
         plan.signed_at = datetime.datetime.now()
-        if plan.schedule_years != [] or plan.schedule_years is not None:
-            for schedule_year in plan.schedule_years:
-                for group in schedule_year.staff_divisions:
-                    for staff_unit in group.staff_units:
-                        if isinstance(staff_unit.requirements, list):
-                            staff_unit.requirements = json.dumps(
-                                staff_unit.requirements)
-                    if isinstance(group.description, dict):
-                        group.description = json.dumps(group.description)
 
         db.add(plan)
         db.flush()
@@ -222,14 +212,6 @@ class BspPlanService(ServiceBase[BspPlan, BspPlanCreate, BspPlanUpdate]):
 
         plan.status = PlanStatus.DRAFT.name
 
-        for year in plan.schedule_years:
-            for group in year.staff_divisions:
-                for staff_unit in group.staff_units:
-                    if isinstance(staff_unit.requirements, list):
-                        staff_unit.requirements = json.dumps(staff_unit.requirements)
-                if isinstance(group.description, dict):
-                    group.description = json.dumps(group.description)
-
         schedule_year_service.send_all_to_draft_by_plan(db, plan.id)
 
         db.add(plan)
@@ -263,15 +245,6 @@ class BspPlanService(ServiceBase[BspPlan, BspPlanCreate, BspPlanUpdate]):
         obj = self.get_by_id(db, id)
 
         for schedule_year in obj.schedule_years:
-
-            for group in schedule_year.staff_divisions:
-                for staff_unit in group.staff_units:
-                    if isinstance(staff_unit.requirements, list):
-                        staff_unit.requirements = json.dumps(
-                            staff_unit.requirements)
-                if isinstance(group.description, dict):
-                    group.description = json.dumps(group.description)
-
             schedule_year_service.remove_schedule_with_staff_divisions(db,
                                                                        schedule_year.id)
 

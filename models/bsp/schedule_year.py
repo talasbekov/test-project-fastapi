@@ -36,8 +36,10 @@ class ScheduleYear(Model):
         'User',
         secondary=schedule_year_users)
     activity = relationship('Activity')
-    activity_months = relationship('Month', secondary=schedule_year_months)
-    exam_months = relationship('Month', secondary=schedule_exam_months)
+    activity_months = relationship('Month', secondary=schedule_year_months,
+                                   cascade='all,delete')
+    exam_months = relationship('Month', secondary=schedule_exam_months,
+                               cascade='all,delete')
     plan = relationship('BspPlan', back_populates='schedule_years')
     months = relationship('ScheduleMonth', back_populates='schedule'
                           , cascade='all,delete')

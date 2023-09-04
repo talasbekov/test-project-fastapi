@@ -135,14 +135,6 @@ class ExamService(ServiceBase[ExamSchedule, ExamScheduleCreate, ExamScheduleUpda
 
     def remove(self, db: Session, id: str):
         exam = self.get_by_id(db, id)
-        if exam.schedule is not None:
-            for group in exam.schedule.staff_divisions:
-                for staff_unit in group.staff_units:
-                    if isinstance(staff_unit.requirements, list):
-                        staff_unit.requirements = json.dumps(
-                            staff_unit.requirements)
-                if isinstance(group.description, dict):
-                    group.description = json.dumps(group.description)
         db.delete(exam)
         db.flush()
         if exam.schedule is not None:
