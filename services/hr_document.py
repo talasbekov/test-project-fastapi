@@ -578,6 +578,15 @@ class HrDocumentService(
         db.add(document)
         db.commit()
         
+        if isinstance(document.properties, str):
+            document.properties = json.loads(document.properties)
+        if isinstance(document.document_template.properties, str):
+            document.document_template.properties = json.loads(document.document_template.properties)
+        if isinstance(document.document_template.description, str):
+            document.document_template.description = json.loads(document.document_template.description)
+        if isinstance(document.document_template.actions, str):
+            document.document_template.actions = json.loads(document.document_template.actions)
+            
         return document
     
     async def initialize_with_certificate(self,
