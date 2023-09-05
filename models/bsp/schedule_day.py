@@ -31,6 +31,7 @@ class ScheduleDay(Model):
     month = relationship(
         "ScheduleMonth",
         back_populates="days",
+        cascade='all,delete'
     )
     activity_month = relationship("Month")
     activity_dates = relationship("ActivityDate",

@@ -10,7 +10,7 @@ from schemas import (BadgeRead, RankRead, UserStaffUnitRead,
 from schemas import Model, ReadModel, BaseModel
 
 def calculate_age_from_birthdate(birth_date):
-    today = datetime.datetime.now(datetime.timezone.utc)
+    today = datetime.datetime.now()
     age = relativedelta(today, birth_date)
     return age.years
 

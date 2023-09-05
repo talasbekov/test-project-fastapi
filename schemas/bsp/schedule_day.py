@@ -71,8 +71,8 @@ class ScheduleDayRead(ScheduleDayBase):
     day: Optional[DayRead]
     activity_dates: Optional[List[ActivityDateRead]]
     activity_month: Optional[MonthRead]
-    start_time: Optional[Any]
-    end_time: Optional[Any]
+    start_time: Optional[str]
+    end_time: Optional[str]
 
     @classmethod
     def from_orm(cls, orm_obj):

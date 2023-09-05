@@ -1,6 +1,6 @@
 import uuid
-from datetime import date, time
-from typing import Optional, List
+from datetime import date, time, datetime, timedelta
+from typing import Optional, List, Dict
 from pydantic import Field
 
 from schemas import (BaseModel,
@@ -9,6 +9,19 @@ from schemas import (BaseModel,
                      StaffDivisionReadWithoutStaffUnit)
 from .schedule_month import PlaceRead
 from .activity import ActivityRead
+
+
+def get_days_between_dates(start_date, end_date):
+    start_datetime = datetime.combine(start_date, datetime.min.time())
+    end_datetime = datetime.combine(end_date, datetime.min.time())
+
+    dates = []
+
+    while start_datetime <= end_datetime:
+        dates.append({'exam_date': start_datetime.strftime("%Y-%m-%d")})
+        start_datetime += timedelta(days=1)
+
+    return dates
 
 
 class ExamScheduleBase(BaseModel):
@@ -42,10 +55,11 @@ class ExamScheduleRead(ExamScheduleBase):
     activity: Optional[ActivityRead]
     class_status: Optional[str]
     staff_divisions: Optional[List[StaffDivisionReadWithoutStaffUnit]]
-    class_status: Optional[str]
+    exam_dates: List[Dict[str, str]]
 
     @classmethod
     def from_orm(cls, orm_obj):
+        exam_dates = get_days_between_dates(orm_obj.start_date, orm_obj.end_date)
         return cls(
             id=orm_obj.id,
             start_date=orm_obj.start_date,
@@ -61,7 +75,8 @@ class ExamScheduleRead(ExamScheduleBase):
                       if orm_obj.schedule else None),
             staff_divisions=(orm_obj.schedule.staff_divisions
                              if orm_obj.schedule else None),
-            class_status=orm_obj.class_status
+            class_status=orm_obj.class_status,
+            exam_dates=exam_dates
         )
 
 class ExamScheduleReadPagination(BaseModel):
@@ -109,3 +124,8 @@ class ExamResultRead(ExamResultBase):
 class ExamResultReadPagination(BaseModel):
     total: int = Field(0, nullable=False)
     objects: List[ExamResultRead] = Field([], nullable=False)
+
+
+class ExamTabletRead(BaseModel):
+    exams: List[ExamScheduleRead] = Field([], nullable=False)
+    results: List[ExamResultRead] = Field([], nullable=False)
