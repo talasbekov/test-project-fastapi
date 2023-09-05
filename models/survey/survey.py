@@ -43,6 +43,7 @@ class Survey(NamedModel):
         self.owner_id = kwargs.get("owner_id")
         self.type = kwargs.get("type")
         self.repeat_type = kwargs.get("repeat_type")
+        self.comp_form_for_id = kwargs.get("comp_form_for_id")
     
     description = Column(CLOB, nullable=True)
     start_date = Column(TIMESTAMP(timezone=True), nullable=True)
@@ -58,8 +59,10 @@ class Survey(NamedModel):
     type = Column(Enum(SurveyTypeEnum), nullable=False)
     repeat_type = Column(Enum(SurveyRepeatTypeEnum), nullable=False,
                          server_default=SurveyRepeatTypeEnum.NEVER.value)
-        
+    comp_form_for_id = Column(String(36), ForeignKey("hr_erp_users.id"), nullable=True)
+    
     questions = relationship(
         "Question", cascade="all, delete", back_populates="survey")
     jurisdictions = relationship(
         "SurveyJurisdiction", cascade="all, delete", back_populates="survey")
+    comp_form_for = relationship("User", foreign_keys=[comp_form_for_id])
