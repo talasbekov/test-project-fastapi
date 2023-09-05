@@ -110,7 +110,9 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
     def get_by_id(self, db: Session, id: str) -> History:
         history = self.get(db, id)
         if type(history) == EmergencyServiceHistory:
-            history.staff_division.description = json.loads(history.staff_division.description)
+            if history.staff_division is not None:
+                if isinstance(history.staff_division.description, str):
+                    history.staff_division.description = json.loads(history.staff_division.description)
         if history is None:
             raise NotFoundException(
                 detail=f"History with id {id} not found!")
