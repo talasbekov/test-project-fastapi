@@ -84,6 +84,43 @@ async def get_exam_results(*,
     user_id = Authorize.get_jwt_subject()
     return exam_result_service.get_exam_results_by_user_id(db, user_id, skip, limit)
 
+@router.get("/month", dependencies=[Depends(HTTPBearer())],
+            response_model=List[ExamScheduleRead],
+            summary="Get ScheduleMonths by month")
+async def get_by_month(*,
+                      db: Session = Depends(get_db),
+                      month_num: int = 1,
+                      Authorize: AuthJWT = Depends()
+                      ):
+    """
+       Get ScheduleMonths by month
+
+    - **month**: int - The number of month when you want to get ScheduleMonth
+   """
+
+    Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
+    return exam_service.get_exams_by_month(db, user_id, month_num)
+
+@router.get("/nearest", dependencies=[Depends(HTTPBearer())],
+            response_model=List[ExamScheduleRead],
+            summary="Get nearest ScheduleMonths")
+async def get_nearest(*,
+                      db: Session = Depends(get_db),
+                      limit: int = 100,
+                      Authorize: AuthJWT = Depends()
+                      ):
+    """
+       Get nearest ScheduleMonths
+
+    - **limit**: int - The maximum number of ScheduleMonth
+        to return in the response.
+        This parameter is optional and defaults to 100.
+   """
+    Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
+    return exam_service.get_nearest_exams(db, user_id, limit)
+
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=ExamScheduleRead,
             summary="Get ExamSchedule by id")
@@ -157,7 +194,7 @@ async def delete(*,
 
 @router.put("/results_update", dependencies=[Depends(HTTPBearer())],
             summary="Change Exam Results")
-async def change_attendance_status(*,
+async def change_results(*,
                  db: Session = Depends(get_db),
                  body: ExamChangeResults,
                  Authorize: AuthJWT = Depends()
