@@ -245,8 +245,8 @@ class BspPlanService(ServiceBase[BspPlan, BspPlanCreate, BspPlanUpdate]):
         obj = self.get_by_id(db, id)
 
         for schedule_year in obj.schedule_years:
-            schedule_year_service.remove_schedule_with_staff_divisions(db,
-                                                                       schedule_year.id)
+            schedule_year_service.remove_schedule(db,
+                                                  schedule_year.id)
 
         db.delete(obj)
         db.flush()

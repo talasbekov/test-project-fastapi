@@ -36,6 +36,28 @@ class ExamService(ServiceBase[ExamSchedule, ExamScheduleCreate, ExamScheduleUpda
 
         return {'total': total, 'objects': exams}
 
+    def get_for_tablet(
+        self, db: Session, skip: int = 0, limit: int = 100
+    ):
+        exams = (db.query(self.model)
+                 .join(ScheduleYear)
+                 .filter(ScheduleYear.is_active == True)
+                 .offset(skip)
+                 .limit(limit)
+                 .all())
+        results = []
+        for exam in exams:
+            results.extend(db.query(ExamResult)
+                           .filter(ExamResult.exam_id == str(exam.id))
+                           .all())
+        if exams is not None or exams != []:
+            for exam_schedule in exams:
+                for group in exam_schedule.schedule.staff_divisions:
+                    if isinstance(group.description, str):
+                        group.description = json.loads(group.description)
+
+        return {'exams': exams, 'results': results}
+
     def get_users_by_exam(self,
                           db: Session,
                           exam_id: str):
@@ -174,6 +196,30 @@ class ExamService(ServiceBase[ExamSchedule, ExamScheduleCreate, ExamScheduleUpda
 
         return schedules
 
+    def get_exams_by_day(self,
+                            db: Session,
+                            user_id: str,
+                            date: datetime.date,
+                            limit: int):
+        schedules = (db.query(ExamSchedule)
+                             .join(ScheduleYear)
+                             .filter(ExamSchedule.start_date <= date,
+                                     ExamSchedule.end_date >= date,
+                                     )
+                             .filter(User.id == user_id,
+                                     ScheduleYear.is_active == True)
+                             .order_by(ExamSchedule.start_date,
+                                       func.to_char(ExamSchedule.start_time, 'HH24:MI:SS'))
+                             .limit(limit)
+                             .all()
+                             )
+
+        for schedule_month in schedules:
+            for group in schedule_month.schedule.staff_divisions:
+                if isinstance(group.description, str):
+                    group.description = json.loads(group.description)
+
+        return schedules
 
     def get_by_schedule_year_id(self,
                                 db: Session,
@@ -192,13 +238,14 @@ class ExamService(ServiceBase[ExamSchedule, ExamScheduleCreate, ExamScheduleUpda
         return schedules
 
     def remove(self, db: Session, id: str):
-        exam = self.get_by_id(db, id)
-        db.delete(exam)
-        db.flush()
-        if exam.schedule is not None:
-            for group in exam.schedule.staff_divisions:
-                if isinstance(group.description, str):
-                    group.description = json.loads(group.description)
+        exam = self.get(db, id)
+        if exam is not None:
+            db.delete(exam)
+            db.flush()
+            if exam.schedule is not None:
+                for group in exam.schedule.staff_divisions:
+                    if isinstance(group.description, str):
+                        group.description = json.loads(group.description)
         return exam
 
 

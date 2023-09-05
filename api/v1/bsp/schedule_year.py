@@ -1,3 +1,4 @@
+import datetime
 import uuid
 
 from fastapi import APIRouter, Depends
@@ -27,6 +28,8 @@ router = APIRouter(prefix="/schedule_year",
 async def get_all(*,
                   db: Session = Depends(get_db),
                   filter = '',
+                  filter_year: str = datetime.date.today().year,
+                  filter_month: str = datetime.date.today().month,
                   skip: int = 0,
                   limit: int = 100,
                   Authorize: AuthJWT = Depends()
@@ -42,7 +45,12 @@ async def get_all(*,
         This parameter is optional and defaults to 100.
    """
     Authorize.jwt_required()
-    return schedule_year_service.get_multi(db, filter.lstrip().rstrip(), skip, limit)
+    return schedule_year_service.get_multi(db,
+                                           filter.lstrip().rstrip(),
+                                           filter_year,
+                                           filter_month,
+                                           skip,
+                                           limit)
 
 @router.get("/plan/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=ScheduleYearReadPagination,

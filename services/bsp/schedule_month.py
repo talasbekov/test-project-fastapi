@@ -170,7 +170,6 @@ class ScheduleMonthService(ServiceBase[ScheduleMonth,
 
         return schedules
 
-
     def get_schedule_by_day(self,
                             db: Session,
                             user_id: str,
@@ -202,13 +201,19 @@ class ScheduleMonthService(ServiceBase[ScheduleMonth,
         return schedules
 
     def remove(self, db: Session, id: str):
-        schedule_month = self.get_by_id(db, id)
-        db.delete(schedule_month)
-        db.flush()
-        if schedule_month.schedule is not None:
-            for group in schedule_month.schedule.staff_divisions:
-                if isinstance(group.description, str):
-                    group.description = json.loads(group.description)
+        schedule_month = self.get(db, id)
+        if schedule_month is not None:
+            for schedule_day in schedule_month.days:
+                schedule_day_service.remove(db, str(schedule_day.id))
+            schedule_month.days = []
+            db.add(schedule_month)
+            db.flush()
+            db.delete(schedule_month)
+            db.flush()
+            if schedule_month.schedule is not None:
+                for group in schedule_month.schedule.staff_divisions:
+                    if isinstance(group.description, str):
+                        group.description = json.loads(group.description)
         return schedule_month
 
 schedule_month_service = ScheduleMonthService(ScheduleMonth)

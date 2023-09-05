@@ -1,3 +1,4 @@
+import datetime
 import json
 import uuid
 from typing import List
@@ -15,7 +16,8 @@ from schemas import (ExamScheduleRead,
                      ExamResultReadPagination,
                      ExamScheduleReadPagination,
                      ExamChangeResults,
-                     ExamResultRead,)
+                     ExamResultRead,
+                     ExamTabletRead,)
 
 from services import exam_service, exam_result_service
 
@@ -46,6 +48,28 @@ async def get_all(*,
    """
     Authorize.jwt_required()
     return exam_service.get_multi(db, skip, limit)
+
+@router.get("/tablet/", dependencies=[Depends(HTTPBearer())],
+            response_model=ExamTabletRead,
+            summary="Get all ExamSchedule")
+async def get_for_tablet(*,
+                  db: Session = Depends(get_db),
+                  skip: int = 0,
+                  limit: int = 100,
+                  Authorize: AuthJWT = Depends()
+                  ):
+    """
+       Get all ExamSchedule
+
+    - **skip**: int - The number of ExamSchedule
+        to skip before returning the results.
+        This parameter is optional and defaults to 0.
+    - **limit**: int - The maximum number of ExamSchedule
+        to return in the response.
+        This parameter is optional and defaults to 100.
+   """
+    Authorize.jwt_required()
+    return exam_service.get_for_tablet(db, skip, limit)
 
 @router.get("/users/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=List[ExamResultRead],
@@ -120,6 +144,28 @@ async def get_nearest(*,
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
     return exam_service.get_nearest_exams(db, user_id, limit)
+
+@router.get("/date", dependencies=[Depends(HTTPBearer())],
+            response_model=List[ExamScheduleRead],
+            summary="Get ScheduleMonths by date")
+async def get_by_date(*,
+                      db: Session = Depends(get_db),
+                      limit: int = 100,
+                      date: datetime.date,
+                      Authorize: AuthJWT = Depends()
+                      ):
+    """
+       Get ScheduleMonths by date
+
+    - **limit**: int - The maximum number of ScheduleMonth
+        to return in the response.
+        This parameter is optional and defaults to 100.
+    - **date**: date (yyyy-mm-dd) - The date when you want to get ScheduleMonth
+   """
+
+    Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
+    return exam_service.get_exams_by_day(db, user_id, date, limit)
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=ExamScheduleRead,

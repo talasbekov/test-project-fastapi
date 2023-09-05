@@ -25,7 +25,7 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
                                       ScheduleYearCreate,
                                       ScheduleYearUpdate]):
 
-    def set_has_schedule_month(self, db: Session, schedules):
+    def _filter_months(self, db: Session, month: int, schedules):
         schedules = [ScheduleYearRead.from_orm(schedule).dict()
                      for schedule in schedules]
         for schedule in schedules:
@@ -33,6 +33,9 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
             activity_months = schedule['activity_months']
 
             for activity_month in activity_months:
+                if activity_month['month_order'] != month:
+                    activity_months.remove(activity_month)
+                    continue
                 schedule_month = schedule_month_service.get_by_month_and_schedule_year(
                     db, activity_month['month_order'], schedule['id'])
 
@@ -41,9 +44,14 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
                 else:
                     activity_month['has_schedule_month'] = False
 
+            schedule['activity_months'] = activity_months
+
             exam_months = schedule['exam_months']
 
             for exam_month in exam_months:
+                if exam_month['month_order'] != month:
+                    exam_months.remove(exam_month)
+                    continue
                 schedule_months = exam_service.get_by_month_and_schedule_year(
                     db, exam_month['month_order'], schedule['id'])
 
@@ -52,13 +60,24 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
                 else:
                     exam_month['has_schedule_month'] = False
 
+            schedule['exam_months'] = exam_months
+
         return schedules
 
     def get_multi(
-            self, db: Session, filter: str = '', skip: int = 0, limit: int = 100
+            self,
+            db: Session,
+            filter: str = '',
+            filter_year: str = datetime.date.today().year,
+            filter_month: str = datetime.date.today().month,
+            skip: int = 0,
+            limit: int = 100
     ):
-        current_date = datetime.date.today()
-        current_year_month = str(current_date.year) + str(current_date.month)
+        if filter_month == '':
+            filter_month = datetime.date.today().month
+        if filter_year == '':
+            filter_year = datetime.date.today().year
+        current_year_month = str(filter_year) + str(filter_month)
 
         total = (db.query(self.model)
                  .filter(ScheduleYear.is_active == True)
@@ -67,8 +86,8 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
                      .join(BspPlan)
                      .join(ScheduleYear.activity_months)
                      .filter(ScheduleYear.is_active == True,
-                             func.concat(BspPlan.year, Month.month_order) >=
-                             (current_year_month),
+                             func.concat(BspPlan.year, Month.month_order) ==
+                             (current_year_month)
                              )
                      )
 
@@ -89,7 +108,7 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
                 if isinstance(group.description, str):
                     group.description = json.loads(group.description)
 
-        schedules = self.set_has_schedule_month(db, schedules)
+        schedules = self._filter_months(db, int(filter_month), schedules)
 
         return {'total': total, 'objects': schedules}
 
@@ -98,17 +117,20 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
                         schedule_id: str):
         schedule_year = self.get_by_id(db, str(schedule_id))
 
-        schedule_months = schedule_month_service.get_by_schedule_year_id(db, schedule_id)
+        if schedule_year.months is not None:
+            for schedule_month in schedule_year.months:
+                schedule_month_service.remove(db, schedule_month.id)
 
-        for schedule_month in schedule_months:
-            schedule_month_service.remove(db, schedule_month.id)
-
-        exam_months = exam_service.get_by_schedule_year_id(db, schedule_id)
-
-        if exam_months is not None:
-            for exam_month in exam_months:
+        if schedule_year.exams is not None:
+            for exam_month in schedule_year.exams:
                 exam_service.remove(db, exam_month.id)
+        schedule_year.exam_months.clear()
+        schedule_year.activity_months.clear()
+        schedule_year.months.clear()
+        schedule_year.exams.clear()
 
+        db.add(schedule_year)
+        db.flush()
         db.delete(schedule_year)
         db.flush()
         db.commit()
