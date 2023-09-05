@@ -1,7 +1,8 @@
 import json
 import uuid
+import datetime
 
-from sqlalchemy import extract, text
+from sqlalchemy import extract, text, func, and_, or_
 from sqlalchemy.orm import Session
 from models import ExamSchedule, ScheduleYear, User, ExamResult
 from schemas import (ExamScheduleCreate,
@@ -116,6 +117,63 @@ class ExamService(ServiceBase[ExamSchedule, ExamScheduleCreate, ExamScheduleUpda
                     group.description = json.loads(group.description)
 
         return schedule
+
+    def get_nearest_exams(self,
+                              db: Session,
+                              user_id: str,
+                              limit: int):
+        current_time = datetime.datetime.now().time()
+        current_date = datetime.date.today()
+
+        closest_schedules = (db.query(ExamSchedule)
+                             .join(ScheduleYear)
+                             .join(ScheduleYear.users)
+                             .filter(or_((ExamSchedule.start_date > current_date),
+                                     and_(ExamSchedule.start_date == current_date,
+                                          func.to_char(ExamSchedule.start_time,
+                                                       'HH24:MI:SS')
+                                          > str(current_time)))
+                                     )
+                             .filter(ExamSchedule.end_date >= current_date)
+                             .filter(User.id == user_id,
+                                     ScheduleYear.is_active == True)
+                             .order_by(ExamSchedule.start_date,
+                                       func.to_char(ExamSchedule.start_time, 'HH24:MI:SS'))
+                             .limit(limit)
+                             .all()
+                             )
+
+        for schedule_month in closest_schedules:
+            for group in schedule_month.schedule.staff_divisions:
+                if isinstance(group.description, str):
+                    group.description = json.loads(group.description)
+
+        return closest_schedules
+
+
+    def get_exams_by_month(self,
+                              db: Session,
+                              user_id: str,
+                              month_number: int):
+        current_year = datetime.date.today().year
+        schedules = (
+            db.query(ExamSchedule)
+            .join(ScheduleYear)
+            .join(ScheduleYear.users)
+            .filter(User.id == user_id,
+                    extract('month', ExamSchedule.start_date) == month_number,
+                    extract('year', ExamSchedule.start_date) == current_year,
+                    ScheduleYear.is_active == True)
+            .all()
+        )
+
+        for schedule_month in schedules:
+            for group in schedule_month.schedule.staff_divisions:
+                if isinstance(group.description, str):
+                    group.description = json.loads(group.description)
+
+        return schedules
+
 
     def get_by_schedule_year_id(self,
                                 db: Session,

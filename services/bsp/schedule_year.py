@@ -93,8 +93,9 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
 
         return {'total': total, 'objects': schedules}
 
-    def remove_schedule_with_staff_divisions(self, db: Session,
-                                            schedule_id: str):
+    def remove_schedule(self,
+                        db: Session,
+                        schedule_id: str):
         schedule_year = self.get_by_id(db, str(schedule_id))
 
         schedule_months = schedule_month_service.get_by_schedule_year_id(db, schedule_id)
@@ -109,6 +110,24 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
                 exam_service.remove(db, exam_month.id)
 
         db.delete(schedule_year)
+        db.flush()
+        db.commit()
+
+        for group in schedule_year.staff_divisions:
+            if isinstance(group.description, str):
+                group.description = json.loads(group.description)
+
+        return schedule_year
+
+    def remove_division_from_schedule(self,
+                                      db: Session,
+                                      schedule_id: str,
+                                      division_id: str):
+        schedule_year = self.get_by_id(db, str(schedule_id))
+
+        staff_division = staff_division_service.get_by_id(db, str(division_id))
+
+        schedule_year.staff_divisions.remove(staff_division)
         db.flush()
         db.commit()
 
