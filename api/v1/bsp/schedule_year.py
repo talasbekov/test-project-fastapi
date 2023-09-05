@@ -174,6 +174,24 @@ async def update(*,
         db_obj=schedule_year_service.get_by_id(db, str(id)),
         obj_in=body)
 
+@router.delete("/division/{schedule_id}/{division_id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=ScheduleYearRead,
+            summary="Delete ScheduleYear")
+async def delete_division(*,
+                 db: Session = Depends(get_db),
+                 schedule_id: str,
+                 division_id: str,
+                 Authorize: AuthJWT = Depends()
+                 ):
+    """
+        Delete ScheduleYear
+
+    """
+    Authorize.jwt_required()
+    return schedule_year_service.remove_division_from_schedule(db,
+                                                               schedule_id,
+                                                               division_id)
+
 @router.delete("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=ScheduleYearRead,
             summary="Delete ScheduleYear")
@@ -187,5 +205,5 @@ async def delete(*,
 
     """
     Authorize.jwt_required()
-    return schedule_year_service.remove_schedule_with_staff_divisions(db,
-                                                                     id)
+    return schedule_year_service.remove_schedule(db,
+                                                 id)
