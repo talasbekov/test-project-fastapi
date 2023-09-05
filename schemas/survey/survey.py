@@ -3,7 +3,7 @@ import datetime
 from typing import Optional, List
 from pydantic import BaseModel, Field
 
-from schemas import NamedModel, ReadNamedModel
+from schemas import NamedModel, ReadNamedModel, UserShortRead
 from models import (SurveyTypeEnum, SurveyStatusEnum, SurveyRepeatTypeEnum)
 from .question import QuestionRead
 from .survey_jurisdiction import SurveyJurisdictionRead, SurveyJurisdictionBase
@@ -16,6 +16,7 @@ class SurveyBase(NamedModel):
     is_kz_translate_required: Optional[bool]
     is_anonymous: Optional[bool]
     repeat_type: Optional[SurveyRepeatTypeEnum]
+    comp_form_for_id: Optional[str]
 
 
 class SurveyCreateWithJurisdiction(SurveyBase):
@@ -41,10 +42,11 @@ class SurveyRead(SurveyBase, ReadNamedModel):
     questions: Optional[List[QuestionRead]]
     type: Optional[SurveyTypeEnum]
     jurisdictions: Optional[List[SurveyJurisdictionRead]]
+    comp_form_for: Optional[UserShortRead]
 
     class Config:
         orm_mode = True
-
+    
 
 class SurveyReadPagination(BaseModel):
     total: int = Field(0, nullable=False)
