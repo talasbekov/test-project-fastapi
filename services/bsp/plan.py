@@ -179,7 +179,9 @@ class BspPlanService(ServiceBase[BspPlan, BspPlanCreate, BspPlanUpdate]):
                        .offset(skip)
                        .limit(limit)
                        .all())
-        total = db.query(self.model).filter(func.to_char(BspPlan.status) == PlanStatus.DRAFT.name).count()
+        total = (db.query(self.model)
+                 .filter(func.to_char(BspPlan.status) == PlanStatus.DRAFT.name)
+                 .count())
 
         for plan in draft_plans:
             if plan.schedule_years != [] or plan.schedule_years is not None:

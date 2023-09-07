@@ -1,5 +1,6 @@
 import json
 import datetime
+import time
 
 from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
@@ -25,72 +26,71 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
                                       ScheduleYearCreate,
                                       ScheduleYearUpdate]):
 
-    def _filter_months(self, db: Session, month: int, schedules):
-        schedules = [ScheduleYearRead.from_orm(schedule).dict()
-                     for schedule in schedules]
+    def _filter_months(self, month: int, schedules):
+        result = []
         for schedule in schedules:
+            schedule_dict = ScheduleYearRead.from_orm(schedule).dict()
 
-            activity_months = schedule['activity_months']
-
-            for activity_month in activity_months:
-                if activity_month['month_order'] != month:
-                    activity_months.remove(activity_month)
-                    continue
-                schedule_month = schedule_month_service.get_by_month_and_schedule_year(
-                    db, activity_month['month_order'], schedule['id'])
-
-                if schedule_month is None:
-                    activity_month['has_schedule_month'] = True
+            activity_months = [item for item in schedule_dict['activity_months'] if
+                               item['month_order'] == month]
+            if activity_months:
+                first_activity_month = activity_months[0]['month_order']
+                for month_entry in schedule_dict['months']:
+                    if month_entry['start_date'].month == first_activity_month:
+                        activity_months[0]['has_schedule_month'] = False
+                        break
                 else:
-                    activity_month['has_schedule_month'] = False
+                    activity_months[0]['has_schedule_month'] = True
 
-            schedule['activity_months'] = activity_months
+            schedule_dict['activity_months'] = activity_months
 
-            exam_months = schedule['exam_months']
-
-            for exam_month in exam_months:
-                if exam_month['month_order'] != month:
-                    exam_months.remove(exam_month)
-                    continue
-                schedule_months = exam_service.get_by_month_and_schedule_year(
-                    db, exam_month['month_order'], schedule['id'])
-
-                if schedule_months is None:
-                    exam_month['has_schedule_month'] = True
+            exam_months = [item for item in schedule_dict['exam_months'] if
+                           item['month_order'] == month]
+            if exam_months:
+                first_exam_month = exam_months[0]['month_order']
+                for exam_entry in schedule_dict['exams']:
+                    if exam_entry['start_date'].month == first_exam_month:
+                        exam_months[0]['has_schedule_month'] = False
+                        break
                 else:
-                    exam_month['has_schedule_month'] = False
+                    exam_months[0]['has_schedule_month'] = True
 
-            schedule['exam_months'] = exam_months
+                schedule_dict['exam_months'] = exam_months
 
-        return schedules
+            result.append(schedule_dict)
+
+        return result
 
     def get_multi(
             self,
             db: Session,
             filter: str = '',
-            filter_year: str = datetime.date.today().year,
-            filter_month: str = datetime.date.today().month,
+            filter_year: str = '',
+            filter_month: str = '',
             skip: int = 0,
             limit: int = 100
     ):
+        start_time = time.time()
         if filter_month == '':
-            filter_month = datetime.date.today().month
+            filter_month = str(datetime.date.today().month)
         if filter_year == '':
-            filter_year = datetime.date.today().year
-        current_year_month = str(filter_year) + str(filter_month)
+            filter_year = str(datetime.date.today().year)
 
         total = (db.query(self.model)
-                 .filter(ScheduleYear.is_active == True)
+                 .join(BspPlan)
+                 .join(ScheduleYear.activity_months)
+                 .filter(ScheduleYear.is_active == True,
+                         func.concat(BspPlan.year, Month.month_order) ==
+                         (filter_year + filter_month))
                  )
         schedules = (db.query(self.model)
                      .join(BspPlan)
                      .join(ScheduleYear.activity_months)
                      .filter(ScheduleYear.is_active == True,
                              func.concat(BspPlan.year, Month.month_order) ==
-                             (current_year_month)
+                             (filter_year + filter_month)
                              )
                      )
-
         if filter != '':
             total = self._add_filter_to_query(total, filter)
             schedules = self._add_filter_to_query(schedules, filter)
@@ -103,13 +103,17 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
             .limit(limit)
             .all()
         )
+
         for schedule in schedules:
             for group in schedule.staff_divisions:
                 if isinstance(group.description, str):
                     group.description = json.loads(group.description)
 
-        schedules = self._filter_months(db, int(filter_month), schedules)
+        print('before _filter_months time: ', (time.time() - start_time))
 
+        schedules = self._filter_months(int(filter_month), schedules)
+
+        print('total time: ', (time.time() - start_time))
         return {'total': total, 'objects': schedules}
 
     def remove_schedule(self,

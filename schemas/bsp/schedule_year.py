@@ -59,7 +59,7 @@ class ScheduleYearRead(ScheduleYearBase):
     id: Optional[str]
     created_at: Optional[datetime]
     staff_divisions: Optional[List[StaffDivisionReadWithoutStaffUnit]]
-    users: Optional[List[Optional[UserShortReadStatus]]]
+    # users: Optional[List[Optional[UserShortReadStatus]]]
     activity: Optional[ActivityRead]
     activity_months: Optional[List[MonthRead]]
     exam_months: Optional[List[MonthRead]]
