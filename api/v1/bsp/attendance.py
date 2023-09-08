@@ -138,7 +138,7 @@ async def get_absent_days_by_user(*,
     return attendance_service.get_absent_days_by_user(db, user_id, id)
 
 @router.get("/absent/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=List[UserShortReadPagination],
+            response_model=UserShortReadPagination,
             summary="Get all absent users for the ScheduleYear")
 async def get_absent_users(*,
                     db: Session = Depends(get_db),
