@@ -1,5 +1,5 @@
 import uuid
-from typing import List
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends, status
 from fastapi.security import HTTPBearer
@@ -9,7 +9,8 @@ from sqlalchemy.orm import Session
 from core import get_db
 from schemas import (StaffDivisionCreate, StaffDivisionRead, 
                      StaffDivisionStepRead,StaffDivisionUpdate, 
-                     StaffDivisionUpdateParentGroup, StaffDivisionTypeRead)
+                     StaffDivisionUpdateParentGroup, StaffDivisionTypeRead,
+                     StaffDivisionMatreshkaStepRead)
 from services import staff_division_service, staff_division_type_service
 
 router = APIRouter(
@@ -134,6 +135,22 @@ async def get_all_one_level_for_id(*,
     """
     Authorize.jwt_required()
     return staff_division_service.get_by_id(db, str(id))
+
+@router.get("/one-level-matreshka", dependencies=[Depends(HTTPBearer())],
+            response_model=StaffDivisionMatreshkaStepRead,
+            summary="Get Staff Division one level by id")
+async def get_all_one_level_for_id(*,
+                  db: Session = Depends(get_db),
+                  id: Optional[str] = None,
+                  Authorize: AuthJWT = Depends()
+                  ):
+    """
+       Get all Staff Divisions
+
+    - **id**: uuid - The id of staff division. This parameter is required.
+    """
+    Authorize.jwt_required()
+    return staff_division_service.get_one_level_by_id(db, str(id))
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],

@@ -15,7 +15,8 @@ from schemas import (
     DocumentStaffFunctionRead,
     ServiceStaffFunctionRead,
     StaffUnitCreateWithPosition,
-    StaffUnitFunctionsByPosition
+    StaffUnitFunctionsByPosition,
+    StaffUnitMatreshkaOptionRead
 )
 from services import staff_unit_service
 
@@ -263,3 +264,20 @@ async def remove_document_staff_function(*,
     """
     Authorize.jwt_required()
     staff_unit_service.remove_document_staff_function(db, body)
+
+@router.get("/staff_division/{id}/",
+            dependencies=[Depends(HTTPBearer())],
+            response_model=List[StaffUnitMatreshkaOptionRead],
+            summary="Get Staff Units by staff_division_id")
+async def get_by_id(*,
+                    db: Session = Depends(get_db),
+                    id: str,
+                    Authorize: AuthJWT = Depends()
+                    ):
+    """
+        Get Staff Units by staff_division_id
+
+        - **staff_division_id** - UUID - required
+    """
+    Authorize.jwt_required()
+    return staff_unit_service.get_by_staff_division_id(db, str(id))

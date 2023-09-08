@@ -11,7 +11,8 @@ from models import (StaffUnit, Position, User, EmergencyServiceHistory,
                     StaffDivision, PositionNameEnum, StaffDivisionEnum)
 from schemas import (StaffUnitCreate, StaffUnitUpdate,
                      StaffUnitFunctions, StaffUnitRead,
-                     StaffUnitCreateWithPosition, StaffUnitFunctionsByPosition
+                     StaffUnitCreateWithPosition, StaffUnitFunctionsByPosition,
+                     StaffUnitMatreshkaOptionRead
                      )
 from services import (service_staff_function_service,
                       document_staff_function_service,
@@ -31,6 +32,21 @@ class StaffUnitService(
         if isinstance(position.staff_division.description, str):
             position.staff_division.description = json.loads(position.staff_division.description)
         return position
+    
+    def get_by_staff_division_id(self, db: Session, id: str):
+        stmt = select(StaffUnit).where(StaffUnit.staff_division_id == id)
+        staff_unit = db.execute(stmt).first()
+        if staff_unit is None:
+            raise NotFoundException(
+                detail=f"StaffUnit within staff_division with id: {id} is not found!")
+        else:
+            staff_unit = staff_unit[0]
+            
+        if isinstance(staff_unit.requirements, str):
+            staff_unit.requirements = json.loads(staff_unit.requirements)
+        if isinstance(staff_unit.staff_division.description, str):
+            staff_unit.staff_division.description = json.loads(staff_unit.staff_division.description)
+        return staff_unit
 
     def create_with_position(self, db: Session,
                              staff_unit_with_position: StaffUnitCreateWithPosition):

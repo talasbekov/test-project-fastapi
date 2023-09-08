@@ -59,6 +59,17 @@ class UserRead(ReadModel):
     class Config:
         orm_mode = True
 
+class MatreshkaUserRead(ReadModel):
+    icon: Optional[str] = Field(None, nullable=True)
+    supervised_by: Optional[str]
+    is_military: Optional[bool]
+    first_name: Optional[str]
+    last_name: Optional[str]
+    id_number: Optional[str]
+    personal_id: Optional[str]
+
+    class Config:
+        orm_mode = True
 
 class HrVacancyRead(ReadModel):
     is_active: Optional[bool]
@@ -113,6 +124,17 @@ class StaffUnitOptionRead(ReadModel):
     position_id: Optional[str]
     position: Optional[PositionRead]
     users: Optional[List[Optional[UserRead]]]
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
+        
+        
+class StaffUnitMatreshkaOptionRead(ReadModel):
+    staff_division_id: Optional[str]
+    position_id: Optional[str]
+    position: Optional[NamedModel]
+    users: Optional[List[Optional[MatreshkaUserRead]]]
 
     class Config:
         orm_mode = True
@@ -287,6 +309,40 @@ class StaffDivisionStepRead(StaffDivisionBase):
     children: Optional[List['StaffDivisionStepChildRead']]
     staff_units: Optional[List['StaffUnitRead']]
     type: Optional[StaffDivisionTypeRead]
+
+    class Config:
+        orm_mode = True
+
+class StaffDivisionMatreshkaStepChildRead(ReadNamedModel):
+    id: Optional[str]
+    is_combat_unit: Optional[bool] = Field(None, nullable=True)
+    leader_id: Optional[str] = Field(None, nullable=True)
+    staff_division_number: Optional[int] = Field(None, nullable=True)
+    type: Optional[StaffDivisionTypeRead]
+    name: str
+    nameKZ: Optional[str] = Field(None, nullable=True)
+    
+    class Config:
+        orm_mode = True
+
+class StaffDivisionMatreshkaStepRead(ReadNamedModel):
+    id: Optional[str]
+    children: Optional[List['StaffDivisionMatreshkaStepChildRead']]
+    is_combat_unit: Optional[bool] = Field(None, nullable=True)
+    leader_id: Optional[str] = Field(None, nullable=True)
+    staff_division_number: Optional[int] = Field(None, nullable=True)
+    type: Optional[StaffDivisionTypeRead]
+    name: str
+    nameKZ: Optional[str] = Field(None, nullable=True)
+    is_parent: Optional[bool]
+    
+    @validator('children')
+    def validate_children(cls, children):
+        if children == []:
+            return None
+        else:
+            return children 
+
 
     class Config:
         orm_mode = True

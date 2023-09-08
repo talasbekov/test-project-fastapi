@@ -3,11 +3,11 @@ import json
 from typing import List, Dict, Any, Optional
 
 from sqlalchemy.orm import Session
-from sqlalchemy import distinct, func
+from sqlalchemy import distinct, func, select
 
 
 from exceptions import BadRequestException, NotFoundException
-from models import (StaffDivision, StaffDivisionEnum, ArchiveStaffDivision,
+from models import (StaffDivision, StaffDivisionEnum, StaffDivisionType, ArchiveStaffDivision,
                     StaffUnit, HrVacancy, Secondment, EmergencyServiceHistory,
                     Position)
 from schemas import (
@@ -17,7 +17,8 @@ from schemas import (
     StaffDivisionUpdateParentGroup,
     StaffDivisionVacancyRead,
     StaffDivisionOptionRead,
-    StaffDivisionOptionChildRead
+    StaffDivisionOptionChildRead,
+    StaffDivisionMatreshkaStepRead
 )
 
 from .base import ServiceBase
@@ -36,7 +37,40 @@ class StaffDivisionService(
                 staff_unit.requirements = json.loads(staff_unit.requirements)
         if isinstance(group.description, str):
             group.description = json.loads(group.description)
+        for child in group.children:
+            if isinstance(child.description, str):
+                child.description = json.loads(child.description)
         return group
+    
+    def get_one_level_by_id(self, db: Session, id: Optional[str]):
+        if id == 'None':
+            stmt = (select(StaffDivision)
+                    .where(StaffDivision.name == StaffDivisionEnum.SERVICE.value))
+            group = db.execute(stmt).first()[0]
+            #group = db.query(StaffDivision).filter(StaffDivision.name == StaffDivisionEnum.SERVICE.value).first()
+        else:
+            stmt = (select(StaffDivision)
+                    .where(StaffDivision.id == id))
+            group = db.execute(stmt).first()
+            if group is None:
+                raise NotFoundException(
+                    f"StaffDivision with id: {id} is not found!")
+            else:
+                group = group[0]
+            
+        for staff_unit in group.staff_units:
+            if isinstance(staff_unit.requirements, str):
+                staff_unit.requirements = json.loads(staff_unit.requirements)
+        if isinstance(group.description, str):
+            group.description = json.loads(group.description)
+        for child in group.children:
+            if isinstance(child.description, str):
+                child.description = json.loads(child.description)
+
+        group = group.__dict__
+        group['is_parent'] = self.__is_parent(db, group['id'])
+        return group
+        
     
     def delete(self, db: Session, id: str) -> StaffDivision:
         staff_division = self.get_by_id(db, id)
@@ -336,6 +370,13 @@ class StaffDivisionService(
             super().remove(db, staff_division.id)
         db.flush()
 
+    def __is_parent(self, db: Session, id: str):
+        stmp = select(StaffDivision).where(StaffDivision.parent_group_id == id)
+        if db.execute(stmp).first() is not None:
+            return True
+        else: 
+            return False
+    
     def _update(
         self,
         db: Session,
