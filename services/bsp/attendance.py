@@ -128,8 +128,16 @@ class AttendanceService(ServiceBase[Attendance, AttendanceCreate, AttendanceUpda
                     == AttendanceStatus.ABSENT_REASON.name)
             .all()
         )
+        total = (
+            db.query(User)
+            .join(AttendedUser)
+            .filter(AttendedUser.attendance_id.in_(attendances),
+                    func.to_char(AttendedUser.attendance_status)
+                    == AttendanceStatus.ABSENT_REASON.name)
+            .count()
+        )
 
-        return absent_users
+        return {'total': total, 'objects': absent_users}
 
     def get_nearest_attendances(self, db: Session,
                                 is_mine: bool,

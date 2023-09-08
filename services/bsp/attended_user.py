@@ -46,7 +46,7 @@ class AttendedUserService(ServiceBase[AttendedUser,
         )
         if schedule_month is None:
             raise NotFoundException(
-                detail=f"ScheduleMonth with id {id} not found!")
+                detail=f"ScheduleMonth with id {body.schedule_id} not found!")
         attendance = (
             db.query(Attendance)
             .filter(Attendance.schedule_id == str(schedule_month.id))

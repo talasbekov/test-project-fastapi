@@ -207,19 +207,16 @@ class StaffDivisionRead(StaffDivisionBase):
         orm_mode = True
 
 
-class StaffDivisionReadWithoutStaffUnit(StaffDivisionBase):
+class StaffDivisionReadWithoutStaffUnit(NamedModel):
+    parent_group_id: Optional[str] = Field(None, nullable=True)
+    is_combat_unit: Optional[bool] = Field(None, nullable=True)
+    leader_id: Optional[str] = Field(None, nullable=True)
+    is_active: Optional[bool] = True
+    type_id: Optional[str] = Field(None, nullable=True)
+    staff_division_number: Optional[int] = Field(None, nullable=True)
     id: Optional[str]
-    children: Optional[List['StaffDivisionChildRead']]
     type: Optional[StaffDivisionTypeRead]
     count_vacancies: Optional[int]
-
-    @validator('children')
-    def validate_children(cls, children):
-        if children == []:
-            return None
-        else:
-            return children
-
 
     class Config:
         orm_mode = True

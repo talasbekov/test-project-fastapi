@@ -101,6 +101,9 @@ class UserShortRead(Model):
     class Config:
         orm_mode = True
 
+class UserShortReadPagination(BaseModel):
+    total: int = Field(0, nullable=False)
+    objects: List[UserShortRead] = Field([], nullable=False)
 
 class UserShortReadStatus(Model):
     id: Optional[str]

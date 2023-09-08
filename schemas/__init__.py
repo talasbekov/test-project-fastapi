@@ -50,7 +50,8 @@ from .user import (UserCreate, UserRead, UserUpdate,
                    UserGroupUpdate, UserShortRead,
                    UserShortReadStatus, TableUserRead,
                    UserShortReadStatusPagination,
-                   UserShortReadAgeCategory)
+                   UserShortReadAgeCategory,
+                   UserShortReadPagination)
 from .profile import ProfileCreate, ProfileUpdate, ProfileRead
 from .hr_document_status import HrDocumentStatusRead, HrDocumentStatusCreate, HrDocumentStatusUpdate
 from .hr_document import (HrDocumentCreate, HrDocumentInit, HrDocumentRead,
