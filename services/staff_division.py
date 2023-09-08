@@ -64,8 +64,10 @@ class StaffDivisionService(
         if isinstance(group.description, str):
             group.description = json.loads(group.description)
         for child in group.children:
-            if isinstance(child.description, str):
-                child.description = json.loads(child.description)
+            child = child.__dict__
+            child['is_parent'] = self.__is_parent(db, child['id'])
+            if isinstance(child['description'], str):
+                child['description'] = json.loads(child['description'])
 
         group = group.__dict__
         group['is_parent'] = self.__is_parent(db, group['id'])

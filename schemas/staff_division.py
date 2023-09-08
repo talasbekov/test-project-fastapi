@@ -318,6 +318,7 @@ class StaffDivisionMatreshkaStepChildRead(ReadNamedModel):
     type: Optional[StaffDivisionTypeRead]
     name: str
     nameKZ: Optional[str] = Field(None, nullable=True)
+    is_parent: Optional[bool]
     
     class Config:
         orm_mode = True
