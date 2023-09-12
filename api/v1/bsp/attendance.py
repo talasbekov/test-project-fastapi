@@ -143,15 +143,23 @@ async def get_absent_days_by_user(*,
 async def get_absent_users(*,
                     db: Session = Depends(get_db),
                     id: str,
+                    skip: int = 0,
+                    limit: int = 10,
                     Authorize: AuthJWT = Depends()
                     ):
     """
         Get all absent users for the ScheduleYear
 
         - **id**: UUID - required. ScheduleYear id
+        - **skip**: int - The number of Attendance
+        to skip before returning the results.
+        This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of Attendance
+        to return in the response.
+        This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
-    return attendance_service.get_absent_users(db, id)
+    return attendance_service.get_absent_users(db, id, skip, limit)
 
 
 @router.post("/", dependencies=[Depends(HTTPBearer())],
