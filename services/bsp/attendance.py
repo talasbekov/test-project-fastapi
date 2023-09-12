@@ -110,7 +110,7 @@ class AttendanceService(ServiceBase[Attendance, AttendanceCreate, AttendanceUpda
 
         return attendances_percentages
 
-    def get_absent_users(self, db: Session, schedule_id: str):
+    def get_absent_users(self, db: Session, schedule_id: str, skip, limit):
         schedule_months = (
             db.query(ScheduleMonth.id)
             .join(ScheduleYear.months)
@@ -126,6 +126,8 @@ class AttendanceService(ServiceBase[Attendance, AttendanceCreate, AttendanceUpda
             .filter(AttendedUser.attendance_id.in_(attendances),
                     func.to_char(AttendedUser.attendance_status)
                     == AttendanceStatus.ABSENT_REASON.name)
+            .offset(skip)
+            .limit(limit)
             .all()
         )
         total = (

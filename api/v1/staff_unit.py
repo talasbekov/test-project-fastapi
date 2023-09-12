@@ -272,12 +272,20 @@ async def remove_document_staff_function(*,
 async def get_by_id(*,
                     db: Session = Depends(get_db),
                     id: str,
+                    skip: int = 0,
+                    limit: int = 10,
                     Authorize: AuthJWT = Depends()
                     ):
     """
         Get Staff Units by staff_division_id
 
         - **staff_division_id** - UUID - required
+        - **skip**: int - The number of staff units
+            to skip before returning the results.
+            This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of staff units
+            to return in the response.
+            This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
-    return staff_unit_service.get_by_staff_division_id(db, str(id))
+    return staff_unit_service.get_by_staff_division_id(db, str(id), skip, limit)
