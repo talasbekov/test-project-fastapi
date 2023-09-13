@@ -229,28 +229,29 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             SecondmentHistory.user_id == user_id).all()
         equipments = user.equipments
 
-        clothing_equipments_type_count = (
-            equipment_service
-            .get_clothing_equipments_type_count(db)
-        )
+        # clothing_equipments_type_count = (
+        #     equipment_service
+        #     .get_clothing_equipments_type_count(db)
+        # )
 
-        equipment_models_count = (
-            equipment_service
-            .get_clothing_equipment_models_count_by_user(
-                db,
-                user_id
-            )
-        )
-        percentage = {}
-        if equipment_models_count:
-            for equipment_model in equipment_models_count:
-                percentage[equipment_model[0]] = (
-                    equipment_model[1] * 100) / clothing_equipments_type_count
+        # equipment_models_count = (
+        #     equipment_service
+        #     .get_clothing_equipment_models_count_by_user(
+        #         db,
+        #         user_id
+        #     )
+        # )
+        # percentage = {}
+        # if equipment_models_count:
+        #     for equipment_model in equipment_models_count:
+        #         percentage[equipment_model[0]] = (
+        #             equipment_model[1] * 100) / clothing_equipments_type_count
 
-        service_id_info = self.get_service_id_by_user_id(db, user_id)
-        equipments_dict = [EquipmentRead.from_orm(
-            equipment).dict() for equipment in equipments]
-        equipments_dict.append(percentage)
+        # service_id_info = self.get_service_id_by_user_id(db, user_id)
+        # equipments_dict = [EquipmentRead.from_orm(
+        #     equipment).dict() for equipment in equipments]
+        #equipments_dict.append(percentage)
+
         attendance = AttendanceRead(
             physical_training=100,
             tactical_training=100,
@@ -269,7 +270,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             emergency_contracts=emergency_contracts,
             experience=experience,
             secondments=secondments,
-            equipments=equipments_dict,
+            equipments=equipments,
             general_information=general_information,
             service_id_info=service_id_info
         )
