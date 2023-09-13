@@ -698,7 +698,7 @@ class HistoryServiceDetailRead(Model):
     emergency_contracts: Optional[List[EmergencyContactRead]] = None
     experience: Optional[List[ExperienceRead]] = None
     secondments: Optional[List[SecondmentRead]] = None
-    equipments: Optional[List[dict]] = None
+    equipments: Optional[List[EquipmentRead]] = None
 
     class Config:
         from_attributes=True
