@@ -19,6 +19,10 @@ class IdentificationCardCreate(IdentificationCardBase):
 
 
 class IdentificationCardUpdate(BaseModel):
+    document_number: Optional[str]
+    date_of_issue: Optional[datetime.date]
+    date_to: Optional[datetime.date]
+    issued_by: Optional[str]
     document_link: Optional[AnyUrl]
 
 

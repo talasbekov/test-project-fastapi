@@ -23,6 +23,11 @@ class BiographicInfoCreate(BiographicInfoBase):
 
 
 class BiographicInfoUpdate(BaseModel):
+    place_birth: Optional[str]
+    gender: Optional[bool]
+    citizenship: Optional[str]
+    nationality: Optional[str]
+    family_status_id: Optional[str]
     residence_address: Optional[str]
 
 

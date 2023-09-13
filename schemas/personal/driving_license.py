@@ -23,6 +23,10 @@ class DrivingLicenseCreate(DrivingLicenseBase):
 
 
 class DrivingLicenseUpdate(BaseModel):
+    document_number: Optional[str]
+    category: Optional[List[str]]
+    date_of_issue: Optional[datetime.date]
+    date_to: Optional[datetime.date]
     document_link: Optional[AnyUrl]
 
 
