@@ -247,7 +247,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         #         percentage[equipment_model[0]] = (
         #             equipment_model[1] * 100) / clothing_equipments_type_count
 
-        # service_id_info = self.get_service_id_by_user_id(db, user_id)
+        service_id_info = self.get_service_id_by_user_id(db, user_id)
         # equipments_dict = [EquipmentRead.from_orm(
         #     equipment).dict() for equipment in equipments]
         #equipments_dict.append(percentage)
