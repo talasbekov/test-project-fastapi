@@ -17,6 +17,7 @@ class EquipmentBase(Model):
     document_link: Optional[str]
     document_number: Optional[str]
     date_from: Optional[datetime]
+    date_to: Optional[datetime]
     user_id: Optional[str]
 
     class Config:
