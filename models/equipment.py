@@ -17,6 +17,7 @@ class Equipment(Model):
     __tablename__ = "hr_erp_equipments"
 
     date_from = Column(TIMESTAMP, nullable=True)
+    date_to = Column(TIMESTAMP, nullable=True)
     document_number = Column(String, nullable=True)
     document_link = Column(String, nullable=True)
 

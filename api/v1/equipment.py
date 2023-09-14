@@ -12,7 +12,8 @@ from schemas import (EquipmentCreate,
                      EquipmentRead,
                      TypeClothingEquipmentRead,
                      TypeArmyEquipmentRead,
-                     TypeOtherEquipmentRead
+                     TypeOtherEquipmentRead,
+                     NamedModel
                      )
 from services import equipment_service
 

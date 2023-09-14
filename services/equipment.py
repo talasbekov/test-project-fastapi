@@ -12,12 +12,14 @@ from models import (Equipment,
                     ArmyEquipment,
                     ClothingEquipment,
                     OtherEquipment,
-                    ClothingEquipmentTypesModels)
+                    ClothingEquipmentTypesModels,
+                    TypeOtherEquipmentModel)
 from schemas import (EquipmentCreate,
                      EquipmentUpdate,
                      TypeClothingEquipmentRead,
                      TypeArmyEquipmentRead,
-                     TypeOtherEquipmentRead)
+                     TypeOtherEquipmentRead,
+                     NamedModel)
 from .base import ServiceBase
 
 equipment = {

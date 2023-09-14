@@ -1,7 +1,6 @@
 from .base import Model, NamedModel, ReadModel, ReadNamedModel, ReadTextModel, TextModel
 from .badge import *
 from .autotag import *
-from .notification import *
 from .equipment import (EquipmentCreate,
                         EquipmentRead,
                         EquipmentUpdate,
@@ -104,3 +103,4 @@ from .secondment import *
 from .history import *
 from .survey import *
 from .bsp import *
+from .notification import *
