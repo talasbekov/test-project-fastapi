@@ -12,14 +12,12 @@ from models import (Equipment,
                     ArmyEquipment,
                     ClothingEquipment,
                     OtherEquipment,
-                    ClothingEquipmentTypesModels,
-                    TypeOtherEquipmentModel)
+                    ClothingEquipmentTypesModels)
 from schemas import (EquipmentCreate,
                      EquipmentUpdate,
                      TypeClothingEquipmentRead,
                      TypeArmyEquipmentRead,
-                     TypeOtherEquipmentRead,
-                     NamedModel)
+                     TypeOtherEquipmentRead)
 from .base import ServiceBase
 
 equipment = {
@@ -39,7 +37,12 @@ class EquipmentService(
 
     def create(self, db: Session, body: EquipmentCreate):
         cls = equipment[body.type_of_equipment]
-
+        if body.type_of_equipment == "clothing_equipment":
+            body.cloth_eq_types_models_id = (
+                self.get_clothing_equipment_type_model_by_ids(db,
+                                                              body.cloth_eq_types_id,
+                                                              body.cloth_eq_models_id)
+            )
         equipment1 = cls(**body.dict(exclude_none=True))
         db.add(equipment1)
         db.flush()
@@ -54,6 +57,21 @@ class EquipmentService(
 
         return [TypeArmyEquipmentRead.from_orm(army_equipment)
                 for army_equipment in army_equipments]
+
+    def get_clothing_equipment_type_model_by_ids(
+            self, db: Session,
+            type_id: str,
+            model_id: str
+    ):
+        clothing_equipment_type_model_id = \
+            (db.query(ClothingEquipmentTypesModels.id)
+             .filter(ClothingEquipmentTypesModels.type_cloth_equipmets_id == type_id,
+                     ClothingEquipmentTypesModels.type_cloth_eq_models_id == model_id)
+             .first()
+            )
+        return clothing_equipment_type_model_id
+
+
 
     def get_all_clothing_equipments(
             self, db: Session,
@@ -153,6 +171,12 @@ class EquipmentService(
         equipment = self.get_by_id(db, id)
         if not equipment:
             raise NotFoundException("Equipment not found")
+        if body.type_of_equipment == "clothing_equipment":
+            body.cloth_eq_types_models_id = (
+                self.get_clothing_equipment_type_model_by_ids(db,
+                                                              body.cloth_eq_types_id,
+                                                              body.cloth_eq_models_id)
+            )
         for key, value in body.dict(exclude_none=True).items():
             setattr(equipment, key, value)
         db.add(equipment)

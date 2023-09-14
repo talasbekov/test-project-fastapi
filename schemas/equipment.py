@@ -26,7 +26,8 @@ class EquipmentBase(Model):
 
 
 class EquipmentCreate(EquipmentBase):
-    pass
+    cloth_eq_types_id: Optional[str]
+    cloth_eq_models_id: Optional[str]
 
 
 class EquipmentUpdate(EquipmentBase):
