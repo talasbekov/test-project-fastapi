@@ -41,8 +41,10 @@ class EquipmentService(
             body.cloth_eq_types_models_id = (
                 self.get_clothing_equipment_type_model_by_ids(db,
                                                               body.cloth_eq_types_id,
-                                                              body.cloth_eq_models_id)
+                                                              body.cloth_eq_models_id)[0]
             )
+            body.cloth_eq_types_id = None
+            body.cloth_eq_models_id = None
         equipment1 = cls(**body.dict(exclude_none=True))
         db.add(equipment1)
         db.flush()
@@ -175,8 +177,10 @@ class EquipmentService(
             body.cloth_eq_types_models_id = (
                 self.get_clothing_equipment_type_model_by_ids(db,
                                                               body.cloth_eq_types_id,
-                                                              body.cloth_eq_models_id)
+                                                              body.cloth_eq_models_id)[0]
             )
+            body.cloth_eq_types_id = None
+            body.cloth_eq_models_id = None
         for key, value in body.dict(exclude_none=True).items():
             setattr(equipment, key, value)
         db.add(equipment)
