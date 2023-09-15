@@ -82,8 +82,8 @@ class ArmyEquipment(Equipment):
 
 
 class TypeClothingEquipmentModel(NamedModel):
-    """Type of equipment. Example:
-    ШАПКА, ПОЛУЧЕК, ПОЛУЧЕК, etc."""
+    """Clothing equipment model. Example:
+    ПАРАДНАЯ, ПОВСЕДНЕВНО-ПОСТОВАЯ, ТАКТИЧЕСКАЯ, etc."""
     __tablename__ = "hr_erp_type_cloth_eq_models"
 
     cloth_eq_types_models = relationship(
@@ -92,8 +92,8 @@ class TypeClothingEquipmentModel(NamedModel):
 
 
 class TypeClothingEquipment(NamedModel):  # obj.
-    """Type of clothing equipment. Example:
-    ПАРАДНАЯ, ПОВСЕДНЕВНО-ПОСТОВАЯ, ТАКТИЧЕСКАЯ, etc."""
+    """Type of equipment. Example:
+    ШАПКА, ПОЛУЧЕК, ПОЛУЧЕК, etc."""
     __tablename__ = "hr_erp_type_cloth_equipmets"
 
     cloth_eq_types_models = relationship(

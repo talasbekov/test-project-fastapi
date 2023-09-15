@@ -31,7 +31,8 @@ class EquipmentCreate(EquipmentBase):
 
 
 class EquipmentUpdate(EquipmentBase):
-    pass
+    cloth_eq_types_id: Optional[str]
+    cloth_eq_models_id: Optional[str]
 
 
 class EquipmentRead(EquipmentBase, ReadModel):
