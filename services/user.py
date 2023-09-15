@@ -1,9 +1,7 @@
 import types
-import uuid
-import json
 import datetime
 from typing import List, Optional, Any, Union, Dict
-from sqlalchemy.orm import Session, Query, joinedload
+from sqlalchemy.orm import Session, Query
 from sqlalchemy import func, and_
 from fastapi.encoders import jsonable_encoder
 
@@ -523,5 +521,19 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
                  .all())
 
         return users
+
+    def get_iin_by_ids(self, db: Session, user_ids: List[str]):
+        users = db.query(User.iin).filter(User.id.in_(user_ids)).all()
+
+        users_iin = [user[0] for user in users]
+
+        return users_iin
+
+    def get_all_iin_by_ids(self, db: Session, user_ids: List[str], candidate_ids: List[str]):
+        users_iin = self.get_iin_by_ids(db, user_ids)
+
+        candidates_iin = self.get_iin_by_ids(db, candidate_ids)
+
+        return {'Сотрудники': users_iin, 'Кандидаты': candidates_iin}
 
 user_service = UserService(User)
