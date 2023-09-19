@@ -320,4 +320,22 @@ class SurveyService(ServiceBase[Survey, SurveyCreate, SurveyUpdate]):
         
         return participated_surveys_ids
 
+    def _create_notifications_for_users(
+        self,
+        db: Session,
+        document: HrDocument,
+        steps: List[HrDocumentStep]
+    ):
+        for step in steps:
+            staff_units = document_staff_function_service.get_staff_units_by_id(db, step.staff_function_id)
+            print(staff_units)
+            for staff_unit in staff_units:
+                detailed_notification = detailed_notification_service.create(
+                    db,
+                    {
+                        "hr_document_id": document.id,
+                        "receiver_id": user_service.get_user_by_staff_unit(db, staff_unit).id
+                    }
+                )
+    
 survey_service = SurveyService(Survey)

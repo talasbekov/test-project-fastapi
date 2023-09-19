@@ -1,13 +1,15 @@
 from sqlalchemy.orm import Session
 
-from models import Notification
+from models import Notification, SocketSession
 from schemas import NotificationCreate, NotificationUpdate
-from .base import ServiceBase
+from services import ServiceBase
+from typing import TYPE_CHECKING
 
+from ws import notification_manager
 
 class NotificationService(
         ServiceBase[Notification, NotificationCreate, NotificationUpdate]):
-    def get_received_by_user_id(
+    def get_receiveds_by_user_id(
             self, db: Session, user_id: str, skip: int = 0, limit: int = 10):
         return (
             db.query(self.model)
@@ -17,6 +19,12 @@ class NotificationService(
             .limit(limit)
             .all()
         )
+    
+    async def send_message(
+        self, message: str, user_id: str
+    ):
+        await notification_manager.broadcast({"message": message}, user_id)
+        
 
 
 notification_service = NotificationService(Notification)

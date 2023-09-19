@@ -302,23 +302,23 @@ class HrDocumentTemplateService(
         )
 
     def duplicate(self, db: Session, id: str):
-        template = self.get_by_id(db, str(id))
+        template = super().get_by_id(db, str(id))
         new_template = self.create(
             db,
-            HrDocumentTemplateCreate(
-                name=template.name
+            {
+                "name": (template.name
                 if template.name is None
-                else template.name + " (Копия)",
-                nameKZ=template.nameKZ + " (Копия)",
-                path=template.path,
-                pathKZ=template.pathKZ,
-                subject_type=template.subject_type,
-                properties=template.properties,
-                description=template.description,
-                actions=template.actions,
-                is_visible=template.is_visible,
-                is_draft=template.is_draft
-            ),
+                else template.name + " (Копия)"),
+                "nameKZ": template.nameKZ + " (Копия)",
+                "path": template.path,
+                "pathKZ": template.pathKZ,
+                "subject_type": template.subject_type,
+                "properties": template.properties,
+                "description": template.description,
+                "actions": template.actions,
+                "is_visible": template.is_visible,
+                "is_draft": template.is_draft
+            }
         )
         steps = hr_document_step_service.get_all_by_document_template_id(
             db, template.id
@@ -357,6 +357,13 @@ class HrDocumentTemplateService(
             )
             db.add(new_staff_function)
         db.add(new_template)
+        db.commit()
+        if isinstance(new_template.properties, str):
+            new_template.properties = json.loads(new_template.properties)
+        if isinstance(new_template.actions, str):
+            new_template.actions= json.loads(new_template.actions)
+        if isinstance(new_template.description, str):
+            new_template.description= json.loads(new_template.description)
         return new_template
 
     async def suggest_corrections(

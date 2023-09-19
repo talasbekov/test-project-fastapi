@@ -64,6 +64,7 @@ from schemas import (
     ArchiveStaffUnitRead,
     HrDocumentInitEcp,
     HrDocumentSignEcp,
+    DetailedNotificationCreate
 )
 from services import (
     badge_service,
@@ -87,6 +88,8 @@ from services import (
     status_leave_service,
     state_body_service,
     categories,
+    detailed_notification_service,
+    document_staff_function
 )
 
    
@@ -472,7 +475,6 @@ class HrDocumentService(
 
         users_in_revision = self._exists_user_document_in_revision(
             db, body.hr_document_template_id, body.user_ids)
-        print(users_in_revision)
         revision_doc = None
         
         if users_in_revision:
@@ -575,8 +577,10 @@ class HrDocumentService(
         if revision_doc:
             super().remove(db, revision_doc.id)
         
+        self._create_notifications_for_steps(db, document, all_steps)
+        
         db.add(document)
-        db.commit()
+        db.commit()     
         
         if isinstance(document.properties, str):
             document.properties = json.loads(document.properties)
@@ -617,18 +621,18 @@ class HrDocumentService(
         from services import auth_service
         access_token, refresh_token = auth_service._generate_tokens(Authorize, user)
 
-        url = configs.ECP_SERVICE_URL + 'api/hr_document_step_signer/create/template/'
-        request_body = {
-            'hr_document_template_id': str(body.hr_document_template_id),
-            'user_id': user_id,
-            'certificate_blob': body.certificate_blob
-        }
+        # url = configs.ECP_SERVICE_URL + 'api/hr_document_step_signer/create/template/'
+        # request_body = {
+        #     'hr_document_template_id': str(body.hr_document_template_id),
+        #     'user_id': user_id,
+        #     'certificate_blob': body.certificate_blob
+        # }
          
-        headers = {"Authorization": f"Bearer {access_token}"}
+        # headers = {"Authorization": f"Bearer {access_token}"}
 	
-        res = requests.post(url=url, json=request_body, headers=headers)
-        if res.status_code == 400:
-            raise BadRequestException(detail=res.text)
+        # res = requests.post(url=url, json=request_body, headers=headers)
+        # if res.status_code == 400:
+        #     raise BadRequestException(detail=res.text)
 
         return document
 
@@ -650,19 +654,19 @@ class HrDocumentService(
             user_id
         )
 
-        url = configs.ECP_SERVICE_URL+'api/hr_document_step_signer/create/'
-        request_body = {
-            'hr_document_template_signer_id': str(document.hr_document_template_id),
-            'user_id': str(user_id),
-            'step_id': str(document.last_step_id),
-            'certificate_blob': body.certificate_blob
-        }
-        headers = {"Authorization": f"Bearer {access_token}"}
+        # url = configs.ECP_SERVICE_URL+'api/hr_document_step_signer/create/'
+        # request_body = {
+        #     'hr_document_template_signer_id': str(document.hr_document_template_id),
+        #     'user_id': str(user_id),
+        #     'step_id': str(document.last_step_id),
+        #     'certificate_blob': body.certificate_blob
+        # }
+        # headers = {"Authorization": f"Bearer {access_token}"}
 
-        res = requests.post(url=url, json=request_body, headers=headers)
+        # res = requests.post(url=url, json=request_body, headers=headers)
 
-        if res.status_code == 400:
-            raise BadRequestException(detail=res.text)
+        # if res.status_code == 400:
+        #     raise BadRequestException(detail=res.text)
         return document
 
     def sign(
@@ -1614,6 +1618,24 @@ class HrDocumentService(
                 f"{last_info.signed_by.last_name} {last_info.signed_by.father_name}"
             )
         return template.render(context), document_template.name
+
+    def _create_notifications_for_steps(
+        self,
+        db: Session,
+        document: HrDocument,
+        steps: List[HrDocumentStep]
+    ):
+        for step in steps:
+            staff_units = document_staff_function_service.get_staff_units_by_id(db, step.staff_function_id)
+            print(staff_units)
+            for staff_unit in staff_units:
+                detailed_notification = detailed_notification_service.create(
+                    db,
+                    {
+                        "hr_document_id": document.id,
+                        "receiver_id": user_service.get_user_by_staff_unit(db, staff_unit).id
+                    }
+                )
 
 
 hr_document_service = HrDocumentService(HrDocument)

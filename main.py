@@ -95,16 +95,16 @@ async def websocket_endpoint(
     Authorize: AuthJWT = Depends(),
 ):
     try:
-        Authorize.jwt_required("websocket", token=token)
-        user_id = Authorize.get_jwt_subject()
+        Authorize.jwt_required("websocket", token)
+        user_id = Authorize.get_raw_jwt(token)['sub']
         if user_id is None:
             raise AuthJWTException()
     except AuthJWTException:
         await websocket.close()
-
+    await websocket.accept()
     await notification_manager.connect(websocket, user_id)
     try:
         while True:
-            await websocket.receive_text()
+            await websocket.receive_json()
     except WebSocketDisconnect:
         notification_manager.disconnect(user_id, websocket)

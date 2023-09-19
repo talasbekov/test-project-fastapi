@@ -22,10 +22,12 @@ class SurveyBase(NamedModel):
 class SurveyCreateWithJurisdiction(SurveyBase):
     type: SurveyTypeEnum
     jurisdictions: List[SurveyJurisdictionBase]
+    owner_id: str
 
 
 class SurveyCreate(SurveyBase):
     type: SurveyTypeEnum
+    owner_id: str
 
 
 class SurveyUpdate(SurveyBase):

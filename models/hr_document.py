@@ -1,8 +1,10 @@
 import enum
+import json
 
 from sqlalchemy import TIMESTAMP, Column, ForeignKey, String, TEXT
 from sqlalchemy.dialects.oracle import CLOB
 from sqlalchemy.orm import relationship
+from sqlalchemy.event import listens_for
 
 from models import Model
 from .association import hr_document_equipments, hr_documents_users
@@ -71,3 +73,13 @@ class HrDocument(Model):
         back_populates="hr_document",
         cascade="all,delete")
     old_history = relationship("History", foreign_keys=[old_history_id])
+
+@listens_for(HrDocument, 'before_update')
+def json_fields_update_listener(mapper, connection, target):
+    if isinstance(target.properties, dict):
+        target.properties = json.dumps(target.properties)
+
+@listens_for(HrDocument, 'before_insert')
+def json_fields_insert_listener(mapper, connection, target):
+    if isinstance(target.properties, dict):
+        target.properties = json.dumps(target.properties)

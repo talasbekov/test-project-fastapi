@@ -1,8 +1,10 @@
 import enum
+import json
 
 from sqlalchemy import Column, Enum, String, UUID, ForeignKey, Boolean
 from sqlalchemy.dialects.oracle import CLOB
 from sqlalchemy.orm import relationship
+from sqlalchemy.event import listens_for
 
 from models import NamedModel, isActiveModel
 
@@ -50,3 +52,21 @@ class HrDocumentTemplate(NamedModel, isActiveModel):
     steps = relationship("HrDocumentStep",
                          back_populates='hr_document_template',
                          cascade='all,delete')
+
+@listens_for(HrDocumentTemplate, 'before_update')
+def json_fields_update_listener(mapper, connection, target):
+    if isinstance(target.description, dict):
+        target.description = json.dumps(target.description)
+    if isinstance(target.properties, dict):
+        target.properties = json.dumps(target.properties)
+    if isinstance(target.actions, dict):
+        target.actions = json.dumps(target.actions)
+
+@listens_for(HrDocumentTemplate, 'before_insert')
+def json_fields_insert_listener(mapper, connection, target):
+    if isinstance(target.description, dict):
+        target.description = json.dumps(target.description)
+    if isinstance(target.properties, dict):
+        target.properties = json.dumps(target.properties)
+    if isinstance(target.actions, dict):
+        target.actions = json.dumps(target.actions)

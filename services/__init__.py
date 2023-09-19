@@ -4,7 +4,7 @@ from .base import ServiceBase
 from .position import position_service
 from .state_body import state_body_service
 from .profile import *
-from .notification import notification_service
+from .notification import *
 
 from .jurisdiction import jurisdiction_service
 from .staff_division_type import staff_division_type_service

@@ -66,3 +66,4 @@ class Survey(NamedModel):
     jurisdictions = relationship(
         "SurveyJurisdiction", cascade="all, delete", back_populates="survey")
     comp_form_for = relationship("User", foreign_keys=[comp_form_for_id])
+    owner = relationship("User", foreign_keys=[owner_id])
