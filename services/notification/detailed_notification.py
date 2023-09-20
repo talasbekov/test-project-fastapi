@@ -36,7 +36,8 @@ class DetailedNotificationService(
                     notification.hr_document.document_template.actions= json.loads(notification.hr_document.document_template.actions)
                 if isinstance(notification.hr_document.document_template.description, str):
                     notification.hr_document.document_template.description= json.loads(notification.hr_document.document_template.description)
-        return notifications
+        notifications_count = db.query(self.model).count()
+        return {"total": notifications_count, "objects": notifications}
     
     def create(self, db: Session,
                body: Union[DetailedNotificationCreate, Dict[str, Any]]):

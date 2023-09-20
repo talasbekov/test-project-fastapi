@@ -1,5 +1,5 @@
 import uuid
-from typing import Optional
+from typing import Optional, List
 
 from schemas import Model, ReadModel, HrDocumentRead, SurveyRead, UserShortRead
 
@@ -26,6 +26,10 @@ class NotificationRead(ReadModel, NotificationBase):
     message: Optional[str]
     sender_type: Optional[str]
     receiver_id: Optional[str]
+    
+class NotificationReadPagination(Model):
+    total: Optional[int]
+    objects: Optional[List[NotificationRead]]
 
 class DetailedNotificationBase(Model):
     hr_document_id: Optional[str]
@@ -45,3 +49,8 @@ class SurveyNotificationRead(SurveyRead):
 class DetailedNotificationRead(ReadModel, DetailedNotificationBase):
     hr_document: Optional[HrDocumentRead]
     survey: Optional[SurveyNotificationRead]
+    
+class DetailedNotificationReadPagination(Model):
+    total: Optional[int]
+    objects: Optional[List[DetailedNotificationRead]]
+    

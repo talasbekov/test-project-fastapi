@@ -7,7 +7,9 @@ from sqlalchemy.orm import Session
 
 from core import get_db
 from schemas import (NotificationRead, DetailedNotificationRead,
-                     DetailedNotificationCreate, NotificationCreate)
+                     DetailedNotificationCreate, NotificationCreate,
+                     DetailedNotificationReadPagination,
+                     NotificationReadPagination)
 from services import notification_service, detailed_notification_service
 
 router = APIRouter(
@@ -19,7 +21,7 @@ router = APIRouter(
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[NotificationRead],
+            response_model=NotificationReadPagination,
             summary="Get all Notifications")
 async def get_all(*,
                   db: Session = Depends(get_db),
@@ -90,7 +92,7 @@ async def test(*,
     return await notification_service.send_message(message, user_id)
 
 @router.get("/detailed", dependencies=[Depends(HTTPBearer())],
-            response_model=List[DetailedNotificationRead],
+            response_model=DetailedNotificationReadPagination,
             summary="Get all Detailed Notifications")
 async def get_all_detailed(*,
                   db: Session = Depends(get_db),
