@@ -49,6 +49,9 @@ class AddBadgeHandler(BaseHandler):
                 ("Badge is already assigned to this user:"
                  f" {user.first_name} {user.last_name}")
             )
+        if history_service.has_penalty_history(db, user.id):
+            raise BadRequestException(
+                f"User has penalty!")
 
     def get_args(self, action, properties):
         try:

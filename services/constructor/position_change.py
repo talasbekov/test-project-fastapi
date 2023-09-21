@@ -10,7 +10,7 @@ from models import (User, HrDocument, EmergencyServiceHistory,
 from schemas import StaffUnitRead
 from .base import BaseHandler
 from services import (staff_unit_service, history_service,
-                      staff_division_service)
+                      staff_division_service, history_service)
 from services.candidates import candidate_service
 from exceptions import BadRequestException
 
@@ -72,7 +72,9 @@ class PositionChangeHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        pass
+        if history_service.has_penalty_history(db, user.id):
+            raise BadRequestException(
+                f"User has penalty!")
 
     def get_args(self, action, properties):
         try:

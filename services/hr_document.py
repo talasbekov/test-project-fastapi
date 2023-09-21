@@ -1506,8 +1506,8 @@ class HrDocumentService(
 
     def _cancel_document(self, db: Session, document: HrDocument):
         template: HrDocumentTemplate = document.document_template
-        if isinstance(document.actions, str):
-            document_actions = json.loads(document.actions)
+        if isinstance(template.actions, str):
+            document_actions = json.loads(template.actions)
         if isinstance(document.properties, str):
             document_properties = json.loads(document.properties)
         if isinstance(document.document_template.properties, str):
@@ -1515,6 +1515,8 @@ class HrDocumentService(
         document.status_id = hr_document_status_service.get_by_name(
             db, HrDocumentStatusEnum.CANCELED.value).id
         document.last_step = None
+        
+        detailed_notification_service.remove_document_notifications(db, document.id)
         if isinstance(document.document_template.actions, dict):
             document.document_template.actions = json.dumps(template.actions)
         if isinstance(document.document_template.properties, dict):
