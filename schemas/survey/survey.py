@@ -22,7 +22,7 @@ class SurveyBase(NamedModel):
 class SurveyCreateWithJurisdiction(SurveyBase):
     type: SurveyTypeEnum
     jurisdictions: List[SurveyJurisdictionBase]
-    owner_id: str
+    owner_id: Optional[str]
 
 
 class SurveyCreate(SurveyBase):
