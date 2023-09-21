@@ -67,7 +67,7 @@ class StaffUnitService(
         db.flush()
         return staff_unit
 
-    def get_by_staff_division_id(self, db: Session, staff_division_id: str, skip: int, limit: int):
+    def get_by_staff_division_id(self, db: Session, staff_division_id: str, skip: int = 0, limit: int = 1000):
         return (db.query(self.model)
                 .filter(self.model.staff_division_id == staff_division_id)
                 .offset(skip)
