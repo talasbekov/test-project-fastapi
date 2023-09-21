@@ -467,5 +467,14 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                 HistoryPersonalRead.from_orm(obj).to_dict())
         return lis_of_histories
 
+    def has_penalty_history(self, db: Session, user_id: str) -> bool:
+        penalty_history = (
+            db.query(PenaltyHistory)
+            .filter(PenaltyHistory.date_to == None,
+                    PenaltyHistory.user_id == user_id)
+            .first()
+        )
+
+        return penalty_history != None
 
 history_service = HistoryService(History)
