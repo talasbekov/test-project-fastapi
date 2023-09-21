@@ -194,6 +194,7 @@ async def create(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
+    body['ownder_id'] = Authorize.get_jwt_subject()
     return survey_service.create(db, body)
 
 
@@ -249,6 +250,7 @@ async def save_as_draft(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
+    body['ownder_id'] = Authorize.get_jwt_subject()
     return survey_service.save_as_draft(db, body)
 
 
