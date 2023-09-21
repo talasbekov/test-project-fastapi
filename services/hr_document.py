@@ -996,8 +996,9 @@ class HrDocumentService(
                     db, user, action, template_properties, document_properties, document)
 
         document.signed_at = datetime.now()
-
         document.last_step_id = None
+        
+        detailed_notification_service.remove_document_notifications(db, document.id)
         
         if isinstance(document.document_template.actions, dict):
             document.document_template.actions = json.dumps(template.actions)
@@ -1505,8 +1506,8 @@ class HrDocumentService(
 
     def _cancel_document(self, db: Session, document: HrDocument):
         template: HrDocumentTemplate = document.document_template
-        if isinstance(document.properties, str):
-            document_actions = json.loads(template.actions)
+        if isinstance(document.actions, str):
+            document_actions = json.loads(document.actions)
         if isinstance(document.properties, str):
             document_properties = json.loads(document.properties)
         if isinstance(document.document_template.properties, str):
@@ -1636,6 +1637,5 @@ class HrDocumentService(
                         "receiver_id": user_service.get_user_by_staff_unit(db, staff_unit).id
                     }
                 )
-
 
 hr_document_service = HrDocumentService(HrDocument)

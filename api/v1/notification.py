@@ -112,7 +112,7 @@ async def get_all_detailed(*,
    """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
-    return detailed_notification_service.get_multi(db, skip, limit)
+    return detailed_notification_service.get_multi(db, user_id, skip, limit)
 
 @router.post("/detailed", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],

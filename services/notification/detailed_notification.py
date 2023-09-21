@@ -23,9 +23,15 @@ class DetailedNotificationService(
         )
         
     def get_multi(
-        self, db: Session, skip: int = 0, limit: int = 100
+        self, db: Session, user_id: str, skip: int = 0, limit: int = 100
     ):
-        notifications = db.query(self.model).offset(skip).limit(limit).all()
+        notifications = (
+            db.query(self.model)
+            .filter(self.model.receiver_id == user_id)
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
         for notification in notifications:
             if notification.hr_document_id is not None:
                 if isinstance(notification.hr_document.properties, str):
@@ -36,7 +42,11 @@ class DetailedNotificationService(
                     notification.hr_document.document_template.actions= json.loads(notification.hr_document.document_template.actions)
                 if isinstance(notification.hr_document.document_template.description, str):
                     notification.hr_document.document_template.description= json.loads(notification.hr_document.document_template.description)
-        notifications_count = db.query(self.model).count()
+        notifications_count = (
+            db.query(self.model)
+            .filter(self.model.receiver_id == user_id)
+            .count()
+        )
         return {"total": notifications_count, "objects": notifications}
     
     def create(self, db: Session,
@@ -55,6 +65,14 @@ class DetailedNotificationService(
             if isinstance(notification.hr_document.document_template.description, str):
                 notification.hr_document.document_template.description= json.loads(notification.hr_document.document_template.description)
         return notification
+    
+    def remove_document_notifications(self, db: Session, document_id: str):
+        notifications = (
+            db.query(self.model).filter(self.model.hr_document_id == document_id).all()
+        )
+        db.delete(notifications)
+        db.flush()
+        return notifications
 
 
 detailed_notification_service = DetailedNotificationService(DetailedNotification)
