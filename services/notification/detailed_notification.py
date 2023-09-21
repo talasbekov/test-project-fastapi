@@ -70,8 +70,9 @@ class DetailedNotificationService(
         notifications = (
             db.query(self.model).filter(self.model.hr_document_id == document_id).all()
         )
-        db.delete(notifications)
-        db.flush()
+        for notification in notifications:
+            db.delete(notification)
+            db.flush()
         return notifications
 
 
