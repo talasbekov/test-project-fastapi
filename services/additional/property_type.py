@@ -34,9 +34,7 @@ class PropertyTypeService(
             raise NotFoundException(
                 detail=f"Profile with user_id: {user_id} is not found!")
 
-        properties = db.query(self.model).filter(
-            self.model.profile_id == profile.additional_profile.id
-        ).offset(skip).limit(limit).all()
+        properties = db.query(self.model).offset(skip).limit(limit).all()
 
         return properties
 
