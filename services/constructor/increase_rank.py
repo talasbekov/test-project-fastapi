@@ -53,6 +53,9 @@ class IncreaseRankHandler(BaseHandler):
         if user_rank.rank_order >= rank.rank_order:
             raise ForbiddenException(
                 detail=f"You can not increase rank to {rank.name}")
+        if history_service.has_penalty_history(db, user.id):
+            raise BadRequestException(
+                f"User has penalty!")
 
     def handle_filter(self, db: Session, user_query: Query[Any]):
         max_rank = rank_service.get_max_rank(db)
