@@ -1,4 +1,6 @@
 from typing import List
+from datetime import datetime
+import json
 
 from fastapi import APIRouter, Depends, status
 from fastapi.security import HTTPBearer
@@ -81,16 +83,21 @@ async def delete(*,
 @router.get("/test", dependencies=[Depends(HTTPBearer())],
             summary="Test Notifications")
 async def test(*,
-                  Authorize: AuthJWT = Depends(),
-                  message: str = 'anime',
-                  ):
+               db: Session = Depends(get_db),
+               Authorize: AuthJWT = Depends(),
+               message: str = 'anime',
+               ):
     """
        Test all Notifications
     """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
-    message = {"title": "test", "message": message}
-    return await notification_service.send_message(message, user_id)
+    message = {
+        "sender_type": "test",
+        "message": message,
+        "created_at": str(datetime.now())
+    }
+    return await notification_service.send_message(db, message, user_id)
 
 @router.get("/detailed", dependencies=[Depends(HTTPBearer())],
             response_model=DetailedNotificationReadPagination,
