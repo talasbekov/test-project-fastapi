@@ -27,6 +27,14 @@ class NotificationService(
     async def send_message(
         self, message: str, user_id: str
     ):
+        notifications = (
+            db.query(self.model)
+            .filter(self.model.receiver_id == user_id)
+            .order_by(self.model.created_at.desc())
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
         await notification_manager.broadcast(message, user_id)
         
 
