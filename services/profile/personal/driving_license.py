@@ -47,7 +47,7 @@ class DrivingLicenseService(
             if field in update_data:
                 setattr(db_obj, field, update_data[field])
         db.add(db_obj)
-        db.flush()
+        db.commit()
         db_obj.category = eval(db_obj.category)
         return db_obj
 
