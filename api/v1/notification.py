@@ -89,6 +89,7 @@ async def test(*,
     """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
+    message = {"title": "test", "message": message}
     return await notification_service.send_message(message, user_id)
 
 @router.get("/detailed", dependencies=[Depends(HTTPBearer())],

@@ -27,7 +27,7 @@ class NotificationService(
     async def send_message(
         self, message: str, user_id: str
     ):
-        await notification_manager.broadcast({"message": message}, user_id)
+        await notification_manager.broadcast(message, user_id)
         
 
 
