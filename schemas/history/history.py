@@ -446,7 +446,7 @@ class CharacteristicRead(ReadModel):
         crc_init = orm_obj.characteristic_initiator
         if crc_init:
             full_name = (f"{crc_init.last_name} {crc_init.first_name[0]}"
-                         f".{crc_init.father_name[0]}.")
+                         f".{'' if crc_init.father_name is None else crc_init.father_name[0]}")
         else:
             full_name = None
         return cls(
