@@ -164,7 +164,8 @@ class HrDocumentService(
             document.document_template.description = json.loads(document.document_template.description)
         if isinstance(document.document_template.actions, str):
             document.document_template.actions = json.loads(document.document_template.actions)
-        return document
+            
+        return self._to_response(db, document)
 
     def get_initialized_documents(self,
                                   db: Session,
