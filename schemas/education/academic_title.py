@@ -7,6 +7,8 @@ from pydantic import BaseModel, AnyUrl
 from .academic_title_degree import AcademicTitleDegreeRead
 from .specialty import SpecialtyRead
 
+from schemas import NamedModel
+
 
 class AcademicTitleBase(BaseModel):
     profile_id: Optional[str]
@@ -39,3 +41,15 @@ class AcademicTitleRead(AcademicTitleBase):
 
     class Config:
         orm_mode = True
+        
+class AcademicTitleShortRead(BaseModel):
+    document_number: str
+    document_link: Optional[str]
+    assignment_date: Optional[datetime.date]
+
+    degree: Optional[NamedModel]
+    specialty: Optional[NamedModel]
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True

@@ -8,6 +8,8 @@ from .academic_degree_degree import AcademicDegreeDegreeRead
 from .science import ScienceRead
 from .specialty import SpecialtyRead
 
+from schemas import NamedModel
+
 
 class AcademicDegreeBase(BaseModel):
     profile_id: str
@@ -45,3 +47,17 @@ class AcademicDegreeRead(AcademicDegreeBase):
     degree: Optional[AcademicDegreeDegreeRead]
     science: Optional[ScienceRead]
     specialty: Optional[SpecialtyRead]
+
+class AcademicDegreeShorRead(BaseModel):
+    specialty: Optional[NamedModel]
+    document_number: Optional[str]
+    document_link: Optional[str]
+    assignment_date: Optional[date]
+
+    degree: Optional[NamedModel]
+    science: Optional[NamedModel]
+    specialty: Optional[NamedModel]
+    
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True

@@ -24,9 +24,7 @@ class IdentificationCardService(
                                 .join(Profile)
                                 .filter(Profile.user_id == user_id)
                                 .first())
-        if identification_card is None:
-            raise NotFoundException(
-                detail=f"IdentificationCard with user id: {id} is not found!")
+        
         return identification_card
 
 

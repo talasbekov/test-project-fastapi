@@ -56,7 +56,7 @@ from schemas import (
 from services import (privelege_emergency_service, coolness_service, badge_service,
                       personnal_reserve_service, service_id_service, user_service,
                       recommender_user_service, equipment_service, driving_license_service,
-                      identification_card_service, passport_service)
+                      identification_card_service, passport_service, profile_service)
 
 
 classes = {
@@ -510,6 +510,12 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         driving_license = driving_license_service.get_by_user_id(db, user_id)
         identification_card = identification_card_service.get_by_user_id(db, user_id)
         passport = passport_service.get_by_user_id(db, user_id)
+        educational_profile = profile_service.get_by_user_id(db, user_id).educational_profile
+        academic_degrees = educational_profile.academic_degree
+        academic_titles = educational_profile.academic_title
+        educations = educational_profile.education
+        courses = educational_profile.course
+        
 
         service_id_info = self.get_service_id_by_user_id(db, user_id)
 
@@ -529,7 +535,11 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             service_id_info=service_id_info,
             driving_license=driving_license,
             identification_card=identification_card,
-            passport=passport
+            passport=passport,
+            academic_degrees = academic_degrees,
+            academic_titles = academic_titles,
+            educations = educations,
+            courses = courses
         )
         timeline_dict = HistoryTimeLineRead.from_orm(
             timeline_read).dict()

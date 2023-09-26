@@ -21,9 +21,7 @@ class PassportService(ServiceBase[Passport, PassportCreate, PassportUpdate]):
                         .join(Profile)
                         .filter(Profile.user_id == user_id)
                         .first())
-        if passport is None:
-            raise NotFoundException(
-                detail=f"Passport with user id: {id} is not found!")
+        
         return passport
 
 

@@ -36,3 +36,11 @@ class CourseRead(CourseBase, ReadNamedModel):
     document_link: Optional[str]
 
     course_provider: Optional[CourseProviderRead]
+    
+class CourseShortRead(NamedModel):
+    start_date: Optional[datetime.date]
+    end_date: Optional[datetime.date]
+    document_link: Optional[str]
+
+    course_provider: Optional[NamedModel]
+

@@ -7,7 +7,7 @@ from .institution import InstitutionRead
 from .specialty import SpecialtyRead
 from .institution_degree_type import InstitutionDegreeTypeRead
 
-from schemas import Model
+from schemas import Model, NamedModel
 
 
 class EducationBase(Model):
@@ -47,3 +47,12 @@ class EducationRead(EducationBase):
     specialty: Optional[SpecialtyRead]
     institution: Optional[InstitutionRead]
     degree: Optional[InstitutionDegreeTypeRead]
+    
+class EducationShortRead(Model):
+    start_date: Optional[datetime.date]
+    end_date: Optional[datetime.date]
+    document_link: Optional[str]
+    specialty: Optional[NamedModel]
+    institution: Optional[NamedModel]
+    degree: Optional[NamedModel]
+

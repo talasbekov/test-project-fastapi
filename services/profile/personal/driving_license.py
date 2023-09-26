@@ -30,9 +30,6 @@ class DrivingLicenseService(
                            .join(Profile)
                            .filter(Profile.user_id == user_id)
                            .first())
-        if driving_licence is None:
-            raise NotFoundException(
-                detail=f"DrivingLicense with user id: {id} is not found!")
         driving_licence.category = eval(driving_licence.category)
         return driving_licence
 

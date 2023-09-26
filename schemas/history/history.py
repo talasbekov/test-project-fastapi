@@ -23,7 +23,11 @@ from schemas import (
     StaffDivisionReadWithoutStaffUnit,
     DrivingLicenseRead,
     IdentificationCardRead,
-    PassportRead
+    PassportRead,
+    AcademicDegreeShorRead,
+    AcademicTitleShortRead,
+    CourseShortRead,
+    EducationShortRead
 )
 
 
@@ -707,7 +711,14 @@ class HistoryServiceDetailRead(Model):
         from_attributes=True
         arbitrary_types_allowed = True
 
+
 class HistoryTimeLineRead(HistoryServiceDetailRead):
+    academic_degrees: Optional[List[AcademicDegreeShorRead]]
+    academic_titles: Optional[List[AcademicTitleShortRead]]
+    educations: Optional[List[EducationShortRead]]
+    courses: Optional[List[CourseShortRead]]
     driving_license: Optional[DrivingLicenseRead] = None
     identification_card: Optional[IdentificationCardRead] = None
     passport:  Optional[PassportRead] = None
+    
+    

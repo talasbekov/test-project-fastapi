@@ -9,3 +9,4 @@ from .passport import passport_service
 from .sport_achievement import sport_achievement_service
 from .sport_degree import sport_degree_service
 from .tax_declaration import tax_declaration_service
+from .passport import passport_service
