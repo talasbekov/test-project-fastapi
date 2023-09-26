@@ -19,7 +19,12 @@ class PassportCreate(PassportBase):
 
 
 class PassportUpdate(BaseModel):
+    document_number: Optional[str]
+    date_of_issue: Optional[datetime.date]
+    date_to: Optional[datetime.date]
     document_link: Optional[AnyUrl]
+    profile_id: Optional[str]
+    issued_by: Optional[str]
 
 
 class PassportRead(PassportBase):
