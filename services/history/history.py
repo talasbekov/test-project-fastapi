@@ -30,7 +30,9 @@ from models import (
     Status,
     Badge,
     Coolness,
-    User
+    User,
+    IdentificationCard,
+    Passport
 )
 from schemas import HistoryCreate, HistoryUpdate
 from schemas.history.history import EquipmentRead
@@ -47,12 +49,14 @@ from schemas import (
     HistoryRead,
     HistoryServiceDetailRead,
     HistoryPersonalRead,
-    ServiceIdInfoRead
+    ServiceIdInfoRead,
+    HistoryTimeLineRead
 )
 
 from services import (privelege_emergency_service, coolness_service, badge_service,
                       personnal_reserve_service, service_id_service, user_service,
-                      recommender_user_service, equipment_service)
+                      recommender_user_service, equipment_service, driving_license_service,
+                      identification_card_service, passport_service)
 
 
 classes = {
@@ -476,5 +480,141 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         )
 
         return penalty_history != None
+    
+    def get_timeline(self, db: Session, user_id: str):
+        user = user_service.get_by_id(db, user_id)
+
+        general_information = self.get_general_information_by_user_id(
+            db, user_id, user)
+        badges = db.query(BadgeHistory).filter(
+            BadgeHistory.user_id == user_id).all()
+        ranks = db.query(RankHistory).filter(
+            RankHistory.user_id == user_id).all()
+        penalties = db.query(PenaltyHistory).filter(
+            PenaltyHistory.user_id == user_id).all()
+        contracts = db.query(ContractHistory).filter(
+            ContractHistory.user_id == user_id).all()
+        attestations = db.query(AttestationHistory).filter(
+            AttestationHistory.user_id == user_id).all()
+        characteristics = db.query(ServiceCharacteristicHistory).filter(
+            ServiceCharacteristicHistory.user_id == user_id).all()
+        holidays = db.query(StatusHistory).filter(
+            StatusHistory.user_id == user_id).all()
+        emergency_contracts = db.query(EmergencyServiceHistory).filter(
+            EmergencyServiceHistory.user_id == user_id).all()
+        experience = db.query(WorkExperienceHistory).filter(
+            WorkExperienceHistory.user_id == user_id).all()
+        secondments = db.query(SecondmentHistory).filter(
+            SecondmentHistory.user_id == user_id).all()
+        equipments = user.equipments
+        driving_license = driving_license_service.get_by_user_id(db, user_id)
+        identification_card = identification_card_service.get_by_user_id(db, user_id)
+        passport = passport_service.get_by_user_id(db, user_id)
+
+        service_id_info = self.get_service_id_by_user_id(db, user_id)
+
+        timeline_read = HistoryTimeLineRead(
+            holidays=holidays,
+            badges=badges,
+            ranks=ranks,
+            penalties=penalties,
+            contracts=contracts,
+            attestations=attestations,
+            characteristics=characteristics,
+            emergency_contracts=emergency_contracts,
+            experience=experience,
+            secondments=secondments,
+            equipments=equipments,
+            general_information=general_information,
+            service_id_info=service_id_info,
+            driving_license=driving_license,
+            identification_card=identification_card,
+            passport=passport
+        )
+        timeline_dict = HistoryTimeLineRead.from_orm(
+            timeline_read).dict()
+        return timeline_dict
+    
+    #TODO
+    # def get_timeline(self, db: Session, user_id: str, filter_timedelta: int, date: datetime):
+    #     user = user_service.get_by_id(db, user_id)
+    #     events = []
+    #     privelege_emergency = privelege_emergency_service.get_by_user_id(
+    #         db, user_id)
+    #     if privelege_emergency is not None:
+    #         events.append(Event(
+    #             date=privelege_emergency.date_from,
+    #             value=privelege_emergency.form,
+    #             type="from",
+    #             name="privelege_emergency"
+    #         ))
+    #         events.append(Event(
+    #             date=privelege_emergency.date_to,
+    #             value=privelege_emergency.form,
+    #             type="to",
+    #             name="privelege_emergency"
+    #         ))
+
+    #     personal_reserve = personnal_reserve_service.get_by_user_id(
+    #         db, user_id)
+    #     if personal_reserve is not None:
+    #         events.append(Event(
+    #             date=personal_reserve.date_from,
+    #             value=personal_reserve.reserve,
+    #             type="from",
+    #             name="personal_reserve",
+    #         ))
+    #         events.append(Event(
+    #             date=personal_reserve.date_to,
+    #             value=personal_reserve.reserve,
+    #             name="personal_reserve"
+    #         ))
+
+    #     badges = db.query(BadgeHistory).filter(
+    #         BadgeHistory.user_id == user_id).all()
+    #     for badge in badges:
+    #         events.append(Event(
+    #             date=badge.date_from,
+    #             value=BadgeServiceDetailRead(badge),
+    #             type="from",
+    #             name="badge"
+    #         ))
+    #         if badge.date_to is not None:
+    #             events.append(Event(
+    #                 date=badge.date_to,
+    #                 value=BadgeServiceDetailRead(badge),
+    #                 type="to",
+    #                 name="badge"
+    #             ))
+    #     ranks = db.query(RankHistory).filter(
+    #         RankHistory.user_id == user_id).all()
+    #     penalties = db.query(PenaltyHistory).filter(
+    #         PenaltyHistory.user_id == user_id).all()
+    #     contracts = db.query(ContractHistory).filter(
+    #         ContractHistory.user_id == user_id).all()
+    #     attestations = db.query(AttestationHistory).filter(
+    #         AttestationHistory.user_id == user_id).all()
+    #     characteristics = db.query(ServiceCharacteristicHistory).filter(
+    #         ServiceCharacteristicHistory.user_id == user_id).all()
+    #     holidays = db.query(StatusHistory).filter(
+    #         StatusHistory.user_id == user_id).all()
+    #     emergency_contracts = db.query(EmergencyServiceHistory).filter(
+    #         EmergencyServiceHistory.user_id == user_id).all()
+    #     experience = db.query(WorkExperienceHistory).filter(
+    #         WorkExperienceHistory.user_id == user_id).all()
+    #     secondments = db.query(SecondmentHistory).filter(
+    #         SecondmentHistory.user_id == user_id).all()
+    #     equipments = user.equipments
+
+    #     service_id_info = self.get_service_id_by_user_id(db, user_id)
+    
+
+    #     attendance = AttendanceRead(
+    #         physical_training=100,
+    #         tactical_training=100,
+    #         shooting_training=100,
+    #     )
+
+    #     return TimeLineRead(events)
 
 history_service = HistoryService(History)

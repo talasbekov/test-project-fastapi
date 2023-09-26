@@ -20,7 +20,10 @@ from schemas import (
     ContractRead,
     BadgeRead,
     StaffDivisionRead,
-    StaffDivisionReadWithoutStaffUnit
+    StaffDivisionReadWithoutStaffUnit,
+    DrivingLicenseRead,
+    IdentificationCardRead,
+    PassportRead
 )
 
 
@@ -703,3 +706,8 @@ class HistoryServiceDetailRead(Model):
     class Config:
         from_attributes=True
         arbitrary_types_allowed = True
+
+class HistoryTimeLineRead(HistoryServiceDetailRead):
+    driving_license: Optional[DrivingLicenseRead] = None
+    identification_card: Optional[IdentificationCardRead] = None
+    passport:  Optional[PassportRead] = None

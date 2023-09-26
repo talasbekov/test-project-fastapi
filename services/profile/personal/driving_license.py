@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from fastapi.encoders import jsonable_encoder
 
 from exceptions.client import NotFoundException
-from models import DrivingLicense
+from models import DrivingLicense, PersonalProfile, Profile
 from schemas import (
     DrivingLicenseCreate,
     DrivingLicenseUpdate,
@@ -21,6 +21,18 @@ class DrivingLicenseService(
         if driving_licence is None:
             raise NotFoundException(
                 detail=f"DrivingLicense with id: {id} is not found!")
+        driving_licence.category = eval(driving_licence.category)
+        return driving_licence
+    
+    def get_by_user_id(self, db: Session, user_id: str):
+        driving_licence = (db.query(DrivingLicense)
+                           .join(PersonalProfile)
+                           .join(Profile)
+                           .filter(Profile.user_id == user_id)
+                           .first())
+        if driving_licence is None:
+            raise NotFoundException(
+                detail=f"DrivingLicense with user id: {id} is not found!")
         driving_licence.category = eval(driving_licence.category)
         return driving_licence
 

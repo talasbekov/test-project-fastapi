@@ -1,5 +1,4 @@
 from sqlalchemy import TIMESTAMP, Column, ForeignKey, String, TEXT
-from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.event import listens_for
 

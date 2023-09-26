@@ -215,3 +215,18 @@ async def get_all_by_type_and_user_id(*,
     Authorize.jwt_required()
     return history_service.get_all_by_type_and_user_id(
         db, type, user_id, skip, limit)
+
+@router.get("/timeline", dependencies=[Depends(HTTPBearer())],
+            summary="Get all Histories by type and user id")
+async def get_all_by_type_and_user_id(*,
+                                      db: Session = Depends(get_db),
+                                      Authorize: AuthJWT = Depends(),
+                                      ):
+    """
+        Get timeline for user id
+        
+        - **user_id**: UUID - required
+    """
+    Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
+    return history_service.get_timeline(db, user_id)
