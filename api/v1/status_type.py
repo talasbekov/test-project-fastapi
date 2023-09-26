@@ -19,7 +19,7 @@ router = APIRouter(
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[BadgeTypeRead],
+            response_model=List[StatusTypeRead],
             summary="Get all Status types")
 async def get_all(*,
                   db: Session = Depends(get_db),
@@ -38,16 +38,16 @@ async def get_all(*,
             This parameter is optional and defaults to 100.
    """
     Authorize.jwt_required()
-    return badge_type_service.get_multi(db, skip, limit)
+    return status_type_service.get_multi(db, skip, limit)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
-             response_model=BadgeTypeRead,
+             response_model=StatusTypeRead,
              summary="Create Status type")
 async def create(*,
                  db: Session = Depends(get_db),
-                 body: BadgeTypeCreate,
+                 body: StatusTypeCreate,
                  Authorize: AuthJWT = Depends()
                  ):
     """
@@ -56,11 +56,11 @@ async def create(*,
         - **name**: required
     """
     Authorize.jwt_required()
-    return badge_type_service.create(db, body)
+    return status_type_service.create(db, body)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=BadgeTypeRead,
+            response_model=StatusTypeRead,
             summary="Get Status type by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
@@ -73,16 +73,16 @@ async def get_by_id(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return badge_type_service.get_by_id(db, str(id))
+    return status_type_service.get_by_id(db, str(id))
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=BadgeTypeRead,
+            response_model=StatusTypeRead,
             summary="Update Status type")
 async def update(*,
                  db: Session = Depends(get_db),
                  id: str,
-                 body: BadgeTypeUpdate,
+                 body: StatusTypeUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
     """
@@ -92,9 +92,9 @@ async def update(*,
         - **name**: required.
     """
     Authorize.jwt_required()
-    return badge_type_service.update(
+    return status_type_service.update(
         db,
-        db_obj=badge_type_service.get_by_id(db, str(id)),
+        db_obj=status_type_service.get_by_id(db, str(id)),
         obj_in=body)
 
 
@@ -112,4 +112,4 @@ async def delete(*,
         - **id**: UUID - required
     """
     Authorize.jwt_required()
-    badge_type_service.remove(db, str(id))
+    status_type_service.remove(db, str(id))
