@@ -45,7 +45,7 @@ class AddBlackBeretHandler(BaseHandler):
     ):
         if history_service.has_penalty_history(db, user.id):
             raise BadRequestException(
-                f"User has penalty!")
+                f"Инициирование приказа возможно после снятия взыскания!")
         if badge_service.get_black_beret_by_user_id(db, user.id) is not None:
             raise ForbiddenException(
                 ("Badge is already assigned to this user:"

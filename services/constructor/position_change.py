@@ -74,7 +74,7 @@ class PositionChangeHandler(BaseHandler):
     ):
         if history_service.has_penalty_history(db, user.id):
             raise BadRequestException(
-                f"User has penalty!")
+                f"Инициирование приказа возможно после снятия взыскания!")
 
     def get_args(self, action, properties):
         try:
