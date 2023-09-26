@@ -38,6 +38,8 @@ from .privelege_emergency import privelege_emergency_service
 from .coolness import coolness_service
 from .penalty import penalty_service
 from .penalty_type import penalty_type_service
+from .badge_type import badge_type_service
+from .status_type import status_type_service
 from .contract import contract_service
 from .service_id import service_id_service
 from .military_unit import military_unit_service
