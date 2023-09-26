@@ -44,6 +44,9 @@ from .position import router as position_router
 from .auto_tag import router as auto_tag_router
 from .dashboard import router as dashboard_router
 from .permission import router as permission_router
+from .badge_type import router as badge_type_router
+from .penalty_type import router as penalty_type_router
+from .status_type import router as status_type_router
 
 from .survey import *
 from .bsp import *
@@ -131,3 +134,6 @@ router.include_router(schedule_month_router)
 router.include_router(schedule_year_router)
 router.include_router(permission_router)
 router.include_router(dashboard_router)
+router.include_router(badge_type_router)
+router.include_router(penalty_type_router)
+router.include_router(status_type_router)
