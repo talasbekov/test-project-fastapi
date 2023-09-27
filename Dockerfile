@@ -4,7 +4,9 @@ FROM python:3.9-slim-buster
 RUN pip install --upgrade pip
 RUN pip install pipenv
 
-RUN apt-get update && apt-get install -y libaio1 wget unzip && apt-get install -y git
+RUN apt-get update && apt-get install -y libaio1 wget unzip tzdata && apt-get install -y git 
+ENV TZ=Asia/Almaty
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 WORKDIR /opt/oracle
 RUN wget https://download.oracle.com/otn_software/linux/instantclient/instantclient-basiclite-linuxx64.zip && \

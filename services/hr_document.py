@@ -1,10 +1,14 @@
 from .constructor import handlers
 import pdfkit
+import qrcode
+import hashlib
 import random
 import tempfile
 import uuid
 import json
 import requests
+import io
+import base64
 from core import configs
 from datetime import datetime, timedelta
 	
@@ -64,7 +68,8 @@ from schemas import (
     ArchiveStaffUnitRead,
     HrDocumentInitEcp,
     HrDocumentSignEcp,
-    DetailedNotificationCreate
+    DetailedNotificationCreate,
+    QrRead
 )
 from services import (
     badge_service,
@@ -89,7 +94,7 @@ from services import (
     state_body_service,
     categories,
     detailed_notification_service,
-    document_staff_function
+    document_staff_function,
 )
 
    
@@ -622,18 +627,40 @@ class HrDocumentService(
         from services import auth_service
         access_token, refresh_token = auth_service._generate_tokens(Authorize, user)
 
-        # url = configs.ECP_SERVICE_URL + 'api/hr_document_step_signer/create/template/'
-        # request_body = {
-        #     'hr_document_template_id': str(body.hr_document_template_id),
-        #     'user_id': user_id,
-        #     'certificate_blob': body.certificate_blob
-        # }
+        url = configs.ECP_SERVICE_URL + 'api/hr_document_step_signer/create/template/'
+        request_body = {
+            'hr_document_template_id': str(body.hr_document_template_id),
+            'hr_document_id': str(document.id),
+            'user_id': user_id,
+            'certificate_blob': body.certificate_blob
+        }
          
-        # headers = {"Authorization": f"Bearer {access_token}"}
+        headers = {"Authorization": f"Bearer {access_token}"}
 	
-        # res = requests.post(url=url, json=request_body, headers=headers)
-        # if res.status_code == 400:
-        #     raise BadRequestException(detail=res.text)
+        res = requests.post(url=url, json=request_body, headers=headers)
+        if res.status_code == 400:
+            raise BadRequestException(detail=res.text)
+        
+        template = document.hr_document_template_id
+        step: HrDocumentStep = hr_document_step_service.get_initial_step_for_template(
+            db, template
+        )
+        
+        url = configs.ECP_SERVICE_URL+'api/hr_document_step_signer/create/'
+        request_body = {
+            'hr_document_id': str(document.id),
+            'user_id': str(user_id),
+            'step_id': str(step.id),
+            'certificate_blob': body.certificate_blob
+        }
+        
+        print(request_body)
+        headers = {"Authorization": f"Bearer {access_token}"}
+
+        res = requests.post(url=url, json=request_body, headers=headers)
+
+        if res.status_code == 400:
+            raise BadRequestException(detail=res.text)
 
         return document
 
@@ -645,6 +672,7 @@ class HrDocumentService(
             user_id: str,
             access_token,
     ):
+        step = self.get_by_id(db, document_id).last_step_id
         document = self.sign(
             db,
             document_id,
@@ -655,19 +683,20 @@ class HrDocumentService(
             user_id
         )
 
-        # url = configs.ECP_SERVICE_URL+'api/hr_document_step_signer/create/'
-        # request_body = {
-        #     'hr_document_template_signer_id': str(document.hr_document_template_id),
-        #     'user_id': str(user_id),
-        #     'step_id': str(document.last_step_id),
-        #     'certificate_blob': body.certificate_blob
-        # }
-        # headers = {"Authorization": f"Bearer {access_token}"}
+        url = configs.ECP_SERVICE_URL+'api/hr_document_step_signer/create/'
+        request_body = {
+            'hr_document_template_signer_id': str(document.hr_document_template_id),
+            'hr_document_id': str(document.id),
+            'user_id': str(user_id),
+            'step_id': str(step),
+            'certificate_blob': body.certificate_blob
+        }
+        headers = {"Authorization": f"Bearer {access_token}"}
 
-        # res = requests.post(url=url, json=request_body, headers=headers)
+        res = requests.post(url=url, json=request_body, headers=headers)
 
-        # if res.status_code == 400:
-        #     raise BadRequestException(detail=res.text)
+        if res.status_code == 400:
+            raise BadRequestException(detail=res.text)
         return document
 
     def sign(
@@ -1197,7 +1226,57 @@ class HrDocumentService(
         db.flush()
 
         return super_document
+    
+    def generate_qrs(self, db: Session, hr_document_id: str):
+        qrs = []
+        query = text(
+        "SELECT HR_ERP_HR_DOCUMENT_TEMPLATE_SIGNER.user_id, hr_erp_hr_document_step_signer.step_id, \
+        hr_erp_hr_document_step_signer.certificate_blob, \
+        hr_erp_hr_document_step_signer.created_at \
+        FROM HR_ERP_HR_DOCUMENT_STEP_SIGNER \
+        JOIN HR_ERP_HR_DOCUMENT_TEMPLATE_SIGNER \
+        ON hr_erp_hr_document_step_signer.hr_document_template_signer_id = HR_ERP_HR_DOCUMENT_TEMPLATE_SIGNER.ID \
+        WHERE HR_ERP_HR_DOCUMENT_TEMPLATE_SIGNER.hr_document_id = :hr_document_id")
+        certificates = db.execute(query, {"hr_document_id": str(hr_document_id)}).fetchall()
+        
+        for certificate in certificates:
+            (
+                user_id,
+                step_id,
+                certificate_blob,
+                signed_at
+            ) = certificate
+            
+            step = hr_document_step_service.get_by_id(db, step_id)
+            user = user_service.get_by_id(db, user_id)
+            hash_algorithm = hashlib.sha256()
+            hash_algorithm.update(certificate_blob.encode('utf-8'))
+            hashed_value = hash_algorithm.hexdigest()
+            
+            
+            qr = qrcode.QRCode(
+                version=1, 
+                error_correction=qrcode.constants.ERROR_CORRECT_L
+            )
+            
+            qr.add_data(hashed_value)
+            img = qr.make_image(fill_color="black", back_color="white")
+            buffer = io.BytesIO()
+            img.save(buffer, format="PNG")
 
+            qr_base64 = base64.b64encode(buffer.getvalue()).decode("utf-8")
+            
+            buffer.close()
+            
+            qrs.append(QrRead(
+                step=step,
+                user=user,
+                qr_base64=qr_base64,
+                signed_at=signed_at
+            ))
+            
+        return qrs
+        
     def _get_service(self, key):
         service = options.get(key)
         if service is None:
@@ -1637,7 +1716,6 @@ class HrDocumentService(
     ):
         for step in steps:
             staff_units = document_staff_function_service.get_staff_units_by_id(db, step.staff_function_id)
-            print(staff_units)
             for staff_unit in staff_units:
                 detailed_notification = detailed_notification_service.create(
                     db,

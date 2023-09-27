@@ -187,19 +187,19 @@ class CandidateStageInfoService(
                                     user_id):
         candidate_stage_info = self.sign_candidate_info(db, id, role)
 
-        # url = configs.ECP_SERVICE_URL + 'api/candidate_stage_signer/create/'
-        # request_body = {
-        #     'candidates_stage_id': str(id),
-        #     'user_id': str(user_id),
-        #     'certificate_blob': body.certificate_blob,
-        #     'xml_sign': None
-        # }
-        # headers = {"Authorization": f"Bearer {access_token}"}
+        url = configs.ECP_SERVICE_URL + 'api/candidate_stage_signer/create/'
+        request_body = {
+            'candidates_stage_id': str(id),
+            'user_id': str(user_id),
+            'certificate_blob': body.certificate_blob,
+            'xml_sign': None
+        }
+        headers = {"Authorization": f"Bearer {access_token}"}
 
-        # res = requests.post(url=url, json=request_body, headers=headers)
+        res = requests.post(url=url, json=request_body, headers=headers)
 
-        # if res.status_code >= 400:
-        #     raise BadRequestException(detail=res.text)
+        if res.status_code >= 400:
+            raise BadRequestException(detail=res.text)
 
         return candidate_stage_info
 

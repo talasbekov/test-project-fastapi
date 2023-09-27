@@ -130,3 +130,17 @@ class HrDocumentRead(HrDocumentBase, ReadModel):
 
     class Config:
         orm_mode = True
+
+class UserShortRead(Model):
+    id: Optional[str]
+    first_name: Optional[str]
+    last_name: Optional[str]
+    father_name: Optional[str]
+    icon: Optional[str]
+    iin: Optional[str]
+
+class QrRead(Model):
+    step: Optional[HrDocumentStepRead]
+    user: Optional[UserShortRead]
+    signed_at: Optional[datetime]
+    qr_base64: Optional[str]

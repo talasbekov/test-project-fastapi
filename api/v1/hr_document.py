@@ -17,7 +17,8 @@ from schemas import (HrDocumentInit,
                      UserRead,
                      HrDocumentInitEcp,
                      HrDocumentSignEcp,
-                     HrDocumentSignEcpWithIds)
+                     HrDocumentSignEcpWithIds,
+                     QrRead)
 from services import hr_document_service
 from tasks import task_sign_document_with_certificate
 
@@ -548,3 +549,17 @@ async def initialize_from_staff_list(*,
                                                                staff_list_id=id,
                                                                user_id=user_id,
                                                                role=role)
+    
+@router.get('/qrs/{id}/', response_model=List[QrRead])
+async def get_qrs(*,
+                     db: Session = Depends(get_db),
+                     id: str,
+                     Authorize: AuthJWT = Depends()
+                     ):
+    """
+        Get qrs
+
+        - **id**: hr_document_id - required.
+    """
+    Authorize.jwt_required()
+    return hr_document_service.generate_qrs(db, id)
