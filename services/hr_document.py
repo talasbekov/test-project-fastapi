@@ -762,8 +762,14 @@ class HrDocumentService(
         ans, name = await self._get_html(db, id, language)
 
         opts = {
+            'page-size': 'A4',
+            'dpi': 300,
             'encoding': 'UTF-8',
-            'enable-local-file-access': True
+            'enable-local-file-access': True,
+            'margin-top': '2.54cm',
+            'margin-right': '1.5cm',
+            'margin-bottom': '0.94cm',
+            'margin-left': '2.54cm',
         }
 
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:

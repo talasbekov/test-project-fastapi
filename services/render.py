@@ -410,8 +410,14 @@ class RenderService:
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
             file_name = temp_file.name + ".pdf"
             options = {
+                'page-size': 'A4',
+                'dpi': 300,
                 'encoding': 'UTF-8',
-                'enable-local-file-access': True
+                'enable-local-file-access': True,
+                'margin-top': '2.54cm',
+                'margin-right': '1.5cm',
+                'margin-bottom': '0.94cm',
+                'margin-left': '2.54cm',
             }
             pdfkit.from_string(html,
                                file_name,
