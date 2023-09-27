@@ -21,10 +21,10 @@ class ProfileService(ServiceBase[Profile, ProfileCreate, ProfileUpdate]):
         if profile is None:
             raise NotFoundException(
                 detail=f"Profile with user_id: {id} is not found!")
-        # if profile.personal_profile.driving_license is not None:
-        #     profile.personal_profile.driving_license.category = (
-        #         profile.personal_profile.driving_license.category[1:-1].split(',')
-        #     )
+        if profile.personal_profile.driving_license is not None:
+            profile.personal_profile.driving_license.category = (
+                eval(profile.personal_profile.driving_license.category)
+            )
         return profile
 
     # def generate_profile_doc(self, db: Session, user_id: str):
