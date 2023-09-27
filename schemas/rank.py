@@ -12,10 +12,17 @@ class RankBase(NamedModel):
 
 
 class RankCreate(RankBase):
+    military_url: Optional[AnyUrl]
+    employee_url: Optional[AnyUrl]
     pass
 
 
 class RankUpdate(RankBase):
+    name: Optional[str]
+    nameKZ: Optional[str]
+    rank_order: Optional[int]
+    military_url: Optional[AnyUrl]
+    employee_url: Optional[AnyUrl]
     pass
 
 
