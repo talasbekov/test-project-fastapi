@@ -127,6 +127,7 @@ class HrDocumentRead(HrDocumentBase, ReadModel):
     new_value: Optional[list]
     old_history_id: Optional[str]
     children: Optional[List["HrDocumentRead"]]
+    reg_number: Optional[str]
 
     class Config:
         orm_mode = True
