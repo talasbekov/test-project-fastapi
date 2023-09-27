@@ -24,6 +24,8 @@ class ProfileService(ServiceBase[Profile, ProfileCreate, ProfileUpdate]):
         if profile.personal_profile.driving_license is not None:
             profile.personal_profile.driving_license.category = (
                 eval(profile.personal_profile.driving_license.category)
+                if isinstance(profile.personal_profile.driving_license.category, str)
+                else profile.personal_profile.driving_license.category
             )
         return profile
 
