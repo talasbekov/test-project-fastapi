@@ -58,15 +58,12 @@ async def create(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    credentials = Authorize.get_jwt_subject()
-    profile = profile_service.get_by_user_id(db, credentials)
-    body.profile_id = profile.additional_profile.id
     return property_type_service.create(db, body)
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=PropertyTypeRead,
-            summary="Update Abroad Travel by id")
+            summary="Update Property Type by id")
 async def update(*,
                  db: Session = Depends(get_db),
                  id: str,
@@ -74,14 +71,14 @@ async def update(*,
                  Authorize: AuthJWT = Depends()
                  ):
     """
-        Update abroad travel by id
+        Update Property Type by id
 
         - **name**: required
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    abroad_travel = property_type_service.get_by_id(db, str(id))
-    return property_type_service.update(db, abroad_travel, body)
+    property_type = property_type_service.get_by_id(db, str(id))
+    return property_type_service.update(db, property_type, body)
 
 
 @router.delete("/{id}/", dependencies=[Depends(HTTPBearer())],
