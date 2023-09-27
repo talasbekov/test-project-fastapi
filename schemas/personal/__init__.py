@@ -7,7 +7,8 @@ from .identification_card import (IdentificationCardCreate,
                                   IdentificationCardRead,
                                   IdentificationCardUpdate)
 from .passport import PassportCreate, PassportRead, PassportUpdate
-from .sport_type import (SportTypeCreate, SportTypeUpdate, SportTypeRead)
+from .sport_type import (SportTypeCreate, SportTypeUpdate, SportTypeRead,
+                         SportTypePaginationRead)
 from .sport_achievement import (SportAchievementCreate, SportAchievementRead,
                                 SportAchievementUpdate)
 from .sport_degree import SportDegreeCreate, SportDegreeRead, SportDegreeUpdate

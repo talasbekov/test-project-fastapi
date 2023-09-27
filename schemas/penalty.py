@@ -1,6 +1,6 @@
 import uuid
 
-from typing import Optional
+from typing import Optional, List
 from pydantic import BaseModel
 
 from schemas import NamedModel, ReadNamedModel
@@ -24,6 +24,9 @@ class PenaltyTypeUpdate(PenaltyTypeBase):
 class PenaltyTypeRead(PenaltyTypeBase, ReadNamedModel):
     pass
 
+class PenaltyTypePaginationRead(BaseModel):
+    total: Optional[int]
+    objects: Optional[List[PenaltyTypeRead]]
 
 class PenaltyBase(BaseModel):
     user_id: str

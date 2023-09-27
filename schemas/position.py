@@ -1,8 +1,7 @@
 import uuid
-from typing import Optional
+from typing import Optional, List
 
-from schemas import NamedModel, ReadNamedModel
-from schemas import RankRead
+from schemas import NamedModel, ReadNamedModel, BaseModel, RankRead
 
 
 class PositionBase(NamedModel):
@@ -29,3 +28,7 @@ class PositionRead(PositionBase, ReadNamedModel):
 
     max_rank_id: Optional[str]
     max_rank: Optional[RankRead]
+    
+class PositionPaginationRead(BaseModel):
+    total: Optional[int]
+    objects: Optional[List[PositionRead]]

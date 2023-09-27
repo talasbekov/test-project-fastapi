@@ -1,4 +1,5 @@
-from schemas import NamedModel, ReadNamedModel
+from schemas import NamedModel, ReadNamedModel, BaseModel
+from typing import Optional, List
 
 
 class PropertyTypeBase(NamedModel):
@@ -18,3 +19,7 @@ class PropertyTypeUpdate(PropertyTypeBase):
 
 class PropertyTypeRead(PropertyTypeBase, ReadNamedModel):
     pass
+
+class PropertyTypePaginationRead(BaseModel):
+    total: Optional[int]
+    objects: Optional[List[PropertyTypeRead]]

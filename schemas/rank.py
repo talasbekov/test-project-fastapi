@@ -1,8 +1,8 @@
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import AnyUrl
 
-from schemas import NamedModel, ReadNamedModel
+from schemas import NamedModel, ReadNamedModel, BaseModel
 
 
 class RankBase(NamedModel):
@@ -33,3 +33,7 @@ class RankRead(RankBase, ReadNamedModel):
 
     class Config:
         orm_mode = True
+
+class RankPaginationRead(BaseModel):
+    total: Optional[int]
+    objects: Optional[List[RankRead]]

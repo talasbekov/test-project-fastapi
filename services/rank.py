@@ -1,4 +1,4 @@
-import uuid
+from typing import List
 
 from sqlalchemy.orm import Session
 
@@ -16,6 +16,13 @@ class RankService(ServiceBase[Rank, RankCreate, RankUpdate]):
         if rank is None:
             raise NotFoundException(detail=f"Rank with id: {id} is not found!")
         return rank
+    
+    def get_multi(
+        self, db: Session, skip: int = 0, limit: int = 100
+    ) -> List[Rank]:
+        ranks = db.query(self.model).order_by(self.model.created_at.desc()).offset(skip).limit(limit).all()
+        count = db.query(self.model).count()
+        return {"total": count, "objects": ranks}
 
     def get_by_option(self, db: Session, type: str,
                       id: str, skip: int, limit: int):

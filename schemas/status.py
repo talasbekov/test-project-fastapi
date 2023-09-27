@@ -1,8 +1,8 @@
 import uuid
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
-from schemas import Model, NamedModel, ReadModel, ReadNamedModel
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel, BaseModel
 
 
 class StatusTypeBase(NamedModel):
@@ -20,6 +20,9 @@ class StatusTypeUpdate(StatusTypeBase):
 class StatusTypeRead(StatusTypeBase, ReadNamedModel):
     pass
 
+class StatusTypePaginationRead(BaseModel):
+    total: Optional[int]
+    objects: Optional[List[StatusTypeRead]]
 
 class History(Model):
     date_from: Optional[datetime]

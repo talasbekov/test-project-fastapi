@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from core import get_db
 from models.position import CategoryCodeEnum
-from schemas import PositionCreate, PositionUpdate, PositionRead
+from schemas import PositionCreate, PositionUpdate, PositionRead, PositionPaginationRead
 from services import position_service
 
 router = APIRouter(
@@ -21,6 +21,28 @@ router = APIRouter(
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[PositionRead],
+            summary="Get all Positions without specials")
+async def get_all(*,
+                  db: Session = Depends(get_db),
+                  skip: int = 0,
+                  limit: int = 100,
+                  Authorize: AuthJWT = Depends()
+                  ):
+    """
+       Get all Positions without specials
+
+       - **skip**: int - The number of Positions
+            to skip before returning the results.
+            This parameter is optional and defaults to 0.
+       - **limit**: int - The maximum number of Positions
+            to return in the response.
+            This parameter is optional and defaults to 100.
+   """
+    Authorize.jwt_required()
+    return position_service.get_without_special(db, skip, limit)
+
+@router.get("/all", dependencies=[Depends(HTTPBearer())],
+            response_model=PositionPaginationRead,
             summary="Get all Positions")
 async def get_all(*,
                   db: Session = Depends(get_db),
@@ -39,8 +61,7 @@ async def get_all(*,
             This parameter is optional and defaults to 100.
    """
     Authorize.jwt_required()
-    return position_service.get_without_special(db, skip, limit)
-
+    return position_service.get_multi(db, skip, limit)
 
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],

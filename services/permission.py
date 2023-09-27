@@ -1,4 +1,4 @@
-import uuid
+from typing import List
 
 from sqlalchemy.orm import Session
 
@@ -16,6 +16,13 @@ class PermissionService(ServiceBase[Permission, PermissionCreate, PermissionUpda
         if permission is None:
             raise NotFoundException(detail=f"Permission with id: {id} is not found!")
         return permission
+    
+    def get_multi(
+        self, db: Session, skip: int = 0, limit: int = 100
+    ) -> List[Permission]:
+        permissions = db.query(self.model).order_by(self.model.created_at.desc()).offset(skip).limit(limit).all()
+        count = db.query(self.model).count()
+        return {"total": count, "objects": permissions}
 
     def get_permission_types(self, db: Session, skip: int = 0, limit: int = 100):
         return db.query(PermissionType).offset(skip).limit(limit).all()

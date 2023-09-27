@@ -7,7 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import RankCreate, RankUpdate, RankRead
+from schemas import RankCreate, RankUpdate, RankRead, RankPaginationRead
 from services import rank_service
 
 router = APIRouter(
@@ -19,7 +19,7 @@ router = APIRouter(
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[RankRead],
+            response_model=RankPaginationRead,
             summary="Get all Ranks")
 async def get_all(*,
                   db: Session = Depends(get_db),

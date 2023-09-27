@@ -7,7 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import PenaltyTypeCreate, PenaltyTypeUpdate, PenaltyTypeRead
+from schemas import PenaltyTypeCreate, PenaltyTypeUpdate, PenaltyTypeRead, PenaltyTypePaginationRead
 from services import penalty_type_service
 
 router = APIRouter(
@@ -19,7 +19,7 @@ router = APIRouter(
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[PenaltyTypeRead],
+            response_model=PenaltyTypePaginationRead,
             summary="Get all Penalty types")
 async def get_all(*,
                   db: Session = Depends(get_db),

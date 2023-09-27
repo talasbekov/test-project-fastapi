@@ -15,10 +15,11 @@ from .hr_document_template import (HrDocumentTemplateCreate,
                                    HrDocumentTemplateUpdate,
                                    SuggestCorrections)
 from .permission import (PermissionCreate, PermissionRead, PermissionUpdate,
-                         UserPermission, PermissionTypeRead, PermissionType)
+                         UserPermission, PermissionTypeRead, PermissionType,
+                         PermissionPaginationRead)
 
-from .rank import RankCreate, RankRead, RankUpdate
-from .position import PositionCreate, PositionUpdate, PositionRead
+from .rank import RankCreate, RankRead, RankUpdate, RankPaginationRead
+from .position import PositionCreate, PositionUpdate, PositionRead, PositionPaginationRead
 from .jurisdiction import JurisdictionRead, JurisdictionCreate, JurisdictionUpdate
 from .staff_function_type import (DocumentStaffFunctionTypeCreate, DocumentStaffFunctionTypeRead,
                                   DocumentStaffFunctionTypeUpdate, ServiceStaffFunctionTypeCreate,

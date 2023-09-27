@@ -34,9 +34,9 @@ class PropertyTypeService(
             raise NotFoundException(
                 detail=f"Profile with user_id: {user_id} is not found!")
 
-        properties = db.query(self.model).offset(skip).limit(limit).all()
-
-        return properties
+        properties = db.query(self.model).order_by(self.model.created_at.desc()).offset(skip).limit(limit).all()
+        count = db.query(self.model).count()
+        return {"total": count, "objects": properties}
 
 
 property_type_service = PropertyTypeService(PropertyType)

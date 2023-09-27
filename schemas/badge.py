@@ -1,5 +1,5 @@
 import uuid
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 
 from schemas import Model, NamedModel, ReadModel, ReadNamedModel
@@ -24,6 +24,9 @@ class BadgeTypeUpdate(BadgeTypeBase):
 class BadgeTypeRead(BadgeTypeBase, ReadNamedModel):
     url: str
 
+class BadgeTypePaginationRead(Model):
+    total: Optional[int]
+    objects: Optional[List[BadgeTypeRead]]
 
 class BadgeBase(Model):
     user_id: str

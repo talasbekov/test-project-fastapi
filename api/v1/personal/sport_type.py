@@ -7,7 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import SportTypeCreate, SportTypeRead, SportTypeUpdate
+from schemas import SportTypeCreate, SportTypeRead, SportTypeUpdate, SportTypePaginationRead
 from services import sport_type_service
 
 router = APIRouter(
@@ -19,7 +19,7 @@ router = APIRouter(
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[SportTypeRead],
+            response_model=SportTypePaginationRead,
             summary="Get all SportType")
 async def get_all(*,
                   db: Session = Depends(get_db),

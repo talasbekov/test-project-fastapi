@@ -11,7 +11,8 @@ from .special_check import (SpecialCheckBase, SpecialCheckCreate,
 from .violation import (ViolationBase, ViolationCreate,
                         ViolationUpdate, ViolationRead)
 from .property_type import (PropertyTypeBase, PropertyTypeCreate,
-                            PropertyTypeUpdate, PropertyTypeRead)
+                            PropertyTypeUpdate, PropertyTypeRead,
+                            PropertyTypePaginationRead)
 from .service_housing import (ServiceHousingUpdate, ServiceHousingCreate,
                               ServiceHousingRead)
 from .properties import (PropertiesBase, PropertiesCreate,

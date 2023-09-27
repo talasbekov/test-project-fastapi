@@ -41,3 +41,7 @@ class PermissionRead(PermissionBase, ReadModel):
     user: UserShortRead
     class Config:
         orm_mode = True
+        
+class PermissionPaginationRead(Model):
+    total: Optional[int]
+    objects: Optional[List[PermissionRead]]
