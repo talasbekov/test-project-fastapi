@@ -50,5 +50,6 @@ from .hr_vacancy_requirements import HrVacancyRequirements
 from .hr_vacancy_candidate import HrVacancyCandidate
 from .survey import *
 from .bsp import *
+from .hexagon import *
 from .user_logging_actitivty import UserLoggingActivity
 from .permission import Permission, PermissionType, PermissionEnum

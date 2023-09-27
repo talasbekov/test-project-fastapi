@@ -47,7 +47,7 @@ from .permission import router as permission_router
 from .badge_type import router as badge_type_router
 from .penalty_type import router as penalty_type_router
 from .status_type import router as status_type_router
-
+from .hexagon import router as hexagon_router
 from .survey import *
 from .bsp import *
 
@@ -137,3 +137,4 @@ router.include_router(dashboard_router)
 router.include_router(badge_type_router)
 router.include_router(penalty_type_router)
 router.include_router(status_type_router)
+router.include_router(hexagon_router)

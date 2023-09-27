@@ -62,6 +62,7 @@ from .hr_vacancy_requirements import hr_vacancy_requirement_service
 
 from .survey import *
 from .bsp import *
+from .hexagon import *
 from .permission import permission_service
 
 from .dashboard import dashboard_service
