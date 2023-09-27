@@ -38,7 +38,7 @@ class HexagonService(ServiceBase):
                    .filter(Hexagon.user_id == user_id)
                    .order_by(Hexagon.created_at.desc())
                    .first())
-        print('anime')
+
         if not hexagon:
             raise NotFoundException(f"Hexagon for user not found")
         

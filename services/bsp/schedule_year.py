@@ -109,11 +109,8 @@ class ScheduleYearService(ServiceBase[ScheduleYear,
                 if isinstance(group.description, str):
                     group.description = json.loads(group.description)
 
-        print('before _filter_months time: ', (time.time() - start_time))
-
         schedules = self._filter_months(int(filter_month), schedules)
 
-        print('total time: ', (time.time() - start_time))
         return {'total': total, 'objects': schedules}
 
     def remove_schedule(self,
