@@ -23,6 +23,7 @@ class ArchiveStaffUnitBase(BaseModel):
     actual_user_id: Optional[str] = Field(None, nullable=True)
     user_replacing_id: Optional[str] = Field(None, nullable=True)
     requirements: Optional[List[StaffUnitRequirements]]
+    curator_of_id: Optional[str] = Field(None, nullable=True)
 
 
 class ArchiveStaffUnitCreate(ArchiveStaffUnitBase):
