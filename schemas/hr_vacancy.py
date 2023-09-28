@@ -23,6 +23,8 @@ class HrVacancyUpdate(HrVacancyBase):
 
 
 class StaffUnitHrVacancyRead(HrVacancyBase, ReadModel):
+    staff_unit_id: Optional[str] = None
+    archive_staff_unit_id: Optional[str] = None
     is_active: Optional[bool]
     hr_vacancy_requirements: Optional[List[HrVacancyRequirementsRead]]
     candidates: Optional[List[HrVacancyCandidateRead]]
