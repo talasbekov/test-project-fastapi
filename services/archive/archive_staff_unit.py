@@ -198,7 +198,7 @@ class ArchiveStaffUnitService(
     def create_staff_unit(self, db: Session, body: NewArchiveStaffUnitCreate):
         self._validate_archive_staff_position(db, body.position_id)
         if isinstance(body.requirements, list):
-            body.requirements = json.dumps(body.requirements)
+            body.requirements = json.dumps(body.requirements.dict())
         res = super().create(db, ArchiveStaffUnitCreate(
             position_id=body.position_id,
             staff_division_id=body.staff_division_id,
