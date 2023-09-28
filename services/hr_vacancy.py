@@ -51,6 +51,14 @@ class HrVacancyService(
             else:
                 if isinstance(vacancy.staff_unit.requirements, str):
                     vacancy.staff_unit.requirements = json.loads(vacancy.staff_unit.requirements)
+                if vacancy.archive_staff_unit:
+                    if isinstance(vacancy.archive_staff_unit.requirements, str):
+                        vacancy.archive_staff_unit.requirements = json.loads(vacancy.archive_staff_unit.requirements)
+                if vacancy.staff_unit.user_replacing:
+                    if isinstance(vacancy.staff_unit.user_replacing.staff_unit.requirements, str):
+                        vacancy.staff_unit.user_replacing.staff_unit.requirements = json.loads(vacancy.staff_unit.user_replacing.staff_unit.requirements)
+                    if isinstance(vacancy.staff_unit.user_replacing.staff_unit.staff_division.description, str):
+                        vacancy.staff_unit.user_replacing.staff_unit.staff_division.description = json.loads(vacancy.staff_unit.user_replacing.staff_unit.staff_division.description)
                 if isinstance(vacancy.staff_unit.staff_division.description, str):
                     vacancy.staff_unit.staff_division.description = json.loads(vacancy.staff_unit.staff_division.description)
                 vacancies_loaded.append(HrVacancyRead.from_orm(vacancy).to_dict(is_responded=False))
