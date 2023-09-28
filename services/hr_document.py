@@ -735,12 +735,21 @@ class HrDocumentService(
                                                    current_user)
         if body.is_signed:
             if next_step is None:
+                detailed_notification_service.remove_document_notification(
+                    db,
+                    str(document.id),
+                    str(user_id)
+                )
                 return self._finish_document(db, document, document.users)
             document.last_step_id = next_step.id
             query = db.execute(text(f"SELECT id FROM HR_ERP_HR_DOCUMENT_STATUSES WHERE name = '{HrDocumentStatusEnum.IN_PROGRESS.value}'"))
             document.status_id = query.fetchone()[0]
         else:
             if next_step is None:
+                detailed_notification_service.remove_document_notification(
+                    db,
+                    document.id,
+                    user_id)
                 return self._cancel_document(db, document)
 
             steps = (
@@ -1602,7 +1611,6 @@ class HrDocumentService(
             db, HrDocumentStatusEnum.CANCELED.value).id
         document.last_step = None
         
-        detailed_notification_service.remove_document_notifications(db, document.id)
         if isinstance(document.document_template.actions, dict):
             document.document_template.actions = json.dumps(template.actions)
         if isinstance(document.document_template.properties, dict):
