@@ -97,4 +97,4 @@ async def get_by_profile_id(*,
                             Authorize: AuthJWT = Depends()
                             ):
     Authorize.jwt_required()
-    return profile_service.get_by_user_id(db, str(id)).family_profile
+    return family_profile_service.get_by_user_id(db, str(id))

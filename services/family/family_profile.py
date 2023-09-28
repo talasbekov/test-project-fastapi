@@ -2,8 +2,9 @@ from sqlalchemy import and_
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
-from models import FamilyProfile, Profile
-from schemas import FamilyProfileCreate, FamilyProfileUpdate
+from models import FamilyProfile, Profile, Family, FamilyRelation
+from schemas import (FamilyProfileCreate, FamilyProfileUpdate,
+                     FamilyProfileRead)
 from services import ServiceBase
 
 
@@ -32,7 +33,16 @@ class FamilyProfileService(
                        Profile.user_id == user_id))
             .first()
         )
-        return profile
+        family = (
+            db.query(Family)
+            .join(FamilyRelation)
+            .filter(Family.profile_id==profile.id)
+            .order_by(FamilyRelation.family_order)
+            .all()
+        )
+        return FamilyProfileRead(id=profile.id,
+                                 profile_id=profile.profile_id,
+                                 family=family)
 
 
 family_profile_service = FamilyProfileService(FamilyProfile)

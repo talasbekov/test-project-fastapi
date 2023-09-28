@@ -2,6 +2,7 @@ from schemas import NamedModel, ReadNamedModel
 
 
 class FamilyRelationBase(NamedModel):
+    family_order: int
     pass
 
 
