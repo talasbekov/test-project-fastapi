@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 
+from datetime import datetime
 from models import Notification, SocketSession
 from schemas import NotificationCreate, NotificationUpdate
 from services import ServiceBase
@@ -27,13 +28,7 @@ class NotificationService(
     async def send_message(
         self, db: Session, message: str, user_id: str
     ):
-        notifications = (
-            db.query(self.model)
-            .filter(self.model.receiver_id == user_id)
-            .order_by(self.model.created_at.desc())
-            .limit(5)
-            .all()
-        )
+        message["created_at"] = str(datetime.now())
         await notification_manager.broadcast(message, user_id)
         
 
