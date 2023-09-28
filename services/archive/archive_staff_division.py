@@ -36,6 +36,8 @@ class ArchiveStaffDivisionService(
         for staff_unit in group.staff_units:
             if isinstance(staff_unit.requirements, str):
                 staff_unit.requirements = json.loads(staff_unit.requirements)
+            if isinstance(staff_unit.user_replacing.staff_unit.requirements, str):
+                staff_unit.user_replacing.staff_unit.requirements = json.loads(staff_unit.user_replacing.staff_unit.requirements)
         if group is None:
             raise NotFoundException(
                 f"ArchiveStaffDivision with id: {id} is not found!")
@@ -80,6 +82,8 @@ class ArchiveStaffDivisionService(
             for staff_unit in archive_division.staff_units:
                 if isinstance(staff_unit.requirements, str):
                     staff_unit.requirements = json.loads(staff_unit.requirements)
+                if isinstance(staff_unit.user_replacing.staff_unit.requirements, str):
+                    staff_unit.user_replacing.staff_unit.requirements = json.loads(staff_unit.user_replacing.staff_unit.requirements)
         return archive_divisions
 
     def get_parents(self, db: Session,

@@ -233,6 +233,8 @@ class ArchiveStaffUnitService(
         increment_changes_size(db, archive_staff_unit.staff_division.staff_list)
         if isinstance(archive_staff_unit.requirements, str):
             archive_staff_unit.requirements = eval(archive_staff_unit.requirements)
+        if isinstance(archive_staff_unit.user_replacing.staff_unit.requirements, str):
+            archive_staff_unit.user_replacing.staff_unit.requirements = eval(archive_staff_unit.user_replacing.staff_unit.requirements)
         return archive_staff_unit
 
     def _validate_archive_staff_position(
