@@ -66,14 +66,15 @@ class DetailedNotificationService(
                 notification.hr_document.document_template.description= json.loads(notification.hr_document.document_template.description)
         return notification
     
-    def remove_document_notifications(self, db: Session, document_id: str):
-        notifications = (
-            db.query(self.model).filter(self.model.hr_document_id == document_id).all()
+    def remove_document_notification(self, db: Session, document_id: str, user_id: str):
+        notification = (
+            db.query(self.model)
+            .filter(self.model.hr_document_id == document_id,
+                    self.model.receiver_id == user_id)
+            .first()
         )
-        for notification in notifications:
-            db.delete(notification)
-            db.flush()
-        return notifications
-
+        
+        db.delete(notification)
+        db.commit()
 
 detailed_notification_service = DetailedNotificationService(DetailedNotification)

@@ -1,5 +1,4 @@
 from typing import List
-from datetime import datetime
 import json
 
 from fastapi import APIRouter, Depends, status
@@ -94,8 +93,7 @@ async def test(*,
     user_id = Authorize.get_jwt_subject()
     message = {
         "sender_type": "test",
-        "message": message,
-        "created_at": str(datetime.now())
+        "message": message
     }
     return await notification_service.send_message(db, message, user_id)
 

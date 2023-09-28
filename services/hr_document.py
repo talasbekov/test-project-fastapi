@@ -583,7 +583,6 @@ class HrDocumentService(
         if revision_doc:
             super().remove(db, revision_doc.id)
         
-        self._create_notifications_for_steps(db, document, all_steps)
         
         db.add(document)
         db.commit()     
@@ -623,6 +622,9 @@ class HrDocumentService(
                role,
                parent_id
         )
+        
+        self._create_notification_for_step(db, document, document.last_step)
+        
         user = db.query(User).filter(User.id == user_id).first()
         from services import auth_service
         access_token, refresh_token = auth_service._generate_tokens(Authorize, user)
@@ -645,7 +647,7 @@ class HrDocumentService(
         step: HrDocumentStep = hr_document_step_service.get_initial_step_for_template(
             db, template
         )
-        
+
         url = configs.ECP_SERVICE_URL+'api/hr_document_step_signer/create/'
         request_body = {
             'hr_document_id': str(document.id),
@@ -682,7 +684,7 @@ class HrDocumentService(
             ),
             user_id
         )
-
+        
         url = configs.ECP_SERVICE_URL+'api/hr_document_step_signer/create/'
         request_body = {
             'hr_document_template_signer_id': str(document.hr_document_template_id),
@@ -697,6 +699,7 @@ class HrDocumentService(
 
         if res.status_code == 400:
             raise BadRequestException(detail=res.text)
+        
         return document
 
     def sign(
@@ -722,7 +725,6 @@ class HrDocumentService(
         hr_document_info_service.sign(
             db, info, current_user, body.comment, body.is_signed)
         next_step = self._set_next_step(db, document_id, info)
-        
         if self._is_superdoc(db, document):
             return self._sign_super_document(db,
                                                    document,
@@ -764,14 +766,13 @@ class HrDocumentService(
         db.add(document)
         db.commit()
 
-        #if isinstance(document.properties, str):
-        #    document.properties = json.loads(document.properties)
-        #if isinstance(document.document_template.properties, str):
-        #    document.document_template.properties = json.loads(document.document_template.properties)
-        #if isinstance(document.document_template.description, str):
-        #    document.document_template.description = json.loads(document.document_template.description)
-        #if isinstance(document.document_template.actions, str):
-        #    document.document_template.actions = json.loads(document.document_template.actions)
+        detailed_notification_service.remove_document_notification(
+            db,
+            str(document.id),
+            str(user_id)
+        )
+        
+        self._create_notification_for_step(db, document, document.last_step)
         
         return document
 
@@ -1033,8 +1034,7 @@ class HrDocumentService(
 
         document.signed_at = datetime.now()
         document.last_step_id = None
-        
-        detailed_notification_service.remove_document_notifications(db, document.id)
+
         
         if isinstance(document.document_template.actions, dict):
             document.document_template.actions = json.dumps(template.actions)
@@ -1708,21 +1708,24 @@ class HrDocumentService(
             )
         return template.render(context), document_template.name
 
-    def _create_notifications_for_steps(
+    def _create_notification_for_step(
         self,
         db: Session,
         document: HrDocument,
-        steps: List[HrDocumentStep]
+        step: Optional[HrDocumentStep]
     ):
-        for step in steps:
-            staff_units = document_staff_function_service.get_staff_units_by_id(db, step.staff_function_id)
-            for staff_unit in staff_units:
-                detailed_notification = detailed_notification_service.create(
-                    db,
-                    {
-                        "hr_document_id": document.id,
-                        "receiver_id": user_service.get_user_by_staff_unit(db, staff_unit).id
-                    }
-                )
+        if step is None:
+            pass
+        staff_units = document_staff_function_service.get_staff_units_by_id(
+            db,
+            step.staff_function_id)
+        for staff_unit in staff_units:
+            detailed_notification = detailed_notification_service.create(
+                db,
+                {
+                    "hr_document_id": document.id,
+                    "receiver_id": user_service.get_user_by_staff_unit(db, staff_unit).id
+                }
+            )
 
 hr_document_service = HrDocumentService(HrDocument)
