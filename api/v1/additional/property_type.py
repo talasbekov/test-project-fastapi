@@ -78,7 +78,7 @@ async def update(*,
     """
     Authorize.jwt_required()
     property_type = property_type_service.get_by_id(db, str(id))
-    return property_type_service.update(db, property_type, body)
+    return property_type_service.update(db, db_obj=property_type, obj_in=body)
 
 
 @router.delete("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -96,5 +96,4 @@ async def delete(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    properties = property_type_service.get_by_id(db, str(id))
-    return property_type_service.delete(db, properties)
+    return property_type_service.remove(db, id)
