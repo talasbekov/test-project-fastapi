@@ -1721,10 +1721,7 @@ class HrDocumentService(
             document.id,
             step.id
         )
-        
-        user = user_service.get_user_by_staff_unit(db, staff_unit)
-        if user is None:
-            continue
+
         detailed_notification = detailed_notification_service.create(
             db,
             {
