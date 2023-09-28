@@ -102,6 +102,13 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
             raise NotFoundException(
                 detail=f"Badge with id: {id} is not found!")
         return badge
+    
+    def get_by_badge_id(self, db: Session, id: str):
+        badge = db.query(Badge).filter(Badge.id == id).first()
+        if badge is None:
+            raise NotFoundException(
+                detail=f"Badge with id: {id} is not found!")
+        return badge
 
     def create_badge(self, db: Session, body: BadgeCreate):
         badge = db.query(Badge).filter(Badge.user_id == body.user_id).first()
