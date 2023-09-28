@@ -1,5 +1,5 @@
 import uuid
-from typing import Dict, Optional, Union
+from typing import Dict, Optional, Union, List
 
 from pydantic import validator
 
@@ -52,4 +52,8 @@ class HrDocumentTemplateRead(HrDocumentTemplateBase, ReadNamedModel):
 
     class Config:
         orm_mode = True
+        
+class HrDocumentTemplatePaginationRead(Model):
+    total: Optional[int]
+    objects: Optional[List[HrDocumentTemplateRead]]
 

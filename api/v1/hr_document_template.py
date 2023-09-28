@@ -11,7 +11,8 @@ from schemas import (
     HrDocumentTemplateCreate,
     HrDocumentTemplateUpdate,
     HrDocumentTemplateRead,
-    SuggestCorrections
+    SuggestCorrections,
+    HrDocumentTemplatePaginationRead
 )
 from services import hr_document_template_service
 
@@ -24,7 +25,7 @@ router = APIRouter(
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[HrDocumentTemplateRead],
+            response_model=HrDocumentTemplatePaginationRead,
             summary="Get all HrDocumentTemplate")
 async def get_all(*,
                   db: Session = Depends(get_db),
@@ -59,7 +60,7 @@ async def get_all_archived(*,
 
 @router.get('/draft',  status_code=status.HTTP_200_OK,
              dependencies=[Depends(HTTPBearer())],
-             response_model=List[HrDocumentTemplateRead],
+             response_model=HrDocumentTemplatePaginationRead,
              summary="Get HrDocumentTemplate drafts")
 async def get_all_draft(*,
                            db: Session = Depends(get_db),
