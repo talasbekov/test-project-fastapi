@@ -1230,7 +1230,7 @@ class HrDocumentService(
     def generate_qrs(self, db: Session, hr_document_id: str):
         qrs = []
         query = text(
-        "SELECT HR_ERP_HR_DOCUMENT_TEMPLATE_SIGNER.user_id, hr_erp_hr_document_step_signer.step_id, \
+        "SELECT HR_ERP_HR_DOCUMENT_STEP_SIGNER.user_id, hr_erp_hr_document_step_signer.step_id, \
         hr_erp_hr_document_step_signer.certificate_blob, \
         hr_erp_hr_document_step_signer.created_at \
         FROM HR_ERP_HR_DOCUMENT_STEP_SIGNER \
