@@ -131,7 +131,7 @@ async def get_by_id(*,
         - **id** - UUID - required
     """
     Authorize.jwt_required()
-    return archive_staff_unit_service.get_by_id(db, str(id))
+    return archive_staff_unit_service.get_by_id_for_api(db, str(id))
 
 
 @router.get("user/{user_id}/", dependencies=[Depends(HTTPBearer())],

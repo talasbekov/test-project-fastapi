@@ -1,4 +1,4 @@
-import uuid
+import json
 from typing import List
 
 from sqlalchemy.orm import Session
@@ -29,7 +29,17 @@ class ArchiveStaffUnitService(
             raise NotFoundException(
                 detail=f"ArchiveStaffUnit with id: {id} is not found!")
         return position
+    
+    def get_by_id_for_api(self, db: Session, id: str) -> ArchiveStaffUnit:
+        archive_staff_unit = super().get(db, id)
+        if isinstance(archive_staff_unit.requirements, str):
+            archive_staff_unit.requirements = eval(archive_staff_unit.requirements)
+        if archive_staff_unit is None:
+            raise NotFoundException(
+                detail=f"ArchiveStaffUnit with id: {id} is not found!")
+        return archive_staff_unit
 
+    
     def dispose_all_units(
             self,
             db: Session,
@@ -206,7 +216,7 @@ class ArchiveStaffUnitService(
             staff_unit: ArchiveStaffUnit,
             body: NewArchiveStaffUnitUpdate):
         self._validate_archive_staff_position(db, body.position_id)
-        res = super().update(
+        archive_staff_unit = super().update(
             db,
             db_obj=staff_unit,
             obj_in=ArchiveStaffUnitUpdate(
@@ -218,8 +228,10 @@ class ArchiveStaffUnitService(
                 user_replacing_id=body.user_replacing_id,
                 origin_id=staff_unit.origin_id,
                 requirements=body.requirements))
-        increment_changes_size(db, res.staff_division.staff_list)
-        return res
+        increment_changes_size(db, archive_staff_unit.staff_division.staff_list)
+        if isinstance(archive_staff_unit.requirements, str):
+            archive_staff_unit.requirements = eval(archive_staff_unit.requirements)
+        return archive_staff_unit
 
     def _validate_archive_staff_position(
             self, db: Session, position_id: str):
