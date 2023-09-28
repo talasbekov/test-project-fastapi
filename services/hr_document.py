@@ -1716,19 +1716,21 @@ class HrDocumentService(
     ):
         if step is None:
             pass
-        staff_units = document_staff_function_service.get_staff_units_by_id(
+        info = hr_document_info_service.find_by_document_id_and_step_id(
             db,
-            step.staff_function_id)
-        for staff_unit in staff_units:
-            user = user_service.get_user_by_staff_unit(db, staff_unit)
-            if user is None:
-                continue
-            detailed_notification = detailed_notification_service.create(
-                db,
-                {
-                    "hr_document_id": document.id,
-                    "receiver_id": user.id
-                }
-            )
+            document.id,
+            step.id
+        )
+        
+        user = user_service.get_user_by_staff_unit(db, staff_unit)
+        if user is None:
+            continue
+        detailed_notification = detailed_notification_service.create(
+            db,
+            {
+                "hr_document_id": document.id,
+                "receiver_id": info.assigned_to_id
+            }
+        )
 
 hr_document_service = HrDocumentService(HrDocument)
