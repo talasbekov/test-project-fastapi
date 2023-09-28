@@ -35,6 +35,9 @@ class StaffDivisionService(
         for staff_unit in group.staff_units:
             if isinstance(staff_unit.requirements, str):
                 staff_unit.requirements = json.loads(staff_unit.requirements)
+            if staff_unit.user_replacing:
+                    if isinstance(staff_unit.user_replacing.staff_unit.requirements, str):
+                        staff_unit.user_replacing.staff_unit.requirements = json.loads(staff_unit.user_replacing.staff_unit.requirements)
         if isinstance(group.description, str):
             group.description = json.loads(group.description)
         for child in group.children:
@@ -144,8 +147,9 @@ class StaffDivisionService(
             for staff_unit in parent.staff_units:
                 if isinstance(staff_unit.requirements, str):
                     staff_unit.requirements = json.loads(staff_unit.requirements)
-                if isinstance(staff_unit.user_replacing.staff_unit.requirements, str):
-                    staff_unit.user_replacing.staff_unit.requirements = json.loads(staff_unit.user_replacing.staff_unit.requirements)
+                if staff_unit.user_replacing:
+                    if isinstance(staff_unit.user_replacing.staff_unit.requirements, str):
+                        staff_unit.user_replacing.staff_unit.requirements = json.loads(staff_unit.user_replacing.staff_unit.requirements)
         return parents
     
     def get_all_except_special_raw(self,

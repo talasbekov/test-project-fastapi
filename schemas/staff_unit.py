@@ -25,7 +25,10 @@ class StaffUnitBase(Model):
 
 class StaffUnitCreate(StaffUnitBase):
     curator_of_id: Optional[str] = Field(None, nullable=True)
-
+    
+class StaffUnitFromArchiveCreate(StaffUnitBase):
+    curator_of_id: Optional[str] = Field(None, nullable=True)
+    requirements: Optional[str]
 
 class StaffUnitCreateWithPosition(PositionCreate):
     staff_division_id: str

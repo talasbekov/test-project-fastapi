@@ -12,7 +12,7 @@ from models import (StaffUnit, Position, User, EmergencyServiceHistory,
 from schemas import (StaffUnitCreate, StaffUnitUpdate,
                      StaffUnitFunctions, StaffUnitRead,
                      StaffUnitCreateWithPosition, StaffUnitFunctionsByPosition,
-                     StaffUnitMatreshkaOptionRead
+                     StaffUnitMatreshkaOptionRead, StaffUnitFromArchiveCreate
                      )
 from services import (service_staff_function_service,
                       document_staff_function_service,
@@ -217,7 +217,7 @@ class StaffUnitService(
     def create_from_archive(self, db: Session, archive_staff_unit: ArchiveStaffUnit,
                             staff_division_id: str):
         res = super().create(
-            db, StaffUnitCreate(
+            db, StaffUnitFromArchiveCreate(
                 position_id=archive_staff_unit.position_id,
                 staff_division_id=staff_division_id,
                 curator_of_id=archive_staff_unit.curator_of_id,

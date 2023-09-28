@@ -43,7 +43,9 @@ from .staff_division import (StaffDivisionCreate, StaffDivisionRead,
                              StaffDivisionVacancyRead, StaffUnitMatreshkaOptionRead,
                              ShortStaffUnitDivisionRead, StaffDivisionOptionChildRead,
                              StaffDivisionMatreshkaStepRead)
-from .staff_unit import StaffUnitCreate, StaffUnitRead, StaffUnitUpdate, UserStaffUnitRead, StaffUnitCreateWithPosition, ShortUserStaffUnitRead
+from .staff_unit import (StaffUnitCreate, StaffUnitRead, StaffUnitUpdate,
+                         UserStaffUnitRead, StaffUnitCreateWithPosition,
+                         ShortUserStaffUnitRead, StaffUnitFromArchiveCreate)
 from .state_body import StateBodyCreate, StateBodyRead, StateBodyUpdate
 from .hr_document_step import (HrDocumentStepCreate, HrDocumentStepRead,
                                HrDocumentStepUpdate)
