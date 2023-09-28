@@ -28,7 +28,7 @@ class ArchiveStaffUnitBase(BaseModel):
 class ArchiveStaffUnitCreate(ArchiveStaffUnitBase):
     curator_of_id: Optional[str] = Field(None, nullable=True)
     origin_id: Optional[str] = Field(None, nullable=True)
-    requirements: Optional[List[str]]
+    requirements: Optional[str]
 
 
 class ArchiveStaffUnitCreateWithStaffFunctions(ArchiveStaffUnitBase):
