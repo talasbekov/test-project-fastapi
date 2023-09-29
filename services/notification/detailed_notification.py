@@ -73,7 +73,8 @@ class DetailedNotificationService(
                     self.model.receiver_id == user_id)
             .first()
         )
-        
+        if notification is None:
+            return
         db.delete(notification)
         db.commit()
 

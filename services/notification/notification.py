@@ -1,10 +1,12 @@
-from sqlalchemy.orm import Session
+import asyncio
 
+from sqlalchemy.orm import Session
 from datetime import datetime
 from models import Notification, SocketSession
 from schemas import NotificationCreate, NotificationUpdate
 from services import ServiceBase
-from typing import TYPE_CHECKING
+from typing import Optional, Any, Dict, Union
+from fastapi.encoders import jsonable_encoder
 
 from ws import notification_manager
 
@@ -26,7 +28,7 @@ class NotificationService(
         return {"total": notifications_count, "objects": notifications}
     
     async def send_message(
-        self, db: Session, message: str, user_id: str
+        self, db: Session, message: dict, user_id: str
     ):
         message["created_at"] = str(datetime.now())
         await notification_manager.broadcast(message, user_id)

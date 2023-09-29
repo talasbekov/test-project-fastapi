@@ -69,7 +69,8 @@ from schemas import (
     HrDocumentInitEcp,
     HrDocumentSignEcp,
     DetailedNotificationCreate,
-    QrRead
+    QrRead,
+    NotificationCreate
 )
 from services import (
     badge_service,
@@ -95,6 +96,7 @@ from services import (
     categories,
     detailed_notification_service,
     document_staff_function,
+    notification_service
 )
 
    
@@ -475,9 +477,14 @@ class HrDocumentService(
         )
 
         all_steps: list = hr_document_step_service.get_all_by_document_template_id(
-            db, template.id
+            db, template.id, False
         )
+        
+        notifier_id = body.document_step_users_ids.get('-1', None)
+        
         users = [v for _, v in body.document_step_users_ids.items()]
+ 
+        users.remove(notifier_id)
 
         users_in_revision = self._exists_user_document_in_revision(
             db, body.hr_document_template_id, body.user_ids)
@@ -587,6 +594,25 @@ class HrDocumentService(
         db.add(document)
         db.commit()     
         
+        if notifier_id:
+            message = f"{template.name} \n"
+            for user in users_document:
+                user_name = f"{user.first_name} {user.last_name} "
+                message += user_name
+            notification_service.create(
+                db, 
+                obj_in=NotificationCreate(
+                    message=message,
+                    sender_type="Приказ",
+                    receiver_id=notifier_id
+                )
+            )
+            message = {
+                "sender_type": "Приказ",
+                "message": message
+            }
+            await notification_service.send_message(db, message, notifier_id)
+        
         if isinstance(document.properties, str):
             document.properties = json.loads(document.properties)
         if isinstance(document.document_template.properties, str):
@@ -656,7 +682,6 @@ class HrDocumentService(
             'certificate_blob': body.certificate_blob
         }
         
-        print(request_body)
         headers = {"Authorization": f"Bearer {access_token}"}
 
         res = requests.post(url=url, json=request_body, headers=headers)
