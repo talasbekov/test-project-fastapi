@@ -68,6 +68,8 @@ class History(Model):
     type = Column(String, nullable=True)
     document_style = Column(String, nullable=True)
     date_credited = Column(TIMESTAMP, nullable=True)
+    staff_division_name = Column(String, nullable=True)
+    staff_division_nameKZ = Column('staff_division_namekz', String, nullable=True)
 
     user = relationship(
         "User",
@@ -91,6 +93,9 @@ class RankHistory(History):
     rank = relationship("Rank", foreign_keys=[rank_id])
 
     rank_assigned_by = Column(String, nullable=True)
+    rank_name = Column(String, nullable=True)
+    rank_nameKZ = Column('rank_namekz', String, nullable=True)
+
 
     @classmethod
     def create_history(cls, db: Session, user_id: str,
@@ -224,8 +229,9 @@ class EmergencyServiceHistory(History):
         "StaffDivision",
         foreign_keys=[staff_division_id])
 
-    staff_division_name = Column(String, nullable=True)
-    staff_division_nameKZ = Column('staff_division_namekz', String, nullable=True)
+    position_name = Column(String, nullable=True)
+    position_nameKZ = Column('position_namekz', String, nullable=True)
+
 
     contractor_signer_name = Column(String, nullable=True)
     contractor_signer_nameKZ = Column('contractor_signer_namekz', String, nullable=True)
@@ -499,6 +505,7 @@ class StatusHistory(History):
         nullable=True)
     status = relationship("Status", back_populates="history")
     status_name = Column(NCLOB, nullable=True)
+    status_nameKZ = Column('status_namekz', String, nullable=True)
 
     @classmethod
     def create_history(cls, db: Session, user_id: str,

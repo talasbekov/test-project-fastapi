@@ -8,7 +8,7 @@ from schemas import Model, ReadModel
 
 class SpecialCheckBase(Model):
     number: str
-    issued_by: str
+    issued_by: Optional[str]
     date_of_issue: datetime
     document_link: Optional[AnyUrl]
     profile_id: str

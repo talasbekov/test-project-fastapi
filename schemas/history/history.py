@@ -358,9 +358,9 @@ class RankServiceDetailRead(ReadNamedModel):
     def from_orm(cls, orm_obj):
         return cls(
             id=orm_obj.id,
-            name=orm_obj.rank.name,
-            nameKZ=orm_obj.rank.nameKZ,
-            rank_id=orm_obj.rank.id,
+            name=orm_obj.rank.name if orm_obj.rank else orm_obj.rank_name,
+            nameKZ=orm_obj.rank.nameKZ if orm_obj.rank else orm_obj.rank_nameKZ,
+            rank_id=orm_obj.rank.id if orm_obj.rank else None,
             document_link=orm_obj.document_link,
             rank_assigned_by=orm_obj.rank_assigned_by,
             document_number=orm_obj.document_number,
@@ -370,7 +370,7 @@ class RankServiceDetailRead(ReadNamedModel):
         )
 
 
-class PenaltyRead(Model):
+class PenaltyRead(Model):	
     status: Optional[str]
     document_link: Optional[str]
     document_number: Optional[str]
@@ -488,7 +488,7 @@ class HolidayRead(Model):
             document_link=orm_obj.document_link,
             cancel_document_link=orm_obj.cancel_document_link,
             document_number=orm_obj.document_number,
-            status=orm_obj.status.type.name,
+            status=orm_obj.status.type.name if orm_obj.status.type else orm_obj.status_name,
         )
 
 
@@ -514,12 +514,12 @@ class EmergencyContactRead(ReadModel):
 
     @classmethod
     def from_orm(cls, orm_obj):
-        position_name = orm_obj.position.name if orm_obj.position else None
-        position_nameKZ = orm_obj.position.nameKZ if orm_obj.position else None
+        position_name = orm_obj.position.name if orm_obj.position else orm_obj.position_name
+        position_nameKZ = orm_obj.position.nameKZ if orm_obj.position else orm_obj.position_nameKZ
         staff_division_name =(orm_obj.staff_division.name
-                              if orm_obj.staff_division else None)
+                              if orm_obj.staff_division else orm_obj.staff_division_name)
         staff_division_nameKZ = (orm_obj.staff_division.nameKZ
-                                 if orm_obj.staff_division else None)
+                                 if orm_obj.staff_division else orm_obj.staff_division_nameKZ)
 
         date_to = orm_obj.date_to or datetime.now(orm_obj.date_from.tzinfo)
         length_of_service = get_date_difference(orm_obj.date_from, date_to)
