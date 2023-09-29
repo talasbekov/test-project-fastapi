@@ -41,6 +41,7 @@ class ArchiveStaffUnitUpdate(ArchiveStaffUnitBase):
     origin_id: Optional[str]
     user_replacing: Optional[str] = Field(None, nullable=True)
     curator_of_id: Optional[str] = Field(None, nullable=True)
+    requirements: Optional[str]
 
 
 class NewArchiveStaffUnitCreate(ArchiveStaffUnitBase):
