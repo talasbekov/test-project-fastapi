@@ -49,18 +49,26 @@ class HrVacancyService(
                     vacancy.staff_unit.staff_division.description = json.loads(vacancy.staff_unit.staff_division.description)
                 vacancies_loaded.append(HrVacancyRead.from_orm(vacancy).to_dict(is_responded=True))
             else:
-                if isinstance(vacancy.staff_unit.requirements, str):
-                    vacancy.staff_unit.requirements = json.loads(vacancy.staff_unit.requirements)
                 if vacancy.archive_staff_unit:
                     if isinstance(vacancy.archive_staff_unit.requirements, str):
                         vacancy.archive_staff_unit.requirements = json.loads(vacancy.archive_staff_unit.requirements)
-                if vacancy.staff_unit.user_replacing:
-                    if isinstance(vacancy.staff_unit.user_replacing.staff_unit.requirements, str):
-                        vacancy.staff_unit.user_replacing.staff_unit.requirements = json.loads(vacancy.staff_unit.user_replacing.staff_unit.requirements)
-                    if isinstance(vacancy.staff_unit.user_replacing.staff_unit.staff_division.description, str):
-                        vacancy.staff_unit.user_replacing.staff_unit.staff_division.description = json.loads(vacancy.staff_unit.user_replacing.staff_unit.staff_division.description)
-                if isinstance(vacancy.staff_unit.staff_division.description, str):
-                    vacancy.staff_unit.staff_division.description = json.loads(vacancy.staff_unit.staff_division.description)
+                    if vacancy.archive_staff_unit.user_replacing:
+                        if isinstance(vacancy.archive_staff_unit.user_replacing.staff_unit.requirements, str):
+                            vacancy.archive_staff_unit.user_replacing.staff_unit.requirements = json.loads(vacancy.archive_staff_unit.user_replacing.staff_unit.requirements)
+                        if isinstance(vacancy.archive_staff_unit.user_replacing.staff_unit.staff_division.description, str):
+                            vacancy.archive_staff_unit.user_replacing.staff_unit.staff_division.description = json.loads(vacancy.archive_staff_unit.user_replacing.staff_unit.staff_division.description)
+                if vacancy.staff_unit:
+                    if isinstance(vacancy.staff_unit.requirements, str):
+                        vacancy.staff_unit.requirements = json.loads(vacancy.staff_unit.requirements)
+                    if isinstance(vacancy.staff_unit.staff_division.description, str):
+                        vacancy.staff_unit.staff_division.description = json.loads(vacancy.staff_unit.staff_division.description)
+                    if vacancy.staff_unit.user_replacing:
+                        if isinstance(vacancy.staff_unit.user_replacing.staff_unit.requirements, str):
+                            vacancy.staff_unit.user_replacing.staff_unit.requirements = json.loads(vacancy.staff_unit.user_replacing.staff_unit.requirements)
+                        if isinstance(vacancy.staff_unit.user_replacing.staff_unit.staff_division.description, str):
+                            vacancy.staff_unit.user_replacing.staff_unit.staff_division.description = json.loads(vacancy.staff_unit.user_replacing.staff_unit.staff_division.description)
+                    if isinstance(vacancy.staff_unit.staff_division.description, str):
+                        vacancy.staff_unit.staff_division.description = json.loads(vacancy.staff_unit.staff_division.description)
                 vacancies_loaded.append(HrVacancyRead.from_orm(vacancy).to_dict(is_responded=False))
         
         response = HrVacancyStaffDivisionRead(
@@ -126,12 +134,12 @@ class HrVacancyService(
     def create_by_archive_staff_unit(
             self, db: Session, body: HrVacancyCreate, role_id: str) -> HrVacancy:
 
-        archieve_staff_unit = archive_staff_unit_service.get_by_id(
+        archive_staff_unit = archive_staff_unit_service.get_by_id(
             db, body.staff_unit_id)
 
         vacancy = self.model()  # init object
-
-        vacancy.archive_staff_unit_id = archieve_staff_unit.id
+        
+        vacancy.archive_staff_unit_id = archive_staff_unit.id
 
         if body.hr_vacancy_requirements_ids is not None:
             vacancy.hr_vacancy_requirements = self._set_requirements_to_vacancy(
@@ -139,6 +147,14 @@ class HrVacancyService(
 
         db.add(vacancy)
         db.flush()
+        
+        if isinstance(vacancy.archive_staff_unit.requirements, str):
+            vacancy.archive_staff_unit.requirements = json.loads(vacancy.archive_staff_unit.requirements)
+        if vacancy.archive_staff_unit.user_replacing:
+            if isinstance(vacancy.archive_staff_unit.user_replacing.staff_unit.requirements, str):
+                vacancy.archive_staff_unit.user_replacing.staff_unit.requirements = json.loads(vacancy.archive_staff_unit.user_replacing.staff_unit.requirements)
+            if isinstance(vacancy.archive_staff_unit.user_replacing.staff_unit.staff_division.description, str):
+                vacancy.archive_staff_unit.user_replacing.staff_unit.staff_division.description = json.loads(vacancy.archive_staff_unit.user_replacing.staff_unit.staff_division.description)
 
         return vacancy
 

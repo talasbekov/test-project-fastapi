@@ -197,22 +197,29 @@ class ArchiveStaffUnitService(
 
     def create_staff_unit(self, db: Session, body: NewArchiveStaffUnitCreate):
         self._validate_archive_staff_position(db, body.position_id)
+        reqs = None
         if isinstance(body.requirements, list):
+            reqs = []
             for requirements in body.requirements:
-                requirements = requirements.dict()
-            body.requirements = json.dumps(body.requirements)
-        res = super().create(db, ArchiveStaffUnitCreate(
+                reqs.append(requirements.dict())
+            reqs = json.dumps(reqs)
+        archive_staff_unit = super().create(db, ArchiveStaffUnitCreate(
             position_id=body.position_id,
             staff_division_id=body.staff_division_id,
             user_id=body.user_id,
             actual_user_id=body.actual_user_id,
             user_replacing_id=body.user_replacing_id,
             origin_id=None,
-            requirements=body.requirements,
+            requirements=reqs,
             curator_of_id=body.curator_of_id,
         ))
-        increment_changes_size(db, res.staff_division.staff_list)
-        return res
+        increment_changes_size(db, archive_staff_unit.staff_division.staff_list)
+        if isinstance(archive_staff_unit.requirements, str):
+            archive_staff_unit.requirements = json.loads(archive_staff_unit.requirements)
+        if archive_staff_unit.user_replacing:
+            if isinstance(archive_staff_unit.user_replacing.staff_unit.requirements, str):
+                archive_staff_unit.user_replacing.staff_unit.requirements = json.loads(archive_staff_unit.user_replacing.staff_unit.requirements)
+        return archive_staff_unit
 
     def update_staff_unit(
             self,
@@ -220,6 +227,12 @@ class ArchiveStaffUnitService(
             staff_unit: ArchiveStaffUnit,
             body: NewArchiveStaffUnitUpdate):
         self._validate_archive_staff_position(db, body.position_id)
+        reqs = None
+        if isinstance(body.requirements, list):
+            reqs = []
+            for requirements in body.requirements:
+                reqs.append(requirements.dict())
+            reqs = json.dumps(reqs)
         archive_staff_unit = super().update(
             db,
             db_obj=staff_unit,
@@ -231,7 +244,7 @@ class ArchiveStaffUnitService(
                 actual_user_id=body.actual_user_id,
                 user_replacing_id=body.user_replacing_id,
                 origin_id=staff_unit.origin_id,
-                requirements=body.requirements))
+                requirements=reqs))
         increment_changes_size(db, archive_staff_unit.staff_division.staff_list)
         if isinstance(archive_staff_unit.requirements, str):
             archive_staff_unit.requirements = eval(archive_staff_unit.requirements)

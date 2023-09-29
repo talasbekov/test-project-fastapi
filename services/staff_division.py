@@ -251,8 +251,9 @@ class StaffDivisionService(
         for staff_unit in staff_division.staff_units:
             if isinstance(staff_unit.requirements, str):
                 staff_unit.requirements = json.loads(staff_unit.requirements)
-            if isinstance(staff_unit.user_replacing.staff_unit.requirements, str):
-                staff_unit.user_replacing.staff_unit.requirements = json.loads(staff_unit.user_replacing.staff_unit.requirements)
+            if staff_unit.user_replacing:
+                if isinstance(staff_unit.user_replacing.staff_unit.requirements, str):
+                    staff_unit.user_replacing.staff_unit.requirements = json.loads(staff_unit.user_replacing.staff_unit.requirements)
         res = StaffDivisionRead.from_orm(staff_division)
         db.rollback()
         return res
