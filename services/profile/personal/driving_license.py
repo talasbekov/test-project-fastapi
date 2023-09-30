@@ -30,7 +30,8 @@ class DrivingLicenseService(
                            .join(Profile)
                            .filter(Profile.user_id == user_id)
                            .first())
-        driving_licence.category = eval(driving_licence.category)
+        if driving_licence:
+            driving_licence.category = eval(driving_licence.category)
         return driving_licence
 
     def update_document_link(self, db: Session, id: str,

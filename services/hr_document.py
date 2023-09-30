@@ -483,8 +483,8 @@ class HrDocumentService(
         notifier_id = body.document_step_users_ids.get('-1', None)
         
         users = [v for _, v in body.document_step_users_ids.items()]
- 
-        users.remove(notifier_id)
+        if notifier_id:
+            users.remove(notifier_id)
 
         users_in_revision = self._exists_user_document_in_revision(
             db, body.hr_document_template_id, body.user_ids)
@@ -514,7 +514,7 @@ class HrDocumentService(
         status = hr_document_status_service.get_by_name(
             db, HrDocumentStatusEnum.IN_PROGRESS.value)
         
-        template.properties = json.dumps(template.properties)
+        template.properties = json.dumps(template.properties, ensure_ascii=False)
         template.description = json.dumps(template.description)
         template.actions = json.dumps(template.actions)
         
@@ -665,7 +665,7 @@ class HrDocumentService(
          
         headers = {"Authorization": f"Bearer {access_token}"}
 	
-        res = requests.post(url=url, json=request_body, headers=headers)
+        res = requests.post(url=url, json=request_body, headers=headers, verify=False)
         if res.status_code == 400:
             raise BadRequestException(detail=res.text)
         
@@ -684,7 +684,7 @@ class HrDocumentService(
         
         headers = {"Authorization": f"Bearer {access_token}"}
 
-        res = requests.post(url=url, json=request_body, headers=headers)
+        res = requests.post(url=url, json=request_body, headers=headers, verify=False)
 
         if res.status_code == 400:
             raise BadRequestException(detail=res.text)
@@ -720,7 +720,7 @@ class HrDocumentService(
         }
         headers = {"Authorization": f"Bearer {access_token}"}
 
-        res = requests.post(url=url, json=request_body, headers=headers)
+        res = requests.post(url=url, json=request_body, headers=headers, verify=False)
 
         if res.status_code == 400:
             raise BadRequestException(detail=res.text)
@@ -790,7 +790,7 @@ class HrDocumentService(
             document.status_id = hr_document_status_service.get_by_name(
                 db, HrDocumentStatusEnum.ON_REVISION.value).id
         if isinstance(document.properties, dict):
-            document.properties = json.dumps(document.properties)
+            document.properties = json.dumps(document.properties, ensure_ascii=False)
         if isinstance(document.document_template.properties, dict):
             document.document_template.properties = json.dumps(document.document_template.properties)
         if isinstance(document.document_template.description, dict):
@@ -1268,9 +1268,9 @@ class HrDocumentService(
         hr_erp_hr_document_step_signer.certificate_blob, \
         hr_erp_hr_document_step_signer.created_at \
         FROM HR_ERP_HR_DOCUMENT_STEP_SIGNER \
-        JOIN HR_ERP_HR_DOCUMENT_TEMPLATE_SIGNER \
-        ON hr_erp_hr_document_step_signer.hr_document_template_signer_id = HR_ERP_HR_DOCUMENT_TEMPLATE_SIGNER.ID \
-        WHERE HR_ERP_HR_DOCUMENT_TEMPLATE_SIGNER.hr_document_id = :hr_document_id")
+        JOIN HR_ERP_HR_DOC_TEMPLATE_SIGNER \
+        ON hr_erp_hr_document_step_signer.hr_document_template_signer_id = HR_ERP_HR_DOC_TEMPLATE_SIGNER.ID \
+        WHERE HR_ERP_HR_DOC_TEMPLATE_SIGNER.hr_document_id = :hr_document_id")
         certificates = db.execute(query, {"hr_document_id": str(hr_document_id)}).fetchall()
         
         for certificate in certificates:

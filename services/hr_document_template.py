@@ -503,6 +503,10 @@ class HrDocumentTemplateService(
         count = 1
         all_steps = {}
         if is_direct:
+            if user.staff_unit.staff_division.leader is None:
+                raise NotFoundException(
+                        detail="Leader for staff division of this user is not found!"
+                    )
             if user.staff_unit.staff_division.leader_id != user.staff_unit_id:
                 if len(user.staff_unit.staff_division.leader.users) == 0:
                     raise NotFoundException(

@@ -1,5 +1,5 @@
 import uuid
-from typing import List
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends
 from fastapi.security import HTTPBearer
@@ -59,7 +59,7 @@ async def get_by_id(*,
 
 
 @router.get('/user/{user_id}', dependencies=[Depends(HTTPBearer())],
-            response_model=FamilyStatusRead)
+            response_model=Optional[FamilyStatusRead])
 async def get_profile_by_id(*,
                             db: Session = Depends(get_db),
                             user_id: str,
