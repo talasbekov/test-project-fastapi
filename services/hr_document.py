@@ -1270,7 +1270,8 @@ class HrDocumentService(
         FROM HR_ERP_HR_DOCUMENT_STEP_SIGNER \
         JOIN HR_ERP_HR_DOC_TEMPLATE_SIGNER \
         ON hr_erp_hr_document_step_signer.hr_document_template_signer_id = HR_ERP_HR_DOC_TEMPLATE_SIGNER.ID \
-        WHERE HR_ERP_HR_DOC_TEMPLATE_SIGNER.hr_document_id = :hr_document_id")
+        WHERE HR_ERP_HR_DOC_TEMPLATE_SIGNER.hr_document_id = :hr_document_id \
+        ORDER BY HR_ERP_HR_DOCUMENT_STEP_SIGNER.created_at")
         certificates = db.execute(query, {"hr_document_id": str(hr_document_id)}).fetchall()
         
         for certificate in certificates:
