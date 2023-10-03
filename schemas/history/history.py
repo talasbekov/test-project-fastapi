@@ -591,6 +591,7 @@ class SecondmentRead(Model):
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     staff_division: Optional[str]
+    staff_divisionKZ: Optional[str]
     document_link: Optional[str]
     state_body: Optional[str]
 
@@ -600,14 +601,18 @@ class SecondmentRead(Model):
 
     @classmethod
     def from_orm(cls, orm_obj):
-        staff_division = (orm_obj.secondment.staff_division.name
-                        if orm_obj.secondment.staff_division else None)
+        staff_division = (orm_obj.secondment.name
+                        if orm_obj.secondment else None)
+        staff_divisionKZ = (orm_obj.secondment.nameKZ
+                        if orm_obj.secondment else None)
+
         body = (orm_obj.secondment.state_body.name
                 if orm_obj.secondment.state_body else None)
         return cls(
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
             staff_division=staff_division,
+            staff_divisionKZ=staff_divisionKZ,
             document_link=orm_obj.document_link,
             state_body=body
         )

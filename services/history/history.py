@@ -212,25 +212,25 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         general_information = self.get_general_information_by_user_id(
             db, user_id, user)
         badges = db.query(BadgeHistory).filter(
-            BadgeHistory.user_id == user_id).all()
+            BadgeHistory.user_id == user_id).order_by(BadgeHistory.date_from.desc()).all()
         ranks = db.query(RankHistory).filter(
-            RankHistory.user_id == user_id).all()
+            RankHistory.user_id == user_id).order_by(RankHistory.date_from.desc()).all()
         penalties = db.query(PenaltyHistory).filter(
-            PenaltyHistory.user_id == user_id).all()
+            PenaltyHistory.user_id == user_id).order_by(PenaltyHistory.date_from.desc()).all()
         contracts = db.query(ContractHistory).filter(
-            ContractHistory.user_id == user_id).all()
+            ContractHistory.user_id == user_id).order_by(ContractHistory.date_from.desc()).all()
         attestations = db.query(AttestationHistory).filter(
-            AttestationHistory.user_id == user_id).all()
+            AttestationHistory.user_id == user_id).order_by(AttestationHistory.date_from.desc()).all()
         characteristics = db.query(ServiceCharacteristicHistory).filter(
-            ServiceCharacteristicHistory.user_id == user_id).all()
+            ServiceCharacteristicHistory.user_id == user_id).order_by(ServiceCharacteristicHistory.date_from.desc()).all()
         holidays = db.query(StatusHistory).filter(
-            StatusHistory.user_id == user_id).all()
+            StatusHistory.user_id == user_id).order_by(StatusHistory.date_from.desc()).all()
         emergency_contracts = db.query(EmergencyServiceHistory).filter(
-            EmergencyServiceHistory.user_id == user_id).all()
+            EmergencyServiceHistory.user_id == user_id).order_by(EmergencyServiceHistory.date_from.desc()).all()
         experience = db.query(WorkExperienceHistory).filter(
-            WorkExperienceHistory.user_id == user_id).all()
+            WorkExperienceHistory.user_id == user_id).order_by(WorkExperienceHistory.date_from.desc()).all()
         secondments = db.query(SecondmentHistory).filter(
-            SecondmentHistory.user_id == user_id).all()
+            SecondmentHistory.user_id == user_id).order_by(SecondmentHistory.date_from.desc()).all()
         equipments = user.equipments
 
         # clothing_equipments_type_count = (
@@ -362,7 +362,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             recommender_user = {"name": (f"{recommender.user_by.last_name}"
                                          f" {recommender.user_by.first_name[0]}"
                                          f"{' ' + father_name}"),
-                                "id": str(user.id)
+                                "id": str(recommender.user_by_id)
                                 }
         else:
             recommender_user = None

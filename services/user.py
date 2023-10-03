@@ -18,7 +18,9 @@ from models import (
     HrDocumentInfo,
     HrDocumentTemplate,
     ScheduleYear,
-    SubjectType
+    SubjectType,
+    StatusHistory,
+    Status
 )
 from schemas import (
     UserCreate,
@@ -129,11 +131,22 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
         users = (
             user_queue
-            .order_by(self.model.created_at.asc())
+            .order_by(self.model.last_name.asc())
             .offset(skip)
             .limit(limit)
             .all()
         )
+
+        for user in users:
+            status_histories = db.query(StatusHistory).order_by(StatusHistory.created_at).filter(StatusHistory.user_id == user.id).all()
+            for status_history in status_histories:
+                today = datetime.datetime.now()
+                if status_history.date_from < today and status_history.date_to > today:
+                    user.statuses = [status_history.status]
+                    break
+                else:
+                    user.statuses = []
+                    
         return users, user_queue.count()
 
     def get_all_archived(self,
@@ -147,7 +160,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
         users = (
             user_queue
-            .order_by(self.model.created_at.asc())
+            .order_by(self.model.last_name.asc())
             .offset(skip)
             .limit(limit)
             .all()

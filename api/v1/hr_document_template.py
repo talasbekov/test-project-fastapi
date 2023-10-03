@@ -164,6 +164,7 @@ async def get_steps_by_document_template_id(*,
         - **id**: UUID - required.
     """
     Authorize.jwt_required()
+    print(user_id, ' in request')
     return hr_document_template_service.get_steps_by_document_template_id(
         db, str(id), str(user_id))
 

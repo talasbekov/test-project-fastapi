@@ -29,9 +29,9 @@ class TemporaryStatusChangeHandler(BaseHandler):
         history = history_service.create_timeline_history(
             db, user.id, res,
             convert_str_to_datetime(
-                props[action['date_from']['tagname']]['name']),
+                props[action['date_from']['tagname']]['value']),
             convert_str_to_datetime(
-                props[action['date_to']['tagname']]['name'])
+                props[action['date_to']['tagname']]['value'])
         )
 
         history.document_link = configs.GENERATE_IP + str(document.id)

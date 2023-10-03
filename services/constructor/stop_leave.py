@@ -1,11 +1,11 @@
 from datetime import datetime
 
 from typing import Any
-from sqlalchemy import and_, or_
+from sqlalchemy import and_, or_, func
 from sqlalchemy.orm import Session, Query
 
 from core import configs
-from models import User, HrDocument, StatusEnum, StatusHistory, Status
+from models import User, HrDocument, StatusEnum, StatusHistory, Status, StatusType
 from services import status_service
 from exceptions import BadRequestException
 
@@ -33,7 +33,7 @@ class StopLeaveHandler(BaseHandler):
         status = statuses[0]
         if status is None:
             return
-        res = status_service.stop_relation(db, user.id, status.id)
+        res = status_service.stop_relation(db, user.id, status.status_id)
         res.cancel_document_link = configs.GENERATE_IP + str(document.id)
         db.flush()
 
@@ -89,8 +89,15 @@ class StopLeaveHandler(BaseHandler):
                         action: dict,
                         properties: dict,
                         ):
-        statuses = status_service.get_active_status_of_user(
-            db, user.id, StatusEnum.ROOT.value)
+        statuses = (db.query(StatusHistory)
+            .join(Status)
+            .filter(Status.user_id == user.id)
+            .join(StatusType)
+            .filter(func.lower(StatusType.name).contains(StatusEnum.ROOT.value.lower()))
+            .order_by(StatusHistory.date_to.desc())
+            .all())
+
+        
         status = statuses[0]
         return status
 

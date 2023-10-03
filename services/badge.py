@@ -80,8 +80,7 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
             db.query(BadgeHistory)
             .filter(BadgeHistory.badge_id == badge_id,
                     BadgeHistory.user_id == user_id,
-                    BadgeHistory.date_to is None
-                    )
+                    BadgeHistory.date_to == None)
             .first()
         )
         if res is None:

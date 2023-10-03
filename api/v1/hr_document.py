@@ -195,7 +195,6 @@ def sign_ecp(*,
                                               body,
                                               str(user_id),
                                               access_token,
-                                              Authorize
                                               )
 
 @router.post("/ecp_initialize",

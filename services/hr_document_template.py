@@ -180,7 +180,7 @@ class HrDocumentTemplateService(
 
             if step.is_direct_supervisor is not None:
                 steps[str(function.priority)] = self.get_all_supervisors(
-                    db, step.id, step.is_direct_supervisor, document_template_id, user
+                    db, step.id, step.is_direct_supervisor, document_template_id, user_id
                 )
                 continue
             if step.category is not None:
@@ -213,6 +213,7 @@ class HrDocumentTemplateService(
                 )
                 .filter(HrDocumentTemplate.is_visible == True)
                 .filter(HrDocumentTemplate.is_draft == False)
+                .order(HrDocumentTemplate.created_at.desc())
                 .offset(skip)
                 .limit(limit)
                 .all()
@@ -498,47 +499,57 @@ class HrDocumentTemplateService(
         step_id: str,
         is_direct: bool,
         template_id: str,
-        user: User,
+        user_id: str,
     ):
-        count = 1
-        all_steps = {}
+        user = db.query(User).filter(User.id == user_id).first()
+        count = 0
+        #all_steps = {}
+        all_steps = []
         if is_direct:
-            if user.staff_unit.staff_division.leader is None:
+            if user.staff_unit.staff_division.leader_id is None:
                 raise NotFoundException(
-                        detail="Leader for staff division of this user is not found!"
+                        detail="Direct Leader for staff division of this user is not found!"
                     )
             if user.staff_unit.staff_division.leader_id != user.staff_unit_id:
-                if len(user.staff_unit.staff_division.leader.users) == 0:
+                leader_id = user.staff_unit.staff_division.leader_id
+                leader = db.query(User).filter(User.staff_unit_id == leader_id).first()
+                #all_steps[count] = leader.id 
+                all_steps.append(leader.id)
+            else:
+                if user.staff_unit.staff_division.leader_id is None:
                     raise NotFoundException(
                         detail="Leader for staff division of this user is not found!"
                     )
-                all_steps[count] = user.staff_unit.staff_division.leader.users[0].id
-            else:
-                staff_division = staff_division_service.get_by_id(
-                    db, user.staff_unit.staff_division.parent_group_id
-                )
-                all_steps[count] = staff_division.leader.users[0].id
+                parent_id = user.staff_unit.staff_division.parent_group_id
+                if parent_id:
+                    leader_id = staff_division_service.get_by_id(db, parent_id).leader_id
+                    leader = db.query(User).filter(User.staff_unit_id == leader_id).first()
+                    #all_steps[count] = leader.id
+                    all_steps.append(leader.id)
             return all_steps
-        staff_division = staff_division_service.get_by_id(
-            db, user.staff_unit.staff_division_id
-        )
-
-        parent_id = staff_division.parent_group_id
 
         service_division = staff_division_service.get_by_name(
             db, StaffDivisionEnum.SERVICE.value
         )
-        if service_division.id == staff_division.id:
-            all_steps[count] = staff_division.leader.users[0].id
+        print(service_division.id, ' ', user.staff_unit.staff_division.id)
+        if service_division.id == user.staff_unit.staff_division.id:
+            #all_steps[count] = user.staff_unit.staff_division.leader.users[0].id
+            all_steps.append(leader.id)
             return all_steps
 
-        tmp = staff_division_service.get_by_id(db, parent_id)
+        parent_id = user.staff_unit.staff_division.parent_group_id
+        
+        if parent_id is not None:
+            tmp = user.staff_unit.staff_division
 
-        while tmp.id != service_division.id:
-            tmp = staff_division_service.get_by_id(db, parent_id)
-            all_steps[count] = tmp.leader.users[0].id
-            parent_id = tmp.parent_group_id
-            count += 1
+            while tmp.parent_group_id != service_division.id:
+                tmp = staff_division_service.get_by_id(db, tmp.parent_group_id)
+                if tmp.leader is None:
+                    continue
+                print(tmp.leader_id)
+                all_steps.append(tmp.leader.users[0].id)
+                #all_steps[count] = tmp.leader.users[0].id
+                count += 1
 
         return all_steps
 
