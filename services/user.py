@@ -140,12 +140,13 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         for user in users:
             status_histories = db.query(StatusHistory).order_by(StatusHistory.created_at).filter(StatusHistory.user_id == user.id).all()
             for status_history in status_histories:
-                today = datetime.datetime.now()
-                if status_history.date_from < today and status_history.date_to > today:
-                    user.statuses = [status_history.status]
-                    break
-                else:
-                    user.statuses = []
+                if status_history != [] and (status_history.date_to is not None):
+                    today = datetime.datetime.now()
+                    if status_history.date_from < today and status_history.date_to > today:
+                        user.statuses = [status_history.status]
+                        break
+                    else:
+                        user.statuses = []
                     
         return users, user_queue.count()
 
