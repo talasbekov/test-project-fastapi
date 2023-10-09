@@ -1,23 +1,16 @@
-from .constructor import handlers
 import pdfkit
 import qrcode
 import hashlib
 import random
 import tempfile
-import uuid
 import json
 import requests
 import io
 import base64
 from core import configs
 from datetime import datetime, timedelta
-	
+
 from typing import List, Union, Dict, Any, Optional
-
-from typing import TYPE_CHECKING
-
-
-
 
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import FileResponse
@@ -68,7 +61,6 @@ from schemas import (
     ArchiveStaffUnitRead,
     HrDocumentInitEcp,
     HrDocumentSignEcp,
-    DetailedNotificationCreate,
     QrRead,
     NotificationCreate
 )
@@ -89,20 +81,16 @@ from services import (
     coolness_service,
     penalty_service,
     contract_service,
-    # staff_list_service,
     archive_staff_unit_service,
     status_leave_service,
     state_body_service,
     categories,
     detailed_notification_service,
-    document_staff_function,
     notification_service
 )
 
-   
-
-
 from .base import ServiceBase
+from .constructor import handlers
 
 options = {
     "staff_unit": staff_unit_service,
@@ -136,8 +124,8 @@ responses = {
 
 
 class HrDocumentService(
-    ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpdate]):
-    
+        ServiceBase[HrDocument, HrDocumentCreate, HrDocumentUpdate]):
+
     def create(self, db: Session,
                obj_in: Union[HrDocumentCreate, Dict[str, Any]]) -> HrDocument:
         obj_in_data = jsonable_encoder(obj_in)
@@ -146,19 +134,20 @@ class HrDocumentService(
         format_string = "%Y-%m-%dT%H:%M:%S.%f%z"
         due_date = obj_in_data.get('due_date', None)
         if due_date is not None:
-            obj_in_data['due_date'] = datetime.strptime(obj_in_data['due_date'], format_string)
-        
+            obj_in_data['due_date'] = datetime.strptime(obj_in_data['due_date'],
+                                                        format_string)
+
         db_obj = self.model(**obj_in_data)  # type: ignore
         db.add(db_obj)
         db.flush()
         return db_obj
-    
+
     def get_by_id(self, db: Session, id: str) -> HrDocument:
         document = super().get(db, id)
         if document is None:
             raise NotFoundException(detail="Document is not found!")
         return document
-    
+
     def get_by_id_for_api(self, db: Session, id: str) -> HrDocument:
         document = super().get(db, id)
         if document is None:
@@ -166,12 +155,15 @@ class HrDocumentService(
         if isinstance(document.properties, str):
             document.properties = json.loads(document.properties)
         if isinstance(document.document_template.properties, str):
-            document.document_template.properties = json.loads(document.document_template.properties)
+            document.document_template.properties = json.loads(
+                document.document_template.properties)
         if isinstance(document.document_template.description, str):
-            document.document_template.description = json.loads(document.document_template.description)
+            document.document_template.description = json.loads(
+                document.document_template.description)
         if isinstance(document.document_template.actions, str):
-            document.document_template.actions = json.loads(document.document_template.actions)
-            
+            document.document_template.actions = json.loads(
+                document.document_template.actions)
+
         return self._to_response(db, document)
 
     def get_initialized_documents(self,
@@ -208,11 +200,14 @@ class HrDocumentService(
             if isinstance(document.properties, str):
                 document.properties = json.loads(document.properties)
             if isinstance(document.document_template.properties, str):
-                document.document_template.properties = json.loads(document.document_template.properties)
+                document.document_template.properties = json.loads(
+                    document.document_template.properties)
             if isinstance(document.document_template.description, str):
-                document.document_template.description = json.loads(document.document_template.description)
+                document.document_template.description = json.loads(
+                    document.document_template.description)
             if isinstance(document.document_template.actions, str):
-                document.document_template.actions = json.loads(document.document_template.actions)
+                document.document_template.actions = json.loads(
+                    document.document_template.actions)
         return self._return_correctly(db, documents, user)
 
     def get_not_signed_documents(
@@ -259,11 +254,14 @@ class HrDocumentService(
             if isinstance(document.properties, str):
                 document.properties = json.loads(document.properties)
             if isinstance(document.document_template.properties, str):
-                document.document_template.properties = json.loads(document.document_template.properties)
+                document.document_template.properties = json.loads(
+                    document.document_template.properties)
             if isinstance(document.document_template.description, str):
-                document.document_template.description = json.loads(document.document_template.description)
+                document.document_template.description = json.loads(
+                    document.document_template.description)
             if isinstance(document.document_template.actions, str):
-                document.document_template.actions = json.loads(document.document_template.actions)
+                document.document_template.actions = json.loads(
+                    document.document_template.actions)
         return self._return_correctly(db, documents, user)
 
     def get_signed_documents(
@@ -418,10 +416,10 @@ class HrDocumentService(
         current_user = user_service.get_by_id(db, user_id)
 
         step_from_template = (hr_document_template_service
-        .get_steps_by_document_template_id(
-            db,
-            document.hr_document_template_id,
-            current_user.id))
+                              .get_steps_by_document_template_id(
+                                  db,
+                                  document.hr_document_template_id,
+                                  current_user.id))
 
         users = [v for _, v in step_from_template.items()]
         subject_users_ids: List[str] = []
@@ -479,9 +477,9 @@ class HrDocumentService(
         all_steps: list = hr_document_step_service.get_all_by_document_template_id(
             db, template.id, False
         )
-        
+
         notifier_id = body.document_step_users_ids.get('-1', None)
-        
+
         users = [v for _, v in body.document_step_users_ids.items()]
         if notifier_id:
             users.remove(notifier_id)
@@ -489,16 +487,18 @@ class HrDocumentService(
         users_in_revision = self._exists_user_document_in_revision(
             db, body.hr_document_template_id, body.user_ids)
         revision_doc = None
-        
+
         if users_in_revision:
             for user in users_in_revision:
                 doc = (db.query(HrDocument)
-                .filter(HrDocument.users.contains(user),
-                        HrDocument.hr_document_template_id == body.hr_document_template_id)
-                .scalar()
-                )
+                       .filter(HrDocument.users.contains(user),
+                               HrDocument.hr_document_template_id ==
+                               body.hr_document_template_id)
+                       .scalar()
+                       )
 
-                revision_status = hr_document_status_service.get_by_name(db, 'На доработке')
+                revision_status = hr_document_status_service.get_by_name(db,
+                                                                         'На доработке')
                 if doc.status != revision_status:
                     break
                 else:
@@ -513,11 +513,12 @@ class HrDocumentService(
         current_user = user_service.get_by_id(db, user_id)
         status = hr_document_status_service.get_by_name(
             db, HrDocumentStatusEnum.IN_PROGRESS.value)
-        
-        template.properties = json.dumps(template.properties, ensure_ascii=False)
+
+        template.properties = json.dumps(
+            template.properties, ensure_ascii=False)
         template.description = json.dumps(template.description)
         template.actions = json.dumps(template.actions)
-        
+
         document: HrDocument = self.create(
             db,
             HrDocumentCreate(
@@ -530,7 +531,7 @@ class HrDocumentService(
                 initialized_at=datetime.now(),
             ),
         )
-        
+
         document_info_initiator = self._create_hr_document_info_for_initiator(
             db, document, current_user, step)
 
@@ -544,7 +545,7 @@ class HrDocumentService(
             template = document.document_template
 
             properties: dict = document.properties
-            
+
             if isinstance(template.actions, str):
                 document_actions = json.loads(template.actions)
             else:
@@ -552,21 +553,29 @@ class HrDocumentService(
             if isinstance(document.properties, str):
                 document_properties = json.loads(document.properties)
             if isinstance(document.document_template.properties, str):
-                template_properties = json.loads(document.document_template.properties)
-            
+                template_properties = json.loads(
+                    document.document_template.properties)
+
             for user in users_document:
                 if isinstance(user.staff_unit.requirements, list):
-                    user.staff_unit.requirements = json.dumps(user.staff_unit.requirements)
-                for i in document_actions['args']:
-                    action_name = list(i)[0]
-                    action = i[action_name]
+                    user.staff_unit.requirements = json.dumps(
+                        user.staff_unit.requirements)
+                for arg in document_actions['args']:
+                    action_name = list(arg)[0]
+                    action = arg[action_name]
 
                     if handlers.get(action_name) is None:
                         raise InvalidOperationException(
                             f"Action {action_name} is not supported!"
                         )
                     handlers[action_name].handle_validation(
-                        db, user, action, template_properties, document_properties, document)
+                        db,
+                        user,
+                        action,
+                        template_properties,
+                        document_properties,
+                        document
+                    )
 
             document.users = users_document
             if len(all_steps) == 0:
@@ -586,21 +595,20 @@ class HrDocumentService(
             hr_document_info_service.sign(
                 db, document_info_initiator, current_user, None, True
             )
-        
+
         if revision_doc:
             super().remove(db, revision_doc.id)
-        
-        
+
         db.add(document)
-        db.commit()     
-        
+        db.commit()
+
         if notifier_id:
             message = f"{template.name} \n"
             for user in users_document:
                 user_name = f"{user.first_name} {user.last_name} "
                 message += user_name
             notification_service.create(
-                db, 
+                db,
                 obj_in=NotificationCreate(
                     message=message,
                     sender_type="Приказ",
@@ -612,48 +620,52 @@ class HrDocumentService(
                 "message": message
             }
             await notification_service.send_message(db, message, notifier_id)
-        
+
         if isinstance(document.properties, str):
             document.properties = json.loads(document.properties)
         if isinstance(document.document_template.properties, str):
-            document.document_template.properties = json.loads(document.document_template.properties)
+            document.document_template.properties = json.loads(
+                document.document_template.properties)
         if isinstance(document.document_template.description, str):
-            document.document_template.description = json.loads(document.document_template.description)
+            document.document_template.description = json.loads(
+                document.document_template.description)
         if isinstance(document.document_template.actions, str):
-            document.document_template.actions = json.loads(document.document_template.actions)
-            
+            document.document_template.actions = json.loads(
+                document.document_template.actions)
+
         return document
-    
+
     async def initialize_with_certificate(self,
-                         db: Session,
-                         body: HrDocumentInitEcp,
-                         user_id: str,
-                         role: str,
-                         access_token,
-                         Authorize,
-                         parent_id: str = None,
-                         ):
+                                          db: Session,
+                                          body: HrDocumentInitEcp,
+                                          user_id: str,
+                                          role: str,
+                                          access_token,
+                                          Authorize,
+                                          parent_id: str = None,
+                                          ):
         document = await self.initialize(
-               db,
-               HrDocumentInit(
-                   document_step_users_ids=body.document_step_users_ids,
-                   user_ids=body.user_ids,
-                   hr_document_template_id=body.hr_document_template_id,
-                   due_date=body.due_date,
-                   parent_id=body.parent_id,
-                   properties=body.properties,
-                   initial_comment=body.initial_comment
-               ),
-               user_id,
-               role,
-               parent_id
+            db,
+            HrDocumentInit(
+                document_step_users_ids=body.document_step_users_ids,
+                user_ids=body.user_ids,
+                hr_document_template_id=body.hr_document_template_id,
+                due_date=body.due_date,
+                parent_id=body.parent_id,
+                properties=body.properties,
+                initial_comment=body.initial_comment
+            ),
+            user_id,
+            role,
+            parent_id
         )
-        
+
         self._create_notification_for_step(db, document, document.last_step)
-        
+
         user = db.query(User).filter(User.id == user_id).first()
         from services import auth_service
-        access_token, refresh_token = auth_service._generate_tokens(Authorize, user)
+        access_token, refresh_token = auth_service._generate_tokens(
+            Authorize, user)
 
         url = configs.ECP_SERVICE_URL + 'api/hr_document_step_signer/create/template/'
         request_body = {
@@ -662,13 +674,14 @@ class HrDocumentService(
             'user_id': user_id,
             'certificate_blob': body.certificate_blob
         }
-         
+
         headers = {"Authorization": f"Bearer {access_token}"}
-	
-        res = requests.post(url=url, json=request_body, headers=headers, verify=False)
+
+        res = requests.post(url=url, json=request_body,
+                            headers=headers, verify=False)
         if res.status_code == 400:
             raise BadRequestException(detail=res.text)
-        
+
         template = document.hr_document_template_id
         step: HrDocumentStep = hr_document_step_service.get_initial_step_for_template(
             db, template
@@ -681,10 +694,11 @@ class HrDocumentService(
             'step_id': str(step.id),
             'certificate_blob': body.certificate_blob
         }
-        
+
         headers = {"Authorization": f"Bearer {access_token}"}
 
-        res = requests.post(url=url, json=request_body, headers=headers, verify=False)
+        res = requests.post(url=url, json=request_body,
+                            headers=headers, verify=False)
 
         if res.status_code == 400:
             raise BadRequestException(detail=res.text)
@@ -709,7 +723,7 @@ class HrDocumentService(
             ),
             user_id
         )
-        
+
         url = configs.ECP_SERVICE_URL+'api/hr_document_step_signer/create/'
         request_body = {
             'hr_document_template_signer_id': str(document.hr_document_template_id),
@@ -720,11 +734,12 @@ class HrDocumentService(
         }
         headers = {"Authorization": f"Bearer {access_token}"}
 
-        res = requests.post(url=url, json=request_body, headers=headers, verify=False)
+        res = requests.post(url=url, json=request_body,
+                            headers=headers, verify=False)
 
         if res.status_code == 400:
             raise BadRequestException(detail=res.text)
-        
+
         return document
 
     def sign(
@@ -752,12 +767,12 @@ class HrDocumentService(
         next_step = self._set_next_step(db, document_id, info)
         if self._is_superdoc(db, document):
             return self._sign_super_document(db,
-                                                   document,
-                                                   next_step,
-                                                   body.is_signed,
-                                                   body.comment,
-                                                   info,
-                                                   current_user)
+                                             document,
+                                             next_step,
+                                             body.is_signed,
+                                             body.comment,
+                                             info,
+                                             current_user)
         if body.is_signed:
             if next_step is None:
                 detailed_notification_service.remove_document_notification(
@@ -767,7 +782,10 @@ class HrDocumentService(
                 )
                 return self._finish_document(db, document, document.users)
             document.last_step_id = next_step.id
-            query = db.execute(text(f"SELECT id FROM HR_ERP_HR_DOCUMENT_STATUSES WHERE name = '{HrDocumentStatusEnum.IN_PROGRESS.value}'"))
+            query = db.execute(text(f"SELECT id \
+                                      FROM HR_ERP_HR_DOCUMENT_STATUSES \
+                                      WHERE name = \
+                                      '{HrDocumentStatusEnum.IN_PROGRESS.value}'"))
             document.status_id = query.fetchone()[0]
         else:
             if next_step is None:
@@ -790,13 +808,17 @@ class HrDocumentService(
             document.status_id = hr_document_status_service.get_by_name(
                 db, HrDocumentStatusEnum.ON_REVISION.value).id
         if isinstance(document.properties, dict):
-            document.properties = json.dumps(document.properties, ensure_ascii=False)
+            document.properties = json.dumps(
+                document.properties, ensure_ascii=False)
         if isinstance(document.document_template.properties, dict):
-            document.document_template.properties = json.dumps(document.document_template.properties)
+            document.document_template.properties = json.dumps(
+                document.document_template.properties)
         if isinstance(document.document_template.description, dict):
-            document.document_template.description = json.dumps(document.document_template.description)
+            document.document_template.description = json.dumps(
+                document.document_template.description)
         if isinstance(document.document_template.actions, dict):
-            document.document_template.actions = json.dumps(document.document_template.actions)
+            document.document_template.actions = json.dumps(
+                document.document_template.actions)
         db.add(document)
         db.commit()
 
@@ -805,9 +827,9 @@ class HrDocumentService(
             str(document.id),
             str(user_id)
         )
-        
+
         self._create_notification_for_step(db, document, document.last_step)
-        
+
         return document
 
     async def generate_html(self, db: Session, id: str, language: LanguageEnum):
@@ -839,7 +861,8 @@ class HrDocumentService(
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
             file_name = temp_file.name + ".pdf"
             pdfkit.from_string(ans, file_name, options=opts,
-                               configuration=pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path))
+                               configuration=pdfkit.configuration
+                               (wkhtmltopdf=wkhtmltopdf_path))
 
         return FileResponse(
             path=file_name,
@@ -907,8 +930,8 @@ class HrDocumentService(
                     detail='Вы не можете инициализировать этот документ!'
                 )
             if step.is_direct_supervisor:
-                for i in staff_units:
-                    if i.staff_division_id != staff_unit.staff_division_id:
+                for staff_unit in staff_units:
+                    if staff_unit.staff_division_id != staff_unit.staff_division_id:
                         raise ForbiddenException(
                             detail='Вы не можете инициализировать этот документ!'
                         )
@@ -952,8 +975,8 @@ class HrDocumentService(
                 )
             )
 
-        document_staff_function = document_staff_function_service.get_by_id(db,
-                                                                            step.staff_function_id)
+        document_staff_function = (document_staff_function_service
+                                   .get_by_id(db, step.staff_function_id))
 
         if not self._check_jurisdiction(
                 db, staff_unit, document_staff_function, body.user_ids):
@@ -995,8 +1018,8 @@ class HrDocumentService(
                            status.id for status in forbidden_statuses])
                     )
             .all()
-           )
-        
+        )
+
     def _exists_user_document_in_revision(
             self,
             db: Session,
@@ -1019,12 +1042,12 @@ class HrDocumentService(
                     HrDocumentInfo.signed_by_id.is_(None),
                     HrDocument.status_id == revision_status.id)
             .all()
-           )
+        )
 
     def _finish_document(self,
-                               db: Session,
-                               document: HrDocument,
-                               users: List[User]):
+                         db: Session,
+                         document: HrDocument,
+                         users: List[User]):
 
         completed_status = hr_document_status_service.get_by_name(
             db, HrDocumentStatusEnum.COMPLETED.value)
@@ -1035,61 +1058,68 @@ class HrDocumentService(
         template: HrDocumentTemplate = document.document_template
 
         document_properties: dict = document.properties
-        
+
         if isinstance(document.document_template.actions, dict):
             document.document_template.actions = json.dumps(template.actions)
         if isinstance(document.document_template.properties, dict):
-            document.document_template.properties = json.dumps(template.properties)
+            document.document_template.properties = json.dumps(
+                template.properties)
         if isinstance(document.document_template.description, dict):
-            document.document_template.description = json.dumps(template.description)
-        
+            document.document_template.description = json.dumps(
+                template.description)
+
         if isinstance(document.properties, str):
             document_actions = json.loads(template.actions)
         if isinstance(document.properties, str):
             document_properties = json.loads(document.properties)
         if isinstance(document.document_template.properties, str):
-            template_properties = json.loads(document.document_template.properties)
+            template_properties = json.loads(
+                document.document_template.properties)
 
         document.reg_number = (
-                "11"
-                + "-"
-                + str(random.randint(1, 10000))
-                + "")
+            "11"
+            + "-"
+            + str(random.randint(1, 10000))
+            + "")
         for user in users:
-            for i in document_actions['args']:
-                action_name = list(i)[0]
-                action = i[action_name]
+            for arg in document_actions['args']:
+                action_name = list(arg)[0]
+                action = arg[action_name]
                 if handlers.get(action_name) is None:
                     raise InvalidOperationException(
                         f"Action {action_name} is not supported!"
                     )
                 handlers[action_name].handle_action(
-                    db, user, action, template_properties, document_properties, document)
+                    db,
+                    user,
+                    action,
+                    template_properties,
+                    document_properties,
+                    document)
 
         document.signed_at = datetime.now()
         document.last_step_id = None
 
-        
         if isinstance(document.document_template.actions, dict):
             document.document_template.actions = json.dumps(template.actions)
         if isinstance(document.document_template.properties, dict):
-            document.document_template.properties = json.dumps(template.properties)
+            document.document_template.properties = json.dumps(
+                template.properties)
         if isinstance(document.document_template.description, dict):
-            document.document_template.description = json.dumps(template.description)
+            document.document_template.description = json.dumps(
+                template.description)
 
         db.add(document)
         db.flush()
         return document
-        
 
     def _sign_super_document(self,
-                                   db: Session,
-                                   super_document: HrDocument,
-                                   super_document_next_step: HrDocumentStep,
-                                   is_signed: bool,
-                                   comment: str,
-                                   super_document_info: HrDocumentInfo,
-                                   user: User):
+                             db: Session,
+                             super_document: HrDocument,
+                             super_document_next_step: HrDocumentStep,
+                             is_signed: bool,
+                             comment: str,
+                             user: User):
         child_documents = db.query(self.model).filter(
             self.model.parent_id == super_document.id
         ).all()
@@ -1184,9 +1214,9 @@ class HrDocumentService(
 
         super_template: HrDocumentTemplate = super_document.document_template
 
-        for i in super_template.actions['args']:
-            action_name = list(i)[0]
-            action = i[action_name]
+        for arg in super_template.actions['args']:
+            action_name = list(arg)[0]
+            action = arg[action_name]
 
             if handlers.get(action_name) is None:
                 raise InvalidOperationException(
@@ -1221,9 +1251,9 @@ class HrDocumentService(
             properties: dict = document.properties
 
             for user in document.users:
-                for i in template.actions['args']:
-                    action_name = list(i)[0]
-                    action = i[action_name]
+                for arg in template.actions['args']:
+                    action_name = list(arg)[0]
+                    action = arg[action_name]
 
                     if handlers.get(action_name) is None:
                         raise InvalidOperationException(
@@ -1235,10 +1265,10 @@ class HrDocumentService(
 
             document.signed_at = datetime.now()
             document.reg_number = (
-                    str(random.randint(1, 10000))
-                    + "-"
-                    + str(random.randint(1, 10000))
-                    + "қбп/жқ"
+                str(random.randint(1, 10000))
+                + "-"
+                + str(random.randint(1, 10000))
+                + "қбп/жқ"
             )
 
             document.status_id = completed_status.id
@@ -1246,10 +1276,10 @@ class HrDocumentService(
 
         super_document.signed_at = datetime.now()
         super_document.reg_number = (
-                str(random.randint(1, 10000))
-                + "-"
-                + str(random.randint(1, 10000))
-                + "қбп/жқ"
+            str(random.randint(1, 10000))
+            + "-"
+            + str(random.randint(1, 10000))
+            + "қбп/жқ"
         )
 
         super_document.status_id = completed_status.id
@@ -1260,19 +1290,20 @@ class HrDocumentService(
         db.flush()
 
         return super_document
-    
+
     def generate_qrs(self, db: Session, hr_document_id: str):
         qrs = []
         query = text(
-        "SELECT HR_ERP_HR_DOCUMENT_STEP_SIGNER.user_id, hr_erp_hr_document_step_signer.step_id, \
+            "SELECT HR_ERP_HR_DOCUMENT_STEP_SIGNER.user_id, hr_erp_hr_document_step_signer.step_id, \
         hr_erp_hr_document_step_signer.certificate_blob, \
         hr_erp_hr_document_step_signer.created_at \
         FROM HR_ERP_HR_DOCUMENT_STEP_SIGNER \
         JOIN HR_ERP_HR_DOC_TEMPLATE_SIGNER \
         ON hr_erp_hr_document_step_signer.hr_document_template_signer_id = HR_ERP_HR_DOC_TEMPLATE_SIGNER.ID \
         WHERE HR_ERP_HR_DOC_TEMPLATE_SIGNER.hr_document_id = :hr_document_id ORDER BY hr_erp_hr_document_step_signer.created_at")
-        certificates = db.execute(query, {"hr_document_id": str(hr_document_id)}).fetchall()
-        
+        certificates = db.execute(
+            query, {"hr_document_id": str(hr_document_id)}).fetchall()
+
         for certificate in certificates:
             (
                 user_id,
@@ -1280,37 +1311,36 @@ class HrDocumentService(
                 certificate_blob,
                 signed_at
             ) = certificate
-            
+
             step = hr_document_step_service.get_by_id(db, step_id)
             user = user_service.get_by_id(db, user_id)
             hash_algorithm = hashlib.sha256()
             hash_algorithm.update(certificate_blob.encode('utf-8'))
             hashed_value = hash_algorithm.hexdigest()
-            
-            
+
             qr = qrcode.QRCode(
-                version=1, 
+                version=1,
                 error_correction=qrcode.constants.ERROR_CORRECT_L
             )
-            
+
             qr.add_data(hashed_value)
             img = qr.make_image(fill_color="black", back_color="white")
             buffer = io.BytesIO()
             img.save(buffer, format="PNG")
 
             qr_base64 = base64.b64encode(buffer.getvalue()).decode("utf-8")
-            
+
             buffer.close()
-            
+
             qrs.append(QrRead(
                 step=step,
                 user=user,
                 qr_base64=qr_base64,
                 signed_at=signed_at
             ))
-            
+
         return qrs
-        
+
     def _get_service(self, key):
         service = options.get(key)
         if service is None:
@@ -1323,7 +1353,6 @@ class HrDocumentService(
     def _to_response(self, db: Session,
                      document: HrDocument) -> HrDocumentRead:
         response = HrDocumentRead.from_orm(document)
-        
         if document.last_step_id is not None:
             response.can_cancel = document.last_step.staff_function.role.can_cancel
 
@@ -1337,6 +1366,7 @@ class HrDocumentService(
         else:
             for action in actions:
                 for action_name in list(action.keys()):
+                    print(action_name)
                     new_val.append({
                         f'{action_name}': handlers[action_name].handle_response(
                             db,
@@ -1382,23 +1412,49 @@ class HrDocumentService(
     ) -> List[HrDocumentRead]:
         s = set()
         hr_documents = []
-        for i in documents:
-            if i is None:
+        for document in documents:
+            if document is None:
                 continue
-            if i.id not in s:
-                if isinstance(i.properties, str):
-                    i.properties = json.loads(i.properties)
-                if isinstance(i.document_template.properties, str):
-                    i.document_template.properties = json.loads(i.document_template.properties)
-                if isinstance(i.document_template.description, str):
-                    i.document_template.description = json.loads(i.document_template.description)
-                if isinstance(i.document_template.actions, str):
-                    i.document_template.actions = json.loads(i.document_template.actions)
-                s.add(i.id)
-                if len(i.users) > 0:
-                    hr_documents.append(self._to_response(db, i))
+            if document.id not in s:
+                if isinstance(document.properties, str):
+                    document.properties = json.loads(document.properties)
+                if isinstance(document.document_template.properties, str):
+                    document.document_template.properties = json.loads(
+                        document.document_template.properties)
+                if isinstance(document.document_template.description, str):
+                    document.document_template.description = json.loads(
+                        document.document_template.description)
+                if isinstance(document.document_template.actions, str):
+                    document.document_template.actions = json.loads(
+                        document.document_template.actions)
+                s.add(document.id)
+                if len(document.users) > 0:
+                    # for user in document.users:
+                    #     if user.staff_unit.user_replacing:
+                    #         requirements = (user
+                    #                         .staff_unit.user_replacing
+                    #                         .staff_unit
+                    #                         .requirements)
+                    #         staff_division_description = (user
+                    #                                       .staff_unit.user_replacing
+                    #                                       .staff_unit
+                    #                                       .staff_division
+                    #                                       .description)
+                    #         if isinstance(requirements, str):
+                    #             (user
+                    #              .staff_unit.user_replacing
+                    #              .staff_unit
+                    #              .requirements) = json.loads(requirements)
+                    #         if isinstance(requirements, str):
+                    #             (user
+                    #              .staff_unit.user_replacing
+                    #              .staff_unit
+                    #              .staff_division
+                    #              .description) = json.loads(staff_division_description)
+                    hr_documents.append(self._to_response(db, document))
                 else:
-                    hr_documents.append(self._to_response_super_doc(db, i))
+                    hr_documents.append(
+                        self._to_response_super_doc(db, document))
         return hr_documents
 
     def _check_jurisdiction(
@@ -1428,8 +1484,8 @@ class HrDocumentService(
 
         subject_users: List[User] = []
 
-        for i in subject_user_ids:
-            subject_users.append(user_service.get_by_id(db, i))
+        for user_id in subject_user_ids:
+            subject_users.append(user_service.get_by_id(db, user_id))
 
         # Проверка на вид юрисдикции "Личное дело"
         if jurisdiction.name == JurisdictionEnum.PERSONNEL.value:
@@ -1466,24 +1522,24 @@ class HrDocumentService(
 
         # Получаем все staff unit из staff divisions
         staff_units: List[StaffUnit] = []
-        for i in staff_divisions:
+        for staff_division in staff_divisions:
             staff_units.extend(
-                staff_unit_service.get_by_staff_division_id(db, i.id))
+                staff_unit_service.get_by_staff_division_id(db, staff_division.id))
 
         # Проверка субъекта на присутствие в штатной единице
         # Метод возвращает True если все из субъектов относятся к штатной единице
         # Если один из субъектов не относится к штатной единице то метод
         # выбрасывает False
-        for i in subject_users:
-            if i.staff_unit not in staff_units:
+        for user in subject_users:
+            if user.staff_unit not in staff_units:
                 return False
 
         return True
 
     def _check_supervised_jurisdiction(
             self, subject_users: List[User]) -> bool:
-        for i in subject_users:
-            if i.supervised_by is None:
+        for user in subject_users:
+            if user.supervised_by is None:
                 return False
 
         return True
@@ -1491,14 +1547,14 @@ class HrDocumentService(
     def _check_candidates_jurisdiction(
             self, db: Session, subject_users: List[User]):
         staff_units: List[StaffUnit] = []
-        for i in subject_users:
-            staff_units.append(i.staff_unit)
+        for user in subject_users:
+            staff_units.append(user.staff_unit)
 
         candidates_staff_division = staff_division_service.get_by_name(
             db, StaffDivisionEnum.CANDIDATES.value)
 
-        for i in staff_units:
-            if not i.staff_division_id == candidates_staff_division.id:
+        for staff_unit in staff_units:
+            if not staff_unit.staff_division_id == candidates_staff_division.id:
                 return False
 
         return True
@@ -1603,8 +1659,8 @@ class HrDocumentService(
         if document.parent_id is None:
             template = hr_document_template_service.get_by_id(
                 db, document.hr_document_template_id)
-            for i in template.actions['args']:
-                actions = list(i)
+            for arg in template.actions['args']:
+                actions = list(arg)
                 if "superdoc" in actions:
                     superdoc = True
         return superdoc
@@ -1631,17 +1687,20 @@ class HrDocumentService(
         if isinstance(document.properties, str):
             document_properties = json.loads(document.properties)
         if isinstance(document.document_template.properties, str):
-            template_properties = json.loads(document.document_template.properties)
+            template_properties = json.loads(
+                document.document_template.properties)
         document.status_id = hr_document_status_service.get_by_name(
             db, HrDocumentStatusEnum.CANCELED.value).id
         document.last_step = None
-        
+
         if isinstance(document.document_template.actions, dict):
             document.document_template.actions = json.dumps(template.actions)
         if isinstance(document.document_template.properties, dict):
-            document.document_template.properties = json.dumps(template.properties)
+            document.document_template.properties = json.dumps(
+                template.properties)
         if isinstance(document.document_template.description, dict):
-            document.document_template.description = json.dumps(template.description)
+            document.document_template.description = json.dumps(
+                template.description)
         db.add(document)
         db.flush()
         return document
@@ -1691,11 +1750,14 @@ class HrDocumentService(
         if isinstance(document.properties, str):
             document.properties = json.loads(document.properties)
         if isinstance(document.document_template.properties, str):
-            document.document_template.properties = json.loads(document.document_template.properties)
+            document.document_template.properties = json.loads(
+                document.document_template.properties)
         if isinstance(document.document_template.description, str):
-            document.document_template.description = json.loads(document.document_template.description)
+            document.document_template.description = json.loads(
+                document.document_template.description)
         if isinstance(document.document_template.actions, str):
-            document.document_template.actions = json.loads(document.document_template.actions)
+            document.document_template.actions = json.loads(
+                document.document_template.actions)
         document_template = hr_document_template_service.get_by_id(
             db, document.hr_document_template_id
         )
@@ -1714,13 +1776,13 @@ class HrDocumentService(
 
             context = {}
 
-            for i in list(document.properties):
-                if isinstance(document.properties[i], dict):
-                    context[i] = (document.properties[i]["name"]
-                                  if language == LanguageEnum.ru
-                                  else document.properties[i]["nameKZ"])
+            for prop in list(document.properties):
+                if isinstance(document.properties[prop], dict):
+                    context[prop] = (document.properties[prop]["name"]
+                                     if language == LanguageEnum.ru
+                                     else document.properties[prop]["nameKZ"])
                 else:
-                    context[i] = document.properties[i]
+                    context[prop] = document.properties[prop]
             if document.reg_number is not None:
                 context["reg_number"] = document.reg_number
             if document.signed_at is not None:
@@ -1762,5 +1824,6 @@ class HrDocumentService(
                 "receiver_id": info.assigned_to_id
             }
         )
+
 
 hr_document_service = HrDocumentService(HrDocument)
