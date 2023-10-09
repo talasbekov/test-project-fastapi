@@ -140,7 +140,7 @@ class StaffDivisionService(
         parents = db.query(self.model).filter(
             StaffDivision.parent_group_id == None,
             self.model.name != StaffDivisionEnum.SPECIAL_GROUP.value
-        ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
+        ).order_by(StaffDivision.staff_division_number).offset(skip).limit(limit).all()
         for parent in parents:
             if isinstance(parent.description, str):
                 parent.description = json.loads(parent.description)
