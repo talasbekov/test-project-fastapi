@@ -5,13 +5,12 @@ from sqlalchemy.orm import Session
 from sqlalchemy.sql import text
 
 from core import configs
-from models import (User, HrDocument, EmergencyServiceHistory,
-                    StaffDivisionEnum, CandidateStatusEnum, StaffUnit)
-from schemas import StaffUnitRead
+from models import (User, HrDocument, EmergencyServiceHistory)
+from schemas import ShortUserStaffUnitRead
 from .base import BaseHandler
 from services import (staff_unit_service, history_service,
-                      staff_division_service, history_service)
-from services.candidates import candidate_service
+                      history_service)
+
 from exceptions import BadRequestException
 
 
@@ -35,14 +34,16 @@ class PositionChangeHandler(BaseHandler):
         if old_history is None:
             staff_unit = user.staff_unit
             if isinstance(staff_unit.staff_division.description, dict):
-                staff_unit.staff_division.description = json.dumps(staff_unit.staff_division.description)
+                staff_unit.staff_division.description = json.dumps(
+                    staff_unit.staff_division.description)
             history: EmergencyServiceHistory = history_service.create_history(
                 db, user.id, staff_unit)
             old_history = staff_unit_service.get_last_history(db, user.id)
-        
-        res = staff_unit_service.create_relation(db, user, position_id)        
+
+        res = staff_unit_service.create_relation(db, user, position_id)
         if isinstance(res.staff_division.description, dict):
-            res.staff_division.description = json.dumps(res.staff_division.description)
+            res.staff_division.description = json.dumps(
+                res.staff_division.description)
         if isinstance(res.requirements, list):
             res.requirements = json.dumps(res.requirements)
 
@@ -54,7 +55,8 @@ class PositionChangeHandler(BaseHandler):
 
         document.old_history_id = old_history.id
         if isinstance(user.staff_unit.staff_division.description, dict):
-            user.staff_unit.staff_division.description = json.dumps(user.staff_unit.staff_division.description)
+            user.staff_unit.staff_division.description = json.dumps(
+                user.staff_unit.staff_division.description)
         db.add(user)
         db.add(history)
         db.add(document)
@@ -84,13 +86,13 @@ class PositionChangeHandler(BaseHandler):
             raise BadRequestException(
                 f"Position is not defined for this action: {self.__handler__}")
         try:
-           percent = int(properties[action["percent"]["tagname"]]["name"])
+            percent = int(properties[action["percent"]["tagname"]]["name"])
         except KeyError as e:
             logging.exception(e)
             raise BadRequestException(
                 f"Percent is not defined for this action: {self.__handler__}")
         try:
-           reason = properties[action["reason"]["tagname"]]["name"]
+            reason = properties[action["reason"]["tagname"]]["name"]
         except KeyError as e:
             logging.exception(e)
             raise BadRequestException(
@@ -107,8 +109,9 @@ class PositionChangeHandler(BaseHandler):
         if isinstance(obj.requirements, str):
             obj.requirements = json.loads(obj.requirements)
         if isinstance(obj.staff_division.description, str):
-            obj.staff_division.description = json.loads(obj.staff_division.description)
-        return StaffUnitRead.from_orm(obj)
+            obj.staff_division.description = json.loads(
+                obj.staff_division.description)
+        return ShortUserStaffUnitRead.from_orm(obj)
 
 
 handler = PositionChangeHandler()
