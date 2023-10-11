@@ -66,3 +66,4 @@ from .hexagon import *
 from .permission import permission_service
 
 from .dashboard import dashboard_service
+from .dictionary import dictionary_service

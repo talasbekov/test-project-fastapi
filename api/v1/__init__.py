@@ -50,6 +50,7 @@ from .status_type import router as status_type_router
 from .hexagon import router as hexagon_router
 from .survey import *
 from .bsp import *
+from .dictionary import *
 
 router = APIRouter(prefix="/v1")
 
