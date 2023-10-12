@@ -233,6 +233,9 @@ class EmergencyServiceHistory(History):
     position_nameKZ = Column('position_namekz', String, nullable=True)
 
 
+    position_name = Column(String, nullable=True)
+    position_nameKZ = Column('position_namekz', String, nullable=True)
+
     contractor_signer_name = Column(String, nullable=True)
     contractor_signer_nameKZ = Column('contractor_signer_namekz', String, nullable=True)
 
