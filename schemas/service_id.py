@@ -9,8 +9,8 @@ from schemas import Model, ReadModel
 class ServiceIDBase(Model):
     number: Optional[str]
     date_to: Optional[datetime]
-    token_status: Optional[ServiceIDStatus]
-    id_status: Optional[ServiceIDStatus]
+    token_status: Optional[str]
+    id_status: Optional[str]
     user_id: str
 
     class Config:
