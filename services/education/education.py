@@ -1,5 +1,7 @@
-from sqlalchemy.orm import Session
+from typing import Dict, Any, Union
 
+from sqlalchemy.orm import Session
+from fastapi.encoders import jsonable_encoder
 from exceptions import NotFoundException
 from models.education import Education
 from schemas.education import EducationCreate, EducationUpdate
@@ -8,6 +10,18 @@ from services import ServiceBase
 
 class EducationService(
         ServiceBase[Education, EducationCreate, EducationUpdate]):
+
+    def create(self, db: Session,
+               obj_in: Union[EducationCreate, Dict[str, Any]]) -> Education:
+        obj_in_data = jsonable_encoder(obj_in)
+        obj_in_data = jsonable_encoder(obj_in)
+        obj_in_data['start_date'] = obj_in.start_date
+        obj_in_data['end_date'] = obj_in.end_date
+        obj_in_data['date_of_issue'] = obj_in.date_of_issue
+        db_obj = self.model(**obj_in_data)  # type: ignore
+        db.add(db_obj)
+        db.flush()
+        return db_obj
 
     def get_by_id(self, db: Session, id: str):
         education = super().get(db, id)
