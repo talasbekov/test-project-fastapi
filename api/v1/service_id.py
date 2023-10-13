@@ -108,7 +108,6 @@ async def delete(*,
 
 
 @router.get("statuses/", dependencies=[Depends(HTTPBearer())],
-            response_model=List[ServiceIDStatus],
             summary="Get all ServiceID statuses")
 async def get_all_statuses(
 ):
@@ -116,4 +115,6 @@ async def get_all_statuses(
         Get all ServiceID statuses
 
     """
-    return [status.value for status in ServiceIDStatus]
+    return {"RECEIVED": "Получен",
+            "LOST": "Утерян",
+            "NOT_RECEIVED": "Не получен"}
