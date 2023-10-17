@@ -1,4 +1,4 @@
-import uuid
+from datetime import datetime
 from typing import List
 
 from fastapi import APIRouter, Depends, status
@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from core import get_db
 from models import ServiceIDStatus
-from schemas import ServiceIDCreate, ServiceIDUpdate, ServiceIDRead
+from schemas import ServiceIDCreate, ServiceIDRead, ServiceIDUpdate
 from services import service_id_service
 
 router = APIRouter(
@@ -86,7 +86,6 @@ async def update(*,
     """
     Authorize.jwt_required()
     service_id = service_id_service.get_by_id(db, str(id))
-
     return service_id_service.update(db, db_obj=service_id, obj_in=body)
 
 

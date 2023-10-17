@@ -1,6 +1,6 @@
 import uuid
+from datetime import datetime, date
 from typing import Optional
-from datetime import datetime
 
 from models import ServiceIDStatus
 from schemas import Model, ReadModel
@@ -8,7 +8,7 @@ from schemas import Model, ReadModel
 
 class ServiceIDBase(Model):
     number: Optional[str]
-    date_to: Optional[datetime]
+    date_to: Optional[date]
     token_status: Optional[str]
     id_status: Optional[str]
     user_id: str
