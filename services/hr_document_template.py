@@ -531,7 +531,6 @@ class HrDocumentTemplateService(
         service_division = staff_division_service.get_by_name(
             db, StaffDivisionEnum.SERVICE.value
         )
-        print(service_division.id, ' ', user.staff_unit.staff_division.id)
         if service_division.id == user.staff_unit.staff_division.id:
             #all_steps[count] = user.staff_unit.staff_division.leader.users[0].id
             all_steps.append(leader.id)
@@ -546,7 +545,6 @@ class HrDocumentTemplateService(
                 tmp = staff_division_service.get_by_id(db, tmp.parent_group_id)
                 if tmp.leader is None:
                     continue
-                print(tmp.leader_id)
                 all_steps.append(tmp.leader.users[0].id)
                 #all_steps[count] = tmp.leader.users[0].id
                 count += 1

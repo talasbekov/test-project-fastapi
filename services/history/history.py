@@ -110,13 +110,14 @@ def finish_last(db: Session, user_id: str, type: str):
 
 
 class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
-    
+
     def get_by_id(self, db: Session, id: str) -> History:
         history = self.get(db, id)
         if type(history) == EmergencyServiceHistory:
             if history.staff_division is not None:
                 if isinstance(history.staff_division.description, str):
-                    history.staff_division.description = json.loads(history.staff_division.description)
+                    history.staff_division.description = json.loads(
+                        history.staff_division.description)
         if history is None:
             raise NotFoundException(
                 detail=f"History with id {id} not found!")
@@ -254,7 +255,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         service_id_info = self.get_service_id_by_user_id(db, user_id)
         # equipments_dict = [EquipmentRead.from_orm(
         #     equipment).dict() for equipment in equipments]
-        #equipments_dict.append(percentage)
+        # equipments_dict.append(percentage)
 
         attendance = AttendanceRead(
             physical_training=100,
@@ -286,7 +287,6 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         service_id = service_id_service.get_by_user_id(db, user_id)
         if service_id is None:
             return None
-
         service_id_read = ServiceIdInfoRead(
             id=service_id.id,
             date_to=service_id.date_to,
@@ -329,7 +329,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         else:
             coolness_read = CoolnessRead(
                 type_id=coolness.type_id,
-                #date_to=coolness.history.date_to,
+                # date_to=coolness.history.date_to,
                 type=coolness.type,
                 id=coolness.id,
                 user_id=coolness.user_id,
@@ -371,7 +371,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             if user.father_name is not None:
                 father_name = user.father_name[0] + '.'
             researcher = {"name": (f"{user.last_name} {user.first_name[0]} "
-                                    f"{' ' + father_name}"),
+                                   f"{' ' + father_name}"),
                           "id": str(user.id)
                           }
         else:
@@ -418,8 +418,8 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                 detail=f"In options: {diff} is not present!")
         if getattr(cls, "create_timeline_history", None) is None:
             raise NotSupportedException(
-                detail= (f"Class: {cls.__name__} "
-                         "does not support date_from, date_to format!")
+                detail=(f"Class: {cls.__name__} "
+                        "does not support date_from, date_to format!")
             )
         return cls.create_timeline_history(
             db, user_id, object.id, finish_last, date_from, date_to
@@ -480,7 +480,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         )
 
         return penalty_history != None
-    
+
     def get_timeline(self, db: Session, user_id: str):
         user = user_service.get_by_id(db, user_id)
 
@@ -508,14 +508,15 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             SecondmentHistory.user_id == user_id).all()
         equipments = user.equipments
         driving_license = driving_license_service.get_by_user_id(db, user_id)
-        identification_card = identification_card_service.get_by_user_id(db, user_id)
+        identification_card = identification_card_service.get_by_user_id(
+            db, user_id)
         passport = passport_service.get_by_user_id(db, user_id)
-        educational_profile = profile_service.get_by_user_id(db, user_id).educational_profile
+        educational_profile = profile_service.get_by_user_id(
+            db, user_id).educational_profile
         academic_degrees = educational_profile.academic_degree
         academic_titles = educational_profile.academic_title
         educations = educational_profile.education
         courses = educational_profile.course
-        
 
         service_id_info = self.get_service_id_by_user_id(db, user_id)
 
@@ -536,16 +537,16 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             driving_license=driving_license,
             identification_card=identification_card,
             passport=passport,
-            academic_degrees = academic_degrees,
-            academic_titles = academic_titles,
-            educations = educations,
-            courses = courses
+            academic_degrees=academic_degrees,
+            academic_titles=academic_titles,
+            educations=educations,
+            courses=courses
         )
         timeline_dict = HistoryTimeLineRead.from_orm(
             timeline_read).dict()
         return timeline_dict
-    
-    #TODO
+
+    # TODO
     # def get_timeline(self, db: Session, user_id: str, filter_timedelta: int, date: datetime):
     #     user = user_service.get_by_id(db, user_id)
     #     events = []
@@ -617,7 +618,6 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
     #     equipments = user.equipments
 
     #     service_id_info = self.get_service_id_by_user_id(db, user_id)
-    
 
     #     attendance = AttendanceRead(
     #         physical_training=100,
@@ -626,5 +626,6 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
     #     )
 
     #     return TimeLineRead(events)
+
 
 history_service = HistoryService(History)

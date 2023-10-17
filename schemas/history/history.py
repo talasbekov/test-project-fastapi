@@ -116,7 +116,7 @@ class HistoryBase(BaseModel):
     staff_division_nameKZ: Optional[str]
 
     class Config:
-        from_attributes=True
+        from_attributes = True
         arbitrary_types_allowed = True
 
 
@@ -140,7 +140,7 @@ class HistoryRead(HistoryBase, ReadNamedModel):
     staff_division: Optional[StaffDivisionReadWithoutStaffUnit]
 
     class Config:
-        from_attributes=True
+        from_attributes = True
         arbitrary_types_allowed = True
 
     @property
@@ -231,7 +231,7 @@ class HistoryPersonalRead(ReadModel):
     coefficent: Optional[Decimal]
 
     class Config:
-        from_attributes=True
+        from_attributes = True
         arbitrary_types_allowed = True
 
     @property
@@ -311,7 +311,7 @@ class TrainingAttendanceRead(Model):
     shooting_training: Optional[int] = None
 
     class Config:
-        from_attributes=True
+        from_attributes = True
         arbitrary_types_allowed = True
 
 
@@ -324,7 +324,7 @@ class BadgeServiceDetailRead(ReadNamedModel):
     url: Optional[str]
 
     class Config:
-        from_attributes=True
+        from_attributes = True
         arbitrary_types_allowed = True
 
     @classmethod
@@ -351,7 +351,7 @@ class RankServiceDetailRead(ReadNamedModel):
     rank_id: Optional[str]
 
     class Config:
-        from_attributes=True
+        from_attributes = True
         arbitrary_types_allowed = True
 
     @classmethod
@@ -370,7 +370,7 @@ class RankServiceDetailRead(ReadNamedModel):
         )
 
 
-class PenaltyRead(Model):	
+class PenaltyRead(Model):
     status: Optional[str]
     document_link: Optional[str]
     document_number: Optional[str]
@@ -381,7 +381,7 @@ class PenaltyRead(Model):
     """TODO: WHO IS THIS?"""
 
     class Config:
-        from_attributes=True
+        from_attributes = True
         arbitrary_types_allowed = True
 
     @classmethod
@@ -405,7 +405,7 @@ class ContractRead(ReadNamedModel):
     experience_years: Optional[int]
 
     class Config:
-        from_attributes=True
+        from_attributes = True
         arbitrary_types_allowed = True
 
     @classmethod
@@ -431,7 +431,7 @@ class AttestationRead(Model):
     attestation_status: Optional[str]
 
     class Config:
-        from_attributes=True
+        from_attributes = True
         arbitrary_types_allowed = True
 
 
@@ -445,7 +445,7 @@ class CharacteristicRead(ReadModel):
     characteristic_initiator_id: Optional[str]
 
     class Config:
-        from_attributes=True
+        from_attributes = True
         arbitrary_types_allowed = True
 
     @classmethod
@@ -477,7 +477,7 @@ class HolidayRead(Model):
     status: Optional[str]
 
     class Config:
-        from_attributes=True
+        from_attributes = True
         arbitrary_types_allowed = True
 
     @classmethod
@@ -509,15 +509,15 @@ class EmergencyContactRead(ReadModel):
     contractor_signer_name: Optional[dict]
 
     class Config:
-        from_attributes=True
+        from_attributes = True
         arbitrary_types_allowed = True
 
     @classmethod
     def from_orm(cls, orm_obj):
         position_name = orm_obj.position.name if orm_obj.position else orm_obj.position_name
         position_nameKZ = orm_obj.position.nameKZ if orm_obj.position else orm_obj.position_nameKZ
-        staff_division_name =(orm_obj.staff_division.name
-                              if orm_obj.staff_division else orm_obj.staff_division_name)
+        staff_division_name = (orm_obj.staff_division.name
+                               if orm_obj.staff_division else orm_obj.staff_division_name)
         staff_division_nameKZ = (orm_obj.staff_division.nameKZ
                                  if orm_obj.staff_division else orm_obj.staff_division_nameKZ)
 
@@ -556,7 +556,7 @@ class ExperienceRead(ReadModel):
     position_work_experience: Optional[str]
 
     class Config:
-        from_attributes=True
+        from_attributes = True
         arbitrary_types_allowed = True
 
     @classmethod
@@ -583,7 +583,7 @@ class ServiceIdInfoRead(ReadModel):
     id_status: Optional[Enum]
 
     class Config:
-        from_attributes=True
+        from_attributes = True
         arbitrary_types_allowed = True
 
 
@@ -596,15 +596,15 @@ class SecondmentRead(Model):
     state_body: Optional[str]
 
     class Config:
-        from_attributes=True
+        from_attributes = True
         arbitrary_types_allowed = True
 
     @classmethod
     def from_orm(cls, orm_obj):
         staff_division = (orm_obj.secondment.name
-                        if orm_obj.secondment else None)
+                          if orm_obj.secondment else None)
         staff_divisionKZ = (orm_obj.secondment.nameKZ
-                        if orm_obj.secondment else None)
+                            if orm_obj.secondment else None)
 
         body = (orm_obj.secondment.state_body.name
                 if orm_obj.secondment.state_body else None)
@@ -622,7 +622,7 @@ class TypeOfArmyEquipmentModelRead(ReadNamedModel):
     type_of_equipment: Optional[dict]
 
     class Config:
-        from_attributes=True
+        from_attributes = True
         arbitrary_types_allowed = True
 
     @classmethod
@@ -641,7 +641,7 @@ class TypeOfClothingEquipmentModelRead(ReadModel):
     model_of_equipment: Optional[dict]
 
     class Config:
-        from_attributes=True
+        from_attributes = True
         arbitrary_types_allowed = True
 
     @classmethod
@@ -659,7 +659,7 @@ class TypeOfOtherEquipmentModelRead(ReadNamedModel):
     type_of_equipment: Optional[dict]
 
     class Config:
-        from_attributes=True
+        from_attributes = True
         arbitrary_types_allowed = True
 
     @classmethod
@@ -692,7 +692,7 @@ class EquipmentRead(ReadModel):
     type_of_other_equipment_model: Optional[TypeOfOtherEquipmentModelRead]
 
     class Config:
-        from_attributes=True
+        from_attributes = True
         arbitrary_types_allowed = True
 
 
@@ -713,7 +713,7 @@ class HistoryServiceDetailRead(Model):
     equipments: Optional[List[EquipmentRead]] = None
 
     class Config:
-        from_attributes=True
+        from_attributes = True
         arbitrary_types_allowed = True
 
 
@@ -725,5 +725,3 @@ class HistoryTimeLineRead(HistoryServiceDetailRead):
     driving_license: Optional[DrivingLicenseRead] = None
     identification_card: Optional[IdentificationCardRead] = None
     passport:  Optional[PassportRead] = None
-    
-    

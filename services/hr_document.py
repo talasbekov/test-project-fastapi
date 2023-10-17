@@ -1366,7 +1366,6 @@ class HrDocumentService(
         else:
             for action in actions:
                 for action_name in list(action.keys()):
-                    print(action_name)
                     new_val.append({
                         f'{action_name}': handlers[action_name].handle_response(
                             db,
