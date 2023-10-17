@@ -1,6 +1,5 @@
 import enum
 from sqlalchemy import Column, ForeignKey, Date, String, Enum
-from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from models import Model

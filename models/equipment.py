@@ -2,7 +2,6 @@ from sqlalchemy import (
     BigInteger,
     Column,
     String,
-    UUID,
     ForeignKey,
     TIMESTAMP
 )

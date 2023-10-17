@@ -1,4 +1,4 @@
-from sqlalchemy import TEXT, Integer, Column, ForeignKey, String, CLOB
+from sqlalchemy import Integer, Column, ForeignKey, String, CLOB
 from sqlalchemy.orm import relationship
 
 from models import TextModel

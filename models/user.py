@@ -1,6 +1,6 @@
 from sqlalchemy import TIMESTAMP, Column, ForeignKey, String, Boolean
-from sqlalchemy.dialects.postgresql import TEXT, UUID
-from sqlalchemy.orm import relationship, Mapped
+from sqlalchemy.dialects.postgresql import TEXT
+from sqlalchemy.orm import relationship
 
 from models import isActiveModel, History
 from .association import hr_documents_users

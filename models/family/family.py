@@ -1,5 +1,4 @@
 from sqlalchemy import TIMESTAMP, Column, ForeignKey, String
-from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from ..association import family_violation, family_abroad_travel
 

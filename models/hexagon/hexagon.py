@@ -2,7 +2,7 @@
 from sqlalchemy import Column, ForeignKey, String, Integer
 from sqlalchemy.orm import relationship
 
-from models import NamedModel, Model
+from models import Model
 
 
 class Hexagon(Model):

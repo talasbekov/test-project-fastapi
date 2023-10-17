@@ -1,5 +1,5 @@
 from sqlalchemy import Column, ForeignKey, Integer, String
-from sqlalchemy.dialects.postgresql import UUID, TEXT, DATE
+from sqlalchemy.dialects.postgresql import TEXT, DATE
 from sqlalchemy.orm import relationship
 
 from models import Model

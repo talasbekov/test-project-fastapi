@@ -1,7 +1,7 @@
 import enum
 import json
 
-from sqlalchemy import Column, Enum, String, UUID, ForeignKey, Boolean
+from sqlalchemy import Column, Enum, String, ForeignKey, Boolean
 from sqlalchemy.dialects.oracle import CLOB
 from sqlalchemy.orm import relationship
 from sqlalchemy.event import listens_for

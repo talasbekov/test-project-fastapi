@@ -1,8 +1,7 @@
 import uuid
 import datetime
 
-from sqlalchemy import TIMESTAMP, Column, String, text, TEXT, CLOB
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import TIMESTAMP, Column, String, text, CLOB
 from sqlalchemy.sql.sqltypes import Boolean
 from abc import abstractmethod
 

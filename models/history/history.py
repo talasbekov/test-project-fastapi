@@ -5,7 +5,6 @@ from enum import Enum as BaseEnum
 from typing import Union
 
 from sqlalchemy import TIMESTAMP, Column, ForeignKey, String, Double, Integer, Boolean
-from sqlalchemy.dialects.postgresql import TEXT
 from sqlalchemy.dialects.oracle import NCLOB, CLOB
 from sqlalchemy.orm import relationship, Session
 from sqlalchemy.sql import text
@@ -13,7 +12,6 @@ from sqlalchemy.sql import text
 from exceptions import NotSupportedException, NotFoundException
 from models import (
     Model,
-    StaffUnit,
     Rank,
     Penalty,
     Coolness,

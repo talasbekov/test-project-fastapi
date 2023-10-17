@@ -1,6 +1,6 @@
 from sqlalchemy import Column, TEXT
 from sqlalchemy import ForeignKey, String
-from sqlalchemy.dialects.postgresql import TIMESTAMP, UUID
+from sqlalchemy.dialects.postgresql import TIMESTAMP
 from sqlalchemy.orm import relationship
 
 from models import NamedModel
