@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime
 
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import text
@@ -110,17 +111,21 @@ class DictionaryService:
 
         current_obj = db.query(class_obj).filter(
             class_obj.id == id).first()
-
+        
         new_obj = class_obj(**(await self.__get_column_values(current_obj)))
         new_obj.id = str(uuid.uuid4())
         new_obj.created_at = None
         new_obj.updated_at = None
 
         current_obj.active = 0
+        current_obj.last_change = 'SOFT_UPDATE'
+        current_obj.updated_at = datetime.now()
 
         db.add(new_obj)
         db.add(current_obj)
         db.flush()
+        
+        return new_obj.id
 
     async def __get_column_values(self,
                                   obj) -> dict:

@@ -53,5 +53,5 @@ async def soft_update(*,
        - **id**: str - id to update
     """
     Authorize.jwt_required()
-    await dictionary_service.soft_update(db, entity, id)
-    return "Records updated successfully"
+    obj_id = await dictionary_service.soft_update(db, entity, id)
+    return obj_id
