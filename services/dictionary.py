@@ -62,11 +62,11 @@ class DictionaryService:
             'languages': 'language_id'
         }
 
-        query = text(f"UPDATE {TABLES[entity]} "
-                     f"SET {COLUMNS[entity]} = '{body.correct_id}' "
-                     f"WHERE {COLUMNS[entity]} = :id_to_change")
+        id_change_query = text(f"UPDATE {TABLES[entity]} "
+                               f"SET {COLUMNS[entity]} = '{body.correct_id}' "
+                               f"WHERE {COLUMNS[entity]} = :id_to_change")
         for id_to_change in body.ids_to_change:
-            db.execute(query, {'id_to_change': id_to_change})
+            db.execute(id_change_query, {'id_to_change': id_to_change})
 
     async def soft_update(self,
                           db: Session,

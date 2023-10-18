@@ -34,7 +34,7 @@ async def join_records(*,
     """
     Authorize.jwt_required()
     await dictionary_service.join_records(db, entity, body)
-    return "Records successfully updated"
+    return "Records successfully updated "
 
 
 @router.post("/soft_update", dependencies=[Depends(HTTPBearer())],
