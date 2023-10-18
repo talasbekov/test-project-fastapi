@@ -7,7 +7,6 @@ from .language import LanguageRead
 
 
 class LanguageProficiencyBase(BaseModel):
-    id: str
     level: int
     profile_id: Optional[str]
     language_id: Optional[str]
@@ -26,4 +25,5 @@ class LanguageProficiencyUpdate(LanguageProficiencyBase):
 
 
 class LanguageProficiencyRead(LanguageProficiencyBase):
+    id: str
     language: Optional[LanguageRead]
