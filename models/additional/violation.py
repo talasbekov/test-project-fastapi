@@ -10,6 +10,7 @@ class Violation(Model):
     __tablename__ = "hr_erp_violations"
 
     name = Column(String(255), nullable=False)
+    nameKZ = Column('namekz', String, nullable=True)
     date = Column(
         'violation_date',
         TIMESTAMP(
