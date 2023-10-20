@@ -59,9 +59,6 @@ async def create(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    user_id = Authorize.get_jwt_subject()
-    profile = profile_service.get_by_user_id(db, str(user_id))
-    body.profile_id = profile.id
     return abroad_travel_service.create(db, body)
 
 

@@ -1,3 +1,7 @@
+from datetime import datetime
+from typing import Union, Dict, Any
+
+from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
@@ -17,8 +21,14 @@ class ViolationService(
                 detail=f"Violation with id: {id} is not found!")
         return rank
 
-    def create(self, db: Session, obj_in: ViolationCreate):
-        return super().create(db, obj_in)
+    def create(self, db: Session,
+            obj_in: Union[ViolationCreate, Dict[str, Any]]) -> Violation:
+        obj_in_data = jsonable_encoder(obj_in)
+        obj_in_data['date'] = datetime.strptime(obj_in_data['date'], '%Y-%m-%dT%H:%M:%S.%f%z')
+        db_obj = self.model(**obj_in_data)
+        db.add(db_obj)
+        db.flush()
+        return db_obj
 
     def update(self, db: Session, db_obj: Violation, obj_in: ViolationUpdate):
         return super().update(db, db_obj, obj_in)

@@ -13,7 +13,7 @@ class MedicalProfile(Model):
     profile = relationship("Profile", back_populates="medical_profile")
 
     hospital_datas = relationship("HospitalData", back_populates="profile")
-    disp_registrations = relationship(
+    dispensary_registrations = relationship(
         "DispensaryRegistration", back_populates="profile")
     user_liberations = relationship("UserLiberation", back_populates="profile")
     anthropometric_datas = relationship(

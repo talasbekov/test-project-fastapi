@@ -1,3 +1,6 @@
+from datetime import datetime
+
+from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
@@ -18,7 +21,13 @@ class SpecialCheckService(
         return rank
 
     def create(self, db: Session, obj_in: SpecialCheckCreate):
-        return super().create(db, obj_in)
+        obj_in_data = jsonable_encoder(obj_in)
+        obj_in_data['date_of_issue'] = datetime.strptime(obj_in_data['date_of_issue'],
+                                                '%Y-%m-%dT%H:%M:%S.%f%z')
+        db_obj = self.model(**obj_in_data)
+        db.add(db_obj)
+        db.flush()
+        return db_obj
 
     def update(self, db: Session, db_obj: SpecialCheck,
                obj_in: SpecialCheckUpdate):
