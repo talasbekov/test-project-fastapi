@@ -1,5 +1,4 @@
 import datetime
-import uuid
 from typing import Optional
 
 from pydantic import AnyUrl
@@ -14,6 +13,7 @@ class ServiceHousingBase(Model):
     address: str
     document_link: Optional[AnyUrl]
     issue_date: datetime.datetime
+    profile_id: str
 
     class Config:
         orm_mode = True
