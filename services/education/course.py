@@ -1,15 +1,25 @@
+from typing import Union, Dict, Any, List
+from datetime import datetime
+
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
 from models.education import Course
 from schemas.education import CourseCreate, CourseUpdate
 from services import ServiceBase
-from typing import Union, Dict, Any
 from fastapi.encoders import jsonable_encoder
-from datetime import datetime
 
 
 class CourseService(ServiceBase[Course, CourseCreate, CourseUpdate]):
+
+    def get_multi(
+        self, db: Session, skip: int = 0, limit: int = 100
+    ) -> List[Course]:
+        return (db.query(Course)
+                  .order_by(Course.name)
+                  .offset(skip)
+                  .limit(limit)
+                  .all())
 
     def get_by_id(self, db: Session, id: str):
         course = super().get(db, id)

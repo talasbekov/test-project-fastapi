@@ -6,12 +6,16 @@ from .base import ServiceBase
 
 
 class BadgeTypeService(ServiceBase[BadgeType, BadgeTypeCreate, BadgeTypeUpdate]):
-  
-    def get_multi(self, db: Session,
-                    skip: int,
-                    limit: int):
 
-        badge_types = (db.query(BadgeType).order_by(self.model.created_at.desc()).offset(skip).limit(limit).all())
+    def get_multi(self, db: Session,
+                  skip: int,
+                  limit: int):
+
+        badge_types = (db.query(BadgeType)
+                         .order_by(BadgeType.name)
+                         .offset(skip)
+                         .limit(limit)
+                         .all())
 
         total = (db.query(BadgeType).count())
 

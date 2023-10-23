@@ -14,13 +14,18 @@ class SportTypeService(ServiceBase):
         if not sport_type:
             raise NotFoundException("Sport type not found")
         return sport_type
-    
+
     def get_multi(
         self, db: Session, skip: int = 0, limit: int = 100
     ) -> List[SportType]:
-        sport_types = db.query(self.model).order_by(self.model.created_at.desc()).offset(skip).limit(limit).all()
-        count = db.query(self.model).count()
+        sport_types = (db.query(SportType)
+                         .order_by(SportType.created_at.desc())
+                         .offset(skip)
+                         .limit(limit)
+                         .all())
+        count = db.query(SportType).count()
+
         return {"total": count, "objects": sport_types}
-        
+
 
 sport_type_service = SportTypeService(SportType)

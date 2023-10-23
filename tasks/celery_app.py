@@ -23,8 +23,8 @@ app = Celery('celery_app', backend='redis://redis:6379/',
 
 app.conf.beat_schedule = {
     'clear_user_logging_activities_table_every_3_days': {
-        'task': 'tasks.celery_app.task_clear_user_'+
-                    'logging_activities_table_every_3_days',
+        'task': 'tasks.celery_app.task_clear_user_' +
+        'logging_activities_table_every_3_days',
         'schedule': crontab(minute=0, hour=0, day_of_month='*/3')
     },
     'repeat_surveys_with_every_week_type': {
@@ -44,7 +44,7 @@ app.conf.beat_schedule = {
     }
 }
 
-SQLALCHEMY_DATABASE_URL = f"oracle://system:Oracle123@192.168.1.228:1521/MORAL"
+SQLALCHEMY_DATABASE_URL = f"oracle://system:Oracle123@193.106.99.68:2290/MORAL"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
@@ -118,18 +118,20 @@ def task_apply_staff_list(
 @app.task
 def task_clear_user_logging_activities_table_every_3_days():
     SessionLocal = sessionmaker(bind=engine)
-    db = SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    db = SessionLocal = sessionmaker(
+        autocommit=False, autoflush=False, bind=engine)
     try:
         now_date = datetime.datetime.now()
         delete_objects = (
             db.query(UserLoggingActivity).filter(
-                UserLoggingActivity.signed_at < now_date - datetime.timedelta(days=3)
+                UserLoggingActivity.signed_at < now_date -
+                datetime.timedelta(days=3)
             ).all()
         )
-        
+
         for obj in delete_objects:
             db.delete(obj)
-        
+
         db.commit()
     except Exception as e:
         db.rollback()
@@ -137,8 +139,9 @@ def task_clear_user_logging_activities_table_every_3_days():
     finally:
         if db:
             db.close()
-    
+
     return True
+
 
 @app.task
 def task_repeat_surveys(status: str):
@@ -148,10 +151,10 @@ def task_repeat_surveys(status: str):
         expired_surveys = (
             survey_service.get_expired_by_repeat_type(db, status)
         )
-        
+
         for survey in expired_surveys:
             survey_service.repeat(db, survey.id)
-        
+
         db.commit()
     except Exception as e:
         db.rollback()
@@ -159,8 +162,9 @@ def task_repeat_surveys(status: str):
     finally:
         if db:
             db.close()
-    
+
     return True
+
 
 @app.task(bind=True)
 def task_sign_document_with_certificate(
@@ -174,17 +178,17 @@ def task_sign_document_with_certificate(
     body = pickle.loads(byte_body)
     state_counter = 0
     self.update_state(state=state_counter)
-    #hr_documents = []
+    # hr_documents = []
     percent_per_document = 100/len(body.document_ids)
     for document_id in body.document_ids:
         state_counter += percent_per_document
         hr_document_service.sign_with_certificate(
-                      db,
-                      document_id,
-                      body,
-                      user_id,
-                      access_token)
-        #hr_documents.append(HrDocumentRead.from_orm(hr_document).dict())
+            db,
+            document_id,
+            body,
+            user_id,
+            access_token)
+        # hr_documents.append(HrDocumentRead.from_orm(hr_document).dict())
         self.update_state(state=state_counter)
     try:
         db.commit()
@@ -194,4 +198,4 @@ def task_sign_document_with_certificate(
     finally:
         if db:
             db.close()
-    #return hr_documents
+    # return hr_documents

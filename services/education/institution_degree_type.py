@@ -1,3 +1,6 @@
+from typing import List
+
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
@@ -10,6 +13,15 @@ class InstitutionDegreeTypeService(
         ServiceBase[InstitutionDegreeType,
                     InstitutionDegreeTypeCreate,
                     InstitutionDegreeTypeUpdate]):
+
+    def get_multi(
+        self, db: Session, skip: int = 0, limit: int = 100
+    ) -> List[InstitutionDegreeType]:
+        return (db.query(InstitutionDegreeType)
+                  .order_by(func.to_char(InstitutionDegreeType.name))
+                  .offset(skip)
+                  .limit(limit)
+                  .all())
 
     def get_by_id(self, db: Session, id: str):
         institution_degree_type = super().get(db, id)

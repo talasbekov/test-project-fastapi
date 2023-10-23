@@ -1,5 +1,6 @@
 from typing import List
 
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
@@ -16,12 +17,16 @@ class RankService(ServiceBase[Rank, RankCreate, RankUpdate]):
         if rank is None:
             raise NotFoundException(detail=f"Rank with id: {id} is not found!")
         return rank
-    
+
     def get_multi(
         self, db: Session, skip: int = 0, limit: int = 100
     ) -> List[Rank]:
-        ranks = db.query(self.model).order_by(self.model.created_at.desc()).offset(skip).limit(limit).all()
-        count = db.query(self.model).count()
+        ranks = (db.query(Rank)
+                   .order_by(func.to_char(Rank.name))
+                   .offset(skip)
+                   .limit(limit)
+                   .all())
+        count = db.query(Rank).count()
         return {"total": count, "objects": ranks}
 
     def get_by_option(self, db: Session, type: str,
@@ -36,7 +41,7 @@ class RankService(ServiceBase[Rank, RankCreate, RankUpdate]):
             if user.rank.rank_order == 1:
                 return []
             else:
-                return [self.get_by_order(db, user.rank.rank_order- 1)]
+                return [self.get_by_order(db, user.rank.rank_order - 1)]
 
     def get_object(self, db: Session, id: str, type: str):
         return self.get(db, id)

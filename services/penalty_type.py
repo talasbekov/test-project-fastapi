@@ -11,7 +11,7 @@ class PenaltyTypeService(ServiceBase[PenaltyType, PenaltyTypeCreate, PenaltyType
                     limit: int):
 
         penalty_types = (db.query(PenaltyType)
-                        .order_by(PenaltyType.created_at.desc())
+                        .order_by(PenaltyType.name)
                         .offset(skip)
                         .limit(limit)
                         .all())

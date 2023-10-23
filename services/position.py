@@ -22,14 +22,17 @@ class PositionService(ServiceBase[Position, PositionCreate, PositionUpdate]):
                      .all())
 
         return positions
-    
+
     def get_multi(
         self, db: Session, skip: int = 0, limit: int = 100
     ) -> List[Position]:
-        positions = db.query(self.model).order_by(self.model.created_at.desc()).offset(skip).limit(limit).all()
-        count = db.query(self.model).count()
+        positions = (db.query(Position)
+                       .order_by(Position.name)
+                       .offset(skip)
+                       .limit(limit)
+                       .all())
+        count = db.query(Position).count()
         return {"total": count, "objects": positions}
-
 
     def get_id_by_name(self, db: Session, name: str):
         role = db.query(Position).filter(

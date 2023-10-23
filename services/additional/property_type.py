@@ -1,3 +1,4 @@
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
@@ -24,8 +25,13 @@ class PropertyTypeService(
             raise NotFoundException(
                 detail=f"Profile with user_id: {user_id} is not found!")
 
-        properties = db.query(self.model).order_by(self.model.created_at.desc()).offset(skip).limit(limit).all()
-        count = db.query(self.model).count()
+        properties = (db.query(PropertyType)
+                        .order_by(func.to_char(PropertyType.name))
+                        .offset(skip)
+                        .limit(limit)
+                        .all())
+        count = db.query(PropertyType).count()
+
         return {"total": count, "objects": properties}
 
 

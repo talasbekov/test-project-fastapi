@@ -1,3 +1,6 @@
+from typing import List
+
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
@@ -7,6 +10,15 @@ from services import ServiceBase
 
 
 class ScienceService(ServiceBase[Science, ScienceCreate, ScienceUpdate]):
+
+    def get_multi(
+        self, db: Session, skip: int = 0, limit: int = 100
+    ) -> List[Science]:
+        return (db.query(Science)
+                  .order_by(func.to_char(Science.name))
+                  .offset(skip)
+                  .limit(limit)
+                  .all())
 
     def get_by_id(self, db: Session, id: str):
         science = super().get(db, id)
