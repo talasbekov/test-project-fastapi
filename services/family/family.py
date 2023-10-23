@@ -19,8 +19,8 @@ class FamilyService(ServiceBase[Family, FamilyCreate, FamilyUpdate]):
         return families
 
     def get_by_id(self, db: Session, id: str) -> Family:
-        family = db.query(Family).join(
-            Family.violation).join(
+        family = db.query(Family).outerjoin(
+            Family.violation).outerjoin(
             Family.abroad_travel).filter(
             Family.id == id).first()
         if not family:
@@ -31,16 +31,19 @@ class FamilyService(ServiceBase[Family, FamilyCreate, FamilyUpdate]):
         family = db.query(Family).filter(
             Family.relation_id == relation_id).first()
         return family
-    
+
     def create(self, db: Session,
-            obj_in: Union[FamilyCreate, Dict[str, Any]]) -> Family:
+               obj_in: Union[FamilyCreate, Dict[str, Any]]) -> Family:
         obj_in_data = jsonable_encoder(obj_in)
-        obj_in_data['birthday'] = datetime.strptime(obj_in_data['birthday'], '%Y-%m-%dT%H:%M:%S.%f%z')
+        obj_in_data['birthday'] = datetime.strptime(
+            obj_in_data['birthday'], '%Y-%m-%dT%H:%M:%S.%f%z')
         if obj_in_data['death_day'] is not None:
-            obj_in_data['death_day'] = datetime.strptime(obj_in_data['death_day'], '%Y-%m-%dT%H:%M:%S.%f%z')
-        db_obj = self.model(**obj_in_data) 
+            obj_in_data['death_day'] = datetime.strptime(
+                obj_in_data['death_day'], '%Y-%m-%dT%H:%M:%S.%f%z')
+        db_obj = self.model(**obj_in_data)
         db.add(db_obj)
         db.flush()
         return db_obj
+
 
 family_service = FamilyService(Family)
