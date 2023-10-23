@@ -36,21 +36,22 @@ class StaffDivisionService(
             if isinstance(staff_unit.requirements, str):
                 staff_unit.requirements = json.loads(staff_unit.requirements)
             if staff_unit.user_replacing:
-                    if isinstance(staff_unit.user_replacing.staff_unit.requirements, str):
-                        staff_unit.user_replacing.staff_unit.requirements = json.loads(staff_unit.user_replacing.staff_unit.requirements)
+                if isinstance(staff_unit.user_replacing.staff_unit.requirements, str):
+                    staff_unit.user_replacing.staff_unit.requirements = json.loads(
+                        staff_unit.user_replacing.staff_unit.requirements)
         if isinstance(group.description, str):
             group.description = json.loads(group.description)
         for child in group.children:
             if isinstance(child.description, str):
                 child.description = json.loads(child.description)
         return group
-    
+
     def get_one_level_by_id(self, db: Session, id: Optional[str]):
         if id == 'None':
             stmt = (select(StaffDivision)
                     .where(StaffDivision.name == StaffDivisionEnum.SERVICE.value))
             group = db.execute(stmt).first()[0]
-            #group = db.query(StaffDivision).filter(StaffDivision.name == StaffDivisionEnum.SERVICE.value).first()
+            # group = db.query(StaffDivision).filter(StaffDivision.name == StaffDivisionEnum.SERVICE.value).first()
         else:
             stmt = (select(StaffDivision)
                     .where(StaffDivision.id == id))
@@ -60,7 +61,7 @@ class StaffDivisionService(
                     f"StaffDivision with id: {id} is not found!")
             else:
                 group = group[0]
-            
+
         for staff_unit in group.staff_units:
             if isinstance(staff_unit.requirements, str):
                 staff_unit.requirements = json.loads(staff_unit.requirements)
@@ -75,8 +76,7 @@ class StaffDivisionService(
         group = group.__dict__
         group['is_parent'] = self.__is_parent(db, group['id'])
         return group
-        
-    
+
     def delete(self, db: Session, id: str) -> StaffDivision:
         staff_division = self.get_by_id(db, id)
         (db.query(ArchiveStaffDivision)
@@ -125,6 +125,27 @@ class StaffDivisionService(
         ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
         return departments
 
+    def get_department_name_by_id(
+        self,
+        db: Session,
+        id: str
+    ) -> StaffDivision:
+        service_staff_division = self.get_by_name(
+            db, StaffDivisionEnum.SERVICE.value)
+        staff_division = self.get_by_id(db, id)
+
+        if staff_division.id == service_staff_division.id:
+            return {"id": staff_division.id,
+                    "name": staff_division.name,
+                    "nameKZ": staff_division.nameKZ}
+
+        while staff_division.parent_group_id != service_staff_division.id:
+            staff_division = self.get_by_id(db, staff_division.parent_group_id)
+
+        return {"id": staff_division.id,
+                "name": staff_division.name,
+                "nameKZ": staff_division.nameKZ}
+
     def get_all_parents(self,
                         db: Session,
                         skip: int, limit: int) -> List[StaffDivision]:
@@ -146,12 +167,14 @@ class StaffDivisionService(
                 parent.description = json.loads(parent.description)
             for staff_unit in parent.staff_units:
                 if isinstance(staff_unit.requirements, str):
-                    staff_unit.requirements = json.loads(staff_unit.requirements)
+                    staff_unit.requirements = json.loads(
+                        staff_unit.requirements)
                 if staff_unit.user_replacing:
                     if isinstance(staff_unit.user_replacing.staff_unit.requirements, str):
-                        staff_unit.user_replacing.staff_unit.requirements = json.loads(staff_unit.user_replacing.staff_unit.requirements)
+                        staff_unit.user_replacing.staff_unit.requirements = json.loads(
+                            staff_unit.user_replacing.staff_unit.requirements)
         return parents
-    
+
     def get_all_except_special_raw(self,
                                    db: Session,
                                    skip: int,
@@ -175,7 +198,8 @@ class StaffDivisionService(
                 parent.description = json.loads(parent.description)
             for staff_unit in parent.staff_units:
                 if isinstance(staff_unit.requirements, str):
-                    staff_unit.requirements = json.loads(staff_unit.requirements)
+                    staff_unit.requirements = json.loads(
+                        staff_unit.requirements)
         return parents
 
     def get_all_child_groups(self, db: Session,
@@ -247,13 +271,14 @@ class StaffDivisionService(
             staff_division.children = [prev_staff_division]
             prev_staff_division = staff_division
             parent_id = staff_division.parent_group_id
-            
+
         for staff_unit in staff_division.staff_units:
             if isinstance(staff_unit.requirements, str):
                 staff_unit.requirements = json.loads(staff_unit.requirements)
             if staff_unit.user_replacing:
                 if isinstance(staff_unit.user_replacing.staff_unit.requirements, str):
-                    staff_unit.user_replacing.staff_unit.requirements = json.loads(staff_unit.user_replacing.staff_unit.requirements)
+                    staff_unit.user_replacing.staff_unit.requirements = json.loads(
+                        staff_unit.user_replacing.staff_unit.requirements)
         res = StaffDivisionRead.from_orm(staff_division)
         db.rollback()
         return res
@@ -389,9 +414,9 @@ class StaffDivisionService(
         stmp = select(StaffDivision).where(StaffDivision.parent_group_id == id)
         if db.execute(stmp).first() is not None:
             return True
-        else: 
+        else:
             return False
-    
+
     def _update(
         self,
         db: Session,
@@ -410,15 +435,15 @@ class StaffDivisionService(
         db.add(db_obj)
         db.flush()
         return db_obj
-    
+
     def _replace_secondment_division_id_with_name(self,
                                                   db,
                                                   staff_division: StaffDivision):
         (db.query(Secondment)
             .filter(Secondment.staff_division_id == staff_division.id)
-            .update({Secondment.staff_division_id:None,
-                     Secondment.name:Secondment.name + ": " + staff_division.name,
-                     Secondment.nameKZ:Secondment.nameKZ + ": " + staff_division.nameKZ}
+            .update({Secondment.staff_division_id: None,
+                     Secondment.name: Secondment.name + ": " + staff_division.name,
+                     Secondment.nameKZ: Secondment.nameKZ + ": " + staff_division.nameKZ}
                     )
          )
         db.flush()
@@ -428,7 +453,8 @@ class StaffDivisionService(
         count_vacancies = self._get_count_vacancies_recursive(
             db, staff_division)
 
-        staff_division = StaffDivisionVacancyRead.from_orm(staff_division).dict()
+        staff_division = StaffDivisionVacancyRead.from_orm(
+            staff_division).dict()
 
         staff_division['count_vacancies'] = count_vacancies
 

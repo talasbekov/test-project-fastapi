@@ -59,6 +59,7 @@ class UserRead(ReadModel):
     class Config:
         orm_mode = True
 
+
 class MatreshkaUserRead(ReadModel):
     icon: Optional[str] = Field(None, nullable=True)
     supervised_by: Optional[str]
@@ -70,6 +71,7 @@ class MatreshkaUserRead(ReadModel):
 
     class Config:
         orm_mode = True
+
 
 class HrVacancyRead(ReadModel):
     is_active: Optional[bool]
@@ -119,6 +121,7 @@ class StaffUnitRead(ReadModel):
         orm_mode = True
         arbitrary_types_allowed = True
 
+
 class StaffUnitOptionRead(ReadModel):
     staff_division_id: Optional[str]
     position_id: Optional[str]
@@ -128,8 +131,8 @@ class StaffUnitOptionRead(ReadModel):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
-        
-        
+
+
 class StaffUnitMatreshkaOptionRead(ReadModel):
     staff_division_id: Optional[str]
     position_id: Optional[str]
@@ -249,6 +252,7 @@ class StaffDivisionOptionChildRead(ReadNamedModel):
         orm_mode = True
         arbitrary_types_allowed = True
 
+
 class StaffDivisionOptionRead(ReadNamedModel):
     parent_group_id: Optional[str] = Field(None, nullable=True)
     is_combat_unit: Optional[bool] = Field(None, nullable=True)
@@ -271,7 +275,7 @@ class StaffDivisionOptionRead(ReadNamedModel):
             return None
         else:
             return staff_units
-    
+
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
@@ -282,7 +286,8 @@ class StaffUnitDivisionRead(StaffDivisionBase, ReadNamedModel):
 
     class Config:
         orm_mode = True
-        
+
+
 class ShortStaffUnitDivisionRead(ReadNamedModel):
     parent_group_id: Optional[str] = Field(None, nullable=True)
     is_combat_unit: Optional[bool] = Field(None, nullable=True)
@@ -294,12 +299,14 @@ class ShortStaffUnitDivisionRead(ReadNamedModel):
     class Config:
         orm_mode = True
 
+
 class StaffDivisionStepChildRead(StaffDivisionBase):
     id: Optional[str]
     type: Optional[StaffDivisionTypeRead]
 
     class Config:
         orm_mode = True
+
 
 class StaffDivisionStepRead(StaffDivisionBase):
     id: Optional[str]
@@ -310,6 +317,7 @@ class StaffDivisionStepRead(StaffDivisionBase):
     class Config:
         orm_mode = True
 
+
 class StaffDivisionMatreshkaStepChildRead(ReadNamedModel):
     id: Optional[str]
     is_combat_unit: Optional[bool] = Field(None, nullable=True)
@@ -319,9 +327,10 @@ class StaffDivisionMatreshkaStepChildRead(ReadNamedModel):
     name: str
     nameKZ: Optional[str] = Field(None, nullable=True)
     is_parent: Optional[bool]
-    
+
     class Config:
         orm_mode = True
+
 
 class StaffDivisionMatreshkaStepRead(ReadNamedModel):
     id: Optional[str]
@@ -333,17 +342,17 @@ class StaffDivisionMatreshkaStepRead(ReadNamedModel):
     name: str
     nameKZ: Optional[str] = Field(None, nullable=True)
     is_parent: Optional[bool]
-    
+
     @validator('children')
     def validate_children(cls, children):
         if children == []:
             return None
         else:
-            return children 
-
+            return children
 
     class Config:
         orm_mode = True
+
 
 class StaffDivisionVacancyRead(BaseModel):
     id: Optional[str]
@@ -355,3 +364,9 @@ class StaffDivisionVacancyRead(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class StaffDivisionNamedModel(BaseModel):
+    id: Optional[str]
+    name: str
+    nameKZ: Optional[str] = Field(None, nullable=True)

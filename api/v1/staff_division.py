@@ -7,10 +7,10 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import (StaffDivisionCreate, StaffDivisionRead, 
-                     StaffDivisionStepRead,StaffDivisionUpdate, 
+from schemas import (StaffDivisionCreate, StaffDivisionRead,
+                     StaffDivisionStepRead, StaffDivisionUpdate,
                      StaffDivisionUpdateParentGroup, StaffDivisionTypeRead,
-                     StaffDivisionMatreshkaStepRead)
+                     StaffDivisionMatreshkaStepRead, StaffDivisionNamedModel)
 from services import staff_division_service, staff_division_type_service
 
 router = APIRouter(
@@ -120,14 +120,32 @@ async def get_by_id(*,
     Authorize.jwt_required()
     return staff_division_service.get_by_id(db, str(id))
 
+
+@router.get("/get-department-of/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=StaffDivisionNamedModel,
+            summary="Get Staff Division one level by id")
+async def get_all_one_level_for_id(*,
+                                   db: Session = Depends(get_db),
+                                   id: str,
+                                   Authorize: AuthJWT = Depends()
+                                   ):
+    """
+       Get Department of staff division
+
+    - **id**: uuid - The id of staff division. This parameter is required.
+    """
+    Authorize.jwt_required()
+    return staff_division_service.get_department_name_by_id(db, str(id))
+
+
 @router.get("/one-level/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=StaffDivisionStepRead,
             summary="Get Staff Division one level by id")
 async def get_all_one_level_for_id(*,
-                  db: Session = Depends(get_db),
-                  id: str,
-                  Authorize: AuthJWT = Depends()
-                  ):
+                                   db: Session = Depends(get_db),
+                                   id: str,
+                                   Authorize: AuthJWT = Depends()
+                                   ):
     """
        Get all Staff Divisions
 
@@ -136,14 +154,15 @@ async def get_all_one_level_for_id(*,
     Authorize.jwt_required()
     return staff_division_service.get_by_id(db, str(id))
 
+
 @router.get("/one-level-matreshka", dependencies=[Depends(HTTPBearer())],
             response_model=StaffDivisionMatreshkaStepRead,
             summary="Get Staff Division one level by id")
 async def get_all_one_level_for_id(*,
-                  db: Session = Depends(get_db),
-                  id: Optional[str] = None,
-                  Authorize: AuthJWT = Depends()
-                  ):
+                                   db: Session = Depends(get_db),
+                                   id: Optional[str] = None,
+                                   Authorize: AuthJWT = Depends()
+                                   ):
     """
        Get all Staff Divisions
 
