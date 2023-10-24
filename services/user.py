@@ -43,11 +43,12 @@ CALLABLES = types.FunctionType, types.MethodType
 
 
 class UserService(ServiceBase[User, UserCreate, UserUpdate]):
-    
+
     def create(self, db: Session,
                obj_in: Union[UserCreate, Dict[str, Any]]) -> User:
         obj_in_data = jsonable_encoder(obj_in)
-        obj_in_data['date_birth'] = datetime.datetime.strptime(obj_in_data['date_birth'], '%Y-%m-%d')
+        obj_in_data['date_birth'] = datetime.datetime.strptime(
+            obj_in_data['date_birth'], '%Y-%m-%d')
         db_obj = self.model(**obj_in_data)  # type: ignore
         db.add(db_obj)
         db.flush()
@@ -86,7 +87,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
                                                    hr_document_template_id)
                      .except_(excepted_users)
                      .filter(self.model.is_active == True))
-            
+
             if template.subject_type == SubjectType.CANDIDATE.value:
                 candidate_staff_division = (
                     staff_division_service.get_by_name(
@@ -101,7 +102,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
         users = (
             users
-            .order_by(self.model.created_at.asc())
+            .order_by(User.name)
             .distinct()
             .offset(skip)
             .limit(limit)
@@ -138,7 +139,8 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         )
 
         for user in users:
-            status_histories = db.query(StatusHistory).order_by(StatusHistory.created_at).filter(StatusHistory.user_id == user.id).all()
+            status_histories = db.query(StatusHistory).order_by(
+                StatusHistory.created_at).filter(StatusHistory.user_id == user.id).all()
             for status_history in status_histories:
                 if status_history != [] and (status_history.date_to is not None):
                     today = datetime.datetime.now()
@@ -147,7 +149,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
                         break
                     else:
                         user.statuses = []
-                    
+
         return users, user_queue.count()
 
     def get_all_archived(self,
@@ -257,15 +259,15 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         ).all()
 
         return users
-      
+
     def get_user_by_staff_unit(self, db: Session, staff_unit_id):
 
         users = db.query(self.model).filter(
             self.model.staff_unit_id == staff_unit_id
         ).first()
-        
+
         return users
-    
+
     def get_by_schedule_id(self, db: Session,
                            schedule_id: str,
                            skip: int,
@@ -390,10 +392,10 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         excepted_users = (
             excepted_users
             .filter(HrDocument.hr_document_template_id == hr_document_template_id,
-            HrDocumentInfo.signed_by_id.is_(None),
-            and_(*[HrDocument.status_id !=
-                   status.id for status in forbidden_statuses])
-            )
+                    HrDocumentInfo.signed_by_id.is_(None),
+                    and_(*[HrDocument.status_id !=
+                           status.id for status in forbidden_statuses])
+                    )
         )
         return excepted_users
 
@@ -465,9 +467,9 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             user_query
             .filter(
                 and_(func.concat(func.concat(func.concat(func.lower(User.first_name), ' '),
-                    func.concat(func.lower(User.last_name), ' ')),
-                    func.lower(User.father_name)).contains(name) for name in key_words)
-            )        
+                                             func.concat(func.lower(User.last_name), ' ')),
+                                 func.lower(User.father_name)).contains(name) for name in key_words)
+            )
         )
         return users
 
@@ -549,5 +551,6 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         candidates_iin = self.get_iin_by_ids(db, candidate_ids)
 
         return {'Сотрудники': users_iin, 'Кандидаты': candidates_iin}
+
 
 user_service = UserService(User)

@@ -1,3 +1,4 @@
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
@@ -19,7 +20,7 @@ class SportTypeService(ServiceBase):
         self, db: Session, skip: int = 0, limit: int = 100
     ) -> List[SportType]:
         sport_types = (db.query(SportType)
-                         .order_by(SportType.created_at.desc())
+                         .order_by(func.to_char(func.lower(SportType.name)))
                          .offset(skip)
                          .limit(limit)
                          .all())

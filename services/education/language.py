@@ -15,7 +15,7 @@ class LanguageService(ServiceBase[Language, LanguageCreate, LanguageUpdate]):
         self, db: Session, skip: int = 0, limit: int = 100
     ) -> List[Language]:
         return (db.query(Language)
-                  .order_by(func.to_char(Language.name))
+                  .order_by(func.to_char(func.lower(Language.name)))
                   .offset(skip)
                   .limit(limit)
                   .all())
