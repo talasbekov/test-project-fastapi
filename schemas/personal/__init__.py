@@ -19,3 +19,4 @@ from .user_financial_info import (UserFinancialInfoCreate,
                                   UserFinancialInfoUpdate)
 from .personal_profile import (PersonalProfileCreate, PersonalProfileRead,
                                PersonalProfileUpdate)
+from .sport_degree_type import *
