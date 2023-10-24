@@ -102,7 +102,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
         users = (
             users
-            .order_by(User.name)
+            .order_by(func.to_char(User.last_name))
             .distinct()
             .offset(skip)
             .limit(limit)
