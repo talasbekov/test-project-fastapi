@@ -125,7 +125,7 @@ class HistoryCreate(HistoryBase):
 
 
 class HistoryUpdate(HistoryBase):
-    pass
+    type: Optional[str]
 
 
 class HistoryRead(HistoryBase, ReadNamedModel):
@@ -138,6 +138,7 @@ class HistoryRead(HistoryBase, ReadNamedModel):
     contract: Optional[ContractRead]
     badge: Optional[BadgeRead]
     staff_division: Optional[StaffDivisionReadWithoutStaffUnit]
+    user_id: Optional[str]
 
     class Config:
         from_attributes = True
@@ -322,6 +323,7 @@ class BadgeServiceDetailRead(ReadNamedModel):
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     url: Optional[str]
+    user_id: Optional[str]
 
     class Config:
         from_attributes = True
