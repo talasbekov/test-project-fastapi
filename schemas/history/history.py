@@ -489,11 +489,12 @@ class ContractRead(ReadNamedModel):
             experience_years=orm_obj.experience_years,
             name=orm_obj.contract.type.name,
             nameKZ=orm_obj.contract.type.nameKZ,
+            contract_type_id=orm_obj.contract.type_id
         )
 
 
 class AttestationRead(Model):
-    id:str
+    id: str
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     document_link: Optional[str]
