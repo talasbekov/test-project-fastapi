@@ -12,7 +12,8 @@ from .history import (
     TrainingAttendanceRead,
     HistoryPersonalRead,
     ServiceIdInfoRead,
-    HistoryTimeLineRead
+    HistoryTimeLineRead,
+    HistoryContractCreate,
 )
 from .history_name_change import (
     HistoryNameChangeBase,

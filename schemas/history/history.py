@@ -124,6 +124,15 @@ class HistoryCreate(HistoryBase):
     pass
 
 
+class HistoryContractCreate(BaseModel):
+    user_id: str
+    type: str
+    date_from: datetime
+    date_to: Optional[datetime]
+    document_number: str
+    contract_type_id: str
+
+
 class HistoryUpdate(HistoryBase):
     type: Optional[str]
 

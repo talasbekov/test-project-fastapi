@@ -1,4 +1,3 @@
-import uuid
 from typing import List
 
 from fastapi import APIRouter, Depends, status
@@ -7,7 +6,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import HistoryCreate, HistoryUpdate, HistoryRead
+from schemas import HistoryCreate, HistoryUpdate, HistoryRead, HistoryContractCreate
 from services import history_service
 
 router = APIRouter(
@@ -30,9 +29,9 @@ async def get_all(*,
     """
         Get all Histories
 
-        - **skip**: int - The number of equipments to skip before returning the results.
+        - **skip**: int - The number of Historys to skip before returning the results.
             This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of equipments to return in the response.
+        - **limit**: int - The maximum number of Historys to return in the response.
             This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
@@ -42,20 +41,39 @@ async def get_all(*,
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=HistoryRead,
-             summary="Create Equipment")
+             summary="Create History")
 async def create(*,
                  db: Session = Depends(get_db),
                  body: HistoryCreate,
                  Authorize: AuthJWT = Depends()
                  ):
     """
-        Create Equipment
+        Create History
 
         - **name**: required
         - **quantity**: required
     """
     Authorize.jwt_required()
     return history_service.create(db, body)
+
+
+@router.post("/contract/", status_code=status.HTTP_201_CREATED,
+             dependencies=[Depends(HTTPBearer())],
+             response_model=HistoryRead,
+             summary="Create Contract History")
+async def create_contract(*,
+                          db: Session = Depends(get_db),
+                          body: HistoryContractCreate,
+                          Authorize: AuthJWT = Depends()
+                          ):
+    """
+        Create contract history
+
+        - **name**: required
+        - **quantity**: required
+    """
+    Authorize.jwt_required()
+    return history_service.create_contract(db, body)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -67,7 +85,7 @@ async def get_by_id(*,
                     Authorize: AuthJWT = Depends()
                     ):
     """
-       Get Equipment by id
+       Get History by id
 
        - **id**: UUID - required
     """
@@ -91,9 +109,9 @@ async def get_all_by_type(*,
         Get all Histories by type
 
         - **type**: str - required
-        - **skip**: int - The number of equipments to skip before returning the results.
+        - **skip**: int - The number of Historys to skip before returning the results.
             This parameter is optional and defaults to 0.
-        - **limit**: int - The maximum number of equipments to return in the response.
+        - **limit**: int - The maximum number of Historys to return in the response.
             This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
@@ -110,9 +128,9 @@ async def update(*,
                  Authorize: AuthJWT = Depends()
                  ):
     """
-        Update Equipment
+        Update History
 
-        - **id**: UUID - the id of equipment to update. This parameter is required
+        - **id**: UUID - the id of History to update. This parameter is required
         - **name**: required
         - **quantity**: required
     """
@@ -129,7 +147,7 @@ async def delete(*,
                  Authorize: AuthJWT = Depends()
                  ):
     """
-        Delete Equipment
+        Delete History
 
         - **id**: UUID - required
     """

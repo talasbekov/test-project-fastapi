@@ -8,7 +8,8 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import HistoryCreate, HistoryUpdate, HistoryRead, HistoryServiceDetailRead
+from schemas import (HistoryCreate, HistoryUpdate, HistoryRead,
+                     HistoryServiceDetailRead, HistoryContractCreate)
 from services import history_service
 from models import HistoryEnum
 
@@ -98,20 +99,39 @@ async def get_all_by_user_id(*,
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=HistoryRead,
-             summary="Create Equipment")
+             summary="Create History")
 async def create(*,
                  db: Session = Depends(get_db),
                  body: HistoryCreate,
                  Authorize: AuthJWT = Depends()
                  ):
     """
-        Create Equipment
+        Create History
 
         - **name**: required
         - **quantity**: required
     """
     Authorize.jwt_required()
     return history_service.create(db, body)
+
+
+@router.post("/contract", status_code=status.HTTP_201_CREATED,
+             dependencies=[Depends(HTTPBearer())],
+             response_model=HistoryRead,
+             summary="Create Contract History")
+async def create_contract(*,
+                          db: Session = Depends(get_db),
+                          body: HistoryContractCreate,
+                          Authorize: AuthJWT = Depends()
+                          ):
+    """
+        Create contract history
+
+        - **name**: required
+        - **quantity**: required
+    """
+    Authorize.jwt_required()
+    return history_service.create_contract(db, body)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -216,6 +236,7 @@ async def get_all_by_type_and_user_id(*,
     return history_service.get_all_by_type_and_user_id(
         db, type, user_id, skip, limit)
 
+
 @router.get("/timeline", dependencies=[Depends(HTTPBearer())],
             summary="Get all Histories by type and user id")
 async def get_all_by_type_and_user_id(*,
@@ -224,7 +245,7 @@ async def get_all_by_type_and_user_id(*,
                                       ):
     """
         Get timeline for user id
-        
+
         - **user_id**: UUID - required
     """
     Authorize.jwt_required()
