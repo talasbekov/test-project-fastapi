@@ -116,7 +116,7 @@ class StatusService(ServiceBase[Status, StatusCreate, StatusUpdate]):
             .join(StaffUnit, User.staff_unit_id == StaffUnit.id) \
             .join(StaffDivision, StaffUnit.staff_division_id == StaffDivision.id) \
             .filter(
-            StatusType.name == status,
+            func.to_char(StatusType.name) == status,
             User.staff_unit_id == StaffUnit.id,
             StaffUnit.staff_division_id == department.id
         ).all()
@@ -149,20 +149,21 @@ class StatusService(ServiceBase[Status, StatusCreate, StatusUpdate]):
             .join(StaffUnit, User.staff_unit_id == StaffUnit.id) \
             .join(StaffDivision, StaffUnit.staff_division_id == StaffDivision.id) \
             .filter(
-            StatusType.name.in_(self.ALL_STATUSES),
+            func.to_char(StatusType.name).in_(self.ALL_STATUSES),
             User.staff_unit_id == StaffUnit.id,
             StaffUnit.staff_division_id == department.id
         ).all()
 
         # Recursively call this function for each child division
         for child in department.children:
-            users.extend(self.get_count_all_users_recursive_by_status(db, child))
+            users.extend(
+                self.get_count_all_users_recursive_by_status(db, child))
 
         users_with_status: List[User] = []
-        
+
         if users is None:
             return 0
-        
+
         for user in users:
             users_with_status.append(user)
 

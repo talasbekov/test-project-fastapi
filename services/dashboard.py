@@ -21,12 +21,14 @@ class DashboardService:
         PositionNameEnum.HEAD_OF_DEPARTMENT.value,
         PositionNameEnum.MANAGEMENT_HEAD.value,
         PositionNameEnum.HEAD_OF_OTDEL.value,
+        PositionNameEnum.HEAD_OF_SERVICE.value
     ]
 
     def get_all_state(self, db: Session, role: str) -> int:
 
         staff_unit: StaffUnit = staff_unit_service.get_by_id(db, role)
-        fifth_department = staff_division_service.get_by_name(db, "Пятый департамент")
+        fifth_department = staff_division_service.get_by_name(
+            db, "Пятый департамент")
 
         if staff_unit.curator_of_id == fifth_department.id:
             staff_division = staff_division_service.get_by_name(
@@ -44,15 +46,15 @@ class DashboardService:
 
     def get_state_by_list(self, db: Session, role: str) -> int:
         all_state = self.get_all_state(db, role)
-        hr_vacancy = self.get_hr_vacancy_count_by_division \
-            (db, role)
+        hr_vacancy = self.get_hr_vacancy_count_by_division(db, role)
         state_by_list = all_state - hr_vacancy
         return state_by_list
 
     def get_hr_vacancy_count_by_division(self, db: Session,
                                          role: str) -> int:
         staff_unit: StaffUnit = staff_unit_service.get_by_id(db, role)
-        fifth_department = staff_division_service.get_by_name(db, "Пятый департамент")
+        fifth_department = staff_division_service.get_by_name(
+            db, "Пятый департамент")
 
         if staff_unit.curator_of_id == fifth_department.id:
             staff_division = staff_division_service.get_by_name(
@@ -81,17 +83,18 @@ class DashboardService:
     def get_count_by_status_all_users(self, db: Session, role: str):
 
         staff_unit: StaffUnit = staff_unit_service.get_by_id(db, role)
-        fifth_department = staff_division_service.get_by_name(db, "Пятый департамент")
+        fifth_department = staff_division_service.get_by_name(
+            db, "Пятый департамент")
 
         if staff_unit.curator_of_id == fifth_department.id:
             staff_division = staff_division_service.get_by_name(
                 db, StaffDivisionEnum.SERVICE.value
             )
             return len(
-                    status_service.get_count_all_users_recursive_by_status(
-                        db, staff_division
-                    )
+                status_service.get_count_all_users_recursive_by_status(
+                    db, staff_division
                 )
+            )
 
         elif not self.check_by_role(db, staff_unit):
             raise ForbiddenException(
@@ -102,16 +105,17 @@ class DashboardService:
             )
 
             return len(
-                    status_service.get_count_all_users_recursive_by_status(
-                        db, staff_division
-                    )
+                status_service.get_count_all_users_recursive_by_status(
+                    db, staff_division
                 )
+            )
 
     def get_count_by_every_status_users(
             self, db: Session, role: str
     ) -> dict[str, int]:
         staff_unit: StaffUnit = staff_unit_service.get_by_id(db, role)
-        fifth_department = staff_division_service.get_by_name(db, "Пятый департамент")
+        fifth_department = staff_division_service.get_by_name(
+            db, "Пятый департамент")
 
         if staff_unit.curator_of_id == fifth_department.id:
             staff_division = staff_division_service.get_by_name(
@@ -175,7 +179,8 @@ class DashboardService:
             self, db: Session, role: str
     ) -> int:
         staff_unit: StaffUnit = staff_unit_service.get_by_id(db, role)
-        fifth_department = staff_division_service.get_by_name(db, "Пятый департамент")
+        fifth_department = staff_division_service.get_by_name(
+            db, "Пятый департамент")
 
         if staff_unit.curator_of_id == fifth_department.id:
             staff_division = staff_division_service.get_by_name(
@@ -195,7 +200,8 @@ class DashboardService:
 
     def get_statistic_passed_candidate_stage_infos(self, db: Session, role: str):
         staff_unit: StaffUnit = staff_unit_service.get_by_id(db, role)
-        fifth_department = staff_division_service.get_by_name(db, "Пятый департамент")
+        fifth_department = staff_division_service.get_by_name(
+            db, "Пятый департамент")
 
         if staff_unit.curator_of_id == fifth_department.id:
             candidates = candidate_service.get_all(db)
@@ -237,7 +243,8 @@ class DashboardService:
 
     def get_statistic_duration_candidate_learning(self, db: Session, role: str):
         staff_unit: StaffUnit = staff_unit_service.get_by_id(db, role)
-        fifth_department = staff_division_service.get_by_name(db, "Пятый департамент")
+        fifth_department = staff_division_service.get_by_name(
+            db, "Пятый департамент")
 
         if staff_unit.curator_of_id == fifth_department.id:
             candidates = candidate_service.get_all(db)
@@ -253,7 +260,7 @@ class DashboardService:
         between_6_12_month = 0
         more_than_year = 0
 
-        date_now = datetime.now(timezone.utc)
+        date_now = datetime.now()
 
         for candidate in candidates:
             # Check if the candidate has been learning for more than a year
@@ -291,7 +298,8 @@ class DashboardService:
             self, db: Session, role: str
     ) -> dict[str, int]:
         staff_unit: StaffUnit = staff_unit_service.get_by_id(db, role)
-        fifth_department = staff_division_service.get_by_name(db, "Пятый департамент")
+        fifth_department = staff_division_service.get_by_name(
+            db, "Пятый департамент")
 
         if staff_unit.curator_of_id == fifth_department.id:
             staff_division = staff_division_service.get_by_name(
@@ -315,7 +323,8 @@ class DashboardService:
             self, db: Session, role: str
     ) -> dict[str, int]:
         staff_unit: StaffUnit = staff_unit_service.get_by_id(db, role)
-        fifth_department = staff_division_service.get_by_name(db, "Пятый департамент")
+        fifth_department = staff_division_service.get_by_name(
+            db, "Пятый департамент")
 
         if staff_unit.curator_of_id == fifth_department.id:
             staff_division = staff_division_service.get_by_name(
@@ -354,12 +363,12 @@ class DashboardService:
         return len(active_users)
 
     # def get_users_at_three_day_by_active(self, db: Session):
-    
+
     #     end_time = datetime.now()
     #     start_time = end_time - timedelta(days=3)
-    
+
     #     last_signed_ids = {}
-    
+
     #     users = (
     #         db.query(User).filter(
     #             User.last_signed_at.between(start_time, end_time)
@@ -426,5 +435,3 @@ class DashboardService:
 
 
 dashboard_service = DashboardService()
-
-

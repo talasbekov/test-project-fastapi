@@ -19,7 +19,7 @@ from .candidate_stage_info import candidate_stage_info_service
 
 
 class CandidateService(
-    ServiceBase[Candidate, CandidateCreate, CandidateUpdate]):
+        ServiceBase[Candidate, CandidateCreate, CandidateUpdate]):
     # This const variable stores the positions which have access to all
     # candidates
     ALL_CANDIDATE_VIEWERS = {
@@ -46,18 +46,17 @@ class CandidateService(
             Returns a list of all candidates by curators within staff division.
         """
         candidates = (
-            db.query(self.model)\
-                .join(StaffUnit, self.model.staff_unit_curator_id == StaffUnit.id)\
-                .filter(
-                    self.model.status == status,
-                    StaffUnit.staff_division_id == staff_division.id
-                ).all()
+            db.query(self.model)
+            .join(StaffUnit, self.model.staff_unit_curator_id == StaffUnit.id)
+            .filter(
+                self.model.status == status,
+                StaffUnit.staff_division_id == staff_division.id
+            ).all()
         )
         for group in staff_division.children:
             candidates += self.get_all_by_staff_division(db, group, status)
 
         return candidates
-
 
     def get_count_completed_candidates(
             self, db: Session
@@ -104,6 +103,8 @@ class CandidateService(
             curator = user_service.get_user_by_staff_unit(
                 db, candidate.staff_unit_curator_id
             )
+            if curator is None:
+                continue
             if curator.id in top_curators:
                 top_curators[curator.id] += 1
             else:
@@ -117,7 +118,8 @@ class CandidateService(
             id: value for id, value in top_curators.items()
             if value is not None and value != ""
         }
-        sorted_curators = sorted(top_curators.items(), key=lambda x: x[1], reverse=True)
+        sorted_curators = sorted(top_curators.items(),
+                                 key=lambda x: x[1], reverse=True)
         return sorted_curators
 
     def get_top_curator_duration_by_candidates(self,
@@ -131,18 +133,20 @@ class CandidateService(
             curator = user_service.get_user_by_staff_unit(
                 db, candidate.staff_unit_curator_id
             )
+            if curator is None:
+                continue
             if curator.id in top_curators:
                 if candidate.created_at > top_curators[curator.id]:
                     top_curators[curator.id] = candidate.created_at
             else:
                 top_curators[curator.id] = candidate.created_at
 
-
         top_curators = {
             id: value for id, value in top_curators.items()
             if value is not None and value != ""
         }
-        sorted_curators = sorted(top_curators.items(), key=lambda x: x[1], reverse=True)
+        sorted_curators = sorted(top_curators.items(),
+                                 key=lambda x: x[1], reverse=True)
         return sorted_curators
 
     def get_multiple(self, db: Session,
@@ -334,7 +338,7 @@ class CandidateService(
         """
         candidate_stage_info_count = db.query(CandidateStageType).count()
         candidate['id'] = str(candidate['id'])
-        
+
         candidate_stage_info_success_count = db.query(
             CandidateStageInfo).filter(
             CandidateStageInfo.status == CandidateStageInfoStatusEnum.APPROVED.value,
@@ -400,10 +404,10 @@ class CandidateService(
         return candidates
 
     def _get_candidates_by_status_and_filter(self, db: Session,
-                                filter: str,
-                                skip: int = 0,
-                                limit: int = 100,
-                                status: CandidateStatusEnum = None) -> CandidateRead:
+                                             filter: str,
+                                             skip: int = 0,
+                                             limit: int = 100,
+                                             status: CandidateStatusEnum = None) -> CandidateRead:
         """
             Returns a list of candidates based on the given status
             and filtered by the given keyword.
