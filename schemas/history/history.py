@@ -131,6 +131,14 @@ class HistoryContractCreate(BaseModel):
     date_to: Optional[datetime]
     document_number: str
     contract_type_id: str
+    
+class HistoryBadgeCreate(BaseModel):
+    user_id: str
+    type: str
+    date_from: datetime
+    date_to: Optional[datetime]
+    document_number: str
+    badge_type_id: str
 
 
 class HistoryUpdate(HistoryBase):

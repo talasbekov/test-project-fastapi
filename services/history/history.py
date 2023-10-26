@@ -51,7 +51,8 @@ from schemas import (
     HistoryPersonalRead,
     ServiceIdInfoRead,
     HistoryTimeLineRead,
-    HistoryContractCreate
+    HistoryContractCreate,
+    HistoryBadgeCreate
 )
 
 from services import (privelege_emergency_service, coolness_service, badge_service,
@@ -201,7 +202,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         db.refresh(obj_db)
         return obj_db
 
-    def create_contract(self, db: Session, obj_in: HistoryContractCreate):
+    def create_contract_history(self, db: Session, obj_in: HistoryContractCreate):
         cls = options.get(obj_in.type)
         if cls is None:
             raise NotSupportedException(
@@ -211,6 +212,27 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         obj_data = {
             "user_id": obj_in.user_id,
             "contract_id": contract.id,
+            "type": obj_in.type,
+            "document_number": obj_in.document_number,
+            "date_from": obj_in.date_from,
+            "date_to": obj_in.date_to if obj_in.date_to is not None else None
+        }
+        obj_db = cls(**obj_data)
+        db.add(obj_db)
+        db.flush()
+        db.refresh(obj_db)
+        return obj_db
+
+    def create_badge_history(self, db: Session, obj_in: HistoryBadgeCreate):
+        cls = options.get(obj_in.type)
+        if cls is None:
+            raise NotSupportedException(
+                detail=f'Type: {obj_in.type} is not supported!')
+        badge = badge_service.create_relation(
+            db, obj_in.user_id, obj_in.badge_type_id)
+        obj_data = {
+            "user_id": obj_in.user_id,
+            "badge_id": badge.id,
             "type": obj_in.type,
             "document_number": obj_in.document_number,
             "date_from": obj_in.date_from,

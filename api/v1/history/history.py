@@ -9,7 +9,8 @@ from sqlalchemy.orm import Session
 
 from core import get_db
 from schemas import (HistoryCreate, HistoryUpdate, HistoryRead,
-                     HistoryServiceDetailRead, HistoryContractCreate)
+                     HistoryServiceDetailRead, HistoryContractCreate,
+                     HistoryBadgeCreate)
 from services import history_service
 from models import HistoryEnum
 
@@ -119,11 +120,11 @@ async def create(*,
              dependencies=[Depends(HTTPBearer())],
              response_model=HistoryRead,
              summary="Create Contract History")
-async def create_contract(*,
-                          db: Session = Depends(get_db),
-                          body: HistoryContractCreate,
-                          Authorize: AuthJWT = Depends()
-                          ):
+async def create_contract_history(*,
+                                  db: Session = Depends(get_db),
+                                  body: HistoryContractCreate,
+                                  Authorize: AuthJWT = Depends()
+                                  ):
     """
         Create contract history
 
@@ -132,6 +133,25 @@ async def create_contract(*,
     """
     Authorize.jwt_required()
     return history_service.create_contract(db, body)
+
+
+@router.post("/bagde", status_code=status.HTTP_201_CREATED,
+             dependencies=[Depends(HTTPBearer())],
+             response_model=HistoryRead,
+             summary="Create Badge History")
+async def create_badge_history(*,
+                               db: Session = Depends(get_db),
+                               body: HistoryBadgeCreate,
+                               Authorize: AuthJWT = Depends()
+                               ):
+    """
+        Create badge history
+
+        - **name**: required
+        - **quantity**: required
+    """
+    Authorize.jwt_required()
+    return history_service.create_badge_history(db, body)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],

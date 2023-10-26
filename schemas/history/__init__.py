@@ -14,6 +14,7 @@ from .history import (
     ServiceIdInfoRead,
     HistoryTimeLineRead,
     HistoryContractCreate,
+    HistoryBadgeCreate,
 )
 from .history_name_change import (
     HistoryNameChangeBase,
