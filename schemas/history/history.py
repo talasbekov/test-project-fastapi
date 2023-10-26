@@ -131,7 +131,8 @@ class HistoryContractCreate(BaseModel):
     date_to: Optional[datetime]
     document_number: str
     contract_type_id: str
-    
+
+
 class HistoryBadgeCreate(BaseModel):
     user_id: str
     type: str
@@ -139,6 +140,52 @@ class HistoryBadgeCreate(BaseModel):
     date_to: Optional[datetime]
     document_number: str
     badge_type_id: str
+
+
+class HistorySecondmentCreate(BaseModel):
+    user_id: str
+    type: str
+    date_from: datetime
+    date_to: Optional[datetime]
+    document_number: str
+    staff_division_id: Optional[str]
+    value: Optional[str]
+
+
+class HistoryPenaltyCreate(BaseModel):
+    user_id: str
+    type: str
+    date_from: datetime
+    date_to: Optional[datetime]
+    document_number: str
+    penalty_type_id: str
+
+
+class HistoryStatusCreate(BaseModel):
+    user_id: str
+    type: str
+    date_from: datetime
+    date_to: Optional[datetime]
+    document_number: str
+    status_type_id: str
+
+
+class HistoryCoolnessCreate(BaseModel):
+    user_id: str
+    type: str
+    date_from: datetime
+    date_to: Optional[datetime]
+    document_number: str
+    coolness_type_id: str
+
+
+class HistoryAttestationCreate(BaseModel):
+    user_id: str
+    type: str
+    date_from: datetime
+    date_to: Optional[datetime]
+    document_number: str
+    attestation_status: str
 
 
 class HistoryUpdate(HistoryBase):
@@ -433,6 +480,7 @@ class ContractRead(ReadNamedModel):
     @classmethod
     def from_orm(cls, orm_obj):
         return cls(
+            id=orm_obj.id,
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
             document_link=orm_obj.document_link,

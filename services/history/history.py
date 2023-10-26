@@ -52,13 +52,20 @@ from schemas import (
     ServiceIdInfoRead,
     HistoryTimeLineRead,
     HistoryContractCreate,
-    HistoryBadgeCreate
+    HistoryBadgeCreate,
+    HistorySecondmentCreate,
+    HistoryPenaltyCreate,
+    HistoryStatusCreate,
+    HistoryCoolnessCreate,
+    HistoryAttestationCreate
 )
 
 from services import (privelege_emergency_service, coolness_service, badge_service,
                       personnal_reserve_service, service_id_service, user_service,
                       recommender_user_service, contract_service, driving_license_service,
-                      identification_card_service, passport_service, profile_service)
+                      identification_card_service, passport_service, profile_service,
+                      secondment_service, staff_division_service, penalty_service,
+                      status_service)
 
 
 classes = {
@@ -240,6 +247,118 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         }
         obj_db = cls(**obj_data)
         db.add(obj_db)
+        db.flush()
+        db.refresh(obj_db)
+        return obj_db
+
+    def create_secondment_history(self, db: Session, obj_in: HistorySecondmentCreate):
+        cls = options.get(obj_in.type)
+        if cls is None:
+            raise NotSupportedException(
+                detail=f'Type: {obj_in.type} is not supported!')
+        if obj_in.staff_division_id:
+            staff_division = staff_division_service.get_by_id(
+                db, obj_in.staff_division_id)
+            secondment = secondment_service.create_relation(
+                db, obj_in.user_id, staff_division)
+        else:
+            secondment = secondment_service.create_relation(
+                db, obj_in.user_id, obj_in.value)
+        obj_data = {
+            "user_id": obj_in.user_id,
+            "secondment_id": secondment.id,
+            "type": obj_in.type,
+            "document_number": obj_in.document_number,
+            "date_from": obj_in.date_from,
+            "date_to": obj_in.date_to if obj_in.date_to is not None else None
+        }
+        obj_db = cls(**obj_data)
+        db.add(obj_db)
+        db.flush()
+        db.refresh(obj_db)
+        return obj_db
+
+    def create_penalty_history(self, db: Session, obj_in: HistoryPenaltyCreate):
+        cls = options.get(obj_in.type)
+        if cls is None:
+            raise NotSupportedException(
+                detail=f'Type: {obj_in.type} is not supported!')
+        penalty = penalty_service.create_relation(
+            db, obj_in.user_id, obj_in.penalty_type_id)
+        obj_data = {
+            "user_id": obj_in.user_id,
+            "penalty_id": penalty.id,
+            "type": obj_in.type,
+            "document_number": obj_in.document_number,
+            "date_from": obj_in.date_from,
+            "date_to": obj_in.date_to if obj_in.date_to is not None else None
+        }
+        obj_db = cls(**obj_data)
+        db.add(obj_db)
+        db.flush()
+        db.refresh(obj_db)
+        return obj_db
+
+    def create_status_history(self, db: Session, obj_in: HistoryStatusCreate):
+        cls = options.get(obj_in.type)
+        if cls is None:
+            raise NotSupportedException(
+                detail=f'Type: {obj_in.type} is not supported!')
+        status = status_service.create_relation(
+            db, obj_in.user_id, obj_in.status_type_id)
+        obj_data = {
+            "user_id": obj_in.user_id,
+            "status_id": status.id,
+            "type": obj_in.type,
+            "document_number": obj_in.document_number,
+            "date_from": obj_in.date_from,
+            "date_to": obj_in.date_to if obj_in.date_to is not None else None
+        }
+        obj_db = cls(**obj_data)
+        db.add(obj_db)
+        db.flush()
+        db.refresh(obj_db)
+        return obj_db
+
+    def create_coolness_history(self, db: Session, obj_in: HistoryCoolnessCreate):
+        cls = options.get(obj_in.type)
+        if cls is None:
+            raise NotSupportedException(
+                detail=f'Type: {obj_in.type} is not supported!')
+        coolness = coolness_service.create_relation(
+            db, obj_in.user_id, obj_in.coolness_type_id)
+        obj_data = {
+            "user_id": obj_in.user_id,
+            "coolness_id": coolness.id,
+            "type": obj_in.type,
+            "document_number": obj_in.document_number,
+            "date_from": obj_in.date_from,
+            "date_to": obj_in.date_to if obj_in.date_to is not None else None
+        }
+        obj_db = cls(**obj_data)
+        db.add(obj_db)
+        db.flush()
+        db.refresh(obj_db)
+        return obj_db
+    
+    def create_attestation_history(self, db: Session, obj_in: HistoryAttestationCreate):
+        cls = options.get(obj_in.type)
+        if cls is None:
+            raise NotSupportedException(
+                detail=f'Type: {obj_in.type} is not supported!')
+        attesation = Attestation(**{"user_id": obj_in.user_id})
+        obj_data = {
+            "user_id": obj_in.user_id,
+            "attestation_id": attesation.id,
+            "type": obj_in.type,
+            "document_number": obj_in.document_number,
+            "date_from": obj_in.date_from,
+            "attestation_status": obj_in.attestation_status,
+            "date_to": obj_in.date_to if obj_in.date_to is not None else None
+        }
+        obj_db = cls(**obj_data)
+        db.add(obj_db)
+        db.add(attesation)
         db.flush()
         db.refresh(obj_db)
         return obj_db
