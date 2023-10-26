@@ -440,14 +440,13 @@ class RankServiceDetailRead(ReadNamedModel):
 
 
 class PenaltyRead(Model):
+    id: str
     status: Optional[str]
     document_link: Optional[str]
     document_number: Optional[str]
     cancel_document_link: Optional[str]
     date_from: Optional[datetime]
     date_to: Optional[datetime]
-
-    """TODO: WHO IS THIS?"""
 
     class Config:
         from_attributes = True
@@ -456,6 +455,7 @@ class PenaltyRead(Model):
     @classmethod
     def from_orm(cls, orm_obj):
         return cls(
+            id=orm_obj.id,
             status=orm_obj.penalty.type.name,
             document_link=orm_obj.document_link,
             cancel_document_link=orm_obj.cancel_document_link,
@@ -493,6 +493,7 @@ class ContractRead(ReadNamedModel):
 
 
 class AttestationRead(Model):
+    id:str
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     document_link: Optional[str]
@@ -539,6 +540,7 @@ class CharacteristicRead(ReadModel):
 
 
 class HolidayRead(Model):
+    id: str
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     document_link: Optional[str]
@@ -553,6 +555,7 @@ class HolidayRead(Model):
     @classmethod
     def from_orm(cls, orm_obj):
         return cls(
+            id=orm_obj.id,
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
             document_link=orm_obj.document_link,
@@ -658,6 +661,7 @@ class ServiceIdInfoRead(ReadModel):
 
 
 class SecondmentRead(Model):
+    id: str
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     staff_division: Optional[str]
@@ -679,6 +683,7 @@ class SecondmentRead(Model):
         body = (orm_obj.secondment.state_body.name
                 if orm_obj.secondment.state_body else None)
         return cls(
+            id=orm_obj.id,
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
             staff_division=staff_division,
