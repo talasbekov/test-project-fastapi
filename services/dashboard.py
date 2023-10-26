@@ -358,7 +358,7 @@ class DashboardService:
 
     def get_active_users(self, db: Session) -> int:
         active_users = db.query(User).filter(
-            User.is_active.is_(True)
+            User.is_active == True
         ).all()
         return len(active_users)
 
