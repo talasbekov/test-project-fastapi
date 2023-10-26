@@ -466,6 +466,8 @@ class PenaltyRead(Model):
 
 
 class ContractRead(ReadNamedModel):
+    contract_id: str
+    contract_type_id: str
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     document_link: Optional[str]
@@ -481,6 +483,8 @@ class ContractRead(ReadNamedModel):
     def from_orm(cls, orm_obj):
         return cls(
             id=orm_obj.id,
+            contract_id=orm_obj.contract_id,
+            contract_type_id=orm_obj.contract.type_id,
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
             document_link=orm_obj.document_link,
@@ -488,8 +492,7 @@ class ContractRead(ReadNamedModel):
             document_number=orm_obj.document_number,
             experience_years=orm_obj.experience_years,
             name=orm_obj.contract.type.name,
-            nameKZ=orm_obj.contract.type.nameKZ,
-            contract_type_id=orm_obj.contract.type_id
+            nameKZ=orm_obj.contract.type.nameKZ
         )
 
 
