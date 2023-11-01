@@ -16,11 +16,11 @@ class UserLiberationBase(BaseModel):
 
 
 class UserLiberationCreate(UserLiberationBase):
-    pass
+    liberation_id: Optional[str]
 
 
 class UserLiberationUpdate(UserLiberationBase):
-    pass
+    liberation_id: Optional[str]
 
 
 class UserLiberationRead(UserLiberationBase):
