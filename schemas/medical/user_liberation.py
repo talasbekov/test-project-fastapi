@@ -1,13 +1,13 @@
 import datetime
 import uuid
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel
 
 
 class UserLiberationBase(BaseModel):
     reason: str
-    liberation_id: str
+    liberation_ids: List
     initiator: str
     start_date: datetime.datetime
     end_date: datetime.datetime
@@ -16,17 +16,17 @@ class UserLiberationBase(BaseModel):
 
 
 class UserLiberationCreate(UserLiberationBase):
-    liberation_id: Optional[str]
+    liberation_ids: Optional[List]
 
 
 class UserLiberationUpdate(UserLiberationBase):
-    liberation_id: Optional[str]
+    liberation_ids: Optional[List]
 
 
 class UserLiberationRead(UserLiberationBase):
     id: Optional[str]
     reason: Optional[str]
-    liberation_id: Optional[str]
+    liberation_ids: Optional[List]
     initiator: Optional[str]
     start_date: Optional[datetime.datetime]
     end_date: Optional[datetime.datetime]
