@@ -29,6 +29,7 @@ class BiographicInfoUpdate(BaseModel):
     nationality: Optional[str]
     family_status_id: Optional[str]
     residence_address: Optional[str]
+    address: Optional[str]
 
 
 class BiographicInfoRead(BiographicInfoBase):
