@@ -2,7 +2,7 @@ import json
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
-from models import Profile
+from models import Profile, Liberation
 from schemas import ProfileCreate, ProfileUpdate
 from services import ServiceBase
 
@@ -21,6 +21,15 @@ class ProfileService(ServiceBase[Profile, ProfileCreate, ProfileUpdate]):
         if profile is None:
             raise NotFoundException(
                 detail=f"Profile with user_id: {id} is not found!")
+        if profile.medical_profile.user_liberations is not None:
+            for user_liberation in profile.medical_profile.user_liberations:
+                liberated_data = db.query(Liberation).filter(
+                    Liberation.id.in_(user_liberation.liberation_ids)).all()
+                if len(liberated_data) != len(user_liberation.liberation_ids):
+                    raise ValueError("Some liberation IDs not found")
+                user_liberation.liberation_ids = liberated_data
+                print(user_liberation.liberation_ids)
+
         if profile.personal_profile.driving_license is not None:
             profile.personal_profile.driving_license.category = (
                 eval(profile.personal_profile.driving_license.category)
