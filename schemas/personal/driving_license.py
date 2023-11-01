@@ -19,7 +19,7 @@ class DrivingLicenseBase(BaseModel):
 
 
 class DrivingLicenseCreate(DrivingLicenseBase):
-    pass
+    category: Optional[str]
 
 
 class DrivingLicenseUpdate(BaseModel):
