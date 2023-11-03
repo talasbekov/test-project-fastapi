@@ -7,8 +7,10 @@ from pydantic import BaseModel
 
 class UserLiberationBase(BaseModel):
     reason: str
+    reasonKZ: str
     liberation_ids: List
     initiator: str
+    initiatorKZ: str
     start_date: datetime.datetime
     end_date: datetime.datetime
     profile_id: str
@@ -26,8 +28,10 @@ class UserLiberationUpdate(UserLiberationBase):
 class UserLiberationRead(UserLiberationBase):
     id: Optional[str]
     reason: Optional[str]
+    reasonKZ: Optional[str]
     liberation_ids: Optional[List]
     initiator: Optional[str]
+    initiatorKZ: Optional[str]
     start_date: Optional[datetime.datetime]
     end_date: Optional[datetime.datetime]
     profile_id: Optional[str]

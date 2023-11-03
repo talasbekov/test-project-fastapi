@@ -12,7 +12,9 @@ class UserLiberation(Model):
     __tablename__ = "hr_erp_user_liberations"
 
     reason = Column(String)
+    reasonKZ = Column("REASONKZ", String)
     initiator = Column(String)
+    initiatorKZ = Column("INITIATORKZ", String)
     start_date = Column(TIMESTAMP(timezone=True))
     end_date = Column(TIMESTAMP(timezone=True))
     document_link = Column(TEXT, nullable=True)

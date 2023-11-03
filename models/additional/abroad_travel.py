@@ -19,6 +19,7 @@ class AbroadTravel(Model):
         nullable=False)
 
     vehicle_type = Column(String(255), nullable=False)
+    vehicle_typeKZ = Column('vehicle_typekz', String, nullable=True)
     destination_country_id = Column(
         String(),
         ForeignKey('hr_erp_countries.id'),
@@ -26,6 +27,7 @@ class AbroadTravel(Model):
     date_from = Column(TIMESTAMP(timezone=True), nullable=False)
     date_to = Column(TIMESTAMP(timezone=True), nullable=False)
     reason = Column(String(255), nullable=False, default="")
+    reasonKZ = Column('reasonkz', String, nullable=True)
     document_link = Column(String(255), nullable=False, default="")
 
     profile_id = Column(String(), ForeignKey(

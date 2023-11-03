@@ -10,6 +10,7 @@ class DispensaryRegistration(NamedModel):
     __tablename__ = "hr_erp_disp_registrations"
 
     initiator = Column(String)
+    initiatorKZ = Column("INITIATORKZ", String)
     start_date = Column(TIMESTAMP(timezone=True))
     end_date = Column(TIMESTAMP(timezone=True))
     document_link = Column(TEXT, nullable=True)

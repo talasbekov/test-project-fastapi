@@ -10,8 +10,11 @@ from schemas import NamedModel, ReadNamedModel
 class ViolationBase(NamedModel):
     date: datetime
     issued_by: str
+    issued_byKZ: str
     article_number: str
+    article_numberKZ: str
     consequence: str
+    consequenceKZ: str
     document_link: Optional[AnyUrl]
     profile_id: Optional[str]
 
@@ -29,4 +32,6 @@ class ViolationUpdate(ViolationBase):
 
 
 class ViolationRead(ViolationBase, ReadNamedModel):
-    pass
+    issued_byKZ: Optional[str]
+    article_numberKZ: Optional[str]
+    consequenceKZ: Optional[str]
