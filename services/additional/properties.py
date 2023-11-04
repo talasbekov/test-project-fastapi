@@ -29,10 +29,6 @@ class PropertiesService(
         db.flush()
         return db_obj
 
-    def update(self, db: Session, db_obj: Properties,
-               obj_in: PropertiesUpdate):
-        return super().update(db, db_obj, obj_in)
-
     def delete(self, db: Session, id: str):
         return super().delete(db, id)
 
