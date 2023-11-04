@@ -23,17 +23,13 @@ class AbroadTravelService(
     def create(self, db: Session, obj_in: AbroadTravelCreate):
         obj_in_data = jsonable_encoder(obj_in)
         obj_in_data['date_from'] = datetime.strptime(obj_in_data['date_from'],
-                                                '%Y-%m-%dT%H:%M:%S.%f%z')
+                                                     '%Y-%m-%dT%H:%M:%S.%f%z')
         obj_in_data['date_to'] = datetime.strptime(obj_in_data['date_to'],
-                                                '%Y-%m-%dT%H:%M:%S.%f%z')
+                                                   '%Y-%m-%dT%H:%M:%S.%f%z')
         db_obj = self.model(**obj_in_data)
         db.add(db_obj)
         db.flush()
         return db_obj
-
-    def update(self, db: Session, db_obj: AbroadTravel,
-               obj_in: AbroadTravelUpdate):
-        return super().update(db, db_obj, obj_in)
 
     def delete(self, db: Session, id: str):
         return super().delete(db, id)
