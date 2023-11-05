@@ -95,7 +95,7 @@ async def update(*,
     """
     Authorize.jwt_required()
     personnal_reserve = personnal_reserve_service.get_by_id(db, str(id))
-    return personnal_reserve_service.update(db, personnal_reserve, body)
+    return personnal_reserve_service.update(db=db, db_obj=personnal_reserve, obj_in=body)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
