@@ -20,7 +20,7 @@ router = APIRouter(prefix="/psychological-check",
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
             response_model=List[PsychologicalCheckRead],
-            summary="Get all Polygraph Check")
+            summary="Get all psychological check")
 async def get_all(*,
                   db: Session = Depends(get_db),
                   skip: int = 0,
@@ -28,11 +28,11 @@ async def get_all(*,
                   Authorize: AuthJWT = Depends()
                   ):
     """
-        Get all Abroad Travel
+        Get all psychological check
 
-    - **skip**: int - The number of abroad travel to skip before returning the results.
+    - **skip**: int - The number of psychological check to skip before returning the results.
         This parameter is optional and defaults to 0.
-    - **limit**: int - The maximum number of abroad travel to return in the response.
+    - **limit**: int - The maximum number of psychological check to return in the response.
         This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
@@ -51,7 +51,7 @@ async def create(*,
                  Authorize: AuthJWT = Depends()
                  ):
     """
-        Create new abroad travel
+        Create new psychological check
 
         - **name**: required
         - **url**: image url. This parameter is required
@@ -62,7 +62,7 @@ async def create(*,
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=PsychologicalCheckRead,
-            summary="Update Abroad Travel by id")
+            summary="Update psychological check by id")
 async def update(*,
                  db: Session = Depends(get_db),
                  id: str,
@@ -70,7 +70,7 @@ async def update(*,
                  Authorize: AuthJWT = Depends()
                  ):
     """
-        Update abroad travel by id
+        Update psychological check by id
 
         - **name**: required
         - **url**: image url. This parameter is required
@@ -82,18 +82,18 @@ async def update(*,
 
 @router.delete("/{id}/", dependencies=[Depends(HTTPBearer())],
                response_model=PsychologicalCheckRead,
-               summary="Delete Abroad Travel by id")
+               summary="Delete psychological check by id")
 async def delete(*,
                  db: Session = Depends(get_db),
                  id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """
-        Delete abroad travel by id
+        Delete psychological check by id
 
         - **name**: required
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    abroad_travel = psychological_check_service.get_by_id(db, str(id))
-    return psychological_check_service.delete(db, abroad_travel)
+    psychological_check = psychological_check_service.get_by_id(db, str(id))
+    return psychological_check_service.remove(db=db, id=psychological_check.id)

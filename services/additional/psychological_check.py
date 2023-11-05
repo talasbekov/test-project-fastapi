@@ -35,9 +35,6 @@ class PsychologicalService(
                obj_in: PsychologicalCheckUpdate):
         return super().update(db, db_obj=db_obj, obj_in=obj_in)
 
-    def delete(self, db: Session, id: str):
-        return super().remove(db, id)
-
     def get_multi_by_user_id(
             self, db: Session, user_id: str, skip: int = 0, limit: int = 100):
         profile = profile_service.get_by_user_id(db, user_id)
