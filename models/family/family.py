@@ -26,9 +26,7 @@ class Family(Model):
     relation = relationship("FamilyRelation")
     violation = relationship(
         "Violation",
-        secondary=family_violation,
-        cascade="all, delete")
+        secondary=family_violation)
     abroad_travel = relationship(
         "AbroadTravel",
-        secondary=family_abroad_travel,
-        cascade="all, delete")
+        secondary=family_abroad_travel)
