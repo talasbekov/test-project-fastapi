@@ -5,6 +5,7 @@ from sqlalchemy.dialects.postgresql import TIMESTAMP
 from sqlalchemy.orm import relationship
 
 from models import Model
+from models.association import family_abroad_travel
 
 
 class AbroadTravel(Model):
@@ -38,3 +39,8 @@ class AbroadTravel(Model):
         back_populates="abroad_travels")
     destination_country = relationship(
         "Country", back_populates="abroad_travels")
+
+    family_abroad_travel = relationship(
+        "AbroadTravel",
+        secondary=family_abroad_travel,
+        cascade="all, delete")
