@@ -97,4 +97,4 @@ async def delete(*,
     """
     Authorize.jwt_required()
     properties = properties_service.get_by_id(db, str(id))
-    return properties_service.delete(db, properties)
+    return properties_service.remove(db=db, id=properties.id)

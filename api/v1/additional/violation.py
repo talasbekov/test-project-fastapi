@@ -96,4 +96,4 @@ async def delete(*,
     """
     Authorize.jwt_required()
     abroad_travel = violation_service.get_by_id(db, str(id))
-    return violation_service.delete(db, abroad_travel)
+    return violation_service.remove(db=db, id=abroad_travel.id)

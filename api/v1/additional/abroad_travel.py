@@ -98,4 +98,4 @@ async def delete(*,
     """
     Authorize.jwt_required()
     abroad_travel = abroad_travel_service.get_by_id(db, str(id))
-    return abroad_travel_service.delete(db, abroad_travel)
+    return abroad_travel_service.delete(db=db, id=abroad_travel.id)
