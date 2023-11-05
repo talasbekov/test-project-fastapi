@@ -31,8 +31,6 @@ class AbroadTravelService(
         db.flush()
         return db_obj
 
-    def delete(self, db: Session, id: str):
-        return super().delete(db, id)
 
     def get_multi_by_additional_profile_id(self, db: Session, profile_id: str):
         qry = db.query(

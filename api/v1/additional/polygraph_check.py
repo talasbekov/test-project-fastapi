@@ -52,7 +52,7 @@ async def create(*,
                  Authorize: AuthJWT = Depends()
                  ):
     """
-        Create new abroad travel
+        Create new polyhraph_check
 
         - **name**: required
         - **url**: image url. This parameter is required
@@ -63,7 +63,7 @@ async def create(*,
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=PolygraphCheckRead,
-            summary="Update Abroad Travel by id")
+            summary="Update polyhraph_check by id")
 async def update(*,
                  db: Session = Depends(get_db),
                  id: str,
@@ -71,7 +71,7 @@ async def update(*,
                  Authorize: AuthJWT = Depends()
                  ):
     """
-        Update abroad travel by id
+        Update polyhraph_check by id
 
         - **name**: required
         - **url**: image url. This parameter is required
@@ -83,18 +83,18 @@ async def update(*,
 
 @router.delete("/{id}/", dependencies=[Depends(HTTPBearer())],
                response_model=PolygraphCheckRead,
-               summary="Delete Abroad Travel by id")
+               summary="Delete polyhraph_check by id")
 async def delete(*,
                  db: Session = Depends(get_db),
                  id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """
-        Delete abroad travel by id
+        Delete polyhraph_check by id
 
         - **name**: required
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    abroad_travel = polyhraph_check_service.get_by_id(db, str(id))
-    return polyhraph_check_service.delete(db, abroad_travel)
+    polyhraph_check = polyhraph_check_service.get_by_id(db, str(id))
+    return polyhraph_check_service.remove(db=db, id=polyhraph_check.id)
