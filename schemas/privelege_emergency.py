@@ -1,7 +1,7 @@
 import uuid
 from typing import Optional
 
-from datetime import datetime
+from datetime import date
 from enum import Enum
 
 from schemas import Model, ReadModel
@@ -9,8 +9,8 @@ from schemas import Model, ReadModel
 
 class PrivelegeEmergency(Model):
     form: Optional[str]
-    date_from: Optional[datetime]
-    date_to: Optional[datetime]
+    date_from: Optional[date]
+    date_to: Optional[date]
     user_id: Optional[str]
 
     class Config:
