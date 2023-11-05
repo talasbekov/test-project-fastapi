@@ -26,6 +26,7 @@ class Violation(Model):
     document_link = Column(String(255), nullable=False)
 
     profile_id = Column(String(),
-                        ForeignKey("hr_erp_additional_profiles.id"))
+                        ForeignKey("hr_erp_additional_profiles.id"),
+                        nullable=True)
 
     profile = relationship("AdditionalProfile", back_populates="violations")
