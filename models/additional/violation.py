@@ -3,6 +3,7 @@ from sqlalchemy.dialects.postgresql import TIMESTAMP
 from sqlalchemy.orm import relationship
 
 from models import Model
+from models.association import family_violation
 
 
 class Violation(Model):
@@ -30,3 +31,8 @@ class Violation(Model):
                         nullable=True)
 
     profile = relationship("AdditionalProfile", back_populates="violations")
+
+    family_violation = relationship(
+        "Violation",
+        secondary=family_violation,
+        cascade="all, delete")
