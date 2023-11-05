@@ -508,8 +508,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             personal_reserve_read = None
         else:
             personal_reserve_read = PersonnalReserveRead(
-                date_from=personal_reserve.date_from,
-                date_to=personal_reserve.date_to,
+                reserve_date=personal_reserve.reserve_date,
                 id=personal_reserve.id,
                 reserve=personal_reserve.reserve,
                 user_id=personal_reserve.user_id,
