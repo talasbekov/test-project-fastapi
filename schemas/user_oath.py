@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime
+from datetime import date
 from typing import Optional
 
 
@@ -8,7 +8,7 @@ from schemas import Model, ReadModel
 
 
 class UserOath(Model):
-    date: Optional[datetime]
+    date: Optional[date]
     user_id: str
     military_unit_id: str
 
