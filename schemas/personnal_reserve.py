@@ -1,16 +1,14 @@
-import uuid
-from typing import Optional
 
-from datetime import datetime
+from typing import Optional
 from enum import Enum
+from datetime import date
 
 from schemas import Model, ReadModel
 
 
 class PersonnalReserveBase(Model):
-    reserve: Optional[Enum]
-    date_from: Optional[datetime]
-    date_to: Optional[datetime]
+    reserve: Optional[str]
+    reserve_date: Optional[date]
     user_id: Optional[str]
     document_link: Optional[str]
     document_number: Optional[str]
@@ -29,4 +27,4 @@ class PersonnalReserveUpdate(PersonnalReserveBase):
 
 
 class PersonnalReserveRead(PersonnalReserveBase, ReadModel):
-    pass
+    reserve: Optional[Enum]
