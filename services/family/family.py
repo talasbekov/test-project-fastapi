@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from exceptions.client import NotFoundException
 from models import Family
 from schemas import FamilyCreate, FamilyUpdate
-from services import ServiceBase
+from services import ServiceBase, violation_service, abroad_travel_service
 from typing import Union, Dict, Any
 from fastapi.encoders import jsonable_encoder
 from datetime import datetime
@@ -44,6 +44,20 @@ class FamilyService(ServiceBase[Family, FamilyCreate, FamilyUpdate]):
         db.add(db_obj)
         db.flush()
         return db_obj
+
+    def create_violation(self, db: Session, family_id: str,
+                        obj_in):
+        violation = violation_service.create(db, obj_in)
+        family = self.get_by_id(db, family_id)
+        family.violation.append(violation)
+        return family
+    
+    def create_abroad_travel(self, db: Session, family_id: str,
+                        obj_in):
+        abroad_travel = abroad_travel_service.create(db, obj_in)
+        family = self.get_by_id(db, family_id)
+        family.abroad_travel.append(abroad_travel)
+        return family
 
 
 family_service = FamilyService(Family)
