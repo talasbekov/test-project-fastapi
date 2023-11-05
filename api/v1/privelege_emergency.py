@@ -94,7 +94,7 @@ async def update(*,
     """
     Authorize.jwt_required()
     privelege_emergency = privelege_emergency_service.get_by_id(db, str(id))
-    return privelege_emergency_service.update(db, privelege_emergency, body)
+    return privelege_emergency_service.update(db=db, db_obj=privelege_emergency, obj_in=body)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
