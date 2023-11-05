@@ -46,18 +46,26 @@ class FamilyService(ServiceBase[Family, FamilyCreate, FamilyUpdate]):
         return db_obj
 
     def create_violation(self, db: Session, family_id: str,
-                        obj_in):
+                         obj_in):
         violation = violation_service.create(db, obj_in)
         family = self.get_by_id(db, family_id)
         family.violation.append(violation)
         return family
-    
+
     def create_abroad_travel(self, db: Session, family_id: str,
-                        obj_in):
+                             obj_in):
         abroad_travel = abroad_travel_service.create(db, obj_in)
         family = self.get_by_id(db, family_id)
         family.abroad_travel.append(abroad_travel)
         return family
+
+    def remove(self, db: Session, id: str) -> Family:
+        obj = db.query(self.model).get(id)
+        obj.violation = []
+        obj.abroad_travel = []
+        db.delete(obj)
+        db.flush()
+        return obj
 
 
 family_service = FamilyService(Family)
