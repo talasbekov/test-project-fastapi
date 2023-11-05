@@ -29,11 +29,11 @@ async def get_all(*,
                   Authorize: AuthJWT = Depends()
                   ):
     """
-        Get all Abroad Travel
+        Get all special_check
 
-    - **skip**: int - The number of abroad travel to skip before returning the results.
+    - **skip**: int - The number of special_check to skip before returning the results.
         This parameter is optional and defaults to 0.
-    - **limit**: int - The maximum number of abroad travel to return in the response.
+    - **limit**: int - The maximum number of special_check to return in the response.
         This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
@@ -52,7 +52,7 @@ async def create(*,
                  Authorize: AuthJWT = Depends()
                  ):
     """
-        Create new abroad travel
+        Create new special_check
 
         - **name**: required
         - **url**: image url. This parameter is required
@@ -71,7 +71,7 @@ async def update(*,
                  Authorize: AuthJWT = Depends()
                  ):
     """
-        Update abroad travel by id
+        Update special_check by id
 
         - **name**: required
         - **url**: image url. This parameter is required
@@ -83,18 +83,18 @@ async def update(*,
 
 @router.delete("/{id}/", dependencies=[Depends(HTTPBearer())],
                response_model=SpecialCheckRead,
-               summary="Delete Abroad Travel by id")
+               summary="Delete special_check by id")
 async def delete(*,
                  db: Session = Depends(get_db),
                  id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """
-        Delete abroad travel by id
+        Delete special_check by id
 
         - **name**: required
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    abroad_travel = special_check_service.get_by_id(db, str(id))
-    return special_check_service.delete(db, abroad_travel)
+    special_check = special_check_service.get_by_id(db, str(id))
+    return special_check_service.remove(db=db, id=special_check.id)

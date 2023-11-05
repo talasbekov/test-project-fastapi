@@ -1,3 +1,4 @@
+
 import uuid
 from typing import List
 
@@ -29,11 +30,11 @@ async def get_all(*,
                   Authorize: AuthJWT = Depends()
                   ):
     """
-        Get all Abroad Travel
+        Get all vehicle
 
-    - **skip**: int - The number of abroad travel to skip before returning the results.
+    - **skip**: int - The number of vehicle to skip before returning the results.
         This parameter is optional and defaults to 0.
-    - **limit**: int - The maximum number of abroad travel to return in the response.
+    - **limit**: int - The maximum number of vehicle to return in the response.
         This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
@@ -50,7 +51,7 @@ async def create(*,
                  Authorize: AuthJWT = Depends()
                  ):
     """
-        Create new abroad travel
+        Create new vehicle
 
         - **name**: required
         - **url**: image url. This parameter is required
@@ -68,11 +69,11 @@ async def get_by_id(*,
                     Authorize: AuthJWT = Depends()
                     ):
     """
-        Get abroad travel by id
+        Get vehicle by id
 
-    - **skip**: int - The number of abroad travel to skip before returning the results.
+    - **skip**: int - The number of vehicle to skip before returning the results.
         This parameter is optional and defaults to 0.
-    - **limit**: int - The maximum number of abroad travel to return in the response.
+    - **limit**: int - The maximum number of vehicle to return in the response.
         This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
@@ -111,11 +112,11 @@ async def delete(*,
                  Authorize: AuthJWT = Depends()
                  ):
     """
-        Delete abroad travel by id
+        Delete vehicle by id
 
         - **name**: required
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    abroad_travel = vehicle_service.get_by_id(db, str(id))
-    return vehicle_service.delete(db, abroad_travel)
+    vehicle = vehicle_service.get_by_id(db, str(id))
+    return vehicle_service.remove(db=db, id=vehicle.id)
