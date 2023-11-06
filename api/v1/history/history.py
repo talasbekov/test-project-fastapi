@@ -311,6 +311,24 @@ async def update(*,
     Authorize.jwt_required()
     return history_service.update(db, id, body)
 
+@router.put("/secondment/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=HistoryRead,
+            summary="Update History")
+async def update(*,
+                 db: Session = Depends(get_db),
+                 id: str,
+                 body: HistoryUpdate,
+                 Authorize: AuthJWT = Depends()
+                 ):
+    """
+        Update Equipment
+
+        - **id**: UUID - the id of equipment to update. This parameter is required
+        - **name**: required
+        - **quantity**: required
+    """
+    Authorize.jwt_required()
+    return history_service.update_secondment(db, id, body)
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
