@@ -3,16 +3,21 @@ version: '3'
 services:
   sgo-erp-oracle:
     platform: linux/amd64
-    command: bash -c "uvicorn main:app --host 0.0.0.0 --port 8002 --log-config log.ini --workers ${NUMBER_OF_WORKERS}"
+    command: bash -c "uvicorn main:app --host 0.0.0.0 --port 8003 --log-config log.ini --workers ${NUMBER_OF_WORKERS}"
     build: .
     container_name: sgo-erp-oracle
     restart: always
     ports:
-      - "8003:8002"
+      - "8003:8003"
     volumes:
       - .:/app
-    network_mode: "oracle"
+    networks:
+      - backend-dev
     deploy:
       resources:
         limits:
           memory: 4g
+
+networks:
+  backend-dev:
+    driver: bridge
