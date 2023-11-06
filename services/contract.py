@@ -29,6 +29,10 @@ class ContractService(ServiceBase[Contract, ContractCreate, ContractUpdate]):
             return [ContractRead.from_orm(contract).dict()
                     for contract in user.contracts]
 
+    def get_all_contract_types(self, db: Session, skip: int, limit: int):
+        return [ContractTypeRead.from_orm(i).dict() for i in db.query(
+            ContractType).offset(skip).limit(limit).all()]
+
     def get_object(self, db: Session, id: str, type: str):
         if type == 'write':
             return db.query(ContractType).filter(ContractType.id == id).first()
