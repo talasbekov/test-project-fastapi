@@ -194,6 +194,7 @@ class HistoryUpdate(HistoryBase):
     type: Optional[str]
     attestation_status: Optional[str]
     badge_type_id: Optional[str]
+    status_type_id: Optional[str]
 
 
 class HistoryRead(HistoryBase, ReadNamedModel):
