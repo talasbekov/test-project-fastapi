@@ -114,6 +114,8 @@ class HistoryBase(BaseModel):
     percentage: Optional[int]
     staff_division_name: Optional[str]
     staff_division_nameKZ: Optional[str]
+    contractor_signer_name: Optional[str]
+    contractor_signer_nameKZ: Optional[str]
 
     class Config:
         from_attributes = True
