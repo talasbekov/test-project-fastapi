@@ -193,6 +193,7 @@ class HistoryAttestationCreate(BaseModel):
 class HistoryUpdate(HistoryBase):
     type: Optional[str]
     attestation_status: Optional[str]
+    badge_type_id: Optional[str]
 
 
 class HistoryRead(HistoryBase, ReadNamedModel):
@@ -390,7 +391,6 @@ class BadgeServiceDetailRead(ReadNamedModel):
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     url: Optional[str]
-    user_id: Optional[str]
 
     class Config:
         from_attributes = True
