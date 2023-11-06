@@ -585,6 +585,25 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         return cls.create_timeline_history(
             db, user_id, object.id, finish_last, date_from, date_to
         )
+        
+    def update_secondment(self, db: Session, id: str, object: HistoryUpdate):
+        history = self.get_by_id(db, id)
+        if history is None:
+            raise NotFoundException(
+                detail=f'History with id: {id} is not found!')
+        for key, value in object.dict(exclude_unset=True).items():
+            setattr(history, key, value)
+        if history.secondment_id:
+            staff_division = staff_division_service.get_by_id(db, object.staff_division_id)
+            history.secondment.staff_division_id = staff_division.id
+            history.secondment.name = staff_division.name
+            history.secondment.nameKZ = staff_division.nameKZ
+        else:
+            raise NotFoundException(
+                detail=f'Secondment is not found!')
+        db.add(history)
+        db.commit()
+        return history
 
     def update(self, db: Session, id: str, object: HistoryUpdate):
         history = self.get_by_id(db, id)
