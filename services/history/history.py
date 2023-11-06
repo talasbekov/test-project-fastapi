@@ -523,7 +523,8 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             recommender_user = {"name": (f"{recommender.user_by.last_name}"
                                          f" {recommender.user_by.first_name[0]}"
                                          f"{' ' + father_name}"),
-                                "id": str(recommender.user_by_id)
+                                "user_by_id": str(recommender.user_by_id),
+                                "id": str(recommender.id)
                                 }
         else:
             recommender_user = None
