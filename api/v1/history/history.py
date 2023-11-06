@@ -314,7 +314,7 @@ async def update(*,
 @router.put("/secondment/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=HistoryRead,
             summary="Update History")
-async def update(*,
+async def update_secondment(*,
                  db: Session = Depends(get_db),
                  id: str,
                  body: HistoryUpdate,
@@ -333,7 +333,7 @@ async def update(*,
 @router.put("/badge/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=HistoryRead,
             summary="Update History")
-async def update(*,
+async def update_badge(*,
                  db: Session = Depends(get_db),
                  id: str,
                  body: HistoryUpdate,
@@ -348,6 +348,25 @@ async def update(*,
     """
     Authorize.jwt_required()
     return history_service.update_badge(db, id, body)
+
+@router.put("/status/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=HistoryRead,
+            summary="Update History")
+async def update_status(*,
+                 db: Session = Depends(get_db),
+                 id: str,
+                 body: HistoryUpdate,
+                 Authorize: AuthJWT = Depends()
+                 ):
+    """
+        Update badge history
+
+        - **id**: UUID - the id of history to update. This parameter is required
+        - **name**: required
+        - **quantity**: required
+    """
+    Authorize.jwt_required()
+    return history_service.update_status(db, id, body)
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],

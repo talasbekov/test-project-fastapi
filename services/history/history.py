@@ -618,7 +618,24 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             history.badge.type_id = object.badge_type_id
         else:
             raise NotFoundException(
-                detail=f'Secondment is not found!')
+                detail=f'Badge is not found!')
+        db.add(history)
+        db.commit()
+        return history
+    
+    def update_status(self, db: Session, id: str, object: HistoryUpdate):
+        history = self.get_by_id(db, id)
+        if history is None:
+            raise NotFoundException(
+                detail=f'History with id: {id} is not found!')
+        for key, value in object.dict(exclude_unset=True).items():
+            setattr(history, key, value)
+        if history.status_id:
+            status = status_service.get_by_id(db, history.status_id)
+            history.status.type_id = object.status_type_id
+        else:
+            raise NotFoundException(
+                detail=f'Status is not found!')
         db.add(history)
         db.commit()
         return history
