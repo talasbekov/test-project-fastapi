@@ -11,13 +11,8 @@ services:
       - "8003:8003"
     volumes:
       - .:/app
-    networks:
-      - backend-dev
+    network_mode: "oracle"
     deploy:
       resources:
         limits:
           memory: 4g
-
-networks:
-  backend-dev:
-    driver: bridge
