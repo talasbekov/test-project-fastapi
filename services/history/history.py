@@ -594,7 +594,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         for key, value in object.dict(exclude_unset=True).items():
             setattr(history, key, value)
         db.add(history)
-        db.flush()
+        db.commit()
         return history
 
     def get_all_personal(self, db: Session, user_id: str,
