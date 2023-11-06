@@ -134,7 +134,7 @@ async def create_contract_history(*,
         - **quantity**: required
     """
     Authorize.jwt_required()
-    return history_service.create_contract(db, body)
+    return history_service.create_contract_history(db, body)
 
 
 @router.post("/bagde", status_code=status.HTTP_201_CREATED,
@@ -155,15 +155,16 @@ async def create_badge_history(*,
     Authorize.jwt_required()
     return history_service.create_badge_history(db, body)
 
+
 @router.post("/secondement", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=HistoryRead,
              summary="Create Secondment History")
 async def create_secondement_history(*,
-                               db: Session = Depends(get_db),
-                               body: HistorySecondmentCreate,
-                               Authorize: AuthJWT = Depends()
-                               ):
+                                     db: Session = Depends(get_db),
+                                     body: HistorySecondmentCreate,
+                                     Authorize: AuthJWT = Depends()
+                                     ):
     """
         Create secondment history
 
@@ -173,15 +174,16 @@ async def create_secondement_history(*,
     Authorize.jwt_required()
     return history_service.create_secondment_history(db, body)
 
+
 @router.post("/penalty", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=HistoryRead,
              summary="Create Penalty History")
 async def create_penalty_history(*,
-                               db: Session = Depends(get_db),
-                               body: HistoryPenaltyCreate,
-                               Authorize: AuthJWT = Depends()
-                               ):
+                                 db: Session = Depends(get_db),
+                                 body: HistoryPenaltyCreate,
+                                 Authorize: AuthJWT = Depends()
+                                 ):
     """
         Create penalty history
 
@@ -191,15 +193,16 @@ async def create_penalty_history(*,
     Authorize.jwt_required()
     return history_service.create_penalty_history(db, body)
 
+
 @router.post("/status", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=HistoryRead,
              summary="Create Status History")
 async def create_status_history(*,
-                               db: Session = Depends(get_db),
-                               body: HistoryStatusCreate,
-                               Authorize: AuthJWT = Depends()
-                               ):
+                                db: Session = Depends(get_db),
+                                body: HistoryStatusCreate,
+                                Authorize: AuthJWT = Depends()
+                                ):
     """
         Create status history
 
@@ -209,15 +212,16 @@ async def create_status_history(*,
     Authorize.jwt_required()
     return history_service.create_status_history(db, body)
 
+
 @router.post("/coolness", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=HistoryRead,
              summary="Create Coolness History")
 async def create_coolness_history(*,
-                               db: Session = Depends(get_db),
-                               body: HistoryCoolnessCreate,
-                               Authorize: AuthJWT = Depends()
-                               ):
+                                  db: Session = Depends(get_db),
+                                  body: HistoryCoolnessCreate,
+                                  Authorize: AuthJWT = Depends()
+                                  ):
     """
         Create status history
 
@@ -227,15 +231,16 @@ async def create_coolness_history(*,
     Authorize.jwt_required()
     return history_service.create_coolness_history(db, body)
 
+
 @router.post("/attestation", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=HistoryRead,
              summary="Create Attestation History")
 async def create_attestation_history(*,
-                               db: Session = Depends(get_db),
-                               body: HistoryAttestationCreate,
-                               Authorize: AuthJWT = Depends()
-                               ):
+                                     db: Session = Depends(get_db),
+                                     body: HistoryAttestationCreate,
+                                     Authorize: AuthJWT = Depends()
+                                     ):
     """
         Create attestation history
 
