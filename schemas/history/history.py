@@ -192,6 +192,7 @@ class HistoryAttestationCreate(BaseModel):
 
 class HistoryUpdate(HistoryBase):
     type: Optional[str]
+    attestation_status: Optional[str]
 
 
 class HistoryRead(HistoryBase, ReadNamedModel):
