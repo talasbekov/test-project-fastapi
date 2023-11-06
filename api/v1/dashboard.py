@@ -191,7 +191,7 @@ async def get_curators_by_candidates_duration(*,
 
 
 @router.get("/users/all/inErp", dependencies=[Depends(HTTPBearer())],
-            summary="Get all data of candidates curators for Dashboard")
+            summary="All users in ecosystem ERP")
 async def get_all_users_of_erp(*,
                                db: Session = Depends(get_db),
                                Authorize: AuthJWT = Depends(),
@@ -204,7 +204,7 @@ async def get_all_users_of_erp(*,
 
 
 @router.get("/users/added", dependencies=[Depends(HTTPBearer())],
-            summary="Get all data of candidates curators for Dashboard")
+            summary="How match users are added")
 async def get_all_new_users_at_week(*,
                                     db: Session = Depends(get_db),
                                     Authorize: AuthJWT = Depends(),
@@ -217,7 +217,7 @@ async def get_all_new_users_at_week(*,
 
 
 @router.get("/users/active", dependencies=[Depends(HTTPBearer())],
-            summary="Get all data of candidates curators for Dashboard")
+            summary="Online users")
 async def get_all_active(*,
                          db: Session = Depends(get_db),
                          Authorize: AuthJWT = Depends(),
@@ -230,7 +230,7 @@ async def get_all_active(*,
 
 
 @router.get("/users/active/statistics", dependencies=[Depends(HTTPBearer())],
-            summary="Get all data of candidates curators for Dashboard")
+            summary="Get all data of users activity by three days")
 async def get_users_at_three_day_by_active(*,
                                            db: Session = Depends(get_db),
                                            Authorize: AuthJWT = Depends(),
