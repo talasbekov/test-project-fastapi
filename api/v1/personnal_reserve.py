@@ -75,7 +75,8 @@ async def get_all_forms(*,
        Get all Privelege Emergency Forms
    """
     Authorize.jwt_required()
-    return [reserve.name for reserve in ReserveEnum]
+    return {k: v for (k, v) in zip(ReserveEnum.__members__.keys(),
+                                   ReserveEnum.__members__.values())}
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -94,7 +95,7 @@ async def update(*,
     """
     Authorize.jwt_required()
     personnal_reserve = personnal_reserve_service.get_by_id(db, str(id))
-    return personnal_reserve_service.update(db, personnal_reserve, body)
+    return personnal_reserve_service.update(db=db, db_obj=personnal_reserve, obj_in=body)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],

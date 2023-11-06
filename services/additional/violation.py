@@ -22,19 +22,14 @@ class ViolationService(
         return rank
 
     def create(self, db: Session,
-            obj_in: Union[ViolationCreate, Dict[str, Any]]) -> Violation:
+               obj_in: Union[ViolationCreate, Dict[str, Any]]) -> Violation:
         obj_in_data = jsonable_encoder(obj_in)
-        obj_in_data['date'] = datetime.strptime(obj_in_data['date'], '%Y-%m-%dT%H:%M:%S.%f%z')
+        obj_in_data['date'] = datetime.strptime(
+            obj_in_data['date'], '%Y-%m-%dT%H:%M:%S.%f%z')
         db_obj = self.model(**obj_in_data)
         db.add(db_obj)
         db.flush()
         return db_obj
-
-    def update(self, db: Session, db_obj: Violation, obj_in: ViolationUpdate):
-        return super().update(db, db_obj, obj_in)
-
-    def delete(self, db: Session, id: str):
-        return super().delete(db, id)
 
     def get_multi_by_user_id(
             self, db: Session, user_id: str, skip: int = 0, limit: int = 100):

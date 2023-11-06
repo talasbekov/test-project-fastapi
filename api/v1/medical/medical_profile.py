@@ -138,4 +138,11 @@ async def get_profile_by_id(*,
                             Authorize: AuthJWT = Depends()
                             ):
     Authorize.jwt_required()
-    return profile_service.get_by_user_id(db, str(id)).medical_profile
+    medical_profile = (profile_service.get_by_user_id(
+        db, str(id)).medical_profile)
+    medical_profile = MedicalProfileRead.from_orm(medical_profile).dict()
+    if medical_profile['user_liberations'] is not None:
+        for user_liberation in medical_profile['user_liberations']:
+            user_liberation['liberation_ids'] = medical_profile_service.get_liberation_ids(
+                db, user_liberation)
+    return medical_profile

@@ -124,6 +124,70 @@ class HistoryCreate(HistoryBase):
     pass
 
 
+class HistoryContractCreate(BaseModel):
+    user_id: str
+    type: str
+    date_from: datetime
+    date_to: Optional[datetime]
+    document_number: str
+    contract_type_id: str
+
+
+class HistoryBadgeCreate(BaseModel):
+    user_id: str
+    type: str
+    date_from: datetime
+    date_to: Optional[datetime]
+    document_number: str
+    badge_type_id: str
+
+
+class HistorySecondmentCreate(BaseModel):
+    user_id: str
+    type: str
+    date_from: datetime
+    date_to: Optional[datetime]
+    document_number: str
+    staff_division_id: Optional[str]
+    value: Optional[str]
+
+
+class HistoryPenaltyCreate(BaseModel):
+    user_id: str
+    type: str
+    date_from: datetime
+    date_to: Optional[datetime]
+    document_number: str
+    penalty_type_id: str
+
+
+class HistoryStatusCreate(BaseModel):
+    user_id: str
+    type: str
+    date_from: datetime
+    date_to: Optional[datetime]
+    document_number: str
+    status_type_id: str
+
+
+class HistoryCoolnessCreate(BaseModel):
+    user_id: str
+    type: str
+    date_from: datetime
+    date_to: Optional[datetime]
+    document_number: str
+    coolness_type_id: str
+
+
+class HistoryAttestationCreate(BaseModel):
+    user_id: str
+    type: str
+    date_from: datetime
+    date_to: Optional[datetime]
+    document_number: str
+    attestation_status: str
+
+
 class HistoryUpdate(HistoryBase):
     type: Optional[str]
 
@@ -376,14 +440,13 @@ class RankServiceDetailRead(ReadNamedModel):
 
 
 class PenaltyRead(Model):
+    id: str
     status: Optional[str]
     document_link: Optional[str]
     document_number: Optional[str]
     cancel_document_link: Optional[str]
     date_from: Optional[datetime]
     date_to: Optional[datetime]
-
-    """TODO: WHO IS THIS?"""
 
     class Config:
         from_attributes = True
@@ -392,6 +455,7 @@ class PenaltyRead(Model):
     @classmethod
     def from_orm(cls, orm_obj):
         return cls(
+            id=orm_obj.id,
             status=orm_obj.penalty.type.name,
             document_link=orm_obj.document_link,
             cancel_document_link=orm_obj.cancel_document_link,
@@ -402,6 +466,8 @@ class PenaltyRead(Model):
 
 
 class ContractRead(ReadNamedModel):
+    contract_id: str
+    contract_type_id: str
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     document_link: Optional[str]
@@ -416,6 +482,9 @@ class ContractRead(ReadNamedModel):
     @classmethod
     def from_orm(cls, orm_obj):
         return cls(
+            id=orm_obj.id,
+            contract_id=orm_obj.contract_id,
+            contract_type_id=orm_obj.contract.type_id,
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
             document_link=orm_obj.document_link,
@@ -423,11 +492,12 @@ class ContractRead(ReadNamedModel):
             document_number=orm_obj.document_number,
             experience_years=orm_obj.experience_years,
             name=orm_obj.contract.type.name,
-            nameKZ=orm_obj.contract.type.nameKZ,
+            nameKZ=orm_obj.contract.type.nameKZ
         )
 
 
 class AttestationRead(Model):
+    id: str
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     document_link: Optional[str]
@@ -474,6 +544,7 @@ class CharacteristicRead(ReadModel):
 
 
 class HolidayRead(Model):
+    id: str
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     document_link: Optional[str]
@@ -488,6 +559,7 @@ class HolidayRead(Model):
     @classmethod
     def from_orm(cls, orm_obj):
         return cls(
+            id=orm_obj.id,
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
             document_link=orm_obj.document_link,
@@ -593,6 +665,7 @@ class ServiceIdInfoRead(ReadModel):
 
 
 class SecondmentRead(Model):
+    id: str
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     staff_division: Optional[str]
@@ -614,6 +687,7 @@ class SecondmentRead(Model):
         body = (orm_obj.secondment.state_body.name
                 if orm_obj.secondment.state_body else None)
         return cls(
+            id=orm_obj.id,
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
             staff_division=staff_division,

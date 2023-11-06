@@ -13,8 +13,7 @@ class PersonalReserve(Model):
 
     __tablename__ = "hr_erp_personnal_reserves"
     reserve = Column(Enum(ReserveEnum), nullable=True)
-    date_from = Column(TIMESTAMP(timezone=True), nullable=True)
-    date_to = Column(TIMESTAMP(timezone=True), nullable=True)
+    reserve_date = Column(TIMESTAMP(timezone=True), nullable=True)
 
     user_id = Column(String(), ForeignKey("hr_erp_users.id"))
     document_link = Column(String, nullable=True)

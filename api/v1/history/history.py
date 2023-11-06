@@ -8,7 +8,11 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import HistoryCreate, HistoryUpdate, HistoryRead, HistoryServiceDetailRead
+from schemas import (HistoryCreate, HistoryUpdate, HistoryRead,
+                     HistoryServiceDetailRead, HistoryContractCreate,
+                     HistoryBadgeCreate, HistorySecondmentCreate,
+                     HistoryPenaltyCreate, HistoryStatusCreate,
+                     HistoryCoolnessCreate, HistoryAttestationCreate)
 from services import history_service
 from models import HistoryEnum
 
@@ -98,20 +102,148 @@ async def get_all_by_user_id(*,
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=HistoryRead,
-             summary="Create Equipment")
+             summary="Create History")
 async def create(*,
                  db: Session = Depends(get_db),
                  body: HistoryCreate,
                  Authorize: AuthJWT = Depends()
                  ):
     """
-        Create Equipment
+        Create History
 
         - **name**: required
         - **quantity**: required
     """
     Authorize.jwt_required()
     return history_service.create(db, body)
+
+
+@router.post("/contract", status_code=status.HTTP_201_CREATED,
+             dependencies=[Depends(HTTPBearer())],
+             response_model=HistoryRead,
+             summary="Create Contract History")
+async def create_contract_history(*,
+                                  db: Session = Depends(get_db),
+                                  body: HistoryContractCreate,
+                                  Authorize: AuthJWT = Depends()
+                                  ):
+    """
+        Create contract history
+
+        - **name**: required
+        - **quantity**: required
+    """
+    Authorize.jwt_required()
+    return history_service.create_contract(db, body)
+
+
+@router.post("/bagde", status_code=status.HTTP_201_CREATED,
+             dependencies=[Depends(HTTPBearer())],
+             response_model=HistoryRead,
+             summary="Create Badge History")
+async def create_badge_history(*,
+                               db: Session = Depends(get_db),
+                               body: HistoryBadgeCreate,
+                               Authorize: AuthJWT = Depends()
+                               ):
+    """
+        Create badge history
+
+        - **name**: required
+        - **quantity**: required
+    """
+    Authorize.jwt_required()
+    return history_service.create_badge_history(db, body)
+
+@router.post("/secondement", status_code=status.HTTP_201_CREATED,
+             dependencies=[Depends(HTTPBearer())],
+             response_model=HistoryRead,
+             summary="Create Secondment History")
+async def create_secondement_history(*,
+                               db: Session = Depends(get_db),
+                               body: HistorySecondmentCreate,
+                               Authorize: AuthJWT = Depends()
+                               ):
+    """
+        Create secondment history
+
+        - **name**: required
+        - **quantity**: required
+    """
+    Authorize.jwt_required()
+    return history_service.create_secondment_history(db, body)
+
+@router.post("/penalty", status_code=status.HTTP_201_CREATED,
+             dependencies=[Depends(HTTPBearer())],
+             response_model=HistoryRead,
+             summary="Create Penalty History")
+async def create_penalty_history(*,
+                               db: Session = Depends(get_db),
+                               body: HistoryPenaltyCreate,
+                               Authorize: AuthJWT = Depends()
+                               ):
+    """
+        Create penalty history
+
+        - **name**: required
+        - **quantity**: required
+    """
+    Authorize.jwt_required()
+    return history_service.create_penalty_history(db, body)
+
+@router.post("/status", status_code=status.HTTP_201_CREATED,
+             dependencies=[Depends(HTTPBearer())],
+             response_model=HistoryRead,
+             summary="Create Status History")
+async def create_status_history(*,
+                               db: Session = Depends(get_db),
+                               body: HistoryStatusCreate,
+                               Authorize: AuthJWT = Depends()
+                               ):
+    """
+        Create status history
+
+        - **name**: required
+        - **quantity**: required
+    """
+    Authorize.jwt_required()
+    return history_service.create_status_history(db, body)
+
+@router.post("/coolness", status_code=status.HTTP_201_CREATED,
+             dependencies=[Depends(HTTPBearer())],
+             response_model=HistoryRead,
+             summary="Create Coolness History")
+async def create_coolness_history(*,
+                               db: Session = Depends(get_db),
+                               body: HistoryCoolnessCreate,
+                               Authorize: AuthJWT = Depends()
+                               ):
+    """
+        Create status history
+
+        - **name**: required
+        - **quantity**: required
+    """
+    Authorize.jwt_required()
+    return history_service.create_coolness_history(db, body)
+
+@router.post("/attestation", status_code=status.HTTP_201_CREATED,
+             dependencies=[Depends(HTTPBearer())],
+             response_model=HistoryRead,
+             summary="Create Attestation History")
+async def create_attestation_history(*,
+                               db: Session = Depends(get_db),
+                               body: HistoryAttestationCreate,
+                               Authorize: AuthJWT = Depends()
+                               ):
+    """
+        Create attestation history
+
+        - **name**: required
+        - **quantity**: required
+    """
+    Authorize.jwt_required()
+    return history_service.create_attestation_history(db, body)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -216,6 +348,7 @@ async def get_all_by_type_and_user_id(*,
     return history_service.get_all_by_type_and_user_id(
         db, type, user_id, skip, limit)
 
+
 @router.get("/timeline", dependencies=[Depends(HTTPBearer())],
             summary="Get all Histories by type and user id")
 async def get_all_by_type_and_user_id(*,
@@ -224,7 +357,7 @@ async def get_all_by_type_and_user_id(*,
                                       ):
     """
         Get timeline for user id
-        
+
         - **user_id**: UUID - required
     """
     Authorize.jwt_required()

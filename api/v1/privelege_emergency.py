@@ -1,4 +1,3 @@
-import uuid
 from typing import List
 
 from fastapi import APIRouter, Depends, status
@@ -75,7 +74,8 @@ async def get_all_forms(*,
        Get all Privelege Emergency Forms
    """
     Authorize.jwt_required()
-    return [form.value for form in FormEnum]
+    return {k: v for (k, v) in zip(FormEnum.__members__.keys(),
+                                   FormEnum.__members__.values())}
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -94,7 +94,7 @@ async def update(*,
     """
     Authorize.jwt_required()
     privelege_emergency = privelege_emergency_service.get_by_id(db, str(id))
-    return privelege_emergency_service.update(db, privelege_emergency, body)
+    return privelege_emergency_service.update(db=db, db_obj=privelege_emergency, obj_in=body)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],

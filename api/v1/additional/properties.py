@@ -63,7 +63,7 @@ async def create(*,
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=PropertiesRead,
-            summary="Update Abroad Travel by id")
+            summary="Update property by id")
 async def update(*,
                  db: Session = Depends(get_db),
                  id: str,
@@ -71,14 +71,14 @@ async def update(*,
                  Authorize: AuthJWT = Depends()
                  ):
     """
-        Update abroad travel by id
+        Update property by id
 
         - **name**: required
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    abroad_travel = properties_service.get_by_id(db, str(id))
-    return properties_service.update(db, abroad_travel, body)
+    property = properties_service.get_by_id(db, str(id))
+    return properties_service.update(db=db, db_obj=property, obj_in=body)
 
 
 @router.delete("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -97,4 +97,4 @@ async def delete(*,
     """
     Authorize.jwt_required()
     properties = properties_service.get_by_id(db, str(id))
-    return properties_service.delete(db, properties)
+    return properties_service.remove(db=db, id=properties.id)

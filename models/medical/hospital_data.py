@@ -11,7 +11,9 @@ class HospitalData(Model):
 
     code = Column(String)
     reason = Column(String)
+    reasonKZ = Column("REASONKZ", String)
     place = Column(String)
+    placeKZ = Column("PLACEKZ", String)
     start_date = Column(TIMESTAMP(timezone=True))
     end_date = Column(TIMESTAMP(timezone=True))
     document_link = Column(TEXT, nullable=True)

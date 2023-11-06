@@ -7,7 +7,8 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import FamilyCreate, FamilyRead, FamilyUpdate
+from schemas import (FamilyCreate, FamilyRead, FamilyUpdate,
+                     ViolationCreate, AbroadTravelCreate)
 from models import Profile, FamilyProfile
 from services import family_service
 from exceptions import NotFoundException
@@ -48,6 +49,34 @@ async def create(*,
         raise NotFoundException("Profile not found")
     body.profile_id = family_profile.id
     return family_service.create(db, obj_in=body)
+
+
+@router.post("/violation/{family_id}/", status_code=status.HTTP_201_CREATED,
+             dependencies=[Depends(HTTPBearer())],
+             response_model=FamilyRead,
+             summary="Add Violation")
+async def add_violation(*,
+                        db: Session = Depends(get_db),
+                        body: ViolationCreate,
+                        family_id: str,
+                        Authorize: AuthJWT = Depends()
+                        ):
+    Authorize.jwt_required()
+    return family_service.create_violation(db=db, family_id=family_id, obj_in=body)
+
+
+@router.post("/abroad_travel/{family_id}/", status_code=status.HTTP_201_CREATED,
+             dependencies=[Depends(HTTPBearer())],
+             response_model=FamilyRead,
+             summary="Add Abroad Travel")
+async def add_violation(*,
+                        db: Session = Depends(get_db),
+                        body: AbroadTravelCreate,
+                        family_id: str,
+                        Authorize: AuthJWT = Depends()
+                        ):
+    Authorize.jwt_required()
+    return family_service.create_abroad_travel(db=db, family_id=family_id, obj_in=body)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],

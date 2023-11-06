@@ -1,4 +1,5 @@
-import json 
+from typing import Any, Dict, Union
+from datetime import datetime
 
 from sqlalchemy.orm import Session
 
@@ -23,7 +24,20 @@ class DrivingLicenseService(
                 detail=f"DrivingLicense with id: {id} is not found!")
         driving_licence.category = eval(driving_licence.category)
         return driving_licence
-    
+
+    def create(self, db: Session,
+               obj_in: Union[DrivingLicenseCreate, Dict[str, Any]]) -> DrivingLicense:
+        obj_in_data = jsonable_encoder(obj_in)
+        obj_in_data['date_to'] = datetime.strptime(
+            obj_in_data['date_to'], '%Y-%m-%d')
+        obj_in_data['date_of_issue'] = datetime.strptime(
+            obj_in_data['date_of_issue'], '%Y-%m-%d')
+        db_obj = self.model(**obj_in_data)
+        db.add(db_obj)
+        db.commit()
+        db_obj.category = eval(db_obj.category)
+        return db_obj
+
     def get_by_user_id(self, db: Session, user_id: str):
         driving_licence = (db.query(DrivingLicense)
                            .join(PersonalProfile)
@@ -40,7 +54,7 @@ class DrivingLicenseService(
         license.document_link = body.document_link
         db.add(license)
         db.flush()
-        
+
     def update(
         self,
         db: Session,

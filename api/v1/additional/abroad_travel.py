@@ -79,7 +79,7 @@ async def update(*,
     """
     Authorize.jwt_required()
     abroad_travel = abroad_travel_service.get_by_id(db, str(id))
-    return abroad_travel_service.update(db, abroad_travel, body)
+    return abroad_travel_service.update(db=db, db_obj=abroad_travel, obj_in=body)
 
 
 @router.delete("/{id}/", dependencies=[Depends(HTTPBearer())],
@@ -98,4 +98,4 @@ async def delete(*,
     """
     Authorize.jwt_required()
     abroad_travel = abroad_travel_service.get_by_id(db, str(id))
-    return abroad_travel_service.delete(db, abroad_travel)
+    return abroad_travel_service.remove(db=db, id=abroad_travel.id)

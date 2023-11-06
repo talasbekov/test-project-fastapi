@@ -12,7 +12,14 @@ from .history import (
     TrainingAttendanceRead,
     HistoryPersonalRead,
     ServiceIdInfoRead,
-    HistoryTimeLineRead
+    HistoryTimeLineRead,
+    HistoryContractCreate,
+    HistoryBadgeCreate,
+    HistorySecondmentCreate,
+    HistoryPenaltyCreate,
+    HistoryStatusCreate,
+    HistoryCoolnessCreate,
+    HistoryAttestationCreate,
 )
 from .history_name_change import (
     HistoryNameChangeBase,

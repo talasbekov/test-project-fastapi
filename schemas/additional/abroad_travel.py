@@ -11,10 +11,12 @@ from .country import CountryRead
 
 class AbroadTravelBase(Model):
     vehicle_type: str
+    vehicle_typeKZ: str
     destination_country_id: str
     date_from: datetime
     date_to: datetime
     reason: str
+    reasonKZ: str
     document_link: Optional[AnyUrl]
     profile_id: Optional[str]
 
@@ -34,3 +36,5 @@ class AbroadTravelUpdate(AbroadTravelBase):
 class AbroadTravelRead(AbroadTravelBase, ReadModel):
     document_link: Optional[str]
     destination_country: Optional[CountryRead]
+    vehicle_typeKZ: Optional[str]
+    reasonKZ: Optional[str]

@@ -5,6 +5,7 @@ from sqlalchemy.dialects.postgresql import TIMESTAMP
 from sqlalchemy.orm import relationship
 
 from models import Model
+from models.association import family_abroad_travel
 
 
 class AbroadTravel(Model):
@@ -19,6 +20,7 @@ class AbroadTravel(Model):
         nullable=False)
 
     vehicle_type = Column(String(255), nullable=False)
+    vehicle_typeKZ = Column('vehicle_typekz', String, nullable=True)
     destination_country_id = Column(
         String(),
         ForeignKey('hr_erp_countries.id'),
@@ -26,6 +28,7 @@ class AbroadTravel(Model):
     date_from = Column(TIMESTAMP(timezone=True), nullable=False)
     date_to = Column(TIMESTAMP(timezone=True), nullable=False)
     reason = Column(String(255), nullable=False, default="")
+    reasonKZ = Column('reasonkz', String, nullable=True)
     document_link = Column(String(255), nullable=False, default="")
 
     profile_id = Column(String(), ForeignKey(
@@ -36,3 +39,8 @@ class AbroadTravel(Model):
         back_populates="abroad_travels")
     destination_country = relationship(
         "Country", back_populates="abroad_travels")
+
+    family_abroad_travel = relationship(
+        "AbroadTravel",
+        secondary=family_abroad_travel,
+        cascade="all, delete")
