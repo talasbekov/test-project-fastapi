@@ -13,7 +13,7 @@ class SportDegreeBase(NamedModel):
     sport_type_id: str
     document_link: Optional[AnyUrl]
     profile_id: str
-    sport_degree_id: Optional[str] = None
+    sport_degree_type_id: Optional[str] = None
 
     class Config:
         orm_mode = True
