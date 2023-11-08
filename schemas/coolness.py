@@ -23,7 +23,7 @@ class CoolnessTypeRead(CoolnessTypeBase, ReadNamedModel):
 
 
 class CoolnessBase(Model):
-    is_assigned: Optional[bool]
+    coolness_status: Optional[str]
     type_id: Optional[str]
     user_id: Optional[str]
 

@@ -13,9 +13,9 @@ class SpecialtyEnum(EnumBase):
 
 
 class CoolnessStatusEnum(EnumBase):
-    granted = "Выдан"
-    confirmed = "Подтвержден"
-    removed = "Изъят"
+    granted = {"name": "Присвоен", "nameKZ": "Берілген"}
+    confirmed = {"name": "Подтвержден", "nameKZ": "Растады"}
+    removed = {"name": "Лишен", "nameKZ": "Жоилды"}
 
 
 class CoolnessType(NamedModel):
@@ -34,6 +34,8 @@ class Coolness(Model):
 
     user_id = Column(String(), ForeignKey("hr_erp_users.id"))
     user = relationship("User", back_populates="coolnesses")
+    
+    coolness_status = Column(String(), nullable=False)
 
     history = relationship(
         "CoolnessHistory",

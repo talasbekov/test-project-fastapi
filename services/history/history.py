@@ -325,7 +325,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             raise NotSupportedException(
                 detail=f'Type: {obj_in.type} is not supported!')
         coolness = coolness_service.create_relation(
-            db, obj_in.user_id, obj_in.coolness_type_id, obj_in.is_assigned)
+            db, obj_in.user_id, obj_in.coolness_type_id, obj_in.coolness_status)
         obj_data = {
             "user_id": obj_in.user_id,
             "coolness_id": coolness.id,

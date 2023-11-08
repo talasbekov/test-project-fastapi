@@ -186,7 +186,7 @@ class HistoryCoolnessCreate(BaseModel):
     date_to: Optional[datetime]
     document_number: str
     coolness_type_id: str
-    is_assigned: bool
+    coolness_status: str
 
 
 class HistoryAttestationCreate(BaseModel):
