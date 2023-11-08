@@ -7,7 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import CoolnessCreate, CoolnessRead
+from schemas import CoolnessCreate, CoolnessRead, CoolnessTypeRead
 from services import coolness_service
 from models import SpecialtyEnum
 
@@ -39,6 +39,19 @@ async def get_all(*,
    """
     Authorize.jwt_required()
     return coolness_service.get_multi(db, skip, limit)
+
+@router.get("/types/", dependencies=[Depends(HTTPBearer())],
+            response_model=List[CoolnessTypeRead],
+            summary="Get all Coolness types")
+async def get_all(*,
+                  db: Session = Depends(get_db),
+                  Authorize: AuthJWT = Depends(),
+                  ):
+    """
+       Get all Coolness types
+   """
+    Authorize.jwt_required()
+    return coolness_service.get_all_types(db)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,

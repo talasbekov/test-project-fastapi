@@ -90,6 +90,9 @@ class CoolnessService(ServiceBase[Coolness, CoolnessCreate, CoolnessUpdate]):
     def get_type_by_order(self, db: Session, order: int):
         return db.query(CoolnessType).filter(
             CoolnessType.order == order).first()
+        
+    def get_all_types(self, db: Session):
+        return db.query(CoolnessType).all()
 
 
 coolness_service = CoolnessService(Coolness)
