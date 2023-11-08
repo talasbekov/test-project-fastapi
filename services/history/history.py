@@ -220,7 +220,9 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             "type": obj_in.type,
             "document_number": obj_in.document_number,
             "date_from": obj_in.date_from,
-            "date_to": obj_in.date_to if obj_in.date_to is not None else None
+            "date_to": obj_in.date_to if obj_in.date_to is not None else None,
+            "experience_years": obj_in.experience_years,
+            "date_credited": obj_in.date_credited,
         }
         obj_db = cls(**obj_data)
         db.add(obj_db)
