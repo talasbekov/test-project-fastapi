@@ -171,7 +171,7 @@ class PenaltyHistory(History):
                     cls.__mapper_args__["polymorphic_identity"])
         obj = PenaltyHistory(
             date_from=datetime.datetime.now(),
-            date_to=None,
+            date_to=datetime.datetime.now() + datetime.timedelta(days=180),
             user_id=user_id,
             penalty_id=id,
         )
