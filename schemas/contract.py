@@ -8,6 +8,7 @@ from schemas import NamedModel, ReadNamedModel
 
 
 class ContractTypeBase(NamedModel):
+    years: Optional[int]
 
     class Config:
         orm_mode = True
