@@ -34,8 +34,6 @@ class Coolness(Model):
 
     user_id = Column(String(), ForeignKey("hr_erp_users.id"))
     user = relationship("User", back_populates="coolnesses")
-    
-    coolness_assigned = Column(Boolean, nullable=True)
 
     history = relationship(
         "CoolnessHistory",
