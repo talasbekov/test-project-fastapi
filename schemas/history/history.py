@@ -138,6 +138,8 @@ class HistoryContractCreate(BaseModel):
     date_to: Optional[datetime]
     document_number: str
     contract_type_id: str
+    experience_years: Optional[int]
+    date_credited: Optional[datetime]
 
 
 class HistoryBadgeCreate(BaseModel):
@@ -207,6 +209,7 @@ class HistoryUpdate(HistoryBase):
     attestation_statusKZ: Optional[str]
     badge_type_id: Optional[str]
     status_type_id: Optional[str]
+    experience_years: Optional[int]
 
 
 class HistoryRead(HistoryBase, ReadNamedModel):
