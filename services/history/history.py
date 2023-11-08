@@ -325,7 +325,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             raise NotSupportedException(
                 detail=f'Type: {obj_in.type} is not supported!')
         coolness = coolness_service.create_relation(
-            db, obj_in.user_id, obj_in.coolness_type_id)
+            db, obj_in.user_id, obj_in.coolness_type_id, obj_in.is_assigned)
         obj_data = {
             "user_id": obj_in.user_id,
             "coolness_id": coolness.id,
@@ -495,6 +495,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                 type=coolness.type,
                 id=coolness.id,
                 user_id=coolness.user_id,
+                is_assigned=coolness.is_assigned,
             )
 
         black_beret = badge_service.get_black_beret_by_user_id(db, user_id)

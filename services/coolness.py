@@ -23,8 +23,10 @@ class CoolnessService(ServiceBase[Coolness, CoolnessCreate, CoolnessUpdate]):
             self.model.user_id == user_id).first()
         return coolness
 
-    def create_relation(self, db: Session, user_id: str, type_id: str):
-        coolness = super().create(db, CoolnessCreate(user_id=user_id, type_id=type_id))
+    def create_relation(self, db: Session, user_id: str, type_id: str, is_assigned: bool = True):
+        coolness = super().create(db, CoolnessCreate(user_id=user_id,
+                                                     type_id=type_id,
+                                                     is_assigned=is_assigned))
         return coolness
 
     def get_by_option(
@@ -90,7 +92,7 @@ class CoolnessService(ServiceBase[Coolness, CoolnessCreate, CoolnessUpdate]):
     def get_type_by_order(self, db: Session, order: int):
         return db.query(CoolnessType).filter(
             CoolnessType.order == order).first()
-        
+
     def get_all_types(self, db: Session):
         return db.query(CoolnessType).all()
 

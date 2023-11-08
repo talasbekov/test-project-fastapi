@@ -5,7 +5,6 @@ from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 
 class CoolnessTypeBase(NamedModel):
-
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
@@ -24,6 +23,7 @@ class CoolnessTypeRead(CoolnessTypeBase, ReadNamedModel):
 
 
 class CoolnessBase(Model):
+    is_assigned: Optional[bool]
     type_id: Optional[str]
     user_id: Optional[str]
 
