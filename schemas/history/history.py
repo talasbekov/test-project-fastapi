@@ -19,7 +19,6 @@ from schemas import (
     CoolnessRead,
     ContractRead,
     BadgeRead,
-    StaffDivisionRead,
     StaffDivisionReadWithoutStaffUnit,
     DrivingLicenseRead,
     IdentificationCardRead,
@@ -107,8 +106,10 @@ class HistoryBase(BaseModel):
     document_style: Optional[str]
     date_credited: Optional[datetime]
     name_of_organization: Optional[str]
+    name_of_organizationKZ: Optional[str]
     type: str
     position_work_experience: Optional[str]
+    position_work_experienceKZ: Optional[str]
     staff_division_id: Optional[str]
     coefficient: Optional[Decimal]
     percentage: Optional[int]
@@ -116,6 +117,8 @@ class HistoryBase(BaseModel):
     staff_division_nameKZ: Optional[str]
     contractor_signer_name: Optional[str]
     contractor_signer_nameKZ: Optional[str]
+    reason: Optional[str]
+    reasonKZ: Optional[str]
 
     class Config:
         from_attributes = True
@@ -161,6 +164,8 @@ class HistoryPenaltyCreate(BaseModel):
     date_to: Optional[datetime]
     document_number: str
     penalty_type_id: str
+    reason: str
+    reasonKZ: str
 
 
 class HistoryStatusCreate(BaseModel):
@@ -187,12 +192,16 @@ class HistoryAttestationCreate(BaseModel):
     date_from: datetime
     date_to: Optional[datetime]
     document_number: str
+    attestation_reg_number: str
     attestation_status: str
+    attestation_statusKZ: str
 
 
 class HistoryUpdate(HistoryBase):
     type: Optional[str]
+    attestation_reg_number: Optional[str]
     attestation_status: Optional[str]
+    attestation_statusKZ: Optional[str]
     badge_type_id: Optional[str]
     status_type_id: Optional[str]
 
@@ -254,7 +263,9 @@ class HistoryRead(HistoryBase, ReadNamedModel):
             "document_style": self.document_style,
             "date_credited": self.date_credited,
             "name_of_organization": self.name_of_organization,
+            "name_of_organizationKZ": self.name_of_organizationKZ,
             "position_work_experience": self.position_work_experience,
+            "position_work_experienceKZ": self.position_work_experienceKZ,
             "coefficient": self.coefficient,
             "percentage": self.percentage,
             "staff_division_name": self.staff_division_name,
@@ -328,7 +339,7 @@ class HistoryPersonalRead(ReadModel):
     def work_experience(self) -> Optional[dict]:
         if self.name_of_organization is not None:
             return {"name": self.name_of_organization,
-                    "nameKZ": self.name_of_organization}
+                    "nameKZ": self.name_of_organizationKZ}
         else:
             return None
 
@@ -451,6 +462,8 @@ class PenaltyRead(Model):
     cancel_document_link: Optional[str]
     date_from: Optional[datetime]
     date_to: Optional[datetime]
+    reason: Optional[str]
+    reasonKZ: Optional[str]
 
     class Config:
         from_attributes = True
@@ -466,6 +479,8 @@ class PenaltyRead(Model):
             document_number=orm_obj.document_number,
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
+            reason=orm_obj.reason,
+            reasonKZ=orm_obj.reasonKZ
         )
 
 
@@ -507,7 +522,9 @@ class AttestationRead(Model):
     document_link: Optional[str]
     cancel_document_link: Optional[str]
     document_number: Optional[str]
+    attestation_reg_number: Optional[str]
     attestation_status: Optional[str]
+    attestation_statusKZ: Optional[str]
 
     class Config:
         from_attributes = True
@@ -631,10 +648,12 @@ class ExperienceRead(ReadModel):
     document_link: Optional[str]
     document_number: Optional[str]
     name_of_organization: Optional[str]
+    name_of_organizationKZ: Optional[str]
     is_credited: Optional[bool]
     document_style: Optional[str]
     date_credited: Optional[datetime]
     position_work_experience: Optional[str]
+    position_work_experienceKZ: Optional[str]
 
     class Config:
         from_attributes = True
@@ -649,11 +668,12 @@ class ExperienceRead(ReadModel):
             document_link=orm_obj.document_link,
             document_number=orm_obj.document_number,
             name_of_organization=orm_obj.name_of_organization,
+            name_of_organizationKZ=orm_obj.name_of_organizationKZ,
             is_credited=orm_obj.is_credited,
             document_style=orm_obj.document_style,
             date_credited=orm_obj.date_credited,
             position_work_experience=orm_obj.position_work_experience,
-
+            position_work_experienceKZ=orm_obj.position_work_experienceKZ
         )
 
 
