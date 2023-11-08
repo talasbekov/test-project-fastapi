@@ -29,9 +29,8 @@ from models import (
     Status,
     Badge,
     Coolness,
+    CoolnessStatusEnum,
     User,
-    IdentificationCard,
-    Passport
 )
 from schemas import HistoryCreate, HistoryUpdate
 from schemas.history.history import EquipmentRead
@@ -495,7 +494,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                 type=coolness.type,
                 id=coolness.id,
                 user_id=coolness.user_id,
-                is_assigned=coolness.is_assigned,
+                coolness_status=CoolnessStatusEnum[coolness.coolness_status],
             )
 
         black_beret = badge_service.get_black_beret_by_user_id(db, user_id)
