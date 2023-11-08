@@ -67,7 +67,10 @@ class History(Model):
     document_style = Column(String, nullable=True)
     date_credited = Column(TIMESTAMP, nullable=True)
     staff_division_name = Column(String, nullable=True)
-    staff_division_nameKZ = Column('staff_division_namekz', String, nullable=True)
+    staff_division_nameKZ = Column(
+        'staff_division_namekz', String, nullable=True)
+    reason = Column(String, nullable=True, )
+    reasonKZ = Column("reasonkz", String, nullable=True)
 
     user = relationship(
         "User",
@@ -93,7 +96,6 @@ class RankHistory(History):
     rank_assigned_by = Column(String, nullable=True)
     rank_name = Column(String, nullable=True)
     rank_nameKZ = Column('rank_namekz', String, nullable=True)
-
 
     @classmethod
     def create_history(cls, db: Session, user_id: str,
@@ -217,7 +219,6 @@ class EmergencyServiceHistory(History):
         ForeignKey("hr_erp_positions.id"),
         nullable=True)
     position = relationship("Position", foreign_keys=[position_id])
-    reason = Column(String, nullable=True)
 
     staff_division_id = Column(
         String(),
@@ -230,17 +231,18 @@ class EmergencyServiceHistory(History):
     position_name = Column(String, nullable=True)
     position_nameKZ = Column('position_namekz', String, nullable=True)
 
-
     position_name = Column(String, nullable=True)
     position_nameKZ = Column('position_namekz', String, nullable=True)
 
     contractor_signer_name = Column(String, nullable=True)
-    contractor_signer_nameKZ = Column('contractor_signer_namekz', String, nullable=True)
+    contractor_signer_nameKZ = Column(
+        'contractor_signer_namekz', String, nullable=True)
 
     @classmethod
     def create_history(self, db: Session, user_id: str,
                        id: str, finish_last):
-        query = db.execute(text(f"SELECT HR_ERP_STAFF_UNITS.id, HR_ERP_STAFF_UNITS.position_id, HR_ERP_STAFF_UNITS.staff_division_id FROM HR_ERP_STAFF_UNITS JOIN HR_ERP_USERS ON HR_ERP_STAFF_UNITS.id=HR_ERP_USERS.staff_unit_id WHERE HR_ERP_STAFF_UNITS.id = '{id}' AND HR_ERP_USERS.id = '{user_id}'"))
+        query = db.execute(text(
+            f"SELECT HR_ERP_STAFF_UNITS.id, HR_ERP_STAFF_UNITS.position_id, HR_ERP_STAFF_UNITS.staff_division_id FROM HR_ERP_STAFF_UNITS JOIN HR_ERP_USERS ON HR_ERP_STAFF_UNITS.id=HR_ERP_USERS.staff_unit_id WHERE HR_ERP_STAFF_UNITS.id = '{id}' AND HR_ERP_USERS.id = '{user_id}'"))
         staff_unit = query.fetchone()
         if staff_unit is None:
             raise NotFoundException(detail="Staff unit not found")
@@ -373,9 +375,14 @@ class CoolnessHistory(History):
 class WorkExperienceHistory(History):
 
     name_of_organization = Column(String, nullable=True)
+    name_of_organizationKZ = Column(
+        "name_of_organizationkz", String, nullable=True)
+
     is_credited = Column(Boolean, nullable=True)
 
     position_work_experience = Column(String, nullable=True)
+    position_work_experienceKZ = Column(
+        "position_work_experiencekz", String, nullable=True)
 
     __mapper_args__ = {
         "polymorphic_identity": "work_experience_history",
@@ -459,6 +466,10 @@ class AttestationHistory(History):
     attestation = relationship("Attestation")
 
     attestation_status = Column(String, nullable=True)
+    attestation_statusKZ = Column(
+        "attestation_statuskz", String, nullable=True)
+
+    attestation_reg_number = Column(String, nullable=True)
 
     @classmethod
     def create_history(cls, db: Session, user_id: str,
