@@ -1,5 +1,5 @@
 
-from sqlalchemy import Column, ForeignKey, Integer, String, Boolean
+from sqlalchemy import Column, ForeignKey, Integer, String, Enum
 from sqlalchemy.orm import relationship
 
 from models import Model, NamedModel
@@ -35,7 +35,7 @@ class Coolness(Model):
     user_id = Column(String(), ForeignKey("hr_erp_users.id"))
     user = relationship("User", back_populates="coolnesses")
     
-    coolness_status = Column(String(), nullable=False)
+    coolness_status = Column(Enum(CoolnessStatusEnum), nullable=False)
 
     history = relationship(
         "CoolnessHistory",

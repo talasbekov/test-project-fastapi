@@ -56,7 +56,6 @@ async def get_all_types(*,
 
 
 @router.get("/statuses/", dependencies=[Depends(HTTPBearer())],
-            response_model=List[NamedModel],
             summary="Get all Coolness statuses")
 async def get_all_types(*,
                         Authorize: AuthJWT = Depends(),
@@ -65,7 +64,7 @@ async def get_all_types(*,
        Get all Coolness statuses
    """
     Authorize.jwt_required()
-    return [status.value for status in CoolnessStatusEnum]
+    return {coolness_status.name: coolness_status.value for coolness_status in CoolnessStatusEnum}
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
