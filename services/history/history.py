@@ -356,7 +356,9 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             "document_number": obj_in.document_number,
             "date_from": obj_in.date_from,
             "attestation_status": obj_in.attestation_status,
-            "date_to": obj_in.date_to if obj_in.date_to is not None else None
+            "attestation_statusKZ": obj_in.attestation_statusKZ,
+            "date_to": obj_in.date_to if obj_in.date_to is not None else None,
+            "attestation_reg_number": obj_in.attestation_reg_number
         }
         obj_db = cls(**obj_data)
         db.add(obj_db)
