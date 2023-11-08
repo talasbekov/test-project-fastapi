@@ -95,7 +95,9 @@ class RankHistory(History):
 
     rank_assigned_by = Column(String, nullable=True)
     rank_name = Column(String, nullable=True)
-    rank_nameKZ = Column('rank_namekz', String, nullable=True)
+    rank_nameKZ = Column('rank_namekz', String, nullable=True)\
+        
+    early_promotion = Column(Boolean, nullable=True, default=False)
 
     @classmethod
     def create_history(cls, db: Session, user_id: str,
@@ -108,7 +110,7 @@ class RankHistory(History):
             date_from=datetime.datetime.now(),
             date_to=None,
             user_id=user_id,
-            rank_id=id,
+            rank_id=id
         )
         db.add(obj)
         db.flush()

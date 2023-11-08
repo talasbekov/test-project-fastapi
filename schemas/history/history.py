@@ -121,6 +121,7 @@ class HistoryBase(BaseModel):
     contractor_signer_nameKZ: Optional[str]
     reason: Optional[str]
     reasonKZ: Optional[str]
+    early_promotion: Optional[bool]
 
     class Config:
         from_attributes = True
@@ -439,6 +440,7 @@ class RankServiceDetailRead(ReadNamedModel):
     date_to: Optional[datetime]
     document_style: Optional[str]
     rank_id: Optional[str]
+    early_promotion: Optional[bool]
 
     class Config:
         from_attributes = True
@@ -457,6 +459,7 @@ class RankServiceDetailRead(ReadNamedModel):
             document_style=orm_obj.document_style,
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
+            early_promotion=orm_obj.early_promotion
         )
 
 
