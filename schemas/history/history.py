@@ -665,6 +665,7 @@ class ExperienceRead(ReadModel):
     date_credited: Optional[datetime]
     position_work_experience: Optional[str]
     position_work_experienceKZ: Optional[str]
+    length_of_service: Optional[dict]
 
     class Config:
         from_attributes = True
@@ -672,6 +673,11 @@ class ExperienceRead(ReadModel):
 
     @classmethod
     def from_orm(cls, orm_obj):
+        date_to = orm_obj.date_to or datetime.now(orm_obj.date_from.tzinfo)
+        if orm_obj.is_credited:
+            length_of_service = get_date_difference(orm_obj.date_from, date_to)
+        else:
+            length_of_service = None
         return cls(
             id=orm_obj.id,
             date_from=orm_obj.date_from,
@@ -684,7 +690,8 @@ class ExperienceRead(ReadModel):
             document_style=orm_obj.document_style,
             date_credited=orm_obj.date_credited,
             position_work_experience=orm_obj.position_work_experience,
-            position_work_experienceKZ=orm_obj.position_work_experienceKZ
+            position_work_experienceKZ=orm_obj.position_work_experienceKZ,
+            length_of_service=length_of_service,
         )
 
 
