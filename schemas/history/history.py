@@ -198,7 +198,7 @@ class HistoryAttestationCreate(BaseModel):
     date_from: datetime
     date_to: Optional[datetime]
     document_number: str
-    attestation_reg_number: str
+    date_credited: Optional[datetime]
     attestation_status: str
     attestation_statusKZ: str
 
@@ -531,7 +531,7 @@ class AttestationRead(Model):
     document_link: Optional[str]
     cancel_document_link: Optional[str]
     document_number: Optional[str]
-    attestation_reg_number: Optional[str]
+    date_credited: Optional[datetime]
     attestation_status: Optional[str]
     attestation_statusKZ: Optional[str]
 
