@@ -471,8 +471,6 @@ class AttestationHistory(History):
     attestation_statusKZ = Column(
         "attestation_statuskz", String, nullable=True)
 
-    attestation_reg_number = Column(String, nullable=True)
-
     @classmethod
     def create_history(cls, db: Session, user_id: str,
                        id: str, finish_last):
