@@ -1,5 +1,4 @@
-import uuid
-from typing import Optional
+from typing import Optional, Any
 
 from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
@@ -23,7 +22,7 @@ class CoolnessTypeRead(CoolnessTypeBase, ReadNamedModel):
 
 
 class CoolnessBase(Model):
-    coolness_status: Optional[NamedModel]
+    coolness_status: Optional[Any]
     type_id: Optional[str]
     user_id: Optional[str]
 
