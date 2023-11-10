@@ -152,6 +152,7 @@ class HistoryBadgeCreate(BaseModel):
     badge_type_id: str
     reason: str
     reasonKZ: str
+    url: str
 
 
 class HistorySecondmentCreate(BaseModel):
