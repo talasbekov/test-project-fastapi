@@ -342,7 +342,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         db.flush()
         db.refresh(obj_db)
         return obj_db
-    
+
     def create_attestation_history(self, db: Session, obj_in: HistoryAttestationCreate):
         cls = options.get(obj_in.type)
         if cls is None:
@@ -500,7 +500,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                 type=coolness.type,
                 id=coolness.id,
                 user_id=coolness.user_id,
-                coolness_status=CoolnessStatusEnum[coolness.coolness_status],
+                coolness_status=coolness.coolness_status.value,
             )
 
         black_beret = badge_service.get_black_beret_by_user_id(db, user_id)
@@ -592,7 +592,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         return cls.create_timeline_history(
             db, user_id, object.id, finish_last, date_from, date_to
         )
-        
+
     def update_secondment(self, db: Session, id: str, object: HistoryUpdate):
         history = self.get_by_id(db, id)
         if history is None:
@@ -601,7 +601,8 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         for key, value in object.dict(exclude_unset=True).items():
             setattr(history, key, value)
         if history.secondment_id:
-            staff_division = staff_division_service.get_by_id(db, object.staff_division_id)
+            staff_division = staff_division_service.get_by_id(
+                db, object.staff_division_id)
             history.secondment.staff_division_id = staff_division.id
             history.secondment.name = staff_division.name
             history.secondment.nameKZ = staff_division.nameKZ
@@ -611,7 +612,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         db.add(history)
         db.commit()
         return history
-    
+
     def update_badge(self, db: Session, id: str, object: HistoryUpdate):
         history = self.get_by_id(db, id)
         if history is None:
@@ -628,7 +629,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         db.add(history)
         db.commit()
         return history
-    
+
     def update_status(self, db: Session, id: str, object: HistoryUpdate):
         history = self.get_by_id(db, id)
         if history is None:
