@@ -23,10 +23,10 @@ class CoolnessService(ServiceBase[Coolness, CoolnessCreate, CoolnessUpdate]):
             self.model.user_id == user_id).all()
         return coolnesses
 
-    def create_relation(self, db: Session, user_id: str, type_id: str, is_assigned: bool = True):
+    def create_relation(self, db: Session, user_id: str, type_id: str, coolness_status: str):
         coolness = super().create(db, CoolnessCreate(user_id=user_id,
                                                      type_id=type_id,
-                                                     is_assigned=is_assigned))
+                                                     coolness_status=coolness_status))
         return coolness
 
     def get_by_option(
