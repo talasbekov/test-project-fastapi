@@ -7,7 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import CoolnessCreate, CoolnessRead, CoolnessTypeRead, NamedModel
+from schemas import CoolnessCreate, CoolnessRead, CoolnessTypeRead, CoolnessUpdate
 from services import coolness_service
 from models import SpecialtyEnum, CoolnessStatusEnum
 
@@ -104,7 +104,7 @@ async def get_all_forms(*,
 async def update(*,
                  db: Session = Depends(get_db),
                  id: str,
-                 body: SpecialtyEnum,
+                 body: CoolnessUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
     """
@@ -113,8 +113,8 @@ async def update(*,
         **name** - required - str
     """
     Authorize.jwt_required()
-    coolness_emergency = coolness_service.get_by_id(db, str(id))
-    return coolness_service.update(db, db_obj=coolness_emergency, obj_in=body)
+    coolness = coolness_service.get_by_id(db, str(id))
+    return coolness_service.update(db, db_obj=coolness, obj_in=body)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
