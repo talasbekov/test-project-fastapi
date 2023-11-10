@@ -18,10 +18,10 @@ class CoolnessService(ServiceBase[Coolness, CoolnessCreate, CoolnessUpdate]):
         return rank
 
     def get_by_user_id(self, db: Session, user_id: str):
-        coolness = db.query(
+        coolnesses = db.query(
             self.model).filter(
-            self.model.user_id == user_id).first()
-        return coolness
+            self.model.user_id == user_id).all()
+        return coolnesses
 
     def create_relation(self, db: Session, user_id: str, type_id: str, is_assigned: bool = True):
         coolness = super().create(db, CoolnessCreate(user_id=user_id,

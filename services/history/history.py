@@ -492,18 +492,21 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                 user_id=privelege_emergency.user_id,
             )
 
-        coolness = coolness_service.get_by_user_id(db, user_id)
-        if coolness is None:
+        coolnesses = coolness_service.get_by_user_id(db, user_id)
+        coolnesses_list = []
+        if coolnesses is None:
             coolness_read = None
         else:
-            coolness_read = CoolnessRead(
-                type_id=coolness.type_id,
-                # date_to=coolness.history.date_to,
-                type=coolness.type,
-                id=coolness.id,
-                user_id=coolness.user_id,
-                coolness_status=coolness.coolness_status.value,
-            )
+            for coolness in coolnesses:
+                coolness_read = CoolnessRead(
+                    type_id=coolness.type_id,
+                    # date_to=coolness.history.date_to,
+                    type=coolness.type,
+                    id=coolness.id,
+                    user_id=coolness.user_id,
+                    coolness_status=coolness.coolness_status.value,
+                )
+                coolnesses_list.append(coolness_read)
 
         black_beret = badge_service.get_black_beret_by_user_id(db, user_id)
         is_badge_black = False
@@ -551,7 +554,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             oath=user_oath_read,
             privilege_emergency_secrets=privelege_emergency_read,
             personnel_reserve=personal_reserve_read,
-            coolness=coolness_read,
+            coolness=coolnesses_list,
             is_badge_black=is_badge_black,
             researcher=researcher,
             recommender=recommender_user
