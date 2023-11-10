@@ -150,6 +150,8 @@ class HistoryBadgeCreate(BaseModel):
     date_to: Optional[datetime]
     document_number: str
     badge_type_id: str
+    reason: str
+    reasonKZ: str
 
 
 class HistorySecondmentCreate(BaseModel):
