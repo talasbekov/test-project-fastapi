@@ -188,9 +188,9 @@ class HistoryStatusCreate(BaseModel):
 class HistoryCoolnessCreate(BaseModel):
     user_id: str
     type: str
-    date_from: datetime
+    date_from: Optional[datetime]
     date_to: Optional[datetime]
-    document_number: str
+    document_number: Optional[str]
     coolness_type_id: str
     coolness_status: str
 
@@ -214,6 +214,7 @@ class HistoryUpdate(HistoryBase):
     badge_type_id: Optional[str]
     status_type_id: Optional[str]
     experience_years: Optional[int]
+    url: Optional[str]
 
 
 class HistoryRead(HistoryBase, ReadNamedModel):
