@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from typing import Optional
+from typing import Optional, List
 from pydantic import BaseModel
 
 from schemas import ReadModel
@@ -31,7 +31,7 @@ class GeneralInformationRead(BaseModel):
     oath: Optional[OathRead]
     privilege_emergency_secrets: Optional[PrivelegeEmergencyRead]
     personnel_reserve: Optional[PersonnalReserveRead]
-    coolness: Optional[CoolnessRead]
+    coolness: Optional[List[CoolnessRead]]
     is_badge_black: Optional[bool]
     researcher: Optional[dict]
     recommender: Optional[dict]
