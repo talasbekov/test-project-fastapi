@@ -412,6 +412,8 @@ class BadgeServiceDetailRead(ReadNamedModel):
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     url: Optional[str]
+    reason: Optional[str]
+    reasonKZ: Optional[str]
 
     class Config:
         from_attributes = True
@@ -430,7 +432,9 @@ class BadgeServiceDetailRead(ReadNamedModel):
             url=orm_obj.badge.type.url,
             id=orm_obj.id,
             created_at=orm_obj.created_at,
-            updated_at=orm_obj.updated_at
+            updated_at=orm_obj.updated_at,
+            reason=orm_obj.reason,
+            reasonKZ=orm_obj.reasonKZ
         )
 
 
