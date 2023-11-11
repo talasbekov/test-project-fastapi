@@ -1,6 +1,7 @@
 from .general_information import (
     OathRead,
-    GeneralInformationRead
+    GeneralInformationRead,
+    BlackBeretRead
 )
 
 
@@ -20,6 +21,7 @@ from .history import (
     HistoryStatusCreate,
     HistoryCoolnessCreate,
     HistoryAttestationCreate,
+    HistoryBlackBeretCreate,
 )
 from .history_name_change import (
     HistoryNameChangeBase,

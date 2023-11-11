@@ -193,6 +193,12 @@ class HistoryCoolnessCreate(BaseModel):
     document_number: Optional[str]
     coolness_type_id: str
     coolness_status: str
+    
+class HistoryBlackBeretCreate(BaseModel):
+    user_id: str
+    type: str
+    date_from: Optional[datetime]
+    document_number: Optional[str]
 
 
 class HistoryAttestationCreate(BaseModel):

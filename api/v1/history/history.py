@@ -12,7 +12,8 @@ from schemas import (HistoryCreate, HistoryUpdate, HistoryRead,
                      HistoryServiceDetailRead, HistoryContractCreate,
                      HistoryBadgeCreate, HistorySecondmentCreate,
                      HistoryPenaltyCreate, HistoryStatusCreate,
-                     HistoryCoolnessCreate, HistoryAttestationCreate)
+                     HistoryCoolnessCreate, HistoryAttestationCreate,
+                     HistoryBlackBeretCreate)
 from services import history_service
 from models import HistoryEnum
 
@@ -154,6 +155,24 @@ async def create_badge_history(*,
     """
     Authorize.jwt_required()
     return history_service.create_badge_history(db, body)
+
+@router.post("/black_beret", status_code=status.HTTP_201_CREATED,
+             dependencies=[Depends(HTTPBearer())],
+             response_model=HistoryRead,
+             summary="Create Black Beret History")
+async def create_black_beret_history(*,
+                               db: Session = Depends(get_db),
+                               body: HistoryBlackBeretCreate,
+                               Authorize: AuthJWT = Depends()
+                               ):
+    """
+        Create badge history
+
+        - **name**: required
+        - **quantity**: required
+    """
+    Authorize.jwt_required()
+    return history_service.create_black_beret_history(db, body)
 
 
 @router.post("/secondement", status_code=status.HTTP_201_CREATED,
@@ -383,6 +402,22 @@ async def delete(*,
     """
     Authorize.jwt_required()
     history_service.remove(db, str(id))
+    
+@router.delete("/black_beret/{id}/", status_code=status.HTTP_204_NO_CONTENT,
+               dependencies=[Depends(HTTPBearer())],
+               summary="Delete Black Beret History")
+async def delete(*,
+                 db: Session = Depends(get_db),
+                 id: str,
+                 Authorize: AuthJWT = Depends()
+                 ):
+    """
+        Delete Equipment
+
+        - **id**: UUID - required
+    """
+    Authorize.jwt_required()
+    history_service.black_beret_remove(db, str(id))
 
 
 @router.get("/all/type/{type}/{user_id}", dependencies=[Depends(HTTPBearer())],
