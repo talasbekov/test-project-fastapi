@@ -24,4 +24,4 @@ class RecommenderUserUpdate(RecommenderUserBase):
 
 
 class RecommenderUserRead(RecommenderUserBase, ReadModel):
-    pass
+    id: Optional[str]
