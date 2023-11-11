@@ -39,5 +39,4 @@ class GeneralInformationRead(BaseModel):
     personnel_reserve: Optional[PersonnalReserveRead]
     coolness: Optional[List[CoolnessRead]]
     black_beret: Optional[BlackBeretRead]
-    researcher: Optional[dict]
     recommender: Optional[dict]

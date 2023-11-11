@@ -13,6 +13,7 @@ class RecommenderUser(Model):
         ForeignKey("hr_erp_users.id"),
         nullable=True)
     recommendant = Column(String(500), nullable=True)
+    researcher = Column(String(500), nullable=True)
     user_by = relationship("User", foreign_keys=user_by_id)
     user_id = Column(String(), ForeignKey("hr_erp_users.id"), nullable=True)
     user = relationship("User", foreign_keys=user_id)

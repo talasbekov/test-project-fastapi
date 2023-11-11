@@ -563,28 +563,6 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                 document_number=personal_reserve.document_number
             )
         recommender = recommender_user_service.get_by_user_id(db, user_id)
-        if recommender:
-            father_name = ''
-            if recommender.user_by.father_name is not None:
-                father_name = recommender.user_by.father_name[0] + '.'
-            recommender_user = {"name": (f"{recommender.user_by.last_name}"
-                                         f" {recommender.user_by.first_name[0]}"
-                                         f"{' ' + father_name}"),
-                                "user_by_id": str(recommender.user_by_id),
-                                "id": str(recommender.id)
-                                }
-        else:
-            recommender_user = None
-        if user:
-            father_name = ''
-            if user.father_name is not None:
-                father_name = user.father_name[0] + '.'
-            researcher = {"name": (f"{user.last_name} {user.first_name[0]} "
-                                   f"{' ' + father_name}"),
-                          "id": str(user.id)
-                          }
-        else:
-            researcher = None
 
         general_information_read = GeneralInformationRead(
             oath=user_oath_read,
@@ -592,8 +570,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             personnel_reserve=personal_reserve_read,
             coolness=coolnesses_list,
             black_beret=black_beret,
-            researcher=researcher,
-            recommender=recommender_user
+            recommender=recommender
         )
 
         return general_information_read
