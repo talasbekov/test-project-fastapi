@@ -6,7 +6,7 @@ from schemas import Model, ReadModel
 
 class RecommenderUserBase(Model):
     document_link: Optional[str]
-    user_by_id: str
+    recommendant: Optional[str]
     user_id: str
 
     class Config:
