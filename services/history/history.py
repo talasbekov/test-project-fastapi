@@ -55,7 +55,9 @@ from schemas import (
     HistoryPenaltyCreate,
     HistoryStatusCreate,
     HistoryCoolnessCreate,
-    HistoryAttestationCreate
+    HistoryAttestationCreate,
+    HistoryBlackBeretCreate,
+    BlackBeretRead
 )
 
 from services import (privelege_emergency_service, coolness_service, badge_service,
@@ -246,6 +248,27 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             "date_to": obj_in.date_to if obj_in.date_to is not None else None,
             "reason": obj_in.reason,
             "reasonKZ": obj_in.reasonKZ
+        }
+        obj_db = cls(**obj_data)
+        db.add(obj_db)
+        db.flush()
+        db.refresh(obj_db)
+        return obj_db
+    
+    def create_black_beret_history(self, db: Session, obj_in: HistoryBlackBeretCreate):
+        cls = options.get(obj_in.type)
+        if cls is None:
+            raise NotSupportedException(
+                detail=f'Type: {obj_in.type} is not supported!')
+        black_beret_type = badge_service.get_black_beret(db)
+        badge = badge_service.create_relation(
+            db, obj_in.user_id, black_beret_type.id)
+        obj_data = {
+            "user_id": obj_in.user_id,
+            "badge_id": badge.id,
+            "type": obj_in.type,
+            "document_number": obj_in.document_number,
+            "date_from": obj_in.date_from,
         }
         obj_db = cls(**obj_data)
         db.add(obj_db)
@@ -508,11 +531,24 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                 )
                 coolnesses_list.append(coolness_read)
 
-        black_beret = badge_service.get_black_beret_by_user_id(db, user_id)
-        is_badge_black = False
-        if black_beret:
-            is_badge_black = True
-
+        black_beret_badge = badge_service.get_black_beret_by_user_id(db, user_id)
+        if black_beret_badge is not None:
+            black_beret = db.query(BadgeHistory).filter(
+                BadgeHistory.user_id == user_id,
+                BadgeHistory.badge_id == black_beret_badge.id,
+                BadgeHistory.date_to == None
+            ).first()
+            
+            if black_beret is not None:
+                black_beret = BlackBeretRead(
+                    id=black_beret.id,
+                    badge_id=black_beret.badge_id,
+                    date_from=black_beret.date_from,
+                    document_number=black_beret.document_number
+                )
+        else:
+            black_beret = None
+            
         personal_reserve = personnal_reserve_service.get_by_user_id(
             db, user_id)
         if personal_reserve is None:
@@ -555,7 +591,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             privilege_emergency_secrets=privelege_emergency_read,
             personnel_reserve=personal_reserve_read,
             coolness=coolnesses_list,
-            is_badge_black=is_badge_black,
+            black_beret=black_beret,
             researcher=researcher,
             recommender=recommender_user
         )
@@ -853,6 +889,14 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
     #     )
 
     #     return TimeLineRead(events)
+
+    def black_beret_remove(self, db: Session, id: str):
+        obj = db.query(self.model).get(id)
+        badge = db.query(Badge).filter(Badge.id == obj.badge_id).first()
+        db.delete(obj)
+        db.delete(badge)
+        db.flush()
+        return obj
 
 
 history_service = HistoryService(History)

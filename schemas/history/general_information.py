@@ -25,6 +25,12 @@ class OathRead(ReadModel):
             military_id=orm_obj.military_unit_id,
             military_name=orm_obj.military_unit.name,
         )
+        
+class BlackBeretRead(BaseModel):
+    id: Optional[str]
+    badge_id: Optional[str]
+    date_from: Optional[datetime]
+    document_number: Optional[str]
 
 
 class GeneralInformationRead(BaseModel):
@@ -32,6 +38,6 @@ class GeneralInformationRead(BaseModel):
     privilege_emergency_secrets: Optional[PrivelegeEmergencyRead]
     personnel_reserve: Optional[PersonnalReserveRead]
     coolness: Optional[List[CoolnessRead]]
-    is_badge_black: Optional[bool]
+    black_beret: Optional[BlackBeretRead]
     researcher: Optional[dict]
     recommender: Optional[dict]
