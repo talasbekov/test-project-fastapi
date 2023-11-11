@@ -57,7 +57,8 @@ from schemas import (
     HistoryCoolnessCreate,
     HistoryAttestationCreate,
     HistoryBlackBeretCreate,
-    BlackBeretRead
+    BlackBeretRead,
+    RecommenderUserRead
 )
 
 from services import (privelege_emergency_service, coolness_service, badge_service,
@@ -563,6 +564,15 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                 document_number=personal_reserve.document_number
             )
         recommender = recommender_user_service.get_by_user_id(db, user_id)
+        #fulfill recommender RecommenderUserRead schema
+        if recommender is not None:
+            recommender = RecommenderUserRead(
+                id=recommender.id,
+                user_id=recommender.user_id,
+                recommendant=recommender.recommendant,
+                researcher=recommender.researcher,
+                document_link=recommender.document_link
+            )
 
         general_information_read = GeneralInformationRead(
             oath=user_oath_read,
