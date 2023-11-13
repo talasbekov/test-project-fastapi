@@ -487,6 +487,7 @@ class PenaltyRead(Model):
     date_to: Optional[datetime]
     reason: Optional[str]
     reasonKZ: Optional[str]
+    penalty_id: Optional[str]
 
     class Config:
         from_attributes = True
@@ -503,7 +504,8 @@ class PenaltyRead(Model):
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
             reason=orm_obj.reason,
-            reasonKZ=orm_obj.reasonKZ
+            reasonKZ=orm_obj.reasonKZ,
+            penalty_id=orm_obj.penalty_id
         )
 
 
