@@ -42,12 +42,19 @@ class PenaltyCreate(PenaltyBase):
 
 
 class PenaltyUpdate(PenaltyBase):
-    pass
+    user_id: Optional[str]
+    type_id: Optional[str]
 
 
 class PenaltyRead(PenaltyBase):
     id: str
     type: Optional[PenaltyTypeRead]
+
+
+class PenaltyPaginationRead(BaseModel):
+    total: Optional[int]
+    objects: Optional[List[PenaltyRead]]
+
 
 class PenaltyReadForOption(PenaltyBase):
     id: str
