@@ -9,7 +9,8 @@ from sqlalchemy.orm import Session
 from core import get_db
 from schemas.education import (CourseProviderCreate,
                                CourseProviderRead,
-                               CourseProviderUpdate)
+                               CourseProviderUpdate,
+                               CourseProviderReadPagination)
 from services.education import course_provider_service
 
 router = APIRouter(prefix="/course_providers",
@@ -18,7 +19,7 @@ router = APIRouter(prefix="/course_providers",
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[CourseProviderRead],
+            response_model=List[CourseProviderReadPagination],
             summary="Get all CourseProviders")
 async def get_all(*,
                   db: Session = Depends(get_db),
