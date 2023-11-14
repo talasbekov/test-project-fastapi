@@ -25,7 +25,8 @@ async def get_all(*,
                   db: Session = Depends(get_db),
                   skip: int = 0,
                   limit: int = 100,
-                  Authorize: AuthJWT = Depends()
+                  Authorize: AuthJWT = Depends(),
+                  filter: str = ''
                   ):
     """
         Get all CourseProviders
@@ -38,7 +39,7 @@ async def get_all(*,
         This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    return course_provider_service.get_multi(db, skip, limit)
+    return course_provider_service.get_all(db, skip, limit, filter)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
