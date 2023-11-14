@@ -17,6 +17,8 @@ class Properties(Model):
     address = Column(String(255), nullable=False)
     profile_id = Column(String(),
                         ForeignKey("hr_erp_additional_profiles.id"))
+    document_link = Column(String(255))
+
     profile = relationship("AdditionalProfile", back_populates="properties")
 
     type = relationship("PropertyType", back_populates="properties")
