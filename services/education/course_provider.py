@@ -14,12 +14,17 @@ class CourseProviderService(
 
     def get_multi(
         self, db: Session, skip: int = 0, limit: int = 100
-    ) -> List[CourseProvider]:
-        return (db.query(CourseProvider)
+    ):
+        courses = (db.query(CourseProvider)
                   .order_by(func.to_char(CourseProvider.name))
                   .offset(skip)
                   .limit(limit)
                   .all())
+
+        total = (db.query(CourseProvider)
+                 .count())
+
+        return {'total': total, 'objects': courses}
 
     def get_by_id(self, db: Session, id: str):
         course_provider = super().get(db, id)
