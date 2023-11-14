@@ -45,9 +45,8 @@ class CourseProviderService(
         course_providers = (
             course_provider_query
             .filter(
-                and_(func.concat(
-                    func.concat(func.concat(func.lower(CourseProvider.name), ' '),
-                                func.concat(func.lower(CourseProvider.nameKZ), ' '))
+                and_(func.concat(func.concat(func.lower(CourseProvider.name), ' '),
+                                 func.concat(func.lower(CourseProvider.nameKZ), ' ')
                     ).contains(name) for name in key_words)
             )
         )

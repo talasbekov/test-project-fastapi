@@ -33,10 +33,9 @@ class BadgeTypeService(ServiceBase[BadgeType, BadgeTypeCreate, BadgeTypeUpdate])
         badge_types = (
             badge_type_query
             .filter(
-                and_(func.concat(
-                    func.concat(func.concat(func.lower(BadgeType.name), ' '),
+                and_(func.concat(func.concat(func.lower(BadgeType.name), ' '),
                                 func.concat(func.lower(BadgeType.nameKZ), ' '))
-                    ).contains(name) for name in key_words)
+                    .contains(name) for name in key_words)
             )
         )
         return badge_types
