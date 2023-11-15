@@ -518,6 +518,7 @@ class ContractRead(ReadNamedModel):
     cancel_document_link: Optional[str]
     document_number: Optional[str]
     experience_years: Optional[int]
+    date_credited: Optional[datetime]
 
     class Config:
         from_attributes = True
@@ -536,7 +537,8 @@ class ContractRead(ReadNamedModel):
             document_number=orm_obj.document_number,
             experience_years=orm_obj.experience_years,
             name=orm_obj.contract.type.name,
-            nameKZ=orm_obj.contract.type.nameKZ
+            nameKZ=orm_obj.contract.type.nameKZ,
+            date_credited=orm_obj.date_credited
         )
 
 
