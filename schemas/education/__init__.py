@@ -9,6 +9,6 @@ from .course_provider import CourseProviderRead, CourseProviderCreate, CoursePro
 from .course import CourseRead, CourseCreate, CourseUpdate, CourseShortRead
 from .language_proficiency import LanguageProficiencyRead, LanguageProficiencyCreate, LanguageProficiencyUpdate
 from .language import LanguageRead, LanguageCreate, LanguageUpdate
-from .institution import InstitutionRead, InstitutionCreate, InstitutionUpdate
+from .institution import InstitutionRead, InstitutionCreate, InstitutionUpdate, InstitutionReadPagination
 from .institution_degree_type import InstitutionDegreeTypeRead, InstitutionDegreeTypeCreate, InstitutionDegreeTypeUpdate
 from .educational_profile import EducationalProfileRead, EducationalProfileCreate, EducationalProfileUpdate
