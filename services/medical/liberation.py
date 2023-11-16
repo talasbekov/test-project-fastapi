@@ -34,7 +34,6 @@ class LiberationService(
             raise client.NotFoundException(detail="Liberation is not found!")
         return liberation
 
-
     def _add_filter_to_query(self, liberation_query, filter):
         key_words = filter.lower().split()
         liberations = (
@@ -46,5 +45,6 @@ class LiberationService(
             )
         )
         return liberations
+
 
 liberation_service = LiberationService(Liberation)

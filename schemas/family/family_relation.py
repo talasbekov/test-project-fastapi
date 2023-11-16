@@ -1,4 +1,6 @@
-from schemas import NamedModel, ReadNamedModel
+from typing import Optional, List
+
+from schemas import NamedModel, ReadNamedModel, BaseModel
 
 
 class FamilyRelationBase(NamedModel):
@@ -18,3 +20,7 @@ class FamilyRelationRead(FamilyRelationBase, ReadNamedModel):
 
     class Config:
         orm_mode = True
+
+class FamilyRelationReadPagination(BaseModel):
+    total: Optional[int]
+    objects: Optional[List[FamilyRelationRead]]
