@@ -1,6 +1,6 @@
 from typing import List
 
-from sqlalchemy import func
+from sqlalchemy import func, and_
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
@@ -12,14 +12,23 @@ from services import ServiceBase
 class InstitutionService(
         ServiceBase[Institution, InstitutionCreate, InstitutionUpdate]):
 
-    def get_multi(
-        self, db: Session, skip: int = 0, limit: int = 100
-    ) -> List[Institution]:
-        return (db.query(Institution)
-                  .order_by(func.to_char(Institution.name))
-                  .offset(skip)
-                  .limit(limit)
-                  .all())
+    def get_all(
+        self, db: Session, skip: int = 0, limit: int = 100, filter: str = ''
+    ):
+        institutions = db.query(Institution)
+
+        if filter != '':
+            institutions = self._add_filter_to_query(institutions, filter)
+
+        institutions = (institutions
+                       .order_by(func.to_char(Institution.name))
+                       .offset(skip)
+                       .limit(limit)
+                       .all())
+
+        total = db.query(Institution).count()
+
+        return {'total': total, 'objects': institutions}
 
     def get_by_id(self, db: Session, id: str):
         institution = super().get(db, id)
@@ -27,6 +36,18 @@ class InstitutionService(
             raise NotFoundException(
                 detail=f"Institution with id: {id} is not found!")
         return institution
+
+    def _add_filter_to_query(self, institution_query, filter):
+        key_words = filter.lower().split()
+        institutions = (
+            institution_query
+            .filter(
+                and_(func.concat(func.concat(func.lower(Institution.name), ' '),
+                                 func.concat(func.lower(Institution.nameKZ), ' '))
+                     .contains(name) for name in key_words)
+            )
+        )
+        return institutions
 
 
 institution_service = InstitutionService(Institution)

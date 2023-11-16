@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import func
+from sqlalchemy import func, and_
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
@@ -51,14 +51,20 @@ class EquipmentService(
         return equipment1
 
     def get_all_army_equipments(
-            self, db: Session, skip: int = 0, limit: int = 10):
+            self, db: Session, skip: int = 0, limit: int = 10, filter: str = ''):
+        army_equipments = db.query(TypeArmyEquipment)
 
-        army_equipments = (db.query(TypeArmyEquipment)
+        if filter != '':
+            army_equipments = self._add_filter_to_army_query(army_equipments, filter)
+
+        army_equipments = (army_equipments
                            .offset(skip)
                            .limit(limit).all())
 
-        return [TypeArmyEquipmentRead.from_orm(army_equipment)
-                for army_equipment in army_equipments]
+        total = db.query(TypeArmyEquipment).count()
+
+        return {'total': total, 'objects': [TypeArmyEquipmentRead.from_orm(army_equipment)
+                for army_equipment in army_equipments]}
 
     def get_clothing_equipment_type_model_by_ids(
             self, db: Session,
@@ -77,10 +83,14 @@ class EquipmentService(
 
     def get_all_clothing_equipments(
             self, db: Session,
-            skip: int = 0, limit: int = 10):
+            skip: int = 0, limit: int = 10, filter: str = ''):
+        type_cloth_equipmets_list = db.query(TypeClothingEquipment)
 
-        type_cloth_equipmets_list = (db.query(TypeClothingEquipment)
-                                         .offset(skip).limit(limit).all())
+        if filter != '':
+            type_cloth_equipmets_list = self._add_filter_to_cloth_query(type_cloth_equipmets_list, filter)
+
+        type_cloth_equipmets_list = (type_cloth_equipmets_list
+                                     .offset(skip).limit(limit).all())
 
         if not type_cloth_equipmets_list:
             raise NotFoundException("Equipment not found")
@@ -102,7 +112,9 @@ class EquipmentService(
             type_cloth_equipmets_read_list.append(
                 type_clothing_equipment_read)
 
-        return type_cloth_equipmets_read_list
+        total = db.query(TypeClothingEquipment).count()
+
+        return {'total': total, 'objects': type_cloth_equipmets_read_list}
 
     def get_all_clothing_equipment_models(self, db: Session):
         return db.query(TypeClothingEquipmentModel).all()
@@ -127,14 +139,21 @@ class EquipmentService(
 
     def get_all_other_equipments(
             self, db: Session,
-            skip: int = 0, limit: int = 10):
+            skip: int = 0, limit: int = 10, filter: str = ''):
 
-        other_equipments = (db.query(TypeOtherEquipment)
-                            .offset(skip)
-                            .limit(limit).all())
+        other_equipments = db.query(TypeOtherEquipment)
 
-        return [TypeOtherEquipmentRead.from_orm(other_equipment)
-                for other_equipment in other_equipments]
+        if filter != '':
+            other_equipments = self._add_filter_to_other_query(other_equipments, filter)
+
+        other_equipments = (other_equipments
+                           .offset(skip)
+                           .limit(limit).all())
+
+        total = db.query(TypeOtherEquipment).count()
+
+        return {'total': total, 'objects': [TypeOtherEquipmentRead.from_orm(other_equipment)
+                for other_equipment in other_equipments]}
 
     def get_all_available_equipments(
             self, db: Session, user_id: str, skip: int = 0, limit: int = 10):
@@ -186,6 +205,44 @@ class EquipmentService(
         db.add(equipment)
         db.flush()
         return equipment
+
+
+    def _add_filter_to_army_query(self, army_equipment_query, filter):
+        key_words = filter.lower().split()
+        army_equipments = (
+            army_equipment_query
+            .filter(
+                and_(func.concat(func.concat(func.lower(TypeArmyEquipment.name), ' '),
+                                 func.concat(func.lower(TypeArmyEquipment.nameKZ), ' '))
+                     .contains(name) for name in key_words)
+            )
+        )
+        return army_equipments
+
+
+    def _add_filter_to_cloth_query(self, cloth_equipment_query, filter):
+        key_words = filter.lower().split()
+        cloth_equipments = (
+            cloth_equipment_query
+            .filter(
+                and_(func.concat(func.concat(func.lower(TypeClothingEquipment.name), ' '),
+                                 func.concat(func.lower(TypeClothingEquipment.nameKZ), ' '))
+                     .contains(name) for name in key_words)
+            )
+        )
+        return cloth_equipments
+
+    def _add_filter_to_other_query(self, other_equipment_query, filter):
+        key_words = filter.lower().split()
+        other_equipments = (
+            other_equipment_query
+            .filter(
+                and_(func.concat(func.concat(func.lower(TypeOtherEquipment.name), ' '),
+                                 func.concat(func.lower(TypeOtherEquipment.nameKZ), ' '))
+                     .contains(name) for name in key_words)
+            )
+        )
+        return other_equipments
 
 
 equipment_service = EquipmentService(Equipment)

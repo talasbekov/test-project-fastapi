@@ -2,7 +2,7 @@ import uuid
 from typing import Optional, List
 from datetime import datetime
 
-from schemas import Model, ReadModel, ReadNamedModel
+from schemas import Model, ReadModel, ReadNamedModel, BaseModel
 
 
 class EquipmentBase(Model):
@@ -54,6 +54,11 @@ class TypeArmyEquipmentRead(ReadNamedModel):
         arbitrary_types_allowed = True
 
 
+class TypeArmyEquipmentReadPagination(BaseModel):
+    total: Optional[int]
+    objects: Optional[List[TypeArmyEquipmentRead]]
+
+
 class TypeClothingEquipmentModel(ReadNamedModel):
 
     class Config:
@@ -67,6 +72,11 @@ class TypeClothingEquipmentRead(ReadNamedModel):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
+
+
+class TypeClothingEquipmentReadPagination(BaseModel):
+    total: Optional[int]
+    objects: Optional[List[TypeClothingEquipmentRead]]
 
 
 class ClothingEquipmentTypesModelsRead(ReadNamedModel):
@@ -92,3 +102,8 @@ class TypeOtherEquipmentRead(ReadNamedModel):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
+
+
+class TypeOtherEquipmentReadPagination(BaseModel):
+    total: Optional[int]
+    objects: Optional[List[TypeOtherEquipmentRead]]

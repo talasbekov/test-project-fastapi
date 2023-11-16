@@ -7,7 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import CountryCreate, CountryUpdate, CountryRead
+from schemas import CountryCreate, CountryUpdate, CountryRead, CountryReadPagination
 from services import country_service
 
 router = APIRouter(
@@ -19,12 +19,13 @@ router = APIRouter(
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[CountryRead],
+            response_model=CountryReadPagination,
             summary="Get all Country")
 async def get_all(*,
                   db: Session = Depends(get_db),
                   skip: int = 0,
                   limit: int = 100,
+                  filter: str = '',
                   Authorize: AuthJWT = Depends()
                   ):
     """
@@ -36,7 +37,7 @@ async def get_all(*,
             This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    return country_service.get_multi(db, skip, limit)
+    return country_service.get_all(db, skip, limit, filter)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
