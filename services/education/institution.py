@@ -37,17 +37,17 @@ class InstitutionService(
                 detail=f"Institution with id: {id} is not found!")
         return institution
 
-    def _add_filter_to_query(self, sport_type_query, filter):
+    def _add_filter_to_query(self, institution_query, filter):
         key_words = filter.lower().split()
-        sport_types = (
-            sport_type_query
+        institutions = (
+            institution_query
             .filter(
                 and_(func.concat(func.concat(func.lower(Institution.name), ' '),
                                  func.concat(func.lower(Institution.nameKZ), ' '))
                      .contains(name) for name in key_words)
             )
         )
-        return sport_types
+        return institutions
 
 
 institution_service = InstitutionService(Institution)

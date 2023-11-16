@@ -39,17 +39,17 @@ class InstitutionDegreeTypeService(
                 detail=f"InstitutionDegreeType with id: {id} is not found!")
         return institution_degree_type
 
-    def _add_filter_to_query(self, sport_type_query, filter):
+    def _add_filter_to_query(self, institution_degree_type_query, filter):
         key_words = filter.lower().split()
-        sport_types = (
-            sport_type_query
+        institution_degree_types = (
+            institution_degree_type_query
             .filter(
                 and_(func.concat(func.concat(func.lower(InstitutionDegreeType.name), ' '),
                                  func.concat(func.lower(InstitutionDegreeType.nameKZ), ' '))
                      .contains(name) for name in key_words)
             )
         )
-        return sport_types
+        return institution_degree_types
 
 institution_degree_type_service = InstitutionDegreeTypeService(
     InstitutionDegreeType)
