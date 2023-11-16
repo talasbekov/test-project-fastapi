@@ -8,7 +8,8 @@ from .equipment import (EquipmentCreate,
                         TypeArmyEquipmentRead,
                         TypeOtherEquipmentRead,
                         TypeArmyEquipmentReadPagination,
-                        TypeClothingEquipmentReadPagination
+                        TypeClothingEquipmentReadPagination,
+                        TypeOtherEquipmentReadPagination
                         )
 
 from .event import EventCreate, EventRead, EventUpdate

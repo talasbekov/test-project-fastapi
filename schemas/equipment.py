@@ -102,3 +102,8 @@ class TypeOtherEquipmentRead(ReadNamedModel):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
+
+
+class TypeOtherEquipmentReadPagination(BaseModel):
+    total: Optional[int]
+    objects: Optional[List[TypeOtherEquipmentRead]]

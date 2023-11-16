@@ -12,7 +12,7 @@ from schemas import (EquipmentCreate,
                      EquipmentRead,
                      TypeClothingEquipmentReadPagination,
                      TypeArmyEquipmentReadPagination,
-                     TypeOtherEquipmentRead,
+                     TypeOtherEquipmentReadPagination,
                      )
 from services import equipment_service
 
@@ -165,13 +165,14 @@ async def get_all_army(*,
 
 
 @router.get("/type/other/", dependencies=[Depends(HTTPBearer())],
-            response_model=List[TypeOtherEquipmentRead],
+            response_model=TypeOtherEquipmentReadPagination,
             summary="Get all Other Equipments")
 async def get_all_other(*,
                         db: Session = Depends(get_db),
                         Authorize: AuthJWT = Depends(),
                         skip: int = 0,
-                        limit: int = 10
+                        limit: int = 10,
+                        filter: str = ''
                         ):
     """
         Get all Other Equipments
@@ -182,7 +183,7 @@ async def get_all_other(*,
             This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
-    return equipment_service.get_all_other_equipments(db, skip, limit)
+    return equipment_service.get_all_other_equipments(db, skip, limit, filter)
 
 
 @router.get("/type/all", dependencies=[Depends(HTTPBearer())],

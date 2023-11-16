@@ -61,8 +61,10 @@ class EquipmentService(
                            .offset(skip)
                            .limit(limit).all())
 
-        return [TypeArmyEquipmentRead.from_orm(army_equipment)
-                for army_equipment in army_equipments]
+        total = db.query(TypeArmyEquipment).count()
+
+        return {'total': total, 'objects': [TypeArmyEquipmentRead.from_orm(army_equipment)
+                for army_equipment in army_equipments]}
 
     def get_clothing_equipment_type_model_by_ids(
             self, db: Session,
@@ -110,7 +112,9 @@ class EquipmentService(
             type_cloth_equipmets_read_list.append(
                 type_clothing_equipment_read)
 
-        return type_cloth_equipmets_read_list
+        total = db.query(TypeClothingEquipment).count()
+
+        return {'total': total, 'objects': type_cloth_equipmets_read_list}
 
     def get_all_clothing_equipment_models(self, db: Session):
         return db.query(TypeClothingEquipmentModel).all()
@@ -135,14 +139,21 @@ class EquipmentService(
 
     def get_all_other_equipments(
             self, db: Session,
-            skip: int = 0, limit: int = 10):
+            skip: int = 0, limit: int = 10, filter: str = ''):
 
-        other_equipments = (db.query(TypeOtherEquipment)
-                            .offset(skip)
-                            .limit(limit).all())
+        other_equipments = db.query(TypeOtherEquipment)
 
-        return [TypeOtherEquipmentRead.from_orm(other_equipment)
-                for other_equipment in other_equipments]
+        if filter != '':
+            other_equipments = self._add_filter_to_other_query(other_equipments, filter)
+
+        other_equipments = (other_equipments
+                           .offset(skip)
+                           .limit(limit).all())
+
+        total = db.query(TypeOtherEquipment).count()
+
+        return {'total': total, 'objects': [TypeOtherEquipmentRead.from_orm(other_equipment)
+                for other_equipment in other_equipments]}
 
     def get_all_available_equipments(
             self, db: Session, user_id: str, skip: int = 0, limit: int = 10):
@@ -221,6 +232,17 @@ class EquipmentService(
         )
         return cloth_equipments
 
+    def _add_filter_to_other_query(self, other_equipment_query, filter):
+        key_words = filter.lower().split()
+        other_equipments = (
+            other_equipment_query
+            .filter(
+                and_(func.concat(func.concat(func.lower(TypeOtherEquipment.name), ' '),
+                                 func.concat(func.lower(TypeOtherEquipment.nameKZ), ' '))
+                     .contains(name) for name in key_words)
+            )
+        )
+        return other_equipments
 
 
 
