@@ -7,7 +7,11 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import ContractCreate, ContractUpdate, ContractRead, ContractTypeRead
+from schemas import (ContractCreate,
+                     ContractUpdate,
+                     ContractRead,
+                     ContractTypeRead,
+                     ContractTypeReadPagination)
 from services import contract_service
 
 router = APIRouter(
@@ -42,12 +46,13 @@ async def get_all(*,
 
 @router.get("/types", status_code=status.HTTP_200_OK,
             dependencies=[Depends(HTTPBearer())],
-            response_model=List[ContractTypeRead],
+            response_model=ContractTypeReadPagination,
             summary="Get all Contract Types")
 async def get_all_contract_types(*,
                                  db: Session = Depends(get_db),
                                  skip: int = 0,
                                  limit: int = 100,
+                                 filter: str = '',
                                  Authorize: AuthJWT = Depends()
                                 ):
     """
@@ -61,7 +66,7 @@ async def get_all_contract_types(*,
             This parameter is optional and defaults to 100.
    """
     Authorize.jwt_required()
-    return contract_service.get_all_contract_types(db, skip, limit)
+    return contract_service.get_all_contract_types(db, skip, limit, filter)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
