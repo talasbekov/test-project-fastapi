@@ -1,7 +1,7 @@
 from .abroad_travel import (AbroadTravelBase, AbroadTravelCreate,
                             AbroadTravelRead, AbroadTravelUpdate)
 from .country import (CountryBase, CountryCreate, CountryRead,
-                      CountryUpdate)
+                      CountryUpdate, CountryReadPagination)
 from .polygraph_check import (PolygraphCheckBase, PolygraphCheckCreate,
                               PolygraphCheckUpdate, PolygraphCheckRead)
 from .psychological_check import (PsychologicalCheckBase, PsychologicalCheckCreate,
