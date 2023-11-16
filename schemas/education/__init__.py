@@ -4,7 +4,7 @@ from .science import ScienceRead, ScienceCreate, ScienceUpdate, ScienceReadPagin
 from .specialty import SpecialtyRead, SpecialtyCreate, SpecialtyUpdate, SpecialtyReadPagination
 from .academic_degree import AcademicDegreeRead, AcademicDegreeCreate, AcademicDegreeUpdate, AcademicDegreeShorRead
 from .academic_title import AcademicTitleRead, AcademicTitleCreate, AcademicTitleUpdate, AcademicTitleShortRead
-from .academic_title_degree import AcademicTitleDegreeRead, AcademicTitleDegreeCreate, AcademicTitleDegreeUpdate
+from .academic_title_degree import AcademicTitleDegreeRead, AcademicTitleDegreeCreate, AcademicTitleDegreeUpdate, AcademicTitleDegreeReadPagination
 from .course_provider import CourseProviderRead, CourseProviderCreate, CourseProviderUpdate, CourseProviderReadPagination
 from .course import CourseRead, CourseCreate, CourseUpdate, CourseShortRead
 from .language_proficiency import LanguageProficiencyRead, LanguageProficiencyCreate, LanguageProficiencyUpdate

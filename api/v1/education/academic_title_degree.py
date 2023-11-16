@@ -9,7 +9,8 @@ from sqlalchemy.orm import Session
 from core import get_db
 from schemas.education import (AcademicTitleDegreeCreate,
                                AcademicTitleDegreeRead,
-                               AcademicTitleDegreeUpdate)
+                               AcademicTitleDegreeUpdate,
+                               AcademicTitleDegreeReadPagination)
 from services.education import academic_title_degree_service
 
 router = APIRouter(prefix="/academic_title_degrees",
@@ -18,12 +19,13 @@ router = APIRouter(prefix="/academic_title_degrees",
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[AcademicTitleDegreeRead],
+            response_model=AcademicTitleDegreeReadPagination,
             summary="Get all AcademicTitleDegrees")
 async def get_all(*,
                   db: Session = Depends(get_db),
                   skip: int = 0,
                   limit: int = 100,
+                  filter: str = '',
                   Authorize: AuthJWT = Depends()
                   ):
     """
@@ -37,7 +39,7 @@ async def get_all(*,
         This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    return academic_title_degree_service.get_multi(db, skip, limit)
+    return academic_title_degree_service.get_all(db, skip, limit, filter)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
