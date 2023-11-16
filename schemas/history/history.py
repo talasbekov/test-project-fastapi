@@ -497,7 +497,7 @@ class PenaltyRead(Model):
     def from_orm(cls, orm_obj):
         return cls(
             id=orm_obj.id,
-            status=orm_obj.penalty.type.name,
+            status=orm_obj.penalty.type.name if orm_obj.penalty.type else None,
             document_link=orm_obj.document_link,
             cancel_document_link=orm_obj.cancel_document_link,
             document_number=orm_obj.document_number,
