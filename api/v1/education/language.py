@@ -9,7 +9,8 @@ from sqlalchemy.orm import Session
 from core import get_db
 from schemas.education import (LanguageCreate,
                                LanguageRead,
-                               LanguageUpdate)
+                               LanguageUpdate,
+                               LanguageReadPagination)
 from services.education import language_service
 
 router = APIRouter(prefix="/languages",
@@ -18,7 +19,7 @@ router = APIRouter(prefix="/languages",
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[LanguageRead],
+            response_model=LanguageReadPagination,
             summary="Get all Languages")
 async def get_all(*,
                   db: Session = Depends(get_db),

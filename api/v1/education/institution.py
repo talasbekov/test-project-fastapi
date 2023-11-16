@@ -19,7 +19,7 @@ router = APIRouter(prefix="/institutions",
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[InstitutionReadPagination],
+            response_model=InstitutionReadPagination,
             summary="Get all Institutions")
 async def get_all(*,
                   db: Session = Depends(get_db),
