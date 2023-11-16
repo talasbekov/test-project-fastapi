@@ -1,3 +1,5 @@
+from typing import Optional, List
+
 from schemas import NamedModel, ReadNamedModel
 
 
@@ -18,3 +20,8 @@ class LanguageUpdate(LanguageBase):
 
 class LanguageRead(LanguageBase, ReadNamedModel):
     pass
+
+
+class LanguageReadPagination(BaseModel):
+    total: Optional[int]
+    objects: Optional[List[LanguageRead]]

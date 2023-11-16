@@ -37,17 +37,17 @@ class SpecialtyService(
                 detail=f"Specialty with id: {id} is not found!")
         return specialty
 
-    def _add_filter_to_query(self, sport_type_query, filter):
+    def _add_filter_to_query(self, specialty_query, filter):
         key_words = filter.lower().split()
-        sport_types = (
-            sport_type_query
+        specialties = (
+            specialty_query
             .filter(
                 and_(func.concat(func.concat(func.lower(Specialty.name), ' '),
                                  func.concat(func.lower(Specialty.nameKZ), ' '))
                      .contains(name) for name in key_words)
             )
         )
-        return sport_types
+        return specialties
 
 
 specialty_service = SpecialtyService(Specialty)

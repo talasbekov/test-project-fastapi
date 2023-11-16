@@ -8,7 +8,7 @@ from .academic_title_degree import AcademicTitleDegreeRead, AcademicTitleDegreeC
 from .course_provider import CourseProviderRead, CourseProviderCreate, CourseProviderUpdate, CourseProviderReadPagination
 from .course import CourseRead, CourseCreate, CourseUpdate, CourseShortRead
 from .language_proficiency import LanguageProficiencyRead, LanguageProficiencyCreate, LanguageProficiencyUpdate
-from .language import LanguageRead, LanguageCreate, LanguageUpdate
+from .language import LanguageRead, LanguageCreate, LanguageUpdate, LanguageReadPagination
 from .institution import InstitutionRead, InstitutionCreate, InstitutionUpdate, InstitutionReadPagination
 from .institution_degree_type import InstitutionDegreeTypeRead, InstitutionDegreeTypeCreate, InstitutionDegreeTypeUpdate, InstitutionDegreeTypeReadPagination
 from .educational_profile import EducationalProfileRead, EducationalProfileCreate, EducationalProfileUpdate
