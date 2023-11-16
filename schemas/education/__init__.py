@@ -1,5 +1,5 @@
 from .education import EducationRead, EducationCreate, EducationUpdate, EducationShortRead
-from .academic_degree_degree import AcademicDegreeDegreeRead, AcademicDegreeDegreeCreate, AcademicDegreeDegreeUpdate
+from .academic_degree_degree import AcademicDegreeDegreeRead, AcademicDegreeDegreeCreate, AcademicDegreeDegreeUpdate, AcademicDegreeDegreeReadPagination
 from .science import ScienceRead, ScienceCreate, ScienceUpdate
 from .specialty import SpecialtyRead, SpecialtyCreate, SpecialtyUpdate, SpecialtyReadPagination
 from .academic_degree import AcademicDegreeRead, AcademicDegreeCreate, AcademicDegreeUpdate, AcademicDegreeShorRead
