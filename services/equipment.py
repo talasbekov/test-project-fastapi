@@ -51,9 +51,13 @@ class EquipmentService(
         return equipment1
 
     def get_all_army_equipments(
-            self, db: Session, skip: int = 0, limit: int = 10):
+            self, db: Session, skip: int = 0, limit: int = 10, filter: str = ''):
+        army_equipments = db.query(TypeArmyEquipment)
 
-        army_equipments = (db.query(TypeArmyEquipment)
+        if filter != '':
+            army_equipments = self._add_filter_to_army_query(army_equipments, filter)
+
+        army_equipments = (army_equipments
                            .offset(skip)
                            .limit(limit).all())
 
@@ -186,6 +190,20 @@ class EquipmentService(
         db.add(equipment)
         db.flush()
         return equipment
+
+
+    def _add_filter_to_army_query(self, penalty_type_query, filter):
+        key_words = filter.lower().split()
+        penalty_types = (
+            penalty_type_query
+            .filter(
+                and_(func.concat(func.concat(func.lower(PenaltyType.name), ' '),
+                                 func.concat(func.lower(PenaltyType.nameKZ), ' '))
+                     .contains(name) for name in key_words)
+            )
+        )
+        return penalty_types
+
 
 
 equipment_service = EquipmentService(Equipment)
