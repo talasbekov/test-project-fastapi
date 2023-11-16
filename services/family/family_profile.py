@@ -37,7 +37,8 @@ class FamilyProfileService(
             db.query(Family)
             .join(FamilyRelation)
             .filter(Family.profile_id==profile.id)
-            .order_by(FamilyRelation.family_order)
+            .order_by(FamilyRelation.family_order,
+                      Family.birthday)
             .all()
         )
         return FamilyProfileRead(id=profile.id,
