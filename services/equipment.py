@@ -245,5 +245,4 @@ class EquipmentService(
         return other_equipments
 
 
-
 equipment_service = EquipmentService(Equipment)
