@@ -25,7 +25,7 @@ async def get_all(*,
                   db: Session = Depends(get_db),
                   skip: int = 0,
                   limit: int = 100,
-                  filetr: str = '',
+                  filter: str = '',
                   Authorize: AuthJWT = Depends()
                   ):
     """
