@@ -21,3 +21,4 @@ from .vehicle import (VehicleBase, VehicleCreate, VehicleRead,
                       VehicleUpdate)
 from .additional_profile import (AdditionalProfileCreate, AdditionalProfileUpdate,
                                  AdditionalProfileRead)
+from .vehicle_type import *
