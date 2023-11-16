@@ -634,6 +634,7 @@ class EmergencyContactRead(ReadModel):
     staff_division_id: Optional[str]
     document_style: Optional[str]
     contractor_signer_name: Optional[dict]
+    date_credited: Optional[datetime]
 
     class Config:
         from_attributes = True
@@ -667,7 +668,8 @@ class EmergencyContactRead(ReadModel):
             staff_division_id=orm_obj.staff_division_id,
             document_style=orm_obj.document_style,
             contractor_signer_name={"name": orm_obj.contractor_signer_name,
-                                    "nameKZ": orm_obj.contractor_signer_nameKZ}
+                                    "nameKZ": orm_obj.contractor_signer_nameKZ},
+            date_credited=orm_obj.date_credited
         )
 
 
