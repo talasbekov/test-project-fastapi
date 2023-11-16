@@ -1,6 +1,6 @@
 from typing import Optional, List
 
-from schemas import NamedModel, ReadNamedModel
+from schemas import NamedModel, ReadNamedModel, BaseModel
 
 
 class LanguageBase(NamedModel):
