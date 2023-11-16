@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import func
+from sqlalchemy import func, and_
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
@@ -81,10 +81,14 @@ class EquipmentService(
 
     def get_all_clothing_equipments(
             self, db: Session,
-            skip: int = 0, limit: int = 10):
+            skip: int = 0, limit: int = 10, filter: str = ''):
+        type_cloth_equipmets_list = db.query(TypeClothingEquipment)
 
-        type_cloth_equipmets_list = (db.query(TypeClothingEquipment)
-                                         .offset(skip).limit(limit).all())
+        if filter != '':
+            type_cloth_equipmets_list = self._add_filter_to_cloth_query(type_cloth_equipmets_list, filter)
+
+        type_cloth_equipmets_list = (type_cloth_equipmets_list
+                                     .offset(skip).limit(limit).all())
 
         if not type_cloth_equipmets_list:
             raise NotFoundException("Equipment not found")
@@ -192,17 +196,31 @@ class EquipmentService(
         return equipment
 
 
-    def _add_filter_to_army_query(self, penalty_type_query, filter):
+    def _add_filter_to_army_query(self, army_equipment_query, filter):
         key_words = filter.lower().split()
-        penalty_types = (
-            penalty_type_query
+        army_equipments = (
+            army_equipment_query
             .filter(
-                and_(func.concat(func.concat(func.lower(PenaltyType.name), ' '),
-                                 func.concat(func.lower(PenaltyType.nameKZ), ' '))
+                and_(func.concat(func.concat(func.lower(TypeArmyEquipment.name), ' '),
+                                 func.concat(func.lower(TypeArmyEquipment.nameKZ), ' '))
                      .contains(name) for name in key_words)
             )
         )
-        return penalty_types
+        return army_equipments
+
+
+    def _add_filter_to_cloth_query(self, cloth_equipment_query, filter):
+        key_words = filter.lower().split()
+        cloth_equipments = (
+            cloth_equipment_query
+            .filter(
+                and_(func.concat(func.concat(func.lower(TypeClothingEquipment.name), ' '),
+                                 func.concat(func.lower(TypeClothingEquipment.nameKZ), ' '))
+                     .contains(name) for name in key_words)
+            )
+        )
+        return cloth_equipments
+
 
 
 

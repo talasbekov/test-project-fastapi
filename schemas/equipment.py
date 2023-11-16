@@ -74,6 +74,11 @@ class TypeClothingEquipmentRead(ReadNamedModel):
         arbitrary_types_allowed = True
 
 
+class TypeClothingEquipmentReadPagination(BaseModel):
+    total: Optional[int]
+    objects: Optional[List[TypeClothingEquipmentRead]]
+
+
 class ClothingEquipmentTypesModelsRead(ReadNamedModel):
 
     type_cloth_eq_models: Optional[List[TypeClothingEquipmentModel]]

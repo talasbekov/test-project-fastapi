@@ -10,7 +10,7 @@ from core import get_db
 from schemas import (EquipmentCreate,
                      EquipmentUpdate,
                      EquipmentRead,
-                     TypeClothingEquipmentRead,
+                     TypeClothingEquipmentReadPagination,
                      TypeArmyEquipmentReadPagination,
                      TypeOtherEquipmentRead,
                      )
@@ -122,7 +122,7 @@ async def delete(*,
 
 
 @router.get("/type/clothing/", dependencies=[Depends(HTTPBearer())],
-            response_model=List[TypeClothingEquipmentRead],
+            response_model=TypeClothingEquipmentReadPagination,
             summary="Get all Clothing Equipments")
 async def get_all_clothing(*,
                            db: Session = Depends(get_db),
