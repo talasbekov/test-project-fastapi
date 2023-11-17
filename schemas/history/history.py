@@ -600,6 +600,7 @@ class HolidayRead(Model):
     document_number: Optional[str]
     status: Optional[str]
     status_type_id: Optional[str]
+    status_id: Optional[str]
 
     class Config:
         from_attributes = True
@@ -615,7 +616,8 @@ class HolidayRead(Model):
             cancel_document_link=orm_obj.cancel_document_link,
             document_number=orm_obj.document_number,
             status=orm_obj.status.type.name if orm_obj.status.type else orm_obj.status_name,
-            status_type_id=orm_obj.status.type.id if orm_obj.status.type else None
+            status_type_id=orm_obj.status.type.id if orm_obj.status.type else None,
+            status_id=orm_obj.status.id if orm_obj.status else None
         )
 
 
