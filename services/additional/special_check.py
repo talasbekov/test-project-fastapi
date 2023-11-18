@@ -29,10 +29,6 @@ class SpecialCheckService(
         db.flush()
         return db_obj
 
-    def update(self, db: Session, db_obj: SpecialCheck,
-               obj_in: SpecialCheckUpdate):
-        return super().update(db, db_obj, obj_in)
-
     def delete(self, db: Session, id: str):
         return super().delete(db, id)
 
