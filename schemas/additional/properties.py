@@ -14,6 +14,7 @@ class PropertiesBase(Model):
     purchase_typeKZ: str
     address: str
     profile_id: str
+    document_link: Optional[str]
 
     class Config:
         orm_mode = True
