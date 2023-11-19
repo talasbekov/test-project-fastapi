@@ -41,6 +41,29 @@ async def get_all(*,
     Authorize.jwt_required()
     return rank_service.get_all(db, skip, limit, filter)
 
+@router.get("/by-name/", dependencies=[Depends(HTTPBearer())],
+            response_model=RankRead,
+            summary="Get all Ranks by name")
+async def get_all(*,
+                  db: Session = Depends(get_db),
+                  skip: int = 0,
+                  limit: int = 100,
+                  filter: str = '',
+                  Authorize: AuthJWT = Depends()
+                  ):
+    """
+       Get all Ranks
+
+       - **skip**: int - The number of ranks
+            to skip before returning the results.
+            This parameter is optional and defaults to 0.
+       - **limit**: int - The maximum number of ranks
+            to return in the response.
+            This parameter is optional and defaults to 100.
+   """
+    Authorize.jwt_required()
+    return rank_service.get_by_name(db, filter)
+
 
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],

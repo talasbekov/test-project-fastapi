@@ -36,6 +36,9 @@ class RankService(ServiceBase[Rank, RankCreate, RankUpdate]):
 
         return {'total': total, 'objects': ranks}
 
+    def get_by_name(self, db: Session, name: str):
+        return db.query(Rank).filter(func.to_char(Rank.name) == name).first()
+
     def get_by_option(self, db: Session, type: str,
                       id: str, skip: int, limit: int):
         user = db.query(User).filter(User.id == id).first()
@@ -79,7 +82,7 @@ class RankService(ServiceBase[Rank, RankCreate, RankUpdate]):
         if res is None:
             raise NotFoundException("Rank with order: {order} is not found!")
         return res
-    
+
     def _add_filter_to_query(self, rank_query, filter):
         key_words = filter.lower().split()
         ranks = (
