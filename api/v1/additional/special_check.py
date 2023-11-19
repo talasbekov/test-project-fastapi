@@ -1,4 +1,3 @@
-import uuid
 from typing import List
 
 from fastapi import APIRouter, Depends, status
@@ -77,8 +76,8 @@ async def update(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    abroad_travel = special_check_service.get_by_id(db, str(id))
-    return special_check_service.update(db, abroad_travel, body)
+    special_check = special_check_service.get_by_id(db, str(id))
+    return special_check_service.update(db=db, db_obj=special_check, obj_in=body)
 
 
 @router.delete("/{id}/", dependencies=[Depends(HTTPBearer())],

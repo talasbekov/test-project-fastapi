@@ -33,9 +33,6 @@ class DashboardService:
                 db, StaffDivisionEnum.SERVICE.value
             )
             return self.__retrieve_all_staff_unit_count(db, staff_division)
-        elif not self.check_by_role(db, staff_unit):
-            raise ForbiddenException(
-                "You don't have permission to see stats!")
         else:
             staff_division = staff_division_service.get_by_id(
                 db, staff_unit.staff_division_id
@@ -46,7 +43,7 @@ class DashboardService:
         all_state = self.get_all_state(db, role)
         hr_vacancy = self.get_hr_vacancy_count_by_division \
             (db, role)
-        state_by_list = all_state - hr_vacancy
+        state_by_list = all_state - len(hr_vacancy)
         return state_by_list
 
     def get_hr_vacancy_count_by_division(self, db: Session, 
@@ -60,9 +57,6 @@ class DashboardService:
                 db, StaffDivisionEnum.SERVICE.value
             )
             return hr_vacancy_service.get_vacancies_recursive(db, staff_division)
-        elif not self.check_by_role(db, staff_unit):
-            raise ForbiddenException(
-                "You don't have permission to see stats of vacancy!")
         else:
             staff_division = staff_division_service.get_by_id(
                 db, staff_unit.staff_division_id
@@ -74,7 +68,7 @@ class DashboardService:
 
         state_by_list = self.get_state_by_list(db, role)
         state_by_status = self.get_count_by_status_all_users(db, role)
-        state_in_line = state_by_list - state_by_status
+        state_in_line = state_by_list - len(state_by_status)
 
         return state_in_line
 
@@ -90,10 +84,6 @@ class DashboardService:
             return status_service.get_count_all_users_recursive_by_status(
                         db, staff_division
                     )
-
-        elif not self.check_by_role(db, staff_unit):
-            raise ForbiddenException(
-                "You don't have permission to see stats of out line users!")
         else:
             staff_division = staff_division_service.get_by_id(
                 db, staff_unit.staff_division_id
@@ -128,9 +118,6 @@ class DashboardService:
                     ),
             }
 
-        elif not self.check_by_role(db, staff_unit):
-            raise ForbiddenException(
-                "You don't have permission to see stats of out line users!")
         else:
             staff_division = staff_division_service.get_by_id(
                 db, staff_unit.staff_division_id
@@ -164,9 +151,6 @@ class DashboardService:
             return candidate_service.get_candidates_recursive(
                 db, staff_division
             )
-        elif not self.check_by_role(db, staff_unit):
-            raise ForbiddenException(
-                "You don't have permission to see stats of candidates!")
         else:
             staff_division = staff_division_service.get_by_id(
                 db, staff_unit.staff_division_id
@@ -282,9 +266,6 @@ class DashboardService:
             return candidate_service.get_top_curators_by_candidates(
                 db, staff_division
             )
-        elif not self.check_by_role(db, staff_unit):
-            raise ForbiddenException(
-                "You don't have permission to see stats of candidates!")
         else:
             staff_division = staff_division_service.get_by_id(
                 db, staff_unit.staff_division_id
@@ -306,9 +287,6 @@ class DashboardService:
             return candidate_service.get_top_curator_duration_by_candidates(
                 db, staff_division
             )
-        elif not self.check_by_role(db, staff_unit):
-            raise ForbiddenException(
-                "You don't have permission to see stats of candidates!")
         else:
             staff_division = staff_division_service.get_by_id(
                 db, staff_unit.staff_division_id
@@ -331,7 +309,7 @@ class DashboardService:
 
     def get_active_users(self, db: Session) -> int:
         active_users = db.query(User).filter(
-            User.is_active.is_(True)
+            User.is_active == 1
         ).count()
         return active_users
 

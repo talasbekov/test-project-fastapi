@@ -1,7 +1,7 @@
 from sqlalchemy import (TEXT, TIMESTAMP, Column, ForeignKey, String)
 from sqlalchemy.orm import relationship
 
-from models import Model, NamedModel
+from models import NamedModel
 
 
 class SportDegree(NamedModel):

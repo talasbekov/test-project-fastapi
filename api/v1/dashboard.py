@@ -156,9 +156,8 @@ async def get_statistic_completed_candidates(*,
        Get completed candidates
     """
     Authorize.jwt_required()
-    role = Authorize.get_raw_jwt()['role']
     return (
-        dashboard_service.get_statistic_completed_candidates(db, role)
+        dashboard_service.get_statistic_completed_candidates(db)
     )
 
 
