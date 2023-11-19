@@ -487,6 +487,7 @@ class PenaltyRead(Model):
     date_to: Optional[datetime]
     reason: Optional[str]
     reasonKZ: Optional[str]
+    penalty_id: Optional[str]
 
     class Config:
         from_attributes = True
@@ -496,14 +497,15 @@ class PenaltyRead(Model):
     def from_orm(cls, orm_obj):
         return cls(
             id=orm_obj.id,
-            status=orm_obj.penalty.type.name,
+            status=orm_obj.penalty.type.name if orm_obj.penalty.type else None,
             document_link=orm_obj.document_link,
             cancel_document_link=orm_obj.cancel_document_link,
             document_number=orm_obj.document_number,
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
             reason=orm_obj.reason,
-            reasonKZ=orm_obj.reasonKZ
+            reasonKZ=orm_obj.reasonKZ,
+            penalty_id=orm_obj.penalty_id
         )
 
 
@@ -516,6 +518,7 @@ class ContractRead(ReadNamedModel):
     cancel_document_link: Optional[str]
     document_number: Optional[str]
     experience_years: Optional[int]
+    date_credited: Optional[datetime]
 
     class Config:
         from_attributes = True
@@ -534,7 +537,8 @@ class ContractRead(ReadNamedModel):
             document_number=orm_obj.document_number,
             experience_years=orm_obj.experience_years,
             name=orm_obj.contract.type.name,
-            nameKZ=orm_obj.contract.type.nameKZ
+            nameKZ=orm_obj.contract.type.nameKZ,
+            date_credited=orm_obj.date_credited
         )
 
 
@@ -595,6 +599,8 @@ class HolidayRead(Model):
     cancel_document_link: Optional[str]
     document_number: Optional[str]
     status: Optional[str]
+    status_type_id: Optional[str]
+    status_id: Optional[str]
 
     class Config:
         from_attributes = True
@@ -610,6 +616,8 @@ class HolidayRead(Model):
             cancel_document_link=orm_obj.cancel_document_link,
             document_number=orm_obj.document_number,
             status=orm_obj.status.type.name if orm_obj.status.type else orm_obj.status_name,
+            status_type_id=orm_obj.status.type.id if orm_obj.status.type else None,
+            status_id=orm_obj.status.id if orm_obj.status else None
         )
 
 
@@ -630,6 +638,7 @@ class EmergencyContactRead(ReadModel):
     staff_division_id: Optional[str]
     document_style: Optional[str]
     contractor_signer_name: Optional[dict]
+    date_credited: Optional[datetime]
 
     class Config:
         from_attributes = True
@@ -663,7 +672,8 @@ class EmergencyContactRead(ReadModel):
             staff_division_id=orm_obj.staff_division_id,
             document_style=orm_obj.document_style,
             contractor_signer_name={"name": orm_obj.contractor_signer_name,
-                                    "nameKZ": orm_obj.contractor_signer_nameKZ}
+                                    "nameKZ": orm_obj.contractor_signer_nameKZ},
+            date_credited=orm_obj.date_credited
         )
 
 

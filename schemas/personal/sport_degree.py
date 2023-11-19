@@ -34,3 +34,4 @@ class SportDegreeRead(SportDegreeBase, ReadNamedModel):
     sport_type: Optional[SportTypeRead]
     document_link: Optional[str]
     profile_id: Optional[str]
+    id: Optional[str]

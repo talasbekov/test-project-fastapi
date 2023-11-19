@@ -46,3 +46,8 @@ class StatusUpdate(StatusBase):
 class StatusRead(StatusBase, ReadModel):
     type: Optional[StatusTypeRead]
     history: Optional[History]
+
+
+class StatusReadPagination(BaseModel):
+    total: Optional[int]
+    objects: Optional[List[StatusRead]]

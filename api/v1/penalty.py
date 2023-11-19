@@ -7,111 +7,109 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas.education import (ScienceCreate,
-                               ScienceRead,
-                               ScienceUpdate,
-                               ScienceReadPagination)
-from services.education import science_service
+from schemas import PenaltyCreate, PenaltyUpdate, PenaltyRead, PenaltyPaginationRead
+from services import penalty_service
 
-router = APIRouter(prefix="/sciences",
-                   tags=["Sciences"],
-                   dependencies=[Depends(HTTPBearer())])
+router = APIRouter(
+    prefix="/penalty",
+    tags=["Penalties"],
+    dependencies=[
+        Depends(
+            HTTPBearer())])
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=ScienceReadPagination,
-            summary="Get all Sciences")
+            response_model=PenaltyPaginationRead,
+            summary="Get all Penalties")
 async def get_all(*,
                   db: Session = Depends(get_db),
                   skip: int = 0,
                   limit: int = 100,
-                  filter: str = '',
                   Authorize: AuthJWT = Depends()
                   ):
     """
-        Get all Sciences
+       Get all Penalties
 
-    - **skip**: int - The number of Sciences
-        to skip before returning the results.
-        This parameter is optional and defaults to 0.
-    - **limit**: int - The maximum number of Sciences
-        to return in the response.
-        This parameter is optional and defaults to 100.
-    """
+       - **skip**: int - The number of Penalties
+            to skip before returning the results.
+            This parameter is optional and defaults to 0.
+       - **limit**: int - The maximum number of Penalties
+            to return in the response.
+            This parameter is optional and defaults to 100.
+   """
     Authorize.jwt_required()
-    return science_service.get_all(db, skip, limit, filter)
+    return penalty_service.get_multi(db, skip, limit)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
-             response_model=ScienceRead,
-             summary="Create")
+             response_model=PenaltyRead,
+             summary="Create Penalty type")
 async def create(*,
                  db: Session = Depends(get_db),
-                 body: ScienceCreate,
+                 body: PenaltyCreate,
                  Authorize: AuthJWT = Depends()
                  ):
     """
-        Create new Science
+        Create Penalty type
 
         - **name**: required
     """
     Authorize.jwt_required()
-    return science_service.create(db, body)
+    return penalty_service.create(db, body)
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=ScienceRead,
-            summary="Get Science by id")
+            response_model=PenaltyRead,
+            summary="Get Penalty type by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),
                     id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
-        Get Science by id
+        Get Penalty type by id
 
-        - **id**: UUID - required.
+        - **id**: UUID - required
     """
     Authorize.jwt_required()
-    return science_service.get_by_id(db, str(id))
+    return penalty_service.get_by_id(db, str(id))
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=ScienceRead,
-            summary="Update Science")
+            response_model=PenaltyRead,
+            summary="Update Penalty type")
 async def update(*,
                  db: Session = Depends(get_db),
                  id: str,
-                 body: ScienceUpdate,
+                 body: PenaltyUpdate,
                  Authorize: AuthJWT = Depends()
                  ):
     """
-        Update Science
+        Update Penalty type
 
-        - **id**: UUID - the ID of Science to update.
-            This is required.
+        - **id**: UUID - the ID of badge to update. This is required.
         - **name**: required.
     """
     Authorize.jwt_required()
-    return science_service.update(
+    return penalty_service.update(
         db,
-        db_obj=science_service.get_by_id(db, str(id)),
+        db_obj=penalty_service.get_by_id(db, str(id)),
         obj_in=body)
 
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],
-               summary="Delete Science")
+               summary="Delete Penalty type")
 async def delete(*,
                  db: Session = Depends(get_db),
                  id: str,
                  Authorize: AuthJWT = Depends()
                  ):
     """
-        Delete Science
+        Delete Penalty type
 
-        - **id**: UUId - required
+        - **id**: UUID - required
     """
     Authorize.jwt_required()
-    science_service.remove(db, str(id))
+    penalty_service.remove(db, str(id))

@@ -1,6 +1,6 @@
 import uuid
 
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel
 
@@ -25,6 +25,11 @@ class ContractTypeUpdate(ContractTypeBase):
 
 class ContractTypeRead(ContractTypeBase, ReadNamedModel):
     pass
+
+
+class ContractTypeReadPagination(BaseModel):
+    total: Optional[int]
+    objects: Optional[List[ContractTypeRead]]
 
 
 class ContractBase(BaseModel):

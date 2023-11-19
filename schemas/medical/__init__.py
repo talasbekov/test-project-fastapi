@@ -1,4 +1,4 @@
-from .liberation import LiberationRead, LiberationCreate, LiberationUpdate
+from .liberation import LiberationRead, LiberationCreate, LiberationUpdate, LiberationReadPagination
 from .hospital_date import HospitalDataCreate, HospitalDataRead, HospitalDataUpdate
 from .user_liberation import UserLiberationCreate, UserLiberationRead, UserLiberationUpdate
 from .anthropometric_data import AnthropometricDataCreate, AnthropometricDataRead, AnthropometricDataUpdate

@@ -1,4 +1,6 @@
-from schemas import NamedModel, ReadNamedModel
+from typing import Optional, List
+
+from schemas import NamedModel, ReadNamedModel, BaseModel
 
 
 class AcademicDegreeDegreeBase(NamedModel):
@@ -18,3 +20,8 @@ class AcademicDegreeDegreeUpdate(AcademicDegreeDegreeBase):
 
 class AcademicDegreeDegreeRead(AcademicDegreeDegreeBase, ReadNamedModel):
     pass
+
+
+class AcademicDegreeDegreeReadPagination(BaseModel):
+    total: Optional[int]
+    objects: Optional[List[AcademicDegreeDegreeRead]]

@@ -1,6 +1,6 @@
 from typing import List
 
-from sqlalchemy import func
+from sqlalchemy import func, and_
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
@@ -18,16 +18,23 @@ class RankService(ServiceBase[Rank, RankCreate, RankUpdate]):
             raise NotFoundException(detail=f"Rank with id: {id} is not found!")
         return rank
 
-    def get_multi(
-        self, db: Session, skip: int = 0, limit: int = 100
-    ) -> List[Rank]:
-        ranks = (db.query(Rank)
-                   .order_by(func.to_char(Rank.name))
-                   .offset(skip)
-                   .limit(limit)
-                   .all())
-        count = db.query(Rank).count()
-        return {"total": count, "objects": ranks}
+    def get_all(
+        self, db: Session, skip: int = 0, limit: int = 100, filter: str = ''
+    ):
+        ranks = db.query(Rank)
+
+        if filter != '':
+            ranks = self._add_filter_to_query(ranks, filter)
+
+        ranks = (ranks
+                 .order_by(func.to_char(Rank.name))
+                 .offset(skip)
+                 .limit(limit)
+                 .all())
+
+        total = db.query(Rank).count()
+
+        return {'total': total, 'objects': ranks}
 
     def get_by_option(self, db: Session, type: str,
                       id: str, skip: int, limit: int):
@@ -72,6 +79,18 @@ class RankService(ServiceBase[Rank, RankCreate, RankUpdate]):
         if res is None:
             raise NotFoundException("Rank with order: {order} is not found!")
         return res
+    
+    def _add_filter_to_query(self, rank_query, filter):
+        key_words = filter.lower().split()
+        ranks = (
+            rank_query
+            .filter(
+                and_(func.concat(func.concat(func.lower(Rank.name), ' '),
+                                 func.concat(func.lower(Rank.nameKZ), ' '))
+                     .contains(name) for name in key_words)
+            )
+        )
+        return ranks
 
 
 rank_service = RankService(Rank)

@@ -10,6 +10,7 @@ class LanguageProficiencyBase(BaseModel):
     level: int
     profile_id: Optional[str]
     language_id: Optional[str]
+    document_link: Optional[str]
 
     class Config:
         orm_mode = True

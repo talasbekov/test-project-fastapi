@@ -10,7 +10,8 @@ from core import get_db
 from schemas.medical import (
     LiberationCreate,
     LiberationRead,
-    LiberationUpdate
+    LiberationUpdate,
+    LiberationReadPagination
 )
 from services.medical import liberation_service
 
@@ -23,12 +24,13 @@ router = APIRouter(
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[LiberationRead],
+            response_model=LiberationReadPagination,
             summary="Get all Liberation")
 async def get_all(*,
                   db: Session = Depends(get_db),
                   skip: int = 0,
                   limit: int = 100,
+                  filter: str = '',
                   Authorize: AuthJWT = Depends()
                   ):
     """
@@ -42,7 +44,7 @@ async def get_all(*,
         This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    return liberation_service.get_multi(db, skip, limit)
+    return liberation_service.get_all(db, skip, limit, filter)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
