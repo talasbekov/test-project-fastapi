@@ -1,10 +1,10 @@
 from sqlalchemy import (TEXT, TIMESTAMP, Column, ForeignKey, String)
 from sqlalchemy.orm import relationship
 
-from models import Model
+from models import NamedModel
 
 
-class SportDegree(Model):
+class SportDegree(NamedModel):
 
     __tablename__ = "hr_erp_sport_degrees"
 
