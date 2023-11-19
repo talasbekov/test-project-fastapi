@@ -667,41 +667,41 @@ class HrDocumentService(
         access_token, refresh_token = auth_service._generate_tokens(
             Authorize, user)
 
-        url = configs.ECP_SERVICE_URL + 'api/hr_document_step_signer/create/template/'
-        request_body = {
-            'hr_document_template_id': str(body.hr_document_template_id),
-            'hr_document_id': str(document.id),
-            'user_id': user_id,
-            'certificate_blob': body.certificate_blob
-        }
+        # url = configs.ECP_SERVICE_URL + 'api/hr_document_step_signer/create/template/'
+        # request_body = {
+        #     'hr_document_template_id': str(body.hr_document_template_id),
+        #     'hr_document_id': str(document.id),
+        #     'user_id': user_id,
+        #     'certificate_blob': body.certificate_blob
+        # }
 
-        headers = {"Authorization": f"Bearer {access_token}"}
+        # headers = {"Authorization": f"Bearer {access_token}"}
 
-        res = requests.post(url=url, json=request_body,
-                            headers=headers, verify=False)
-        if res.status_code == 400:
-            raise BadRequestException(detail=res.text)
+        # res = requests.post(url=url, json=request_body,
+        #                     headers=headers, verify=False)
+        # if res.status_code == 400:
+        #     raise BadRequestException(detail=res.text)
 
         template = document.hr_document_template_id
         step: HrDocumentStep = hr_document_step_service.get_initial_step_for_template(
             db, template
         )
 
-        url = configs.ECP_SERVICE_URL+'api/hr_document_step_signer/create/'
-        request_body = {
-            'hr_document_id': str(document.id),
-            'user_id': str(user_id),
-            'step_id': str(step.id),
-            'certificate_blob': body.certificate_blob
-        }
+        # url = configs.ECP_SERVICE_URL+'api/hr_document_step_signer/create/'
+        # request_body = {
+        #     'hr_document_id': str(document.id),
+        #     'user_id': str(user_id),
+        #     'step_id': str(step.id),
+        #     'certificate_blob': body.certificate_blob
+        # }
 
-        headers = {"Authorization": f"Bearer {access_token}"}
+        # headers = {"Authorization": f"Bearer {access_token}"}
 
-        res = requests.post(url=url, json=request_body,
-                            headers=headers, verify=False)
+        # res = requests.post(url=url, json=request_body,
+        #                     headers=headers, verify=False)
 
-        if res.status_code == 400:
-            raise BadRequestException(detail=res.text)
+        # if res.status_code == 400:
+        #     raise BadRequestException(detail=res.text)
 
         return document
 
@@ -724,21 +724,21 @@ class HrDocumentService(
             user_id
         )
 
-        url = configs.ECP_SERVICE_URL+'api/hr_document_step_signer/create/'
-        request_body = {
-            'hr_document_template_signer_id': str(document.hr_document_template_id),
-            'hr_document_id': str(document.id),
-            'user_id': str(user_id),
-            'step_id': str(step),
-            'certificate_blob': body.certificate_blob
-        }
-        headers = {"Authorization": f"Bearer {access_token}"}
+        # url = configs.ECP_SERVICE_URL+'api/hr_document_step_signer/create/'
+        # request_body = {
+        #     'hr_document_template_signer_id': str(document.hr_document_template_id),
+        #     'hr_document_id': str(document.id),
+        #     'user_id': str(user_id),
+        #     'step_id': str(step),
+        #     'certificate_blob': body.certificate_blob
+        # }
+        # headers = {"Authorization": f"Bearer {access_token}"}
 
-        res = requests.post(url=url, json=request_body,
-                            headers=headers, verify=False)
+        # res = requests.post(url=url, json=request_body,
+        #                     headers=headers, verify=False)
 
-        if res.status_code == 400:
-            raise BadRequestException(detail=res.text)
+        # if res.status_code == 400:
+        #     raise BadRequestException(detail=res.text)
 
         return document
 
@@ -1620,16 +1620,19 @@ class HrDocumentService(
             users: List[User],
             all_steps: List[HrDocumentStep]):
         for step, user_id in zip(all_steps, users):
-            if step.is_direct_supervisor is not None:
-                if not isinstance(user_id, dict):
-                    raise InvalidOperationException(
-                        f"User id must be dict for step {step.id}"
-                    )
-                for i in sorted(user_id.keys()):
-                    hr_document_info_service.create_info_for_step(
-                        db, document.id, step.id, user_id[i], None, None, None
-                    )
-                continue
+            # if step.is_direct_supervisor is not None:
+            #     if not isinstance(user_id, dict):
+            #         print(step.id)
+            #         print("anime")
+            #         print(user_id)
+            #         raise InvalidOperationException(
+            #             f"User id must be dict for step {step.id}"
+            #         )
+            #     for i in sorted(user_id.keys()):
+            #         hr_document_info_service.create_info_for_step(
+            #             db, document.id, step.id, user_id[i], None, None, None
+            #         )
+            #     continue
             hr_document_info_service.create_info_for_step(
                 db, document.id, step.id, user_id, None, None, None
             )
