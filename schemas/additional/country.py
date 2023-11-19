@@ -1,4 +1,6 @@
-from schemas import NamedModel, ReadNamedModel
+from typing import Optional, List
+
+from schemas import NamedModel, ReadNamedModel, BaseModel
 
 
 class CountryBase(NamedModel):
@@ -18,3 +20,8 @@ class CountryUpdate(CountryBase):
 
 class CountryRead(CountryBase, ReadNamedModel):
     pass
+
+
+class CountryReadPagination(BaseModel):
+    total: Optional[int]
+    objects: Optional[List[CountryRead]]

@@ -1,4 +1,6 @@
-from schemas import NamedModel, ReadNamedModel
+from typing import Optional, List
+
+from schemas import NamedModel, ReadNamedModel, BaseModel
 
 
 class InstitutionBase(NamedModel):
@@ -18,3 +20,7 @@ class InstitutionUpdate(InstitutionBase):
 
 class InstitutionRead(InstitutionBase, ReadNamedModel):
     pass
+
+class InstitutionReadPagination(BaseModel):
+    total: Optional[int]
+    objects: Optional[List[InstitutionRead]]

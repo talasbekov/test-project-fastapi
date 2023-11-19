@@ -1,4 +1,6 @@
-from schemas import NamedModel, ReadNamedModel
+from typing import Optional, List
+
+from schemas import NamedModel, ReadNamedModel, BaseModel
 
 
 class SpecialtyBase(NamedModel):
@@ -18,3 +20,8 @@ class SpecialtyUpdate(SpecialtyBase):
 
 class SpecialtyRead(SpecialtyBase, ReadNamedModel):
     pass
+
+
+class SpecialtyReadPagination(BaseModel):
+    total: Optional[int]
+    objects: Optional[List[SpecialtyRead]]

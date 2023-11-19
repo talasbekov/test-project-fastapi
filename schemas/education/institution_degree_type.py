@@ -1,4 +1,6 @@
-from schemas import NamedModel, ReadNamedModel
+from typing import List, Optional
+
+from schemas import NamedModel, ReadNamedModel, BaseModel
 
 
 class InstitutionDegreeTypeBase(NamedModel):
@@ -17,3 +19,8 @@ class InstitutionDegreeTypeRead(InstitutionDegreeTypeBase, ReadNamedModel):
 
     class Config:
         orm_mode = True
+
+
+class InstitutionDegreeTypeReadPagination(BaseModel):
+    total: Optional[int]
+    objects: Optional[List[InstitutionDegreeTypeRead]]

@@ -1,6 +1,6 @@
 from typing import List
 
-from sqlalchemy import func
+from sqlalchemy import func, and_
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
@@ -14,14 +14,23 @@ class InstitutionDegreeTypeService(
                     InstitutionDegreeTypeCreate,
                     InstitutionDegreeTypeUpdate]):
 
-    def get_multi(
-        self, db: Session, skip: int = 0, limit: int = 100
-    ) -> List[InstitutionDegreeType]:
-        return (db.query(InstitutionDegreeType)
-                  .order_by(func.to_char(InstitutionDegreeType.name))
-                  .offset(skip)
-                  .limit(limit)
-                  .all())
+    def get_all(
+        self, db: Session, skip: int = 0, limit: int = 100, filter: str = ''
+    ):
+        institutions = db.query(InstitutionDegreeType)
+
+        if filter != '':
+            institutions = self._add_filter_to_query(institutions, filter)
+
+        institutions = (institutions
+                       .order_by(func.to_char(InstitutionDegreeType.name))
+                       .offset(skip)
+                       .limit(limit)
+                       .all())
+
+        total = db.query(InstitutionDegreeType).count()
+
+        return {'total': total, 'objects': institutions}
 
     def get_by_id(self, db: Session, id: str):
         institution_degree_type = super().get(db, id)
@@ -30,6 +39,17 @@ class InstitutionDegreeTypeService(
                 detail=f"InstitutionDegreeType with id: {id} is not found!")
         return institution_degree_type
 
+    def _add_filter_to_query(self, institution_degree_type_query, filter):
+        key_words = filter.lower().split()
+        institution_degree_types = (
+            institution_degree_type_query
+            .filter(
+                and_(func.concat(func.concat(func.lower(InstitutionDegreeType.name), ' '),
+                                 func.concat(func.lower(InstitutionDegreeType.nameKZ), ' '))
+                     .contains(name) for name in key_words)
+            )
+        )
+        return institution_degree_types
 
 institution_degree_type_service = InstitutionDegreeTypeService(
     InstitutionDegreeType)

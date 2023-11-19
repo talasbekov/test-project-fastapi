@@ -6,7 +6,10 @@ from .equipment import (EquipmentCreate,
                         EquipmentUpdate,
                         TypeClothingEquipmentRead,
                         TypeArmyEquipmentRead,
-                        TypeOtherEquipmentRead
+                        TypeOtherEquipmentRead,
+                        TypeArmyEquipmentReadPagination,
+                        TypeClothingEquipmentReadPagination,
+                        TypeOtherEquipmentReadPagination
                         )
 
 from .event import EventCreate, EventRead, EventUpdate

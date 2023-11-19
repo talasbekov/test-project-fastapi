@@ -26,6 +26,7 @@ async def get_all(*,
                   db: Session = Depends(get_db),
                   skip: int = 0,
                   limit: int = 100,
+                  filter: str = '',
                   Authorize: AuthJWT = Depends()
                   ):
     """
@@ -39,7 +40,7 @@ async def get_all(*,
     Authorize.jwt_required()
     credentials = Authorize.get_jwt_subject()
     return property_type_service.get_multi_by_user_id(
-        db, credentials, skip, limit)
+        db, credentials, skip, limit, filter)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
