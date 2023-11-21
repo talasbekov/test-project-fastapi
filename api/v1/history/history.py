@@ -69,6 +69,7 @@ async def get_all_personal(*,
                            user_id: str,
                            Authorize: AuthJWT = Depends(),
                            date_from: datetime.date = None,
+                           date_to: datetime.date = None,
                            skip: int = 0,
                            limit: int = 10
                            ):
@@ -80,7 +81,7 @@ async def get_all_personal(*,
     """
     Authorize.jwt_required()
     return history_service.get_all_personal(
-        db, user_id, date_from, skip, limit)
+        db, user_id, date_from, date_to, skip, limit)
 
 
 @router.get("/user/{user_id}/", dependencies=[Depends(HTTPBearer())],
