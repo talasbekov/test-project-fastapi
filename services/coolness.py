@@ -23,6 +23,14 @@ class CoolnessService(ServiceBase[Coolness, CoolnessCreate, CoolnessUpdate]):
             self.model.user_id == user_id).all()
         return coolnesses
 
+    def get_by_user_id_and_date(self, db: Session, user_id: str, date_till):
+        coolnesses = db.query(
+            self.model).filter(
+            self.model.user_id == user_id,
+            self.model.created_at <= date_till
+        ).all()
+        return coolnesses
+
     def create_relation(self, db: Session, user_id: str, type_id: str, coolness_status: str):
         coolness = super().create(db, CoolnessCreate(user_id=user_id,
                                                      type_id=type_id,

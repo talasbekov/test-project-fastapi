@@ -48,6 +48,17 @@ class DrivingLicenseService(
             driving_licence.category = eval(driving_licence.category)
         return driving_licence
 
+    def get_by_user_id_and_date(self, db: Session, user_id: str, date_till):
+        driving_licence = (db.query(DrivingLicense)
+                           .join(PersonalProfile)
+                           .join(Profile)
+                           .filter(Profile.user_id == user_id)
+                           .filter(DrivingLicense.date_of_issue <= date_till)
+                           .first())
+        if driving_licence:
+            driving_licence.category = eval(driving_licence.category)
+        return driving_licence
+
     def update_document_link(self, db: Session, id: str,
                              body: DrivingLicenseLinkUpdate):
         license = self.get_by_id(db, id)

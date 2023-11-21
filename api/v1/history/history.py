@@ -450,6 +450,7 @@ async def get_all_by_type_and_user_id(*,
             summary="Get all Histories by type and user id")
 async def get_all_by_type_and_user_id(*,
                                       db: Session = Depends(get_db),
+                                      date_till: datetime.date = None,
                                       Authorize: AuthJWT = Depends(),
                                       ):
     """
@@ -459,4 +460,6 @@ async def get_all_by_type_and_user_id(*,
     """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
+    if date_till is not None:
+        return history_service.get_timeline_by_date(db, user_id, date_till)
     return history_service.get_timeline(db, user_id)

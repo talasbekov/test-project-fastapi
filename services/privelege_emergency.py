@@ -61,5 +61,13 @@ class PrivelegeEmergencyService(
             self.model.user_id == user_id).first()
         return privelege_emergency
 
+    def get_by_user_id_and_date(self, db: Session, user_id: str, date_till):
+        privelege_emergency = db.query(
+            self.model).filter(
+            self.model.user_id == user_id,
+            self.model.date_from <= date_till
+        ).first()
+        return privelege_emergency
+
 
 privelege_emergency_service = PrivelegeEmergencyService(PrivilegeEmergency)

@@ -489,6 +489,19 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         )
         return service_id_read
 
+    def get_service_id_by_user_id_and_date(self, db: Session, user_id: str, date_till):
+        service_id = service_id_service.get_by_user_id_and_date(db, user_id, date_till)
+        if service_id is None:
+            return None
+        service_id_read = ServiceIdInfoRead(
+            id=service_id.id,
+            date_to=service_id.date_to,
+            token_status=service_id.token_status,
+            id_status=service_id.id_status,
+            number=service_id.number,
+        )
+        return service_id_read
+
     def get_general_information_by_user_id(
             self, db: Session, user_id: str, user: User):
         oauth_user = db.query(UserOath).filter(
@@ -565,6 +578,108 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             )
         recommender = recommender_user_service.get_by_user_id(db, user_id)
         #fulfill recommender RecommenderUserRead schema
+        if recommender is not None:
+            recommender = RecommenderUserRead(
+                id=recommender.id,
+                user_id=recommender.user_id,
+                recommendant=recommender.recommendant,
+                researcher=recommender.researcher,
+                document_link=recommender.document_link
+            )
+
+        general_information_read = GeneralInformationRead(
+            oath=user_oath_read,
+            privilege_emergency_secrets=privelege_emergency_read,
+            personnel_reserve=personal_reserve_read,
+            coolness=coolnesses_list,
+            black_beret=black_beret,
+            recommender=recommender
+        )
+
+        return general_information_read
+
+    def get_general_information_by_user_id_and_date(
+            self, db: Session, user_id: str, user: User, date_till):
+        oauth_user = db.query(UserOath).filter(
+            UserOath.user_id == user_id,
+            UserOath.date <= date_till
+        ).first()
+        if oauth_user is None or oauth_user.military_unit is None:
+            user_oath_read = None
+        else:
+            user_oath_read = OathRead(
+                id=oauth_user.id,
+                date=oauth_user.date,
+                military_name=oauth_user.military_unit.name,
+                military_id=oauth_user.military_unit_id
+            )
+
+        privelege_emergency = privelege_emergency_service.get_by_user_id_and_date(
+            db, user_id, date_till)
+        if privelege_emergency is None:
+            privelege_emergency_read = None
+        else:
+            privelege_emergency_read = PrivelegeEmergencyRead(
+                date_from=privelege_emergency.date_from,
+                date_to=privelege_emergency.date_to,
+                form=privelege_emergency.form,
+                id=privelege_emergency.id,
+                user_id=privelege_emergency.user_id,
+            )
+
+        coolnesses = coolness_service.get_by_user_id_and_date(db, user_id, date_till)
+        coolnesses_list = []
+        if coolnesses is None:
+            coolness_read = None
+        else:
+            for coolness in coolnesses:
+                coolness_read = CoolnessRead(
+                    type_id=coolness.type_id,
+                    # date_to=coolness.history.date_to,
+                    type=coolness.type,
+                    id=coolness.id,
+                    user_id=coolness.user_id,
+                    coolness_status=coolness.coolness_status.value,
+                )
+                coolnesses_list.append(coolness_read)
+
+        black_beret_badge = badge_service.get_black_beret_by_user_id_and_date(db,
+                                                                              user_id,
+                                                                              date_till)
+        if black_beret_badge is not None:
+            black_beret = db.query(BadgeHistory).filter(
+                BadgeHistory.user_id == user_id,
+                BadgeHistory.badge_id == black_beret_badge.id,
+                BadgeHistory.date_to == None
+            ).first()
+
+            if black_beret is not None:
+                black_beret = BlackBeretRead(
+                    id=black_beret.id,
+                    badge_id=black_beret.badge_id,
+                    date_from=black_beret.date_from,
+                    document_number=black_beret.document_number
+                )
+        else:
+            black_beret = None
+
+        personal_reserve = personnal_reserve_service.get_by_user_id_and_date(
+            db, user_id, date_till)
+        if personal_reserve is None:
+            personal_reserve_read = None
+        else:
+            personal_reserve_read = PersonnalReserveRead(
+                reserve_date=personal_reserve.reserve_date,
+                id=personal_reserve.id,
+                reserve=personal_reserve.reserve,
+                user_id=personal_reserve.user_id,
+                document_link=personal_reserve.document_link,
+                document_number=personal_reserve.document_number
+            )
+        recommender = recommender_user_service.get_by_user_id_and_date(db,
+                                                                       user_id,
+                                                                       date_till)
+        # fulfill recommender RecommenderUserRead schema
         if recommender is not None:
             recommender = RecommenderUserRead(
                 id=recommender.id,
@@ -780,6 +895,99 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         courses = educational_profile.course
 
         service_id_info = self.get_service_id_by_user_id(db, user_id)
+
+        timeline_read = HistoryTimeLineRead(
+            holidays=holidays,
+            badges=badges,
+            ranks=ranks,
+            penalties=penalties,
+            contracts=contracts,
+            attestations=attestations,
+            characteristics=characteristics,
+            emergency_contracts=emergency_contracts,
+            experience=experience,
+            secondments=secondments,
+            equipments=equipments,
+            general_information=general_information,
+            service_id_info=service_id_info,
+            driving_license=driving_license,
+            identification_card=identification_card,
+            passport=passport,
+            academic_degrees=academic_degrees,
+            academic_titles=academic_titles,
+            educations=educations,
+            courses=courses
+        )
+        timeline_dict = HistoryTimeLineRead.from_orm(
+            timeline_read).dict()
+        return timeline_dict
+
+    def get_timeline_by_date(self, db: Session, user_id: str, date_till):
+        user = user_service.get_by_id(db, user_id)
+
+        general_information = self.get_general_information_by_user_id(
+            db, user_id, user, date_till)
+        badges = db.query(BadgeHistory).filter(
+            BadgeHistory.user_id == user_id,
+            BadgeHistory.date_from <= date_till
+        ).all()
+        ranks = db.query(RankHistory).filter(
+            RankHistory.user_id == user_id,
+            RankHistory.date_from <= date_till
+        ).all()
+        penalties = db.query(PenaltyHistory).filter(
+            PenaltyHistory.user_id == user_id,
+            PenaltyHistory.date_from <= date_till
+        ).all()
+        contracts = db.query(ContractHistory).filter(
+            ContractHistory.user_id == user_id,
+            ContractHistory.date_from <= date_till
+        ).all()
+        attestations = db.query(AttestationHistory).filter(
+            AttestationHistory.user_id == user_id,
+            AttestationHistory.date_from <= date_till
+        ).all()
+        characteristics = db.query(ServiceCharacteristicHistory).filter(
+            ServiceCharacteristicHistory.user_id == user_id,
+            ServiceCharacteristicHistory.date_from <= date_till
+        ).all()
+        holidays = db.query(StatusHistory).filter(
+            StatusHistory.user_id == user_id,
+            StatusHistory.date_from <= date_till
+        ).all()
+        emergency_contracts = db.query(EmergencyServiceHistory).filter(
+            EmergencyServiceHistory.user_id == user_id,
+            EmergencyServiceHistory.date_from <= date_till
+        ).all()
+        experience = db.query(WorkExperienceHistory).filter(
+            WorkExperienceHistory.user_id == user_id,
+            WorkExperienceHistory.date_from <= date_till
+        ).all()
+        secondments = db.query(SecondmentHistory).filter(
+            SecondmentHistory.user_id == user_id,
+            SecondmentHistory.date_from <= date_till
+        ).all()
+        equipments = [equipment for equipment in user.equipments if equipment.date_from <= date_till]
+        driving_license = driving_license_service.get_by_user_id_and_date(db, user_id, date_till)
+        identification_card = identification_card_service.get_by_user_id_and_date(
+            db, user_id, date_till)
+        passport = passport_service.get_by_user_id_and_date(db, user_id, date_till)
+        educational_profile = profile_service.get_by_user_id(
+            db, user_id).educational_profile
+        academic_degrees = [academic_degree
+                            for academic_degree in educational_profile.academic_degree
+                            if academic_degree.assignment_date <= date_till]
+        academic_titles = [academic_title
+                            for academic_title in educational_profile.academic_title
+                            if academic_title.assignment_date <= date_till]
+        educations = [education
+                      for education in educational_profile.education
+                      if education.start_date <= date_till]
+        courses = [course
+                   for course in educational_profile.course
+                   if course.start_date <= date_till]
+
+        service_id_info = self.get_service_id_by_user_id_and_date(db, user_id, date_till)
 
         timeline_read = HistoryTimeLineRead(
             holidays=holidays,
