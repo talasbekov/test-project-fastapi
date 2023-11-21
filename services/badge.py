@@ -50,6 +50,20 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
         )
         return badge
 
+    def get_black_beret_by_user_id_and_date(self, db: Session, user_id: str, date_till):
+        badge_type = (
+            db.query(BadgeType).filter(
+                BadgeType.name == "Черный Берет").first()
+        )
+        badge = (
+            db.query(self.model)
+            .filter(self.model.user_id == user_id)
+            .filter(self.model.type_id == badge_type.id)
+            .filter(self.model.created_at <= date_till)
+            .first()
+        )
+        return badge
+
     def create_relation(self, db: Session, user_id: str,
                         badge_type_id: str):
         if db.query(BadgeType).filter(

@@ -57,5 +57,13 @@ class PersonnalReserveService(
             self.model.user_id == user_id).first()
         return personnal_reserve
 
+    def get_by_user_id_and_date(self, db: Session, user_id: str, date_till):
+        personnal_reserve = db.query(
+            self.model).filter(
+            self.model.user_id == user_id,
+            self.model.reserve_date <= date_till
+        ).first()
+        return personnal_reserve
+
 
 personnal_reserve_service = PersonnalReserveService(PersonalReserve)

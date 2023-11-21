@@ -43,5 +43,15 @@ class IdentificationCardService(
 
         return identification_card
 
+    def get_by_user_id_and_date(self, db: Session, user_id: str, date_till):
+        identification_card = (db.query(IdentificationCard)
+                               .join(PersonalProfile)
+                               .join(Profile)
+                               .filter(Profile.user_id == user_id)
+                               .filter(IdentificationCard.date_of_issue <= date_till)
+                               .first())
+
+        return identification_card
+
 
 identification_card_service = IdentificationCardService(IdentificationCard)
