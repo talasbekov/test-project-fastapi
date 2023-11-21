@@ -688,17 +688,18 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
 
     def get_all_personal(self, db: Session, user_id: str,
                          date_from, date_to, skip: int = 0, limit: int = 100):
-        if date_from is None:
+        if date_to is not None:
             histories = (
                 db.query(self.model)
-                .filter(self.model.user_id == user_id)
+                .filter(self.model.user_id == user_id,
+                        self.model.date_from <= date_to)
                 # add secondary sort order
                 .order_by(self.model.date_from.desc(), self.model.id.asc())
                 .offset(skip)
                 .limit(limit)
                 .all()
             )
-        else:
+        elif date_from is not None:
             start_date = date_from.replace(day=1)
             next_month = date_from.replace(day=28) + timedelta(days=4)
             end_date = next_month - timedelta(days=next_month.day)
@@ -713,11 +714,10 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                 .limit(limit)
                 .all()
             )
-        if date_to is not None:
+        else:
             histories = (
                 db.query(self.model)
-                .filter(self.model.user_id == user_id,
-                        self.model.date_from <= date_to)
+                .filter(self.model.user_id == user_id)
                 # add secondary sort order
                 .order_by(self.model.date_from.desc(), self.model.id.asc())
                 .offset(skip)
