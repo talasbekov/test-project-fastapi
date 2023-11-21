@@ -717,7 +717,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             histories = (
                 db.query(self.model)
                 .filter(self.model.user_id == user_id,
-                        self.model.date_from <= date_from)
+                        self.model.date_from <= date_to)
                 # add secondary sort order
                 .order_by(self.model.date_from.desc(), self.model.id.asc())
                 .offset(skip)
