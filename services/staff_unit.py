@@ -322,6 +322,10 @@ class StaffUnitService(
             return self._add_document_staff_function_to_irrelevant_head(db,
                                                                         current_user_department,
                                                                         body.staff_function_ids)
+        elif body.position.lower() == 'ПГС':
+            return self._add_document_staff_function_to_pgs(db,
+                                                            current_user_department,
+                                                            body.staff_function_ids)
         else:
             raise BadRequestException('Должность не найдена')
 
@@ -440,6 +444,31 @@ class StaffUnitService(
             staff_functions = StaffUnitFunctions(staff_unit_id=staff_unit.id,
                                                  staff_function_ids=staff_function_ids)
             self.add_document_staff_function(db, staff_functions)
+
+    def _add_document_staff_function_to_pgs(self,
+                                            db: Session,
+                                            department: str,
+                                            staff_function_ids: list):
+        """
+            Эта функция добавляет должностную функцию
+            в штатную единицу по должности пгс
+        """
+        pgs = PositionNameEnum.POLITICS_GOVERNMENT_SERVANT.value
+        position = position_service.get_id_by_name(db, pgs)
+        # Получаем штатную единицу пгс
+        staff_unit = db.query(self.model).filter(
+            self.model.position_id == position,
+            self.model.staff_division_id == department
+        ).first()
+
+        if staff_unit is None:
+            raise BadRequestException(
+                'В данном подразделении нет Политического гос. служащего')
+
+        # Добавляем должностную функцию пгс
+        return self.add_document_staff_function(db,
+                                                StaffUnitFunctions(staff_unit_id=staff_unit.id,
+                                                                   staff_function_ids=staff_function_ids))
 
 
 staff_unit_service = StaffUnitService(StaffUnit)
