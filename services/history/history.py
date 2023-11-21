@@ -925,7 +925,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
     def get_timeline_by_date(self, db: Session, user_id: str, date_till):
         user = user_service.get_by_id(db, user_id)
 
-        general_information = self.get_general_information_by_user_id(
+        general_information = self.get_general_information_by_user_id_and_date(
             db, user_id, user, date_till)
         badges = db.query(BadgeHistory).filter(
             BadgeHistory.user_id == user_id,
