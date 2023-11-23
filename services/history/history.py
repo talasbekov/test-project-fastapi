@@ -983,6 +983,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         equipments = [equipment
                       for equipment in user.equipments
                       if equipment.date_from <= datetime.combine(date_till, datetime.min.time())
+                      and equipment.date_to is not None
                       and equipment.date_to <= datetime.combine(date_till, datetime.min.time())]
         driving_license = driving_license_service.get_by_user_id_and_date(
             db, user_id, datetime.combine(date_till, datetime.min.time()))
@@ -1001,10 +1002,12 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         educations = [education
                       for education in educational_profile.education
                       if education.start_date <= date_till
+                      and education.end_date is not None
                       and education.end_date <= date_till]
         courses = [course
                    for course in educational_profile.course
                    if course.start_date <= date_till
+                   and course.end_date is not None
                    and course.end_date <= date_till]
 
         service_id_info = self.get_service_id_by_user_id_and_date(db, user_id, date_till)
