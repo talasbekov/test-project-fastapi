@@ -49,6 +49,7 @@ class IdentificationCardService(
                                .join(Profile)
                                .filter(Profile.user_id == user_id)
                                .filter(IdentificationCard.date_of_issue <= date_till)
+                               .filter(IdentificationCard.date_to <= datetime.combine(date_till, datetime.min.time()))
                                .first())
 
         return identification_card

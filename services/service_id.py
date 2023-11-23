@@ -60,7 +60,8 @@ class ServiceIDService(
     def get_by_user_id_and_date(self, db: Session, user_id: str, date_till):
         service_id = (db.query(self.model)
                       .filter(self.model.user_id == user_id)
-                      .filter(self.model.date_to <= date_till)
+                      .filter(self.model.date_to <=
+                              datetime.combine(date_till, datetime.min.time()))
                       .first())
         return service_id
 

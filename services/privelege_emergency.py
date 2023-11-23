@@ -65,7 +65,8 @@ class PrivelegeEmergencyService(
         privelege_emergency = db.query(
             self.model).filter(
             self.model.user_id == user_id,
-            self.model.date_from <= date_till
+            self.model.date_from <= date_till,
+            self.model.date_to <= date_till
         ).first()
         return privelege_emergency
 

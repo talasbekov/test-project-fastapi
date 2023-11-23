@@ -650,6 +650,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             black_beret = db.query(BadgeHistory).filter(
                 BadgeHistory.user_id == user_id,
                 BadgeHistory.badge_id == black_beret_badge.id,
+                BadgeHistory.date_from <= date_till,
                 BadgeHistory.date_to == None
             ).first()
 
@@ -926,50 +927,63 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         user = user_service.get_by_id(db, user_id)
 
         general_information = self.get_general_information_by_user_id_and_date(
-            db, user_id, user, date_till)
+            db, user_id, user, datetime.combine(date_till, datetime.min.time()))
         badges = db.query(BadgeHistory).filter(
             BadgeHistory.user_id == user_id,
-            BadgeHistory.date_from <= datetime.combine(date_till, datetime.min.time())
+            BadgeHistory.date_from <= datetime.combine(date_till, datetime.min.time()),
+            BadgeHistory.date_to <= datetime.combine(date_till, datetime.min.time())
         ).all()
         ranks = db.query(RankHistory).filter(
             RankHistory.user_id == user_id,
-            RankHistory.date_from <= datetime.combine(date_till, datetime.min.time())
+            RankHistory.date_from <= datetime.combine(date_till, datetime.min.time()),
+            RankHistory.date_to <= datetime.combine(date_till, datetime.min.time())
         ).all()
         penalties = db.query(PenaltyHistory).filter(
             PenaltyHistory.user_id == user_id,
-            PenaltyHistory.date_from <= datetime.combine(date_till, datetime.min.time())
+            PenaltyHistory.date_from <= datetime.combine(date_till, datetime.min.time()),
+            PenaltyHistory.date_to <= datetime.combine(date_till, datetime.min.time())
         ).all()
         contracts = db.query(ContractHistory).filter(
             ContractHistory.user_id == user_id,
-            ContractHistory.date_from <= datetime.combine(date_till, datetime.min.time())
+            ContractHistory.date_from <= datetime.combine(date_till, datetime.min.time()),
+            ContractHistory.date_to <= datetime.combine(date_till,datetime.min.time())
         ).all()
         attestations = db.query(AttestationHistory).filter(
             AttestationHistory.user_id == user_id,
-            AttestationHistory.date_from <= datetime.combine(date_till, datetime.min.time())
+            AttestationHistory.date_credited <= datetime.combine(date_till, datetime.min.time()),
+            AttestationHistory.date_from <= datetime.combine(date_till, datetime.min.time()),
+            AttestationHistory.date_to <= datetime.combine(date_till, datetime.min.time())
         ).all()
         characteristics = db.query(ServiceCharacteristicHistory).filter(
             ServiceCharacteristicHistory.user_id == user_id,
-            ServiceCharacteristicHistory.date_from <= datetime.combine(date_till, datetime.min.time())
+            ServiceCharacteristicHistory.date_from <= datetime.combine(date_till, datetime.min.time()),
+            ServiceCharacteristicHistory.date_to <= datetime.combine(date_till, datetime.min.time())
         ).all()
         holidays = db.query(StatusHistory).filter(
             StatusHistory.user_id == user_id,
-            StatusHistory.date_from <= datetime.combine(date_till, datetime.min.time())
+            StatusHistory.date_from <= datetime.combine(date_till, datetime.min.time()),
+            StatusHistory.date_to <= datetime.combine(date_till, datetime.min.time())
         ).all()
         emergency_contracts = db.query(EmergencyServiceHistory).filter(
             EmergencyServiceHistory.user_id == user_id,
-            EmergencyServiceHistory.date_from <= datetime.combine(date_till, datetime.min.time())
+            EmergencyServiceHistory.date_credited <= datetime.combine(date_till, datetime.min.time()),
+            EmergencyServiceHistory.date_from <= datetime.combine(date_till, datetime.min.time()),
+            EmergencyServiceHistory.date_to <= datetime.combine(date_till, datetime.min.time())
         ).all()
         experience = db.query(WorkExperienceHistory).filter(
             WorkExperienceHistory.user_id == user_id,
-            WorkExperienceHistory.date_from <= datetime.combine(date_till, datetime.min.time())
+            WorkExperienceHistory.date_from <= datetime.combine(date_till, datetime.min.time()),
+            WorkExperienceHistory.date_to <= datetime.combine(date_till, datetime.min.time())
         ).all()
         secondments = db.query(SecondmentHistory).filter(
             SecondmentHistory.user_id == user_id,
-            SecondmentHistory.date_from <= datetime.combine(date_till, datetime.min.time())
+            SecondmentHistory.date_from <= datetime.combine(date_till, datetime.min.time()),
+            SecondmentHistory.date_to <= datetime.combine(date_till, datetime.min.time())
         ).all()
         equipments = [equipment
                       for equipment in user.equipments
-                      if equipment.date_from <= datetime.combine(date_till, datetime.min.time())]
+                      if equipment.date_from <= datetime.combine(date_till, datetime.min.time())
+                      and equipment.date_to <= datetime.combine(date_till, datetime.min.time())]
         driving_license = driving_license_service.get_by_user_id_and_date(
             db, user_id, datetime.combine(date_till, datetime.min.time()))
         identification_card = identification_card_service.get_by_user_id_and_date(
@@ -986,10 +1000,12 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                             if academic_title.assignment_date <= date_till]
         educations = [education
                       for education in educational_profile.education
-                      if education.start_date <= date_till]
+                      if education.start_date <= date_till
+                      and education.end_date <= date_till]
         courses = [course
                    for course in educational_profile.course
-                   if course.start_date <= date_till]
+                   if course.start_date <= date_till
+                   and course.end_date <= date_till]
 
         service_id_info = self.get_service_id_by_user_id_and_date(db, user_id, date_till)
 
