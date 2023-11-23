@@ -46,8 +46,7 @@ class PassportService(ServiceBase[Passport, PassportCreate, PassportUpdate]):
                     .join(Profile)
                     .filter(Profile.user_id == user_id)
                     .filter(Passport.date_of_issue <= date_till)
-                    .filter(Passport.date_to <=
-                            datetime.combine(date_till, datetime.min.time()))
+                    .filter(Passport.date_to <= date_till)
                     .first())
 
         return passport
