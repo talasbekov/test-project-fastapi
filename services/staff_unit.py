@@ -416,7 +416,11 @@ class StaffUnitService(
             position_service.get_id_by_name(
                 db, PositionNameEnum.MANAGEMENT_HEAD.value),
             position_service.get_id_by_name(
-                db, PositionNameEnum.HEAD_OF_OTDEL.value)
+                db, PositionNameEnum.HEAD_OF_OTDEL.value),
+            position_service.get_id_by_name(
+                db, PositionNameEnum.HEAD_OF_DEPARTMENT.value),
+            position_service.get_id_by_name(
+                db, PositionNameEnum.HEAD_OF_SERVICE.value)
         ]
 
         staff_units = []
