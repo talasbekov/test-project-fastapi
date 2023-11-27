@@ -78,6 +78,20 @@ class ArchiveStaffUnitUpdateDispose(BaseModel):
     staff_list_id: str
 
 
+class ArchiveStaffUnitReadWithoutUser(ArchiveStaffUnitBase, ReadModel):
+    id: Optional[str]
+    staff_division_id: Optional[str]
+    staff_functions: Optional[List[ArchiveStaffFunctionRead]]
+    position_id: Optional[str]
+    position: Optional[PositionRead]
+    hr_vacancy: Optional[List[Optional[StaffUnitHrVacancyRead]]]
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
+
+
+
 class UserRead(BaseModel):
     id: Optional[str]
     badges: Optional[List[BadgeRead]]
@@ -93,6 +107,9 @@ class UserRead(BaseModel):
     status_till: Optional[datetime.datetime]
     icon: Optional[str]
     is_military: Optional[bool]
+    actual_staff_unit_id: Optional[str]
+    actual_staff_unit: Optional[ArchiveStaffUnitReadWithoutUser]
+
 
     class Config:
         orm_mode = True

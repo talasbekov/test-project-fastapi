@@ -50,6 +50,19 @@ class HrVacancyRead(ReadModel):
         orm_mode = True
 
 
+class StaffUnitReadWithoutUser(StaffUnitBase, ReadModel):
+    staff_division_id: Optional[str]
+    staff_division: Optional[StaffUnitDivisionRead]
+    staff_functions: Optional[List[StaffFunctionRead]]
+    position_id: Optional[str]
+    position: Optional[PositionRead]
+    hr_vacancy: Optional[List[Optional[HrVacancyRead]]]
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
+
+
 class UserRead(ReadModel):
     badges: Optional[List[BadgeRead]]
     rank: Optional[RankRead]
@@ -62,6 +75,8 @@ class UserRead(ReadModel):
     icon: Optional[str] = Field(None, nullable=True)
     status: Optional[str]
     status_till: Optional[datetime.datetime]
+    actual_staff_unit_id: Optional[str]
+    actual_staff_unit: Optional[StaffUnitReadWithoutUser]
 
     class Config:
         orm_mode = True
