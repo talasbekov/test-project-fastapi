@@ -44,5 +44,20 @@ class PositionService(ServiceBase[Position, PositionCreate, PositionUpdate]):
         else:
             return None
 
+    def get_lower_positions(
+        self,
+        db: Session,
+        position_id: str,
+    ) -> List[Position]:
+        position = self.get_by_id(db, position_id)
+        specials = ['Умер', 'Погиб', 'В запасе', 'В отставке']
+        positions = (db.query(Position)
+                     .filter(Position.name.notin_(specials))
+                     .filter(Position.position_order < position.position_order)
+                     .order_by(Position.position_order.desc())
+                     .all())
+
+        return positions
+
 
 position_service = PositionService(Position)  # type: ignore
