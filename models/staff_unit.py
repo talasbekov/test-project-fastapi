@@ -19,6 +19,10 @@ class StaffUnit(isActiveModel):
         String(),
         ForeignKey("hr_erp_positions.id"),
         nullable=False)
+    actual_position_id = Column(
+        String(),
+        ForeignKey("hr_erp_positions.id"),
+        nullable=False)
     staff_division_id = Column(
         String(),
         ForeignKey("hr_erp_staff_divisions.id"),
@@ -37,6 +41,11 @@ class StaffUnit(isActiveModel):
         "Position",
         cascade="all,delete",
         foreign_keys=[position_id],
+        lazy="joined")
+    actual_position = relationship(
+        "Position",
+        cascade="all,delete",
+        foreign_keys=[actual_position_id],
         lazy="joined")
     staff_division = relationship(
         "StaffDivision", 
