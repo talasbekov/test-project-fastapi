@@ -1,6 +1,6 @@
 from enum import Enum as EnumBase
 
-from sqlalchemy import Column, ForeignKey, String
+from sqlalchemy import Column, ForeignKey, String, Integer
 from sqlalchemy.orm import relationship
 
 from models import NamedModel
@@ -84,3 +84,4 @@ class Position(NamedModel):
     # defined enum values pls fix it
     category_code = Column(String())
     form = Column(String(), nullable=True)
+    position_order = Column(Integer)

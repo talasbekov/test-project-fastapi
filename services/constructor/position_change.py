@@ -28,11 +28,12 @@ class PositionChangeHandler(BaseHandler):
     ):
         self.handle_validation(
             db, user, action, template_props, props, document)
-        position_id, percent, reason = self.get_args(action, props)
+        position_id, percent, reason, actual_position_id = self.get_args(action, props)
         old_history = staff_unit_service.get_last_history(db, user.id)
 
         if old_history is None:
             staff_unit = user.staff_unit
+            staff_unit.actual_position_id = actual_position_id
             if isinstance(staff_unit.staff_division.description, dict):
                 staff_unit.staff_division.description = json.dumps(
                     staff_unit.staff_division.description)
@@ -46,7 +47,7 @@ class PositionChangeHandler(BaseHandler):
                 res.staff_division.description)
         if isinstance(res.requirements, list):
             res.requirements = json.dumps(res.requirements)
-
+        res.actual_position_id = actual_position_id
         history: EmergencyServiceHistory = history_service.create_history(
             db, user.id, res)
         history.percentage = percent
@@ -97,14 +98,19 @@ class PositionChangeHandler(BaseHandler):
             logging.exception(e)
             raise BadRequestException(
                 f"Reason is not defined for this action: {self.__handler__}")
-        return position_id, percent, reason
+        try:
+            actual_position_id = properties["actual_position_id"]["value"]
+        except KeyError:
+            actual_position_id = None
+
+        return position_id, percent, reason, actual_position_id
 
     def handle_response(self, db: Session,
                         user: User,
                         action: dict,
                         properties: dict,
                         ):
-        args, _, _ = self.get_args(action, properties)
+        args, _, _, _ = self.get_args(action, properties)
         obj = staff_unit_service.get_by_id(db, args)
         if isinstance(obj.requirements, str):
             obj.requirements = json.loads(obj.requirements)

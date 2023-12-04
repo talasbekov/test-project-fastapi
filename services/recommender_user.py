@@ -17,9 +17,11 @@ class RecommenderUserService(
         return recommender_user
 
     def get_by_user_id(self, db: Session, user_id: str):
-        recommender_user = db.query(
+        recommender_user = (db.query(
             self.model).filter(
-            self.model.user_id == user_id).first()
+            self.model.user_id == user_id)
+            .order_by(self.model.created_at.desc())
+            .first())
         if recommender_user is None:
             return None
         return recommender_user

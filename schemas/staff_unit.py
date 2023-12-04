@@ -56,6 +56,8 @@ class StaffUnitReadWithoutUser(StaffUnitBase, ReadModel):
     staff_functions: Optional[List[StaffFunctionRead]]
     position_id: Optional[str]
     position: Optional[PositionRead]
+    actual_position_id: Optional[str]
+    actual_position: Optional[PositionRead]
     hr_vacancy: Optional[List[Optional[HrVacancyRead]]]
 
     class Config:
@@ -88,6 +90,8 @@ class UserReplacingStaffUnitRead(StaffUnitBase, ReadModel):
     staff_functions: Optional[List[StaffFunctionRead]]
     position_id: Optional[str]
     position: Optional[PositionRead]
+    actual_position_id: Optional[str]
+    actual_position: Optional[PositionRead]
     users: Optional[List[Optional[UserRead]]]
     actual_users: Optional[List[Optional[UserRead]]]
     hr_vacancy: Optional[List[Optional[HrVacancyRead]]]
@@ -115,6 +119,8 @@ class UserStaffUnitRead(StaffUnitBase, ReadModel):
     staff_functions: Optional[List[StaffFunctionRead]]
     position_id: Optional[str]
     position: Optional[PositionRead]
+    actual_position_id: Optional[str]
+    actual_position: Optional[PositionRead]
 
     class Config:
         orm_mode = True
@@ -126,6 +132,8 @@ class ShortUserStaffUnitRead(ReadModel):
     staff_division: Optional[ShortStaffUnitDivisionRead]
     position_id: Optional[str]
     position: Optional[PositionRead]
+    actual_position_id: Optional[str]
+    actual_position: Optional[PositionRead]
 
     class Config:
         orm_mode = True

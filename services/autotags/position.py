@@ -16,12 +16,16 @@ class PositionAutoTagHandler(BaseAutoTagHandler):
             db, user.staff_unit.staff_division_id)
         full_name = full_name.replace("/", "")
         full_nameKZ = full_nameKZ.replace("/", "")
+        actual_position = (user.staff_unit.actual_position.name
+                           if user.staff_unit.actual_position else None)
+        actual_positionKZ = (user.staff_unit.actual_position.nameKZ
+                             if user.staff_unit.actual_position else None)
         res = (f"{full_name} {user.staff_unit.position.name}"
                f" ({user.staff_unit.position.category_code})"
-               f" ({user.actual_staff_unit.position.name})")
+               f" ({actual_position})")
         resKZ = (f"{full_nameKZ} {user.staff_unit.position.nameKZ}"
                  f" ({user.staff_unit.position.category_code})"
-                 f" ({user.actual_staff_unit.position.nameKZ})")
+                 f" ({actual_positionKZ})")
         return AutoTagRead(name=res, nameKZ=resKZ)
 
 

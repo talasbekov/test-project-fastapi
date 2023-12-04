@@ -222,6 +222,12 @@ class EmergencyServiceHistory(History):
         nullable=True)
     position = relationship("Position", foreign_keys=[position_id])
 
+    actual_position_id = Column(
+        String(),
+        ForeignKey("hr_erp_positions.id"),
+        nullable=True)
+    actual_position = relationship("Position", foreign_keys=[actual_position_id])
+
     staff_division_id = Column(
         String(),
         ForeignKey("hr_erp_staff_divisions.id"),
@@ -233,8 +239,8 @@ class EmergencyServiceHistory(History):
     position_name = Column(String, nullable=True)
     position_nameKZ = Column('position_namekz', String, nullable=True)
 
-    position_name = Column(String, nullable=True)
-    position_nameKZ = Column('position_namekz', String, nullable=True)
+    actual_position_name = Column(String, nullable=True)
+    actual_position_nameKZ = Column('actual_position_namekz', String, nullable=True)
 
     contractor_signer_name = Column(String, nullable=True)
     contractor_signer_nameKZ = Column(
@@ -260,6 +266,7 @@ class EmergencyServiceHistory(History):
             coefficient=1.5,
             percentage=0,
             position_id=staff_unit.position_id,
+            actual_position_id=staff_unit.actual_position_id,
             staff_division_id=staff_unit.staff_division_id,
             user_id=user_id,
             date_from=datetime.datetime.now(),

@@ -90,6 +90,9 @@ class HistoryBase(BaseModel):
     position_id: Optional[str]
     position_name: Optional[str]
     position_nameKZ: Optional[str]
+    actual_position_id: Optional[str]
+    actual_position_name: Optional[str]
+    actual_position_nameKZ: Optional[str]
     rank_id: Optional[str]
     penalty_id: Optional[str]
     emergency_service_id: Optional[str]
@@ -632,6 +635,10 @@ class EmergencyContactRead(ReadModel):
     position_id: Optional[str]
     position_name: Optional[str]
     position_nameKZ: Optional[str]
+    actual_position: Optional[dict]
+    actual_position_id: Optional[str]
+    actual_position_name: Optional[str]
+    actual_position_nameKZ: Optional[str]
     emergency_rank_id: Optional[str]
     document_link: Optional[str]
     document_number: Optional[str]
@@ -648,6 +655,8 @@ class EmergencyContactRead(ReadModel):
     def from_orm(cls, orm_obj):
         position_name = orm_obj.position.name if orm_obj.position else orm_obj.position_name
         position_nameKZ = orm_obj.position.nameKZ if orm_obj.position else orm_obj.position_nameKZ
+        actual_position_name = orm_obj.position.name if orm_obj.position else None
+        actual_position_nameKZ = orm_obj.position.nameKZ if orm_obj.position else None
         staff_division_name = (orm_obj.staff_division.name
                                if orm_obj.staff_division else orm_obj.staff_division_name)
         staff_division_nameKZ = (orm_obj.staff_division.nameKZ
@@ -667,6 +676,9 @@ class EmergencyContactRead(ReadModel):
             position={"name": position_name,
                       "nameKZ": position_nameKZ},
             position_id=orm_obj.position_id,
+            actual_position={"name": actual_position_name,
+                      "nameKZ": actual_position_nameKZ},
+            actual_position_id=orm_obj.actual_position_id,
             document_link=orm_obj.document_link,
             document_number=orm_obj.document_number,
             staff_division_id=orm_obj.staff_division_id,
