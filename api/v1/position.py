@@ -80,6 +80,22 @@ async def create(*,
     Authorize.jwt_required()
     return position_service.create(db, body)
 
+@router.get("/lower/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=List[PositionRead],
+            summary="Get lower positions than position by id")
+async def get_by_id(*,
+                    db: Session = Depends(get_db),
+                    id: str,
+                    Authorize: AuthJWT = Depends()
+                    ):
+    """
+        Get Position by id
+
+        - **id**: UUID - required
+    """
+    Authorize.jwt_required()
+    return position_service.get_lower_positions(db, str(id))
+
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=PositionRead,
