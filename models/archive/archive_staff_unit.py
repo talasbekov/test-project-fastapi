@@ -84,7 +84,15 @@ class ArchiveStaffUnit(Model):
         back_populates="archive_staff_unit",
         cascade="all,delete"
     )
-
+    actual_position_id = Column(
+        String(),
+        ForeignKey("hr_erp_positions.id"),
+        nullable=False)
+    actual_position = relationship(
+        "Position",
+        cascade="all,delete",
+        foreign_keys=[actual_position_id],
+        lazy="joined")
 @listens_for(ArchiveStaffUnit, 'before_update')
 def description_set_listener(mapper, connection, target):
     if isinstance(target.requirements, list):
