@@ -89,6 +89,8 @@ class UserReplacingStaffUnitRead(ReadModel):
     staff_division_id: Optional[str]
     position_id: Optional[str]
     position: Optional[PositionRead]
+    actual_position_id: Optional[str]
+    actual_position: Optional[PositionRead]
     users: Optional[List[Optional[UserRead]]]
     actual_users: Optional[List[Optional[UserRead]]]
     hr_vacancy: Optional[List[Optional[HrVacancyRead]]]
@@ -109,6 +111,8 @@ class StaffUnitRead(ReadModel):
     staff_division_id: Optional[str]
     position_id: Optional[str]
     position: Optional[PositionRead]
+    actual_position_id: Optional[str]
+    actual_position: Optional[PositionRead]
     users: Optional[List[Optional[UserRead]]]
     actual_users: Optional[List[Optional[UserRead]]]
     hr_vacancy: Optional[List[Optional[HrVacancyRead]]]
@@ -126,6 +130,8 @@ class StaffUnitOptionRead(ReadModel):
     staff_division_id: Optional[str]
     position_id: Optional[str]
     position: Optional[PositionRead]
+    actual_position_id: Optional[str]
+    actual_position: Optional[PositionRead]
     users: Optional[List[Optional[UserRead]]]
 
     class Config:
@@ -137,6 +143,8 @@ class StaffUnitMatreshkaOptionRead(ReadModel):
     staff_division_id: Optional[str]
     position_id: Optional[str]
     position: Optional[NamedModel]
+    actual_position_id: Optional[str]
+    actual_position: Optional[PositionRead]
     users: Optional[List[Optional[MatreshkaUserRead]]]
 
     class Config:
