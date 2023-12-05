@@ -20,12 +20,13 @@ router = APIRouter(
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[PositionRead],
+            response_model=PositionPaginationRead,
             summary="Get all Positions without specials")
 async def get_all(*,
                   db: Session = Depends(get_db),
                   skip: int = 0,
                   limit: int = 100,
+                  filter: str = '',
                   Authorize: AuthJWT = Depends()
                   ):
     """
@@ -39,7 +40,7 @@ async def get_all(*,
             This parameter is optional and defaults to 100.
    """
     Authorize.jwt_required()
-    return position_service.get_without_special(db, skip, limit)
+    return position_service.get_without_special(db, skip, limit, filter)
 
 @router.get("/all", dependencies=[Depends(HTTPBearer())],
             response_model=PositionPaginationRead,
@@ -48,6 +49,7 @@ async def get_all(*,
                   db: Session = Depends(get_db),
                   skip: int = 0,
                   limit: int = 100,
+                  filter: str = '',
                   Authorize: AuthJWT = Depends()
                   ):
     """
@@ -61,7 +63,7 @@ async def get_all(*,
             This parameter is optional and defaults to 100.
    """
     Authorize.jwt_required()
-    return position_service.get_multi(db, skip, limit)
+    return position_service.get_multi(db, skip, limit, filter)
 
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
