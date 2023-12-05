@@ -34,6 +34,8 @@ class PositionChangeHandler(BaseHandler):
         if old_history is None:
             staff_unit = user.staff_unit
             staff_unit.actual_position_id = actual_position_id
+            db.add(staff_unit)
+            db.flush()
             if isinstance(staff_unit.staff_division.description, dict):
                 staff_unit.staff_division.description = json.dumps(
                     staff_unit.staff_division.description)
@@ -42,12 +44,14 @@ class PositionChangeHandler(BaseHandler):
             old_history = staff_unit_service.get_last_history(db, user.id)
 
         res = staff_unit_service.create_relation(db, user, position_id)
+        res.actual_position_id = actual_position_id
+        db.add(res)
+        db.flush()
         if isinstance(res.staff_division.description, dict):
             res.staff_division.description = json.dumps(
                 res.staff_division.description)
         if isinstance(res.requirements, list):
             res.requirements = json.dumps(res.requirements)
-        res.actual_position_id = actual_position_id
         history: EmergencyServiceHistory = history_service.create_history(
             db, user.id, res)
         history.percentage = percent
