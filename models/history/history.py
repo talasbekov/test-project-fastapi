@@ -261,7 +261,7 @@ class EmergencyServiceHistory(History):
                 last_history.staff_division_name = last_history.staff_division.name
                 last_history.staff_division_nameKZ = last_history.staff_division.nameKZ
             db.add(last_history)
-
+        print(staff_unit)
         obj = EmergencyServiceHistory(
             coefficient=1.5,
             percentage=0,
