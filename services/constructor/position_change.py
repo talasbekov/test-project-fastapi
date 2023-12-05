@@ -41,6 +41,7 @@ class PositionChangeHandler(BaseHandler):
                     staff_unit.staff_division.description)
             history: EmergencyServiceHistory = history_service.create_history(
                 db, user.id, staff_unit)
+            history.actual_position_id = actual_position_id
             old_history = staff_unit_service.get_last_history(db, user.id)
 
         res = staff_unit_service.create_relation(db, user, position_id)
