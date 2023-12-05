@@ -250,7 +250,7 @@ class EmergencyServiceHistory(History):
     def create_history(self, db: Session, user_id: str,
                        id: str, finish_last):
         query = db.execute(text(
-            f"SELECT HR_ERP_STAFF_UNITS.id, HR_ERP_STAFF_UNITS.position_id, HR_ERP_STAFF_UNITS.staff_division_id, HR_ERP_STAFF_UNITS.actual_position_id FROM HR_ERP_STAFF_UNITS JOIN HR_ERP_USERS ON HR_ERP_STAFF_UNITS.id=HR_ERP_USERS.staff_unit_id WHERE HR_ERP_STAFF_UNITS.id = '{id}' AND HR_ERP_USERS.id = '{user_id}'"))
+            f"SELECT HR_ERP_STAFF_UNITS.id, HR_ERP_STAFF_UNITS.position_id, HR_ERP_STAFF_UNITS.staff_division_id FROM HR_ERP_STAFF_UNITS JOIN HR_ERP_USERS ON HR_ERP_STAFF_UNITS.id=HR_ERP_USERS.staff_unit_id WHERE HR_ERP_STAFF_UNITS.id = '{id}' AND HR_ERP_USERS.id = '{user_id}'"))
         staff_unit = query.fetchone()
         if staff_unit is None:
             raise NotFoundException(detail="Staff unit not found")
@@ -261,12 +261,10 @@ class EmergencyServiceHistory(History):
                 last_history.staff_division_name = last_history.staff_division.name
                 last_history.staff_division_nameKZ = last_history.staff_division.nameKZ
             db.add(last_history)
-        print(staff_unit)
         obj = EmergencyServiceHistory(
             coefficient=1.5,
             percentage=0,
             position_id=staff_unit.position_id,
-            actual_position_id=staff_unit.actual_position_id,
             staff_division_id=staff_unit.staff_division_id,
             user_id=user_id,
             date_from=datetime.datetime.now(),
