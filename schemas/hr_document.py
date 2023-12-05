@@ -124,7 +124,7 @@ class HrDocumentRead(HrDocumentBase, ReadModel):
     created_at: Optional[datetime]
     updated_at: Optional[datetime]
     last_step: Optional[HrDocumentStepRead]
-    new_value: Optional[list]
+    new_value: Optional[Any]
     old_history_id: Optional[str]
     children: Optional[List["HrDocumentRead"]]
     reg_number: Optional[str]
