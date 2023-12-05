@@ -71,7 +71,7 @@ class UserRead(ReadModel):
     email: Optional[EmailStr] = Field(None, nullable=True)
     first_name: Optional[str] = Field(None, nullable=True)
     last_name: Optional[str] = Field(None, nullable=True)
-    father_name: Optional[str] = Field(None, nullable=True)
+    father_name: Optional[str]
     staff_unit_id: Optional[str]
     call_sign: Optional[str]
     id_number: Optional[str]
