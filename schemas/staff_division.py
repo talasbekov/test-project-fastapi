@@ -45,6 +45,7 @@ class UserRead(ReadModel):
     email: Optional[EmailStr]
     first_name: Optional[str]
     last_name: Optional[str]
+    father_name: Optional[str]
     last_signed_at: Optional[datetime.datetime]
     staff_unit_id: Optional[str]
     call_sign: Optional[str]
@@ -66,6 +67,7 @@ class MatreshkaUserRead(ReadModel):
     is_military: Optional[bool]
     first_name: Optional[str]
     last_name: Optional[str]
+    father_name: Optional[str]
     id_number: Optional[str]
     personal_id: Optional[str]
 
