@@ -14,15 +14,20 @@ class PositionService(ServiceBase[Position, PositionCreate, PositionUpdate]):
         self,
         db: Session,
         skip: int = 0,
-        limit: int = 100
+        limit: int = 100,
+        filter: str = ''
     ):
         specials = ['Умер', 'Погиб', 'В запасе', 'В отставке']
-        positions = (db.query(Position)
+        positions = (db.query(Position))
+        if filter != '':
+            positions = self._add_filter_to_query(positions, filter)
+        positions = (positions
                      .filter(Position.name.notin_(specials))
                      .order_by(Position.name)
                      .offset(skip)
                      .limit(limit)
                      .all())
+        count = db.query(Position).count()
         count = db.query(Position).filter(Position.name.notin_(specials)).count()
         return {"total": count, "objects": positions}
 
