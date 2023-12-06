@@ -1,3 +1,4 @@
+import datetime
 import logging
 import json
 
@@ -58,6 +59,8 @@ class PositionChangeHandler(BaseHandler):
         history.percentage = percent
         history.reason = reason
         history.document_link = configs.GENERATE_IP + str(document.id)
+        history.document_number = str(document.reg_number)
+        history.date_credited = datetime.datetime.now()
 
         document.old_history_id = old_history.id
         if isinstance(user.staff_unit.staff_division.description, dict):
