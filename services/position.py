@@ -27,7 +27,6 @@ class PositionService(ServiceBase[Position, PositionCreate, PositionUpdate]):
                      .offset(skip)
                      .limit(limit)
                      .all())
-        count = db.query(Position).count()
         count = db.query(Position).filter(Position.name.notin_(specials)).count()
         return {"total": count, "objects": positions}
 
