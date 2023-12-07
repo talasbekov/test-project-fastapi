@@ -154,6 +154,11 @@ class StaffUnitMatreshkaOptionRead(ReadModel):
         arbitrary_types_allowed = True
 
 
+class StaffUnitMatreshkaOptionReadPagination(BaseModel):
+    total: Optional[int]
+    objects: Optional[List[StaffUnitMatreshkaOptionRead]]
+
+
 # class StaffDivisionRead(StaffDivisionBase, ReadNamedModel):
 #     is_combat_unit: Optional[bool] = Field(None, nullable=True)
 #     count_vacancies: Optional[int]
