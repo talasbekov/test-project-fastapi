@@ -1,4 +1,3 @@
-import uuid
 from typing import List
 
 from fastapi import APIRouter, Depends, status
@@ -16,6 +15,7 @@ from schemas import (
     ArchiveServiceStaffFunctionRead,
     ArchiveDocumentStaffFunctionRead,
     ArchiveStaffUnitUpdateDispose,
+    ArchiveStaffUnitReadPagination,
 )
 from services import (
     archive_staff_unit_service,
@@ -263,3 +263,29 @@ async def remove_document_staff_function(*,
     """
     Authorize.jwt_required()
     archive_staff_unit_service.remove_document_staff_function(db, body)
+
+@router.get("/staff_division/{id}/",
+            dependencies=[Depends(HTTPBearer())],
+            response_model=ArchiveStaffUnitReadPagination,
+            summary="Get Staff Units by staff_division_id")
+async def get_by_staff_division_id(*,
+                    db: Session = Depends(get_db),
+                    id: str,
+                    skip: int = 0,
+                    limit: int = 10,
+                    filter: str = '',
+                    Authorize: AuthJWT = Depends()
+                    ):
+    """
+        Get Staff Units by staff_division_id
+
+        - **staff_division_id** - UUID - required
+        - **skip**: int - The number of staff units
+            to skip before returning the results.
+            This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of staff units
+            to return in the response.
+            This parameter is optional and defaults to 10.
+    """
+    Authorize.jwt_required()
+    return archive_staff_unit_service.get_all_by_staff_division_id(db, str(id), skip, limit, filter)

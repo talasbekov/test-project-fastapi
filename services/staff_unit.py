@@ -68,7 +68,7 @@ class StaffUnitService(
         db.flush()
         return staff_unit
 
-    def get_by_staff_division_id(self, db: Session,
+    def get_all_by_staff_division_id(self, db: Session,
                                  staff_division_id: str,
                                  skip: int = 0,
                                  limit: int = 1000,

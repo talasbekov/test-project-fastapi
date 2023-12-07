@@ -14,7 +14,7 @@ from .archive_staff_function import (ArchiveStaffFunctionCreate, ArchiveStaffFun
 from .archive_staff_unit import (ArchiveStaffUnitCreate, ArchiveStaffUnitUpdate, ArchiveStaffUnitRead,
                                  ArchiveStaffUnitCreateWithStaffFunctions, NewArchiveStaffUnitCreate,
                                  NewArchiveStaffUnitUpdate, ArchiveStaffUnitUpdateDispose,
-                                 NewArchiveStaffUnitCreateWithStaffFunctions)
+                                 NewArchiveStaffUnitCreateWithStaffFunctions, ArchiveStaffUnitReadPagination)
 from .document_archive_staff_function_type import (DocumentArchiveStaffFunctionTypeCreate,
                                                    DocumentArchiveStaffFunctionTypeUpdate,
                                                    DocumentArchiveStaffFunctionTypeRead,
