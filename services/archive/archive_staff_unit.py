@@ -1,6 +1,7 @@
 import json
 from typing import List
 
+from sqlalchemy import and_, func
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException, BadRequestException
@@ -280,6 +281,40 @@ class ArchiveStaffUnitService(
     def get_object(self, db: Session, id: str, type: str):
         return db.query(ArchiveStaffUnit).filter(
             ArchiveStaffUnit.id == id).first()
+
+    def get_all_by_staff_division_id(self, db: Session,
+                                 staff_division_id: str,
+                                 skip: int = 0,
+                                 limit: int = 1000,
+                                 filter: str = ''):
+        staff_units = (db.query(self.model)
+                       .filter(self.model.staff_division_id == staff_division_id))
+
+        if filter != '':
+            staff_units = self._add_filter_to_query(staff_units, filter)
+
+        total = staff_units.count()
+
+        staff_units = (staff_units
+                       .offset(skip)
+                       .limit(limit)
+                       .all())
+
+        return {'total': total, 'objects': staff_units}
+
+    def _add_filter_to_query(self, staff_unit_query, filter):
+        key_words = filter.lower().split()
+        staff_units = (
+            staff_unit_query
+            .filter(
+                and_(func.concat(func.concat(func.concat(func.lower(ArchiveStaffUnit.user.first_name), ' '),
+                                             func.concat(func.lower(ArchiveStaffUnit.user.last_name), ' ')),
+                                 func.lower(ArchiveStaffUnit.user.father_name))
+                     .contains(name) for name in key_words)
+            )
+        )
+        return staff_units
+
 
     def _validate_leader(self, db: Session, staff_unit_id: str):
         # get staff_division by staff unit id, if staff_unit is staff_division

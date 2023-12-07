@@ -274,6 +274,7 @@ async def get_by_staff_division_id(*,
                     id: str,
                     skip: int = 0,
                     limit: int = 10,
+                    filter: str = '',
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -288,4 +289,4 @@ async def get_by_staff_division_id(*,
             This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
-    return staff_unit_service.get_by_staff_division_id(db, str(id), skip, limit)
+    return staff_unit_service.get_all_by_staff_division_id(db, str(id), skip, limit, filter)

@@ -144,3 +144,8 @@ class UserReplacingRead(UserRead):
 
 class ArchiveStaffUnitRead(UserReplacingArchiveStaffUnitRead):
     user_replacing: Optional[UserReplacingRead] = Field(None, nullable=True)
+
+
+class ArchiveStaffUnitReadPagination(BaseModel):
+    total: Optional[int]
+    objects: Optional[List[ArchiveStaffUnitRead]]
