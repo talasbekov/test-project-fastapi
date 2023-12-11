@@ -45,6 +45,7 @@ class UserRead(ReadModel):
     email: Optional[EmailStr]
     first_name: Optional[str]
     last_name: Optional[str]
+    father_name: Optional[str]
     last_signed_at: Optional[datetime.datetime]
     staff_unit_id: Optional[str]
     call_sign: Optional[str]
@@ -66,6 +67,7 @@ class MatreshkaUserRead(ReadModel):
     is_military: Optional[bool]
     first_name: Optional[str]
     last_name: Optional[str]
+    father_name: Optional[str]
     id_number: Optional[str]
     personal_id: Optional[str]
 
@@ -89,6 +91,8 @@ class UserReplacingStaffUnitRead(ReadModel):
     staff_division_id: Optional[str]
     position_id: Optional[str]
     position: Optional[PositionRead]
+    actual_position_id: Optional[str]
+    actual_position: Optional[PositionRead]
     users: Optional[List[Optional[UserRead]]]
     actual_users: Optional[List[Optional[UserRead]]]
     hr_vacancy: Optional[List[Optional[HrVacancyRead]]]
@@ -109,6 +113,8 @@ class StaffUnitRead(ReadModel):
     staff_division_id: Optional[str]
     position_id: Optional[str]
     position: Optional[PositionRead]
+    actual_position_id: Optional[str]
+    actual_position: Optional[PositionRead]
     users: Optional[List[Optional[UserRead]]]
     actual_users: Optional[List[Optional[UserRead]]]
     hr_vacancy: Optional[List[Optional[HrVacancyRead]]]
@@ -126,6 +132,8 @@ class StaffUnitOptionRead(ReadModel):
     staff_division_id: Optional[str]
     position_id: Optional[str]
     position: Optional[PositionRead]
+    actual_position_id: Optional[str]
+    actual_position: Optional[PositionRead]
     users: Optional[List[Optional[UserRead]]]
 
     class Config:
@@ -137,11 +145,18 @@ class StaffUnitMatreshkaOptionRead(ReadModel):
     staff_division_id: Optional[str]
     position_id: Optional[str]
     position: Optional[NamedModel]
+    actual_position_id: Optional[str]
+    actual_position: Optional[PositionRead]
     users: Optional[List[Optional[MatreshkaUserRead]]]
 
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
+
+
+class StaffUnitMatreshkaOptionReadPagination(BaseModel):
+    total: Optional[int]
+    objects: Optional[List[StaffUnitMatreshkaOptionRead]]
 
 
 # class StaffDivisionRead(StaffDivisionBase, ReadNamedModel):

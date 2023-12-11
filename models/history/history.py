@@ -261,12 +261,10 @@ class EmergencyServiceHistory(History):
                 last_history.staff_division_name = last_history.staff_division.name
                 last_history.staff_division_nameKZ = last_history.staff_division.nameKZ
             db.add(last_history)
-
         obj = EmergencyServiceHistory(
             coefficient=1.5,
             percentage=0,
             position_id=staff_unit.position_id,
-            actual_position_id=staff_unit.actual_position_id,
             staff_division_id=staff_unit.staff_division_id,
             user_id=user_id,
             date_from=datetime.datetime.now(),

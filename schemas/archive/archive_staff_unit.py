@@ -84,6 +84,8 @@ class ArchiveStaffUnitReadWithoutUser(ArchiveStaffUnitBase, ReadModel):
     staff_functions: Optional[List[ArchiveStaffFunctionRead]]
     position_id: Optional[str]
     position: Optional[PositionRead]
+    actual_position_id: Optional[str]
+    actual_position: Optional[PositionRead]
     hr_vacancy: Optional[List[Optional[StaffUnitHrVacancyRead]]]
 
     class Config:
@@ -122,6 +124,8 @@ class UserReplacingArchiveStaffUnitRead(ArchiveStaffUnitBase, ReadModel):
     staff_functions: Optional[List[ArchiveStaffFunctionRead]]
     position_id: Optional[str]
     position: Optional[PositionRead]
+    actual_position_id: Optional[str]
+    actual_position: Optional[PositionRead]
     user: Optional[UserRead] = Field(None, nullable=True)
     actual_user: Optional[UserRead] = Field(None, nullable=True)
     hr_vacancy: Optional[List[Optional[StaffUnitHrVacancyRead]]]
@@ -140,3 +144,8 @@ class UserReplacingRead(UserRead):
 
 class ArchiveStaffUnitRead(UserReplacingArchiveStaffUnitRead):
     user_replacing: Optional[UserReplacingRead] = Field(None, nullable=True)
+
+
+class ArchiveStaffUnitReadPagination(BaseModel):
+    total: Optional[int]
+    objects: Optional[List[ArchiveStaffUnitRead]]

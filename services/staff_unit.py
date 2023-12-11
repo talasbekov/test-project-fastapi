@@ -2,6 +2,7 @@ import datetime
 import uuid
 import json
 
+from sqlalchemy import select, func, and_
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import text
 
@@ -67,12 +68,24 @@ class StaffUnitService(
         db.flush()
         return staff_unit
 
-    def get_by_staff_division_id(self, db: Session, staff_division_id: str, skip: int = 0, limit: int = 1000):
-        return (db.query(self.model)
-                .filter(self.model.staff_division_id == staff_division_id)
-                .offset(skip)
-                .limit(limit)
-                .all())
+    def get_all_by_staff_division_id(self, db: Session,
+                                 staff_division_id: str,
+                                 skip: int = 0,
+                                 limit: int = 1000,
+                                 filter: str = ''):
+        staff_units = (db.query(self.model)
+                       .filter(self.model.staff_division_id == staff_division_id))
+
+        if filter != '':
+            staff_units = self._add_filter_to_query(staff_units, filter)
+
+        total = staff_units.count()
+
+        staff_units = (staff_units
+                       .offset(skip)
+                       .limit(limit)
+                       .all())
+        return {'total': total, 'objects': staff_units}
 
     def add_service_staff_function(
             self, db: Session, body: StaffUnitFunctions):
@@ -474,5 +487,18 @@ class StaffUnitService(
                                                 StaffUnitFunctions(staff_unit_id=staff_unit.id,
                                                                    staff_function_ids=staff_function_ids))
 
+    def _add_filter_to_query(self, staff_unit_query, filter):
+        key_words = filter.lower().split()
+        staff_units = (
+            staff_unit_query
+            .join(StaffUnit.users)
+            .filter(
+                and_(func.concat(func.concat(func.concat(func.lower(User.first_name), ' '),
+                                             func.concat(func.lower(User.last_name), ' ')),
+                                 func.lower(User.father_name))
+                     .contains(name) for name in key_words)
+            )
+        )
+        return staff_units
 
 staff_unit_service = StaffUnitService(StaffUnit)
