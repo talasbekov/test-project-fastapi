@@ -655,8 +655,12 @@ class EmergencyContactRead(ReadModel):
     def from_orm(cls, orm_obj):
         position_name = orm_obj.position.name if orm_obj.position else orm_obj.position_name
         position_nameKZ = orm_obj.position.nameKZ if orm_obj.position else orm_obj.position_nameKZ
-        actual_position_name = orm_obj.position.name if orm_obj.position else None
-        actual_position_nameKZ = orm_obj.position.nameKZ if orm_obj.position else None
+        actual_position_name = (orm_obj.actual_position.name
+                                if orm_obj.actual_position
+                                else orm_obj.actual_position_name)
+        actual_position_nameKZ = (orm_obj.actual_position.nameKZ
+                                  if orm_obj.actual_position
+                                  else orm_obj.actual_position_nameKZ)
         staff_division_name = (orm_obj.staff_division.name
                                if orm_obj.staff_division else orm_obj.staff_division_name)
         staff_division_nameKZ = (orm_obj.staff_division.nameKZ
@@ -677,7 +681,7 @@ class EmergencyContactRead(ReadModel):
                       "nameKZ": position_nameKZ},
             position_id=orm_obj.position_id,
             actual_position={"name": actual_position_name,
-                      "nameKZ": actual_position_nameKZ},
+                             "nameKZ": actual_position_nameKZ},
             actual_position_id=orm_obj.actual_position_id,
             document_link=orm_obj.document_link,
             document_number=orm_obj.document_number,
