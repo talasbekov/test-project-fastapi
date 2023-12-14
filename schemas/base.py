@@ -13,7 +13,7 @@ class Model(BaseModel):
 
 
 class NamedModel(Model):
-    name: str
+    name: Optional[str]
     nameKZ: Optional[str] = Field(None, nullable=True)
 
     class Config:
