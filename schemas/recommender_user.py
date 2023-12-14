@@ -8,6 +8,8 @@ class RecommenderUserBase(Model):
     document_link: Optional[str]
     recommendant: Optional[str]
     researcher: Optional[str]
+    user_by_id: Optional[str]
+    researcher_id: Optional[str]
     user_id: str
 
     class Config:
