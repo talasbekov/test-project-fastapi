@@ -20,7 +20,7 @@ router = APIRouter(
 
 @router.get("",
             dependencies=[Depends(HTTPBearer())],
-            response_model=List[UserRead],
+            response_model=TableUserRead,
             summary="Get all Users")
 async def get_all(
     *,
@@ -45,11 +45,12 @@ async def get_all(
         This parameter is optional and defaults to 10.
     """
     Authorize.jwt_required()
-    return user_service.get_all(db,
+    total, users = user_service.get_all(db,
                                 hr_document_template_id,
                                 filter.lstrip().rstrip(),
                                 skip,
                                 limit)
+    return TableUserRead(total=total, users=users)
 
 
 @router.get("/{user_id}/templates/",
