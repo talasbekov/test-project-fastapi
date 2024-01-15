@@ -25,7 +25,7 @@ class PositionUpdate(PositionBase):
 class PositionRead(PositionBase, ReadNamedModel):
     category_code: Optional[str]
     form: Optional[str]
-
+    position_order: Optional[int]
     max_rank_id: Optional[str]
     max_rank: Optional[RankRead]
     
