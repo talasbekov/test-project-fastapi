@@ -182,11 +182,13 @@ class ArchiveStaffUnitService(
             curator_of_id: str,
             user_id: str,
             position_id: str,
+            actual_position_id: str,
             actual_user_id: str,
             user_replacing_id: str,
             archive_staff_division: ArchiveStaffDivision):
         return super().create(db, ArchiveStaffUnitCreate(
             position_id=position_id,
+            actual_position_id=actual_position_id,
             staff_division_id=archive_staff_division.id,
             curator_of_id=curator_of_id,
             user_id=user_id,
