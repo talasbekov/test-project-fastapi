@@ -17,8 +17,8 @@ class FamilyBase(BaseModel):
     birthday: datetime.datetime
     death_day: Optional[datetime.datetime]
     birthplace: str
-    address: str
-    workplace: str
+    address: Optional[str]
+    workplace: Optional[str]
 
     profile_id: str
 
