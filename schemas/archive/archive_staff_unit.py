@@ -1,6 +1,6 @@
 import datetime
 import uuid
-from typing import List, Optional
+from typing import List, Optional, Any
 
 from pydantic import BaseModel, EmailStr, Field, validator
 
@@ -22,13 +22,14 @@ class ArchiveStaffUnitBase(BaseModel):
     user_id: Optional[str] = Field(None, nullable=True)
     actual_user_id: Optional[str] = Field(None, nullable=True)
     user_replacing_id: Optional[str] = Field(None, nullable=True)
-    requirements: Optional[List[StaffUnitRequirements]]
+    requirements: Optional[Any]
     curator_of_id: Optional[str] = Field(None, nullable=True)
 
 
 class ArchiveStaffUnitCreate(ArchiveStaffUnitBase):
     curator_of_id: Optional[str] = Field(None, nullable=True)
     origin_id: Optional[str] = Field(None, nullable=True)
+    actual_position_id: Optional[str]
     requirements: Optional[str]
 
 
