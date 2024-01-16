@@ -234,7 +234,7 @@ class ArchiveStaffUnitService(
         if isinstance(body.requirements, list):
             reqs = []
             for requirements in body.requirements:
-                reqs.append(requirements.dict())
+                reqs.append(requirements)
             reqs = json.dumps(reqs)
         archive_staff_unit = super().update(
             db,
