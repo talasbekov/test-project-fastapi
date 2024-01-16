@@ -90,7 +90,8 @@ from .service_id import (ServiceIDCreate, ServiceIDRead, ServiceIDUpdate)
 from .military_unit import (
     MilitaryUnitCreate,
     MilitaryUnitRead,
-    MilitaryUnitUpdate)
+    MilitaryUnitUpdate,
+    MilitaryUnitReadPagination,)
 from .user_oath import (UserOathCreate, UserOathRead, UserOathUpdate)
 from .recommender_user import (
     RecommenderUserCreate,

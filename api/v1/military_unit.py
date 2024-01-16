@@ -7,7 +7,10 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import MilitaryUnitCreate, MilitaryUnitRead, MilitaryUnitUpdate
+from schemas import (MilitaryUnitCreate,
+                     MilitaryUnitRead,
+                     MilitaryUnitUpdate,
+                     MilitaryUnitReadPagination)
 from services import military_unit_service
 
 router = APIRouter(
@@ -19,13 +22,14 @@ router = APIRouter(
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[MilitaryUnitRead],
+            response_model=MilitaryUnitReadPagination,
             summary="Get all Military Units")
 async def get_all(*,
                   db: Session = Depends(get_db),
                   Authorize: AuthJWT = Depends(),
                   skip: int = 0,
-                  limit: int = 10
+                  limit: int = 10,
+                  filter: str = ''
                   ):
     """
        Get all Military Units
@@ -38,7 +42,7 @@ async def get_all(*,
         This parameter is optional and defaults to 10.
    """
     Authorize.jwt_required()
-    return military_unit_service.get_multi(db, skip, limit)
+    return military_unit_service.get_all(db, skip, limit, filter)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
