@@ -584,7 +584,9 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                 user_id=recommender.user_id,
                 recommendant=recommender.recommendant,
                 researcher=recommender.researcher,
-                document_link=recommender.document_link
+                document_link=recommender.document_link,
+                researcher_id=recommender.researcher_id,
+                user_by_id=recommender.user_by_id
             )
 
         general_information_read = GeneralInformationRead(
