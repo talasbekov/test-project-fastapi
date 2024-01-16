@@ -1,6 +1,6 @@
-from typing import Optional, Any
+from typing import Optional, Any, List
 
-from schemas import Model, NamedModel, ReadModel, ReadNamedModel
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel, BaseModel
 
 
 class CoolnessTypeBase(NamedModel):
@@ -19,6 +19,11 @@ class CoolnessTypeUpdate(CoolnessTypeBase):
 
 class CoolnessTypeRead(CoolnessTypeBase, ReadNamedModel):
     pass
+
+
+class CoolnessTypeReadPagination(BaseModel):
+    total: Optional[int]
+    objects: Optional[List[CoolnessTypeRead]]
 
 
 class CoolnessBase(Model):
