@@ -16,7 +16,7 @@ from services import coolness_type_service
 
 router = APIRouter(
     prefix="/coolness_type",
-    tags=["Coolness"],
+    tags=["Coolness Type"],
     dependencies=[
         Depends(
             HTTPBearer())])
