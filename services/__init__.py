@@ -67,3 +67,5 @@ from .permission import permission_service
 
 from .dashboard import dashboard_service
 from .dictionary import dictionary_service
+
+from .coolness_type import coolness_type_service

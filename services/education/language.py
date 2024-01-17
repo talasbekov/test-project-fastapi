@@ -1,5 +1,3 @@
-from typing import List
-
 from sqlalchemy import func, and_
 from sqlalchemy.orm import Session
 

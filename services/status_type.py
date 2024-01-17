@@ -19,7 +19,6 @@ class StatusTypeService(
             status_types = self._add_filter_to_query(status_types, filter)
 
         status_types = (status_types
-                        .order_by(StatusType.name)
                         .offset(skip)
                         .limit(limit)
                         .all())

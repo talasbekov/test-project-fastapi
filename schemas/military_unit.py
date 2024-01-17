@@ -1,4 +1,6 @@
-from schemas import NamedModel, ReadNamedModel
+from typing import Optional, List
+
+from schemas import NamedModel, ReadNamedModel, BaseModel
 
 
 class MilitaryUnitBase(NamedModel):
@@ -18,3 +20,8 @@ class MilitaryUnitUpdate(MilitaryUnitBase):
 
 class MilitaryUnitRead(MilitaryUnitBase, ReadNamedModel):
     pass
+
+
+class MilitaryUnitReadPagination(BaseModel):
+    total: Optional[int]
+    objects: Optional[List[MilitaryUnitRead]]
