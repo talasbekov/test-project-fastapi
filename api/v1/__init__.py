@@ -53,6 +53,7 @@ from .survey import *
 from .bsp import *
 from .dictionary import router_dictionary as dictionary_router
 from .penalty import router as penalty_router
+from .coolness_type import router as coolness_type_router
 
 router = APIRouter(prefix="/v1")
 
@@ -144,3 +145,4 @@ router.include_router(status_type_router)
 router.include_router(hexagon_router)
 router.include_router(dictionary_router)
 router.include_router(penalty_router)
+router.include_router(coolness_type_router)
