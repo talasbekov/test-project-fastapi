@@ -1,8 +1,10 @@
+from typing import Union, Dict, Any
+
 from sqlalchemy import func, and_
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
-from models import Coolness, CoolnessType
+from models import CoolnessType
 from schemas import CoolnessTypeCreate, CoolnessTypeUpdate
 from .base import ServiceBase
 
@@ -46,4 +48,4 @@ class CoolnessTypeService(
         return coolness_types
 
 
-coolness_type_service = CoolnessTypeService(Coolness)
+coolness_type_service = CoolnessTypeService(CoolnessType)
