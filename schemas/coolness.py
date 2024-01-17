@@ -10,7 +10,7 @@ class CoolnessTypeBase(NamedModel):
 
 
 class CoolnessTypeCreate(CoolnessTypeBase):
-    pass
+    order: Optional[int]
 
 
 class CoolnessTypeUpdate(CoolnessTypeBase):
