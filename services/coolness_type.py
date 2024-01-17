@@ -17,7 +17,7 @@ class CoolnessTypeService(
                 detail=f"Coolness with id: {id} is not found!")
         return coolness_type
 
-    def get_all(self, db: Session, skip: int, limit: int):
+    def get_all(self, db: Session, skip: int, limit: int, filter: str):
         coolness_types = db.query(CoolnessType)
 
         if filter != '':
