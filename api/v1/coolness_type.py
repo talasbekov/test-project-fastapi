@@ -33,7 +33,7 @@ async def get_all(*,
                   filter: str = ''
                   ):
     """
-       Get all Coolness
+       Get all Coolness Type
 
     - **skip**: int - The number of Coolness to skip before returning the results.
         This parameter is optional and defaults to 0.
@@ -54,7 +54,7 @@ async def create(*,
                  Authorize: AuthJWT = Depends()
                  ):
     """
-        Create Coolness
+        Create Coolness Type
 
         **name** - required - str
     """
@@ -72,7 +72,7 @@ async def update(*,
                  Authorize: AuthJWT = Depends()
                  ):
     """
-        Update Coolness
+        Update Coolness Type
 
         **name** - required - str
     """
@@ -90,7 +90,7 @@ async def get_by_id(*,
                     Authorize: AuthJWT = Depends()
                     ):
     """
-        Get Coolness by id
+        Get Coolness Type by id
 
         - **id** - UUID - required
     """
@@ -107,7 +107,7 @@ async def delete(*,
                  Authorize: AuthJWT = Depends()
                  ):
     """
-        Delete Coolness
+        Delete Coolness Type
 
         - **id** - UUID - required
     """
