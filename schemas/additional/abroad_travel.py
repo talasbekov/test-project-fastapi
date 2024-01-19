@@ -14,7 +14,7 @@ class AbroadTravelBase(Model):
     vehicle_typeKZ: str
     destination_country_id: str
     date_from: datetime
-    date_to: datetime
+    date_to: Optional[datetime]
     reason: str
     reasonKZ: str
     document_link: Optional[AnyUrl]

@@ -46,7 +46,17 @@ class PositionService(ServiceBase[Position, PositionCreate, PositionUpdate]):
 
     def get_id_by_name(self, db: Session, name: str):
         role = db.query(Position).filter(
-            Position.name == name
+            func.lower(Position.name) == name.lower()
+        ).first()
+
+        if role:
+            return role.id
+        else:
+            return None
+
+    def get_id_by_name_like(self, db: Session, name: str):
+        role = db.query(Position).filter(
+            func.lower(Position.name).ilike(f'%{name.lower()}%')
         ).first()
 
         if role:

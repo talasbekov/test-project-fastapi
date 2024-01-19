@@ -45,8 +45,12 @@ class RankService(ServiceBase[Rank, RankCreate, RankUpdate]):
         if user is None:
             raise NotFoundException(detail=f"User with id: {id} is not found!")
         if type == "write":
-            return [RankRead.from_orm(rank).dict() for rank in db.query(Rank).filter(
-                Rank.rank_order <= user.staff_unit.position.max_rank.rank_order).all()]
+            if user.staff_unit.position is not None:
+                return [RankRead.from_orm(rank).dict() for rank in db.query(Rank).filter(
+                    Rank.rank_order <= user.staff_unit.position.max_rank.rank_order).all()]
+            if user.staff_unit.actual_position is not None:
+                return [RankRead.from_orm(rank).dict() for rank in db.query(Rank).filter(
+                    Rank.rank_order <= user.staff_unit.actual_position.max_rank.rank_order).all()]
         else:
             if user.rank.rank_order == 1:
                 return []

@@ -31,6 +31,8 @@ class PositionNameEnum(str, EnumBase):
     HR = "HR-менеджер"
     SUPERVISOR = "Начальник"
     HEAD_OF_SERVICE = "Начальник Службы"
+    HEAD_OF_SERVICE_INSTEAD = "Заместитель начальника СГО"
+    HEAD_OF_SERVICE_SHORT = "Зам Нач СГО"
     HEAD_OF_DEPARTMENT = 'Начальник департамента'
     MANAGEMENT_HEAD = 'Начальник управления'
     HEAD_OF_OTDEL = 'Начальник отдела'

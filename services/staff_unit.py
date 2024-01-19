@@ -335,7 +335,7 @@ class StaffUnitService(
             return self._add_document_staff_function_to_irrelevant_head(db,
                                                                         current_user_department,
                                                                         body.staff_function_ids)
-        elif body.position.lower() == 'ПГС':
+        elif body.position.lower() == 'пгс':
             return self._add_document_staff_function_to_pgs(db,
                                                             current_user_department,
                                                             body.staff_function_ids)
@@ -399,7 +399,7 @@ class StaffUnitService(
             в штатную единицу по должности прямого начальника
         """
         head_of_department = PositionNameEnum.HEAD_OF_DEPARTMENT.value
-        position = position_service.get_id_by_name(db, head_of_department)
+        position = position_service.get_id_by_name_like(db, head_of_department)
         # Получаем штатную единицу прямого начальника
         staff_unit = db.query(self.model).filter(
             self.model.position_id == position,
@@ -426,13 +426,13 @@ class StaffUnitService(
 
         # Получаем список должностей непосредственных начальников
         positions = [
-            position_service.get_id_by_name(
+            position_service.get_id_by_name_like(
                 db, PositionNameEnum.MANAGEMENT_HEAD.value),
-            position_service.get_id_by_name(
+            position_service.get_id_by_name_like(
                 db, PositionNameEnum.HEAD_OF_OTDEL.value),
-            position_service.get_id_by_name(
+            position_service.get_id_by_name_like(
                 db, PositionNameEnum.HEAD_OF_DEPARTMENT.value),
-            position_service.get_id_by_name(
+            position_service.get_id_by_name_like(
                 db, PositionNameEnum.HEAD_OF_SERVICE.value)
         ]
 
@@ -462,6 +462,53 @@ class StaffUnitService(
                                                  staff_function_ids=staff_function_ids)
             self.add_document_staff_function(db, staff_functions)
 
+    # def _add_document_staff_function_to_all_heads(self,
+    #                                                     db: Session,
+    #                                                     department: str,
+    #                                                     staff_function_ids: list):
+    #     """
+    #         Эта функция добавляет должностную функцию в штатную единицу по должности
+    #         непосредственного начальника
+    #     """
+    #
+    #     # Получаем список должностей непосредственных начальников
+    #     positions = [
+    #         position_service.get_id_by_name_like(
+    #             db, PositionNameEnum.MANAGEMENT_HEAD.value),
+    #         position_service.get_id_by_name_like(
+    #             db, PositionNameEnum.HEAD_OF_OTDEL.value),
+    #         position_service.get_id_by_name_like(
+    #             db, PositionNameEnum.HEAD_OF_DEPARTMENT.value),
+    #         position_service.get_id_by_name_like(
+    #             db, PositionNameEnum.HEAD_OF_SERVICE.value)
+    #     ]
+    #
+    #     staff_units = []
+    #
+    #     # Получаем список всех дочерных групп
+    #     child_groups = staff_division_service.get_all_child_groups(
+    #         db, department)
+    #
+    #     # Получаем список staff unit непосредственных начальников
+    #     for child_group in child_groups:
+    #         staff_unit = db.query(self.model).filter(
+    #             self.model.position_id.in_(positions),
+    #             self.model.staff_division_id == child_group.id
+    #         ).first()
+    #
+    #         if staff_unit is not None:
+    #             staff_units.append(staff_unit)
+    #
+    #     if len(staff_units) == 0:
+    #         raise BadRequestException(
+    #             'В данном подразделении нет ни одного начальника')
+    #
+    #     # Добавляем должностную функцию непосредственным начальникам
+    #     for staff_unit in staff_units:
+    #         staff_functions = StaffUnitFunctions(staff_unit_id=staff_unit.id,
+    #                                              staff_function_ids=staff_function_ids)
+    #         self.add_document_staff_function(db, staff_functions)
+
     def _add_document_staff_function_to_pgs(self,
                                             db: Session,
                                             department: str,
@@ -470,22 +517,30 @@ class StaffUnitService(
             Эта функция добавляет должностную функцию
             в штатную единицу по должности пгс
         """
-        pgs = PositionNameEnum.POLITICS_GOVERNMENT_SERVANT.value
-        position = position_service.get_id_by_name(db, pgs)
+        positions = [
+            position_service.get_id_by_name_like(
+                db, PositionNameEnum.HEAD_OF_SERVICE.value),
+            position_service.get_id_by_name_like(
+                db, PositionNameEnum.HEAD_OF_SERVICE_INSTEAD.value),
+            position_service.get_id_by_name_like(
+                db, PositionNameEnum.HEAD_OF_SERVICE_SHORT.value),
+        ]
         # Получаем штатную единицу пгс
-        staff_unit = db.query(self.model).filter(
-            self.model.position_id == position,
+        staff_units = db.query(self.model).filter(
+            self.model.position_id.in_(positions),
             self.model.staff_division_id == department
-        ).first()
+        ).all()
 
-        if staff_unit is None:
+        if staff_units is None:
             raise BadRequestException(
                 'В данном подразделении нет Политического гос. служащего')
 
         # Добавляем должностную функцию пгс
-        return self.add_document_staff_function(db,
-                                                StaffUnitFunctions(staff_unit_id=staff_unit.id,
-                                                                   staff_function_ids=staff_function_ids))
+        for staff_unit in staff_units:
+            staff_functions = StaffUnitFunctions(staff_unit_id=staff_unit.id,
+                                                 staff_function_ids=staff_function_ids)
+            self.add_document_staff_function(db, staff_functions)
+
 
     def _add_filter_to_query(self, staff_unit_query, filter):
         key_words = filter.lower().split()
