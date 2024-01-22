@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  sgo-erp-oracle:
+  sgo-erp-oracle2:
     platform: linux/amd64
     command: bash -c "uvicorn main:app --host 0.0.0.0 --port 8005 --log-config log.ini --workers ${NUMBER_OF_WORKERS} --reload"
     build: .
@@ -12,7 +12,7 @@ services:
     volumes:
       - .:/app
     networks:
-      - sgo-erp-oracle
+      - sgo-erp-oracle2
     deploy:
       resources:
         limits:
