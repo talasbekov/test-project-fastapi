@@ -7,6 +7,7 @@ from exceptions.client import NotFoundException
 from models.education import AcademicDegreeDegree
 from schemas.education import AcademicDegreeDegreeCreate, AcademicDegreeDegreeUpdate
 from services import ServiceBase
+from utils import add_filter_to_query
 
 
 class AcademicDegreeDegreeService(
@@ -20,7 +21,9 @@ class AcademicDegreeDegreeService(
         academic_degree_degrees = db.query(AcademicDegreeDegree)
 
         if filter != '':
-            academic_degree_degrees = self._add_filter_to_query(academic_degree_degrees, filter)
+            academic_degree_degrees = add_filter_to_query(academic_degree_degrees,
+                                                          filter,
+                                                          AcademicDegreeDegree)
 
         academic_degree_degrees = (academic_degree_degrees
                        .order_by(func.to_char(AcademicDegreeDegree.name))
@@ -38,18 +41,7 @@ class AcademicDegreeDegreeService(
             raise NotFoundException(
                 detail="AcademicDegreeDegree is not found!")
         return academic_degree_degree
-    
-    def _add_filter_to_query(self, academic_degree_degree_query, filter):
-        key_words = filter.lower().split()
-        academic_degree_degrees = (
-            academic_degree_degree_query
-            .filter(
-                and_(func.concat(func.concat(func.lower(AcademicDegreeDegree.name), ' '),
-                                 func.concat(func.lower(AcademicDegreeDegree.nameKZ), ' '))
-                     .contains(name) for name in key_words)
-            )
-        )
-        return academic_degree_degrees
+
 
 academic_degree_degree_service = AcademicDegreeDegreeService(
     AcademicDegreeDegree

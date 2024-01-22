@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from models import BadgeType
 from schemas import BadgeTypeCreate, BadgeTypeUpdate
+from utils import add_filter_to_query
 from .base import ServiceBase
 
 
@@ -16,7 +17,7 @@ class BadgeTypeService(ServiceBase[BadgeType, BadgeTypeCreate, BadgeTypeUpdate])
         badge_types = db.query(BadgeType)
 
         if filter != '':
-            badge_types = self._add_filter_to_query(badge_types, filter)
+            badge_types = add_filter_to_query(badge_types, filter, BadgeType)
 
         badge_types = (badge_types
                        .order_by(BadgeType.name)
@@ -27,18 +28,6 @@ class BadgeTypeService(ServiceBase[BadgeType, BadgeTypeCreate, BadgeTypeUpdate])
         total = (db.query(BadgeType).count())
 
         return {'total': total, 'objects': badge_types}
-
-    def _add_filter_to_query(self, badge_type_query, filter):
-        key_words = filter.lower().split()
-        badge_types = (
-            badge_type_query
-            .filter(
-                and_(func.concat(func.concat(func.lower(BadgeType.name), ' '),
-                                func.concat(func.lower(BadgeType.nameKZ), ' '))
-                    .contains(name) for name in key_words)
-            )
-        )
-        return badge_types
 
 
 badge_type_service = BadgeTypeService(BadgeType)

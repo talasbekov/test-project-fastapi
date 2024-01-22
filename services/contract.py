@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from exceptions.client import NotFoundException
 from models import Contract, ContractType, User, ContractHistory
 from schemas import ContractCreate, ContractRead, ContractUpdate, ContractTypeRead
+from utils import add_filter_to_query
 from .base import ServiceBase
 
 
@@ -34,7 +35,7 @@ class ContractService(ServiceBase[Contract, ContractCreate, ContractUpdate]):
         contract_types = db.query(ContractType)
 
         if filter != '':
-            contract_types = self._add_filter_to_query(contract_types, filter)
+            contract_types = add_filter_to_query(contract_types, filter, ContractType)
 
         contract_types = [ContractTypeRead.from_orm(i).dict() for i in
                           contract_types.offset(skip).limit(limit).all()]
@@ -62,16 +63,5 @@ class ContractService(ServiceBase[Contract, ContractCreate, ContractUpdate]):
             .first()
         ) is not None
 
-    def _add_filter_to_query(self, contract_type_query, filter):
-        key_words = filter.lower().split()
-        contract_types = (
-            contract_type_query
-            .filter(
-                and_(func.concat(func.concat(func.lower(ContractType.name), ' '),
-                                 func.concat(func.lower(ContractType.nameKZ), ' '))
-                     .contains(name) for name in key_words)
-            )
-        )
-        return contract_types
 
 contract_service = ContractService(Contract)

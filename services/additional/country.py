@@ -7,6 +7,7 @@ from exceptions.client import NotFoundException
 from models import Country
 from schemas import CountryCreate, CountryUpdate
 from services.base import ServiceBase
+from utils import add_filter_to_query
 
 
 class CountryService(ServiceBase[Country, CountryCreate, CountryUpdate]):
@@ -17,7 +18,7 @@ class CountryService(ServiceBase[Country, CountryCreate, CountryUpdate]):
         countries = db.query(Country)
 
         if filter != '':
-            countries = self._add_filter_to_query(countries, filter)
+            countries = add_filter_to_query(countries, filter, Country)
 
         countries = (countries
                      .order_by(func.to_char(Country.name))
@@ -36,16 +37,5 @@ class CountryService(ServiceBase[Country, CountryCreate, CountryUpdate]):
                 detail=f"Violation with id: {id} is not found!")
         return rank
 
-    def _add_filter_to_query(self, country_query, filter):
-        key_words = filter.lower().split()
-        countries = (
-            country_query
-            .filter(
-                and_(func.concat(func.concat(func.lower(Country.name), ' '),
-                                 func.concat(func.lower(Country.nameKZ), ' '))
-                     .contains(name) for name in key_words)
-            )
-        )
-        return countries
 
 country_service = CountryService(Country)

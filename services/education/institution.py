@@ -7,6 +7,7 @@ from exceptions import NotFoundException
 from models.education import Institution
 from schemas.education import InstitutionCreate, InstitutionUpdate
 from services import ServiceBase
+from utils import add_filter_to_query
 
 
 class InstitutionService(
@@ -18,7 +19,7 @@ class InstitutionService(
         institutions = db.query(Institution)
 
         if filter != '':
-            institutions = self._add_filter_to_query(institutions, filter)
+            institutions = add_filter_to_query(institutions, filter, Institution)
 
         institutions = (institutions
                        .order_by(func.to_char(Institution.name))
@@ -36,18 +37,6 @@ class InstitutionService(
             raise NotFoundException(
                 detail=f"Institution with id: {id} is not found!")
         return institution
-
-    def _add_filter_to_query(self, institution_query, filter):
-        key_words = filter.lower().split()
-        institutions = (
-            institution_query
-            .filter(
-                and_(func.concat(func.concat(func.lower(Institution.name), ' '),
-                                 func.concat(func.lower(Institution.nameKZ), ' '))
-                     .contains(name) for name in key_words)
-            )
-        )
-        return institutions
 
 
 institution_service = InstitutionService(Institution)

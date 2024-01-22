@@ -2,6 +2,7 @@ from sqlalchemy import and_, func
 
 from models import StatusType
 from schemas import StatusTypeCreate, StatusTypeUpdate
+from utils import add_filter_to_query
 from .base import ServiceBase
 from typing import List
 
@@ -16,7 +17,7 @@ class StatusTypeService(
         status_types = (db.query(StatusType))
 
         if filter != '':
-            status_types = self._add_filter_to_query(status_types, filter)
+            status_types = add_filter_to_query(status_types, filter, StatusType)
 
         status_types = (status_types
                         .offset(skip)
@@ -27,16 +28,5 @@ class StatusTypeService(
 
         return {"total": count, "objects": status_types}
 
-    def _add_filter_to_query(self, status_type_query, filter):
-        key_words = filter.lower().split()
-        status_types = (
-            status_type_query
-            .filter(
-                and_(func.concat(func.concat(func.lower(StatusType.name), ' '),
-                                 func.concat(func.lower(StatusType.nameKZ), ' '))
-                     .contains(name) for name in key_words)
-            )
-        )
-        return status_types
 
 status_type_service = StatusTypeService(StatusType)
