@@ -1,13 +1,11 @@
-from typing import List
-
-from sqlalchemy import func, and_
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
 from models.education import AcademicTitleDegree
 from schemas.education import AcademicTitleDegreeCreate, AcademicTitleDegreeUpdate
 from services import ServiceBase
-from utils import add_filter_to_query
+from services.filter import add_filter_to_query
 
 
 class AcademicTitleDegreeService(

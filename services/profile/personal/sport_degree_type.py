@@ -1,12 +1,11 @@
-from sqlalchemy import func, and_
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import SportDegreeType
 from services.base import ServiceBase
-from typing import List
 
-from utils import add_filter_to_query
+from services.filter import add_filter_to_query
 
 
 class SportDegreeTypeService(ServiceBase):

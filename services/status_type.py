@@ -1,10 +1,7 @@
-from sqlalchemy import and_, func
-
 from models import StatusType
 from schemas import StatusTypeCreate, StatusTypeUpdate
-from utils import add_filter_to_query
+from services.filter import add_filter_to_query
 from .base import ServiceBase
-from typing import List
 
 from sqlalchemy.orm import Session
 

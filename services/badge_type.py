@@ -1,9 +1,8 @@
-from sqlalchemy import and_, func
 from sqlalchemy.orm import Session
 
 from models import BadgeType
 from schemas import BadgeTypeCreate, BadgeTypeUpdate
-from utils import add_filter_to_query
+from services.filter import add_filter_to_query
 from .base import ServiceBase
 
 

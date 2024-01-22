@@ -1,9 +1,7 @@
-from sqlalchemy import func, and_
-
 from models import PenaltyType
 from sqlalchemy.orm import Session
 from schemas import PenaltyTypeCreate, PenaltyTypeUpdate
-from utils import add_filter_to_query
+from services.filter import add_filter_to_query
 from .base import ServiceBase
 
 

@@ -1,13 +1,11 @@
-from typing import List
-
 from sqlalchemy.orm import Session
-from sqlalchemy import func, and_
+from sqlalchemy import func
 
 from exceptions import NotFoundException
 from models.education import Specialty
 from schemas.education import SpecialtyCreate, SpecialtyUpdate
 from services import ServiceBase
-from utils import add_filter_to_query
+from services.filter import add_filter_to_query
 
 
 class SpecialtyService(

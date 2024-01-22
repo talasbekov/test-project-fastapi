@@ -1,13 +1,11 @@
-import uuid
 from datetime import datetime
 
-from sqlalchemy import func, and_
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import Contract, ContractType, User, ContractHistory
 from schemas import ContractCreate, ContractRead, ContractUpdate, ContractTypeRead
-from utils import add_filter_to_query
+from services.filter import add_filter_to_query
 from .base import ServiceBase
 
 

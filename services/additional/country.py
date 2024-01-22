@@ -1,13 +1,11 @@
-from typing import List
-
-from sqlalchemy import func, and_
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import Country
 from schemas import CountryCreate, CountryUpdate
 from services.base import ServiceBase
-from utils import add_filter_to_query
+from services.filter import add_filter_to_query
 
 
 class CountryService(ServiceBase[Country, CountryCreate, CountryUpdate]):
