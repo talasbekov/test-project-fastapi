@@ -87,8 +87,10 @@ from services import (
     categories,
     detailed_notification_service,
     notification_service
+
 )
 
+from services.history import history
 from .base import ServiceBase
 from .constructor import handlers
 
@@ -1849,6 +1851,20 @@ class HrDocumentService(
                 "receiver_id": info.assigned_to_id
             }
         )
+    def generate_draft_for_expiring(self, db: Session, id: str, language: LanguageEnum):
+        expiring_contructs = history.HistoryService.get_expiring_contracts(db)
+        for contract in expiring_contructs:
+            if contract.id == id:
+                ans, name = self._get_html(db, id, language)
+                with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                    file_name = temp_file.name
+                    temp_file.write(ans.encode("utf-8"))
+                    return FileResponse(
+                        path=file_name,
+                        filename=name + ".html",
+                    )
+        
+        return None
 
 
 hr_document_service = HrDocumentService(HrDocument)

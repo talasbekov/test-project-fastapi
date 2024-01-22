@@ -193,7 +193,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
     def _get_all_by_type_and_user_id(self, db: Session, type: str, user_id):
         return db.query(self.model).filter(self.model.type ==
                                            type, self.model.user_id == user_id)
-
+    
     def create(self, db: Session, obj_in: HistoryCreate):
         cls = options.get(obj_in.type)
         if cls is None:
@@ -1139,6 +1139,13 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         db.delete(badge)
         db.flush()
         return obj
+    
+    def get_expiring_contracts(self, db: Session):
+        contracts = db.query(ContractHistory).filter(
+            ContractHistory.date_to <= datetime.now() + timedelta(days=30)
+        ).all()
+        return contracts
 
 
 history_service = HistoryService(History)
+

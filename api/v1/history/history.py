@@ -463,3 +463,7 @@ async def get_all_by_type_and_user_id(*,
     if date_till is not None:
         return history_service.get_timeline_by_date(db, user_id, date_till)
     return history_service.get_timeline(db, user_id)
+
+@router.get("/contracts")
+async def get_contracts(db: Session = Depends(get_db)):
+    return history_service.get_expiring_contracts(db)
