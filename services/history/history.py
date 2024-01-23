@@ -1141,9 +1141,10 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         return obj
     
     def get_expiring_contracts(self, db: Session):
-        contracts = db.query(ContractHistory).filter(
-            ContractHistory.date_to <= datetime.now() + timedelta(days=30)
-        ).all()
+        # contracts = db.query(ContractHistory).filter(
+        #     ContractHistory.date_to <= datetime.now() + timedelta(days=30)
+        # ).all()
+        contracts = db.query(ContractHistory).all()
         return contracts
 
 
