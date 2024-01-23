@@ -43,6 +43,22 @@ async def get_all(*,
         db, credentials, skip, limit, filter)
 
 
+@router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=PropertyTypeRead,
+            summary="Get Property Type by id")
+async def get_by_id(*,
+                    db: Session = Depends(get_db),
+                    id: str,
+                    Authorize: AuthJWT = Depends()
+                    ):
+    """
+        Get property type by id
+    """
+    Authorize.jwt_required()
+    return property_type_service.get_by_id(db, str(id))
+
+
+
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=PropertyTypeRead,

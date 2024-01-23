@@ -40,6 +40,21 @@ async def get_all(*,
     return country_service.get_all(db, skip, limit, filter)
 
 
+@router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=CountryRead,
+            summary="Get Country by id")
+async def get_by_id(*,
+                    db: Session = Depends(get_db),
+                    id: str,
+                    Authorize: AuthJWT = Depends()
+                    ):
+    """
+        Get country by id
+    """
+    Authorize.jwt_required()
+    return country_service.get_by_id(db, str(id))
+
+
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
              response_model=CountryRead,
