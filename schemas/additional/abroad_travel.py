@@ -4,9 +4,10 @@ from typing import Optional
 
 from pydantic import AnyUrl
 
-from schemas import Model, ReadModel, VehicleTypeRead
+from schemas import Model, ReadModel
 
 from .country import CountryRead
+from .vehicle_type import VehicleTypeRead
 
 
 class AbroadTravelBase(Model):
