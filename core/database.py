@@ -9,7 +9,7 @@ from fastapi import HTTPException
 from .config import configs
 import cx_Oracle
 
-SQLALCHEMY_DATABASE_URL = f"oracle://system:Oracle123@192.168.0.134:1521/MORAL"
+SQLALCHEMY_DATABASE_URL = f"oracle://system:Oracle123@172.20.0.2:1521/MORAL"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
