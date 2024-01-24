@@ -1,10 +1,11 @@
-from sqlalchemy import func, and_
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
 from models.education import Language
 from schemas.education import LanguageCreate, LanguageUpdate
 from services import ServiceBase
+from services.filter import add_filter_to_query
 
 
 class LanguageService(ServiceBase[Language, LanguageCreate, LanguageUpdate]):
@@ -15,7 +16,7 @@ class LanguageService(ServiceBase[Language, LanguageCreate, LanguageUpdate]):
         languages = db.query(Language)
 
         if filter != '':
-            languages = self._add_filter_to_query(languages, filter)
+            languages = add_filter_to_query(languages, filter, Language)
 
         languages = (languages
                        .order_by(func.to_char(Language.name))
@@ -34,16 +35,5 @@ class LanguageService(ServiceBase[Language, LanguageCreate, LanguageUpdate]):
                 detail=f"Language with id: {id} is not found!")
         return language
 
-    def _add_filter_to_query(self, language_query, filter):
-        key_words = filter.lower().split()
-        languages = (
-            language_query
-            .filter(
-                and_(func.concat(func.concat(func.lower(Language.name), ' '),
-                                 func.concat(func.lower(Language.nameKZ), ' '))
-                     .contains(name) for name in key_words)
-            )
-        )
-        return languages
 
 language_service = LanguageService(Language)

@@ -1,10 +1,11 @@
-from sqlalchemy import func, and_
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import SportDegreeType
 from services.base import ServiceBase
-from typing import List
+
+from services.filter import add_filter_to_query
 
 
 class SportDegreeTypeService(ServiceBase):
@@ -23,7 +24,7 @@ class SportDegreeTypeService(ServiceBase):
         sport_types = (db.query(SportDegreeType))
 
         if filter != '':
-            sport_types = self._add_filter_to_query(sport_types, filter)
+            sport_types = add_filter_to_query(sport_types, filter, SportDegreeType)
 
         sport_types = (sport_types
                        .order_by(func.to_char(func.lower(SportDegreeType.name)))
@@ -35,16 +36,5 @@ class SportDegreeTypeService(ServiceBase):
 
         return {"total": count, "objects": sport_types}
 
-    def _add_filter_to_query(self, sport_type_query, filter):
-        key_words = filter.lower().split()
-        sport_types = (
-            sport_type_query
-            .filter(
-                and_(func.concat(func.concat(func.lower(SportDegreeType.name), ' '),
-                                 func.concat(func.lower(SportDegreeType.nameKZ), ' '))
-                     .contains(name) for name in key_words)
-            )
-        )
-        return sport_types
 
 sport_degree_type_service = SportDegreeTypeService(SportDegreeType)

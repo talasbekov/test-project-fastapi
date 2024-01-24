@@ -1,12 +1,11 @@
-from typing import List
-
-from sqlalchemy import func, and_
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
 from models.education import Science
 from schemas.education import ScienceCreate, ScienceUpdate
 from services import ServiceBase
+from services.filter import add_filter_to_query
 
 
 class ScienceService(ServiceBase[Science, ScienceCreate, ScienceUpdate]):
@@ -17,7 +16,7 @@ class ScienceService(ServiceBase[Science, ScienceCreate, ScienceUpdate]):
         sciences = db.query(Science)
 
         if filter != '':
-            sciences = self._add_filter_to_query(sciences, filter)
+            sciences = add_filter_to_query(sciences, filter, Science)
 
         sciences = (sciences
                      .order_by(func.to_char(Science.name))
@@ -35,17 +34,6 @@ class ScienceService(ServiceBase[Science, ScienceCreate, ScienceUpdate]):
             raise NotFoundException(
                 detail=f"Science with id: {id} is not found!")
         return science
-    
-    def _add_filter_to_query(self, science_query, filter):
-        key_words = filter.lower().split()
-        sciences = (
-            science_query
-            .filter(
-                and_(func.concat(func.concat(func.lower(Science.name), ' '),
-                                 func.concat(func.lower(Science.nameKZ), ' '))
-                     .contains(name) for name in key_words)
-            )
-        )
-        return sciences
+
 
 science_service = ScienceService(Science)

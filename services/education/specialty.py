@@ -1,12 +1,11 @@
-from typing import List
-
 from sqlalchemy.orm import Session
-from sqlalchemy import func, and_
+from sqlalchemy import func
 
 from exceptions import NotFoundException
 from models.education import Specialty
 from schemas.education import SpecialtyCreate, SpecialtyUpdate
 from services import ServiceBase
+from services.filter import add_filter_to_query
 
 
 class SpecialtyService(
@@ -18,7 +17,7 @@ class SpecialtyService(
         specialties = db.query(Specialty)
 
         if filter != '':
-            specialties = self._add_filter_to_query(specialties, filter)
+            specialties = add_filter_to_query(specialties, filter, Specialty)
 
         specialties = (specialties
                        .order_by(func.to_char(Specialty.name))
@@ -36,18 +35,6 @@ class SpecialtyService(
             raise NotFoundException(
                 detail=f"Specialty with id: {id} is not found!")
         return specialty
-
-    def _add_filter_to_query(self, specialty_query, filter):
-        key_words = filter.lower().split()
-        specialties = (
-            specialty_query
-            .filter(
-                and_(func.concat(func.concat(func.lower(Specialty.name), ' '),
-                                 func.concat(func.lower(Specialty.nameKZ), ' '))
-                     .contains(name) for name in key_words)
-            )
-        )
-        return specialties
 
 
 specialty_service = SpecialtyService(Specialty)

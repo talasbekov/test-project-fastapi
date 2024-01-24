@@ -1,11 +1,12 @@
 from typing import List
 
-from sqlalchemy import and_, func
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from models import Position
 from schemas import PositionCreate, PositionUpdate
 from services import ServiceBase
+from services.filter import add_filter_to_query
 
 
 class PositionService(ServiceBase[Position, PositionCreate, PositionUpdate]):
@@ -20,7 +21,7 @@ class PositionService(ServiceBase[Position, PositionCreate, PositionUpdate]):
         specials = ['Умер', 'Погиб', 'В запасе', 'В отставке']
         positions = (db.query(Position))
         if filter != '':
-            positions = self._add_filter_to_query(positions, filter)
+            positions = add_filter_to_query(positions, filter, Position)
         positions = (positions
                      .filter(Position.name.notin_(specials))
                      .order_by(Position.name)
@@ -35,7 +36,7 @@ class PositionService(ServiceBase[Position, PositionCreate, PositionUpdate]):
     ):
         positions = (db.query(Position))
         if filter != '':
-            positions = self._add_filter_to_query(positions, filter)
+            positions = add_filter_to_query(positions, filter, Position)
         positions = (positions
                        .order_by(Position.name)
                        .offset(skip)
@@ -77,18 +78,6 @@ class PositionService(ServiceBase[Position, PositionCreate, PositionUpdate]):
                      .order_by(Position.position_order.desc())
                      .all())
 
-        return positions
-
-    def _add_filter_to_query(self, position_query, filter):
-        key_words = filter.lower().split()
-        positions = (
-            position_query
-            .filter(
-                and_(func.concat(func.concat(func.lower(Position.name), ' '),
-                                 func.concat(func.lower(Position.nameKZ), ' '))
-                     .contains(name) for name in key_words)
-            )
-        )
         return positions
 
 
