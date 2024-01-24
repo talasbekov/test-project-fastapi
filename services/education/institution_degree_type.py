@@ -1,12 +1,11 @@
-from typing import List
-
-from sqlalchemy import func, and_
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
 from models.education import InstitutionDegreeType
 from schemas.education import InstitutionDegreeTypeCreate, InstitutionDegreeTypeUpdate
 from services import ServiceBase
+from services.filter import add_filter_to_query
 
 
 class InstitutionDegreeTypeService(
@@ -20,7 +19,7 @@ class InstitutionDegreeTypeService(
         institutions = db.query(InstitutionDegreeType)
 
         if filter != '':
-            institutions = self._add_filter_to_query(institutions, filter)
+            institutions = add_filter_to_query(institutions, filter, InstitutionDegreeType)
 
         institutions = (institutions
                        .order_by(func.to_char(InstitutionDegreeType.name))
@@ -39,17 +38,6 @@ class InstitutionDegreeTypeService(
                 detail=f"InstitutionDegreeType with id: {id} is not found!")
         return institution_degree_type
 
-    def _add_filter_to_query(self, institution_degree_type_query, filter):
-        key_words = filter.lower().split()
-        institution_degree_types = (
-            institution_degree_type_query
-            .filter(
-                and_(func.concat(func.concat(func.lower(InstitutionDegreeType.name), ' '),
-                                 func.concat(func.lower(InstitutionDegreeType.nameKZ), ' '))
-                     .contains(name) for name in key_words)
-            )
-        )
-        return institution_degree_types
 
 institution_degree_type_service = InstitutionDegreeTypeService(
     InstitutionDegreeType)

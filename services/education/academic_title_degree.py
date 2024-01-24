@@ -1,12 +1,11 @@
-from typing import List
-
-from sqlalchemy import func, and_
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
 from models.education import AcademicTitleDegree
 from schemas.education import AcademicTitleDegreeCreate, AcademicTitleDegreeUpdate
 from services import ServiceBase
+from services.filter import add_filter_to_query
 
 
 class AcademicTitleDegreeService(
@@ -20,7 +19,9 @@ class AcademicTitleDegreeService(
         academic_title_degrees = db.query(AcademicTitleDegree)
 
         if filter != '':
-            academic_title_degrees = self._add_filter_to_query(academic_title_degrees, filter)
+            academic_title_degrees = add_filter_to_query(academic_title_degrees,
+                                                         filter,
+                                                         AcademicTitleDegree)
 
         academic_title_degrees = (academic_title_degrees
                      .order_by(func.to_char(AcademicTitleDegree.name))
@@ -38,18 +39,6 @@ class AcademicTitleDegreeService(
             raise NotFoundException(
                 detail=f"AcademicTitleDegree with id: {id} is not found!")
         return academic_title_degree
-    
-    def _add_filter_to_query(self, academic_title_degree_query, filter):
-        key_words = filter.lower().split()
-        academic_title_degrees = (
-            academic_title_degree_query
-            .filter(
-                and_(func.concat(func.concat(func.lower(AcademicTitleDegree.name), ' '),
-                                 func.concat(func.lower(AcademicTitleDegree.nameKZ), ' '))
-                     .contains(name) for name in key_words)
-            )
-        )
-        return academic_title_degrees
 
 
 academic_title_degree_service = AcademicTitleDegreeService(AcademicTitleDegree)

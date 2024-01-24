@@ -1,11 +1,10 @@
-from typing import List
-
-from sqlalchemy import func, and_
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
 from models import Rank, RankHistory, User
 from schemas import RankCreate, RankUpdate, RankRead
+from services.filter import add_filter_to_query
 
 from .base import ServiceBase
 
@@ -24,7 +23,7 @@ class RankService(ServiceBase[Rank, RankCreate, RankUpdate]):
         ranks = db.query(Rank)
 
         if filter != '':
-            ranks = self._add_filter_to_query(ranks, filter)
+            ranks = add_filter_to_query(ranks, filter, Rank)
 
         ranks = (ranks
                  .order_by(func.to_char(Rank.name))
@@ -86,18 +85,6 @@ class RankService(ServiceBase[Rank, RankCreate, RankUpdate]):
         if res is None:
             raise NotFoundException("Rank with order: {order} is not found!")
         return res
-
-    def _add_filter_to_query(self, rank_query, filter):
-        key_words = filter.lower().split()
-        ranks = (
-            rank_query
-            .filter(
-                and_(func.concat(func.concat(func.lower(Rank.name), ' '),
-                                 func.concat(func.lower(Rank.nameKZ), ' '))
-                     .contains(name) for name in key_words)
-            )
-        )
-        return ranks
 
 
 rank_service = RankService(Rank)
