@@ -18,9 +18,10 @@ class AbroadTravel(Model):
         default=lambda: str(uuid.uuid4()),
         unique=True,
         nullable=False)
-
-    vehicle_type = Column(String(255), nullable=False)
-    vehicle_typeKZ = Column('vehicle_typekz', String, nullable=True)
+    vehicle_type_id = Column(
+        String(),
+        ForeignKey("hr_erp_vehicle_types.id"), nullable=True)
+    vehicle_type = relationship("VehicleType")
     destination_country_id = Column(
         String(),
         ForeignKey('hr_erp_countries.id'),
