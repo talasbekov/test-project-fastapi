@@ -86,8 +86,7 @@ from services import (
     state_body_service,
     categories,
     detailed_notification_service,
-    notification_service
-
+    notification_service,
 )
 
 from services.history import history
@@ -1851,19 +1850,21 @@ class HrDocumentService(
                 "receiver_id": info.assigned_to_id
             }
         )
-    def generate_draft_for_expiring(self, db: Session, id: str, language: LanguageEnum):
-        expiring_contructs = history.HistoryService.get_expiring_contracts(db)
-        for contract in expiring_contructs:
+    def generate_document_for_expiring(self, db: Session, id: str, role: str, properties: dict, le):
+        expiring_contracts = history.HistoryService.get_expiring_contracts(db)
+        for contract in expiring_contracts:
             if contract.id == id:
-                ans, name = self._get_html(db, id, language)
-                with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-                    file_name = temp_file.name
-                    temp_file.write(ans.encode("utf-8"))
-                    return FileResponse(
-                        path=file_name,
-                        filename=name + ".html",
-                    )
-        
+                user_id = contract.user_id
+                leader_id = user_service.get_by_id(db, user_id).staff_unit.staff_division.leader_id
+                new_document = HrDocumentInit(
+                    hr_document_template_id="073121d7-87dd-4d72-b4d8-272acdce9d53",
+                    user_ids=[user_id],
+                    document_step_users_ids=[user_id, leader_id],
+                    parent_id=None,
+                    due_date=datetime.now() + timedelta(days=7),
+                    properties=properties
+                )
+                return self.initialize_document(db, new_document, role, user_id)
         return None
 
 

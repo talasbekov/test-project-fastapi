@@ -20,6 +20,7 @@ from schemas import (HrDocumentInit,
                      HrDocumentSignEcpWithIds,
                      QrRead)
 from services import hr_document_service
+from services.autotags import auto_tags
 from tasks import task_sign_document_with_certificate
 
 router = APIRouter(
@@ -592,3 +593,22 @@ async def get_qrs(*,
     """
     Authorize.jwt_required()
     return hr_document_service.generate_qrs(db, id)
+
+@router.get('/generate_draft_for_expiring/')
+async def generate_draft_for_expiring(*,
+                                      contract_id: str,
+                                      db: Session = Depends(get_db),
+                                      Authorize: AuthJWT = Depends()
+                                      ):
+    """
+        Generate draft for expiring contracts
+
+    """
+    Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
+    properties = {}
+    required_properties = ["contract", "father", "name", "officer", "position", "rank", "surname"]
+    for prop in required_properties:
+        properties[prop] = auto_tags.get(prop).handle(db, str(user_id))
+    role = Authorize.get_raw_jwt()['role']
+    return await hr_document_service.generate_document_for_expiring(db, contract_id, role, properties)
