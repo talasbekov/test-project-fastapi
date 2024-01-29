@@ -12,6 +12,7 @@ class OathRead(ReadModel):
     date: Optional[datetime]
     military_id: Optional[str]
     military_name: Optional[str]
+    military_nameKZ: Optional[str]
 
     class Config:
         orm_mode = True

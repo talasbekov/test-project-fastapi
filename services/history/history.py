@@ -614,6 +614,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                 id=oauth_user.id,
                 date=oauth_user.date,
                 military_name=oauth_user.military_unit.name,
+                military_nameKZ=oauth_user.military_unit.nameKZ,
                 military_id=oauth_user.military_unit_id
             )
 
