@@ -12,6 +12,8 @@ class BiographicInfoBase(BaseModel):
     gender: bool
     citizenship: str
     nationality: str
+    citizenshipKZ: Optional[str]
+    nationalityKZ: Optional[str]
     family_status_id: str
     address: str
     residence_address: str

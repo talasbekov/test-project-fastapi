@@ -12,6 +12,8 @@ class BiographicInfo(Model):
     gender = Column(Boolean)
     citizenship = Column(String)
     nationality = Column(String)
+    citizenshipKZ = Column('citizenshipkz', String)
+    nationalityKZ = Column('nationalitykz', String)
     address = Column(String)
     family_status_id = Column(
         String(),
