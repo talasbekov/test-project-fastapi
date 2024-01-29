@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from typing import List, Union, Dict, Any, Optional
 from utils import get_access_token_by_user_id
 from core import get_db
-from models import LanguageEnum
+from models import LanguageEnum, ContractType
 from schemas import (HrDocumentInit,
                      HrDocumentRead,
                      HrDocumentSign,
@@ -594,21 +594,36 @@ async def get_qrs(*,
     Authorize.jwt_required()
     return hr_document_service.generate_qrs(db, id)
 
-@router.get('/generate_draft_for_expiring/')
-async def generate_draft_for_expiring(*,
-                                      contract_id: str,
+@router.get('/generate_document_for_expiring/{contract_id}/{contract_type_id}/', summary="Generate draft for expiring contracts")
+async def generate_document_for_expiring(*,
                                       db: Session = Depends(get_db),
-                                      Authorize: AuthJWT = Depends()
+                                      Authorize: AuthJWT = Depends(),
+                                      contract_id: str = None,
+                                      contract_type_id: str = None,
                                       ):
     """
         Generate draft for expiring contracts
 
     """
+    
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
     properties = {}
-    required_properties = ["contract", "father", "name", "officer", "position", "rank", "surname"]
+    contract = db.query(ContractType).filter(ContractType.id == contract_type_id).all()[0]
+    contract_new = {}
+    contract_new['name'] = contract.name
+    contract_new['nameKZ'] = contract.nameKZ
+    contract_new['value'] = contract.id
+    contract_new['auto'] = False
+    properties["contract"] = contract_new
+    years = contract.years
+    # properties["contract"] = await auto_tags.get("contract").handle(db, str(contract_id))
+    required_properties = ["father_name", "name", "officer_number", "position", "rank", "surname"]
     for prop in required_properties:
+        # print(auto_tags.get("father").handle(db, str(user_id)))
         properties[prop] = auto_tags.get(prop).handle(db, str(user_id))
+        
     role = Authorize.get_raw_jwt()['role']
-    return await hr_document_service.generate_document_for_expiring(db, contract_id, role, properties)
+    document = await hr_document_service.generate_document_for_expiring(db, contract_id, role, properties, years)
+    return document
+    # return properties

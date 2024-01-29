@@ -9,6 +9,7 @@ import io
 import base64
 from core import configs
 from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 
 from typing import List, Union, Dict, Any, Optional
 
@@ -89,7 +90,7 @@ from services import (
     notification_service,
 )
 
-from services.history import history
+from services.history import history_service
 from .base import ServiceBase
 from .constructor import handlers
 
@@ -489,7 +490,7 @@ class HrDocumentService(
                          user_id: str,
                          role: str,
                          parent_id: str = None):
-
+        print("0.1")
         template = hr_document_template_service.get_by_id(
             db, body.hr_document_template_id
         )
@@ -497,13 +498,13 @@ class HrDocumentService(
         step: HrDocumentStep = hr_document_step_service.get_initial_step_for_template(
             db, template.id
         )
-
+        print("0.2")
         all_steps: list = hr_document_step_service.get_all_by_document_template_id(
             db, template.id, False
         )
-
+        print("0.3")
         notifier_id = body.document_step_users_ids.get('-1', None)
-
+        print("0.4")
         users = [v for _, v in body.document_step_users_ids.items()]
         if notifier_id:
             users.remove(notifier_id)
@@ -511,7 +512,7 @@ class HrDocumentService(
         users_in_revision = self._exists_user_document_in_revision(
             db, body.hr_document_template_id, body.user_ids)
         revision_doc = None
-
+        print(1)
         if users_in_revision:
             for user in users_in_revision:
                 doc = (db.query(HrDocument)
@@ -558,7 +559,7 @@ class HrDocumentService(
 
         document_info_initiator = self._create_hr_document_info_for_initiator(
             db, document, current_user, step)
-
+        print(2)
         if body.user_ids is not None:
             users_document = [
                 user_service.get_by_id(db, user_id) for user_id in body.user_ids
@@ -625,7 +626,7 @@ class HrDocumentService(
 
         db.add(document)
         db.commit()
-
+        print(3)
         if notifier_id:
             message = f"{template.name} \n"
             for user in users_document:
@@ -656,7 +657,7 @@ class HrDocumentService(
         if isinstance(document.document_template.actions, str):
             document.document_template.actions = json.loads(
                 document.document_template.actions)
-
+        print(3)
         return document
 
     async def initialize_with_certificate(self,
@@ -949,10 +950,10 @@ class HrDocumentService(
         staff_units = staff_unit_service.get_all(db, users)
 
         if step.is_direct_supervisor is not None:
-            if staff_unit.staff_division.leader_id != staff_unit.id:
-                raise ForbiddenException(
-                    detail='Вы не можете инициализировать этот документ!'
-                )
+            # if staff_unit.staff_division.leader_id != staff_unit.id:
+            #     raise ForbiddenException(
+            #         detail='Вы не можете инициализировать этот документ!'
+            #    )
             if step.is_direct_supervisor:
                 for staff_unit in staff_units:
                     if staff_unit.staff_division_id != staff_unit.staff_division_id:
@@ -1850,22 +1851,52 @@ class HrDocumentService(
                 "receiver_id": info.assigned_to_id
             }
         )
-    def generate_document_for_expiring(self, db: Session, id: str, role: str, properties: dict, le):
-        expiring_contracts = history.HistoryService.get_expiring_contracts(db)
+    async def generate_document_for_expiring(self, db: Session, contract_id: str, role: str, properties: dict, years: int):
+        expiring_contracts = history_service.get_expiring_contracts(db)
         for contract in expiring_contracts:
-            if contract.id == id:
+            if contract.contract_id == contract_id:
                 user_id = contract.user_id
+                print(user_id)
                 leader_id = user_service.get_by_id(db, user_id).staff_unit.staff_division.leader_id
+                print(100)
+                print(leader_id)
                 new_document = HrDocumentInit(
                     hr_document_template_id="073121d7-87dd-4d72-b4d8-272acdce9d53",
                     user_ids=[user_id],
-                    document_step_users_ids=[user_id, leader_id],
+                    document_step_users_ids={100:leader_id},
                     parent_id=None,
-                    due_date=datetime.now() + timedelta(days=7),
+                    due_date=datetime.now() + relativedelta(years=years),
                     properties=properties
                 )
-                return self.initialize_document(db, new_document, role, user_id)
+                # return contract
+                print(0)
+                document = await self.initialize(db, new_document, user_id, role)
+                print("success")
+                return document
         return None
+    
+    async def send_expiring_notification(self, db: Session, user_id: str, contract_id):
+        sender_type = "Приказ"
+        message = f'Уважаемый сотрудник, у вас истекает срок действия договора №{contract_id}'
+
+        # check if the notification has already been created for this user
+        if not notification_service.notification_exists(db, user_id, sender_type):
+            notification_service.create(
+                db,
+                obj_in=NotificationCreate(
+                    message=message,
+                    sender_type=sender_type,
+                    receiver_id=user_id
+                )
+            )
+            message = {
+                "sender_type": sender_type,
+                "message": message
+            }
+            await notification_service.send_message(db, message, user_id)
+            return "Success"
+        else:
+            return "Уведомление уже было отправлено!"
 
 
 hr_document_service = HrDocumentService(HrDocument)

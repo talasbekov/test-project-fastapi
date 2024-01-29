@@ -11,7 +11,7 @@ from sqlalchemy.orm import sessionmaker
 
 from core import configs
 from schemas import HrDocumentRead
-from services import staff_list_service, survey_service, hr_document_service
+from services import staff_list_service, survey_service, hr_document_service, history_service
 from schemas.staff_list import StaffListUserCreate, StaffListRead
 from models import UserLoggingActivity, SurveyRepeatTypeEnum
 
@@ -41,7 +41,12 @@ app.conf.beat_schedule = {
         'task': 'tasks.celery_app.task_repeat_surveys',
         'schedule': crontab(minute=0, hour=0, day_of_month='1', month_of_year='1'),
         'args': (SurveyRepeatTypeEnum.EVERY_YEAR.value,)
+    },
+    'send_expiring_documents_notifications': {
+        'task': 'tasks.celery_app.check_expiring_documents',
+        'schedule': crontab(minute='*'),
     }
+
 }
 
 SQLALCHEMY_DATABASE_URL = f"oracle://system:Oracle123@172.20.0.2:1521/MORAL"
@@ -199,3 +204,21 @@ def task_sign_document_with_certificate(
         if db:
             db.close()
     # return hr_documents
+
+@app.task(bind=True)
+async def check_expiring_documents(self):
+    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    db = SessionLocal()
+    contracts = history_service.get_expiring_contracts(db)
+
+    for contract in contracts:
+        status = await hr_document_service.send_expiring_notification(db, contract.user_id, contract.id)
+        print(status)
+    try:
+        db.commit()
+    except SQLAlchemyError as e:
+        db.rollback()
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if db:
+            db.close()
