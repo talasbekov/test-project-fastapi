@@ -440,6 +440,7 @@ class BadgeServiceDetailRead(ReadNamedModel):
             date_to=orm_obj.date_to,
             name=orm_obj.badge.type.name,
             nameKZ=orm_obj.badge.type.nameKZ,
+            badge_order=orm_obj.badge.type.badge_order,
             url=orm_obj.badge.type.url,
             id=orm_obj.id,
             created_at=orm_obj.created_at,
