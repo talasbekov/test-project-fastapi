@@ -213,7 +213,7 @@ class HrDocumentTemplateService(
                 )
                 .filter(HrDocumentTemplate.is_visible == True)
                 .filter(HrDocumentTemplate.is_draft == False)
-                .order(HrDocumentTemplate.created_at.desc())
+                .order_by(HrDocumentTemplate.created_at.desc())
                 .offset(skip)
                 .limit(limit)
                 .all()
