@@ -14,7 +14,7 @@ class Activity(NamedModel):
     instructions = Column(TEXT())
     is_time_required = Column(Boolean())
     normative_img = Column(TEXT(), nullable=True)
-    is_separated = Column(Boolean(), default=True)
+    # is_separated = Column(Boolean(), default=True)
 
     # Relationships
     children = relationship("Activity")
