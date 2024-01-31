@@ -361,7 +361,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         staff_units: List[StaffUnit] = []
         for i in staff_divisions:
             staff_units.extend(
-                staff_unit_service.get_by_staff_division_id(db, i.id))
+                staff_unit_service.get_all_by_staff_division_id(db, i.id))
 
         users: List[User] = []
         for i in staff_units:
