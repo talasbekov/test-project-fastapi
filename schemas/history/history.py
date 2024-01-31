@@ -425,6 +425,7 @@ class BadgeServiceDetailRead(ReadNamedModel):
     url: Optional[str]
     reason: Optional[str]
     reasonKZ: Optional[str]
+    badge_order: Optional[int]
 
     class Config:
         from_attributes = True
