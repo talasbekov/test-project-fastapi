@@ -868,7 +868,9 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         general_information = self.get_general_information_by_user_id(
             db, user_id, user)
         badges = db.query(BadgeHistory).filter(
-            BadgeHistory.user_id == user_id).all()
+            BadgeHistory.user_id == user_id,
+            BadgeHistory.badge.type.badge_order > 0
+        ).all()
         ranks = db.query(RankHistory).filter(
             RankHistory.user_id == user_id).all()
         penalties = db.query(PenaltyHistory).filter(
@@ -935,7 +937,8 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         badges = db.query(BadgeHistory).filter(
             BadgeHistory.user_id == user_id,
             BadgeHistory.date_from <= datetime.combine(date_till, datetime.min.time()),
-            BadgeHistory.date_to <= datetime.combine(date_till, datetime.min.time())
+            BadgeHistory.date_to <= datetime.combine(date_till, datetime.min.time()),
+            BadgeHistory.badge.type.badge_order > 0
         ).all()
         ranks = db.query(RankHistory).filter(
             RankHistory.user_id == user_id,

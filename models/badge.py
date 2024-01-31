@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, ForeignKey
+from sqlalchemy import Column, String, ForeignKey, Integer
 from sqlalchemy.orm import relationship
 
 from models import Model, NamedModel
@@ -8,6 +8,7 @@ class BadgeType(NamedModel):
     __tablename__ = "hr_erp_badge_types"
 
     url = Column(String, nullable=True)
+    badge_order = Column(Integer, nullable=True)
 
     badges = relationship("Badge", back_populates="type")
 
