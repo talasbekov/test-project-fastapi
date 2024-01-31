@@ -30,7 +30,7 @@ from models import (
     Badge,
     Coolness,
     CoolnessStatusEnum,
-    User,
+    User, BadgeType,
 )
 from schemas import HistoryCreate, HistoryUpdate
 from schemas.history.history import EquipmentRead
@@ -867,10 +867,13 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
 
         general_information = self.get_general_information_by_user_id(
             db, user_id, user)
-        badges = db.query(BadgeHistory).filter(
+        badges = (db.query(BadgeHistory)
+                  .join(Badge, BadgeHistory.badge_id == Badge.id)
+                  .join(BadgeType, Badge.type_id == BadgeType.id)
+                  .filter(
             BadgeHistory.user_id == user_id,
-            BadgeHistory.badge.type.badge_order > 0
-        ).all()
+            BadgeType.badge_order > 0
+        ).all())
         ranks = db.query(RankHistory).filter(
             RankHistory.user_id == user_id).all()
         penalties = db.query(PenaltyHistory).filter(
@@ -934,12 +937,15 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
 
         general_information = self.get_general_information_by_user_id_and_date(
             db, user_id, user, datetime.combine(date_till, datetime.min.time()))
-        badges = db.query(BadgeHistory).filter(
+        badges = (db.query(BadgeHistory)
+                  .join(Badge, BadgeHistory.badge_id == Badge.id)
+                  .join(BadgeType, Badge.type_id == BadgeType.id)
+                  .filter(
             BadgeHistory.user_id == user_id,
             BadgeHistory.date_from <= datetime.combine(date_till, datetime.min.time()),
             BadgeHistory.date_to <= datetime.combine(date_till, datetime.min.time()),
-            BadgeHistory.badge.type.badge_order > 0
-        ).all()
+            BadgeType.badge_order > 0
+        ).all())
         ranks = db.query(RankHistory).filter(
             RankHistory.user_id == user_id,
             RankHistory.date_from <= datetime.combine(date_till, datetime.min.time()),
