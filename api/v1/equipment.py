@@ -151,6 +151,25 @@ async def get_all_clothing(*,
     return equipment_service.get_all_clothing_equipments(db, skip, limit)
 
 
+@router.get("/model/clothing/", dependencies=[Depends(HTTPBearer())],
+            response_model=TypeClothingEquipmentReadPagination,
+            summary="Get all Clothing Equipments")
+async def get_all_clothing(*,
+                           db: Session = Depends(get_db),
+                           Authorize: AuthJWT = Depends()
+                           ):
+    """
+        Get all Clothing Equipments
+
+        - **skip**: int - The number of equipments to skip before returning the results.
+            This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of equipments to return in the response.
+            This parameter is optional and defaults to 10.
+    """
+    Authorize.jwt_required()
+    return equipment_service.get_all_clothing_equipment_models(db)
+
+
 @router.get("/type/army/", dependencies=[Depends(HTTPBearer())],
             response_model=TypeArmyEquipmentReadPagination,
             summary="Get all Army Equipments")
