@@ -155,7 +155,7 @@ async def get_all_clothing(*,
 
 
 @router.get("/model/clothing/", dependencies=[Depends(HTTPBearer())],
-            response_model=TypeClothingEquipmentModel,
+            response_model=List[TypeClothingEquipmentModel],
             summary="Get all Clothing Equipments")
 async def get_all_clothing(*,
                            db: Session = Depends(get_db),
