@@ -232,9 +232,12 @@ class EquipmentService(
         cloth_eq_types_models = []
 
         for model_id in body.model_ids:
-            cloth_eq_types_models.append(
-                self.get_clothing_equipment_model_by_id(db, model_id)
-            )
+            model = self.get_clothing_equipment_model_by_id(db, model_id)
+            if model is not None:
+                cloth_eq_types_models.append(model)
+
+        print(cloth_type)
+        print(cloth_eq_types_models)
 
         cloth_type.cloth_eq_types_models = cloth_eq_types_models
         db.add(cloth_type)
