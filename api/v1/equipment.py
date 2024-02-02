@@ -316,7 +316,7 @@ async def create_army_eq_model(*,
              dependencies=[Depends(HTTPBearer())],
              response_model=TypeClothingEquipmentRead,
              summary="Create Army Equipments Type")
-async def create_army_eq_type(*,
+async def create_cloth_eq_type(*,
                               db: Session = Depends(get_db),
                               Authorize: AuthJWT = Depends(),
                               body: TypeClothingEquipmentCreate
@@ -328,7 +328,7 @@ async def create_army_eq_type(*,
 @router.post("/model/clothing/",
              dependencies=[Depends(HTTPBearer())],
              summary="Create Army Equipments Model")
-async def create_army_eq_model(*,
+async def create_cloth_eq_model(*,
                                db: Session = Depends(get_db),
                                Authorize: AuthJWT = Depends(),
                                body: TypeClothingEquipmentModelCreate
