@@ -229,17 +229,14 @@ class EquipmentService(
         cloth_eq_type = TypeClothingEquipment(name=body.name,
                                               nameKZ=body.nameKZ)
         cloth_type = super().create(db, cloth_eq_type, TypeClothingEquipment)
-        cloth_eq_types_models = []
 
         for model_id in body.model_ids:
-            model = self.get_clothing_equipment_model_by_id(db, model_id)
-            if model is not None:
-                cloth_eq_types_models.append(model)
+            cloth_type_model = {
+                'type_cloth_eq_models_id':model_id,
+                'type_cloth_equipmets_id':cloth_type.id
+            }
+            super().create(db, cloth_type_model, ClothingEquipmentTypesModels)
 
-        print(cloth_type)
-        print(cloth_eq_types_models)
-
-        cloth_type.cloth_eq_types_models = cloth_eq_types_models
         db.add(cloth_type)
         db.flush()
         return cloth_type
