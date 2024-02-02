@@ -21,8 +21,11 @@ from schemas import (EquipmentCreate,
                      TypeOtherEquipmentCreate,
                      TypeOtherEquipmentModelCreate,
                      )
-from schemas.equipment import TypeArmyEquipmentModel, TypeOtherEquipmentRead, \
-    TypeOtherEquipmentModel, TypeClothingEquipmentRead
+from schemas.equipment import (TypeArmyEquipmentModel,
+                               TypeOtherEquipmentRead,
+                               TypeOtherEquipmentModel,
+                               TypeClothingEquipmentRead,
+                               TypeClothingEquipmentModel,)
 from services import equipment_service
 
 router = APIRouter(
@@ -152,7 +155,7 @@ async def get_all_clothing(*,
 
 
 @router.get("/model/clothing/", dependencies=[Depends(HTTPBearer())],
-            response_model=TypeClothingEquipmentReadPagination,
+            response_model=TypeClothingEquipmentModel,
             summary="Get all Clothing Equipments")
 async def get_all_clothing(*,
                            db: Session = Depends(get_db),
