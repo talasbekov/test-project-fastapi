@@ -231,7 +231,8 @@ class EquipmentService(
         return other_model
 
     def create_cloth_eq_type(self, db, body):
-        if self.get_clothing_equipment_type_by_name(db, body.name) is None:
+        cloth_type = self.get_clothing_equipment_type_by_name(db, body.name)
+        if cloth_type is None:
             cloth_eq_type = TypeClothingEquipment(name=body.name,
                                                   nameKZ=body.nameKZ)
             cloth_type = super().create(db, cloth_eq_type, TypeClothingEquipment)
