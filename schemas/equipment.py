@@ -2,8 +2,7 @@ import uuid
 from typing import Optional, List
 from datetime import datetime
 
-from models import NamedModel
-from schemas import Model, ReadModel, ReadNamedModel, BaseModel
+from schemas import Model, ReadModel, ReadNamedModel, BaseModel, NamedModel
 
 
 class EquipmentBase(Model):
