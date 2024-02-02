@@ -131,6 +131,11 @@ class EquipmentService(
                 .filter(TypeClothingEquipmentModel.id==id)
                 .first())
 
+    def get_clothing_equipment_type_by_name(self, db: Session, name: str):
+        return (db.query(TypeClothingEquipment)
+                .filter(TypeClothingEquipment.name == name)
+                .first())
+
     def get_clothing_equipment_models_count_by_user(
             self, db: Session, user_id: str):
         res = (
@@ -226,9 +231,10 @@ class EquipmentService(
         return other_model
 
     def create_cloth_eq_type(self, db, body):
-        cloth_eq_type = TypeClothingEquipment(name=body.name,
-                                              nameKZ=body.nameKZ)
-        cloth_type = super().create(db, cloth_eq_type, TypeClothingEquipment)
+        if self.get_clothing_equipment_type_by_name(db, body.name) is None:
+            cloth_eq_type = TypeClothingEquipment(name=body.name,
+                                                  nameKZ=body.nameKZ)
+            cloth_type = super().create(db, cloth_eq_type, TypeClothingEquipment)
 
         for model_id in body.model_ids:
             cloth_type_model = {
