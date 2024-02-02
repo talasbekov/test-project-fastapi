@@ -13,7 +13,16 @@ from schemas import (EquipmentCreate,
                      TypeClothingEquipmentReadPagination,
                      TypeArmyEquipmentReadPagination,
                      TypeOtherEquipmentReadPagination,
+                     TypeArmyEquipmentRead,
+                     TypeArmyEquipmentCreate,
+                     TypeArmyEquipmentModelCreate,
+                     TypeClothingEquipmentCreate,
+                     TypeClothingEquipmentModelCreate,
+                     TypeOtherEquipmentCreate,
+                     TypeOtherEquipmentModelCreate,
                      )
+from schemas.equipment import TypeArmyEquipmentModel, TypeOtherEquipmentRead, \
+    TypeOtherEquipmentModel, TypeClothingEquipmentRead
 from services import equipment_service
 
 router = APIRouter(
@@ -227,3 +236,80 @@ async def get_all_available(*,
     Authorize.jwt_required()
     return equipment_service.get_all_available_equipments(
         db, user_id, skip, limit)
+
+
+@router.post("/type/other/",
+             dependencies=[Depends(HTTPBearer())],
+             response_model=TypeOtherEquipmentRead,
+             summary="Create Other Equipments Type")
+async def create_other_eq_type(*,
+                               db: Session = Depends(get_db),
+                               Authorize: AuthJWT = Depends(),
+                               body: TypeOtherEquipmentCreate
+                               ):
+    Authorize.jwt_required()
+    return equipment_service.create_other_eq_type(db, body)
+
+
+@router.post("/model/other/",
+             dependencies=[Depends(HTTPBearer())],
+             response_model=TypeOtherEquipmentModel,
+             summary="Create Other Equipments Model")
+async def create_other_eq_model(*,
+                                db: Session = Depends(get_db),
+                                Authorize: AuthJWT = Depends(),
+                                body: TypeOtherEquipmentModelCreate
+                                ):
+    Authorize.jwt_required()
+    return equipment_service.create_other_eq_model(db, body)
+
+
+@router.post("/type/army/",
+             dependencies=[Depends(HTTPBearer())],
+             response_model=TypeArmyEquipmentRead,
+             summary="Create Army Equipments Type")
+async def create_army_eq_type(*,
+                              db: Session = Depends(get_db),
+                              Authorize: AuthJWT = Depends(),
+                              body: TypeArmyEquipmentCreate
+                              ):
+    Authorize.jwt_required()
+    return equipment_service.create_army_eq_type(db, body)
+
+
+@router.post("/model/army/",
+             dependencies=[Depends(HTTPBearer())],
+             response_model=TypeArmyEquipmentModel,
+             summary="Create Army Equipments Model")
+async def create_army_eq_model(*,
+                               db: Session = Depends(get_db),
+                               Authorize: AuthJWT = Depends(),
+                               body: TypeArmyEquipmentModelCreate
+                               ):
+    Authorize.jwt_required()
+    return equipment_service.create_army_eq_model(db, body)
+
+
+@router.post("/type/clothing/",
+             dependencies=[Depends(HTTPBearer())],
+             response_model=TypeClothingEquipmentRead,
+             summary="Create Army Equipments Type")
+async def create_army_eq_type(*,
+                              db: Session = Depends(get_db),
+                              Authorize: AuthJWT = Depends(),
+                              body: TypeClothingEquipmentCreate
+                              ):
+    Authorize.jwt_required()
+    return equipment_service.create_cloth_eq_type(db, body)
+
+
+@router.post("/model/clothing/",
+             dependencies=[Depends(HTTPBearer())],
+             summary="Create Army Equipments Model")
+async def create_army_eq_model(*,
+                               db: Session = Depends(get_db),
+                               Authorize: AuthJWT = Depends(),
+                               body: TypeClothingEquipmentModelCreate
+                               ):
+    Authorize.jwt_required()
+    return equipment_service.create_cloth_eq_model(db, body)
