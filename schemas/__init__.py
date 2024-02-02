@@ -9,7 +9,13 @@ from .equipment import (EquipmentCreate,
                         TypeOtherEquipmentRead,
                         TypeArmyEquipmentReadPagination,
                         TypeClothingEquipmentReadPagination,
-                        TypeOtherEquipmentReadPagination
+                        TypeOtherEquipmentReadPagination,
+                        TypeArmyEquipmentCreate,
+                        TypeArmyEquipmentModelCreate,
+                        TypeClothingEquipmentCreate,
+                        TypeClothingEquipmentModelCreate,
+                        TypeOtherEquipmentCreate,
+                        TypeOtherEquipmentModelCreate,
                         )
 
 from .event import EventCreate, EventRead, EventUpdate

@@ -38,9 +38,12 @@ class ServiceBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         return db.query(self.model).offset(skip).limit(limit).all()
 
     def create(self, db: Session,
-               obj_in: Union[CreateSchemaType, Dict[str, Any]]) -> ModelType:
+               obj_in: Union[CreateSchemaType, Dict[str, Any]],
+               model: ModelType = None) -> ModelType:
+        if model is None:
+            model = self.model
         obj_in_data = jsonable_encoder(obj_in)
-        db_obj = self.model(**obj_in_data)  # type: ignore
+        db_obj = model(**obj_in_data)  # type: ignore
         db.add(db_obj)
         db.flush()
         return db_obj

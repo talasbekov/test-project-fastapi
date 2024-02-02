@@ -12,13 +12,16 @@ from models import (Equipment,
                     ArmyEquipment,
                     ClothingEquipment,
                     OtherEquipment,
-                    ClothingEquipmentTypesModels)
+                    ClothingEquipmentTypesModels,
+                    TypeArmyEquipmentModel,
+                    TypeOtherEquipmentModel)
 from schemas import (EquipmentCreate,
                      EquipmentUpdate,
                      TypeClothingEquipmentRead,
                      TypeArmyEquipmentRead,
                      TypeOtherEquipmentRead)
 from .base import ServiceBase
+from .filter import add_filter_to_query
 
 equipment = {
     "army_equipment": ArmyEquipment,
@@ -55,7 +58,9 @@ class EquipmentService(
         army_equipments = db.query(TypeArmyEquipment)
 
         if filter != '':
-            army_equipments = self._add_filter_to_army_query(army_equipments, filter)
+            army_equipments = add_filter_to_query(army_equipments,
+                                                  filter,
+                                                  TypeArmyEquipment)
 
         army_equipments = (army_equipments
                            .offset(skip)
@@ -87,7 +92,9 @@ class EquipmentService(
         type_cloth_equipmets_list = db.query(TypeClothingEquipment)
 
         if filter != '':
-            type_cloth_equipmets_list = self._add_filter_to_cloth_query(type_cloth_equipmets_list, filter)
+            type_cloth_equipmets_list = add_filter_to_query(type_cloth_equipmets_list,
+                                                            filter,
+                                                            TypeClothingEquipment)
 
         type_cloth_equipmets_list = (type_cloth_equipmets_list
                                      .offset(skip).limit(limit).all())
@@ -119,6 +126,11 @@ class EquipmentService(
     def get_all_clothing_equipment_models(self, db: Session):
         return db.query(TypeClothingEquipmentModel).all()
 
+    def get_clothing_equipment_model_by_id(self, db: Session, id: str):
+        return (db.query(TypeClothingEquipmentModel)
+                .filter(TypeClothingEquipmentModel.id==id)
+                .first())
+
     def get_clothing_equipment_models_count_by_user(
             self, db: Session, user_id: str):
         res = (
@@ -144,7 +156,9 @@ class EquipmentService(
         other_equipments = db.query(TypeOtherEquipment)
 
         if filter != '':
-            other_equipments = self._add_filter_to_other_query(other_equipments, filter)
+            other_equipments = add_filter_to_query(other_equipments,
+                                                  filter,
+                                                  TypeOtherEquipment)
 
         other_equipments = (other_equipments
                            .offset(skip)
@@ -177,17 +191,6 @@ class EquipmentService(
             .limit(limit)
             .all()
         )
-
-    def _get_user_clothing_type_query(self, db: Session, user_id: str):
-        return (
-            db.query(TypeClothingEquipment)
-            .join(ClothingEquipmentTypesModels)
-            .join(ClothingEquipment)
-            .filter(
-                ClothingEquipment.user_id == user_id
-            )
-        )
-
     def update(self, db: Session, id: str, body: EquipmentUpdate):
         equipment = self.get_by_id(db, id)
         if not equipment:
@@ -206,43 +209,53 @@ class EquipmentService(
         db.flush()
         return equipment
 
+    def create_army_eq_type(self, db, body):
+        army_type = super().create(db, body, TypeArmyEquipment)
+        return army_type
 
-    def _add_filter_to_army_query(self, army_equipment_query, filter):
-        key_words = filter.lower().split()
-        army_equipments = (
-            army_equipment_query
+    def create_army_eq_model(self, db: Session, body):
+        army_model = super().create(db, body, TypeArmyEquipmentModel)
+        return army_model
+
+    def create_other_eq_type(self, db, body):
+        other_type = super().create(db, body, TypeOtherEquipment)
+        return other_type
+
+    def create_other_eq_model(self, db: Session, body):
+        other_model = super().create(db, body, TypeOtherEquipmentModel)
+        return other_model
+
+    def create_cloth_eq_type(self, db, body):
+        cloth_eq_type = TypeClothingEquipment(name=body.name,
+                                              nameKZ=body.nameKZ)
+        cloth_type = super().create(db, cloth_eq_type, TypeOtherEquipment)
+        cloth_eq_types_models = []
+
+        for model_id in body.model_ids:
+            cloth_eq_types_models.append(
+                self.get_clothing_equipment_model_by_id(db, model_id)
+            )
+
+        cloth_type.cloth_eq_types_models = cloth_eq_types_models
+
+        db.add(cloth_type)
+        db.flush()
+        return cloth_type
+
+    def create_cloth_eq_model(self, db: Session, body):
+        cloth_model = super().create(db, body, TypeClothingEquipmentModel)
+        return cloth_model
+
+    def _get_user_clothing_type_query(self, db: Session, user_id: str):
+        return (
+            db.query(TypeClothingEquipment)
+            .join(ClothingEquipmentTypesModels)
+            .join(ClothingEquipment)
             .filter(
-                and_(func.concat(func.concat(func.lower(TypeArmyEquipment.name), ' '),
-                                 func.concat(func.lower(TypeArmyEquipment.nameKZ), ' '))
-                     .contains(name) for name in key_words)
+                ClothingEquipment.user_id == user_id
             )
         )
-        return army_equipments
 
-
-    def _add_filter_to_cloth_query(self, cloth_equipment_query, filter):
-        key_words = filter.lower().split()
-        cloth_equipments = (
-            cloth_equipment_query
-            .filter(
-                and_(func.concat(func.concat(func.lower(TypeClothingEquipment.name), ' '),
-                                 func.concat(func.lower(TypeClothingEquipment.nameKZ), ' '))
-                     .contains(name) for name in key_words)
-            )
-        )
-        return cloth_equipments
-
-    def _add_filter_to_other_query(self, other_equipment_query, filter):
-        key_words = filter.lower().split()
-        other_equipments = (
-            other_equipment_query
-            .filter(
-                and_(func.concat(func.concat(func.lower(TypeOtherEquipment.name), ' '),
-                                 func.concat(func.lower(TypeOtherEquipment.nameKZ), ' '))
-                     .contains(name) for name in key_words)
-            )
-        )
-        return other_equipments
 
 
 equipment_service = EquipmentService(Equipment)
