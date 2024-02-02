@@ -228,9 +228,7 @@ class EquipmentService(
     def create_cloth_eq_type(self, db, body):
         cloth_eq_type = TypeClothingEquipment(name=body.name,
                                               nameKZ=body.nameKZ)
-        print(cloth_eq_type)
-        cloth_type = super().create(db, cloth_eq_type, TypeOtherEquipment)
-        print(cloth_type)
+        cloth_type = super().create(db, cloth_eq_type, TypeClothingEquipment)
         cloth_eq_types_models = []
 
         for model_id in body.model_ids:
@@ -239,7 +237,6 @@ class EquipmentService(
             )
 
         cloth_type.cloth_eq_types_models = cloth_eq_types_models
-        print(cloth_type.cloth_eq_types_models)
         db.add(cloth_type)
         db.flush()
         return cloth_type
