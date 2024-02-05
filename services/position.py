@@ -65,6 +65,16 @@ class PositionService(ServiceBase[Position, PositionCreate, PositionUpdate]):
         else:
             return None
 
+    def get_type_id_by_name(self, db: Session, name: str):
+        role = db.query(PositionType).filter(
+            func.lower(PositionType.name) == name.lower()
+        ).first()
+
+        if role:
+            return role.id
+        else:
+            return None
+
     def get_lower_positions(
         self,
         db: Session,
@@ -79,6 +89,23 @@ class PositionService(ServiceBase[Position, PositionCreate, PositionUpdate]):
                      .all())
 
         return positions
+
+    def create(self, db, body):
+        position_type_id = self.get_type_id_by_name(db, body.name)
+        if position_type_id is None:
+            position_type_id = super().create(db,
+                                           PositionType(name=body.name,
+                                                        nameKZ=body.nameKZ),
+                                           PositionType).id
+        position = Position(type_id=position_type_id,
+                            max_rank_id=body.max_rank_id,
+                            category_code=body.category_code,
+                            form=body.form)
+        position = super().create(db, position, Position)
+
+        db.add(position)
+        db.flush()
+        return position
 
 
 position_service = PositionService(Position)  # type: ignore
