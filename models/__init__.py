@@ -34,7 +34,7 @@ from .coolness import Coolness, SpecialtyEnum, CoolnessStatusEnum
 from .military_unit import MilitaryUnit
 from .user_oath import UserOath
 from .user_stat import UserStat
-from .position import Position, PositionNameEnum
+from .position import Position, PositionNameEnum, PositionType
 from .personnal_reserve import PersonalReserve, ReserveEnum
 from .medical import *
 from .profile import Profile

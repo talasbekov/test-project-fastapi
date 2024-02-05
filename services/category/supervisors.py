@@ -5,7 +5,7 @@ from typing import List
 from sqlalchemy import and_, func
 from sqlalchemy.orm import Session
 
-from models import User, StaffUnit, Position, PositionNameEnum
+from models import User, StaffUnit, Position, PositionNameEnum, PositionType
 from exceptions import NotFoundException
 from .base import BaseCategory
 
@@ -17,15 +17,11 @@ class SupervisorCategory(BaseCategory):
         users = (
             db.query(User)
             .join(User.staff_unit)
-            .join(
-                Position,
-                and_(
-                    StaffUnit.position_id == Position.id,
-                    func.lower(
-                        Position.name).contains(
-                        PositionNameEnum.SUPERVISOR.value.lower()),
-                ),
-            )
+            .join(Position, StaffUnit.position_id == Position.id)
+            .join(PositionType, Position.type_id == PositionType.id)
+            .filter(func.lower(
+                        PositionType.name).contains(
+                        PositionNameEnum.SUPERVISOR.value.lower()))
             .all()
         )
         res = list(set([user.id for user in users]))
