@@ -75,6 +75,12 @@ class FormEnum(EnumBase):
     form3 = "Форма 3"
 
 
+class PositionType(NamedModel):
+
+    __tablename__ = "hr_erp_position_types"
+
+    positions = relationship("Position", back_populates="type")
+
 class Position(NamedModel):
 
     __tablename__ = "hr_erp_positions"
@@ -87,3 +93,6 @@ class Position(NamedModel):
     category_code = Column(String())
     form = Column(String(), nullable=True)
     position_order = Column(Integer)
+    type_id = Column(String(), ForeignKey("hr_erp_position_types.id"))
+    type = relationship("PositionType", back_populates="positions")
+
