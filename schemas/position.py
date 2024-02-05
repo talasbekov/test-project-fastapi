@@ -14,7 +14,7 @@ class PositionBase(NamedModel):
 
 
 class PositionCreate(PositionBase):
-    pass
+    type_id: Optional[str]
 
 
 class PositionUpdate(PositionBase):

@@ -9,7 +9,7 @@ from sqlalchemy.sql import text
 from exceptions.client import BadRequestException, NotFoundException
 from models import (StaffUnit, Position, User, EmergencyServiceHistory,
                     ArchiveStaffUnit,
-                    StaffDivision, PositionNameEnum, StaffDivisionEnum)
+                    StaffDivision, PositionNameEnum, StaffDivisionEnum, PositionType)
 from schemas import (StaffUnitCreate, StaffUnitUpdate,
                      StaffUnitFunctions, StaffUnitRead,
                      StaffUnitCreateWithPosition, StaffUnitFunctionsByPosition,
@@ -52,8 +52,7 @@ class StaffUnitService(
     def create_with_position(self, db: Session,
                              staff_unit_with_position: StaffUnitCreateWithPosition):
 
-        position = Position(name=staff_unit_with_position.name,
-                            nameKZ=staff_unit_with_position.nameKZ,
+        position = Position(type_id=staff_unit_with_position.type_id,
                             category_code=staff_unit_with_position.category_code,
                             max_rank_id=staff_unit_with_position.max_rank_id
                             )
@@ -190,7 +189,7 @@ class StaffUnitService(
         if staff_unit is not None:
             return staff_unit
         else:
-            position = db.query(Position).filter(Position.name == name).first()
+            position = db.query(Position).join(PositionType).filter(PositionType.name == name).first()
             staff_unit = self.create(
                 db,
                 StaffUnit(
