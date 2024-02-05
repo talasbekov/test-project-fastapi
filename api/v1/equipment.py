@@ -154,6 +154,18 @@ async def get_all_clothing(*,
     return equipment_service.get_all_clothing_equipments(db, skip, limit)
 
 
+@router.get("/type/clothing/{id}", dependencies=[Depends(HTTPBearer())],
+            response_model=TypeClothingEquipmentRead,
+            summary="Get Clothing Equipment type by id")
+async def get_clothing_by_id(*,
+                             db: Session = Depends(get_db),
+                             Authorize: AuthJWT = Depends(),
+                             id: str
+                             ):
+    Authorize.jwt_required()
+    return equipment_service.get_clothing_equipment_type_by_id(db, id)
+
+
 @router.get("/model/clothing/", dependencies=[Depends(HTTPBearer())],
             response_model=List[TypeClothingEquipmentModel],
             summary="Get all Clothing Equipments")
@@ -195,6 +207,18 @@ async def get_all_army(*,
     return equipment_service.get_all_army_equipments(db, skip, limit, filter)
 
 
+@router.get("/type/army/{id}", dependencies=[Depends(HTTPBearer())],
+            response_model=TypeArmyEquipmentRead,
+            summary="Get Army Equipment type by id")
+async def get_army_by_id(*,
+                         db: Session = Depends(get_db),
+                         Authorize: AuthJWT = Depends(),
+                         id: str
+                         ):
+    Authorize.jwt_required()
+    return equipment_service.get_army_equipment_type_by_id(db, id)
+
+
 @router.get("/type/other/", dependencies=[Depends(HTTPBearer())],
             response_model=TypeOtherEquipmentReadPagination,
             summary="Get all Other Equipments")
@@ -215,6 +239,18 @@ async def get_all_other(*,
     """
     Authorize.jwt_required()
     return equipment_service.get_all_other_equipments(db, skip, limit, filter)
+
+
+@router.get("/type/other/{id}", dependencies=[Depends(HTTPBearer())],
+            response_model=TypeOtherEquipmentRead,
+            summary="Get Other Equipment type by id")
+async def get_other_by_id(*,
+                       db: Session = Depends(get_db),
+                       Authorize: AuthJWT = Depends(),
+                       id: str
+                       ):
+    Authorize.jwt_required()
+    return equipment_service.get_other_equipment_type_by_id(db, id)
 
 
 @router.get("/type/all", dependencies=[Depends(HTTPBearer())],

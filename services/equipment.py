@@ -38,6 +38,33 @@ class EquipmentService(
         cls = equipment[equipment_type]
         return db.query(cls).filter(cls.id == id).first()
 
+    def get_clothing_equipment_type_by_id(self, db: Session, id: str):
+        type_cloth = (db.query(TypeClothingEquipment)
+                      .filter(TypeClothingEquipment.id == id)
+                      .first())
+        if type_cloth is None:
+            raise NotFoundException(
+                detail=f"TypeClothingEquipment with id {id} not found!")
+        return type_cloth
+
+    def get_army_equipment_type_by_id(self, db: Session, id: str):
+        type_army = (db.query(TypeArmyEquipment)
+                     .filter(TypeArmyEquipment.id == id)
+                     .first())
+        if type_army is None:
+            raise NotFoundException(
+                detail=f"TypeArmyEquipment with id {id} not found!")
+        return type_army
+
+    def get_other_equipment_type_by_id(self, db: Session, id: str):
+        type_other = (db.query(TypeOtherEquipment)
+                      .filter(TypeOtherEquipment.id == id)
+                      .first())
+        if type_other is None:
+            raise NotFoundException(
+                detail=f"TypeArmyEquipment with id {id} not found!")
+        return type_other
+
     def create(self, db: Session, body: EquipmentCreate):
         cls = equipment[body.type_of_equipment]
         if body.type_of_equipment == "clothing_equipment":
