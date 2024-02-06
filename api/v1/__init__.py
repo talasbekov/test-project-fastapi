@@ -54,9 +54,11 @@ from .bsp import *
 from .dictionary import router_dictionary as dictionary_router
 from .penalty import router as penalty_router
 from .coolness_type import router as coolness_type_router
+from .search import router as search_router
 
 router = APIRouter(prefix="/v1")
 
+router.include_router(search_router)
 router.include_router(auth_router)
 router.include_router(action_router)
 router.include_router(auto_tag_router)
