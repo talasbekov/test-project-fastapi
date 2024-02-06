@@ -10,6 +10,7 @@ import base64
 from core import configs
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
+import pytz
 
 from typing import List, Union, Dict, Any, Optional
 
@@ -490,7 +491,6 @@ class HrDocumentService(
                          user_id: str,
                          role: str,
                          parent_id: str = None):
-        print("0.1")
         template = hr_document_template_service.get_by_id(
             db, body.hr_document_template_id
         )
@@ -498,13 +498,10 @@ class HrDocumentService(
         step: HrDocumentStep = hr_document_step_service.get_initial_step_for_template(
             db, template.id
         )
-        print("0.2")
         all_steps: list = hr_document_step_service.get_all_by_document_template_id(
             db, template.id, False
         )
-        print("0.3")
         notifier_id = body.document_step_users_ids.get('-1', None)
-        print("0.4")
         users = [v for _, v in body.document_step_users_ids.items()]
         if notifier_id:
             users.remove(notifier_id)
@@ -512,7 +509,6 @@ class HrDocumentService(
         users_in_revision = self._exists_user_document_in_revision(
             db, body.hr_document_template_id, body.user_ids)
         revision_doc = None
-        print(1)
         if users_in_revision:
             for user in users_in_revision:
                 doc = (db.query(HrDocument)
@@ -1856,22 +1852,24 @@ class HrDocumentService(
         for contract in expiring_contracts:
             if contract.contract_id == contract_id:
                 user_id = contract.user_id
+          
+                # leader_id = user_service.get_by_id(db, user_id).staff_unit.staff_division.leader_id
+
+                leader_id = "dfd0a5ec-a23a-47af-8f1c-fb5e4813f570" # for testing Kozenko's id, change later!!!
                 print(user_id)
-                leader_id = user_service.get_by_id(db, user_id).staff_unit.staff_division.leader_id
-                print(100)
                 print(leader_id)
+                due_date = datetime.now(pytz.timezone('Etc/GMT-6')) + relativedelta(years=years)
                 new_document = HrDocumentInit(
                     hr_document_template_id="073121d7-87dd-4d72-b4d8-272acdce9d53",
                     user_ids=[user_id],
                     document_step_users_ids={100:leader_id},
                     parent_id=None,
-                    due_date=datetime.now() + relativedelta(years=years),
+                    due_date = due_date,
                     properties=properties
                 )
-                # return contract
-                print(0)
+     
                 document = await self.initialize(db, new_document, user_id, role)
-                print("success")
+           
                 return document
         return None
     
