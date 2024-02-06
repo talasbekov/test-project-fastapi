@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from typing import List, Union, Dict, Any, Optional
 from utils import get_access_token_by_user_id
 from core import get_db
-from models import LanguageEnum
+from models import LanguageEnum, ContractType
 from schemas import (HrDocumentInit,
                      HrDocumentRead,
                      HrDocumentSign,
@@ -20,6 +20,7 @@ from schemas import (HrDocumentInit,
                      HrDocumentSignEcpWithIds,
                      QrRead)
 from services import hr_document_service
+from services.autotags import auto_tags
 from tasks import task_sign_document_with_certificate
 
 router = APIRouter(
@@ -143,6 +144,36 @@ async def get_all(*,
         user_id = Authorize.get_jwt_subject()
     return hr_document_service.get_all_documents(
         db, user_id, filter.lstrip().rstrip(), skip, limit)
+
+
+@router.get("/allDocuments/",
+            response_model=List[HrDocumentRead],
+            summary="Get all al HrDocuments by user")
+async def get_all(*,
+                  db: Session = Depends(get_db),
+                  Authorize: AuthJWT = Depends(),
+                  skip: int = 0,
+                  limit: int = 10,
+                  ):
+    """
+        Get all HrDocuments
+
+        - **skip**: int - The number of HrDocuments to skip
+            before returning the results.
+            This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of HrDocuments to return in the response.
+            This parameter is optional and defaults to 10.
+        - **filter**: str - The value which returns filtered results.
+            This parameter is optional and defaults to None
+        - **user_id**: UUID - optional defaults to authorized user.
+            User ID of the subject of the HrDocument.
+
+    """
+    Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
+    return hr_document_service.get_all_documents_of_user(
+        db, user_id, skip, limit)
+
 
 @router.post("/ecp_sign_all/", status_code=status.HTTP_200_OK,
              summary="Sign HrDocument with ecp")
@@ -562,3 +593,37 @@ async def get_qrs(*,
     """
     Authorize.jwt_required()
     return hr_document_service.generate_qrs(db, id)
+
+@router.get('/generate_document_for_expiring/{contract_id}/{contract_type_id}/', summary="Generate draft for expiring contracts")
+async def generate_document_for_expiring(*,
+                                      db: Session = Depends(get_db),
+                                      Authorize: AuthJWT = Depends(),
+                                      contract_id: str = None,
+                                      contract_type_id: str = None,
+                                      ):
+    """
+        Generate draft for expiring contracts
+
+    """
+    
+    Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
+    properties = {}
+    contract = db.query(ContractType).filter(ContractType.id == contract_type_id).all()[0]
+    contract_new = {}
+    contract_new['name'] = contract.name
+    contract_new['nameKZ'] = contract.nameKZ
+    contract_new['value'] = contract.id
+    contract_new['auto'] = False
+    properties["contract"] = contract_new
+    years = contract.years
+    # properties["contract"] = await auto_tags.get("contract").handle(db, str(contract_id))
+    required_properties = ["father_name", "name", "officer_number", "position", "rank", "surname"]
+    for prop in required_properties:
+        # print(auto_tags.get("father").handle(db, str(user_id)))
+        properties[prop] = auto_tags.get(prop).handle(db, str(user_id))
+        
+    role = Authorize.get_raw_jwt()['role']
+    document = await hr_document_service.generate_document_for_expiring(db, contract_id, role, properties, years)
+    return document
+    # return properties

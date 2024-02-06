@@ -338,6 +338,10 @@ class StaffUnitService(
             return self._add_document_staff_function_to_pgs(db,
                                                             current_user_department,
                                                             body.staff_function_ids)
+        elif body.position.lower() == 'все сотрудники':
+            return self._add_document_staff_function_to_all(db,
+                                                            current_user_department,
+                                                            body.staff_function_ids)
         else:
             raise BadRequestException('Должность не найдена')
 
@@ -540,6 +544,23 @@ class StaffUnitService(
                                                  staff_function_ids=staff_function_ids)
             self.add_document_staff_function(db, staff_functions)
 
+    def _add_document_staff_function_to_all(self,
+                                            db: Session,
+                                            department: str,
+                                            staff_function_ids: list):
+    
+        # Получаем штатную единицу пгс
+        staff_units = db.query(self.model).all()
+
+        if staff_units is None:
+            raise BadRequestException(
+                'ай ай ай стафф юнитов не существует вообще че делать???')
+
+        # Добавляем должностную функцию пгс
+        for staff_unit in staff_units:
+            staff_functions = StaffUnitFunctions(staff_unit_id=staff_unit.id,
+                                                 staff_function_ids=staff_function_ids)
+            self.add_document_staff_function(db, staff_functions)
 
     def _add_filter_to_query(self, staff_unit_query, filter):
         key_words = filter.lower().split()

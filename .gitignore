@@ -28,7 +28,7 @@ share/python-wheels/
 MANIFEST
 instantclient_19_21/
 timezones/
-
+instantclient_19_16
 # PyInstaller
 *.manifest
 *.spec

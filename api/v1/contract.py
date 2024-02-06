@@ -141,3 +141,16 @@ async def delete(*,
     """
     Authorize.jwt_required()
     contract_service.remove(db, str(id))
+
+@router.post("/types", status_code=status.HTTP_200_OK,
+             dependencies=[Depends(HTTPBearer())],
+             summary="Create contract type")
+async def create_contract_type(*,
+                               db: Session = Depends(get_db),
+                               isFinite: bool,
+                               years: int,
+                               name: str,
+                               nameKZ: str,
+                               Authorize: AuthJWT = Depends()
+                               ):
+    return contract_service.create_contract_type(db, isFinite, years, name, nameKZ)
