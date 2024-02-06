@@ -8,7 +8,7 @@ class ContractType(NamedModel):
     __tablename__ = "hr_erp_contract_types"
     is_finite = Column(Boolean, nullable=False)
     years = Column(Integer, nullable=False)
-
+    
     contracts = relationship("Contract", back_populates="type")
 
 

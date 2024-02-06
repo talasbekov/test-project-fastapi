@@ -41,6 +41,13 @@ class ContractService(ServiceBase[Contract, ContractCreate, ContractUpdate]):
         total = db.query(ContractType).count()
 
         return {'total': total, 'objects': contract_types}
+    
+    def create_contract_type(self, db: Session, isFinite: bool, years: int, name: str, nameKZ: str):
+        contract_type = ContractType(id=str(uuid.uuid4()), is_finite=isFinite, years=years, name=name, nameKZ=nameKZ)
+        db.add(contract_type)
+        db.commit()
+        db.refresh(contract_type)
+        return contract_type
 
     def get_object(self, db: Session, id: str, type: str):
         if type == 'write':
