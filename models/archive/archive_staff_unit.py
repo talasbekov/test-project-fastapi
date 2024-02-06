@@ -58,7 +58,6 @@ class ArchiveStaffUnit(Model):
     # Relationships
     position = relationship(
         "Position",
-        cascade="all,delete",
         foreign_keys=[position_id],
         passive_deletes=True)
     user = relationship("User", foreign_keys=user_id)
@@ -90,7 +89,6 @@ class ArchiveStaffUnit(Model):
         nullable=False)
     actual_position = relationship(
         "Position",
-        cascade="all,delete",
         foreign_keys=[actual_position_id],
         lazy="joined")
 @listens_for(ArchiveStaffUnit, 'before_update')
