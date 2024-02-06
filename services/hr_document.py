@@ -320,6 +320,29 @@ class HrDocumentService(
         )
         return self._return_correctly(db, documents, user)
 
+    def get_all_documents_of_user(
+            self, db: Session, user_id: str, skip: int, limit: int
+    ):
+        user = user_service.get_by_id(db, user_id)
+        print(user_id)
+        documents = (
+            db.query(self.model)
+            .join(self.model.hr_document_infos)
+            .filter(
+                HrDocumentInfo.signed_by_id == user.id,
+                HrDocumentInfo.assigned_to_id == user.id,
+            )
+        )
+
+        documents = (
+            documents
+            .order_by(self.model.created_at.asc())
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
+        return self._return_correctly(db, documents, user)
+
     def get_draft_documents(self,
                             db: Session,
                             user_id: str,
