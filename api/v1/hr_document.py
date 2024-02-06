@@ -144,6 +144,36 @@ async def get_all(*,
     return hr_document_service.get_all_documents(
         db, user_id, filter.lstrip().rstrip(), skip, limit)
 
+
+@router.get("/allDocuments/",
+            response_model=List[HrDocumentRead],
+            summary="Get all al HrDocuments by user")
+async def get_all(*,
+                  db: Session = Depends(get_db),
+                  Authorize: AuthJWT = Depends(),
+                  skip: int = 0,
+                  limit: int = 10,
+                  ):
+    """
+        Get all HrDocuments
+
+        - **skip**: int - The number of HrDocuments to skip
+            before returning the results.
+            This parameter is optional and defaults to 0.
+        - **limit**: int - The maximum number of HrDocuments to return in the response.
+            This parameter is optional and defaults to 10.
+        - **filter**: str - The value which returns filtered results.
+            This parameter is optional and defaults to None
+        - **user_id**: UUID - optional defaults to authorized user.
+            User ID of the subject of the HrDocument.
+
+    """
+    Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
+    return hr_document_service.get_all_documents_of_user(
+        db, user_id, skip, limit)
+
+
 @router.post("/ecp_sign_all/", status_code=status.HTTP_200_OK,
              summary="Sign HrDocument with ecp")
 def sign_ecp_all(*,
