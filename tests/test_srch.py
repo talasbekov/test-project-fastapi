@@ -7,21 +7,18 @@ es = Elasticsearch(
 )
 
 query = {
-    'from': 0,
-    'size': 10,
     'query': {
-        'bool': {
-            'must': [
-                {'match_phrase_prefix': {'LAST_NAME': 'А'}}, 
-            ]
-        }
+         # get all documents
+        'match_all': {}
+
      
     }
 }
 
 # Search the index
 res = es.search(index='users-index', body=query)
-
+from pprint import pprint
 # Print the matched documents
 for hit in res['hits']['hits']:
-    print(hit['_source'])
+    pprint(hit['_source'])
+    print('---' * 10)
