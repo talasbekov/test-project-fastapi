@@ -1,3 +1,4 @@
+import datetime
 from typing import Any
 
 from sqlalchemy.orm import Session, Query
@@ -28,6 +29,7 @@ class DeletePenaltyHandler(BaseHandler):
 
         history.document_link = configs.GENERATE_IP + str(document.id)
         document.old_history_id = history.id
+        history.date_to = datetime.datetime.now()
 
         db.add(user)
         db.add(history)
