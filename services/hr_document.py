@@ -1810,8 +1810,8 @@ class HrDocumentService(
                 context["reg_number"] = document.reg_number
             if document.signed_at is not None:
                 context["signed_at"] = document.signed_at.strftime("%Y-%m-%d")
-        except Exception:
-            raise BadRequestException(detail='Ошибка в шаблоне!')
+        except Exception as e:
+            raise BadRequestException(detail=f'Ошибка в шаблоне!{e}')
         last_step = hr_document_step_service.get_last_step_document_template_id(
             db, document.hr_document_template_id)
 
