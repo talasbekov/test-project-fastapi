@@ -72,7 +72,7 @@ class IncreaseRankHandler(BaseHandler):
 
     def get_args(self, action, properties):
         try:
-            rank_id = properties[action["rank"]["tagname"]]["value"]
+            rank_id = properties["rank"]["value"]
             new_rank_id = properties["new_rank"]["value"]
         except KeyError:
             raise BadRequestException(
