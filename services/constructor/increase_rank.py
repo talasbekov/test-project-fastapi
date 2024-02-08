@@ -21,7 +21,7 @@ class IncreaseRankHandler(BaseHandler):
             props: dict,
             document: HrDocument,
     ):
-        rank_id, _ = self.get_args(action, props)
+        rank_id = self.get_args(action, props)
         rank = rank_service.get_by_id(db, rank_id)
 
         self.handle_validation(
@@ -46,7 +46,7 @@ class IncreaseRankHandler(BaseHandler):
         props: dict,
         document: HrDocument,
     ):
-        rank_id, _ = self.get_args(action, props)
+        rank_id = self.get_args(action, props)
         rank = rank_service.get_by_id(db, rank_id)
         user_rank = rank_service.get_by_id(db, user.rank_id)
 
@@ -72,20 +72,19 @@ class IncreaseRankHandler(BaseHandler):
 
     def get_args(self, action, properties):
         try:
-            rank_id = properties["rank"]["value"]
-            new_rank_id = properties["new_rank"]["value"]
+            rank_id = properties[action["rank"]["tagname"]]["value"]
         except KeyError:
             raise BadRequestException(
                 f"Rank is not defined for this action: {self.__handler__}")
-        return rank_id, new_rank_id
+        return rank_id
 
     def handle_response(self, db: Session,
                         user: User,
                         action: dict,
                         properties: dict,
                         ):
-        old_rank_id, new_rank_id = self.get_args(action, properties)
-        old_rank = rank_service.get_by_id(db, old_rank_id)
+        new_rank_id = self.get_args(action, properties)
+        old_rank = rank_service.get_by_id(db, user.rank_id)
         new_rank = rank_service.get_by_id(db, new_rank_id)
         return {'old_rank': old_rank, 'new_rank': new_rank}
 
