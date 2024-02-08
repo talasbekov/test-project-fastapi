@@ -84,8 +84,20 @@ class IncreaseRankHandler(BaseHandler):
                         properties: dict,
                         ):
         new_rank_id = self.get_args(action, properties)
-        old_rank = rank_service.get_by_id(db, user.rank_id)
         new_rank = rank_service.get_by_id(db, new_rank_id)
+        if user.rank_id != new_rank_id:
+            old_rank_id = user.rank_id
+            old_rank_name = user.rank.name
+        else:
+            old_rank_hist = rank_service.find_last_finished_history(db, user.id)
+            old_rank_id = old_rank_hist.rank_id
+            old_rank_name = old_rank_hist.rank_name
+
+        if old_rank_id is None:
+            old_rank = rank_service.get_by_name(db, old_rank_name)
+        else:
+            old_rank = rank_service.get_by_id(db, old_rank_id)
+
         return {'old_rank': old_rank, 'new_rank': new_rank}
 
 

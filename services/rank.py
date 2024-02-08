@@ -70,6 +70,17 @@ class RankService(ServiceBase[Rank, RankCreate, RankUpdate]):
             .first()
         )
 
+    def find_last_finished_history(self, db: Session, user_id: str):
+        return (
+            db.query(RankHistory)
+            .filter(
+                RankHistory.user_id == user_id,
+            )
+            .order_by(RankHistory.date_from.desc())
+            .offset(1)
+            .first()
+        )
+
     def get_max_rank(self, db: Session):
         return (
             db.query(Rank).order_by(Rank.rank_order.desc()).limit(1).first()
