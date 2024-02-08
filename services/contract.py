@@ -36,7 +36,11 @@ class ContractService(ServiceBase[Contract, ContractCreate, ContractUpdate]):
             contract_types = add_filter_to_query(contract_types, filter, ContractType)
 
         contract_types = [ContractTypeRead.from_orm(i).dict() for i in
-                          contract_types.offset(skip).limit(limit).all()]
+                          contract_types
+                          .offset(skip)
+                          .limit(limit)
+                          .order_by(ContractType.years.desc())
+                          .all()]
 
         total = db.query(ContractType).count()
 
