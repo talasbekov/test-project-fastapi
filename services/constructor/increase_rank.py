@@ -73,7 +73,7 @@ class IncreaseRankHandler(BaseHandler):
     def get_args(self, action, properties):
         try:
             rank_id = properties[action["rank"]["tagname"]]["value"]
-            new_rank_id = properties[action["rank"]["tagname"]]["value"]
+            new_rank_id = properties[action["new_rank"]["tagname"]]["value"]
         except KeyError:
             raise BadRequestException(
                 f"Rank is not defined for this action: {self.__handler__}")
