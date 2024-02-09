@@ -11,7 +11,7 @@ from .vehicle_type import VehicleTypeRead
 
 
 class AbroadTravelBase(Model):
-    vehicle_type_id: str
+    vehicle_type_id: Optional[str]
     destination_country_id: str
     date_from: datetime
     date_to: Optional[datetime]
