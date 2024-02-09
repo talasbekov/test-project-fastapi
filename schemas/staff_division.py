@@ -18,6 +18,11 @@ class StaffDivisionBase(NamedModel):
     type_id: Optional[str] = Field(None, nullable=True)
     staff_division_number: Optional[int] = Field(None, nullable=True)
 
+class StaffDivisionBaseMinimized(NamedModel):
+    parent_group_id: Optional[str] = Field(None, nullable=True)
+    type_id: Optional[str] = Field(None, nullable=True)
+    staff_division_number: Optional[int] = Field(None, nullable=True)
+
 
 class StaffDivisionCreate(StaffDivisionBase):
     description: Optional[Any]
@@ -241,7 +246,7 @@ class StaffDivisionRead(StaffDivisionBase):
     class Config:
         orm_mode = True
 
-class StaffDivisionReadMinimized(StaffDivisionBase):
+class StaffDivisionReadMinimized(StaffDivisionBaseMinimized):
     id: Optional[str]
     children: Optional[List['StaffDivisionChildReadMinimized']]
     type: Optional[StaffDivisionTypeRead]
