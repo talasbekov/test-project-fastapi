@@ -15,10 +15,11 @@ class PositionBase(NamedModel):
 
 class PositionCreate(PositionBase):
     type_id: Optional[str]
+    position_order: Optional[int]
 
 
 class PositionUpdate(PositionBase):
-    pass
+    position_order: Optional[int]
 
 
 class PositionRead(PositionBase, ReadModel):
