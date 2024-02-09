@@ -83,6 +83,22 @@ async def get_division_parents_by_id(*,
     Authorize.jwt_required()
     return staff_division_service.get_division_parents_by_id(db, str(id))
 
+@router.get("/division_parents_minimized/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=StaffDivisionRead,
+            summary="Get Staff Division and all his parents with fewer parameters")
+async def get_division_parents_by_id_minimized(*,
+                                     db: Session = Depends(get_db),
+                                     id: str,
+                                     Authorize: AuthJWT = Depends()
+                                     ):
+    """
+       Get all Staff Divisions
+
+       - **id**: uuid - The id of staff division. This parameter is required.
+   """
+    Authorize.jwt_required()
+    return staff_division_service.get_division_parents_by_id_minimized(db, str(id))
+
 
 @router.post("", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],

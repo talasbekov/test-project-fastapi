@@ -13,6 +13,7 @@ from models import (StaffDivision, StaffDivisionEnum, StaffDivisionType, Archive
 from schemas import (
     StaffDivisionCreate,
     StaffDivisionRead,
+    StaffDivisionReadMinimized,
     StaffDivisionUpdate,
     StaffDivisionUpdateParentGroup,
     StaffDivisionVacancyRead,
@@ -280,6 +281,31 @@ class StaffDivisionService(
                     staff_unit.user_replacing.staff_unit.requirements = json.loads(
                         staff_unit.user_replacing.staff_unit.requirements)
         res = StaffDivisionRead.from_orm(staff_division)
+        db.rollback()
+        return res
+    
+    def get_division_parents_by_id_minimized(self, db: Session, staff_division_id: str):
+
+        staff_division = self.get_by_id(db, staff_division_id)
+
+        parent_id = staff_division.parent_group_id
+
+        prev_staff_division = staff_division
+        staff_division.children = []
+        while parent_id is not None:
+            staff_division = self.get_by_id(db, parent_id)
+            staff_division.children = [prev_staff_division]
+            prev_staff_division = staff_division
+            parent_id = staff_division.parent_group_id
+
+        for staff_unit in staff_division.staff_units:
+            if isinstance(staff_unit.requirements, str):
+                staff_unit.requirements = json.loads(staff_unit.requirements)
+            if staff_unit.user_replacing:
+                if isinstance(staff_unit.user_replacing.staff_unit.requirements, str):
+                    staff_unit.user_replacing.staff_unit.requirements = json.loads(
+                        staff_unit.user_replacing.staff_unit.requirements)
+        res = StaffDivisionReadMinimized.from_orm(staff_division)
         db.rollback()
         return res
 

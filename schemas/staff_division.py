@@ -170,6 +170,7 @@ class StaffUnitMatreshkaOptionReadPagination(BaseModel):
 #         orm_mode = True
 
 
+
 class StaffDivisionChildRead(NamedModel):
     parent_group_id: Optional[str] = Field(None, nullable=True)
     is_combat_unit: Optional[bool] = Field(None, nullable=True)
@@ -199,6 +200,22 @@ class StaffDivisionChildRead(NamedModel):
     class Config:
         orm_mode = True
 
+class StaffDivisionChildReadMinimized(NamedModel):
+    parent_group_id: Optional[str] = Field(None, nullable=True)
+    staff_division_number: Optional[int] = Field(None, nullable=True)
+    id: Optional[str]
+    children: Optional[List]
+    type: Optional[StaffDivisionTypeRead]
+
+    @validator('children')
+    def validate_children(cls, children):
+        if children == []:
+            return None
+        else:
+            return []
+    class Config:
+        orm_mode = True
+
 
 class StaffDivisionRead(StaffDivisionBase):
     id: Optional[str]
@@ -221,6 +238,20 @@ class StaffDivisionRead(StaffDivisionBase):
         else:
             return staff_units
 
+    class Config:
+        orm_mode = True
+
+class StaffDivisionReadMinimized(StaffDivisionBase):
+    id: Optional[str]
+    children: Optional[List['StaffDivisionChildReadMinimized']]
+    type: Optional[StaffDivisionTypeRead]
+
+    @validator('children')
+    def validate_children(cls, children):
+        if children == []:
+            return None
+        else:
+            return children
     class Config:
         orm_mode = True
 
