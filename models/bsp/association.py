@@ -7,7 +7,8 @@ schedule_year_s_d = Table(
     "hr_erp_schedule_year_s_d",
     Base.metadata,
     Column("schedule_year_id", ForeignKey("hr_erp_schedule_years.id")),
-    Column("staff_division_id", ForeignKey("hr_erp_staff_divisions.id")),
+    Column("staff_division_id", ForeignKey("hr_erp_staff_divisions.id",
+                                           ondelete="CASCADE")),
 )
 
 schedule_year_users = Table(
