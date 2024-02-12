@@ -1853,16 +1853,16 @@ class HrDocumentService(
             if contract.contract_id == contract_id:
                 user_id = contract.user_id
           
-                # leader_id = user_service.get_by_id(db, user_id).staff_unit.staff_division.leader_id
-
-                leader_id = "dfd0a5ec-a23a-47af-8f1c-fb5e4813f570" # for testing Kozenko's id, change later!!!
+                staff_division = user_service.get_by_id(db, user_id).staff_unit.staff_division
+                leader_id = user_service.get_leader_id(db, staff_division.id)
+                pgs = "dfd0a5ec-a23a-47af-8f1c-fb5e4813f570" # for testing Kozenko's id, change later!!!
                 print(user_id)
                 print(leader_id)
                 due_date = datetime.now(pytz.timezone('Etc/GMT-6')) + relativedelta(years=years)
                 new_document = HrDocumentInit(
                     hr_document_template_id="073121d7-87dd-4d72-b4d8-272acdce9d53",
                     user_ids=[user_id],
-                    document_step_users_ids={100:leader_id},
+                    document_step_users_ids={100:pgs, 3:leader_id},
                     parent_id=None,
                     due_date = due_date,
                     properties=properties
