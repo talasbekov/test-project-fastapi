@@ -88,17 +88,18 @@ async def docs_redirect():
     return RedirectResponse(url="/docs")
 
 
-@app.websocket("/ws")
+@app.websocket("/ws/{user_id}")
 async def websocket_endpoint(
     websocket: WebSocket,
-    token: str = Query(...),
-    Authorize: AuthJWT = Depends(),
+    user_id: str,
+    # token: str = Query(...),
+    # Authorize: AuthJWT = Depends(),
 ):
     try:
-        Authorize.jwt_required("websocket", token)
-        user_id = Authorize.get_raw_jwt(token)['sub']
+        # Authorize.jwt_required("websocket", token)
         if user_id is None:
-            raise AuthJWTException()
+            # raise AuthJWTException()
+            return JSONResponse(status_code=400, content={"detail": "user_id is required"})
     except AuthJWTException:
         await websocket.close()
     await websocket.accept()
