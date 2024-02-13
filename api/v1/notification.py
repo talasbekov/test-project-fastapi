@@ -32,15 +32,7 @@ async def get_cookie_or_token(
         raise WebSocketException(code=status.WS_1008_POLICY_VIOLATION)
     return session or token
 
-@router.websocket("/ws/notifications/{user_id}")
-async def websocket_notification_endpoint(websocket: WebSocket, user_id: str):
-    await manager.connect(websocket, user_id)
-    try:
-        while True:
-            data = await websocket.receive_text()
 
-    except WebSocketDisconnect:
-        manager.disconnect(user_id, websocket)
 """
 1. Check expiring documents with celery tasks
 2. Create notifications in db for expiring documents 
