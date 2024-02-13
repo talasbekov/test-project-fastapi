@@ -44,8 +44,8 @@ from .staff_division_type import (
     StaffDivisionTypeCreate,
     StaffDivisionTypeRead,
     StaffDivisionTypeUpdate)
-from .staff_division import (StaffDivisionCreate, StaffDivisionRead, StaffDivisionReadMinimized, StaffDivisionChildReadMinimized,
-                             StaffDivisionStepRead, StaffDivisionUpdate,
+from .staff_division import (StaffDivisionCreate, StaffDivisionRead, StaffDivisionReadMinimized, StaffDivisionChildReadMinimized, StaffDivisionBaseMinimized,
+                             StaffDivisionStepRead, StaffDivisionUpdate, StaffDivisionChildReadSchedule, StaffDivisionReadSchedule, StaffDivisionBaseSchedule, StaffUnitReadSchedule, UserReadSchedule,
                              StaffDivisionUpdateParentGroup,
                              StaffDivisionOptionRead, StaffUnitDivisionRead,
                              StaffDivisionReadWithoutStaffUnit,

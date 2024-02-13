@@ -3,7 +3,7 @@ import json
 from typing import List, Dict, Any, Optional
 
 from sqlalchemy.orm import Session
-from sqlalchemy import distinct, func, select
+from sqlalchemy import distinct, func, select, text
 
 
 from exceptions import BadRequestException, NotFoundException
@@ -19,7 +19,10 @@ from schemas import (
     StaffDivisionVacancyRead,
     StaffDivisionOptionRead,
     StaffDivisionOptionChildRead,
-    StaffDivisionMatreshkaStepRead
+    StaffDivisionMatreshkaStepRead, 
+    StaffDivisionReadSchedule,
+    StaffDivisionBaseSchedule,
+    StaffDivisionChildReadSchedule
 )
 
 from .base import ServiceBase
@@ -46,6 +49,14 @@ class StaffDivisionService(
             if isinstance(child.description, str):
                 child.description = json.loads(child.description)
         return group
+    
+    def get_by_id_schedule(self, db: Session, id: str) -> StaffDivision:
+        group = super().get(db, id)
+        if group is None:
+            raise NotFoundException(
+                f"StaffDivision with id: {id} is not found!")
+        res = StaffDivisionReadSchedule.from_orm(group)
+        return res
 
     def get_one_level_by_id(self, db: Session, id: Optional[str]):
         if id == 'None':
@@ -154,8 +165,52 @@ class StaffDivisionService(
             StaffDivision.parent_group_id == None
         ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
         return parents
+    
 
     def get_all_except_special(self,
+                               db: Session,
+                               skip: int,
+                               limit: int) -> List[StaffDivision]:
+        parents = db.query(self.model).filter(
+            StaffDivision.parent_group_id == None,
+            self.model.name != StaffDivisionEnum.SPECIAL_GROUP.value
+        ).order_by(StaffDivision.staff_division_number).offset(skip).limit(limit).all()
+        for parent in parents:
+            if isinstance(parent.description, str):
+                parent.description = json.loads(parent.description)
+            for staff_unit in parent.staff_units:
+                if isinstance(staff_unit.requirements, str):
+                    staff_unit.requirements = json.loads(
+                        staff_unit.requirements)
+                if staff_unit.user_replacing:
+                    if isinstance(staff_unit.user_replacing.staff_unit.requirements, str):
+                        staff_unit.user_replacing.staff_unit.requirements = json.loads(
+                            staff_unit.user_replacing.staff_unit.requirements)
+        return parents
+    
+    def get_all_except_special_schedule(self,
+                               db: Session,
+                               skip: int,
+                               limit: int) -> List[StaffDivision]:
+        parents = db.query(self.model).filter(
+            StaffDivision.parent_group_id == None,
+            self.model.name != StaffDivisionEnum.SPECIAL_GROUP.value
+        ).order_by(StaffDivision.staff_division_number).offset(skip).limit(limit).all()
+        # for parent in parents:
+        #     if isinstance(parent.description, str):
+        #         parent.description = json.loads(parent.description)
+        #     for staff_unit in parent.staff_units:
+        #         if isinstance(staff_unit.requirements, str):
+        #             staff_unit.requirements = json.loads(
+        #                 staff_unit.requirements)
+        #         if staff_unit.user_replacing:
+        #             if isinstance(staff_unit.user_replacing.staff_unit.requirements, str):
+        #                 staff_unit.user_replacing.staff_unit.requirements = json.loads(
+        #                     staff_unit.user_replacing.staff_unit.requirements)
+           
+        return [StaffDivisionReadSchedule.from_orm(parent) for parent in parents]
+    
+    def get_all_except_special_minimized(self,
                                db: Session,
                                skip: int,
                                limit: int) -> List[StaffDivision]:
@@ -337,6 +392,38 @@ class StaffDivisionService(
 
         return full_name, full_nameKZ
 
+
+    # def get_full_name2(self, db: Session, staff_division_id: str):
+    #     query = text("""
+    #         WITH parent_divisions (id, name, nameKZ, parent_group_id) AS (
+    #             SELECT id, name, nameKZ, parent_group_id
+    #             FROM staff_division
+    #             WHERE id = :staff_division_id
+    #             UNION ALL
+    #             SELECT sd.id, sd.name, sd.nameKZ, sd.parent_group_id
+    #             FROM staff_division sd
+    #             INNER JOIN parent_divisions pd ON sd.parent_group_id = pd.id
+    #         )
+    #         SELECT name, nameKZ FROM parent_divisions;
+    #     """)
+
+    #     result = db.execute(query, {"staff_division_id": staff_division_id})
+
+    #     full_name = []
+    #     full_nameKZ = []
+    #     for row in result:
+    #         full_name.append(row['name'])
+    #         full_nameKZ.append(row['nameKZ'])
+
+    #     # Reverse the lists to get the correct order from parent to child
+    #     full_name = " / ".join(full_name[::-1])
+    #     full_nameKZ = " / ".join(full_nameKZ[::-1])
+
+    #     return full_name, full_nameKZ
+
+
+
+    
     def create_from_archive(self,
                             db: Session,
                             archive_staff_division: ArchiveStaffDivision,

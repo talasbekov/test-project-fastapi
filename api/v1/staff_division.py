@@ -7,9 +7,9 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import (StaffDivisionCreate, StaffDivisionRead,
+from schemas import (StaffDivisionCreate, StaffDivisionReadMinimized, StaffDivisionRead,
                      StaffDivisionStepRead, StaffDivisionUpdate,
-                     StaffDivisionUpdateParentGroup, StaffDivisionTypeRead,
+                     StaffDivisionUpdateParentGroup, StaffDivisionTypeRead, StaffDivisionReadSchedule,
                      StaffDivisionMatreshkaStepRead, StaffDivisionNamedModel)
 from services import staff_division_service, staff_division_type_service
 
@@ -22,9 +22,31 @@ router = APIRouter(
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[StaffDivisionRead],
+            # response_model=List[StaffDivisionRead],
             summary="Get all Staff Divisions")
 async def get_all(*,
+                  db: Session = Depends(get_db),
+                  skip: int = 0,
+                  limit: int = 100,
+                  Authorize: AuthJWT = Depends()
+                  ):
+    """
+        Get all Staff Divisions
+
+       - **skip**: int - The number of staff divisions
+            to skip before returning the results.
+            This parameter is optional and defaults to 0.
+       - **limit**: int - The maximum number of staff divisions
+            to return in the response.
+            This parameter is optional and defaults to 100.
+    """
+    Authorize.jwt_required()
+    return staff_division_service.get_all_except_special(db, skip, limit)
+
+@router.get("/schedule/", dependencies=[Depends(HTTPBearer())],
+            # response_model=List[StaffDivisionRead],
+            summary="Get all Staff Divisions")
+async def get_all_schedule(*,
                   db: Session = Depends(get_db),
                   skip: int = 0,
                   limit: int = 100,
@@ -84,7 +106,7 @@ async def get_division_parents_by_id(*,
     return staff_division_service.get_division_parents_by_id(db, str(id))
 
 @router.get("/division_parents_minimized/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=StaffDivisionRead,
+            response_model=StaffDivisionReadMinimized,
             summary="Get Staff Division and all his parents with fewer parameters")
 async def get_division_parents_by_id_minimized(*,
                                      db: Session = Depends(get_db),
@@ -135,6 +157,22 @@ async def get_by_id(*,
     """
     Authorize.jwt_required()
     return staff_division_service.get_by_id(db, str(id))
+
+@router.get("/schedule/{id}/", dependencies=[Depends(HTTPBearer())],
+            # response_model=StaffDivisionReadSchedule,
+            summary="Get Staff Division by id")
+async def get_by_id_schedule(*,
+                    db: Session = Depends(get_db),
+                    id: str,
+                    Authorize: AuthJWT = Depends()
+                    ):
+    """
+        Get Staff Division by id
+
+        - **id**: UUID - required
+    """
+    Authorize.jwt_required()
+    return staff_division_service.get_by_id_schedule(db, str(id))
 
 
 @router.get("/get-department-of/{id}/", dependencies=[Depends(HTTPBearer())],
