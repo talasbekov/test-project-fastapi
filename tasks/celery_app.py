@@ -42,10 +42,10 @@ app.conf.beat_schedule = {
         'schedule': crontab(minute=0, hour=0, day_of_month='1', month_of_year='1'),
         'args': (SurveyRepeatTypeEnum.EVERY_YEAR.value,)
     },
-    # 'send_expiring_documents_notifications': {
-    #     'task': 'tasks.celery_app.check_expiring_documents',
-    #     'schedule': crontab(minute='*'),
-    # }
+    'send_expiring_documents_notifications': {
+        'task': 'tasks.celery_app.check_expiring_documents',
+        'schedule': crontab(minute='*'),
+    }
 
 }
 
