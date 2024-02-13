@@ -14,6 +14,7 @@ from .equipment import (Equipment,
 from .event import Event
 from .hr_document_status import HrDocumentStatus
 from .hr_document import HrDocument, HrDocumentStatusEnum
+from .hr_document_users import HrDocumentUsers
 from .hr_document_info import HrDocumentInfo
 from .hr_document_step import HrDocumentStep
 from .hr_document_template import HrDocumentTemplate, SubjectType, LanguageEnum, HrDocumentTemplateEnum

@@ -455,6 +455,8 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             tactical_training=100,
             shooting_training=100,
         )
+        
+        
 
         history_service_detail_read = HistoryServiceDetailRead(
             holidays=holidays,
@@ -472,6 +474,17 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             general_information=general_information,
             service_id_info=service_id_info
         )
+        additional_emergency_length = {"years":0, "months":0, "days":0}
+        for experience in history_service_detail_read.experience:
+            if experience.is_credited:
+                additional_emergency_length["years"] += experience.length_of_service["years"]
+                additional_emergency_length["months"] += experience.length_of_service["months"]
+                additional_emergency_length["days"] += experience.length_of_service["days"]
+
+        history_service_detail_read.emergency_contracts[0].length_of_service["years"] += additional_emergency_length["years"]
+        history_service_detail_read.emergency_contracts[0].length_of_service["months"] += additional_emergency_length["months"]
+        history_service_detail_read.emergency_contracts[0].length_of_service["days"] += additional_emergency_length["days"]
+
         history_dict = HistoryServiceDetailRead.from_orm(
             history_service_detail_read).dict()
         return history_dict
