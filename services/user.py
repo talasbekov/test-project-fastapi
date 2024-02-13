@@ -554,6 +554,17 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         candidates_iin = self.get_iin_by_ids(db, candidate_ids)
 
         return {'Сотрудники': users_iin, 'Кандидаты': candidates_iin}
+    
+    def get_leader_id(self, db: Session, staff_division_id: str) -> Optional[str]:
+        staff_division = db.query(StaffDivision).filter(StaffDivision.id == staff_division_id).first()
+        if staff_division is None:
+            return None
+        if staff_division.leader_id:
+            return staff_division.leader_id
+        if staff_division.parent_group_id:
+            return self.get_leader_id(db, staff_division.parent_group_id)
+        return None
+
 
 
 user_service = UserService(User)
