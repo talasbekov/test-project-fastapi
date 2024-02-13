@@ -32,6 +32,7 @@ from models import (
     HrDocument,
     HrDocumentStatusEnum,
     HrDocumentStep,
+    HrDocumentUsers,
     StaffUnit,
     User,
     DocumentStaffFunction,
@@ -850,8 +851,23 @@ class HrDocumentService(
         )
 
         self._create_notification_for_step(db, document, document.last_step)
+        self._create_notification_for_subject(db, document)
 
         return document
+    
+    def get_subject(self, db: Session, document_id: str):
+        subject = db.query(HrDocumentUsers).filter(HrDocumentUsers.document_id == document_id).first()
+        return subject
+    
+    def _create_notification_for_subject(self, db: Session, document: HrDocument):
+        subject = self.get_subject(db, document.id)
+        detailed_notification = detailed_notification_service.create(
+            db,
+            {
+                "hr_document_id": document.id,
+                "receiver_id": subject
+            }
+        )
 
     async def generate_html(self, db: Session, id: str, language: LanguageEnum):
         ans, name = await self._get_html(db, id, language)
