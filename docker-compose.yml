@@ -3,12 +3,12 @@ version: '3'
 services:
   sgo-erp-oracle:
     platform: linux/amd64
-    command: bash -c "uvicorn main:app --host 0.0.0.0 --port 8003 --log-config log.ini --workers ${NUMBER_OF_WORKERS}"
+    command: bash -c "uvicorn main:app --host 0.0.0.0 --port 8007 --log-config log.ini --workers ${NUMBER_OF_WORKERS}"
     build: .
-    container_name: sgo-erp-oracle
+    container_name: sgo-erp-oracle-test-yernar
     restart: always
     ports:
-      - "8003:8003"
+      - "8007:8007"
     volumes:
       - .:/app
     network_mode: "oracle"
