@@ -50,9 +50,10 @@ app.conf.beat_schedule = {
 }
 
 SQLALCHEMY_DATABASE_URL = f"oracle://system:Oracle123@172.20.0.2:1521/MORAL"
+SQLALCHEMY_DATABASE_URL2 = f"oracle://system:Oracle123@192.168.0.61:1521/MORAL"
 
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URL,
+    SQLALCHEMY_DATABASE_URL2,
     echo=configs.SQLALCHEMY_ECHO,
     pool_size=10
 )
