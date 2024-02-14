@@ -16,6 +16,8 @@ from services import staff_list_service, survey_service, hr_document_service, hi
 from schemas.staff_list import StaffListUserCreate, StaffListRead
 from models import UserLoggingActivity, SurveyRepeatTypeEnum
 
+from .async_task import async_task
+
 
 app = Celery('celery_app', backend='redis://redis:6379/',
              broker='amqp://rabbitmq:5672/', timezone='Asia/Almaty',
@@ -207,14 +209,14 @@ def task_sign_document_with_certificate(
             db.close()
     # return hr_documents
 
-@app.task(bind=True)
-def check_expiring_documents(self):
+@async_task(app, bind=True)
+async def check_expiring_documents(self):
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     db = SessionLocal()
     contracts = history_service.get_expiring_contracts(db)
 
     for contract in contracts:
-        asyncio.run(hr_document_service.send_expiring_notification(db, contract.user_id, contract.id))
+        await hr_document_service.send_expiring_notification(db, contract.user_id, contract.id)
     try:
         db.commit()
     except SQLAlchemyError as e:
