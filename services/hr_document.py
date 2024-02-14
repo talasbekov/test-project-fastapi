@@ -1862,7 +1862,7 @@ class HrDocumentService(
                 new_document = HrDocumentInit(
                     hr_document_template_id="073121d7-87dd-4d72-b4d8-272acdce9d53",
                     user_ids=[user_id],
-                    document_step_users_ids={100:pgs, 3:leader_id},
+                    document_step_users_ids={100:pgs},
                     parent_id=None,
                     due_date = due_date,
                     properties=properties
