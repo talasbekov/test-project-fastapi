@@ -41,7 +41,7 @@ class NotificationService(
         return db.query(Notification).filter(
             Notification.receiver_id == user_id,
             Notification.sender_type == sender_type
-        ).first() is not None 
+        ).first() is not None
 
 
 notification_service = NotificationService(Notification)
