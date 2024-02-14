@@ -208,7 +208,7 @@ def task_sign_document_with_certificate(
             db.close()
     # return hr_documents
 
-@app.task(app, bind=True)
+@app.task(bind=True)
 def check_expiring_documents(self):
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     db = SessionLocal()
