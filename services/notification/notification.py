@@ -33,7 +33,7 @@ class NotificationService(
     ):
         print(message)
         message["created_at"] = str(datetime.now())
-        await notification_manager.broadcast(json.load(message), user_id)
+        await notification_manager.broadcast(message, user_id)
         
     def notification_exists(self, db: Session, user_id: str, sender_type: str):
         return db.query(Notification).filter(
