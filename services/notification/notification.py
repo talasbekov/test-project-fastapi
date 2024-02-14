@@ -36,7 +36,7 @@ class NotificationService(
     def notification_exists(self, db: Session, user_id: str, sender_type: str):
         return db.query(Notification).filter(
             Notification.receiver_id == user_id,
-            Notification.sender_type == sender_type
+            Notification.type == sender_type
         ).first() is not None
 
 
