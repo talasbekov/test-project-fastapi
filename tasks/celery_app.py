@@ -218,7 +218,7 @@ async def check_expiring_documents():
     contracts = history_service.get_expiring_contracts(db)
     print(contracts)
     for contract in contracts:
-        await hr_document_service.send_expiring_notification(db, contract.user_id, contract.id)
+        loop.run_until_complete(hr_document_service.send_expiring_notification(db, contract.user_id, contract.id))
     try:
         db.commit()
     except SQLAlchemyError as e:
