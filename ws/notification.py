@@ -21,7 +21,7 @@ class ConnectionManager:
         ws = self.active_connections.get(user_id)
         print(message)
         if ws is not None:
-            await ws.send(message)
+            await ws.send_json(message)
 
 
 manager = ConnectionManager()
