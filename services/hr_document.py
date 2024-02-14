@@ -1887,11 +1887,11 @@ class HrDocumentService(
                     receiver_id=user_id
                 )
             )
-            message = {
+            message_to_notifier = {
                 "sender_type": sender_type,
                 "message": message
             }
-            await notification_service.send_message(db, message, user_id)
+            await notification_service.send_message(db, message_to_notifier, user_id)
             return "Success"
         else:
             return "Уведомление уже было отправлено!"
