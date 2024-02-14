@@ -1,12 +1,12 @@
 from functools import wraps
 from celery import Celery, Task
-from typing import Any, Callable, Coroutine, ParamSpec, TypeVar
+from typing import Any, Callable, Coroutine
 from asgiref import sync
 
 try:
-    from typing import ParamSpec
+    from typing import ParamSpec, TypeVar
 except ImportError:
-    from typing_extensions import ParamSpec
+    from typing_extensions import ParamSpec, TypeVar
 
 
 _P = ParamSpec("_P")
