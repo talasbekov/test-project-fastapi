@@ -1917,7 +1917,6 @@ class HrDocumentService(
                 "sender_type": str(sender_type),
                 "message": message
             }
-            print(message_to_notifier)
             await notification_service.send_message(db, message_to_notifier, user_id)
             return "Success"
         else:
