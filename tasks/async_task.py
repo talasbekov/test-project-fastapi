@@ -3,6 +3,11 @@ from celery import Celery, Task
 from typing import Any, Callable, Coroutine, ParamSpec, TypeVar
 from asgiref import sync
 
+try:
+    from typing import ParamSpec
+except ImportError:
+    from typing_extensions import ParamSpec
+
 
 _P = ParamSpec("_P")
 _R = TypeVar("_R")
