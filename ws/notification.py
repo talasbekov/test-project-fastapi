@@ -17,7 +17,7 @@ class ConnectionManager:
             log.error(e)
         return user_id
     
-    async def broadcast(self, message:str, user_id: str):
+    async def broadcast(self, message:dict, user_id: str):
         ws = self.active_connections.get(user_id)
         print(message)
         if ws is not None:
