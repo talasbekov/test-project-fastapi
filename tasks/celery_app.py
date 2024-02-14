@@ -1,6 +1,7 @@
 import datetime
 import pickle
 import logging
+import asyncio
 
 from celery import Celery
 from celery.schedules import crontab
@@ -206,13 +207,13 @@ def task_sign_document_with_certificate(
     # return hr_documents
 
 @app.task(bind=True)
-async def check_expiring_documents(self):
+def check_expiring_documents(self):
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     db = SessionLocal()
     contracts = history_service.get_expiring_contracts(db)
 
     for contract in contracts:
-        await hr_document_service.send_expiring_notification(db, contract.user_id, contract.id)
+        asyncio.run(hr_document_service.send_expiring_notification(db, contract.user_id, contract.id))
     try:
         db.commit()
     except SQLAlchemyError as e:
