@@ -16,7 +16,6 @@ from services import staff_list_service, survey_service, hr_document_service, hi
 from schemas.staff_list import StaffListUserCreate, StaffListRead
 from models import UserLoggingActivity, SurveyRepeatTypeEnum
 
-from .async_task import async_task
 
 
 app = Celery('celery_app', backend='redis://redis:6379/',
@@ -55,7 +54,7 @@ app.conf.beat_schedule = {
 # SQLALCHEMY_DATABASE_URL = f"oracle://system:Oracle123@172.20.0.2:1521/MORAL"
 SQLALCHEMY_DATABASE_URL = f"oracle://system:Oracle123@192.168.0.61:1521/MORAL"
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URL2,
+    SQLALCHEMY_DATABASE_URL,
     echo=configs.SQLALCHEMY_ECHO,
     pool_size=10
 )

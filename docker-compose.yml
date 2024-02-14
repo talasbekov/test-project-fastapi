@@ -5,7 +5,7 @@ services:
     platform: linux/amd64
     command: bash -c "uvicorn main:app --host 0.0.0.0 --port 8007 --reload --log-config log.ini --workers ${NUMBER_OF_WORKERS}"
     build: .
-    container_name: sgo-erp-oracle
+    container_name: sgo-erp-oracle-test-yernar
     restart: always
     ports:
       - "8007:8007"

@@ -108,8 +108,10 @@ async def websocket_endpoint(
             return JSONResponse(status_code=400, content={"detail": "user_id is required"})
     except AuthJWTException:
         await websocket.close()
-    await websocket.accept()
-    await notification_manager.connect(websocket, user_id)
+    custom_websocket = CustomWebSocket(websocket.scope, websocket.receive, websocket.send)
+    await custom_websocket.accept()
+    
+    await notification_manager.connect(custom_websocket, user_id)
     try:
         while True:
             await websocket.receive_json()
