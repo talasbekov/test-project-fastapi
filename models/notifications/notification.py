@@ -25,7 +25,7 @@ class Notification(Model):
         nullable=False,
         default=False)
     
-    type = Column(
+    sender_type = Column(
         String(),
         nullable=True,
         default="Приказ")
