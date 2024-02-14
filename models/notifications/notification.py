@@ -25,4 +25,11 @@ class Notification(Model):
         nullable=False,
         default=False)
     
+    sender_type = Column(
+        String(),
+        nullable=True,
+        default="Приказ")
+    
+    
+    
     receiver = relationship("User", foreign_keys=[receiver_id])
