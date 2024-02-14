@@ -10,7 +10,7 @@ class ConnectionManager:
         await websocket.send_text('CONNECTED')
         return user_id
 
-    def disconnect(self, user_id: str,  websocket: WebSocket):
+    def disconnect(self, user_id: str, websocket: WebSocket):
         try:
             self.active_connections.pop(user_id)
         except KeyError as e:
