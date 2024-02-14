@@ -115,8 +115,7 @@ async def test(*,
         "sender_type": "test",
         "message": message
     }
-    message = await hr_document_service.send_expiring_notification(db, user_id, "test")
-    return await notification_service.send_message(db, message, user_id)
+    return await hr_document_service.send_expiring_notification(db, user_id, "test")
 
 @router.get("/detailed", dependencies=[Depends(HTTPBearer())],
             response_model=DetailedNotificationReadPagination,
