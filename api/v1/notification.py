@@ -108,12 +108,14 @@ async def test(*,
     """
        Test all Notifications
     """
+    from services import hr_document_service 
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
     message = {
         "sender_type": "test",
         "message": message
     }
+    message = await hr_document_service.send_expiring_notification(db, user_id, "test")
     return await notification_service.send_message(db, message, user_id)
 
 @router.get("/detailed", dependencies=[Depends(HTTPBearer())],
