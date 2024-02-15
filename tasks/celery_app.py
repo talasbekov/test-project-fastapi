@@ -16,8 +16,6 @@ from services import staff_list_service, survey_service, hr_document_service, hi
 from schemas.staff_list import StaffListUserCreate, StaffListRead
 from models import UserLoggingActivity, SurveyRepeatTypeEnum
 
-from .async_task import async_task
-
 
 app = Celery('celery_app', backend='redis://redis:6379/',
              broker='amqp://rabbitmq:5672/', timezone='Asia/Almaty',
