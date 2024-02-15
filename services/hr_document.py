@@ -1904,7 +1904,7 @@ class HrDocumentService(
                 )
             )
             message_to_notifier = {
-                "sender_type": sender_type,
+                "sender_type": str(sender_type),
                 "message": message
             }
             await notification_service.send_message(db, message_to_notifier, user_id)
