@@ -113,6 +113,7 @@ async def websocket_endpoint(
     except WebSocketDisconnect:
         notification_manager.disconnect(user_id, websocket)
 
+@app.event("startup")
 @repeat_every(seconds=60)
 async def check_expiring_documents():
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
