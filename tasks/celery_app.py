@@ -237,7 +237,7 @@ async def minimal_async_operation():
 def check_expiring_documents(self):
     try:
         res = asyncio.run(minimal_async_operation())
-        print(res)
+        return res
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     
