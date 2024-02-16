@@ -230,11 +230,18 @@ async def minimal_async_operation():
     return {'data': 'example'}
 
 
+def run_asyncio_coroutine(coroutine):
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    result = loop.run_until_complete(coroutine)
+    loop.close()
+    return result
+
 @app.task(bind=True)
 def check_expiring_documents(self):
     try:
-        res = asyncio.run(minimal_async_operation())
-        return res
+        res = run_asyncio_coroutine(minimal_async_operation())
+        print(res)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     
