@@ -117,23 +117,20 @@ async def websocket_endpoint(
         notification_manager.disconnect(user_id, websocket)
 
 
-@app.on_event("startup")
-async def schedule_check_expiring_documents(background_tasks: BackgroundTasks):
-    background_tasks.add_task(check_expiring_documents)
-
-@repeat_at(cron="* * * * *")
-async def check_expiring_documents():
-    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-    db = SessionLocal()
-    contracts = history_service.get_expiring_contracts(db)
-    print(contracts)
-    for contract in contracts:
-        await hr_document_service.send_expiring_notification(db, contract.user_id, contract.id)
-    try:
-        db.commit()
-    except SQLAlchemyError as e:
-        db.rollback()
-        raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if db:
-            db.close()
+# @app.on_event("startup")
+# @repeat_at(cron="* * * * *")
+# async def check_expiring_documents():
+#     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+#     db = SessionLocal()
+#     contracts = history_service.get_expiring_contracts(db)
+#     print(contracts)
+#     for contract in contracts:
+#         await hr_document_service.send_expiring_notification(db, contract.user_id, contract.id)
+#     try:
+#         db.commit()
+#     except SQLAlchemyError as e:
+#         db.rollback()
+#         raise HTTPException(status_code=400, detail=str(e))
+#     finally:
+#         if db:
+#             db.close()
