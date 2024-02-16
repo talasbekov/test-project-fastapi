@@ -2,7 +2,7 @@ import time
 import socket
 
 import sentry_sdk
-from fastapi import Depends, FastAPI, Request, WebSocket, WebSocketDisconnect, HTTPException
+from fastapi import BackgroundTasks, FastAPI, Request, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.logger import logger as log
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, RedirectResponse
@@ -115,7 +115,11 @@ async def websocket_endpoint(
     except WebSocketDisconnect:
         notification_manager.disconnect(user_id, websocket)
 
+
 @app.on_event("startup")
+async def schedule_check_expiring_documents(background_tasks: BackgroundTasks):
+    background_tasks.add_task(check_expiring_documents)
+
 @repeat_at(cron="* * * * *")
 async def check_expiring_documents():
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
