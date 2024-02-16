@@ -209,15 +209,15 @@ def task_sign_document_with_certificate(
         if db:
             db.close()
     # return hr_documents
+            
 
-@app.task(bind=True)
-def check_expiring_documents(self):
+async def check_expiring_documents():
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     db = SessionLocal()
     contracts = history_service.get_expiring_contracts(db)
-    loop = asyncio.get_event_loop()
+    print(contracts)
     for contract in contracts:
-        loop.run_until_complete(hr_document_service.send_expiring_notification(db, contract.user_id, contract.id))
+        await hr_document_service.send_expiring_notification(db, contract.user_id, contract.id)
     try:
         db.commit()
     except SQLAlchemyError as e:
@@ -226,3 +226,13 @@ def check_expiring_documents(self):
     finally:
         if db:
             db.close()
+
+
+@app.task(bind=True)
+def check_expiring_documents(self):
+    try:
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(check_expiring_documents())
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    
