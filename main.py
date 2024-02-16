@@ -2,7 +2,7 @@ import time
 import socket
 
 import sentry_sdk
-from fastapi import Depends, FastAPI, Request, WebSocket, WebSocketDisconnect, Query
+from fastapi import Depends, FastAPI, Request, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.logger import logger as log
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, RedirectResponse
@@ -13,6 +13,8 @@ from pydantic import ValidationError
 from fastapi_utilities import repeat_at, repeat_every
 from core.database import engine, sessionmaker
 from services import history_service, hr_document_service
+from sqlalchemy.exc import SQLAlchemyError
+
 
 from api import router
 from core import configs
@@ -114,7 +116,7 @@ async def websocket_endpoint(
         notification_manager.disconnect(user_id, websocket)
 
 @app.on_event("startup")
-@repeat_every(seconds=60)
+@repeat_at(cron="* * * * *")
 async def check_expiring_documents():
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     db = SessionLocal()
@@ -122,3 +124,11 @@ async def check_expiring_documents():
     print(contracts)
     for contract in contracts:
         await hr_document_service.send_expiring_notification(db, contract.user_id, contract.id)
+    try:
+        db.commit()
+    except SQLAlchemyError as e:
+        db.rollback()
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if db:
+            db.close()
