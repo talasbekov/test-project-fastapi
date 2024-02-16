@@ -850,7 +850,7 @@ class HrDocumentService(
         )
 
         self._create_notification_for_step(db, document, document.last_step)
-
+        self._create_notification_for_subject(db, document, document)
         return document
 
     async def generate_html(self, db: Session, id: str, language: LanguageEnum):
@@ -1826,6 +1826,17 @@ class HrDocumentService(
             )
         return template.render(context), document_template.name
 
+    def _create_notification_for_subject(self, db: Session, document: HrDocument):
+        subject = self.get_subject(db, document.id)
+        print("Subjeeeect:" , subject)
+        detailed_notification = detailed_notification_service.create(
+            db,
+            {
+                "hr_document_id": document.id,
+                "receiver_id": subject
+            }
+        )
+
     def _create_notification_for_step(
         self,
         db: Session,
@@ -1874,7 +1885,7 @@ class HrDocumentService(
         return None
     
     async def send_expiring_notification(self, db: Session, user_id: str, contract_id):
-        sender_type = "Приказ"
+        sender_type = "Контракт"
         message = f'Уважаемый сотрудник, у вас истекает срок действия договора №{contract_id}'
 
         # check if the notification has already been created for this user
@@ -1887,14 +1898,13 @@ class HrDocumentService(
                     receiver_id=user_id
                 )
             )
-            message_to_notifier = {
-                "sender_type": str(sender_type),
-                "message": message
-            }
-            await notification_service.send_message(db, message_to_notifier, user_id)
-            return "Success"
-        else:
-            return "Уведомление уже было отправлено!"
+        message_to_notifier = {
+            "sender_type": str(sender_type),
+            "message": message
+        }
+        await notification_service.send_message(db, message_to_notifier, user_id)
+        return "Success"
+        
 
 
 hr_document_service = HrDocumentService(HrDocument)

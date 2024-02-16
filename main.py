@@ -19,6 +19,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from api import router
 from core import configs
 from ws import notification_manager
+from fastapi import BackgroundTasks
 
 
 socket.setdefaulttimeout(15) # TODO: change to configs.SOCKET_TIMEOUT
