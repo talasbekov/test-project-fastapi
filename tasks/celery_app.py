@@ -231,8 +231,7 @@ async def check_expiring_documents():
 @app.task(bind=True)
 def check_expiring_documents(self):
     try:
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(check_expiring_documents())
+        asyncio.run(check_expiring_documents())
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     
