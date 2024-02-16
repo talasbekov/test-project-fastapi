@@ -227,11 +227,16 @@ async def check_expiring_documents():
         if db:
             db.close()
 
+async def minimal_async_operation():
+    # Simulate an async operation, e.g., fetching data
+    await asyncio.sleep(1)  # Simulate async I/O operation
+    return {'data': 'example'}
+
 
 @app.task(bind=True)
 def check_expiring_documents(self):
     try:
-        asyncio.run(check_expiring_documents())
+        asyncio.run(minimal_async_operation())
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     
