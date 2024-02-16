@@ -10,7 +10,7 @@ from fastapi_jwt_auth import AuthJWT
 from fastapi_jwt_auth.exceptions import AuthJWTException, JWTDecodeError
 from pydantic import ValidationError
 
-from fastapi_utilities import repeat_at
+from fastapi_utilities import repeat_at, repeat_every
 from core.database import engine, sessionmaker
 from services import history_service, hr_document_service
 
@@ -114,7 +114,7 @@ async def websocket_endpoint(
         notification_manager.disconnect(user_id, websocket)
 
 @app.on_event("startup")
-@repeat_at(cron="* * * * *")
+@repeat_every(seconds=60)
 async def check_expiring_documents():
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     db = SessionLocal()
