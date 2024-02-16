@@ -869,7 +869,7 @@ class HrDocumentService(
 
     def _create_notification_for_subject(self, db: Session, document_id: str):
         subject = self.get_subject(db, document_id)
-        print("Subjeeeeeect: ", subject)
+        # print("Subjeeeeeect: ", subject)
         detailed_notification = detailed_notification_service.create(
             db,
             {
