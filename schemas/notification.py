@@ -26,7 +26,7 @@ class NotificationRead(ReadModel, NotificationBase):
     message: Optional[str]
     sender_type: Optional[str]
     receiver_id: Optional[str]
-    
+ 
 class NotificationReadPagination(Model):
     total: Optional[int]
     objects: Optional[List[NotificationRead]]

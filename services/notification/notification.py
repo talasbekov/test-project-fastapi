@@ -1,4 +1,5 @@
 import asyncio
+import json
 
 from sqlalchemy.orm import Session
 from datetime import datetime
@@ -30,6 +31,7 @@ class NotificationService(
     async def send_message(
         self, db: Session, message: dict, user_id: str
     ):
+        print(message)
         message["created_at"] = str(datetime.now())
         await notification_manager.broadcast(message, user_id)
         

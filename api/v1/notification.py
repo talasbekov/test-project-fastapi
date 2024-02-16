@@ -1,7 +1,7 @@
 from typing import List, Annotated, Union
 import json
 
-from fastapi import APIRouter, Depends, status, Cookie, Query, WebSocketException
+from fastapi import APIRouter, Depends, status, Cookie, Query, WebSocketException, WebSocketDisconnect
 from fastapi.security import HTTPBearer
 from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
@@ -32,14 +32,7 @@ async def get_cookie_or_token(
         raise WebSocketException(code=status.WS_1008_POLICY_VIOLATION)
     return session or token
 
-@router.websocket("/ws/{token}/")
-async def websocket_endpoint(websocket: WebSocket, 
-                             cookie_or_token: Annotated[str, Depends(get_cookie_or_token)],
-                             ):
-    token = cookie_or_token
-    await manager.connect(websocket)
 
-    return
 """
 1. Check expiring documents with celery tasks
 2. Create notifications in db for expiring documents 
@@ -115,13 +108,15 @@ async def test(*,
     """
        Test all Notifications
     """
+    from services import hr_document_service 
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
     message = {
         "sender_type": "test",
         "message": message
     }
-    return await notification_service.send_message(db, message, user_id)
+    print(user_id)
+    return await hr_document_service.send_expiring_notification(db, user_id, "test")
 
 @router.get("/detailed", dependencies=[Depends(HTTPBearer())],
             response_model=DetailedNotificationReadPagination,

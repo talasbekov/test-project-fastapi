@@ -1,6 +1,7 @@
 import datetime
 import pickle
 import logging
+import asyncio
 
 from celery import Celery
 from celery.schedules import crontab
@@ -14,6 +15,8 @@ from schemas import HrDocumentRead
 from services import staff_list_service, survey_service, hr_document_service, history_service
 from schemas.staff_list import StaffListUserCreate, StaffListRead
 from models import UserLoggingActivity, SurveyRepeatTypeEnum
+
+from .async_task import async_task
 
 
 app = Celery('celery_app', backend='redis://redis:6379/',
@@ -42,10 +45,10 @@ app.conf.beat_schedule = {
         'schedule': crontab(minute=0, hour=0, day_of_month='1', month_of_year='1'),
         'args': (SurveyRepeatTypeEnum.EVERY_YEAR.value,)
     },
-    # 'send_expiring_documents_notifications': {
-    #     'task': 'tasks.celery_app.check_expiring_documents',
-    #     'schedule': crontab(minute='*'),
-    # }
+    'send_expiring_documents_notifications': {
+        'task': 'tasks.celery_app.check_expiring_documents',
+        'schedule': crontab(minute='*'),
+    }
 
 }
 
@@ -210,14 +213,13 @@ def task_sign_document_with_certificate(
     # return hr_documents
 
 @app.task(bind=True)
-async def check_expiring_documents(self):
+def check_expiring_documents(self):
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     db = SessionLocal()
     contracts = history_service.get_expiring_contracts(db)
-
+    loop = asyncio.get_event_loop()
     for contract in contracts:
-        status = await hr_document_service.send_expiring_notification(db, contract.user_id, contract.id)
-        print(status)
+        loop.run_until_complete(hr_document_service.send_expiring_notification(db, contract.user_id, contract.id))
     try:
         db.commit()
     except SQLAlchemyError as e:

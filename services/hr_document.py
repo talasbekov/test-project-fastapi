@@ -1888,7 +1888,7 @@ class HrDocumentService(
                 new_document = HrDocumentInit(
                     hr_document_template_id="073121d7-87dd-4d72-b4d8-272acdce9d53",
                     user_ids=[user_id],
-                    document_step_users_ids={100:pgs, 3:leader_id},
+                    document_step_users_ids={100:pgs},
                     parent_id=None,
                     due_date = due_date,
                     properties=properties
@@ -1913,11 +1913,11 @@ class HrDocumentService(
                     receiver_id=user_id
                 )
             )
-            message = {
-                "sender_type": sender_type,
+            message_to_notifier = {
+                "sender_type": str(sender_type),
                 "message": message
             }
-            await notification_service.send_message(db, message, user_id)
+            await notification_service.send_message(db, message_to_notifier, user_id)
             return "Success"
         else:
             return "Уведомление уже было отправлено!"
