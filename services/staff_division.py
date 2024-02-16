@@ -186,6 +186,7 @@ class StaffDivisionService(
                     if isinstance(staff_unit.user_replacing.staff_unit.requirements, str):
                         staff_unit.user_replacing.staff_unit.requirements = json.loads(
                             staff_unit.user_replacing.staff_unit.requirements)
+            
         return parents
     
     def get_all_except_special_schedule(self,

@@ -480,10 +480,10 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                 additional_emergency_length["years"] += experience.length_of_service["years"]
                 additional_emergency_length["months"] += experience.length_of_service["months"]
                 additional_emergency_length["days"] += experience.length_of_service["days"]
-
-        history_service_detail_read.emergency_contracts[0].length_of_service["years"] += additional_emergency_length["years"]
-        history_service_detail_read.emergency_contracts[0].length_of_service["months"] += additional_emergency_length["months"]
-        history_service_detail_read.emergency_contracts[0].length_of_service["days"] += additional_emergency_length["days"]
+        if history_service_detail_read.emergency_contracts:
+            history_service_detail_read.emergency_contracts[0].length_of_service["years"] += additional_emergency_length["years"]
+            history_service_detail_read.emergency_contracts[0].length_of_service["months"] += additional_emergency_length["months"]
+            history_service_detail_read.emergency_contracts[0].length_of_service["days"] += additional_emergency_length["days"]
 
         history_dict = HistoryServiceDetailRead.from_orm(
             history_service_detail_read).dict()
@@ -558,15 +558,17 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                     coolness_status=coolness.coolness_status.value,
                 )
                 coolnesses_list.append(coolness_read)
-
+        # HERE!
         black_beret_badge = badge_service.get_black_beret_by_user_id(db, user_id)
+        # print(black_beret_badge.id)
         if black_beret_badge is not None:
+            # print("here1")
             black_beret = db.query(BadgeHistory).filter(
                 BadgeHistory.user_id == user_id,
                 BadgeHistory.badge_id == black_beret_badge.id,
-                BadgeHistory.date_to == None
+                # BadgeHistory.date_to == None
             ).first()
-            
+            # print(black_beret.id)
             if black_beret is not None:
                 black_beret = BlackBeretRead(
                     id=black_beret.id,
@@ -575,6 +577,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                     document_number=black_beret.document_number
                 )
         else:
+            print("here1")
             black_beret = None
             
         personal_reserve = personnal_reserve_service.get_by_user_id(

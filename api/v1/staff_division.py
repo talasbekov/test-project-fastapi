@@ -22,7 +22,7 @@ router = APIRouter(
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            # response_model=List[StaffDivisionRead],
+            response_model=List[StaffDivisionRead],
             summary="Get all Staff Divisions")
 async def get_all(*,
                   db: Session = Depends(get_db),
@@ -44,7 +44,7 @@ async def get_all(*,
     return staff_division_service.get_all_except_special(db, skip, limit)
 
 @router.get("/schedule/", dependencies=[Depends(HTTPBearer())],
-            # response_model=List[StaffDivisionRead],
+            # response_model=List[StaffDivisionReadSchedule],
             summary="Get all Staff Divisions")
 async def get_all_schedule(*,
                   db: Session = Depends(get_db),
@@ -63,7 +63,7 @@ async def get_all_schedule(*,
             This parameter is optional and defaults to 100.
     """
     Authorize.jwt_required()
-    return staff_division_service.get_all_except_special(db, skip, limit)
+    return staff_division_service.get_all_except_special_schedule(db, skip, limit)
 
 
 @router.get("/departments/", dependencies=[Depends(HTTPBearer())],

@@ -17,3 +17,4 @@ class DispensaryRegistration(NamedModel):
     profile_id = Column(String(), ForeignKey("hr_erp_medical_profiles.id"))
 
     profile = relationship("MedicalProfile")
+

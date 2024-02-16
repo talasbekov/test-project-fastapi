@@ -1,13 +1,17 @@
 from typing import Optional, List
 
 from schemas import NamedModel, BaseModel, RankRead, ReadModel
-
+from pydantic import BaseModel, validator
 
 class PositionBase(NamedModel):
     category_code: str
     form: str
     max_rank_id: Optional[str]
 
+    # make category_code uppercase
+    @validator('category_code')
+    def category_code_to_upper(cls, v):
+        return v.upper()
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
@@ -30,6 +34,7 @@ class PositionRead(PositionBase, ReadModel):
     max_rank: Optional[RankRead]
     name: Optional[str]
     nameKZ: Optional[str]
+
 
     class Config:
         from_attributes = True

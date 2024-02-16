@@ -59,6 +59,8 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         user = super().get(db, id)
         if user is None:
             raise NotFoundException(detail="User is not found!")
+        if (user.personal_id):
+            user.personal_id = user.personal_id.capitalize()
         return user
 
     def get_all(self,

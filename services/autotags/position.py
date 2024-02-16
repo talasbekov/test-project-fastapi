@@ -21,10 +21,10 @@ class PositionAutoTagHandler(BaseAutoTagHandler):
         actual_positionKZ = (f"({user.staff_unit.actual_position.nameKZ})"
                              if user.staff_unit.actual_position else "")
         res = (f"{full_name} {user.staff_unit.position.name}"
-               f" ({user.staff_unit.position.category_code})"
+               f" ({user.staff_unit.position.category_code.upper()})"
                f" {actual_position}")
         resKZ = (f"{full_nameKZ} {user.staff_unit.position.nameKZ}"
-                 f" ({user.staff_unit.position.category_code})"
+                 f" ({user.staff_unit.position.category_code.upper()})"
                  f" {actual_positionKZ}")
         return AutoTagRead(name=res, nameKZ=resKZ)
 

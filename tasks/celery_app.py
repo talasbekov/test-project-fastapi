@@ -49,10 +49,10 @@ app.conf.beat_schedule = {
 
 }
 
-SQLALCHEMY_DATABASE_URL = f"oracle://system:Oracle123@172.20.0.2:1521/MORAL"
-SQLALCHEMY_DATABASE_URL2 = f"oracle://system:Oracle123@192.168.0.61:1521/MORAL"
+# SQLALCHEMY_DATABASE_URL = f"oracle://system:Oracle123@172.20.0.2:1521/MORAL"
+SQLALCHEMY_DATABASE_URL = f"oracle://system:Oracle123@192.168.0.61:1521/MORAL"
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URL2,
+    SQLALCHEMY_DATABASE_URL,
     echo=configs.SQLALCHEMY_ECHO,
     pool_size=10
 )
@@ -178,14 +178,17 @@ def task_sign_document_with_certificate(
     user_id,
     access_token,
 ):
+    print("what")
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     db = SessionLocal()
     body = pickle.loads(byte_body)
     state_counter = 0
     self.update_state(state=state_counter)
+    print("wtfffff")
     # hr_documents = []
     percent_per_document = 100/len(body.document_ids)
     for document_id in body.document_ids:
+        
         state_counter += percent_per_document
         hr_document_service.sign_with_certificate(
             db,
@@ -193,6 +196,7 @@ def task_sign_document_with_certificate(
             body,
             user_id,
             access_token)
+        # hr_document_service._create_notification_for_subject(db, document_id)
         # hr_documents.append(HrDocumentRead.from_orm(hr_document).dict())
         self.update_state(state=state_counter)
     try:

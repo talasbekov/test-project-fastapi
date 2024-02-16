@@ -12,7 +12,7 @@ class Family(Model):
     first_name = Column(String)
     last_name = Column(String)
     father_name = Column(String)
-    IIN = Column(String)
+    IIN = Column(String)    
     birthday = Column(TIMESTAMP(timezone=True), nullable=False)
     death_day = Column(TIMESTAMP(timezone=True))
     birthplace = Column(String)
