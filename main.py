@@ -2,7 +2,7 @@ import time
 import socket
 
 import sentry_sdk
-from fastapi import BackgroundTasks, FastAPI, Request, WebSocket, WebSocketDisconnect, HTTPException
+from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.logger import logger as log
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, RedirectResponse
@@ -10,16 +10,17 @@ from fastapi_jwt_auth import AuthJWT
 from fastapi_jwt_auth.exceptions import AuthJWTException, JWTDecodeError
 from pydantic import ValidationError
 
-from fastapi_utilities import repeat_at, repeat_every
+from fastapi_utilities import repeat_at
 from core.database import engine, sessionmaker
 from services import history_service, hr_document_service
 from sqlalchemy.exc import SQLAlchemyError
-
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.cron import CronTrigger
+from tasks.celery_app import check_expiring_documents
 
 from api import router
 from core import configs
 from ws import notification_manager
-from fastapi import BackgroundTasks
 
 
 socket.setdefaulttimeout(15) # TODO: change to configs.SOCKET_TIMEOUT
@@ -31,6 +32,7 @@ app = FastAPI(
     openapi_url=f"{configs.API_V1_PREFIX}/openapi.json",
     debug=configs.DEBUG,
 )
+scheduler = AsyncIOScheduler()
 
 app.add_middleware(
     CORSMiddleware,
@@ -115,6 +117,13 @@ async def websocket_endpoint(
             await websocket.receive_json()
     except WebSocketDisconnect:
         notification_manager.disconnect(user_id, websocket)
+
+
+@app.on_event("startup")
+def start_scheduler():
+    # Schedule the task to run every minute
+    scheduler.add_job(check_expiring_documents, CronTrigger.from_crontab('* * * * *'))
+    scheduler.start()
 
 
 # @app.on_event("startup")

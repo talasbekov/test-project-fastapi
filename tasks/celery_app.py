@@ -240,11 +240,11 @@ def run_asyncio_coroutine(coroutine):
     loop.close()
     return result
 
-@app.task(bind=True)
-def check_expiring_documents(self):
-    try:
-        res = run_asyncio_coroutine(minimal_async_operation())
-        print(res)
-    except Exception as e:
-        raise print(e)
+# @app.task(bind=True)
+# def check_expiring_documents(self):
+#     try:
+#         res = run_asyncio_coroutine(minimal_async_operation())
+#         print(res)
+#     except Exception as e:
+#         raise print(e)
     
