@@ -121,8 +121,10 @@ async def websocket_endpoint(
 
 @app.on_event("startup")
 def start_scheduler():
+    # Schedule the task to run every minute
     scheduler.add_job(check_expiring_documents, CronTrigger.from_crontab('* * * * *'))
     scheduler.start()
+
 
 
 
