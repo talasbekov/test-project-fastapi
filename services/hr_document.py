@@ -32,6 +32,7 @@ from models import (
     HrDocument,
     HrDocumentStatusEnum,
     HrDocumentStep,
+    HrDocumentUsers,
     StaffUnit,
     User,
     DocumentStaffFunction,
@@ -850,8 +851,27 @@ class HrDocumentService(
         )
 
         self._create_notification_for_step(db, document, document.last_step)
+<<<<<<< HEAD
         self._create_notification_for_subject(db, document, document)
+=======
+        self._create_notification_for_subject(db, document)
+
+>>>>>>> main
         return document
+    
+    def get_subject(self, db: Session, document_id: str):
+        subject = db.query(HrDocumentUsers).filter(HrDocumentUsers.document_id == document_id).first()
+        return subject
+    
+    def _create_notification_for_subject(self, db: Session, document: HrDocument):
+        subject = self.get_subject(db, document.id)
+        detailed_notification = detailed_notification_service.create(
+            db,
+            {
+                "hr_document_id": document.id,
+                "receiver_id": subject
+            }
+        )
 
     async def generate_html(self, db: Session, id: str, language: LanguageEnum):
         ans, name = await self._get_html(db, id, language)
@@ -1900,6 +1920,7 @@ class HrDocumentService(
                     receiver_id=user_id
                 )
             )
+<<<<<<< HEAD
         message_to_notifier = {
             "sender_type": str(sender_type),
             "message": message,
@@ -1908,6 +1929,16 @@ class HrDocumentService(
         await notification_service.send_message(db, message_to_notifier, user_id)
         return "Success"
         
+=======
+            message_to_notifier = {
+                "sender_type": str(sender_type),
+                "message": message
+            }
+            await notification_service.send_message(db, message_to_notifier, user_id)
+            return "Success"
+        else:
+            return "Уведомление уже было отправлено!"
+>>>>>>> main
 
 
 hr_document_service = HrDocumentService(HrDocument)
