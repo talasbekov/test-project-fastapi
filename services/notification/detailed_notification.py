@@ -27,7 +27,7 @@ class DetailedNotificationService(
     ):
         notifications = (
             db.query(self.model)
-            .filter(self.model.receiver_id == user_id)
+            # .filter(self.model.receiver_id == user_id)
             .offset(skip)
             .limit(limit)
             .all()

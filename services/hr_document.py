@@ -33,6 +33,7 @@ from models import (
     HrDocumentStatusEnum,
     HrDocumentStep,
     HrDocumentUsers,
+    HrDocumentUsers,
     StaffUnit,
     User,
     DocumentStaffFunction,
@@ -683,7 +684,7 @@ class HrDocumentService(
         )
 
         self._create_notification_for_step(db, document, document.last_step)
-
+        # self._create_notification_for_subject(db, document)
         user = db.query(User).filter(User.id == user_id).first()
         from services import auth_service
         access_token, refresh_token = auth_service._generate_tokens(
@@ -736,6 +737,7 @@ class HrDocumentService(
             access_token,
     ):
         step = self.get_by_id(db, document_id).last_step_id
+        print("wtf")
         document = self.sign(
             db,
             document_id,
@@ -745,7 +747,7 @@ class HrDocumentService(
             ),
             user_id
         )
-
+        # self._create_notification_for_subject(db, document.id)
         # url = configs.ECP_SERVICE_URL+'api/hr_document_step_signer/create/'
         # request_body = {
         #     'hr_document_template_signer_id': str(document.hr_document_template_id),
@@ -771,6 +773,7 @@ class HrDocumentService(
             body: HrDocumentSign,
             user_id: str,
     ):
+        print("7")
         document = self.get_by_id(db, document_id)
         self._validate_document_for_completed(db, document)
         current_user = user_service.get_by_id(db, user_id)
@@ -781,7 +784,7 @@ class HrDocumentService(
             db, document.hr_document_template_id)
         document_staff_function = document_staff_function_service.get_by_id(
             db, step.staff_function_id)
-
+        print("77")
         if document_staff_function.role.name == DocumentFunctionTypeEnum.EXPERT.value:
             body.is_signed = True
         hr_document_info_service.sign(
@@ -825,7 +828,7 @@ class HrDocumentService(
             )
 
             self._create_info_for_document_steps(db, document, steps)
-
+            print("777")
             document.last_step = steps[0]
             document.status_id = hr_document_status_service.get_by_name(
                 db, HrDocumentStatusEnum.ON_REVISION.value).id
@@ -841,6 +844,7 @@ class HrDocumentService(
         if isinstance(document.document_template.actions, dict):
             document.document_template.actions = json.dumps(
                 document.document_template.actions)
+        print("blah blah")
         db.add(document)
         db.commit()
 
@@ -849,23 +853,29 @@ class HrDocumentService(
             str(document.id),
             str(user_id)
         )
-
+        print("blah blah blah")
         self._create_notification_for_step(db, document, document.last_step)
-        self._create_notification_for_subject(db, document)
+        # self._create_notification_for_subject(db, document.id)
 
         return document
     
     def get_subject(self, db: Session, document_id: str):
         subject = db.query(HrDocumentUsers).filter(HrDocumentUsers.document_id == document_id).first()
-        return subject
+        return subject   
+        # document = db.query(HrDocument).filter(HrDocument.id == document_id).first()
+        # if document:
+        #     return document.subject_id
+        # return None
     
-    def _create_notification_for_subject(self, db: Session, document: HrDocument):
-        subject = self.get_subject(db, document.id)
+
+    def _create_notification_for_subject(self, db: Session, document_id: str):
+        subject = self.get_subject(db, document_id)
+        # print("Subjeeeeeect: ", subject)
         detailed_notification = detailed_notification_service.create(
             db,
             {
-                "hr_document_id": document.id,
-                "receiver_id": subject
+                "hr_document_id": document_id,
+                "receiver_id": subject.subject_id
             }
         )
 
@@ -1145,9 +1155,10 @@ class HrDocumentService(
         if isinstance(document.document_template.description, dict):
             document.document_template.description = json.dumps(
                 template.description)
-
+        
         db.add(document)
         db.flush()
+        self._create_notification_for_subject(db, document.id)
         return document
 
     def _sign_super_document(self,

@@ -31,8 +31,5 @@ class Notification(Model):
         default="Приказ")
     
     
-<<<<<<< HEAD
-=======
     
->>>>>>> main
     receiver = relationship("User", foreign_keys=[receiver_id])

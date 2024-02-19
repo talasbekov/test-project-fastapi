@@ -1,6 +1,6 @@
 import datetime
 import uuid
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from pydantic import BaseModel, AnyUrl
 
@@ -28,12 +28,13 @@ class DrivingLicenseUpdate(BaseModel):
     date_of_issue: Optional[datetime.date]
     date_to: Optional[datetime.date]
     document_link: Optional[AnyUrl]
+    # profile_id: str
 
 
 class DrivingLicenseRead(DrivingLicenseBase):
     id: Optional[str]
     document_number: Optional[str]
-    category: Optional[List[str]]
+    category: Union[Optional[str], Optional[List[str]]]
     date_of_issue: Optional[datetime.date]
     date_to: Optional[datetime.date]
     document_link: Optional[str]

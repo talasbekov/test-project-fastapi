@@ -18,6 +18,20 @@ class StaffDivisionBase(NamedModel):
     type_id: Optional[str] = Field(None, nullable=True)
     staff_division_number: Optional[int] = Field(None, nullable=True)
 
+    # capitalize the first letter of the name and nameKZ
+    @validator('name')
+    def name_capitalize(cls, v):
+        if v!="СГО РК":
+            return v.capitalize()
+        else:
+            return v
+    @validator('nameKZ')
+    def nameKZ_capitalize(cls, v):
+        if v!="СГО РК":
+            return v.capitalize()
+        else:
+            return v
+
 class StaffDivisionBaseSchedule(NamedModel):
     parent_group_id: Optional[str] = Field(None, nullable=True)
     # description: Optional[NamedModel]
@@ -71,6 +85,11 @@ class UserRead(ReadModel):
     statuses: Optional[List[StatusRead]]
     status_till: Optional[datetime.datetime]
 
+    # capitalize the first letter of the personal_id
+    @validator('personal_id')
+    def personal_id_capitalize(cls, v):
+        return v.capitalize()
+    
     class Config:
         orm_mode = True
 
@@ -163,6 +182,7 @@ class StaffUnitRead(ReadModel):
     user_replacing: Optional[UserReplacingRead]
     user_replacing_id: Optional[str]
 
+    
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True

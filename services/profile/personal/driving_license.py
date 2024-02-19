@@ -22,7 +22,8 @@ class DrivingLicenseService(
         if driving_licence is None:
             raise NotFoundException(
                 detail=f"DrivingLicense with id: {id} is not found!")
-        driving_licence.category = eval(driving_licence.category)
+        if driving_licence.category.startswith("["):    
+            driving_licence.category = eval(driving_licence.category)
         return driving_licence
 
     def create(self, db: Session,
@@ -84,7 +85,8 @@ class DrivingLicenseService(
                 setattr(db_obj, field, update_data[field])
         db.add(db_obj)
         db.commit()
-        db_obj.category = eval(db_obj.category)
+        if db_obj.category.startswith("["):    
+            db_obj.category = eval(db_obj.category)
         return db_obj
 
 
