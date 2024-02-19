@@ -226,25 +226,3 @@ async def check_expiring_documents():
     finally:
         if db:
             db.close()
-
-async def minimal_async_operation():
-    # Simulate an async operation, e.g., fetching data
-    await asyncio.sleep(1)  # Simulate async I/O operation
-    return {'data': 'example'}
-
-
-def run_asyncio_coroutine(coroutine):
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    result = loop.run_until_complete(coroutine)
-    loop.close()
-    return result
-
-# @app.task(bind=True)
-# def check_expiring_documents(self):
-#     try:
-#         res = run_asyncio_coroutine(minimal_async_operation())
-#         print(res)
-#     except Exception as e:
-#         raise print(e)
-    

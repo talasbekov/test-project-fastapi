@@ -10,10 +10,6 @@ from fastapi_jwt_auth import AuthJWT
 from fastapi_jwt_auth.exceptions import AuthJWTException, JWTDecodeError
 from pydantic import ValidationError
 
-from fastapi_utilities import repeat_at
-from core.database import engine, sessionmaker
-from services import history_service, hr_document_service
-from sqlalchemy.exc import SQLAlchemyError
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 from tasks.celery_app import check_expiring_documents
@@ -121,25 +117,8 @@ async def websocket_endpoint(
 
 @app.on_event("startup")
 def start_scheduler():
-    # Schedule the task to run every minute
     scheduler.add_job(check_expiring_documents, CronTrigger.from_crontab('* * * * *'))
     scheduler.start()
 
 
-# @app.on_event("startup")
-# @repeat_at(cron="* * * * *")
-# async def check_expiring_documents():
-#     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-#     db = SessionLocal()
-#     contracts = history_service.get_expiring_contracts(db)
-#     print(contracts)
-#     for contract in contracts:
-#         await hr_document_service.send_expiring_notification(db, contract.user_id, contract.id)
-#     try:
-#         db.commit()
-#     except SQLAlchemyError as e:
-#         db.rollback()
-#         raise HTTPException(status_code=400, detail=str(e))
-#     finally:
-#         if db:
-#             db.close()
+

@@ -1910,6 +1910,8 @@ class HrDocumentService(
                 return document
         return None
     
+    
+    
     async def send_expiring_notification(self, db: Session, user_id: str, contract_id):
         sender_type = "Контракт"
         message = f'Уважаемый сотрудник, у вас истекает срок действия договора №{contract_id}'
@@ -1926,7 +1928,8 @@ class HrDocumentService(
             )
         message_to_notifier = {
             "sender_type": str(sender_type),
-            "message": message
+            "message": message,
+            "contract_id": contract_id
         }
         await notification_service.send_message(db, message_to_notifier, user_id)
         return "Success"
