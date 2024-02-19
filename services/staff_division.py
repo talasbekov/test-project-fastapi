@@ -274,6 +274,49 @@ class StaffDivisionService(
                         staff_unit.user_replacing.staff_unit.requirements = json.loads(
                             staff_unit.user_replacing.staff_unit.requirements)
         return parents
+    
+    def get_all_except_special_schedule(self,
+                               db: Session,
+                               skip: int,
+                               limit: int) -> List[StaffDivision]:
+        parents = db.query(self.model).filter(
+            StaffDivision.parent_group_id == None,
+            self.model.name != StaffDivisionEnum.SPECIAL_GROUP.value
+        ).order_by(StaffDivision.staff_division_number).offset(skip).limit(limit).all()
+        # for parent in parents:
+        #     if isinstance(parent.description, str):
+        #         parent.description = json.loads(parent.description)
+        #     for staff_unit in parent.staff_units:
+        #         if isinstance(staff_unit.requirements, str):
+        #             staff_unit.requirements = json.loads(
+        #                 staff_unit.requirements)
+        #         if staff_unit.user_replacing:
+        #             if isinstance(staff_unit.user_replacing.staff_unit.requirements, str):
+        #                 staff_unit.user_replacing.staff_unit.requirements = json.loads(
+        #                     staff_unit.user_replacing.staff_unit.requirements)
+           
+        return [StaffDivisionReadSchedule.from_orm(parent) for parent in parents]
+    
+    def get_all_except_special_minimized(self,
+                               db: Session,
+                               skip: int,
+                               limit: int) -> List[StaffDivision]:
+        parents = db.query(self.model).filter(
+            StaffDivision.parent_group_id == None,
+            self.model.name != StaffDivisionEnum.SPECIAL_GROUP.value
+        ).order_by(StaffDivision.staff_division_number).offset(skip).limit(limit).all()
+        for parent in parents:
+            if isinstance(parent.description, str):
+                parent.description = json.loads(parent.description)
+            for staff_unit in parent.staff_units:
+                if isinstance(staff_unit.requirements, str):
+                    staff_unit.requirements = json.loads(
+                        staff_unit.requirements)
+                if staff_unit.user_replacing:
+                    if isinstance(staff_unit.user_replacing.staff_unit.requirements, str):
+                        staff_unit.user_replacing.staff_unit.requirements = json.loads(
+                            staff_unit.user_replacing.staff_unit.requirements)
+        return parents
 
     def get_all_except_special_raw(self,
                                    db: Session,
