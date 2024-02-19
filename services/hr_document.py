@@ -1926,7 +1926,6 @@ class HrDocumentService(
                     receiver_id=user_id
                 )
             )
-<<<<<<< HEAD
         message_to_notifier = {
             "sender_type": str(sender_type),
             "message": message,
@@ -1935,16 +1934,6 @@ class HrDocumentService(
         await notification_service.send_message(db, message_to_notifier, user_id)
         return "Success"
         
-=======
-            message_to_notifier = {
-                "sender_type": str(sender_type),
-                "message": message
-            }
-            await notification_service.send_message(db, message_to_notifier, user_id)
-            return "Success"
-        else:
-            return "Уведомление уже было отправлено!"
->>>>>>> main
 
 
 hr_document_service = HrDocumentService(HrDocument)
