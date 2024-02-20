@@ -30,6 +30,4 @@ class Notification(Model):
         nullable=True,
         default="Приказ")
     
-    
-    
     receiver = relationship("User", foreign_keys=[receiver_id])

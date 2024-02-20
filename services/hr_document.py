@@ -1932,6 +1932,7 @@ class HrDocumentService(
             "message": message,
             "contract_id": contract_id
         }
+        
         await notification_service.send_message(db, message_to_notifier, user_id)
         return "Success"
         
