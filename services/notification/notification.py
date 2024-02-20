@@ -31,21 +31,17 @@ class NotificationService(
     async def send_message(
         self, db: Session, message: dict, user_id: str
     ):
-        print(message)
-        message["created_at"] = str(datetime.now())
+        message["created_at"] = str(datetime.now()) 
         await notification_manager.broadcast(message, user_id)
         
+    def get_notification_by_message(db, message: str):
+        return db.query(Notification).filter(Notification.message == message).first()
+    
     def notification_exists(self, db: Session, user_id: str, sender_type: str):
         return db.query(Notification).filter(
             Notification.receiver_id == user_id,
             Notification.sender_type == sender_type
-        ).first() is not None
-    
-    def notification_is_seen(self, db: Session, notification_id: str):
-        return db.query(Notification).filter(
-            Notification.id == notification_id,
-            Notification.is_seen == True
-        ).first() is not None   
+        ).first() is not None 
 
 
 notification_service = NotificationService(Notification)

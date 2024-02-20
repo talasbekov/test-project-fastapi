@@ -17,6 +17,8 @@ from tasks.celery_app import check_expiring_documents
 from api import router
 from core import configs
 from ws import notification_manager
+from ws.custom_websocket import CustomWebSocket
+
 
 
 socket.setdefaulttimeout(15) # TODO: change to configs.SOCKET_TIMEOUT
@@ -94,7 +96,7 @@ async def docs_redirect():
 
 @app.websocket("/ws/{user_id}")
 async def websocket_endpoint(
-    websocket: WebSocket,
+    websocket: CustomWebSocket,
     user_id: str,
     # token: str = Query(...),
     # Authorize: AuthJWT = Depends(),
