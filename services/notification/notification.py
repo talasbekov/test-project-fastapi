@@ -41,13 +41,7 @@ class NotificationService(
         return db.query(Notification).filter(
             Notification.receiver_id == user_id,
             Notification.sender_type == sender_type
-        ).first() is not None
-    
-    def notification_is_seen(self, db: Session, notification_id: str):
-        return db.query(Notification).filter(
-            Notification.id == notification_id,
-            Notification.is_seen == True
-        ).first() is not None   
+        ).first() is not None 
 
 
 notification_service = NotificationService(Notification)
