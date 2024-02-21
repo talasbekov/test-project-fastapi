@@ -32,6 +32,9 @@ class NotificationService(
         self, db: Session, message: dict, user_id: str
     ):
         message["created_at"] = str(datetime.now()) 
+        notification = self.get_notification_by_message(db, message)
+        if notification and not notification.is_seen:
+            return "Notification was not seen"
         await notification_manager.broadcast(message, user_id)
         
     def get_notification_by_message(db, message: str):
