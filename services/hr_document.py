@@ -1917,8 +1917,10 @@ class HrDocumentService(
         sender_type = "Контракт"
         message = f'Уважаемый сотрудник, у вас истекает срок действия договора №{contract_id}'
 
+        notification = notification_service.get_notification(db, user_id, sender_type)
+
         # check if the notification has already been created for this user
-        if not notification_service.notification_exists(db, user_id, sender_type):
+        if notification is None:
             notification_service.create(
                 db,
                 obj_in=NotificationCreate(
@@ -1932,8 +1934,10 @@ class HrDocumentService(
             "message": message,
             "contract_id": contract_id
         }
-        result = await notification_service.send_message(db, message_to_notifier, user_id)
-        return result
+        if notification and not notification.is_seen:
+            return "Notification was not seen"
+        await notification_service.send_message(db, message_to_notifier, user_id)
+        return "Success"
 
         
 
