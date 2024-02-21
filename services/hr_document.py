@@ -33,6 +33,7 @@ from models import (
     HrDocumentStatusEnum,
     HrDocumentStep,
     HrDocumentUsers,
+    HrDocumentUsers,
     StaffUnit,
     User,
     DocumentStaffFunction,
