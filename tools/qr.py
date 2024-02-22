@@ -14,6 +14,30 @@ def convert_lob_to_str(obj):
         return [convert_lob_to_str(elem) for elem in obj]
     else:
         return obj
+
+academic_degrees_degrees = [
+    '473d5627-47d3-48ec-8d10-7f4a24a641b8',
+'4fc84352-b2c0-46f6-9b4f-5d3df1058b27',
+'f7c1c17f-c717-4936-83de-5fcbca7769df',
+'f44805ab-38f8-4092-84bf-932842899c2f'
+]
+
+
+
+
+sciences_ids = [
+    '15d67e17-7687-4f32-8e55-8ce0d987efc6',
+'d852ba68-5296-462b-9c5d-804ecb9ac13d',
+'4c2059fb-1acc-4c16-91f9-f87296ad7a9c',
+'4ec08ed8-aaa5-4850-9c32-9a93a3360ec5',
+'2eb56e62-748b-4ca7-8dde-0d77d1e82131',
+'bf1e2404-9ee3-4335-8b0b-8df03790263b',
+'74fbb51d-54fa-42c5-9f07-08950ee2e004',
+'bc4f5704-07d4-44a5-84a2-47b75c7dff62',
+'13112f42-9add-40be-a81d-466b182aeb0b',
+
+]
+
 class BloodType(str, Enum):
     O_PLUS = "O (I) Rh+"
     O_MINUS = "O (I) Rh-"
@@ -30,7 +54,7 @@ def generate_code():
 
 SQLALCHEMY_DATABASE_URL = f"oracle://system:Oracle123@172.20.0.2:1521/MORAL"
 # Create a connection to the Oracle database
-dsn_tns = cx_Oracle.makedsn('192.168.0.61', '1521', service_name='MORAL')
+dsn_tns = cx_Oracle.makedsn('172.20.0.9', '1521', service_name='MORAL')
 conn = cx_Oracle.connect(user='system', password='Oracle123', dsn=dsn_tns)
 
 password = "$2b$12$vhg69KJxWiGgetoLxGRvie3VxElPt45i4ELJiE/V2qOj30X3c3.7m"
@@ -44,6 +68,12 @@ ranks = cursor.fetchall()
 ranks = [convert_lob_to_str(rank) for rank in ranks]
 
 # Close the cursor
+cursor.close()
+
+cursor = conn.cursor()
+cursor.execute("SELECT * FROM HR_ERP_SPECIALTIES")
+specialties = cursor.fetchall()
+specialties = [convert_lob_to_str(specialty) for specialty in specialties]
 cursor.close()
 
 cursor = conn.cursor()
@@ -66,6 +96,50 @@ badge_types = [convert_lob_to_str(badge_type) for badge_type in badge_types]
 cursor.close()
 
 
+cursor = conn.cursor()
+cursor.execute("SELECT * FROM HR_ERP_COURSE_PROVIDERS")
+course_providers = cursor.fetchall()
+course_providers = [convert_lob_to_str(course_provider) for course_provider in course_providers]
+cursor.close()
+
+
+cursor = conn.cursor()
+cursor.execute("SELECT * FROM HR_ERP_INSTITUTIONS")
+institutions = cursor.fetchall()
+institutions = [convert_lob_to_str(institution) for institution in institutions]
+cursor.close()
+
+
+cursor = conn.cursor()
+cursor.execute("SELECT * FROM HR_ERP_LANGUAGES")
+languages = cursor.fetchall()
+languages = [convert_lob_to_str(language) for language in languages]
+cursor.close()
+
+
+cursor = conn.cursor()
+cursor.execute("SELECT * FROM HR_ERP_SPORT_TYPES")
+sport_types = cursor.fetchall()
+sport_types = [convert_lob_to_str(sport_type) for sport_type in sport_types]
+cursor.close()
+
+cursor = conn.cursor()
+cursor.execute("SELECT * FROM HR_ERP_SPORT_DEGREE_TYPES")
+sport_degree_types = cursor.fetchall()
+sport_degree_types = [convert_lob_to_str(sport_degree_type) for sport_degree_type in sport_degree_types]
+cursor.close()
+
+cursor = conn.cursor()
+cursor.execute("SELECT * FROM HR_ERP_COUNTRIES")
+countries_db = cursor.fetchall()
+countries_db = [convert_lob_to_str(country) for country in countries_db]
+cursor.close()
+
+
+
+
+ 
+
 # Execute the SQL query
 names = generate_names(ad, add, adf, 10000)
 
@@ -81,7 +155,7 @@ for name in names:
 
     email = f"user_{counter}@mail.ru"
     phone_number = generate_phone_number()
-    call_sign = str(random.choice(["Альфа", "Бетта", "Гамма"]) + str(random.randint(0, 999999999)))
+    call_sign = str(random.choice(["Альфа", "Бетта", "Гамма"]) + ' ' + str(random.randint(0, 999999999)))
     counter += 1
 
     id_number = str(random.randint(1000000000, 9999999999))
@@ -157,6 +231,10 @@ for name in names:
     cursor.execute(f"INSERT INTO HR_ERP_FAMILY_PROFILES (PROFILE_ID, ID, CREATED_AT, UPDATED_AT) VALUES ('{profile_id}', '{family_profile_id}', SYSDATE, SYSDATE)")
     cursor.close()
 
+    cursor = conn.cursor()
+    additional_profile_id = str(uuid4())
+    cursor.execute(f"INSERT INTO HR_ERP_ADDITIONAL_PROFILES (PROFILE_ID, ID, CREATED_AT, UPDATED_AT) VALUES ('{profile_id}', '{additional_profile_id}', SYSDATE, SYSDATE)")
+    cursor.close()
 
     # get all family relations
     cursor = conn.cursor()
@@ -363,8 +441,257 @@ INITIATORKZ
     residence_address = random.choice(addresses)
     cursor.execute(f"INSERT INTO HR_ERP_BIOGRAPHIC_INFOS (PLACE_BIRTH, GENDER, CITIZENSHIP, NATIONALITY, CITIZENSHIPKZ, NATIONALITYKZ, ADDRESS, FAMILY_STATUS_ID, RESIDENCE_ADDRESS, PROFILE_ID, ID, CREATED_AT, UPDATED_AT) VALUES ('{place_birth}', '{gender}', '{citizenship}', '{nationality}', '{citizenshipKZ}', '{nationalityKZ}', '{address}', '{family_status_id}', '{residence_address}', '{personal_profile_id}', '{biographic_info_id}', SYSDATE, SYSDATE)")
     cursor.close()
-    print("done")
+    
+
+    test = random.choice([0, 1])
+    if test == 1:
+        for i in range(random.randint(0, 5)):                
+            cursor = conn.cursor()
+            degree_id = random.choice(academic_degrees_degrees)
+            science_id = random.choice(sciences_ids)
+            specialty_id = random.choice(specialties)[2]
+            document_number = str(random.randint(100000, 999999))
+            assignment_date = random.choice(random_dates)
+            academic_degree_id = str(uuid4())
+            cursor.execute(f"INSERT INTO HR_ERP_ACADEMIC_DEGREES (PROFILE_ID, DEGREE_ID, SCIENCE_ID, SPECIALTY_ID, DOCUMENT_NUMBER, ASSIGNMENT_DATE, ID, CREATED_AT, UPDATED_AT) VALUES ('{educational_profile_id}', '{degree_id}', '{science_id}', '{specialty_id}', '{document_number}', TO_DATE('{assignment_date}', 'YYYY-MM-DD'), '{academic_degree_id}', SYSDATE, SYSDATE)")
+            cursor.close()
+    test = random.choice([0, 1])
+    if test == 1:
+        for i in range(random.randint(0, 5)):
+            cursor = conn.cursor()
+            academic_title_id = str(uuid4())
+            degree_id = random.choice(['99962544-80a3-4fa4-a5b3-e526c780ae3f', 'a7b81b39-7030-4d68-abd4-d84cb049caf7'])
+            specialty_id = random.choice(specialties)[2]
+            document_number = str(random.randint(100000, 999999))
+            assignment_date = random.choice(random_dates)
+            cursor.execute(f"INSERT INTO HR_ERP_ACADEMIC_TITLES (PROFILE_ID, DEGREE_ID, SPECIALTY_ID, DOCUMENT_NUMBER, ASSIGNMENT_DATE, ID, CREATED_AT, UPDATED_AT) VALUES ('{educational_profile_id}', '{degree_id}', '{specialty_id}', '{document_number}', TO_DATE('{assignment_date}', 'YYYY-MM-DD'), '{academic_title_id}', SYSDATE, SYSDATE)")
+            cursor.close()
+
+    test = random.choice([0, 1])
+    if test == 1:
+        for i in range(random.randint(0, 5)):
+            cursor = conn.cursor()
+            education_id = str(uuid4())
+            is_military_school = random.choice([0, 2])
+            specialty_id = random.choice(specialties)[2]
+            print(random.choice(specialties))
+            type_of_top = random.choice(["Бакалавриат", "Магистратура"])
+            document_number = str(random.randint(100000, 999999))
+            date_of_issue = random.choice(random_dates)
+            start_date = random.choice(random_dates)
+            end_date = (datetime.strptime(start_date, '%Y-%m-%d') + timedelta(days=random.randint(1, 30))).strftime('%Y-%m-%d')
+            institution_id = random.choice(institutions)[2]
+            print(random.choice(institutions))
+            degree_id = ['051afd14-2825-46ad-ba30-38f569946600',
+        '4bbcebe4-ba0a-4e86-aaee-9233fed299ce',
+        '4a64f581-b36b-42a6-b464-737a1306ea1a',
+        'a822c476-2faa-4a4a-94bb-ebf07569a41a']
+            degree_id = random.choice(degree_id)
+            document_link = 'null'
+            cursor.execute(f"INSERT INTO HR_ERP_EDUCATIONS (PROFILE_ID, IS_MILITARY_SCHOOL, SPECIALTY_ID, TYPE_OF_TOP, DOCUMENT_NUMBER, DATE_OF_ISSUE, START_DATE, END_DATE, INSTITUTION_ID, DEGREE_ID, DOCUMENT_LINK, ID, CREATED_AT, UPDATED_AT) VALUES ('{educational_profile_id}', '{is_military_school}', '{specialty_id}', '{type_of_top}', '{document_number}', TO_DATE('{date_of_issue}', 'YYYY-MM-DD'), TO_DATE('{start_date}', 'YYYY-MM-DD'), TO_DATE('{end_date}', 'YYYY-MM-DD'), '{institution_id}', '{degree_id}', null, '{education_id}', SYSDATE, SYSDATE)")
+            cursor.close()
+
+    test = random.choice([0, 1])
+    if test == 1:
+        for i in range(random.randint(0, 5)):        
+            cursor = conn.cursor()
+            language_proficiency_id = str(uuid4())
+            language_id = random.choice(languages)[2]
+            level = random.randint(1, 5)
+            document_number = str(random.randint(100000, 999999))
+            assignment_date = random.choice(random_dates)
+            user_id = new_id
+            cursor.execute(f"INSERT INTO HR_ERP_LANGUAGE_PROFICIENCIES (LANGUAGE_ID, LANGUAGE_LEVEL, DOCUMENT_NUMBER, ASSIGNMENT_DATE, PROFILE_ID, ID, CREATED_AT, UPDATED_AT) VALUES ('{language_id}', '{level}', '{document_number}', TO_DATE('{assignment_date}', 'YYYY-MM-DD'), '{educational_profile_id}', '{language_proficiency_id}', SYSDATE, SYSDATE)")
+            cursor.close()
+    test = random.choice([0, 1])
+    if test == 1:
+        for i in range(random.randint(0, 5)):            
+            cursor = conn.cursor()
+            driving_license_id = str(uuid4())
+            document_number = str(random.randint(100000, 999999))
+            category = random.choice(["A", "B", "C", "D", "E"])
+            date_of_issue = random.choice(random_dates)
+            date_to = (datetime.strptime(date_of_issue, '%Y-%m-%d') + timedelta(days=random.randint(1, 30))).strftime('%Y-%m-%d')
+            cursor.execute(f"INSERT INTO HR_ERP_DRIVING_LICENSES (DOCUMENT_NUMBER, CATEGORY, DATE_OF_ISSUE, DATE_TO, PROFILE_ID, ID, CREATED_AT, UPDATED_AT) VALUES ('{document_number}', '{category}', TO_DATE('{date_of_issue}', 'YYYY-MM-DD'), TO_DATE('{date_to}', 'YYYY-MM-DD'), '{personal_profile_id}', '{driving_license_id}', SYSDATE, SYSDATE)")
+            cursor.close()
+
+    test = random.choice([0, 1])
+    if test == 1:
+        for i in range(random.randint(0, 5)):
+            cursor = conn.cursor()
+            identification_card_id = str(uuid4())
+            document_number = str(random.randint(100000, 999999))
+            date_of_issue = random.choice(random_dates)
+            date_to = (datetime.strptime(date_of_issue, '%Y-%m-%d') + timedelta(days=random.randint(1, 30))).strftime('%Y-%m-%d')
+            issued_by = random.choice(["МВД", "МИД"])
+            cursor.execute(f"INSERT INTO HR_ERP_IDENTIFICATION_CARDS (DOCUMENT_NUMBER, DATE_OF_ISSUE, DATE_TO, ISSUED_BY, PROFILE_ID, ID, CREATED_AT, UPDATED_AT) VALUES ('{document_number}', TO_DATE('{date_of_issue}', 'YYYY-MM-DD'), TO_DATE('{date_to}', 'YYYY-MM-DD'), '{issued_by}', '{personal_profile_id}', '{identification_card_id}', SYSDATE, SYSDATE)")
+            cursor.close()
+
+    test = random.choice([0, 1])
+    if test == 1:
+        for i in range(random.randint(0, 5)):        
+            cursor = conn.cursor()
+            sport_achievement_id = str(uuid4())
+            sport_type_id = random.choice(sport_types)[2] 
+            assignment_date = random.choice(random_dates)
+            name = random.choice(["Золото", "Серебро", "Бронза"])
+            name_kz = random.choice(["Алтын", "Алтын", "Алтын"])
+            cursor.execute(f"INSERT INTO HR_ERP_SPORT_ACHIEVEMENTS (SPORT_TYPE_ID, ASSIGNMENT_DATE, NAME, NAMEKZ, PROFILE_ID, ID, CREATED_AT, UPDATED_AT) VALUES ('{sport_type_id}', TO_DATE('{assignment_date}', 'YYYY-MM-DD'), '{name}', '{name_kz}', '{personal_profile_id}', '{sport_achievement_id}', SYSDATE, SYSDATE)")
+            cursor.close()
+
+    test = random.choice([0, 1])
+    if test == 1:
+        for i in range(random.randint(0, 5)):        
+            cursor = conn.cursor()
+            sport_degree_id = str(uuid4())
+            sport_degree_type_id = random.choice(sport_degree_types)[2]
+            sport_type_id = random.choice(sport_types)[2]
+    
+            print(random.choice(sport_degree_types))
+            assignment_date = random.choice(random_dates)
+            cursor.execute(f"INSERT INTO HR_ERP_SPORT_DEGREES (PROFILE_ID, SPORT_DEGREE_TYPE_ID, SPORT_TYPE_ID, ASSIGNMENT_DATE, ID, CREATED_AT, UPDATED_AT) VALUES ('{personal_profile_id}', '{sport_degree_type_id}', '{sport_type_id}', TO_DATE('{assignment_date}', 'YYYY-MM-DD'), '{sport_degree_id}', SYSDATE, SYSDATE)")
+            cursor.close()
+
+    test = random.choice([0, 1])
+    if test == 1:
+        for i in range(random.randint(0, 5)):            
+            cursor = conn.cursor()
+            tax_declaration_id = str(uuid4())
+            year = str(random.choice([2000, 2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2019, 2018, 2017, 2016, 2015]))
+            is_paid = random.choice([0, 1])
+            cursor.execute(f"INSERT INTO HR_ERP_TAX_DECLARATIONS (YEAR, IS_PAID, PROFILE_ID, ID, CREATED_AT, UPDATED_AT) VALUES ('{year}', '{is_paid}', '{personal_profile_id}', '{tax_declaration_id}', SYSDATE, SYSDATE)")
+            cursor.close()
+
+    test = random.choice([0, 1])
+    if test == 1:
+        for i in range(random.randint(0, 5)):            
+            cursor = conn.cursor()
+            user_financial_id = str(uuid4())
+            iban = "".join([str(random.randint(0, 9)) for _ in range(20)])
+            housing_payments_iban = "".join([str(random.randint(0, 9)) for _ in range(20)])
+            cursor.execute(f"INSERT INTO HR_ERP_USER_FINANCIAL_INFOS (IBAN, HOUSING_PAYMENTS_IBAN, PROFILE_ID, ID, CREATED_AT, UPDATED_AT) VALUES ('{iban}', '{housing_payments_iban}', '{personal_profile_id}', '{user_financial_id}', SYSDATE, SYSDATE)")
+            cursor.close()
+
+    test = random.choice([0, 1])
+    if test == 1:
+        for i in range(random.randint(0, 5)):
+            cursor = conn.cursor()
+            abroad_travel_id = str(uuid4())
+            country = random.choice(countries_db)[2]
+            print(random.choice(countries_db))
+            vehicle_types_id = random.choice(['00890df5-dd8d-4980-98b9-debd5fccfcfd', '2542f546-7398-4c73-954a-2b3922846beg', 'b74cbded-f4de-4c92-9935-6f7846b4dc85'])
+            date_from = random.choice(random_dates)
+            date_to = (datetime.strptime(date_from, '%Y-%m-%d') + timedelta(days=random.randint(1, 30))).strftime('%Y-%m-%d')
+            reason = random.choice(["Отдых", "Работа"])
+            reason_kz = random.choice(["Демалу", "Жұмыс"])
+            destination_country_id = random.choice(countries_db)[2]
+            cursor.execute(f"INSERT INTO HR_ERP_ABROAD_TRAVELS (VEHICLE_TYPE_ID, DESTINATION_COUNTRY_ID, DATE_FROM, DATE_TO, REASON, REASONKZ, DOCUMENT_LINK, PROFILE_ID, ID, CREATED_AT, UPDATED_AT) VALUES ('{vehicle_types_id}', '{destination_country_id}', TO_DATE('{date_from}', 'YYYY-MM-DD'), TO_DATE('{date_to}', 'YYYY-MM-DD'), '{reason}', '{reason_kz}', null, '{additional_profile_id}', '{abroad_travel_id}', SYSDATE, SYSDATE)")
+            cursor.close()
+
+    test = random.choice([0, 1])
+    if test == 1:
+        for i in range(random.randint(0, 5)):        
+            cursor = conn.cursor()
+            polygraph_id = str(uuid4())
+            number = str(random.randint(100000, 999999))
+            issued_by = random.choice(["МВД", "МИД"])
+            date_of_issue = random.choice(random_dates)
+            cursor.execute(f"INSERT INTO HR_ERP_POLYGRAPH_CHECKS (POLYGRAPH_NUMBER, ISSUED_BY, DATE_OF_ISSUE, PROFILE_ID, ID, CREATED_AT, UPDATED_AT) VALUES ('{number}', '{issued_by}', TO_DATE('{date_of_issue}', 'YYYY-MM-DD'), '{additional_profile_id}', '{polygraph_id}', SYSDATE, SYSDATE)")
+            cursor.close()
+
+    test = random.choice([0, 1])
+    if test == 1:
+        for i in range(random.randint(0, 5)):
+            cursor = conn.cursor()
+            psychophysiological_id = str(uuid4())
+            issued_by = random.choice(["МВД", "МИД"])
+            date_of_issue = random.choice(random_dates)
+            document_number = str(random.randint(100000, 999999))
+            cursor.execute(f"INSERT INTO HR_ERP_PSYCHOLOGICAL_CHECKS (ISSUED_BY, DATE_OF_ISSUE, DOCUMENT_NUMBER, PROFILE_ID, ID, CREATED_AT, UPDATED_AT) VALUES ('{issued_by}', TO_DATE('{date_of_issue}', 'YYYY-MM-DD'), '{document_number}', '{additional_profile_id}', '{psychophysiological_id}', SYSDATE, SYSDATE)")
+            cursor.close()
+
+    test = random.choice([0, 1])
+    if test == 1:
+        for i in range(random.randint(0, 5)):            
+            cursor = conn.cursor()
+            service_housing_id = str(uuid4())
+            type_properties = random.choice(['4bc287dc-04af-428f-b487-47509faa7c03',
+        'c6964ff1-29ca-41e6-9a1d-592e466d67b5',
+        'c583af55-8cd9-4510-8989-e4217f794694',
+        'e63eaf6e-b11b-446c-88dc-06dd518c40dc'])
+            address = random.choice(addresses)
+            issue_date = random.choice(random_dates)
+            cursor.execute(f"INSERT INTO HR_ERP_SERVICE_HOUSINGS (TYPE_ID, ADDRESS, ISSUE_DATE, PROFILE_ID, ID, CREATED_AT, UPDATED_AT) VALUES ('{type_properties}', '{address}', TO_DATE('{issue_date}', 'YYYY-MM-DD'), '{additional_profile_id}', '{service_housing_id}', SYSDATE, SYSDATE)")
+            cursor.close()
+    test = random.choice([0, 1])
+    if test == 1:
+        for i in range(random.randint(0, 5)):            
+            cursor = conn.cursor()
+            special_check_id = str(uuid4())
+            number = str(random.randint(100000, 999999))
+            issued_by = random.choice(["МВД", "МИД"])
+            date_of_issue = random.choice(random_dates)
+            cursor.execute(f"INSERT INTO HR_ERP_SPECIAL_CHECKS (SPECIAL_NUMBER, ISSUED_BY, DATE_OF_ISSUE, PROFILE_ID, ID, CREATED_AT, UPDATED_AT) VALUES ('{number}', '{issued_by}', TO_DATE('{date_of_issue}', 'YYYY-MM-DD'), '{additional_profile_id}', '{special_check_id}', SYSDATE, SYSDATE)")
+            cursor.close()
+
+    test = random.choice([0, 1])
+    if test == 1:
+        for i in range(random.randint(0, 5)):        
+            cursor = conn.cursor() 
+            vehicle_id = str(uuid4())
+            number = str(random.randint(100000, 999999))
+            vin_code = "".join([str(random.randint(0, 9)) for _ in range(17)])
+            date_from = random.choice(random_dates)
+            name = random.choice(["BMW", "Mercedes", "Toyota", "Lada"])
+            cursor.execute(f"INSERT INTO HR_ERP_USER_VEHICLES (VEHICLE_NUMBER, VIN_CODE, PROFILE_ID, ID, DATE_FROM, NAME, NAMEKZ, CREATED_AT, UPDATED_AT) VALUES ('{number}', '{vin_code}', '{additional_profile_id}', '{vehicle_id}', TO_DATE('{date_from}', 'YYYY-MM-DD'), '{name}', '{name}', SYSDATE, SYSDATE)")
+            cursor.close()
+
+    test = random.choice([0, 1])
+    if test == 1:
+        for i in range(random.randint(0, 5)):
+            
+            cursor = conn.cursor()
+            violation_id = str(uuid4())
+            name = random.choice(["Пьяный за рулем", "Превышение скорости"])
+            name_kz = random.choice(["Саулыққа қарсы", "Саулыққа қарсы"])
+            date = random.choice(random_dates)
+            issued_by = random.choice(["МВД", "МИД"])
+            issued_by_kz = random.choice(["МВД", "МИД"])
+            article_number = str(random.randint(100000, 999999))
+            article_number_kz = str(random.randint(100000, 999999))
+            consequence = random.choice(["Штраф", "Лишение прав"])
+            consequence_kz = random.choice(["Штраф", "Лишение прав"])
+            cursor.execute(f"INSERT INTO HR_ERP_VIOLATIONS (NAME, NAMEKZ, ISSUED_BY, ISSUED_BYKZ, ARTICLE_NUMBER, ARTICLE_NUMBERKZ, CONSEQUENCE, CONSEQUENCEKZ, PROFILE_ID, ID, CREATED_AT, UPDATED_AT) VALUES ('{name}', '{name_kz}', '{issued_by}', '{issued_by_kz}', '{article_number}', '{article_number_kz}', '{consequence}', '{consequence_kz}', '{additional_profile_id}', '{violation_id}', SYSDATE, SYSDATE)")
+            cursor.close()
+    test = random.choice([0, 1])
+    if test == 1:    
+        cursor = conn.cursor()
+        service_id = str(uuid4())
+        number = str(random.randint(100000, 999999))
+        date_to = random.choice(random_dates)
+        token_status = random.choice(["Получен", "Не получен", "Утерян"])
+        id_status = random.choice(["Получен", "Не получен", "Утерян"])
+        user_id = new_id
+
+        cursor.execute(f"INSERT INTO HR_ERP_SERVICE_IDS (SERVICE_NUMBER, DATE_TO, TOKEN_STATUS, ID_STATUS, USER_ID, ID, CREATED_AT, UPDATED_AT) VALUES ('{number}', TO_DATE('{date_to}', 'YYYY-MM-DD'), '{token_status}', '{id_status}', '{user_id}', '{service_id}', SYSDATE, SYSDATE)")
+        cursor.close()
+    
+    cursor = conn.cursor()
+    personal_reserves_id = str(uuid4())
+    reserve = random.choice(["Зачислен", "Резерв"])
+    reserve_date = random.choice(random_dates)
+    user_id = new_id
+
+    cursor.execute(f"INSERT INTO HR_ERP_PERSONNAL_RESERVES (RESERVE, RESERVE_DATE, USER_ID, ID, CREATED_AT, UPDATED_AT) VALUES ('{reserve}', TO_DATE('{reserve_date}', 'YYYY-MM-DD'), '{user_id}', '{personal_reserves_id}', SYSDATE, SYSDATE)")
+
+    cursor.close()
+     
+
+
+    
+
 conn.commit()
+
 conn.close()
     
     

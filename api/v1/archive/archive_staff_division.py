@@ -12,7 +12,7 @@ from schemas import (ArchiveStaffDivisionRead,
                      ArchiveStaffDivisionStepRead,
                      ArchiveStaffDivisionUpdateParentGroup,
                      NewArchiveStaffDivisionCreate,
-                     NewArchiveStaffDivisionUpdate,)
+                     NewArchiveStaffDivisionUpdate, ArchiveStaffDivisionReadSchedule, ArchiveStaffDivisionReadSecond)
 
 from services import (archive_staff_division_service,
                       staff_list_service,
@@ -33,7 +33,7 @@ async def get_all(*,
                   db: Session = Depends(get_db),
                   staff_list_id: str,
                   skip: int = 0,
-                  limit: int = 100,
+                  limit: int = 10,
                   Authorize: AuthJWT = Depends()
                   ):
     """
@@ -47,8 +47,8 @@ async def get_all(*,
         This parameter is optional and defaults to 100.
    """
     Authorize.jwt_required()
-    staff_list_service.get_by_id(db, str(staff_list_id))
-    return archive_staff_division_service.get_departments(
+    # staff_list_service.get_by_id(db, str(staff_list_id))
+    return await archive_staff_division_service.get_departments(
         db, str(staff_list_id), skip, limit)
 
 @router.get("/one-level/", dependencies=[Depends(HTTPBearer())],
@@ -122,7 +122,7 @@ async def duplicate(*,
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=ArchiveStaffDivisionRead,
+            response_model=ArchiveStaffDivisionReadSecond,
             summary="Get Staff Division by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),

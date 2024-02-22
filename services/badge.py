@@ -42,14 +42,24 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
             db.query(BadgeType).filter(
                 BadgeType.name == "Черный Берет").first()
         )
+        badge_history = db.query(BadgeHistory).filter(BadgeHistory.user_id == user_id).all()
+          # Refresh the session to get the most up-to-date data
+        db.refresh(badge_type)
         badge = (
-            db.query(self.model)
-            .filter(self.model.user_id == user_id)
-            .filter(self.model.type_id == badge_type.id)
+            db.query(Badge)
+            .filter(Badge.user_id == user_id)
+            .filter(Badge.type_id == badge_type.id)
             .first()
         )
-        # print("Beret:", badge.created_at)
-        # print("Beret:", badge.id)
+        db.refresh(badge)
+        badge = (
+            db.query(Badge)
+            .filter(Badge.user_id == user_id)
+            .filter(Badge.type_id == badge_type.id)
+            .first()
+        )
+        print("Beret:", badge.created_at)
+        print("Beret:", badge.id)
         return badge
 
     def get_black_beret_by_user_id_and_date(self, db: Session, user_id: str, date_till):

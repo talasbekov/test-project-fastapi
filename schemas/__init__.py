@@ -65,7 +65,7 @@ from .user import (UserCreate, UserRead, UserUpdate,
                    UserShortReadStatus, TableUserRead,
                    UserShortReadStatusPagination,
                    UserShortReadAgeCategory,
-                   UserShortReadPagination)
+                   UserShortReadPagination, UserShortReadFullNames)
 from .profile import ProfileCreate, ProfileUpdate, ProfileRead
 from .hr_document_status import HrDocumentStatusRead, HrDocumentStatusCreate, HrDocumentStatusUpdate
 from .hr_document import (HrDocumentCreate, HrDocumentInit, HrDocumentRead,

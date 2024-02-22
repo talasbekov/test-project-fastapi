@@ -158,6 +158,9 @@ class TableUserRead(Model):
     total: int
     users: List[UserRead]
 
+class UserShortReadFullNames(Model):
+    total: int
+    users: List[UserShortRead]
 
 class UserShortReadStatusPagination(BaseModel):
     total: int = Field(0, nullable=False)

@@ -22,7 +22,7 @@ router = APIRouter(
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            # response_model=List[StaffDivisionRead],
+            response_model=List[StaffDivisionRead],
             summary="Get all Staff Divisions")
 async def get_all(*,
                   db: Session = Depends(get_db),

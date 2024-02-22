@@ -55,13 +55,13 @@ class ArchiveStaffDivisionService(
                 f"ArchiveStaffDivision with name: {name} is not found!")
         return group
 
-    def get_departments(
+    async def get_departments(
             self,
             db: Session,
             staff_list_id: str,
             skip: int = 0,
-            limit: int = 100
-    ) -> List[ArchiveStaffDivision]:
+            limit: int = 10
+    ): 
         archive_divisions = db.query(self.model).filter(
             ArchiveStaffDivision.staff_list_id == staff_list_id,
             ArchiveStaffDivision.parent_group_id == None,
@@ -86,6 +86,7 @@ class ArchiveStaffDivisionService(
                 if staff_unit.user_replacing:
                     if isinstance(staff_unit.user_replacing.staff_unit.requirements, str):
                         staff_unit.user_replacing.staff_unit.requirements = json.loads(staff_unit.user_replacing.staff_unit.requirements)
+        # archive_divisions = [ArchiveStaffDivisionRead.from_orm(archive_division) for archive_division in archive_divisions]
         return archive_divisions
 
     def get_parents(self, db: Session,

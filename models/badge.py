@@ -1,13 +1,14 @@
-from sqlalchemy import Column, String, ForeignKey, Integer
+from sqlalchemy import Column, String, ForeignKey, Integer, LargeBinary, Text
 from sqlalchemy.orm import relationship
-
+from sqlalchemy.dialects.oracle import NCLOB, CLOB
 from models import Model, NamedModel
 
 
 class BadgeType(NamedModel):
     __tablename__ = "hr_erp_badge_types"
-
-    url = Column(String, nullable=True)
+    # name = Column(String, nullable=False)
+    # nameKZ = Column('namekz', String, nullable=True)
+    url = Column(NCLOB, nullable=True)
     badge_order = Column(Integer, nullable=True)
 
     badges = relationship("Badge", back_populates="type")

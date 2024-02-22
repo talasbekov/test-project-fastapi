@@ -88,3 +88,5 @@ Pillow==10.0.1
 fastapi_utilities
 limits==3.8.0
 apscheduler
+typing_extensions
+asgiref==3.7.2 

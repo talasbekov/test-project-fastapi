@@ -1,9 +1,16 @@
-from sqlalchemy import Column, ForeignKey, Boolean, String
+from sqlalchemy import Column, ForeignKey, Boolean, String, Enum
 from sqlalchemy.dialects.postgresql import DATE, TEXT
 from sqlalchemy.orm import relationship
 
 from models import Model
 
+from enum import Enum as EnumBase
+
+
+class SchoolTypeEnum(EnumBase):
+    militaryAcademy = "militaryAcademy"
+    fullTime = "fullTime"
+    correspondence = "correspondence"
 
 class Education(Model):
 
@@ -13,7 +20,7 @@ class Education(Model):
         "hr_erp_educational_profiles.id"), nullable=True)
     profile = relationship("EducationalProfile", back_populates="education")
     is_military_school = Column(Boolean, nullable=True, default=False)
-
+    school_type = Column(String(), nullable=True)
     specialty_id = Column(
         String(),
         ForeignKey("hr_erp_specialties.id"),

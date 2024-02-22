@@ -11,7 +11,8 @@ from schemas import (UserRead,
                      UserUpdate,
                      UserShortRead,
                      TableUserRead,
-                     UserShortReadStatusPagination,)
+                     UserShortReadStatusPagination,
+                     UserShortReadFullNames)
 from services import user_service
 
 router = APIRouter(
@@ -51,6 +52,40 @@ async def get_all(
                                 skip,
                                 limit)
     return TableUserRead(total=total, users=users)
+
+@router.get("/get_all_short_read",
+            dependencies=[Depends(HTTPBearer())],
+            response_model=UserShortReadFullNames,
+            summary="Get all Users Short Read Full Names")
+async def get_all_full_name(
+    *,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends(),
+    hr_document_template_id: str = None,
+    filter: str = "",
+    skip: int = 0,
+    limit: int = 10
+):
+    """
+    Get all Users Full Name Short Read
+
+    - **hr_document_template_id**: str - The value which returns filtered
+        results by hr_document_template_id.
+        This parameter is optional and defaults to None
+    - **filter**: str - The value which returns filtered results.
+        This parameter is optional and defaults to None
+    - **skip**: int - The number of users to skip before returning the results.
+        This parameter is optional and defaults to 0.
+    - **limit**: int - The maximum number of users to return in response.
+        This parameter is optional and defaults to 10.
+    """
+    Authorize.jwt_required()
+    total, users = user_service.get_all(db,
+                                hr_document_template_id,
+                                filter.lstrip().rstrip(),
+                                skip,
+                                limit)
+    return UserShortReadFullNames(total=total, users=users)
 
 
 @router.get("/{user_id}/templates/",

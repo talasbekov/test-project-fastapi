@@ -22,11 +22,11 @@ class ConnectionManager():
             log.error(e)
         return user_id
 
-    async def broadcast(self, message:dict, user_id: str):
-        ws = self.active_connections.get(user_id)
+    async def broadcast(self, message: dict, user_id: str):
+        ws: CustomWebSocket = self.active_connections.get(user_id)
         print(message)
         if ws is not None:
-            await ws.send_json1(message, mode="text")
+            await ws.send_json(message)
 
 
 manager = ConnectionManager()

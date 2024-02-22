@@ -23,7 +23,7 @@ class BadgeTypeUpdate(BadgeTypeBase):
 
 
 class BadgeTypeRead(BadgeTypeBase, ReadNamedModel):
-    url: str
+    url: Optional[str]
 
 class BadgeTypePaginationRead(Model):
     total: Optional[int]
