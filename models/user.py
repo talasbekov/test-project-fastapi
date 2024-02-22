@@ -16,7 +16,7 @@ class User(isActiveModel):
     last_name = Column(String(150), nullable=True)
     father_name = Column(String(150), nullable=True)
     icon = Column(TEXT(), nullable=True)
-    call_sign = Column(String(255), unique=True)
+    call_sign = Column(String(255))
     id_number = Column(String(255), unique=True)
     phone_number = Column(String(32))
     address = Column(String(255))

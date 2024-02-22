@@ -211,7 +211,8 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         if body.icon is not None:
             user.icon = body.icon
         if body.call_sign is not None and body.call_sign != user.call_sign:
-            self._validate_call_sign(db, body.call_sign)
+            # self._validate_call_sign(db, body.call_sign)
+            self._swipe_call_sign(db, user.call_sign, body.call_sign)
             user.call_sign = body.call_sign
         if body.id_number is not None:
             user.id_number = body.id_number
@@ -235,9 +236,13 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             user.iin = body.iin
         if self._validate_id(db, body.id):
             self.update_id(db, user.id, body.id)
-
-        db.add(user)
-        db.flush()
+        try:
+            db.add(user)
+            db.flush()
+        except Exception as e:
+            print(e)
+        # db.add(user)
+        # db.flush()
 
         return user
 
@@ -533,7 +538,19 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             raise InvalidOperationException(
                 f"call_sign {call_sign} is already assigned to {user_name}!"
             )
-
+    def _swipe_call_sign(self, db: Session, init_call:str, new_call: str):
+        print(1)
+        user = db.query(User).filter(User.call_sign == new_call).first()
+        if user:
+            print(user.id)
+            user.call_sign = init_call
+            try:
+                db.add(user)
+                # db.flush()
+            except Exception as e:
+                print(e)
+        print(2)
+        
     def get_all_by_position(self, db: Session, position_id: str):
 
         users = (db.query(User)

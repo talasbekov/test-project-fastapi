@@ -156,6 +156,7 @@ class HistoryBadgeCreate(BaseModel):
     reason: str
     reasonKZ: str
     url: str
+    # badge_order: Optional[int]
 
 
 class HistorySecondmentCreate(BaseModel):
@@ -743,9 +744,10 @@ class ExperienceRead(ReadModel):
 
 class ServiceIdInfoRead(ReadModel):
     number: Optional[str]
+    token_number: Optional[str]
     date_to: Optional[datetime]
-    token_status: Optional[Enum]
-    id_status: Optional[Enum]
+    token_status: Optional[str]
+    id_status: Optional[str]
 
     class Config:
         from_attributes = True

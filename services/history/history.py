@@ -248,7 +248,8 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             "date_from": obj_in.date_from,
             "date_to": obj_in.date_to if obj_in.date_to is not None else None,
             "reason": obj_in.reason,
-            "reasonKZ": obj_in.reasonKZ
+            "reasonKZ": obj_in.reasonKZ,
+            "badge_order": obj_in.badge_order
         }
         obj_db = cls(**obj_data)
         db.add(obj_db)
@@ -499,6 +500,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             token_status=service_id.token_status,
             id_status=service_id.id_status,
             number=service_id.number,
+            token_number=service_id.token_number
         )
         return service_id_read
 

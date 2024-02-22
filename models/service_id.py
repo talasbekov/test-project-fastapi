@@ -16,8 +16,8 @@ class ServiceID(Model):
 
     number = Column('service_number', String, nullable=True)
     date_to = Column(TIMESTAMP(timezone=True), nullable=True)
-
-    token_status = Column(Enum(ServiceIDStatus), nullable=True)
-    id_status = Column(Enum(ServiceIDStatus), nullable=True)
+    token_number = Column(String, nullable=True)
+    token_status = Column(String, nullable=True)
+    id_status = Column(String, nullable=True)
 
     user_id = Column(String(), ForeignKey("hr_erp_users.id"))

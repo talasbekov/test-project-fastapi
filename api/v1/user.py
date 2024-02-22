@@ -278,7 +278,7 @@ async def update_user_patch(
     - **last_name**: required.
     - **father_name**: optional.
     - **icon**: image with url format. This parameter is optional.
-    - **call_sign**: required.
+    - **x_sign**: required.
     - **id_number**: unique employee number. This parameter is required.
     - **phone_number**: format (+77xxxxxxxxx). This parameter is optional.
     - **address**: optional.

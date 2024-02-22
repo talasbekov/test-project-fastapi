@@ -10,6 +10,7 @@ class ServiceIDBase(Model):
     number: Optional[str]
     date_to: Optional[date]
     token_status: Optional[str]
+    token_number: Optional[str]
     id_status: Optional[str]
     user_id: str
 
