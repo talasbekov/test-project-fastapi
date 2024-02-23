@@ -40,6 +40,14 @@ class NotificationService(
             Notification.sender_type == sender_type
         ).first()
     
+    def update_is_seen(self, db: Session, notification_id: str):
+        notification = self.get_by_id(db, notification_id)
+        notification.is_seen = True
+        db.add(notification)
+        db.flush()
+        return notification
+    
+    
     
 
 

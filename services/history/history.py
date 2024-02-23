@@ -570,7 +570,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                 BadgeHistory.badge_id == black_beret_badge.id,
                 # BadgeHistory.date_to == None
             ).first()
-            # print(black_beret.id)
+            
             if black_beret is not None:
                 black_beret = BlackBeretRead(
                     id=black_beret.id,
@@ -578,8 +578,9 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                     date_from=black_beret.date_from,
                     document_number=black_beret.document_number
                 )
+                print(black_beret.id)
         else:
-            print("here1")
+            print("here_null")
             black_beret = None
             
         personal_reserve = personnal_reserve_service.get_by_user_id(
@@ -1160,8 +1161,8 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
     
     def get_expiring_contracts(self, db: Session):
         contracts = db.query(ContractHistory).filter(
-            ContractHistory.date_to <= datetime.now() + timedelta(days=30),
-            ContractHistory.date_to >= datetime.now() + timedelta(days=1)
+            ContractHistory.date_to >= datetime.now() + timedelta(days=1),
+            ContractHistory.date_to <= datetime.now() + timedelta(days=30)
         ).all()
         return contracts
 

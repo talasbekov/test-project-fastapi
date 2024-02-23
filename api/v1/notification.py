@@ -157,3 +157,20 @@ async def create(*,
     """
     Authorize.jwt_required()
     return detailed_notification_service.create(db, body)
+
+@router.patch("/update_is_seen/{notification_id}", status_code=status.HTTP_200_OK,
+             dependencies=[Depends(HTTPBearer())],
+             summary="Update Detailed Notification")
+async def update_is_seen(*,
+                 db: Session = Depends(get_db),
+                 notification_id: str,
+                 Authorize: AuthJWT = Depends()
+                 ):
+    """
+        Update Notifications to be seen
+
+        **notification_id** - required - str
+    """
+    Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
+    return notification_service.update_is_seen(db, notification_id)

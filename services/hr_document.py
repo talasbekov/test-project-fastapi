@@ -1921,7 +1921,7 @@ class HrDocumentService(
 
         # check if the notification has already been created for this user
         if notification is None:
-            notification_service.create(
+            notification_id_of_created = notification_service.create(
                 db,
                 obj_in=NotificationCreate(
                     message=message,
@@ -1929,10 +1929,13 @@ class HrDocumentService(
                     receiver_id=user_id
                 )
             )
+        
+        notification_id = notification.id if notification else notification_id_of_created.id
         message_to_notifier = {
             "sender_type": str(sender_type),
             "message": message,
-            "contract_id": contract_id
+            "contract_id": contract_id,
+            "notification_id": notification_id
         }
         if notification and not notification.is_seen:
             return "Notification was not seen"
