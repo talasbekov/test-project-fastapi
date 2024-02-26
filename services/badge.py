@@ -56,7 +56,8 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
             db.query(Badge)
             .filter(Badge.user_id == user_id)
             .filter(Badge.type_id == badge_type.id)
-            .first()
+            .order_by(self.model.created_at.desc()) # Аскар чекни это правильно или нет
+            .first() 
         )
         print("Beret:", badge.created_at)
         print("Beret:", badge.id)

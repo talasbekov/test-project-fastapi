@@ -249,7 +249,6 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             "date_to": obj_in.date_to if obj_in.date_to is not None else None,
             "reason": obj_in.reason,
             "reasonKZ": obj_in.reasonKZ,
-            "badge_order": obj_in.badge_order
         }
         obj_db = cls(**obj_data)
         db.add(obj_db)
@@ -445,8 +444,11 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         #     for equipment_model in equipment_models_count:
         #         percentage[equipment_model[0]] = (
         #             equipment_model[1] * 100) / clothing_equipments_type_count
-
-        service_id_info = self.get_service_id_by_user_id(db, user_id)
+        try:
+            service_id_info = self.get_service_id_by_user_id(db, user_id)
+        except Exception as e:
+            print(e)
+        
         # equipments_dict = [EquipmentRead.from_orm(
         #     equipment).dict() for equipment in equipments]
         # equipments_dict.append(percentage)
