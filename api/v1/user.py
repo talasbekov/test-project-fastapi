@@ -87,6 +87,18 @@ async def get_all_full_name(
                                 limit)
     return UserShortReadFullNames(total=total, users=users)
 
+@router.get("/get_all_heads_except_pgs", 
+            dependencies=[Depends(HTTPBearer())],
+            response_model=UserShortReadFullNames,
+            summary="Get all Heads except PGS")
+async def get_all_heads_except_pgs(*,
+                                db: Session = Depends(get_db),
+                                Authorize: AuthJWT = Depends()
+                                ):
+    Authorize.jwt_required()
+    total, users = user_service.get_all_heads_except_pgs(db)
+    return UserShortReadFullNames(total=total, users=users)
+
 
 @router.get("/{user_id}/templates/",
             dependencies=[Depends(HTTPBearer())],
@@ -368,3 +380,4 @@ def get_short_user(
 ):
     Authorize.jwt_required()
     return user_service.get_all_iin_by_ids(db, user_ids, candidate_ids)
+

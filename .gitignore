@@ -8,6 +8,7 @@ __pycache__/
 .idea/*
 
 # Distribution / packaging
+instantclient_19_21_test/
 .Python
 build/
 develop-eggs/

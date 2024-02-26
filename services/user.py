@@ -2,7 +2,7 @@ import types
 import datetime
 from typing import List, Optional, Any, Union, Dict
 from sqlalchemy.orm import Session, Query
-from sqlalchemy import func, and_
+from sqlalchemy import func, and_, not_
 from fastapi.encoders import jsonable_encoder
 
 from exceptions import NotFoundException, InvalidOperationException, BadRequestException
@@ -20,7 +20,8 @@ from models import (
     ScheduleYear,
     SubjectType,
     StatusHistory,
-    Status
+    Status,
+    Position
 )
 from schemas import (
     UserCreate,
@@ -584,6 +585,19 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             return self.get_leader_id(db, staff_division.parent_group_id)
         return None
 
+    def get_all_heads_except_pgs(self, db: Session) -> List[User]:
+        head_positions_users = db.query(User)\
+        .join(StaffDivision, User.actual_staff_unit_id == StaffDivision.leader_id)\
+        .join(StaffUnit, StaffUnit.id == User.actual_staff_unit_id)\
+        .join(Position, StaffUnit.position_id == Position.id)\
+        .filter(Position.name.like('%Начальник%'))\
+        .filter(not_(Position.name.like('%Начальник службы%')))\
+        .all()
+        
+
+
+        total = len(head_positions_users)
+        return total, head_positions_users
 
 
 user_service = UserService(User)
