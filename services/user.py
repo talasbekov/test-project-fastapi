@@ -211,10 +211,10 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             user.father_name = body.father_name
         if body.icon is not None:
             user.icon = body.icon
-        if body.call_sign is not None and body.call_sign != user.call_sign:
+        if body.call_sign is not None and body.call_sign.lower() != user.call_sign.lower():
             # self._validate_call_sign(db, body.call_sign)
-            self._swipe_call_sign(db, user.call_sign, body.call_sign)
-            user.call_sign = body.call_sign
+            self._swipe_call_sign(db, user.call_sign.capitalize(), body.call_sign.capitalize())
+            user.call_sign= body.call_sign.capitalize()
         if body.id_number is not None:
             user.id_number = body.id_number
         if body.phone_number is not None:
@@ -594,7 +594,6 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
         .filter(not_(Position.name.like('%Начальник службы%')))\
         .all()
         
-
 
         total = len(head_positions_users)
         return total, head_positions_users

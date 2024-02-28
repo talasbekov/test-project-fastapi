@@ -2,7 +2,7 @@ import time
 import socket
 
 import sentry_sdk
-from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect, HTTPException
+from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect, HTTPException, Query
 from fastapi.logger import logger as log
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, RedirectResponse
@@ -98,11 +98,11 @@ async def docs_redirect():
 async def websocket_endpoint(
     websocket: CustomWebSocket,
     user_id: str,
-    # token: str = Query(...),
+    token: str = Query(...),
     # Authorize: AuthJWT = Depends(),
 ):
     try:
-        # Authorize.jwt_required("websocket", token)
+        AuthJWT.jwt_required("websocket", token)
         if user_id is None:
             # raise AuthJWTException()
             return JSONResponse(status_code=400, content={"detail": "user_id is required"})

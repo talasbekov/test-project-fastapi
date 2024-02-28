@@ -11,7 +11,9 @@ class PositionBase(NamedModel):
     # make category_code uppercase
     @validator('category_code')
     def category_code_to_upper(cls, v):
-        return v.upper()
+        if v is not None:
+            return v.upper()
+        return
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
