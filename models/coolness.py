@@ -22,7 +22,7 @@ class CoolnessType(NamedModel):
 
     __tablename__ = "hr_erp_coolness_types"
     order = Column('COOLNESS_ORDER', Integer, nullable=False)
-    percentage = Column('PERCENTAGE', Integer, nullable=True)
+    # percentage = Column('PERCENTAGE', Integer, nullable=True)
     coolnesses = relationship("Coolness", back_populates="type")
 
 

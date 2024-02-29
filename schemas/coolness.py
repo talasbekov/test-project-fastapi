@@ -11,7 +11,7 @@ class CoolnessTypeBase(NamedModel):
 
 class CoolnessTypeCreate(CoolnessTypeBase):
     order: Optional[int]
-    percentage: Optional[int]
+#    percentage: Optional[int]
 
 
 class CoolnessTypeUpdate(CoolnessTypeBase):

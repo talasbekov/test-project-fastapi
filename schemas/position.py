@@ -37,13 +37,21 @@ class PositionRead(PositionBase, ReadModel):
     name: Optional[str]
     nameKZ: Optional[str]
 
-
+    @validator('max_rank', always=True)
+    def shorten_max_rank(cls, v, values, **kwargs):
+        if 'category_code' in values and values['category_code'].startswith('C_RG'):
+            return v[:-6]
+        return v
+    
     class Config:
         from_attributes = True
         arbitrary_types_allowed = True
 
     @classmethod
     def from_orm(cls, orm_obj):
+        max_rank = orm_obj.max_rank
+        if orm_obj.category_code.startswith("C_RG"):
+            max_rank = max_rank[:-6]
         return cls(
             id=orm_obj.id,
             created_at=orm_obj.created_at,
