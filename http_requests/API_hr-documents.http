@@ -1,0 +1,113 @@
+### Get hr_document_template_id. black_beret
+GET http://localhost:8002/api/v1/hr-documents-template?name=приказ о присвоения черного берета&skip=0&limit=10
+Authorization: Bearer {{auth_token1}}
+
+> {% client.global.set("hr_document_template_id_beret", response.body[0].id);%}
+
+### Get hr_document_template_id. position
+GET http://localhost:8002/api/v1/hr-documents-template?name=приказ о назначении&skip=0&limit=10
+Authorization: Bearer {{auth_token1}}
+
+> {% client.global.set("hr_document_template_id_position", response.body[0].id); %}
+
+### Get hr_document_template_id. rank
+GET http://localhost:8002/api/v1/hr-documents-template?name=приказ о присвоения звания&skip=0&limit=10
+Authorization: Bearer {{auth_token1}}
+
+> {% client.global.set("hr_document_template_id_rank", response.body[0].id); %}
+
+### Get hr_document_template_steps. rank
+GET http://localhost:8002/api/v1/hr-documents-template/steps/{{hr_document_template_id_beret}}
+Authorization: Bearer {{auth_token1}}
+
+> {%
+client.global.set("hr_document_template_steps1", response.body[2]);
+client.global.set("hr_document_template_steps2", response.body[3]);
+client.global.set("hr_document_template_steps3", response.body[100]);
+%}
+
+### Initialize hr_document. beret
+POST http://localhost:8002/api/v1/hr-documents
+Authorization: Bearer {{auth_token1}}
+Content-Type: application/json
+
+
+{
+  "document_step_users_ids": {
+  "2": "{{hr_document_template_steps1}}",
+  "3": "{{hr_document_template_steps2}}",
+  "100": "{{hr_document_template_steps3}}"
+  },
+  "hr_document_template_id": "{{hr_document_template_id_beret}}",
+  "due_date": "2023-04-27T10:29:24.795Z",
+  "properties": {},
+  "user_ids": [
+    "{{user_id}}"
+  ]
+}
+
+### Initialize hr_document. position
+POST http://localhost:8002/api/v1/hr-documents
+Authorization: Bearer {{auth_token1}}
+Content-Type: application/json
+
+{
+  "document_step_users_ids": {
+  "2": "{{hr_document_template_steps1}}",
+  "3": "{{hr_document_template_steps2}}",
+  "100": "{{hr_document_template_steps3}}"
+  },
+  "hr_document_template_id": "{{hr_document_template_id_position}}",
+  "due_date": "2023-04-27T10:29:24.795Z",
+  "properties": {
+    "new_position": {
+        "name": "",
+        "nameKZ": "",
+        "value": "{{position_id}}"
+    }
+  },
+  "user_ids": [
+    "{{user_id}}"
+  ]
+}
+
+
+### Initialize hr_document. rank
+POST http://localhost:8002/api/v1/hr-documents
+Authorization: Bearer {{auth_token1}}
+Content-Type: application/json
+
+{
+  "document_step_users_ids": {
+  "2": "{{hr_document_template_steps1}}",
+  "3": "{{hr_document_template_steps2}}",
+  "100": "{{hr_document_template_steps3}}"
+  },
+  "hr_document_template_id": "{{hr_document_template_id_rank}}",
+  "due_date": "2023-04-27T10:29:24.795Z",
+  "properties": {
+      "coolness": {
+        "name": "",
+        "nameKZ": "",
+        "value": "58aa3498-9b18-4814-9b8a-12886df30254"
+    }
+  },
+  "user_ids": [
+    "{{user_id}}"
+  ]
+}
+
+### Get hr_documents not-signed
+GET http://localhost:8002/api/v1/hr-documents/not-signed?skip=0&limit=10
+Authorization: Bearer {{auth_token2}}
+
+
+### Get hr_documents sign
+POST http://localhost:8002/api/v1/hr-documents/171dc927-eeb3-46b7-80b5-cea05c093d23/
+Authorization: Bearer {{auth_token4}}
+Content-Type: application/json
+
+{
+  "comment": "",
+  "is_signed": true
+}

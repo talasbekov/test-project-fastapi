@@ -1,0 +1,5 @@
+### Get rank. serjant
+GET http://localhost:8002/api/v1/ranks
+Authorization: Bearer {{auth_token1}}
+
+> {% client.global.set("rank_id", response.body[6].id); %}
