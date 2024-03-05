@@ -91,7 +91,7 @@ class StaffUnit(isActiveModel):
         foreign_keys=[curator_of_id],
         lazy="joined"
     )
-    staff_unit_divisions = relationship("StaffUnitDivision", back_populates="staff_unit")
+    # staff_unit_divisions = relationship("StaffUnitDivision", back_populates="staff_unit")
 
 @listens_for(StaffUnit, 'before_update')
 def description_set_listener(mapper, connection, target):
