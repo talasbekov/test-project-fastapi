@@ -142,6 +142,7 @@ class StaffListService(
             archive_staff_division_service.get_departments(
                 db, staff_list_id, 0, 100)
         )
+        print(staff_divisions)
         new_staff_divisions = []
         task.update_state(state=30)
         for staff_division in staff_divisions:

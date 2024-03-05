@@ -63,3 +63,4 @@ from .bsp import *
 from .hexagon import *
 from .user_logging_actitivty import UserLoggingActivity
 from .permission import Permission, PermissionType, PermissionEnum
+# import .delete_from_hr_documents

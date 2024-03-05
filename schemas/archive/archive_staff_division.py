@@ -1,5 +1,5 @@
 import uuid
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from pydantic import BaseModel, Field, validator
 from schemas import NamedModel, StaffDivisionTypeRead, ReadModel, PositionRead
@@ -78,7 +78,7 @@ class ArchiveStaffUnitReadSchedule(ReadModel):
     position: Optional[PositionRead]
     actual_position_id: Optional[str]
     actual_position: Optional[PositionRead]
-    users: Optional[List[Optional[ArchiveUserReadSchedule]]]
+    user: Optional[ArchiveUserReadSchedule]
     # actual_users: Optional[List[Optional[UserRead]]]
     # hr_vacancy: Optional[List[Optional[HrVacancyRead]]]
     # requirements: Optional[List[dict]]
@@ -102,15 +102,16 @@ class ArchiveStaffDivisionReadSchedule(ArchiveStaffDivisionBaseSchedule):
     children: Optional[List['ArchiveStaffDivisionChildReadSchedule']]
     staff_units: Optional[List['ArchiveStaffUnitReadSchedule']]
 
-    @classmethod
-    def update_forward_refs(cls):
-        cls.__annotations__['children'] = List[ArchiveStaffDivisionChildReadSchedule]
-        cls.__annotations__['staff_units'] = List[ArchiveStaffUnitReadSchedule]
+    # @classmethod
+    # def update_forward_refs(cls):
+    #     cls.__annotations__['children'] = List[ArchiveStaffDivisionChildReadSchedule]
+    #     cls.__annotations__['staff_units'] = List[ArchiveStaffUnitReadSchedule]
     # type: Optional[StaffDivisionTypeRead]
     # count_vacancies: Optional[int]
         
     @classmethod
     def from_orm(cls, obj):
+        super().update_forward_refs()
         return super().from_orm(obj)
     
     @validator('children')
@@ -161,7 +162,7 @@ class ArchiveStaffDivisionChildReadSchedule(NamedModel):
 
 
 
-class ArchiveStaffDivisionChildRead(ArchiveStaffDivisionBase):
+class ArchiveStaffDivisionChildRead(ArchiveStaffDivisionBaseSchedule):
     id: Optional[str]
     children: Optional[List]
     staff_units: Optional[List]
@@ -185,11 +186,11 @@ class ArchiveStaffDivisionChildRead(ArchiveStaffDivisionBase):
         orm_mode = True
 
 
-class ArchiveStaffDivisionRead(ArchiveStaffDivisionBase):
+class ArchiveStaffDivisionRead(ArchiveStaffDivisionBaseSchedule):
     id: Optional[str]
     children: Optional[List['ArchiveStaffDivisionChildRead']]
-    # staff_units: Optional[List['ArchiveStaffUnitRead']]
-    type: Optional[StaffDivisionTypeRead]
+    staff_units: Optional[List['ArchiveStaffUnitReadSchedule']]
+    # type: Optional[StaffDivisionTypeRead]
     
     @validator('children')
     def validate_children(cls, children):
@@ -211,7 +212,7 @@ class ArchiveStaffDivisionRead(ArchiveStaffDivisionBase):
 class ArchiveStaffDivisionReadSecond(ArchiveStaffDivisionBase):
     id: Optional[str]
     children: Optional[List['ArchiveStaffDivisionChildRead']]
-    staff_units: Optional[List['ArchiveStaffUnitReadSchedule']]
+    staff_units: Optional[List['ArchiveStaffUnitRead']]
     type: Optional[StaffDivisionTypeRead]
     
     @validator('children')

@@ -4,10 +4,9 @@ from models import Model
 from enum import Enum as EnumBase
 
 
-class ReserveEnum(EnumBase):
-    enlisted = "Зачислен"
-    reserve = "Резерв"
-
+class ReserveEnum(str, EnumBase):
+    ENLISTED = "Зачислен"
+    RESERVE = "Резерв"
 
 class PersonalReserve(Model):
 

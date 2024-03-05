@@ -96,3 +96,15 @@ class Position(NamedModel):
     type_id = Column(String(), ForeignKey("hr_erp_position_types.id"))
     type = relationship("PositionType", back_populates="positions")
 
+    @property
+    def shortened_max_rank_name(self):
+        if self.category_code.startswith("C-RG"):
+            return self.max_rank.name[:-6]
+        return self.max_rank.name
+
+    @property
+    def shortened_nameKZ(self):
+        if self.category_code.startswith("C-RG"):
+            return self.nameKZ[:-6]
+        return self.nameKZ
+

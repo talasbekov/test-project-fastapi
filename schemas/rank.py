@@ -1,6 +1,6 @@
 from typing import Optional, List
 
-from pydantic import AnyUrl
+from pydantic import AnyUrl, validator
 
 from schemas import NamedModel, ReadNamedModel, BaseModel
 
@@ -27,6 +27,7 @@ class RankUpdate(RankBase):
 
 
 class RankRead(RankBase, ReadNamedModel):
+    
     rank_order: Optional[int]
     military_url: Optional[str]
     employee_url: Optional[str]

@@ -48,7 +48,7 @@ async def get_all(*,
    """
     Authorize.jwt_required()
     # staff_list_service.get_by_id(db, str(staff_list_id))
-    return await archive_staff_division_service.get_departments(
+    return archive_staff_division_service.get_departments(
         db, str(staff_list_id), skip, limit)
 
 @router.get("/one-level/", dependencies=[Depends(HTTPBearer())],
@@ -122,7 +122,7 @@ async def duplicate(*,
 
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=ArchiveStaffDivisionReadSecond,
+            response_model=ArchiveStaffDivisionRead,
             summary="Get Staff Division by id")
 async def get_by_id(*,
                     db: Session = Depends(get_db),

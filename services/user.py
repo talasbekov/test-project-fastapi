@@ -4,6 +4,8 @@ from typing import List, Optional, Any, Union, Dict
 from sqlalchemy.orm import Session, Query
 from sqlalchemy import func, and_, not_
 from fastapi.encoders import jsonable_encoder
+import base64
+import requests
 
 from exceptions import NotFoundException, InvalidOperationException, BadRequestException
 from models import (
@@ -62,6 +64,14 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             raise NotFoundException(detail="User is not found!")
         if (user.personal_id):
             user.personal_id = user.personal_id.capitalize()
+
+        # Convert the image URL to a base64 byte object
+        # if user.icon.startswith('http'): 
+        #     try:  
+        #         response = requests.get(user.icon)
+        #         user.icon = base64.b64encode(response.content)
+        #     except:
+        #         print('Error while converting image to base64')
         return user
 
     def get_all(self,
@@ -489,6 +499,7 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
                                      user_query: Query[Any],
                                      hr_document_template_id: str):
         from .constructor import handlers
+
         template = hr_document_template_service.get_by_id(
             db, hr_document_template_id
         )

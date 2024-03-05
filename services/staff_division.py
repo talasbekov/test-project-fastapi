@@ -56,6 +56,9 @@ class StaffDivisionService(
             raise NotFoundException(
                 f"StaffDivision with id: {id} is not found!")
         res = StaffDivisionReadSchedule.from_orm(group)
+        # for i in res.children:
+        #     for j in i.staff_units:
+        #         j.po
         return res
 
     def get_one_level_by_id(self, db: Session, id: Optional[str]):

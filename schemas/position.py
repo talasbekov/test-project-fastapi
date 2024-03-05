@@ -40,7 +40,9 @@ class PositionRead(PositionBase, ReadModel):
     @validator('max_rank', always=True)
     def shorten_max_rank(cls, v, values, **kwargs):
         if 'category_code' in values and values['category_code'].startswith('C_RG'):
-            return v[:-6]
+            v.name = v.name[:-6]
+            v.nameKZ = v.nameKZ[:-6]
+            return v
         return v
     
     class Config:

@@ -69,7 +69,11 @@ class ServiceBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         return db_obj
 
     def remove(self, db: Session, id: str) -> ModelType:
-        obj = db.query(self.model).get(id)
-        db.delete(obj)
-        db.flush()
-        return obj
+        try:
+            obj = db.query(self.model).get(id)
+            db.delete(obj)
+            db.flush()
+            return obj
+        except Exception as e:
+            db.rollback()
+            raise e

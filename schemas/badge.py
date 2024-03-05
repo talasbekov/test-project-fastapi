@@ -6,7 +6,7 @@ from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 
 
 class BadgeTypeBase(NamedModel):
-    url: str
+    url: Optional[str]
     badge_order: Optional[int]
 
     class Config:

@@ -30,7 +30,7 @@ from models import (
     Badge,
     Coolness,
     CoolnessStatusEnum,
-    User, BadgeType,
+    User, BadgeType, ReserveEnum
 )
 from schemas import HistoryCreate, HistoryUpdate
 from schemas.history.history import EquipmentRead

@@ -105,6 +105,8 @@ async def get_signed(*,
 async def get_result(task_id: str):
     result = AsyncResult(task_id)
     if result.ready():
+        if isinstance(result.result, Exception):
+            raise result.result
         return StaffListRead(**result.result)
     else:
         return {"status": AsyncResult(task_id).state}
@@ -154,7 +156,7 @@ async def get_by_id(*,
 @router.post("/apply/{id}/", dependencies=[Depends(HTTPBearer())],
              response_model=StaffListApplyRead,
              summary="Apply Staff List")
-async def apply_staff_list(*,
+def apply_staff_list(*,
                            id: str,
                            signed_by: str,
                            document_creation_date: datetime.date,

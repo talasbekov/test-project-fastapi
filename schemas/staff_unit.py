@@ -40,7 +40,8 @@ class StaffUnitUpdate(StaffUnitBase):
     requirements: Optional[Any] = Field(None, nullable=True)
     curator_of_id: Optional[str] = Field(None, nullable=True)
     user_replacing_id: Optional[str] = Field(None, nullable=True)
-
+    # position_id: Optional[str] = Field(None, nullable=True)
+    # actual_position_id: Optional[str] = Field(None, nullable=True)
 
 class HrVacancyRead(ReadModel):
     is_active: Optional[bool] = True

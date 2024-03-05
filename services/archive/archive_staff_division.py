@@ -12,7 +12,8 @@ from schemas import (
     ArchiveStaffDivisionUpdateParentGroup,
     ArchiveStaffDivisionRead,
     NewArchiveStaffDivisionCreate,
-    NewArchiveStaffDivisionUpdate)
+    NewArchiveStaffDivisionUpdate,
+    ArchiveStaffDivisionReadSchedule,)
 from services.base import ServiceBase
 from . import increment_changes_size
 from .archive_staff_unit import archive_staff_unit_service
@@ -23,7 +24,7 @@ class ArchiveStaffDivisionService(
                      ArchiveStaffDivisionCreate,
                      ArchiveStaffDivisionUpdate]):
 
-    def get_by_id(self, db: Session, id: str) -> ArchiveStaffDivision:
+    def get_by_id(self, db: Session, id: str):
         group = super().get(db, id)
         for child in group.children:
             if isinstance(child.description, str):
@@ -42,6 +43,7 @@ class ArchiveStaffDivisionService(
         if group is None:
             raise NotFoundException(
                 f"ArchiveStaffDivision with id: {id} is not found!")
+        # return ArchiveStaffDivisionReadSchedule.from_orm(group).update_forward_refs()
         return group
 
     def get_by_name(self, db: Session, name: str,
@@ -55,7 +57,7 @@ class ArchiveStaffDivisionService(
                 f"ArchiveStaffDivision with name: {name} is not found!")
         return group
 
-    async def get_departments(
+    def get_departments(
             self,
             db: Session,
             staff_list_id: str,
@@ -87,8 +89,8 @@ class ArchiveStaffDivisionService(
                     if isinstance(staff_unit.user_replacing.staff_unit.requirements, str):
                         staff_unit.user_replacing.staff_unit.requirements = json.loads(staff_unit.user_replacing.staff_unit.requirements)
         # archive_divisions = [ArchiveStaffDivisionRead.from_orm(archive_division) for archive_division in archive_divisions]
+        # return [ArchiveStaffDivisionReadSchedule.from_orm(parent).update_forward_refs() for parent in archive_divisions]
         return archive_divisions
-
     def get_parents(self, db: Session,
                     staff_list_id: str) -> List[ArchiveStaffDivision]:
         return db.query(self.model).filter(

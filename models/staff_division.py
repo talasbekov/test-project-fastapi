@@ -47,7 +47,7 @@ class StaffDivision(NamedNestedModel, isActiveModel):
     curators = relationship(
         "StaffUnit", back_populates="courted_group",
         foreign_keys="StaffUnit.curator_of_id")
-    staff_unit_divisions = relationship("StaffUnitDivision", back_populates="staff_division")
+    # staff_unit_divisions = relationship("StaffUnitDivision", back_populates="staff_division")
 
 @listens_for(StaffDivision, 'before_update')
 def description_set_listener(mapper, connection, target):
