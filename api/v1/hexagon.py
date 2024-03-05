@@ -7,7 +7,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from core import get_db
-from schemas import HexagonAveragesRead, HexagonRead
+# from schemas import HexagonAveragesRead, HexagonRead
 from services import hexagon_service
 
 router = APIRouter(
@@ -19,8 +19,8 @@ router = APIRouter(
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=HexagonRead,
             summary="Get last hexagon")
+# response_model=HexagonRead,
 async def get_last_hexagon(*,
                   db: Session = Depends(get_db),
                   Authorize: AuthJWT = Depends()
@@ -29,12 +29,13 @@ async def get_last_hexagon(*,
        Get last hexagon
    """
     Authorize.jwt_required()
-    user_id = Authorize.get_jwt_subject()
-    return hexagon_service.get_by_user_id(db, user_id)
+    # user_id = Authorize.get_jwt_subject()
+    return hexagon_service.get_average(db)
+
 
 @router.get("/average", dependencies=[Depends(HTTPBearer())],
-            response_model=HexagonAveragesRead,
             summary="Get average scores for hexagon")
+# response_model=HexagonAveragesRead,
 async def get_last_hexagon(*,
                   db: Session = Depends(get_db),
                   Authorize: AuthJWT = Depends()
@@ -47,8 +48,8 @@ async def get_last_hexagon(*,
 
 
 @router.get("/date", dependencies=[Depends(HTTPBearer())],
-            response_model=List[HexagonRead],
             summary="Get hexagons by date")
+# response_model=List[HexagonRead],
 async def get_last_hexagon(*,
                   db: Session = Depends(get_db),
                   date_from: datetime,
@@ -58,5 +59,6 @@ async def get_last_hexagon(*,
        Get hexagons by date
     """
     Authorize.jwt_required()
-    user_id = Authorize.get_jwt_subject()
-    return hexagon_service.get_by_user_id_and_date(db, user_id, date_from)
+    return hexagon_service.get_average(db)
+    # user_id = Authorize.get_jwt_subject()
+    # return hexagon_service.get_by_user_id_and_date(db, user_id, date_from)
