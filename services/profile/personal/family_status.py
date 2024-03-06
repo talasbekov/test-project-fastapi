@@ -29,13 +29,14 @@ class FamilyStatusService(
         return self._validate_gender(
             res, profile.personal_profile.biographic_info.gender)
 
-    def _validate_gender(self, dict: dict, gender: bool):
-        if gender == 1:
-            dict['name'] = dict['name'].split(' / ')[0]
-            dict['nameKZ'] = dict['nameKZ'].split(' / ')[0]
-        else:
-            dict['name'] = dict['name'].split(' / ')[1]
-            dict['nameKZ'] = dict['nameKZ'].split(' / ')[1]
+    def _validate_gender(self, dict1: dict, gender: bool):
+        if dict1['name'] and dict1['nameKZ']:
+            if gender == 1:
+                dict1['name'] = dict1['name'].split(' / ')[0]
+                dict1['nameKZ'] = dict1['nameKZ'].split(' / ')[0]
+            else:
+                dict1['name'] = dict1['name'].split(' / ')[1]
+                dict1['nameKZ'] = dict1['nameKZ'].split(' / ')[1]
 
         return dict
 
