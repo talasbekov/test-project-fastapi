@@ -328,3 +328,13 @@ async def get_parent_ids(*,
                          ):
     Authorize.jwt_required()
     return staff_division_service.get_parent_ids(db, str(id))
+
+@router.get("/recursive", dependencies=[Depends(HTTPBearer())],
+            # response_model=List[StaffDivisionRead],
+            summary="Get all Staff Divisions")
+async def get_all(*,
+                  db: Session = Depends(get_db),
+                  Authorize: AuthJWT = Depends()
+                  ):
+    Authorize.jwt_required()
+    return staff_division_service.build_staff_division_tree(db)

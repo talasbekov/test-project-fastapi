@@ -576,4 +576,12 @@ class StaffUnitService(
         )
         return staff_units
 
+    def update_staff_unit(self, db: Session, staff_division_id: int, staff_unit_id: int, postion_id: int, actual_position_id: int):
+        staff_unit = db.query(StaffUnit).filter(StaffUnit.id == staff_unit_id).first()
+        staff_unit.position_id = postion_id
+        staff_unit.actual_position_id = actual_position_id
+        staff_unit.staff_division_id = staff_division_id
+        db.add(staff_unit)
+        db.flush()
+
 staff_unit_service = StaffUnitService(StaffUnit)

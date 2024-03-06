@@ -4,7 +4,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from models import Position, PositionType
-from schemas import PositionCreate, PositionUpdate
+from schemas import PositionCreate, PositionUpdate, PositionReadShort
 from services import ServiceBase
 from services.filter import add_filter_to_query
 
@@ -107,5 +107,7 @@ class PositionService(ServiceBase[Position, PositionCreate, PositionUpdate]):
         db.flush()
         return position
 
-
+    def get_short_positions(self, db: Session):
+        positions = db.query(Position).all()
+        return [PositionReadShort.from_orm(position) for position in positions]
 position_service = PositionService(Position)  # type: ignore

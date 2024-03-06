@@ -16,7 +16,8 @@ from schemas import (
     ServiceStaffFunctionRead,
     StaffUnitCreateWithPosition,
     StaffUnitFunctionsByPosition,
-    StaffUnitMatreshkaOptionReadPagination
+    StaffUnitMatreshkaOptionReadPagination,
+    StaffUnitUpdateOverwrite
 )
 from services import staff_unit_service
 
@@ -290,3 +291,14 @@ async def get_by_staff_division_id(*,
     """
     Authorize.jwt_required()
     return staff_unit_service.get_all_by_staff_division_id(db, str(id), skip, limit, filter)
+
+@router.put("/", dependencies=[Depends(HTTPBearer())],
+            # response_model=StaffDivisionRead,
+            summary="Update Staff Unit")
+async def update_staff_division(*,
+                 db: Session = Depends(get_db),
+                 body: StaffUnitUpdateOverwrite,
+                 Authorize: AuthJWT = Depends()
+                 ):
+    Authorize.jwt_required()
+    return staff_unit_service.update_staff_unit(db, body.staff_division_id, body.id, body.position_id, body.actual_position_id)

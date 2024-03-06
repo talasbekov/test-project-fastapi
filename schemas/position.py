@@ -27,6 +27,14 @@ class PositionCreate(PositionBase):
 class PositionUpdate(PositionBase):
     position_order: Optional[int]
 
+class PositionTypeRead(NamedModel):
+    pass
+
+class PositionReadShort(ReadModel):
+    id: str
+    type: Optional[PositionTypeRead]
+    category_code: Optional[str]
+    max_rank: Optional[RankRead]
 
 class PositionRead(PositionBase, ReadModel):
     category_code: Optional[str]

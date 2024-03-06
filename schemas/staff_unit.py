@@ -141,3 +141,13 @@ class ShortUserStaffUnitRead(ReadModel):
         orm_mode = True
         arbitrary_types_allowed = True
     
+
+class StaffUnitUpdateOverwrite(Model):
+    staff_division_id: Optional[str] = Field(None, nullable=True)
+    position_id: Optional[str] = Field(None, nullable=True)
+    actual_position_id: Optional[str] = Field(None, nullable=True)
+    id: Optional[str]
+    
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True

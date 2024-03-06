@@ -1,5 +1,6 @@
 import uuid
 import json
+import sys
 from typing import List, Dict, Any, Optional
 
 from sqlalchemy.orm import Session
@@ -9,7 +10,7 @@ from sqlalchemy import distinct, func, select, text
 from exceptions import BadRequestException, NotFoundException
 from models import (StaffDivision, StaffDivisionEnum, StaffDivisionType, ArchiveStaffDivision,
                     StaffUnit, HrVacancy, Secondment, EmergencyServiceHistory,
-                    Position)
+                    Position, User)
 from schemas import (
     StaffDivisionCreate,
     StaffDivisionRead,
@@ -22,7 +23,8 @@ from schemas import (
     StaffDivisionMatreshkaStepRead, 
     StaffDivisionReadSchedule,
     StaffDivisionBaseSchedule,
-    StaffDivisionChildReadSchedule
+    StaffDivisionChildReadSchedule,
+    StaffDivisionTreeRead
 )
 
 from .base import ServiceBase
@@ -710,6 +712,46 @@ class StaffDivisionService(
 
         ids.reverse()
         return ids
+    
+
+    def get_all_except_special_schedule(self,
+                               db: Session,
+                               skip: int,
+                               limit: int) -> List[StaffDivision]:
+        parents = db.query(self.model).filter(
+            StaffDivision.parent_group_id == None,
+            self.model.name != StaffDivisionEnum.SPECIAL_GROUP.value
+        ).order_by(StaffDivision.staff_division_number).offset(skip).limit(limit).all()
+        # for parent in parents:
+        #     if isinstance(parent.description, str):
+        #         parent.description = json.loads(parent.description)
+        #     for staff_unit in parent.staff_units:
+        #         if isinstance(staff_unit.requirements, str):
+        #             staff_unit.requirements = json.loads(
+        #                 staff_unit.requirements)
+        #         if staff_unit.user_replacing:
+        #             if isinstance(staff_unit.user_replacing.staff_unit.requirements, str):
+        #                 staff_unit.user_replacing.staff_unit.requirements = json.loads(
+        #                     staff_unit.user_replacing.staff_unit.requirements)
+           
+        return [StaffDivisionReadSchedule.from_orm(parent) for parent in parents]
+
+    def get_all_children_recursive(self, db: Session, id: str, res: List) -> List[StaffDivisionTreeRead]:
+        children = self.get_all_child_groups(db, id)
+        if children is None:
+            return []
+        for child in children:
+            res.append(self.get_by_id_schedule(db, child.id))
+        return res
+
+    def build_staff_division_tree(self, db: Session) -> List[StaffDivisionTreeRead]:
+        all_except_special_schdedule = self.get_all_except_special_schedule(db, 0, 1000)
+        res = []
+        for staff_division in all_except_special_schdedule:
+            for j in range(len(staff_division.children)):
+                temp_id = staff_division.children[j].id
+                staff_division.children[j].children = self.get_all_children_recursive(db, temp_id, res)
+        return [StaffDivisionTreeRead.from_orm(i) for i in all_except_special_schdedule]
 
 
 staff_division_service = StaffDivisionService(StaffDivision)

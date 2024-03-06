@@ -158,3 +158,11 @@ async def delete(*,
 @router.get("/category_codes")
 async def get_category_codes():
     return [i.value for i in CategoryCodeEnum]
+
+@router.get('/get_short_positions')
+async def get_short_positions(
+        db: Session = Depends(get_db),
+        Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    return position_service.get_short_positions(db)

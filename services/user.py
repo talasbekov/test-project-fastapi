@@ -23,11 +23,13 @@ from models import (
     SubjectType,
     StatusHistory,
     Status,
-    Position
+    Position,
+    PositionType
 )
 from schemas import (
     UserCreate,
     UserUpdate,
+    UserShortRead,
 )
 from services import (
     staff_division_service,
@@ -608,6 +610,23 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
 
         total = len(head_positions_users)
         return total, head_positions_users
+
+    def get_all_unemployed(self, db: Session, is_free: bool, skip: int, limit: int) -> List[UserShortRead]:
+        if is_free:
+            users = db.query(User)\
+            .join(StaffUnit, User.actual_staff_unit_id == StaffUnit.id)\
+            .join(Position, StaffUnit.position_id == Position.id)\
+            .join(PositionType, Position.type_id == PositionType.id)\
+            .filter(PositionType.name=='В распоряжении')\
+            .offset(skip)\
+            .limit(limit)\
+            .all()
+        else:
+            users = db.query(User)\
+            .offset(skip)\
+            .limit(limit)\
+            .all()
+        return [UserShortRead.from_orm(user) for user in users]
 
 
 user_service = UserService(User)

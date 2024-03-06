@@ -529,6 +529,19 @@ class StaffDivisionMatreshkaStepRead(ReadNamedModel):
     class Config:
         orm_mode = True
 
+class StaffDivisionTreeRead(ReadNamedModel):
+    id: Optional[str]
+    children: Optional[List['StaffDivisionTreeRead']]
+
+    @validator('children')
+    def validate_children(cls, children):
+        if children == []:
+            return None
+        else:
+            return children
+
+    class Config:
+        orm_mode = True
 
 class StaffDivisionVacancyRead(BaseModel):
     id: Optional[str]

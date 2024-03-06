@@ -53,6 +53,24 @@ async def get_all(
                                 limit)
     return TableUserRead(total=total, users=users)
 
+
+@router.get("/unemployed/{is_free}",
+            dependencies=[Depends(HTTPBearer())],
+            response_model=List[UserShortRead],
+            summary="Get all Unemployed Users")
+async def get_all_unemployed(
+    is_free: bool = False,
+    skip: int = 0,
+    limit: int = 10,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends()
+):
+    """
+    Get all Unemployed Users
+    """
+    Authorize.jwt_required()
+    return user_service.get_all_unemployed(db, is_free, skip, limit)
+
 @router.get("/get_all_short_read",
             dependencies=[Depends(HTTPBearer())],
             response_model=UserShortReadFullNames,

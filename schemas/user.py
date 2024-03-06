@@ -96,6 +96,7 @@ class UserShortRead(Model):
     father_name: Optional[str]
     icon: Optional[str]
     rank: Optional[RankRead]
+    staff_unit_id: Optional[str]
 
 
     class Config:
