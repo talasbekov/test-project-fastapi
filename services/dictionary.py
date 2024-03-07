@@ -83,13 +83,13 @@ class DictionaryService:
         """
         MODULES = {
             'institution': ('education', 'Institution'),
-            'positions': ('Position'),
-            'ranks': ('Rank'),
-            'badges': ('Badge'),
-            'penalties': ('Penalty'),
+            'positions': ('Position',),
+            'ranks': ('Rank',),
+            'badges': ('BadgeType',),
+            'penalties': ('Penalty',),
             'properties': ('additional', 'Properties'),
             'sports': ('personal', 'SportType'),
-            'statuses': ('Status'),
+            'statuses': ('Status',),
             'specialties': ('education', 'Specialty'),
             'academic_degrees': ('education', 'AcademicDegreeDegree'),
             'academic_titles': ('education', 'AcademicTitleDegree'),
@@ -99,8 +99,10 @@ class DictionaryService:
             'sciences': ('education', 'Science'),
             'languages': ('education', 'Language')
         }
+        print(MODULES[entity])
+        print(len(MODULES[entity]))
         if len(MODULES[entity]) == 1:
-            class_name = MODULES[entity]
+            class_name = MODULES[entity][0]
             module = __import__('models',
                                 fromlist=[class_name])
         else:
@@ -111,12 +113,14 @@ class DictionaryService:
 
         current_obj = db.query(class_obj).filter(
             class_obj.id == id).first()
-        
+        print(current_obj)
+        print(id)
+        print(class_obj)
         new_obj = class_obj(**(await self.__get_column_values(current_obj)))
         new_obj.id = str(uuid.uuid4())
         new_obj.created_at = None
         new_obj.updated_at = None
-
+        print(new_obj)
         current_obj.active = 0
         current_obj.last_change = 'SOFT_UPDATE'
         current_obj.updated_at = datetime.now()

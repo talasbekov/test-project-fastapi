@@ -627,6 +627,10 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             .limit(limit)\
             .all()
         return [UserShortRead.from_orm(user) for user in users]
+    
+    def get_user_by_iin(self, db: Session, iin: str) -> Optional[UserShortRead]:
+        user = db.query(User).filter(User.iin == iin).first()
+        return UserShortRead.from_orm(user) if user else None
 
 
 user_service = UserService(User)

@@ -399,3 +399,12 @@ def get_short_user(
     Authorize.jwt_required()
     return user_service.get_all_iin_by_ids(db, user_ids, candidate_ids)
 
+@router.get("/get_by_iin/{iin}/", response_model=UserShortRead)
+async def get_user_by_iin(
+    *,
+    db: Session = Depends(get_db),
+    iin: str,
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    return user_service.get_user_by_iin(db, iin)

@@ -292,10 +292,10 @@ async def get_by_staff_division_id(*,
     Authorize.jwt_required()
     return staff_unit_service.get_all_by_staff_division_id(db, str(id), skip, limit, filter)
 
-@router.put("/", dependencies=[Depends(HTTPBearer())],
+@router.put("/update_staff_unit_overwrite", dependencies=[Depends(HTTPBearer())],
             # response_model=StaffDivisionRead,
             summary="Update Staff Unit")
-async def update_staff_division(*,
+async def update_staff_unit(*,
                  db: Session = Depends(get_db),
                  body: StaffUnitUpdateOverwrite,
                  Authorize: AuthJWT = Depends()
