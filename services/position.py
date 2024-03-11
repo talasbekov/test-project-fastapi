@@ -100,7 +100,9 @@ class PositionService(ServiceBase[Position, PositionCreate, PositionUpdate]):
         position = Position(type_id=position_type_id,
                             max_rank_id=body.max_rank_id,
                             category_code=body.category_code,
-                            form=body.form)
+                            form=body.form,
+                            name=body.name, # maybe there is a flaw in the logic 
+                            nameKZ=body.nameKZ) # maybe there is a flaw in the logic 
         position = super().create(db, position, Position)
 
         db.add(position)

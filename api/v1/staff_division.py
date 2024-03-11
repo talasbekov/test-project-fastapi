@@ -338,3 +338,42 @@ async def get_all(*,
                   ):
     Authorize.jwt_required()
     return staff_division_service.build_staff_division_tree(db)
+
+@router.get("/schedule_short", dependencies=[Depends(HTTPBearer())],
+            # response_model=List[StaffDivisionReadSchedule],
+            summary="Get all Staff Divisions")
+async def get_all_schedule(*,
+                  db: Session = Depends(get_db),
+                  skip: int = 0,
+                  limit: int = 100,
+                  Authorize: AuthJWT = Depends()
+                  ):
+    """
+        Get all Staff Divisions
+
+       - **skip**: int - The number of staff divisions
+            to skip before returning the results.
+            This parameter is optional and defaults to 0.
+       - **limit**: int - The maximum number of staff divisions
+            to return in the response.
+            This parameter is optional and defaults to 100.
+    """
+    Authorize.jwt_required()
+    return staff_division_service.get_all_except_special_schedule_short(db, skip, limit)
+
+@router.get("/schedule_short/{id}/", dependencies=[Depends(HTTPBearer())],
+            # response_model=StaffDivisionReadSchedule,
+            summary="Get Staff Division by id short")
+async def get_by_id_schedule(*,
+                    db: Session = Depends(get_db),
+                    id: str,
+                    Authorize: AuthJWT = Depends()
+                    ):
+    """
+        Get Staff Division by id
+
+        - **id**: UUID - required
+    """
+    Authorize.jwt_required()
+    return staff_division_service.get_by_id_schedule_short(db, str(id))
+

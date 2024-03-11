@@ -1,6 +1,7 @@
 import uuid
 import json
 import sys
+from collections import deque
 from typing import List, Dict, Any, Optional
 
 from sqlalchemy.orm import Session
@@ -24,7 +25,8 @@ from schemas import (
     StaffDivisionReadSchedule,
     StaffDivisionBaseSchedule,
     StaffDivisionChildReadSchedule,
-    StaffDivisionTreeRead
+    StaffDivisionTreeRead,
+    StaffDivisionReadScheduleShort
 )
 
 from .base import ServiceBase
@@ -58,6 +60,17 @@ class StaffDivisionService(
             raise NotFoundException(
                 f"StaffDivision with id: {id} is not found!")
         res = StaffDivisionReadSchedule.from_orm(group)
+        # for i in res.children:
+        #     for j in i.staff_units:
+        #         j.po
+        return res
+    
+    def get_by_id_schedule_short(self, db: Session, id: str) -> StaffDivision:
+        group = super().get(db, id)
+        if group is None:
+            raise NotFoundException(
+                f"StaffDivision with id: {id} is not found!")
+        res = StaffDivisionReadScheduleShort.from_orm(group)
         # for i in res.children:
         #     for j in i.staff_units:
         #         j.po
@@ -302,6 +315,29 @@ class StaffDivisionService(
            
         return [StaffDivisionReadSchedule.from_orm(parent) for parent in parents]
     
+    def get_all_except_special_schedule_short(self,
+                               db: Session,
+                               skip: int,
+                               limit: int) -> List[StaffDivision]:
+        parents = db.query(self.model).filter(
+            StaffDivision.parent_group_id == None,
+            self.model.name != StaffDivisionEnum.SPECIAL_GROUP.value
+        ).order_by(StaffDivision.staff_division_number).offset(skip).limit(limit).all()
+        # for parent in parents:
+        #     if isinstance(parent.description, str):
+        #         parent.description = json.loads(parent.description)
+        #     for staff_unit in parent.staff_units:
+        #         if isinstance(staff_unit.requirements, str):
+        #             staff_unit.requirements = json.loads(
+        #                 staff_unit.requirements)
+        #         if staff_unit.user_replacing:
+        #             if isinstance(staff_unit.user_replacing.staff_unit.requirements, str):
+        #                 staff_unit.user_replacing.staff_unit.requirements = json.loads(
+        #                     staff_unit.user_replacing.staff_unit.requirements)
+           
+        return [StaffDivisionReadScheduleShort.from_orm(parent) for parent in parents]
+    
+
     def get_all_except_special_minimized(self,
                                db: Session,
                                skip: int,
@@ -736,21 +772,21 @@ class StaffDivisionService(
            
         return [StaffDivisionReadSchedule.from_orm(parent) for parent in parents]
 
-    def get_all_children_recursive(self, db: Session, id: str, res: List) -> List[StaffDivisionTreeRead]:
-        children = self.get_all_child_groups(db, id)
+    def get_all_children_recursive(self, db: Session, id: str) -> List[StaffDivisionTreeRead]:
+        children = self.get_child_groups(db, id, skip=0, limit=1000)
         if children is None:
             return []
         for child in children:
-            res.append(self.get_by_id_schedule(db, child.id))
-        return res
+            child.children = self.get_all_children_recursive(db, child.id)
+        return children
 
     def build_staff_division_tree(self, db: Session) -> List[StaffDivisionTreeRead]:
         all_except_special_schdedule = self.get_all_except_special_schedule(db, 0, 1000)
-        res = []
+        # res = []
         for staff_division in all_except_special_schdedule:
             for j in range(len(staff_division.children)):
                 temp_id = staff_division.children[j].id
-                staff_division.children[j].children = self.get_all_children_recursive(db, temp_id, res)
+                staff_division.children[j].children = self.get_all_children_recursive(db, temp_id)
         return [StaffDivisionTreeRead.from_orm(i) for i in all_except_special_schdedule]
 
 

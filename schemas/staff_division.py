@@ -306,6 +306,28 @@ class StaffDivisionChildReadSchedule(NamedModel):
     class Config:
         orm_mode = True
 
+class StaffDivisionChildReadScheduleShort(NamedModel):
+    parent_group_id: Optional[str] = Field(None, nullable=True)
+    # is_combat_unit: Optional[bool] = Field(None, nullable=True)
+    # leader_id: Optional[str] = Field(None, nullable=True)
+    # is_active: Optional[bool] = True
+    type_id: Optional[str] = Field(None, nullable=True)
+    staff_division_number: Optional[int] = Field(None, nullable=True)
+    id: Optional[str]
+    children: Optional[List]
+    # staff_units: Optional[List]
+    # type: Optional[StaffDivisionTypeRead]
+
+    @validator('children')
+    def validate_children(cls, children):
+        if children == []:
+            return None
+        else:
+            return []
+
+    class Config:
+        orm_mode = True
+
 class StaffDivisionChildReadMinimized(NamedModel):
     parent_group_id: Optional[str] = Field(None, nullable=True)
     staff_division_number: Optional[int] = Field(None, nullable=True)
@@ -371,6 +393,20 @@ class StaffDivisionReadSchedule(StaffDivisionBaseSchedule):
     class Config:
         orm_mode = True
 
+class StaffDivisionReadScheduleShort(StaffDivisionBaseSchedule):
+    id: Optional[str]
+    children: Optional[List['StaffDivisionChildReadScheduleShort']]
+    # staff_units: Optional[List['StaffUnitReadSchedule']]
+    # type: Optional[StaffDivisionTypeRead]
+    # count_vacancies: Optional[int]
+
+    @validator('children')
+    def validate_children(cls, children):
+        if children == []:
+            return None
+        else:
+            return children
+        
 class StaffDivisionReadMinimized(StaffDivisionBaseMinimized):
     id: Optional[str]
     children: Optional[List['StaffDivisionChildReadMinimized']]

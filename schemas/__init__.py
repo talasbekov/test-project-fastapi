@@ -52,7 +52,7 @@ from .staff_division import (StaffDivisionCreate, StaffDivisionRead, StaffDivisi
                              StaffDivisionVacancyRead, StaffUnitMatreshkaOptionRead,
                              StaffUnitMatreshkaOptionReadPagination,
                              ShortStaffUnitDivisionRead, StaffDivisionOptionChildRead,
-                             StaffDivisionMatreshkaStepRead, StaffDivisionNamedModel, StaffDivisionTreeRead)
+                             StaffDivisionMatreshkaStepRead, StaffDivisionNamedModel, StaffDivisionTreeRead, StaffDivisionChildReadScheduleShort, StaffDivisionReadScheduleShort)
 from .staff_unit import (StaffUnitCreate, StaffUnitRead, StaffUnitUpdate,
                          UserStaffUnitRead, StaffUnitCreateWithPosition,
                          ShortUserStaffUnitRead, StaffUnitFromArchiveCreate, StaffUnitUpdateOverwrite)
