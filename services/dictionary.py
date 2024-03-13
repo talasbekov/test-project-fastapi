@@ -87,7 +87,7 @@ class DictionaryService:
             'ranks': ('Rank',),
             'badges': ('BadgeType',),
             'penalties': ('Penalty',),
-            'properties': ('additional', 'Properties'),
+            'properties': ('additional', 'PropertyType'),
             'sports': ('personal', 'SportType'),
             'statuses': ('Status',),
             'specialties': ('education', 'Specialty'),
