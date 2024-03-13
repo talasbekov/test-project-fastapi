@@ -117,7 +117,7 @@ async def get_by_id(*,
 
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
-            response_model=PositionRead,
+            # response_model=PositionRead,
             summary="Update Position")
 async def update(*,
                  db: Session = Depends(get_db),
