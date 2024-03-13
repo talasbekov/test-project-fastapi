@@ -29,7 +29,7 @@ from .permission import (PermissionCreate, PermissionRead, PermissionUpdate,
                          PermissionPaginationRead)
 
 from .rank import RankCreate, RankRead, RankUpdate, RankPaginationRead
-from .position import PositionCreate, PositionUpdate, PositionRead, PositionPaginationRead, PositionReadShort
+from .position import PositionCreate, PositionUpdate, PositionRead, PositionPaginationRead, PositionReadShort, PositionTypeRead, PositionTypeUpdate
 from .jurisdiction import JurisdictionRead, JurisdictionCreate, JurisdictionUpdate
 from .staff_function_type import (DocumentStaffFunctionTypeCreate, DocumentStaffFunctionTypeRead,
                                   DocumentStaffFunctionTypeUpdate, ServiceStaffFunctionTypeCreate,

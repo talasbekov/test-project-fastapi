@@ -1,7 +1,7 @@
 # Be careful of imports order is important!
 # Possible problems are circular imports, partial initialization of module
 from .base import ServiceBase
-from .position import position_service
+from .position import position_service, position_type_service
 from .state_body import state_body_service
 from .profile import *
 from .notification import *

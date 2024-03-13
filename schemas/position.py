@@ -30,6 +30,9 @@ class PositionUpdate(PositionBase):
 class PositionTypeRead(NamedModel):
     pass
 
+class PositionTypeUpdate(NamedModel):
+    pass
+
 class PositionReadShort(ReadModel):
     id: str
     type: Optional[PositionTypeRead]
@@ -44,6 +47,7 @@ class PositionRead(PositionBase, ReadModel):
     max_rank: Optional[RankRead]
     name: Optional[str]
     nameKZ: Optional[str]
+    type_id: Optional[str]
 
     @validator('max_rank', always=True)
     def shorten_max_rank(cls, v, values, **kwargs):
@@ -72,7 +76,8 @@ class PositionRead(PositionBase, ReadModel):
             max_rank_id=orm_obj.max_rank_id,
             max_rank=orm_obj.max_rank,
             name=orm_obj.type.name,
-            nameKZ=orm_obj.type.nameKZ
+            nameKZ=orm_obj.type.nameKZ,
+            type_id=orm_obj.type_id
         )
     
 class PositionPaginationRead(BaseModel):

@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from core import get_db
 from models.position import CategoryCodeEnum
 from schemas import PositionCreate, PositionUpdate, PositionRead, PositionPaginationRead
-from services import position_service
+from services import position_service, position_type_service
 
 router = APIRouter(
     prefix="/positions",
@@ -132,9 +132,9 @@ async def update(*,
         - **name**: required.
     """
     Authorize.jwt_required()
-    return position_service.update(
+    return position_type_service.update(
         db,
-        db_obj=position_service.get_by_id(db, str(id)),
+        db_obj=position_type_service.get_by_id(db, str(id)),
         obj_in=body)
 
 
