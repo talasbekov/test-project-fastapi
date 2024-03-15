@@ -132,12 +132,9 @@ async def update(*,
         - **name**: required.
     """
     Authorize.jwt_required()
-    position = position_service.get_by_id(db, str(id))
-    position_type = position_type_service.get_by_id(db, position.type_id)
-    return position_type_service.update(
-        db,
-        db_obj=position_type,
-        obj_in=body)
+    # position = position_service.get_by_id(db, str(id))
+    # position_type = position_type_service.get_by_id(db, position.type_id)
+    return position_service.update(db, id, body)
 
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,

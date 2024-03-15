@@ -90,7 +90,8 @@ async def update(*,
         - **url**: image url. This parameter is required
     """
     Authorize.jwt_required()
-    return country_service.update(db, id, body)
+    country = country_service.get_by_id(db, str(id))
+    return country_service.update(db, db_obj=country, obj_in=body)
 
 
 @router.delete("/{id}/", dependencies=[Depends(HTTPBearer())],

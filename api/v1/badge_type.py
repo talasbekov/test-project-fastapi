@@ -24,20 +24,18 @@ router = APIRouter(
 async def get_all(*,
                   db: Session = Depends(get_db),
                   skip: int = 0,
-                  limit: int = 100,
+                  limit: int = 0,
                   filter: str = '',
                   Authorize: AuthJWT = Depends()
                   ):
     """
        Get all Badge types
 
-       - **skip**: int - The number of Badge types
-            to skip before returning the results.
-            This parameter is optional and defaults to 0.
-       - **limit**: int - The maximum number of Badge types
-            to return in the response.
-            This parameter is optional and defaults to 100.
-   """
+       - **skip**: int - The number of Badge types to skip before returning the results.
+       - **limit**: Optional[int] - The maximum number of Badge types to return in the response.
+         Pass 0 (or omit the parameter) to fetch all items.
+       - **filter**: str - A filter string to apply to the query.
+    """
     Authorize.jwt_required()
     return badge_type_service.get_all(db, skip, limit, filter)
 

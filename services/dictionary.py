@@ -5,10 +5,12 @@ from sqlalchemy.orm import Session
 from sqlalchemy.sql import text
 from sqlalchemy.inspection import inspect
 
-from schemas import JoinRecordsBody
+from schemas import JoinRecordsBody, PositionCreate, PositionUpdate
+from models import Position, PositionType
+from services import ServiceBase
 
 
-class DictionaryService:
+class DictionaryService(ServiceBase[PositionType, PositionCreate, PositionUpdate]):
 
     async def join_records(self,
                            db: Session,
@@ -100,7 +102,7 @@ class DictionaryService:
             'languages': ('education', 'Language')
         }
         print(MODULES[entity])
-        print(len(MODULES[entity]))
+        # print(len(MODULES[entity]))
         if len(MODULES[entity]) == 1:
             class_name = MODULES[entity][0]
             module = __import__('models',
@@ -113,14 +115,22 @@ class DictionaryService:
 
         current_obj = db.query(class_obj).filter(
             class_obj.id == id).first()
-        print(current_obj)
-        print(id)
-        print(class_obj)
+        # print(current_obj)
+        # print(id)
+        # print(class_obj)
+        
         new_obj = class_obj(**(await self.__get_column_values(current_obj)))
         new_obj.id = str(uuid.uuid4())
+        if MODULES[entity][0] == 'Position':
+            position_type_id = super().create(db,
+                                           PositionType(name=current_obj.name,
+                                                        nameKZ=current_obj.nameKZ),
+                                           PositionType).id
+            new_obj.type_id = position_type_id
+            print(position_type_id)
         new_obj.created_at = None
         new_obj.updated_at = None
-        print(new_obj)
+        # print(new_obj)
         current_obj.active = 0
         current_obj.last_change = 'SOFT_UPDATE'
         current_obj.updated_at = datetime.now()
@@ -148,4 +158,4 @@ class DictionaryService:
         return values
 
 
-dictionary_service = DictionaryService()
+dictionary_service = DictionaryService(PositionType)

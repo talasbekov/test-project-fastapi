@@ -18,7 +18,7 @@ class SportAchievement(NamedModel):
     sport_type_id = Column(
         String(),
         ForeignKey("hr_erp_sport_types.id"),
-        nullable=False)
+        nullable=True)
 
     sport_type = relationship("SportType", back_populates="sport_achievements")
     profile = relationship(

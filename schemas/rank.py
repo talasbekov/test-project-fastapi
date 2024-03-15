@@ -31,7 +31,7 @@ class RankRead(RankBase, ReadNamedModel):
     rank_order: Optional[int]
     military_url: Optional[str]
     employee_url: Optional[str]
-
+    
     class Config:
         orm_mode = True
 

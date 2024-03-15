@@ -30,6 +30,7 @@ from schemas import (
     UserCreate,
     UserUpdate,
     UserShortRead,
+    UserRead,
 )
 from services import (
     staff_division_service,
@@ -66,7 +67,13 @@ class UserService(ServiceBase[User, UserCreate, UserUpdate]):
             raise NotFoundException(detail="User is not found!")
         if (user.personal_id):
             user.personal_id = user.personal_id.capitalize()
-
+        print(user.staff_unit.position.category_code)
+        if user.staff_unit.position.category_code.startswith('C-S'):
+            print(user.rank.military_url)
+            user.rank.military_url = user.rank.employee_url
+        
+        
+        
         # Convert the image URL to a base64 byte object
         # if user.icon.startswith('http'): 
         #     try:  

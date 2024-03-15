@@ -25,7 +25,7 @@ class AbroadTravel(Model):
     destination_country_id = Column(
         String(),
         ForeignKey('hr_erp_countries.id'),
-        nullable=False)
+        nullable=True)
     date_from = Column(TIMESTAMP(timezone=True), nullable=False)
     date_to = Column(TIMESTAMP(timezone=True), nullable=False)
     reason = Column(String(255), nullable=False, default="")

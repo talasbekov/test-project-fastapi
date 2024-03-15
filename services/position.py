@@ -4,7 +4,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from models import Position, PositionType
-from schemas import PositionCreate, PositionUpdate, PositionReadShort
+from schemas import PositionCreate, PositionUpdate, PositionReadShort, PositionPaginationRead
 from services import ServiceBase
 from services.filter import add_filter_to_query
 
@@ -74,7 +74,17 @@ class PositionService(ServiceBase[Position, PositionCreate, PositionUpdate]):
             return role.id
         else:
             return None
+    def get_type_id_by_names(self, db: Session, name: str, nameKZ: str):
+        role = db.query(PositionType).filter(
+            func.lower(PositionType.name) == name.lower()
+        ).filter(
+            func.lower(PositionType.nameKZ) == nameKZ.lower()
+        ).first()
 
+        if role:
+            return role.id
+        else:
+            return None
     def get_lower_positions(
         self,
         db: Session,
@@ -91,7 +101,7 @@ class PositionService(ServiceBase[Position, PositionCreate, PositionUpdate]):
         return positions
 
     def create(self, db, body):
-        position_type_id = self.get_type_id_by_name(db, body.name)
+        position_type_id = self.get_type_id_by_names(db, body.name, body.nameKZ)
         if position_type_id is None:
             position_type_id = super().create(db,
                                            PositionType(name=body.name,
@@ -109,6 +119,28 @@ class PositionService(ServiceBase[Position, PositionCreate, PositionUpdate]):
         db.flush()
         return position
 
+    def update(self, db, id, body):
+        position = self.get_by_id(db, id)
+        position_type_id = self.get_type_id_by_names(db, body.name, body.nameKZ)
+        if position_type_id is None:
+            position_type = super().create(db,
+                                           PositionType(name=body.name,
+                                                        nameKZ=body.nameKZ),
+                                           PositionType)
+            print("success")
+            position_type_id = position_type.id
+            # db.add(position_type)
+            
+        position.type_id = position_type_id
+        # position.max_rank_id = body.max_rank_id
+        position.category_code = body.category_code
+        position.form = body.form
+        position.name = body.name
+        position.nameKZ = body.nameKZ
+        db.add(position)
+            
+        db.flush()
+        return position
     def get_short_positions(self, db: Session):
         positions = db.query(Position).all()
         return [PositionReadShort.from_orm(position) for position in positions]

@@ -13,22 +13,22 @@ class BadgeTypeService(ServiceBase[BadgeType, BadgeTypeCreate, BadgeTypeUpdate])
                   limit: int,
                   filter: str = ''
                   ):
-        print("here1")
         badge_types = db.query(BadgeType)
         # print(badge_types.all())
-        print("here2")
         if filter != '':
             badge_types = add_filter_to_query(badge_types, filter, BadgeType)
-        print("here3")
-        badge_types = (badge_types
-                       .order_by(BadgeType.name)
-                       .offset(skip)
-                       .limit(limit)
-                       .all())
-                       
-        print("here4")
+        
+        if limit > 0:
+            badge_types = (badge_types
+                        .order_by(BadgeType.name)
+                        .offset(skip)
+                        .limit(limit)
+                        .all())
+        else:
+            badge_types = (badge_types
+                            .order_by(BadgeType.name)
+                            .all())
         total = (db.query(BadgeType).count())
-        print("here5")  
         return {'total': total, 'objects': badge_types}
 
 
