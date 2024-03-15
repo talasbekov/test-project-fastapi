@@ -88,15 +88,15 @@ class DictionaryService(ServiceBase[PositionType, PositionCreate, PositionUpdate
             'positions': ('Position',),
             'ranks': ('Rank',),
             'badges': ('BadgeType',),
-            'penalties': ('Penalty',),
+            'penalties': ('PenaltyType',),
             'properties': ('additional', 'PropertyType'),
             'sports': ('personal', 'SportType'),
-            'statuses': ('Status',),
+            'statuses': ('StatusType',),
             'specialties': ('education', 'Specialty'),
             'academic_degrees': ('education', 'AcademicDegreeDegree'),
             'academic_titles': ('education', 'AcademicTitleDegree'),
             'country': ('additional', 'Country'),
-            'courses': ('education', 'Course'),
+            'courses': ('education', 'CourseProvider'),
             'inst_degrees': ('education', 'InstitutionDegreeType'),
             'sciences': ('education', 'Science'),
             'languages': ('education', 'Language')
@@ -115,9 +115,9 @@ class DictionaryService(ServiceBase[PositionType, PositionCreate, PositionUpdate
 
         current_obj = db.query(class_obj).filter(
             class_obj.id == id).first()
-        # print(current_obj)
-        # print(id)
-        # print(class_obj)
+        print(current_obj)
+        print(id)
+        print(class_obj)
         
         new_obj = class_obj(**(await self.__get_column_values(current_obj)))
         new_obj.id = str(uuid.uuid4())
@@ -130,7 +130,7 @@ class DictionaryService(ServiceBase[PositionType, PositionCreate, PositionUpdate
             print(position_type_id)
         new_obj.created_at = None
         new_obj.updated_at = None
-        # print(new_obj)
+        print(new_obj)
         current_obj.active = 0
         current_obj.last_change = 'SOFT_UPDATE'
         current_obj.updated_at = datetime.now()
