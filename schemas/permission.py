@@ -6,8 +6,10 @@ from schemas import Model, NamedModel, ReadModel, ReadNamedModel
 class PermissionType(NamedModel):
     pass
 
+
 class PermissionTypeRead(ReadNamedModel):
     pass
+
 
 class PermissionBase(Model):
     type_id: str
@@ -15,6 +17,7 @@ class PermissionBase(Model):
 
 
 class PermissionCreate(PermissionBase):
+
     pass
 
 
@@ -26,6 +29,7 @@ class UserPermission(ReadNamedModel):
     user_id: str
     permission_ids: List[PermissionTypeRead]
 
+
 class UserShortRead(Model):
     id: Optional[str]
     first_name: Optional[str]
@@ -36,12 +40,15 @@ class UserShortRead(Model):
     class Config:
         orm_mode = True
 
+
 class PermissionRead(PermissionBase, ReadModel):
     type: PermissionTypeRead
     user: UserShortRead
+
     class Config:
         orm_mode = True
-        
+
+
 class PermissionPaginationRead(Model):
     total: Optional[int]
     objects: Optional[List[PermissionRead]]

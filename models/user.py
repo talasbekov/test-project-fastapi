@@ -26,15 +26,12 @@ class User(isActiveModel):
     staff_unit_id = Column(
         String(),
         ForeignKey("hr_erp_staff_units.id"),
-        nullable=False,)
+        nullable=False,
+    )
     actual_staff_unit_id = Column(
-        String(),
-        ForeignKey("hr_erp_staff_units.id"),
-        nullable=False)
-    supervised_by = Column(
-        String(),
-        ForeignKey("hr_erp_users.id"),
-        nullable=True)
+        String(), ForeignKey("hr_erp_staff_units.id"), nullable=False
+    )
+    supervised_by = Column(String(), ForeignKey("hr_erp_users.id"), nullable=True)
 
     description = Column(TEXT, nullable=True)
     cabinet = Column(String(255), nullable=True)
@@ -49,104 +46,79 @@ class User(isActiveModel):
     badges = relationship("Badge", back_populates="user", cascade="all,delete")
 
     staff_unit = relationship(
-        "StaffUnit",
-        back_populates="users",
-        foreign_keys=staff_unit_id,
-        lazy="select")
+        "StaffUnit", back_populates="users", foreign_keys=staff_unit_id, lazy="select"
+    )
     staff_unit_replacing = relationship(
         "StaffUnit",
         back_populates="user_replacing",
         foreign_keys="StaffUnit.user_replacing_id",
-        lazy="select"
+        lazy="select",
     )
     archive_staff_unit_replacing = relationship(
         "ArchiveStaffUnit",
         back_populates="user_replacing",
         foreign_keys="ArchiveStaffUnit.user_replacing_id",
-        lazy="select"
+        lazy="select",
     )
     actual_staff_unit = relationship(
         "StaffUnit",
         back_populates="actual_users",
         foreign_keys=actual_staff_unit_id,
-        lazy="select")
+        lazy="select",
+    )
 
     hr_documents = relationship(
         "HrDocument",
         secondary=hr_documents_users,
         back_populates="users",
         cascade="all,delete",
-        lazy="select"
+        lazy="select",
     )
     hr_vacancies = relationship(
-        "HrVacancyCandidate",
-        back_populates="user",
-        lazy="select"
+        "HrVacancyCandidate", back_populates="user", lazy="select"
     )
 
     staff_list = relationship(
-        "StaffList",
-        back_populates="user",
-        cascade="all,delete",
-        lazy="select")
+        "StaffList", back_populates="user", cascade="all,delete", lazy="select"
+    )
 
     profile = relationship("Profile", back_populates="user", uselist=False)
     histories = relationship(
-        "History",
-        back_populates="user",
-        foreign_keys=[
-            History.user_id],
-        lazy="select")
+        "History", back_populates="user", foreign_keys=[History.user_id], lazy="select"
+    )
 
     statuses = relationship(
-        "Status",
-        back_populates="user",
-        cascade="all,delete",
-        lazy="select")
+        "Status", back_populates="user", cascade="all,delete", lazy="select"
+    )
     secondments = relationship(
-        "Secondment",
-        back_populates="user",
-        cascade="all,delete",
-        lazy="select")
+        "Secondment", back_populates="user", cascade="all,delete", lazy="select"
+    )
     attestations = relationship(
-        "Attestation",
-        back_populates="user",
-        cascade="all,delete",
-        lazy="select")
+        "Attestation", back_populates="user", cascade="all,delete", lazy="select"
+    )
     coolnesses = relationship(
-        "Coolness",
-        back_populates="user",
-        cascade="all,delete",
-        lazy="select")
+        "Coolness", back_populates="user", cascade="all,delete", lazy="select"
+    )
     penalties = relationship(
-        "Penalty",
-        back_populates="user",
-        cascade="all,delete",
-        lazy="select")
+        "Penalty", back_populates="user", cascade="all,delete", lazy="select"
+    )
     privelege_emergencies = relationship(
-        "PrivilegeEmergency",
-        back_populates="user",
-        cascade="all,delete",
-        lazy="select")
+        "PrivilegeEmergency", back_populates="user", cascade="all,delete", lazy="select"
+    )
     contracts = relationship(
-        "Contract",
-        back_populates="user",
-        cascade="all,delete",
-        lazy="select")
+        "Contract", back_populates="user", cascade="all,delete", lazy="select"
+    )
     equipments = relationship(
-        "Equipment",
-        back_populates="user",
-        cascade="all,delete",
-        lazy="select")
+        "Equipment", back_populates="user", cascade="all,delete", lazy="select"
+    )
     answers = relationship(
-        "Answer",
-        cascade="all,delete",
+        "Answer", cascade="all,delete", back_populates="user", lazy="select"
+    )
+    exam_results = relationship("ExamResult", back_populates="user", lazy="select")
+    activities = relationship(
+        "UserLoggingActivity",
         back_populates="user",
-        lazy="select")
-    exam_results = relationship("ExamResult",
-                                back_populates="user",
-                                lazy="select")
-    activities = relationship("UserLoggingActivity",
-                              back_populates="user",
-                              cascade="all,delete",
-                              lazy="select")
+        cascade="all,delete",
+        lazy="select",
+    )
+    permissions = relationship("Permission", back_populates="user")
