@@ -89,6 +89,7 @@ class UserRead(UserBase, ReadModel):
     class Config:
         orm_mode = True
 
+
 class UserShortRead(Model):
     id: Optional[str]
     first_name: Optional[str]
@@ -98,13 +99,14 @@ class UserShortRead(Model):
     rank: Optional[RankRead]
     staff_unit_id: Optional[str]
 
-
     class Config:
         orm_mode = True
+
 
 class UserShortReadPagination(BaseModel):
     total: int = Field(0, nullable=False)
     objects: List[UserShortRead] = Field([], nullable=False)
+
 
 class UserShortReadStatus(Model):
     id: Optional[str]

@@ -40,6 +40,7 @@ from services import (
     staff_division_service,
     candidate_service,
     user_logging_activity_service,
+    permission_service
 )
 from utils import hash_password, is_valid_phone_number, verify_password
 
@@ -66,7 +67,7 @@ class AuthService:
 
         self._set_last_signed_at(db, user)
 
-        access_token, refresh_token = self._generate_tokens(Authorize, user)
+        access_token, refresh_token = self._generate_tokens(db, Authorize, user)
 
         return {"access_token": access_token, "refresh_token": refresh_token}
 
@@ -80,7 +81,7 @@ class AuthService:
 
         self._set_last_signed_at(db, user)
 
-        access_token, refresh_token = self._generate_tokens(Authorize, user)
+        access_token, refresh_token = self._generate_tokens(db, Authorize, user)
 
         return {"access_token": access_token, "refresh_token": refresh_token}
 
@@ -264,15 +265,12 @@ class AuthService:
                 detail="The user belonging to this token no longer exist",
             )
 
-        access_token, refresh_token = self._generate_tokens(Authorize, user)
+        access_token, refresh_token = self._generate_tokens(db, Authorize, user)
 
         return {"access_token": access_token, "refresh_token": refresh_token}
 
-    def _generate_tokens(self, Authorize: AuthJWT, user: User):
-
-        permissions = []
-        for permission in user.staff_unit.permissions:
-            permissions.append(permission.type.sequence_id)
+    def _generate_tokens(self, db: Session, Authorize: AuthJWT, user: User):
+        permissions = permission_service.get_permissions_sequence_id_by_user(db, user.id)
 
         user_claims = {
             "role": str(user.staff_unit.id),

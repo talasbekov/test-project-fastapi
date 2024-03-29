@@ -49,52 +49,6 @@ async def get_all(
 
 
 @router.get(
-    "/has_permission",
-    dependencies=[Depends(HTTPBearer())],
-    response_model=bool,
-    summary="If user has permission",
-)
-async def has_permission(
-    *, db: Session = Depends(get_db), Authorize: AuthJWT = Depends()
-):
-    """
-    Check if authorized user has permission for permission_type
-
-    - **permission_type**: str - permission_type name
-    """
-    Authorize.jwt_required()
-    user_id = Authorize.get_jwt_subject()
-    role = Authorize.get_raw_jwt()["role"]
-    permissions = Authorize.get_raw_jwt()["permissions"]
-    return permission_service.has_permission(
-        db, str(user_id), str(role), list(permissions)
-    )
-
-
-@router.get(
-    "/user_permissions",
-    dependencies=[Depends(HTTPBearer())],
-    response_model=List[PermissionRead],
-    summary="Get all Permissions of user",
-)
-async def has_permission(
-    *,
-    db: Session = Depends(get_db),
-    user_id: str = None,
-    Authorize: AuthJWT = Depends()
-):
-    """
-    Get all permissions of user
-
-    - **permission_type**: str - permission_type name
-    """
-    Authorize.jwt_required()
-    if user_id is None:
-        user_id = Authorize.get_jwt_subject()
-    return permission_service.get_permissions_by_user(db, str(user_id))
-
-
-@router.get(
     "/types",
     dependencies=[Depends(HTTPBearer())],
     response_model=List[PermissionTypeRead],

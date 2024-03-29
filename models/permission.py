@@ -7,9 +7,11 @@ from models import NamedModel, Model
 
 
 class PermissionEnum(str, enum.Enum):
-    FULL_ACCESS = "Полный доступ"
-    STAFF_LIST_EDITOR = "Редакторование штатного расписания"
-    PERSONAL_PROFILE_EDITOR = "Редактирование личных дел"
+    FULL_ACCESS = 0  # "Полный доступ"
+    STAFF_LIST_EDITOR = 1  # "Редакторование штатного расписания"
+    PERSONAL_PROFILE_EDITOR = 2  # "Редактирование личных дел"
+    VIEW_ALL_EMPLOYEES = 3  # Просмотр всех сотрудников Службы
+    VIEW_ALL_EMPLOYEES_BY_DEPARTMENT = 12  # "Просмотр всех сотрудников Департамента"
 
 
 class PermissionType(NamedModel):

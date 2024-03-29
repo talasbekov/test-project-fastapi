@@ -2,10 +2,9 @@ from typing import List
 
 from sqlalchemy.orm import Session
 
-from exceptions.client import NotFoundException
-from models import Permission, PermissionType
+from exceptions import NotFoundException, ForbiddenException
+from models import Permission, PermissionType, StaffUnit, User
 from schemas import PermissionCreate, PermissionUpdate
-from services import staff_unit_service, user_service
 
 from .base import ServiceBase
 
@@ -34,44 +33,38 @@ class PermissionService(ServiceBase[Permission, PermissionCreate, PermissionUpda
     def get_permission_types(self, db: Session, skip: int = 0, limit: int = 100):
         return db.query(PermissionType).offset(skip).limit(limit).all()
 
-    def has_permission(
-        self, db: Session, user_id: str, role: str, permissions: list[int]
-    ):
-        staff_unit = staff_unit_service.get_by_id(db, role)
-        user = user_service.get_by_id(db, user_id)
+    def has_permission(self, db: Session, user_id: str, role: str, permissions: list[int], required_permission: int):
 
-        # Получение всех permission_types, которые соответствуют списку permissions
-        permission_types = (
-            db.query(PermissionType)
-            .filter(PermissionType.sequence_id.in_(permissions))
-            .all()
-        )
+        # Проверяем, входит ли требуемое разрешение в список разрешений пользователя
+        if required_permission not in permissions:
+            raise ForbiddenException("У пользователя нет требуемого разрешения.")
 
-        # Проверка, что все permission_types из списка permissions найдены
-        if len(permission_types) != len(permissions):
-            raise NotFoundException(detail="One or more permission types not found!")
+        # Ищем тип разрешения по требуемому разрешению
+        permission_type = db.query(PermissionType).filter(PermissionType.sequence_id == required_permission).first()
+        if not permission_type:
+            raise NotFoundException("Тип разрешения не найдено.")
 
-        # Проверка, что для каждого permission_type существует разрешение для данного пользователя и staff_unit
-        for permission_type in permission_types:
-            permission = (
-                db.query(self.model)
-                .filter(
-                    self.model.type_id == permission_type.id,
-                    self.model.user_id == user.id,
-                    self.model.staff_unit_id == staff_unit.id,
-                )
-                .first()
-            )
-            # Если для любого из permission_types не найдено разрешение, возвращаем False
-            if not permission:
-                return False
+        # Проверяем, есть ли у пользователя конкретное разрешение с учётом его роли
+        permission = db.query(self.model).filter(
+            self.model.type_id == permission_type.id,
+            self.model.user_id == user_id
+        ).first()
 
-        # Все разрешения найдены
-        return True
+        return permission is not None  # Возвращает True, если разрешение найдено, иначе False
 
     def get_permissions_by_user(self, db: Session, user_id: str):
         permissions = db.query(self.model).filter(self.model.user_id == user_id).all()
         return permissions
+
+    def get_permissions_sequence_id_by_user(self, db: Session, user_id: str):
+        permissions = db.query(self.model).filter(self.model.user_id == user_id).all()
+        permission_list = []
+        for permission in permissions:
+            permission_list.append(permission.type.sequence_id)
+        update_permission_list = []
+        for i in set(permission_list):
+            update_permission_list.append(i)
+        return update_permission_list
 
 
 permission_service = PermissionService(Permission)

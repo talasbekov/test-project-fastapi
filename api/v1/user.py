@@ -189,8 +189,10 @@ async def get_all_active(
     """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
+    role = Authorize.get_raw_jwt()["role"]
+    permissions = Authorize.get_raw_jwt()["permissions"]
     users, total = user_service.get_all_active(
-        db, filter.lstrip().rstrip(), skip, limit, user_id)
+        db, filter.lstrip().rstrip(), skip, limit, user_id, role, list(permissions))
     return TableUserRead(total=total, users=users)
 
 
