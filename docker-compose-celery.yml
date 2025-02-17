@@ -1,0 +1,64 @@
+version: '3'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3.9.4
+    container_name: rabbitmq
+    ports:
+      - '5672:5672'
+    restart: always
+    network_mode: "erp-sgo-backend_default"
+
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - '6379:6379'
+    restart: always
+    network_mode: "erp-sgo-backend_default"
+
+  celery:
+    build:
+      context: .
+    command: celery -A tasks.celery_app worker --loglevel=info
+    container_name: celery
+    user: "1000"
+    depends_on:
+      - redis
+      - rabbitmq
+    environment:
+      - C_FORCE_ROOT=false
+      - CELERY_BROKER_URL=amqp://rabbitmq:5672/
+    restart: always
+    network_mode: "erp-sgo-backend_default"
+    
+  celery-beat:
+    build:
+      context: .
+    command: celery -A tasks.celery_app beat --loglevel=info
+    container_name: celery-beat
+    depends_on:
+      - redis
+      - rabbitmq
+    environment:
+      - CELERY_BROKER_URL=amqp://rabbitmq:5672/
+    restart: always
+    network_mode: "erp-sgo-backend_default"
+    volumes:
+      - .:/app
+
+  flower:
+    image: "mher/flower"
+    container_name: flower
+    environment:
+      CELERY_BROKER_URL: amqp://rabbitmq:5672/
+    ports:
+      - "5555:5555"
+    restart: always
+    network_mode: "erp-sgo-backend_default"
+    depends_on:
+      - rabbitmq
+
+#networks:
+#  backend-oracle:
+#    driver: bridge

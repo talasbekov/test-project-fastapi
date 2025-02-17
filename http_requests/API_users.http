@@ -1,0 +1,23 @@
+### Get user_id
+GET http://localhost:8002/api/v1/users?filter=адилет&skip=0&limit=10
+Authorization: Bearer {{auth_token1}}
+
+> {%client.global.set("user_id", response.body[0].id);%}
+
+### Get users without filter
+GET http://localhost:8002/api/v1/users?skip=0&limit=10&filter=
+Authorization: Bearer {{auth_token1}}
+
+### Get users with filter
+GET http://localhost:8002/api/v1/users?filter=маратов&skip=0&limit=10
+Authorization: Bearer {{auth_token1}}
+
+### Get users with template_id
+GET http://localhost:8002/api/v1/users?hr_document_template_id={{hr_document_template_id_position}}&filter=адилет&skip=0&limit=10
+Authorization: Bearer {{auth_token1}}
+
+### Get position.
+GET http://localhost:8002/api/v1/users?skip=0&limit=10
+Authorization: Bearer {{auth_token1}}
+
+> {% client.global.set("position_id", response.body[0].staff_unit.position.id); %}
