@@ -1,7 +1,7 @@
 import uuid
-from typing import List
+from typing import List, Optional, Union
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.security import HTTPBearer
 from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
@@ -10,6 +10,7 @@ from core import get_db
 
 from schemas import PolygraphCheckCreate, PolygraphCheckRead, PolygraphCheckUpdate
 from services import polyhraph_check_service
+from models import PermissionTypeEnum
 
 router = APIRouter(
     prefix="/polygraph-check",
@@ -20,7 +21,7 @@ router = APIRouter(
 
 
 @router.get("", dependencies=[Depends(HTTPBearer())],
-            response_model=List[PolygraphCheckRead],
+            response_model=Union[Optional[List[PolygraphCheckRead]], str],
             summary="Get all Polygraph Check")
 async def get_all(*,
                   db: Session = Depends(get_db),
@@ -38,6 +39,10 @@ async def get_all(*,
     """
     Authorize.jwt_required()
     credentials = Authorize.get_jwt_subject()
+    permissions = Authorize.get_raw_jwt()['permissions']
+    if int(PermissionTypeEnum.VIEW_POLIGRAPH.value) not in permissions:
+        # raise HTTPException(status_code=403, detail="Permission denied")
+        return "Permission Denied"
     return polyhraph_check_service.get_multi_by_user_id(
         db, credentials, skip, limit)
 

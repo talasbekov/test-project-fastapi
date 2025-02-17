@@ -14,4 +14,5 @@ class FamilyProfile(Model):
     family = relationship(
         "Family",
         back_populates="profile",
-        cascade="all, delete")
+        cascade="all, delete",
+        uselist=True)

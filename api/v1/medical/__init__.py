@@ -9,6 +9,7 @@ from .hospital_data import router as hospital_data_router
 from .medical_profile import router as medical_profile_router
 from .user_liberation import router as user_liberation_router
 from .liberation import router as liberation_router
+from .illness_type import router as illness_type_router
 
 
 router_medical= APIRouter(prefix="/medical")
@@ -22,3 +23,4 @@ router_medical.include_router(medical_profile_router)
 router_medical.include_router(user_liberation_router)
 router_medical.include_router(liberation_router)
 router_medical.include_router(blood_type_router)
+router_medical.include_router(illness_type_router)

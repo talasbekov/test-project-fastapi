@@ -12,3 +12,4 @@ from .academic_degree import academic_degree_service
 from .language import language_service
 from .language_proficiency import language_proficiency_service
 from .educational_profile import educational_profile_service
+from .military_institution import military_institution_service

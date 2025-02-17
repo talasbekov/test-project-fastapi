@@ -103,7 +103,7 @@ class ExamResultService(ServiceBase[ExamResult, ExamResultCreate, ExamResultUpda
             )
 
         exam_schedule.class_status = ClassStatus.STARTED
-
+        setattr(exam_schedule, 'updated_at', datetime.now())
         db.add(exam_schedule)
         db.flush()
 

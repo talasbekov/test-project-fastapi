@@ -41,12 +41,24 @@ class DictionaryService(ServiceBase[PositionType, PositionCreate, PositionUpdate
             'inst_degrees': 'hr_erp_educations',
             'institutions': 'hr_erp_educations',
             'sciences': 'hr_erp_academic_degrees',
-            'languages': 'hr_erp_language_proficiencies'
+            'languages': 'hr_erp_language_proficiencies',
+            'nationality': 'hr_erp_biographic_infos',
+            'citizenship': 'hr_erp_biographic_infos',
+            'sport_degree_type': 'hr_erp_sport_degrees',
+            'illness_type': 'hr_erp_hospital_datas',
+            'liberation': 'HR_ERP_U_LIBER_LIBERATIONS',
+            'violation_type': 'hr_erp_violations',
+            'region': 'hr_erp_birthplaces',
+            'city': 'hr_erp_birthplaces',
+            'country': 'hr_erp_birthplaces',
+            'equipment_model_army': 'hr_erp_type_ar_equip_models',
+            'equipment_model_cloth': 'hr_erp_type_cloth_eq_models',
+            'equipment_model_other': 'hr_erp_type_oth_eq_models',
         }
 
         COLUMNS = {
             'institutions': 'institution_id',
-            'positions': 'position_id',
+            'positions': 'actual_position_id',
             'ranks': 'rank_id',
             'badges': 'type_id',
             'penalties': 'type_id',
@@ -61,7 +73,19 @@ class DictionaryService(ServiceBase[PositionType, PositionCreate, PositionUpdate
             'inst_degrees': 'degree_id',
             'institutions': 'institution_id',
             'sciences': 'science_id',
-            'languages': 'language_id'
+            'languages': 'language_id',
+            'nationality': 'nationality_id',
+            'citizenship': 'citizenship_id',
+            'sport_degree_type': 'sport_degree_type_id',
+            'illness_type': 'illness_type_id',
+            'liberation': 'liberation_id',
+            'violation_type': 'violation_type_id',
+            'region': 'region_id',
+            'city': 'city_id',
+            'country': 'country_id',
+            'equipment_model_army': 'type_of_army_equipment_id',
+            'equipment_model_cloth': 'type_cloth_eq_types_id',
+            'equipment_model_other': 'type_of_other_equipment_id',
         }
 
         id_change_query = text(f"UPDATE {TABLES[entity]} "
@@ -99,9 +123,16 @@ class DictionaryService(ServiceBase[PositionType, PositionCreate, PositionUpdate
             'courses': ('education', 'CourseProvider'),
             'inst_degrees': ('education', 'InstitutionDegreeType'),
             'sciences': ('education', 'Science'),
-            'languages': ('education', 'Language')
+            'languages': ('education', 'Language'),
+            'nationality': ('personal', 'Nationality'),
+            'citizenship': ('personal', 'Citizenship'),
+            'sport_degree_type': ('personal', 'SportDegreeType'),
+            'illness_types': ('medical', 'IllnessType'),
+            'liberations': ('medical', 'Liberation'), 
+            'violation_types': ('additional', 'ViolationType'),
+            'region': ('personal', 'Region'),
+            'city': ('personal', 'City'),
         }
-        print(MODULES[entity])
         # print(len(MODULES[entity]))
         if len(MODULES[entity]) == 1:
             class_name = MODULES[entity][0]
@@ -115,9 +146,6 @@ class DictionaryService(ServiceBase[PositionType, PositionCreate, PositionUpdate
 
         current_obj = db.query(class_obj).filter(
             class_obj.id == id).first()
-        print(current_obj)
-        print(id)
-        print(class_obj)
         
         new_obj = class_obj(**(await self.__get_column_values(current_obj)))
         new_obj.id = str(uuid.uuid4())
@@ -127,10 +155,8 @@ class DictionaryService(ServiceBase[PositionType, PositionCreate, PositionUpdate
                                                         nameKZ=current_obj.nameKZ),
                                            PositionType).id
             new_obj.type_id = position_type_id
-            print(position_type_id)
         new_obj.created_at = None
-        new_obj.updated_at = None
-        print(new_obj)
+        new_obj.updated_at = datetime.now()
         current_obj.active = 0
         current_obj.last_change = 'SOFT_UPDATE'
         current_obj.updated_at = datetime.now()

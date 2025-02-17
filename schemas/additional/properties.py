@@ -10,8 +10,8 @@ from .property_type import PropertyTypeRead
 class PropertiesBase(Model):
     type_id: str
     purchase_date: datetime.datetime
-    purchase_type: str
-    purchase_typeKZ: str
+    purchase_type: Optional[str] = None
+    purchase_typeKZ: Optional[str] = None
     address: str
     profile_id: str
     document_link: Optional[str]
@@ -30,4 +30,5 @@ class PropertiesUpdate(PropertiesBase):
 
 
 class PropertiesRead(PropertiesBase, ReadModel):
+    type_id: Optional[str]
     type: Optional[PropertyTypeRead]

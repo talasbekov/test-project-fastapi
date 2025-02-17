@@ -20,6 +20,8 @@ class DrivingLicenseBase(BaseModel):
 
 class DrivingLicenseCreate(DrivingLicenseBase):
     category: Optional[str]
+    date_of_issue: Optional[datetime.date]
+    date_to: Optional[datetime.date]
 
 
 class DrivingLicenseUpdate(BaseModel):
@@ -32,13 +34,13 @@ class DrivingLicenseUpdate(BaseModel):
 
 
 class DrivingLicenseRead(DrivingLicenseBase):
-    id: Optional[str]
+    id: str
     document_number: Optional[str]
     category: Union[Optional[str], Optional[List[str]]]
     date_of_issue: Optional[datetime.date]
     date_to: Optional[datetime.date]
     document_link: Optional[str]
-    profile_id: Optional[str]
+    profile_id: str
     created_at: Optional[datetime.date]
     updated_at: Optional[datetime.date]
 

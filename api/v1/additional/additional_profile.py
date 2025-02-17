@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, status
 from fastapi.security import HTTPBearer
 from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
-
+from models import PermissionTypeEnum
 from core import get_db
 
 from schemas import (AdditionalProfileCreate,
@@ -51,7 +51,8 @@ async def get_all(*,
              summary="Create")
 async def create(*,
                  db: Session = Depends(get_db),
-                 Authorize: AuthJWT = Depends()
+                 Authorize: AuthJWT = Depends(),
+                 user_id: str
                  ):
     """
         Create new abroad travel
@@ -139,4 +140,17 @@ async def get_profile_by_id(*,
                             Authorize: AuthJWT = Depends()
                             ):
     Authorize.jwt_required()
-    return profile_service.get_by_user_id(db, str(id)).additional_profile
+    permissions = Authorize.get_raw_jwt()['permissions']
+    res = profile_service.get_by_user_id(db, str(id)).additional_profile
+    res = AdditionalProfileRead.from_orm(res).dict()
+    if id != Authorize.get_jwt_subject():
+    # res = res.__dict__
+        if int(PermissionTypeEnum.VIEW_SPEC_INSPECTIONS.value) not in permissions:
+            res['special_checks'] = "Permission Denied"
+        if int(PermissionTypeEnum.VIEW_POLIGRAPH.value) not in permissions:
+            res['polygraph_checks'] = "Permission Denied"
+        if int(PermissionTypeEnum.VIEW_VIOLATIONS.value) not in permissions:
+            res['violations'] = "Permission Denied"
+        if int(PermissionTypeEnum.VIEW_PSYCH_CHARACTERISTICS.value) not in permissions:
+            res['psychological_checks'] = "Permission Denied"
+    return res

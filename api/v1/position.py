@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from core import get_db
 from models.position import CategoryCodeEnum
 from schemas import PositionCreate, PositionUpdate, PositionRead, PositionPaginationRead
-from services import position_service, position_type_service
+from services import position_service
 
 router = APIRouter(
     prefix="/positions",

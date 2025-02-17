@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 from pydantic import EmailStr, Field, root_validator, validator
 
 from schemas import (BadgeRead, RankRead, UserStaffUnitRead,
-                     StatusRead, ShortUserStaffUnitRead)
+                     StatusRead, ShortUserStaffUnitRead, StaffUnitReadActive, UserStaffUnitRead)
 from schemas import Model, ReadModel, BaseModel
 
 def calculate_age_from_birthdate(birth_date):
@@ -32,9 +32,9 @@ def get_age_group(age):
         return 0
 
 class UserBase(Model):
-    email: Optional[EmailStr]
-    first_name: Optional[str]
-    last_name: Optional[str]
+    email: EmailStr
+    first_name: str
+    last_name: str
     father_name: Optional[str]
     staff_unit_id: Optional[str]
     actual_staff_unit_id: Optional[str]
@@ -48,11 +48,22 @@ class UserBase(Model):
     supervised_by: Optional[str]
     is_military: Optional[bool]
     personal_id: Optional[str]
-    date_birth: Optional[datetime.date]
-    iin: Optional[str]
+    date_birth: Optional[datetime.datetime]
+    iin: str
     is_active: Optional[bool]
-    id: Optional[str]
+    id: str
     description: Optional[str]
+
+    # @validator("description", "name","military_url", "employee_url", pre=True, always=True)
+    # def default_empty_string(cls, v):
+    #     return v if v is not None else ""
+
+
+    @validator("father_name", "description", pre=True, always=True)
+    def default_empty_string(cls, v):
+        return v if v is not None else ""
+    
+
 
 
 class UserCreate(UserBase):
@@ -65,6 +76,28 @@ class UserUpdate(UserBase):
 class UserGroupUpdate(Model):
     user_id: str
     group_id: str
+
+class UserReadDocumentShort(UserBase, ReadModel):
+    is_military: Optional[bool]
+    staff_unit: Optional[ShortUserStaffUnitRead]
+    actual_staff_unit: Optional[ShortUserStaffUnitRead]
+    rank: Optional[RankRead]
+    email: Optional[str]
+    first_name: str
+    last_name: str
+    last_signed_at: Optional[datetime.datetime]
+    staff_unit_id: Optional[str]
+    call_sign: Optional[str]
+    id_number: Optional[str]
+    status_till: Optional[datetime.datetime]
+    personal_id: Optional[str]
+    # badges: Optional[str] = None
+    date_birth: Optional[datetime.datetime]
+    iin: Optional[str]
+    statuses: Optional[List[StatusRead]]
+
+    class Config:
+        orm_mode = True
     
 class UserRead(UserBase, ReadModel):
     badges: Optional[List[BadgeRead]]
@@ -72,9 +105,9 @@ class UserRead(UserBase, ReadModel):
     staff_unit: Optional[ShortUserStaffUnitRead]
     actual_staff_unit: Optional[ShortUserStaffUnitRead]
     rank: Optional[RankRead]
-    email: Optional[EmailStr]
-    first_name: Optional[str]
-    last_name: Optional[str]
+    email: Optional[str]
+    first_name: str
+    last_name: str
     last_signed_at: Optional[datetime.datetime]
     staff_unit_id: Optional[str]
     call_sign: Optional[str]
@@ -82,13 +115,27 @@ class UserRead(UserBase, ReadModel):
     status_till: Optional[datetime.datetime]
     personal_id: Optional[str]
     badges: Optional[List[BadgeRead]]
-    date_birth: Optional[datetime.date]
+    date_birth: Optional[datetime.datetime]
     iin: Optional[str]
     statuses: Optional[List[StatusRead]]
 
     class Config:
         orm_mode = True
+    # @validator("rank", pre=True, always=True)
+    # def default_empty_dict(cls, v):
+    #     return v if v is not None else {}
 
+class UserReadActiveShort(ReadModel):
+    staff_unit: Optional[StaffUnitReadActive]
+    first_name: Optional[str]
+    last_name: Optional[str]
+    last_signed_at: Optional[datetime.datetime]
+    staff_unit_id: Optional[str]
+    statuses: Optional[List[StatusRead]]
+    icon: Optional[str]
+
+    class Config:
+        orm_mode = True
 
 class UserShortRead(Model):
     id: Optional[str]
@@ -98,15 +145,22 @@ class UserShortRead(Model):
     icon: Optional[str]
     rank: Optional[RankRead]
     staff_unit_id: Optional[str]
+    iin: str
+    email: EmailStr
+    first_name: str
+    last_name: str
+
 
     class Config:
         orm_mode = True
 
+    # @validator("rank", pre=True, always=True)
+    # def default_empty_dict(cls, v):
+    #     return v if v is not None else {}
 
 class UserShortReadPagination(BaseModel):
     total: int = Field(0, nullable=False)
     objects: List[UserShortRead] = Field([], nullable=False)
-
 
 class UserShortReadStatus(Model):
     id: Optional[str]
@@ -161,6 +215,10 @@ class TableUserRead(Model):
     total: int
     users: List[UserRead]
 
+class TableUserReadActive(Model):
+    total: int
+    users: List[UserReadActiveShort]
+
 class UserShortReadFullNames(Model):
     total: int
     users: List[UserShortRead]
@@ -168,3 +226,18 @@ class UserShortReadFullNames(Model):
 class UserShortReadStatusPagination(BaseModel):
     total: int = Field(0, nullable=False)
     objects: List[UserShortReadStatus] = Field([], nullable=False)
+
+# class UserFillVacancy(Model):
+#     id: Optional[str]
+#     first_name: Optional[str]
+#     last_name: Optional[str]
+#     father_name: Optional[str]
+#     icon: Optional[str]
+#     rank: Optional[RankRead]
+#     staff_unit: Optional[UserStaffUnitRead]
+#     is_viable: Optional[bool]
+    
+
+#     @validator("is_viable", pre=False, always=False)
+#     def set_viable(cls, v, values):
+        

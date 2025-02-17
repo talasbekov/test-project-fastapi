@@ -20,7 +20,7 @@ class FamilyMemberAutoTagHandler(BaseAutoTagHandler):
         return [
             AutoTagRead(
                 name=(f'{i.relation.name} - {i.last_name}'
-                      f' {i.first_name}{"" + i.father_name},'
+                      f' {i.first_name  }{"" + i.father_name if i.father_name else None},'
                       f' {i.birthday.strftime("%Y-%m-%d")} г.р.'),
                 nameKZ=(f'{i.relation.nameKZ} - {i.last_name}'
                         f' {i.first_name}{" "+ i.father_name},'

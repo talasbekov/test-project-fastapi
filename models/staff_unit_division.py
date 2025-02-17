@@ -3,14 +3,12 @@ from sqlalchemy.orm import relationship
 from models import Model
 
 
-# class StaffUnitDivision(Model):
-#     __tablename__ = 'HR_ERP_STAFF_UNIT_DIVISIONS'
-#     # Assuming your database is Oracle, you might need to specify the schema as well
-#     # __table_args__ = {'schema': 'SYSTEM'}
+class StaffUnitDivisions(Model):
+    __tablename__ = 'hr_erp_staff_unit_divisions'
     
-#     STAFF_UNIT_ID = Column(String(36), ForeignKey('SYSTEM.HR_ERP_STAFF_UNITS.STAFF_UNIT_ID'), primary_key=True)
-#     CURATOR_OF_ID = Column(String(36), ForeignKey('SYSTEM.HR_ERP_STAFF_DIVISIONS.CURATOR_OF_ID'))
+    staff_unit_id = Column(String(36), ForeignKey('hr_erp_staff_units.id'))
+    curator_of_id = Column(String(36), ForeignKey('hr_erp_staff_divisions.id'))
     
-#     # Define relationships
-#     staff_unit = relationship("StaffUnit", back_populates="staff_unit_divisions")
-#     staff_division = relationship("StaffDivision", back_populates="staff_unit_divisions")
+    # relationships
+    staff_unit = relationship("StaffUnit", back_populates="curators")
+    staff_division = relationship("StaffDivision", back_populates="curators")

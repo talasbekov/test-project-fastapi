@@ -10,6 +10,7 @@ class BadgeType(NamedModel):
     # nameKZ = Column('namekz', String, nullable=True)
     url = Column(NCLOB, nullable=True)
     badge_order = Column(Integer, nullable=True)
+    # parent_id = Column(String(), ForeignKey("hr_erp_badge_types.id"), nullable=True)
 
     badges = relationship("Badge", back_populates="type")
 

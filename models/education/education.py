@@ -16,8 +16,9 @@ class Education(Model):
 
     __tablename__ = "hr_erp_educations"
 
-    profile_id = Column(String(), ForeignKey(
+    educational_profile_id = Column(String(), ForeignKey(
         "hr_erp_educational_profiles.id"), nullable=True)
+    profile_id = Column(String(), nullable = True)
     profile = relationship("EducationalProfile", back_populates="education")
     is_military_school = Column(Boolean, nullable=True, default=False)
     school_type = Column(String(), nullable=True)
@@ -38,6 +39,8 @@ class Education(Model):
         String(),
         ForeignKey("hr_erp_institutions.id"),
         nullable=True)
+    military_institution_id = Column(String(), ForeignKey("hr_erp_military_institutions.id"), nullable=True)
+    military_institution = relationship("MilitaryInstitution", back_populates="education")
     institution = relationship("Institution", back_populates="education")
 
     degree_id = Column(String(),

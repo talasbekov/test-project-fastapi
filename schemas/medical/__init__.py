@@ -1,3 +1,4 @@
+from .illness_type import IllnessTypeCreate, IllnessTypeRead, IllnessTypeUpdate
 from .liberation import LiberationRead, LiberationCreate, LiberationUpdate, LiberationReadPagination
 from .hospital_date import HospitalDataCreate, HospitalDataRead, HospitalDataUpdate
 from .user_liberation import UserLiberationCreate, UserLiberationRead, UserLiberationUpdate

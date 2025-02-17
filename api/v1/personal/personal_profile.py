@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, status
 from fastapi.security import HTTPBearer
 from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
-
+from models import PermissionTypeEnum
 from core import get_db
 from schemas import (PersonalProfileCreate, PersonalProfileRead)
 from services import personal_profile_service, profile_service
@@ -133,4 +133,8 @@ async def get_profile_by_id(*,
                             Authorize: AuthJWT = Depends()
                             ):
     Authorize.jwt_required()
-    return profile_service.get_by_user_id(db, str(id)).personal_profile
+    permissions = Authorize.get_raw_jwt()['permissions']
+    res = PersonalProfileRead.from_orm(profile_service.get_by_user_id(db, str(id)).personal_profile).dict()
+    if id != Authorize.get_jwt_subject() and int(PermissionTypeEnum.VIEW_UD.value) not in permissions:
+        res['identification_card'] =  "Permission Denied"
+    return res

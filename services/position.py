@@ -1,10 +1,10 @@
 from typing import List
-
+from datetime import datetime
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from models import Position, PositionType
-from schemas import PositionCreate, PositionUpdate, PositionReadShort, PositionPaginationRead
+from schemas import PositionCreate, PositionUpdate, PositionReadShort, PositionPaginationRead, PositionRead
 from services import ServiceBase
 from services.filter import add_filter_to_query
 
@@ -19,31 +19,32 @@ class PositionService(ServiceBase[Position, PositionCreate, PositionUpdate]):
         filter: str = ''
     ):
         specials = ['Умер', 'Погиб', 'В запасе', 'В отставке']
-        positions = (db.query(Position).join(PositionType))
+        positions = (db.query(Position))
         if filter != '':
             positions = add_filter_to_query(positions, filter, PositionType)
         positions = (positions
-                     .filter(PositionType.name.notin_(specials))
-                     .order_by(PositionType.name)
+                     .filter(Position.name.notin_(specials))
+                     .order_by(Position.name)
                      .offset(skip)
                      .limit(limit)
                      .all())
-        count = db.query(Position).join(PositionType).filter(PositionType.name.notin_(specials)).count()
+        count = db.query(Position).filter(Position.name.notin_(specials)).count()
         return {"total": count, "objects": positions}
 
     def get_multi(
         self, db: Session, skip: int = 0, limit: int = 100, filter: str = ''
     ):
-        positions = (db.query(Position).join(PositionType))
+        positions = (db.query(Position))
         if filter != '':
             positions = add_filter_to_query(positions, filter, PositionType)
         positions = (positions
-                       .order_by(PositionType.name)
+                       .order_by(Position.name)
                        .offset(skip)
                        .limit(limit)
                        .all())
         count = db.query(Position).count()
-        return {"total": count, "objects": positions}
+        positions_dicts = [PositionRead.from_orm(position).dict() for position in positions]
+        return {"total": count, "objects": positions_dicts}
 
     def get_id_by_name(self, db: Session, name: str):
         role = db.query(Position).join(PositionType).filter(
@@ -127,7 +128,7 @@ class PositionService(ServiceBase[Position, PositionCreate, PositionUpdate]):
                                            PositionType(name=body.name,
                                                         nameKZ=body.nameKZ),
                                            PositionType)
-            print("success")
+            # print("success")
             position_type_id = position_type.id
             # db.add(position_type)
             
@@ -137,6 +138,7 @@ class PositionService(ServiceBase[Position, PositionCreate, PositionUpdate]):
         position.form = body.form
         position.name = body.name
         position.nameKZ = body.nameKZ
+        position.updated_at = datetime.now()
         db.add(position)
             
         db.flush()

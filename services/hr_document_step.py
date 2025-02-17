@@ -6,6 +6,8 @@ from exceptions import NotFoundException
 from models import DocumentStaffFunction, HrDocumentStep
 from schemas import HrDocumentStepCreate, HrDocumentStepUpdate
 from .base import ServiceBase
+from schemas import HrDocumentStepRead
+from fastapi import HTTPException
 
 
 class HrDocumentStepService(
@@ -48,16 +50,23 @@ class HrDocumentStepService(
     def get_all_by_document_template_id(
             self, db: Session, template_id: str, notifiers: bool = True):
 
-        steps_query = db.query(self.model)\
-            .filter(self.model.hr_document_template_id == template_id)\
-            .join(self.model.staff_function)\
-            .order_by(DocumentStaffFunction.priority.asc())
+        # steps_query = db.query(self.model)\
+        #     .filter(self.model.hr_document_template_id == template_id)\
+        #     .join(self.model.staff_function)\
+        #     .order_by(DocumentStaffFunction.priority.asc())
+        steps_query = db.query(self.model).filter(self.model.hr_document_template_id == template_id)
 
         if not notifiers:
             steps_query = steps_query.filter(
                 DocumentStaffFunction.priority != -1)
+            
+        result = steps_query.all()
+        print(str(steps_query))
+        print(result)
+        if not result:
+            raise HTTPException(status_code=404, detail="No steps found for this document template")
 
-        return steps_query.all()
+        return result
 
     def get_next_step_from_previous_step(
             self, db: Session, previous_step: HrDocumentStep):

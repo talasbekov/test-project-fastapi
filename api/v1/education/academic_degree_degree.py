@@ -1,7 +1,9 @@
 import uuid
 from typing import List
-
-from fastapi import APIRouter, Depends, status
+from sqlalchemy.exc import DatabaseError
+from models.education import AcademicDegreeDegree
+from sqlalchemy import func
+from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.security import HTTPBearer
 from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
@@ -59,6 +61,25 @@ async def create(*,
     Authorize.jwt_required()
     return academic_degree_degree_service.create(db, body)
 
+@router.get("/check/")
+async def check(
+    *,
+    db: Session = Depends(get_db),
+    skip: int = 0,
+    limit: int = 100,
+    filter: str = '',
+    Authorize: AuthJWT = Depends()
+):
+    try:
+        academic_degree_degrees = db.query(AcademicDegreeDegree)\
+            .order_by(func.to_char(AcademicDegreeDegree.name))\
+            .offset(skip)\
+            .limit(limit)\
+            .all()
+        return {"data": academic_degree_degrees}
+    except DatabaseError as e:
+        print(f"Database error occurred: {e}")
+        raise HTTPException(status_code=500, detail="An error occurred while querying the database.")
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=AcademicDegreeDegreeRead,

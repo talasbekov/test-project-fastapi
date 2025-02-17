@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from exceptions.client import NotFoundException
 from models import FamilyStatus
 from schemas import FamilyStatusCreate, FamilyStatusUpdate, FamilyStatusRead
-from services.base import ServiceBase
+from services import ServiceBase
 from services.profile import profile_service
 
 
@@ -17,17 +17,14 @@ class FamilyStatusService(
                 detail=f"FamilyStatus with id: {id} is not found!")
         return family_status
 
-    def get_by_user_id(self, db: Session, id: str):
+    def get_by_user_id(self, db: Session, id: str) -> FamilyStatusRead:
         profile = profile_service.get_by_user_id(db, id)
-
-        try:
-            res = FamilyStatusRead.from_orm(
-                profile.personal_profile.biographic_info.family_status).dict()
-        except Exception:
-            return None
-
-        return self._validate_gender(
-            res, profile.personal_profile.biographic_info.gender)
+        
+        if profile.personal_profile and profile.personal_profile.biographic_info and profile.personal_profile.biographic_info.family_status:
+            family_status = profile.personal_profile.biographic_info.family_status
+            return FamilyStatusRead.from_orm(family_status)
+        else:
+            raise NotFoundException(detail="Family status not found")
 
     def _validate_gender(self, dict1: dict, gender: bool):
         if dict1['name'] and dict1['nameKZ']:

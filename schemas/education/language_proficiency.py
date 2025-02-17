@@ -11,6 +11,7 @@ class LanguageProficiencyBase(BaseModel):
     profile_id: Optional[str]
     language_id: Optional[str]
     document_link: Optional[str]
+    educational_profile_id: Optional[str]
 
     class Config:
         orm_mode = True
@@ -28,3 +29,4 @@ class LanguageProficiencyUpdate(LanguageProficiencyBase):
 class LanguageProficiencyRead(LanguageProficiencyBase):
     id: str
     language: Optional[LanguageRead]
+    educational_profile_id: Optional[str]

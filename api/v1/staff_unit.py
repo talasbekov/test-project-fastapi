@@ -1,5 +1,7 @@
 import uuid
 from typing import List
+from datetime import datetime, timedelta
+
 
 from fastapi import APIRouter, Depends, status
 from fastapi.security import HTTPBearer
@@ -17,9 +19,10 @@ from schemas import (
     StaffUnitCreateWithPosition,
     StaffUnitFunctionsByPosition,
     StaffUnitMatreshkaOptionReadPagination,
-    StaffUnitUpdateOverwrite
+    StaffUnitUpdateOverwrite,
+    UserUpdate
 )
-from services import staff_unit_service
+from services import staff_unit_service, user_service
 
 router = APIRouter(
     prefix="/staff_unit",
@@ -301,4 +304,5 @@ async def update_staff_unit(*,
                  Authorize: AuthJWT = Depends()
                  ):
     Authorize.jwt_required()
-    return staff_unit_service.update_staff_unit(db, body.staff_division_id, body.id, body.position_id, body.actual_position_id)
+    user = user_service.get_user_by_staff_unit(db, body.id)
+    return staff_unit_service.update_staff_unit(db, body.staff_division_id, body.id, body.position_id, body.actual_position_id, body.rank_id, user)

@@ -200,6 +200,39 @@ async def update(*,
         hr_document_template=hr_document_template_service.get_by_id(db, str(id)),
         obj_in=body)
 
+@router.patch("/archive/{id}/", dependencies=[Depends(HTTPBearer())],
+              response_model=HrDocumentTemplateRead,
+              summary="Update HrDocumentTemplate"
+                )
+async def archive(*,
+                    db: Session = Depends(get_db),
+                    id: str,
+                    Authorize: AuthJWT = Depends()
+                    ):
+    """
+        Archive HrDocumentTemplate
+
+        - **id**: UUID - required.
+    """
+    Authorize.jwt_required()
+    return hr_document_template_service.update_to_inactive(db, str(id))
+
+@router.patch("/unarchive/{id}/", dependencies=[Depends(HTTPBearer())],
+                response_model=HrDocumentTemplateRead,
+                summary="Update HrDocumentTemplate"
+                    )
+async def unarchive(*,
+                        db: Session = Depends(get_db),
+                        id: str,
+                        Authorize: AuthJWT = Depends()
+                        ):
+    """
+        Unarchive HrDocumentTemplate
+
+        - **id**: UUID - required.
+    """
+    Authorize.jwt_required()
+    return hr_document_template_service.update_to_active(db, str(id))
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,
                dependencies=[Depends(HTTPBearer())],

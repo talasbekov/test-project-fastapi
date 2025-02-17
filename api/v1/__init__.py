@@ -1,5 +1,5 @@
 from .education import router_education
-
+from .logger import router as logger_router
 from .hr_document import router as hr_document_router
 from .render import router as render_router
 from .document_staff_function_type import router as document_staff_function_type_router
@@ -49,8 +49,9 @@ from .badge_type import router as badge_type_router
 from .penalty_type import router as penalty_type_router
 from .status_type import router as status_type_router
 from .hexagon import router as hexagon_router
+from .convert import router as convert_router
 from .survey import *
-from .bsp import *
+from .bsp import bsp_router
 from .dictionary import router_dictionary as dictionary_router
 from .penalty import router as penalty_router
 from .coolness_type import router as coolness_type_router
@@ -58,6 +59,8 @@ from .search import router as search_router
 
 router = APIRouter(prefix="/v1")
 
+router.include_router(convert_router)
+# router.include_router(logger_router)
 router.include_router(search_router)
 router.include_router(auth_router)
 router.include_router(action_router)
@@ -130,15 +133,16 @@ router.include_router(question_type_router)
 router.include_router(question_router)
 router.include_router(option_router)
 router.include_router(answer_router)
+router.include_router(bsp_router)
 
-router.include_router(activity_router)
-router.include_router(attendance_router)
-router.include_router(exam_router)
-router.include_router(place_router)
-router.include_router(plan_router)
-router.include_router(schedule_day_router)
-router.include_router(schedule_month_router)
-router.include_router(schedule_year_router)
+# router.include_router(activity_router)
+# router.include_router(attendance_router)
+# router.include_router(exam_router)
+# router.include_router(place_router)
+# router.include_router(plan_router)
+# router.include_router(schedule_day_router)
+# router.include_router(schedule_month_router)
+# router.include_router(schedule_year_router)
 router.include_router(permission_router)
 router.include_router(dashboard_router)
 router.include_router(badge_type_router)
@@ -148,3 +152,4 @@ router.include_router(hexagon_router)
 router.include_router(dictionary_router)
 router.include_router(penalty_router)
 router.include_router(coolness_type_router)
+

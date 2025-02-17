@@ -337,7 +337,19 @@ async def get_all(*,
                   Authorize: AuthJWT = Depends()
                   ):
     Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
     return staff_division_service.build_staff_division_tree(db)
+
+@router.get("/recursive/department", dependencies=[Depends(HTTPBearer())],
+            # response_model=List[StaffDivisionRead],
+            summary="Get all Staff Divisions")
+async def get_all_by_department(*,
+                  db: Session = Depends(get_db),
+                  Authorize: AuthJWT = Depends()
+                  ):
+    Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
+    return staff_division_service.build_staff_division_tree_until_department(db, user_id)
 
 @router.get("/schedule_short", dependencies=[Depends(HTTPBearer())],
             # response_model=List[StaffDivisionReadSchedule],
@@ -377,3 +389,16 @@ async def get_by_id_schedule(*,
     Authorize.jwt_required()
     return staff_division_service.get_by_id_schedule_short(db, str(id))
 
+@router.get("/get_leader_id/{id}", dependencies=[Depends(HTTPBearer())],
+            summary="Get Staff Division leader id")
+async def get_leader_id(*,
+                        db: Session = Depends(get_db),
+                        id: str,
+                        Authorize: AuthJWT = Depends()
+                        ):
+    """
+
+    - **id**: UUID - required   
+    """
+    Authorize.jwt_required()
+    return staff_division_service.get_leader_id(db, str(id))

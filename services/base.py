@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from core import Base
 from exceptions import NotFoundException
-
+from datetime import datetime
 ModelType = TypeVar("ModelType", bound=Base)
 CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
 UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel)
@@ -64,6 +64,7 @@ class ServiceBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         for field in obj_data:
             if field in update_data:
                 setattr(db_obj, field, update_data[field])
+        setattr(db_obj, 'updated_at', datetime.now())
         db.add(db_obj)
         db.flush()
         return db_obj
@@ -71,6 +72,9 @@ class ServiceBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     def remove(self, db: Session, id: str) -> ModelType:
         try:
             obj = db.query(self.model).get(id)
+            if obj is None:
+                raise NotFoundException(
+                    detail=f"{self.model.__name__} with id {id} not found!")
             db.delete(obj)
             db.flush()
             return obj

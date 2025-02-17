@@ -5,7 +5,7 @@ from exceptions.client import NotFoundException
 from models import FamilyProfile, Profile, Family, FamilyRelation
 from schemas import (FamilyProfileCreate, FamilyProfileUpdate,
                      FamilyProfileRead)
-from services import ServiceBase
+from services import ServiceBase, profile_service
 
 
 class FamilyProfileService(
@@ -26,13 +26,18 @@ class FamilyProfileService(
         return family_profile
 
     def get_by_user_id(self, db: Session, user_id: str):
+        profile_id = profile_service.get_by_user_id(db, str(user_id))
         profile = (
             db.query(self.model)
-            .join(Profile,
-                  and_(Profile.id == self.model.profile_id,
-                       Profile.user_id == user_id))
+            .filter(self.model.profile_id == profile_id.id)
             .first()
+            # .join(Profile,
+            #       and_(Profile.id == profile_id.id,
+            #            Profile.user_id == user_id))
+            # .first()
         )
+        # print(profile.id)
+        # print("Profile_id ", profile.profile_id)
         family = (
             db.query(Family)
             .join(FamilyRelation)

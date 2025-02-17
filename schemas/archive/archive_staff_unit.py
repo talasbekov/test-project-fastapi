@@ -17,7 +17,7 @@ class StaffUnitRequirements(Model):
 
 
 class ArchiveStaffUnitBase(BaseModel):
-    position_id: str
+    position_id: Optional[str]
     staff_division_id: str
     user_id: Optional[str] = Field(None, nullable=True)
     actual_user_id: Optional[str] = Field(None, nullable=True)

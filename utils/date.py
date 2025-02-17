@@ -53,3 +53,9 @@ def get_last_date_of_month(year, month):
 
     return last_date.strftime("%Y-%m-%d")
 
+def parse_datetime(dt_str):
+    try:
+        return datetime.strptime(dt_str, '%Y-%m-%dT%H:%M:%S.%f%z')
+    except ValueError:
+        # Fallback to parsing without microseconds
+        return datetime.strptime(dt_str, '%Y-%m-%dT%H:%M:%S%z')

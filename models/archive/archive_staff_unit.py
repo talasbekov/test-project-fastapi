@@ -30,7 +30,7 @@ class ArchiveStaffUnit(Model):
     position_id = Column(
         String(),
         ForeignKey("hr_erp_positions.id"),
-        nullable=False)
+        nullable=True)
     staff_division_id = Column(
         String(), ForeignKey("hr_erp_archive_staff_divisions.id"), nullable=False
     )

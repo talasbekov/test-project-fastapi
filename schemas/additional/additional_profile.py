@@ -1,5 +1,5 @@
 import uuid
-from typing import List, Optional
+from typing import List, Optional, Union
 
 
 from schemas.additional import (AbroadTravelRead, PolygraphCheckRead,
@@ -7,7 +7,7 @@ from schemas.additional import (AbroadTravelRead, PolygraphCheckRead,
                                 ViolationRead, ServiceHousingRead, VehicleRead,
                                 PropertiesRead)
 from schemas import Model, ReadModel
-
+from pydantic import validator
 
 class AdditionalProfileBase(Model):
     profile_id: str
@@ -27,11 +27,17 @@ class AdditionalProfileUpdate(AdditionalProfileBase):
 
 class AdditionalProfileRead(AdditionalProfileBase, ReadModel):
     profile_id: str
-    polygraph_checks: Optional[List[PolygraphCheckRead]]
-    violations: Optional[List[ViolationRead]]
+    polygraph_checks: Union[Optional[List[PolygraphCheckRead]], str]
+    violations: Union[Optional[List[ViolationRead]], str]
     abroad_travels: Optional[List[AbroadTravelRead]]
-    psychological_checks: Optional[List[PsychologicalCheckRead]]
-    special_checks: Optional[List[SpecialCheckRead]]
+    psychological_checks: Union[Optional[List[PsychologicalCheckRead]], str]
+    special_checks: Union[Optional[List[SpecialCheckRead]], str]
     service_housing: Optional[List[ServiceHousingRead]]
     user_vehicles: Optional[List[VehicleRead]]
     properties: Optional[List[PropertiesRead]]
+
+    # @validator("special_checks")
+    # def set_to_none(cls, v):
+    #     if v[0]=='no permission':
+    #         return None
+    #     return v 

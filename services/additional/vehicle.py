@@ -7,6 +7,7 @@ from services.base import ServiceBase
 from typing import Union, Dict, Any
 from fastapi.encoders import jsonable_encoder
 from datetime import datetime
+from utils.date import parse_datetime
 
 
 class VehicleService(ServiceBase[Vehicle, VehicleCreate, VehicleUpdate]):
@@ -19,7 +20,7 @@ class VehicleService(ServiceBase[Vehicle, VehicleCreate, VehicleUpdate]):
     def create(self, db: Session,
             obj_in: Union[VehicleCreate, Dict[str, Any]]) -> Vehicle:
         obj_in_data = jsonable_encoder(obj_in)
-        obj_in_data['date_from'] = datetime.strptime(obj_in_data['date_from'], '%Y-%m-%dT%H:%M:%S.%f%z')
+        obj_in_data['date_from'] = parse_datetime(obj_in_data['date_from'])
         db_obj = self.model(**obj_in_data) 
         db.add(db_obj)
         db.flush()

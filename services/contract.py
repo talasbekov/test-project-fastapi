@@ -1,5 +1,5 @@
 from datetime import datetime
-
+from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
@@ -30,19 +30,27 @@ class ContractService(ServiceBase[Contract, ContractCreate, ContractUpdate]):
                     for contract in user.contracts]
 
     def get_all_contract_types(self, db: Session, skip: int, limit: int, filter: str = ''):
-        contract_types = db.query(ContractType)
+        contract_types = db.query(ContractType).\
+            filter(text("DBMS_LOB.SUBSTR(hr_erp_contract_types.name, 4000) != :contract_name")).\
+            params(contract_name='Контракт')
 
         if filter != '':
+            # Ensure your filtering logic also safely handles NCLOB conversion if necessary
             contract_types = add_filter_to_query(contract_types, filter, ContractType)
 
-        contract_types = [ContractTypeRead.from_orm(i).dict() for i in
-                          contract_types
-                          .order_by(ContractType.years.desc())
-                          .offset(skip)
-                          .limit(limit)
-                          .all()]
+        # Fetching data and creating objects
+        contract_types = [
+            ContractTypeRead.from_orm(i).dict() for i in
+            contract_types.order_by(ContractType.years.desc()).
+            offset(skip).
+            limit(limit).
+            all()
+        ]
 
-        total = db.query(ContractType).count()
+        # Count query also needs to handle NCLOB properly
+        total = db.query(ContractType).\
+            filter(text("DBMS_LOB.SUBSTR(hr_erp_contract_types.name, 4000) != :contract_name")).\
+            params(contract_name='Контракт').count()
 
         return {'total': total, 'objects': contract_types}
     

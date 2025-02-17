@@ -2,10 +2,10 @@ import uuid
 from datetime import datetime
 
 from typing import Optional, List
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from schemas import ReadModel
-from schemas import PrivelegeEmergencyRead, PersonnalReserveRead, CoolnessRead
+from schemas import PrivelegeEmergencyRead, PersonnalReserveRead, CoolnessRead, RecommenderUserRead
 
 
 class OathRead(ReadModel):
@@ -37,7 +37,7 @@ class BlackBeretRead(BaseModel):
 class GeneralInformationRead(BaseModel):
     oath: Optional[OathRead]
     privilege_emergency_secrets: Optional[PrivelegeEmergencyRead]
-    personnel_reserve: Optional[PersonnalReserveRead]
+    personnel_reserve: Optional[PersonnalReserveRead] = Field(alias='personnel_reserve', default={})
     coolness: Optional[List[CoolnessRead]]
     black_beret: Optional[BlackBeretRead]
-    recommender: Optional[dict]
+    recommender: Optional[RecommenderUserRead] = Field(alias='recommender', default={})

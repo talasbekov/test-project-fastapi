@@ -10,7 +10,7 @@ class DetailedNotification(Model):
     hr_document_id = Column(
         String(),
         ForeignKey("hr_erp_hr_documents.id"),
-        nullable=False)
+        nullable=True)
     receiver_id = Column(
         String(),
         ForeignKey("hr_erp_users.id"),

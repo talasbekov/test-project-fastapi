@@ -54,8 +54,10 @@ class AddBlackBeretHandler(BaseHandler):
 
     def handle_filter(self, db: Session, user_query: Query[Any]):
         badge = self.get_args(db)
-        return user_query.filter(User.badges.any(
-            Badge.type_id != badge.id) | ~User.badges.any())
+        users = user_query.filter(User.badges.any(
+            Badge.type_id != badge.id))
+        
+        return users
 
     def get_args(self, db: Session):
         badge_type = badge_service.get_black_beret(db)

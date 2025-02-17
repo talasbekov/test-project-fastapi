@@ -18,7 +18,8 @@ class UserLiberation(Model):
     start_date = Column(TIMESTAMP(timezone=True))
     end_date = Column(TIMESTAMP(timezone=True))
     document_link = Column(TEXT, nullable=True)
-    profile_id = Column(String(), ForeignKey("hr_erp_medical_profiles.id"))
+    medical_profile_id = Column(String(), ForeignKey("hr_erp_medical_profiles.id"))
+    profile_id = Column(String(), nullable=True)
     liberation_ids = Column(PickleType, default=[])
 
-    profile = relationship("MedicalProfile")
+    profile = relationship("MedicalProfile", back_populates="user_liberations", foreign_keys=[medical_profile_id])

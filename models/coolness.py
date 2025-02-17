@@ -16,6 +16,7 @@ class CoolnessStatusEnum(EnumBase):
     granted = {"name": "Присвоен", "nameKZ": "Берілген"}
     confirmed = {"name": "Подтвержден", "nameKZ": "Растады"}
     removed = {"name": "Лишен", "nameKZ": "Жоилды"}
+    demoted = {"name": "Снижен", "nameKZ": "Тусирилди"}
 
 
 class CoolnessType(NamedModel):

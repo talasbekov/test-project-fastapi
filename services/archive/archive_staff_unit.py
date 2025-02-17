@@ -186,6 +186,7 @@ class ArchiveStaffUnitService(
             actual_user_id: str,
             user_replacing_id: str,
             archive_staff_division: ArchiveStaffDivision):
+        # print(staff_unit.requirements)
         return super().create(db, ArchiveStaffUnitCreate(
             position_id=position_id,
             actual_position_id=actual_position_id,

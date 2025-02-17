@@ -14,6 +14,7 @@ class CourseBase(NamedModel):
     start_date: Optional[datetime.date]
     end_date: Optional[datetime.date]
     document_link: Optional[AnyUrl]
+    educational_profile_id: Optional[str]
 
     class Config:
         orm_mode = True
@@ -34,6 +35,7 @@ class CourseRead(CourseBase, ReadNamedModel):
     start_date: Optional[datetime.date]
     end_date: Optional[datetime.date]
     document_link: Optional[str]
+    educational_profile_id: Optional[str]
 
     course_provider: Optional[CourseProviderRead]
     

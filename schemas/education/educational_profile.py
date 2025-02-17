@@ -1,7 +1,7 @@
 import uuid
 from typing import List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
 from .academic_degree import AcademicDegreeRead
 from .academic_title import AcademicTitleRead
@@ -35,3 +35,11 @@ class EducationalProfileRead(EducationalProfileBase):
     education: Optional[List[EducationRead]]
     course: Optional[List[CourseRead]]
     language_proficiency: Optional[List[LanguageProficiencyRead]]
+
+    @validator("academic_title", "academic_degree")
+    def sort_by_assignment_date(cls, v):
+        return sorted(v, key=lambda x: x.assignment_date)
+    
+    @validator("education", "course")
+    def sort_by_end_date(cls, v):
+        return sorted(v, key=lambda x: x.end_date)

@@ -44,21 +44,17 @@ app.conf.beat_schedule = {
         'schedule': crontab(minute=0, hour=0, day_of_month='1', month_of_year='1'),
         'args': (SurveyRepeatTypeEnum.EVERY_YEAR.value,)
     },
-    # 'send_expiring_documents_notifications': {
-    #     'task': 'tasks.celery_app.check_expiring_documents',
-    #     'schedule': crontab(minute='*'),
-    # }
-
+   
 }
 
-SQLALCHEMY_DATABASE_URL = f"oracle://system:Oracle123@172.20.0.4:1521/MORAL"
-# SQLALCHEMY_DATABASE_URL = f"oracle://system:Oracle123@192.168.0.61:1521/MORAL"
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL,
-    echo=configs.SQLALCHEMY_ECHO,
-    pool_size=20
-)
+SQLALCHEMY_DATABASE_URL2 = f"oracle+cx_oracle://hr:hr2025@192.168.1.86:1521/hrfree"
+# Create engine
 
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL2,
+    pool_size=20,
+    echo=configs.SQLALCHEMY_ECHO,
+)
 
 @app.task(bind=True)
 def task_create_draft(self,
@@ -218,7 +214,7 @@ async def check_expiring_documents():
     contracts = history_service.get_expiring_contracts(db)
     print(contracts)
     for contract in contracts:
-        await hr_document_service.send_expiring_notification(db, contract.user_id, contract.id)
+        await hr_document_service.send_expiring_notification(db, contract.user_id, contract.id, sender_type="system")
     try:
         db.commit()
     except SQLAlchemyError as e:
@@ -227,3 +223,20 @@ async def check_expiring_documents():
     finally:
         if db:
             db.close()
+
+
+@app.task(bind=True)
+def task_staff_list_duplicate(self, staff_list_id: str, user_id: str,
+                            obj_in: dict, current_user_role_id: str):
+    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    db = SessionLocal()
+    try:
+        staff_list_service.duplicate(db, staff_list_id, user_id, StaffListUserCreate(**obj_in), current_user_role_id)
+        db.commit()
+    except SQLAlchemyError as e:
+        db.rollback()
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if db:
+            db.close()
+    return True

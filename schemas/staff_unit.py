@@ -7,7 +7,7 @@ from pydantic import EmailStr, Field, validator
 
 from schemas import (BadgeRead, PositionRead, PositionCreate,
                      RankRead, StaffUnitDivisionRead,
-                     StaffFunctionRead, ShortStaffUnitDivisionRead)
+                     StaffFunctionRead, ShortStaffUnitDivisionRead, SuperShortStaffUnitDivisionRead)
 from schemas import Model, ReadModel, NamedModel
 
 
@@ -16,11 +16,10 @@ class StaffUnitRequirements(NamedModel):
     
     
 class StaffUnitBase(Model):
-    position_id: str
+    position_id: Optional[str]
     staff_division_id: Optional[str] = Field(None, nullable=True)
     is_active: Optional[bool] = True
-    requirements: Optional[List[StaffUnitRequirements]
-                           ] = Field(None, nullable=True)
+    requirements: Optional[Any]
 
 
 class StaffUnitCreate(StaffUnitBase):
@@ -90,6 +89,7 @@ class UserReplacingStaffUnitRead(StaffUnitBase, ReadModel):
     staff_division_id: Optional[str]
     staff_division: Optional[StaffUnitDivisionRead]
     staff_functions: Optional[List[StaffFunctionRead]]
+    requirements: Optional[Any]
     position_id: Optional[str]
     position: Optional[PositionRead]
     actual_position_id: Optional[str]
@@ -141,12 +141,26 @@ class ShortUserStaffUnitRead(ReadModel):
         orm_mode = True
         arbitrary_types_allowed = True
     
+class StaffUnitReadActive(ReadModel):
+    is_active: Optional[bool] = True
+    staff_division_id: Optional[str]
+    staff_division: Optional[SuperShortStaffUnitDivisionRead]
+    position_id: Optional[str]
+    position: Optional[PositionRead]
+    actual_position_id: Optional[str]
+    actual_position: Optional[PositionRead]
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
 
 class StaffUnitUpdateOverwrite(Model):
     staff_division_id: Optional[str] = Field(None, nullable=True)
     position_id: Optional[str] = Field(None, nullable=True)
     actual_position_id: Optional[str] = Field(None, nullable=True)
     id: Optional[str]
+    rank_id: Optional[str]
+    # user_id: Optional[str]
     
     class Config:
         orm_mode = True

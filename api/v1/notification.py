@@ -115,7 +115,6 @@ async def test(*,
         "sender_type": "test",
         "message": message
     }
-    print(user_id)
     return await hr_document_service.send_expiring_notification(db, user_id, "test")
 
 @router.get("/detailed", dependencies=[Depends(HTTPBearer())],

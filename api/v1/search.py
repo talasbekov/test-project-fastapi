@@ -34,6 +34,5 @@ async def get_all(*,
     """ 
     Authorize.jwt_required() 
     info = await search_service.general(db=db, params=searches_params, skip=skip, limit=limit)
-    print(info)
     return info
 

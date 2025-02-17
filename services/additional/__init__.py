@@ -10,3 +10,4 @@ from .property_type import property_type_service
 from .service_housing import service_housing_service
 from .vehicle import vehicle_service
 from .vehicle_type import vehicle_type_service
+from .violation_type import violation_type_service

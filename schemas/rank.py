@@ -9,12 +9,13 @@ class RankBase(NamedModel):
     rank_order: int
     military_url: AnyUrl
     employee_url: AnyUrl
+    
 
 
 class RankCreate(RankBase):
     military_url: Optional[AnyUrl]
     employee_url: Optional[AnyUrl]
-    pass
+    
 
 
 class RankUpdate(RankBase):
@@ -23,14 +24,18 @@ class RankUpdate(RankBase):
     rank_order: Optional[int]
     military_url: Optional[AnyUrl]
     employee_url: Optional[AnyUrl]
-    pass
+    
 
 
 class RankRead(RankBase, ReadNamedModel):
     
     rank_order: Optional[int]
-    military_url: Optional[str]
-    employee_url: Optional[str]
+    military_url: Optional[str] = None
+    employee_url: Optional[str] = None
+
+    @validator("military_url", pre=True, always=True)
+    def default_empty_string(cls, v):
+        return v if v is not None else " "
     
     class Config:
         orm_mode = True

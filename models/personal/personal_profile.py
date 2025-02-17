@@ -5,7 +5,6 @@ from models import Model
 
 
 class PersonalProfile(Model):
-
     __tablename__ = "hr_erp_personal_profiles"
 
     profile_id = Column(

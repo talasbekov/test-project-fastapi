@@ -19,7 +19,8 @@ class AcademicDegreeBase(BaseModel):
     document_number: str
     document_link: Optional[AnyUrl]
     assignment_date: date
-
+    educational_profile_id: Optional[str]
+    
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
@@ -43,6 +44,7 @@ class AcademicDegreeRead(AcademicDegreeBase):
     document_number: Optional[str]
     document_link: Optional[str]
     assignment_date: Optional[date]
+    educational_profile_id: Optional[str]
 
     degree: Optional[AcademicDegreeDegreeRead]
     science: Optional[ScienceRead]
@@ -50,13 +52,12 @@ class AcademicDegreeRead(AcademicDegreeBase):
 
 class AcademicDegreeShorRead(BaseModel):
     specialty: Optional[NamedModel]
-    document_number: Optional[str]
+    document_number: str
     document_link: Optional[str]
     assignment_date: Optional[date]
 
     degree: Optional[NamedModel]
     science: Optional[NamedModel]
-    specialty: Optional[NamedModel]
     
     class Config:
         orm_mode = True

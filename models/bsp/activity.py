@@ -2,13 +2,15 @@ from sqlalchemy import Column, ForeignKey, TEXT, String, Boolean
 from sqlalchemy.orm import relationship
 
 
-from models import NamedModel
+from models import Model
 
 
-class Activity(NamedModel):
+class Activity(Model):
     __tablename__ = 'hr_erp_activities'
 
-    # Properties
+    activity_type_id = Column(String(), ForeignKey(
+        "hr_erp_activity_types.id"), nullable=True)
+    # Properties  
     parent_group_id = Column(String(), ForeignKey(
         "hr_erp_activities.id"), nullable=True)
     instructions = Column(TEXT())
@@ -18,3 +20,4 @@ class Activity(NamedModel):
 
     # Relationships
     children = relationship("Activity")
+    activity_type = relationship("ActivityType", back_populates="activities")

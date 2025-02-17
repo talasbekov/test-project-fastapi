@@ -47,6 +47,7 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
                 db.query(self.model)
                 .filter(self.model.user_id == user_id)
                 .filter(self.model.type_id == badge_type.id)
+                .order_by(self.model.created_at.desc())
                 .first()
             )
             return badge
@@ -142,6 +143,7 @@ class BadgeService(ServiceBase[Badge, BadgeCreate, BadgeUpdate]):
         badge = self.get_badge_by_id(db, id)
         badge.name = body.name
         badge.url = body.url
+        badge.updated_at = datetime.now()
         db.add(badge)
         db.flush()
         return badge

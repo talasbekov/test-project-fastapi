@@ -2,7 +2,7 @@ import uuid
 from typing import List, Optional, Union
 
 from pydantic import BaseModel, Field, validator
-from schemas import NamedModel, StaffDivisionTypeRead, ReadModel, PositionRead
+from schemas import NamedModel, StaffDivisionTypeRead, ReadModel, PositionRead, RankRead
 from .archive_staff_unit import ArchiveStaffUnitRead
 
 
@@ -55,7 +55,7 @@ class ArchiveUserReadSchedule(ReadModel):
     # service_phone_number: Optional[str]
     # supervised_by: Optional[str]
     # is_military: Optional[bool]
-    # rank: Optional[RankRead]
+    rank: Optional[RankRead]
     # email: Optional[EmailStr]
     first_name: Optional[str]
     last_name: Optional[str]

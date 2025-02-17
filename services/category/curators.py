@@ -31,12 +31,24 @@ class CuratorCategory(BaseCategory):
         res = set()
         for group in groups:
             for staff_unit in group.curators:
-                if staff_unit.users == []:
+                if staff_unit.staff_unit.users == []:
                     continue
-                first_user = staff_unit.users[0]
+                first_user = staff_unit.staff_unit.users[0]
                 if first_user is not None:
                     res.add(first_user.id)
         return list(res)
+
+    def handle_by_user_id(self, db: Session, user_id: str):
+        user = db.query(User).filter(User.id == user_id).first()
+        curators = user.staff_unit.curators
+        if curators is None:
+            return []
+        return [curators]
+    
+    def get_curators_of_fifth_department(self, db: Session):
+        staff_division = staff_division_service.get_by_name(
+            db, 'Пятый департамент')
+        return staff_division.curators
 
     def get_templates(
         self,
@@ -56,7 +68,7 @@ class CuratorCategory(BaseCategory):
         user = db.query(User).filter(User.id == user_id).first()
         if user is None:
             raise NotFoundException(f'User with id {user_id} not found!')
-        if user.staff_unit is None or user.staff_unit.courted_group is None:
+        if user.staff_unit is None or user.staff_unit.curators is None:
             return False
         return True
 

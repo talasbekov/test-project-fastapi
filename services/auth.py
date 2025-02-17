@@ -26,7 +26,7 @@ from schemas import (
     CandidateRegistrationForm,
     StaffUnitCreate,
     CandidateCreate,
-    EcpLoginForm,
+    EcpLoginForm
 )
 from services import (
     staff_unit_service,
@@ -40,16 +40,15 @@ from services import (
     staff_division_service,
     candidate_service,
     user_logging_activity_service,
-    permission_service
 )
 from utils import hash_password, is_valid_phone_number, verify_password
 
 
-class AuthService:
+class AuthService():
 
     def login_ecp(self, body: EcpLoginForm, db: Session, Authorize: AuthJWT):
-        url = configs.ECP_SERVICE_URL + "api/certificate/validate/"
-        request_body = {"certificate_blob": body.certificate_blob}
+        url = configs.ECP_SERVICE_URL+'api/certificate/validate/'
+        request_body = {'certificate_blob': body.certificate_blob}
 
         res = requests.post(url=url, json=request_body)
         dict_res = json.loads(res.text)
@@ -57,19 +56,20 @@ class AuthService:
         if res.status_code == 400:
             raise BadRequestException(detail=res.text)
 
-        if not dict_res["is_valid"]:
+        if not dict_res['is_valid']:
             raise BadRequestException(detail="Not valid iin!")
 
-        user = user_service.get_by_iin(db, dict_res["data"]["IIN"])
+        user = user_service.get_by_iin(db, dict_res['data']['IIN'])
 
         if not user:
             raise BadRequestException(detail="User not found in database!")
 
         self._set_last_signed_at(db, user)
 
-        access_token, refresh_token = self._generate_tokens(db, Authorize, user)
+        access_token, refresh_token = self._generate_tokens(Authorize, user)
 
         return {"access_token": access_token, "refresh_token": refresh_token}
+
 
     def login(self, form: LoginForm, db: Session, Authorize: AuthJWT):
         user = user_service.get_by_email(db, EmailStr(form.email).lower())
@@ -77,22 +77,25 @@ class AuthService:
         if not user:
             raise BadRequestException(detail="Incorrect email or password!")
         if not verify_password(form.password, user.password):
-            raise BadRequestException(detail="Incorrect email or password")
+            raise BadRequestException(detail='Incorrect email or password')
 
         self._set_last_signed_at(db, user)
 
-        access_token, refresh_token = self._generate_tokens(db, Authorize, user)
+        access_token, refresh_token = self._generate_tokens(Authorize, user)
 
         return {"access_token": access_token, "refresh_token": refresh_token}
 
     def register(self, form: RegistrationForm, db: Session):
 
         if user_service.get_by_email(db, EmailStr(form.email).lower()):
-            raise BadRequestException(detail="User with this email already exists!")
+            raise BadRequestException(
+                detail="User with this email already exists!")
         if user_service.get_by_call_sign(db, form.call_sign):
-            raise BadRequestException(detail="User with this call_sign already exists!")
+            raise BadRequestException(
+                detail="User with this call_sign already exists!")
         if user_service.get_by_id_number(db, form.id_number):
-            raise BadRequestException(detail="User with this id_number already exists!")
+            raise BadRequestException(
+                detail="User with this id_number already exists!")
         if not is_valid_phone_number(form.phone_number):
             raise BadRequestException(detail="Invalid phone number!")
         if form.password != form.re_password:
@@ -118,7 +121,7 @@ class AuthService:
             date_birth=form.date_birth,
             iin=form.iin,
             password=hash_password(form.password),
-            is_active=True,
+            is_active=True
         )
 
         user = user_service.create(db=db, obj_in=user_obj_in)
@@ -128,46 +131,33 @@ class AuthService:
         return user
 
     def register_candidate(
-        self, form: CandidateRegistrationForm, db: Session, staff_unit_id: str
-    ):
+            self, form: CandidateRegistrationForm, db: Session, staff_unit_id: str):
 
         if user_service.get_by_iin(db, form.iin):
-            raise BadRequestException(detail="User with this iin already exists!")
+            raise BadRequestException(
+                detail="User with this iin already exists!")
 
         birth_date = self._extract_birth_date_from_iin(form.iin)
 
         # Get current user and staff unit
         current_user_staff_unit: StaffUnit = staff_unit_service.get_by_id(
-            db, staff_unit_id
-        )
+            db, staff_unit_id)
         current_user: User = current_user_staff_unit.users[0]
         if isinstance(current_user_staff_unit.staff_division.description, dict):
-            current_user_staff_unit.staff_division.description = json.dumps(
-                current_user_staff_unit.staff_division.description
-            )
+            current_user_staff_unit.staff_division.description = json.dumps(current_user_staff_unit.staff_division.description)
         if isinstance(current_user_staff_unit.requirements, list):
-            current_user_staff_unit.requirements = json.dumps(
-                current_user_staff_unit.requirements
-            )
+            current_user_staff_unit.requirements = json.dumps(current_user_staff_unit.requirements)
         # Create new staff unit for candidate
         special_candidate_group = staff_division_service.get_by_name(
-            db, StaffDivisionEnum.CANDIDATES.value
-        )
+            db, StaffDivisionEnum.CANDIDATES.value)
         if isinstance(special_candidate_group.description, dict):
-            special_candidate_group.description = json.dumps(
-                special_candidate_group.description
-            )
-        staff_unit = staff_unit_service.create(
-            db,
-            obj_in=StaffUnitCreate(
-                position_id=current_user_staff_unit.position_id,
-                staff_division_id=special_candidate_group.id,
-            ),
-        )
+            special_candidate_group.description = json.dumps(special_candidate_group.description)
+        staff_unit = staff_unit_service.create(db, obj_in=StaffUnitCreate(
+            position_id=current_user_staff_unit.position_id,
+            staff_division_id=special_candidate_group.id
+        ))
         if isinstance(staff_unit.staff_division.description, dict):
-            staff_unit.staff_division.description = json.dumps(
-                staff_unit.staff_division.description
-            )
+            staff_unit.staff_division.description = json.dumps(staff_unit.staff_division.description)
         # Generate fake personal information for candidate
         first_names = [
             "Канат",
@@ -179,8 +169,7 @@ class AuthService:
             "Азамат",
             "Бахыт",
             "Дамир",
-            "Дастан",
-        ]
+            "Дастан"]
         last_names = [
             "Алибеков",
             "Қанатов",
@@ -191,8 +180,7 @@ class AuthService:
             "Оспанов",
             "Султанов",
             "Турсынбаев",
-            "Жақыпов",
-        ]
+            "Жақыпов"]
         father_names = [
             "Әбдулович",
             "Айбекович",
@@ -203,8 +191,7 @@ class AuthService:
             "Нұрлыбекович",
             "Русланович",
             "Санжарович",
-            "Ержанович",
-        ]
+            "Ержанович"]
 
         first_name = random.choice(first_names)
         last_name = random.choice(last_names)
@@ -237,16 +224,13 @@ class AuthService:
             date_birth=birth_date,
             iin=form.iin,
             password=None,
-            is_active=True,
+            is_active=True
         )
         user = user_service.create(db=db, obj_in=user_obj_in)
-        candidate_service.create(
-            db,
-            body=CandidateCreate(
-                staff_unit_curator_id=str(current_user_staff_unit.id),
-                staff_unit_id=str(staff_unit.id),
-            ),
-        )
+        candidate_service.create(db, body=CandidateCreate(
+            staff_unit_curator_id=str(current_user_staff_unit.id),
+            staff_unit_id=str(staff_unit.id)
+        ))
 
         self._create_profiles(db, str(user.id))
 
@@ -254,64 +238,64 @@ class AuthService:
 
     def refresh_token(self, db: Session, Authorize: AuthJWT):
         if not Authorize.get_jwt_subject():
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Could not refresh access token",
-            )
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                                detail='Could not refresh access token')
         user = user_service.get(db, Authorize.get_jwt_subject())
         if not user:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="The user belonging to this token no longer exist",
-            )
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail='The user belonging to this token no longer exist')
 
-        access_token, refresh_token = self._generate_tokens(db, Authorize, user)
+        access_token, refresh_token = self._generate_tokens(Authorize, user)
 
         return {"access_token": access_token, "refresh_token": refresh_token}
 
-    def _generate_tokens(self, db: Session, Authorize: AuthJWT, user: User):
-        permissions = permission_service.get_permissions_sequence_id_by_user(db, user.id)
-
+    def _generate_tokens(self, Authorize: AuthJWT, user: User):
+        permissions = []
+        for permission in user.permissions:
+            permissions.append(permission.type.sequence_id)
+            
         user_claims = {
-            "role": str(user.staff_unit.id),
+            "role": str(user.staff_unit.id if user.staff_unit else ''),
             "iin": str(user.iin),
-            "permissions": permissions,
+            "permissions": permissions
         }
         access_token = Authorize.create_access_token(
             subject=str(user.id),
             user_claims=user_claims,
-            expires_time=timedelta(minutes=configs.ACCESS_TOKEN_EXPIRES_IN),
+            expires_time=timedelta(minutes=configs.ACCESS_TOKEN_EXPIRES_IN)
         )
         refresh_token = Authorize.create_refresh_token(
             subject=str(user.id),
             user_claims=user_claims,
-            expires_time=timedelta(minutes=configs.REFRESH_TOKEN_EXPIRES_IN),
+            expires_time=timedelta(minutes=configs.REFRESH_TOKEN_EXPIRES_IN)
         )
 
         return access_token, refresh_token
 
     def _create_profiles(self, db: Session, user_id: str):
-        profile = profile_service.create(db=db, obj_in=ProfileCreate(user_id=user_id))
+        profile = profile_service.create(db=db, obj_in=ProfileCreate(
+            user_id=user_id
+        ))
 
-        educational_profile_service.create(
-            db=db, obj_in=EducationalProfileCreate(profile_id=profile.id)
-        )
+        educational_profile_service.create(db=db, obj_in=EducationalProfileCreate(
+            profile_id=profile.id
+        ))
 
-        additional_profile_service.create(
-            db=db, obj_in=AdditionalProfileCreate(profile_id=profile.id)
-        )
+        additional_profile_service.create(db=db, obj_in=AdditionalProfileCreate(
+            profile_id=profile.id
+        ))
 
-        personal_profile_service.create(
-            db=db, obj_in=PersonalProfileCreate(profile_id=profile.id)
-        )
+        personal_profile_service.create(db=db, obj_in=PersonalProfileCreate(
+            profile_id=profile.id
+        ))
 
-        medical_profile_service.create(
-            db=db, obj_in=MedicalProfileCreate(profile_id=profile.id)
-        )
+        medical_profile_service.create(db=db, obj_in=MedicalProfileCreate(
+            profile_id=profile.id
+        ))
 
-        family_profile_service.create(
-            db=db, obj_in=FamilyProfileCreate(profile_id=profile.id)
-        )
+        family_profile_service.create(db=db, obj_in=FamilyProfileCreate(
+            profile_id=profile.id
+        ))
 
     def _set_last_signed_at(self, db: Session, user: User):
         user.last_signed_at = datetime.now()
@@ -323,15 +307,14 @@ class AuthService:
     def _extract_birth_date_from_iin(self, iin: str):
         try:
             date_str = iin[:6]
-            birth_date = datetime.strptime(date_str, "%y%m%d")
+            birth_date = datetime.strptime(date_str, '%y%m%d')
         except ValueError:
             raise BadRequestException(detail="Invalid date in iin parameter!")
 
         # ensure date of birth is in the past
         if birth_date > datetime.today():
             raise BadRequestException(
-                detail="Date of birth in iin parameter is in the future!"
-            )
+                detail="Date of birth in iin parameter is in the future!")
 
         return birth_date
 

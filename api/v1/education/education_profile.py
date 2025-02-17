@@ -11,6 +11,7 @@ from schemas import (EducationalProfileCreate,
                      EducationalProfileUpdate)
 from services import profile_service
 from services.education import educational_profile_service
+from services import academic_degree_service, academic_title_service, education_service, course_service, language_proficiency_service
 
 router = APIRouter(prefix="/educational_profiles",
                    tags=["EducationalProfiles"],
@@ -122,8 +123,24 @@ async def get_profile(*,
                       ):
     Authorize.jwt_required()
     profile = profile_service.get_by_user_id(db, Authorize.get_jwt_subject())
-    return educational_profile_service.get_by_id(
+    educational_profile = educational_profile_service.get_by_profile_id(db, profile.id)
+    education = education_service.get_by_profile_id(db, educational_profile.id)
+    academic_title = academic_title_service.get_by_profile_id(db, educational_profile.id)
+    academic_degree = academic_degree_service.get_by_profile_id(db, educational_profile.id)
+    courses = course_service.get_by_profile_id(db, educational_profile.id)
+    language_proficiency = language_proficiency_service.get_by_profile_id(db, educational_profile.id)
+
+    # print('HEEEERRRREEE')
+    # print(profile.educational_profile.__dict__)
+    res = educational_profile_service.get_by_id(
         db, profile.educational_profile.id)
+    res.education = education
+    res.academic_title = academic_title
+    res.academic_degree = academic_degree
+    res.course = courses
+    res.language_proficiency = language_proficiency
+    # print(res.__dict__)
+    return res
 
 
 @router.get("/profile/{id}", dependencies=[Depends(HTTPBearer())],

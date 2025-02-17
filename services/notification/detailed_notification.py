@@ -27,7 +27,7 @@ class DetailedNotificationService(
     ):
         notifications = (
             db.query(self.model)
-            # .filter(self.model.receiver_id == user_id)
+            .filter(self.model.receiver_id == user_id)
             .offset(skip)
             .limit(limit)
             .all()
@@ -47,6 +47,7 @@ class DetailedNotificationService(
             .filter(self.model.receiver_id == user_id)
             .count()
         )
+        
         return {"total": notifications_count, "objects": notifications}
     
     def create(self, db: Session,

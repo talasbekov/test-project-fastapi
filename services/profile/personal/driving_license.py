@@ -22,21 +22,25 @@ class DrivingLicenseService(
         if driving_licence is None:
             raise NotFoundException(
                 detail=f"DrivingLicense with id: {id} is not found!")
-        if driving_licence.category.startswith("["):    
+
+        if driving_licence.category and driving_licence.category.startswith("["):    
             driving_licence.category = eval(driving_licence.category)
         return driving_licence
 
     def create(self, db: Session,
                obj_in: Union[DrivingLicenseCreate, Dict[str, Any]]) -> DrivingLicense:
         obj_in_data = jsonable_encoder(obj_in)
-        obj_in_data['date_to'] = datetime.strptime(
-            obj_in_data['date_to'], '%Y-%m-%d')
-        obj_in_data['date_of_issue'] = datetime.strptime(
-            obj_in_data['date_of_issue'], '%Y-%m-%d')
+        if obj_in_data['date_to']:
+            obj_in_data['date_to'] = datetime.strptime(
+                obj_in_data['date_to'], '%Y-%m-%d')
+        if obj_in_data['date_of_issue']:
+            obj_in_data['date_of_issue'] = datetime.strptime(
+                obj_in_data['date_of_issue'], '%Y-%m-%d')
         db_obj = self.model(**obj_in_data)
         db.add(db_obj)
         db.commit()
-        db_obj.category = eval(db_obj.category)
+        if db_obj.category:
+            db_obj.category = eval(db_obj.category)
         return db_obj
 
     def get_by_user_id(self, db: Session, user_id: str):
@@ -45,7 +49,7 @@ class DrivingLicenseService(
                            .join(Profile)
                            .filter(Profile.user_id == user_id)
                            .first())
-        if driving_licence:
+        if driving_licence and driving_licence.category:
             driving_licence.category = eval(driving_licence.category)
         return driving_licence
 
@@ -57,7 +61,7 @@ class DrivingLicenseService(
                            .filter(DrivingLicense.date_of_issue <= date_till)
                            .filter(DrivingLicense.date_to <= date_till)
                            .first())
-        if driving_licence:
+        if driving_licence and driving_licence.category:
             driving_licence.category = eval(driving_licence.category)
         return driving_licence
 
@@ -85,7 +89,7 @@ class DrivingLicenseService(
                 setattr(db_obj, field, update_data[field])
         db.add(db_obj)
         db.commit()
-        if db_obj.category.startswith("["):    
+        if db_obj.category and db_obj.category.startswith("["):    
             db_obj.category = eval(db_obj.category)
         return db_obj
 

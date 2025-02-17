@@ -43,11 +43,11 @@ async def create(*,
                  Authorize: AuthJWT = Depends()
                  ):
     Authorize.jwt_required()
-    family_profile = db.query(FamilyProfile).filter(
-        FamilyProfile.profile_id == body.profile_id).first()
-    if not family_profile:
-        raise NotFoundException("Profile not found")
-    body.profile_id = family_profile.id
+    # family_profile = db.query(FamilyProfile).filter(
+    #     FamilyProfile.profile_id == body.profile_id).first()
+    # if not family_profile:
+    #     raise NotFoundException("Profile not found")
+    # body.profile_id = family_profile.id
     return family_service.create(db, obj_in=body)
 
 
@@ -100,7 +100,7 @@ async def update(*,
                  ):
     Authorize.jwt_required()
     return family_service.update(
-        db, db_obj=family_service.get_by_id(db, str(id)), obj_in=body)
+        db, id, obj_in=body)
 
 
 @router.delete("/{id}/", dependencies=[Depends(HTTPBearer())],

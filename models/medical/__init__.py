@@ -5,3 +5,4 @@ from .general_user_information import GeneralUserInformation, BloodType, AgeGrou
 from .hospital_data import HospitalData
 from .medical_profile import MedicalProfile
 from .user_liberation import UserLiberation
+from .illness_type import IllnessType

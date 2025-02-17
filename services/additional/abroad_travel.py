@@ -8,6 +8,7 @@ from models import AbroadTravel, Profile
 from schemas import AbroadTravelCreate, AbroadTravelUpdate
 from services import profile_service
 from services.base import ServiceBase
+from utils.date import parse_datetime
 
 
 class AbroadTravelService(
@@ -22,16 +23,22 @@ class AbroadTravelService(
 
     def create(self, db: Session, obj_in: AbroadTravelCreate):
         obj_in_data = jsonable_encoder(obj_in)
-        obj_in_data['date_from'] = datetime.strptime(obj_in_data['date_from'],
-                                                     '%Y-%m-%dT%H:%M:%S.%f%z')
-        obj_in_data['date_to'] = datetime.strptime(obj_in_data['date_to'],
-                                                   '%Y-%m-%dT%H:%M:%S.%f%z')
+        obj_in_data['date_from'] = parse_datetime(obj_in_data['date_from'])
+        obj_in_data['date_to'] = parse_datetime(obj_in_data['date_to'])
         db_obj = self.model(**obj_in_data)
         db.add(db_obj)
         db.flush()
         return db_obj
-
-
+    def create_family_travel(self, db: Session, obj_in: AbroadTravelCreate):
+        obj_in_data = jsonable_encoder(obj_in)
+        obj_in_data['date_from'] = parse_datetime(obj_in_data['date_from'])
+        obj_in_data['date_to'] = parse_datetime(obj_in_data['date_to'])
+        obj_in_data['profile_id'] = None
+        db_obj = self.model(**obj_in_data)
+        db.add(db_obj)
+        db.flush()
+        return db_obj
+        
     def get_multi_by_additional_profile_id(self, db: Session, profile_id: str):
         qry = db.query(
             self.model).filter(

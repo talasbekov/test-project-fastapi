@@ -15,6 +15,7 @@ from .specialty import router as specialty_router
 from .course import router as course_router
 from .course_provider import router as course_provider_router
 from .academic_title_degree import router as academic_title_degree_router
+from .military_institution import router as military_institution_router
 
 router_education = APIRouter(prefix="/education")
 
@@ -32,3 +33,4 @@ router_education.include_router(specialty_router)
 router_education.include_router(course_router)
 router_education.include_router(course_provider_router)
 router_education.include_router(academic_title_degree_router)
+router_education.include_router(military_institution_router)

@@ -64,6 +64,21 @@ async def create(*,
     Authorize.jwt_required()
     return biographic_info_service.create(db, body)
 
+@router.get("/user/{user_id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=BiographicInfoRead,
+            summary="Get BiographicInfo by user_id")
+async def get_by_user_id(*,
+                    db: Session = Depends(get_db),
+                    user_id: str,
+                    Authorize: AuthJWT = Depends()
+                    ):
+    """
+        Get BiographicInfo by user_id
+
+        - **user_id**: UUID - required.
+    """
+    Authorize.jwt_required()
+    return biographic_info_service.get_by_user_id(db, str(user_id))
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=BiographicInfoRead,
@@ -80,7 +95,6 @@ async def get_by_id(*,
     """
     Authorize.jwt_required()
     return biographic_info_service.get_by_id(db, str(id))
-
 
 @router.put("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=BiographicInfoRead,
@@ -99,9 +113,7 @@ async def update(*,
     """
     Authorize.jwt_required()
     return biographic_info_service.update(
-        db,
-        db_obj=biographic_info_service.get_by_id(db, str(id)),
-        obj_in=body)
+        db, id, body)
 
 
 @router.delete("/{id}/", status_code=status.HTTP_204_NO_CONTENT,

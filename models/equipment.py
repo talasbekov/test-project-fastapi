@@ -15,13 +15,13 @@ class Equipment(Model):
 
     __tablename__ = "hr_erp_equipments"
 
-    date_from = Column(TIMESTAMP, nullable=True)
-    date_to = Column(TIMESTAMP, nullable=True)
+    date_from = Column(TIMESTAMP(timezone=True), nullable=True)
+    date_to = Column(TIMESTAMP(timezone=True), nullable=True)
     document_number = Column(String, nullable=True)
     document_link = Column(String, nullable=True)
 
     type_of_equipment = Column(String, nullable=True)
-
+    
     hr_documents = relationship("HrDocument",
                                 secondary=hr_document_equipments,
                                 back_populates="equipments")
@@ -59,12 +59,13 @@ class TypeArmyEquipment(NamedModel):
 
     type_of_army_equipment_models = relationship(
         "TypeArmyEquipmentModel",
-        back_populates="type_of_army_equipment")
+        back_populates="type_of_army_equipment",
+        cascade="all, delete-orphan")
 
 
 class ArmyEquipment(Equipment):
 
-    type_of_army_equipment_model_id = Column(
+    type_of_army_eq_model_id = Column(
         String(),
         ForeignKey("hr_erp_type_ar_equip_models.id"),
         nullable=True)
@@ -84,10 +85,15 @@ class TypeClothingEquipmentModel(NamedModel):
     """Clothing equipment model. Example:
     ПАРАДНАЯ, ПОВСЕДНЕВНО-ПОСТОВАЯ, ТАКТИЧЕСКАЯ, etc."""
     __tablename__ = "hr_erp_type_cloth_eq_models"
+    type_cloth_eq_types_id = Column(String(), ForeignKey("hr_erp_type_cloth_equipmets.id"), nullable=True)
 
     cloth_eq_types_models = relationship(
         "ClothingEquipmentTypesModels",
         back_populates="type_cloth_eq_models")
+    type_cloth_equipmets = relationship(
+        "TypeClothingEquipment",
+        back_populates="cloth_eq_types_model",
+        uselist=False)
 
 
 class TypeClothingEquipment(NamedModel):  # obj.
@@ -98,7 +104,12 @@ class TypeClothingEquipment(NamedModel):  # obj.
     cloth_eq_types_models = relationship(
         "ClothingEquipmentTypesModels",
         back_populates="type_cloth_equipmets"
-)
+    )
+    cloth_eq_types_model = relationship(
+        "TypeClothingEquipmentModel",
+        back_populates="type_cloth_equipmets",
+        cascade="all, delete-orphan"
+    )
 
 class ClothingEquipmentTypesModels(Model):
     __tablename__ = 'hr_erp_cloth_eq_types_models'
@@ -157,7 +168,8 @@ class TypeOtherEquipment(NamedModel):
 
     type_of_other_equipment_models = relationship(
         "TypeOtherEquipmentModel",
-        back_populates="type_of_other_equipment")
+        back_populates="type_of_other_equipment",
+        cascade="all, delete-orphan")
 
 
 class OtherEquipment(Equipment):

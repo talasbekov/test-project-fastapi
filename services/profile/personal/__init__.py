@@ -11,3 +11,8 @@ from .sport_degree import sport_degree_service
 from .tax_declaration import tax_declaration_service
 from .passport import passport_service
 from .sport_degree_type import sport_degree_type_service
+from .citizenship import citizenship_service
+from .nationality import nationality_service
+from .birthplace import birthplace_service
+from .city import city_service
+from .region import region_service

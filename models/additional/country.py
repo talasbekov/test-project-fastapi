@@ -10,3 +10,9 @@ class Country(NamedModel):
     abroad_travels = relationship(
         "AbroadTravel",
         back_populates="destination_country")
+    birthplace = relationship(
+        "Birthplace",
+        back_populates="country")
+    regions = relationship(
+        "Region",
+        back_populates="country")

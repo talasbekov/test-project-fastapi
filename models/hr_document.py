@@ -32,7 +32,7 @@ class HrDocument(Model):
         String(),
         ForeignKey("hr_erp_hr_document_templates.id"),
         nullable=True)
-    due_date = Column(TIMESTAMP(timezone=True), nullable=True)
+    due_date = Column(TIMESTAMP(timezone=True), nullable=False)
     properties = Column(CLOB)
     reg_number = Column(String, unique=True)
     signed_at = Column(TIMESTAMP(timezone=True), nullable=True)
@@ -73,6 +73,7 @@ class HrDocument(Model):
         back_populates="hr_document",
         cascade="all,delete")
     old_history = relationship("History", foreign_keys=[old_history_id])
+    detailed_notifications = relationship("DetailedNotification", back_populates="hr_document", cascade="all,delete")
 
 @listens_for(HrDocument, 'before_update')
 def json_fields_update_listener(mapper, connection, target):

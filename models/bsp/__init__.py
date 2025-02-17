@@ -7,3 +7,4 @@ from .plan import BspPlan, PlanStatus
 from .schedule_day import ScheduleDay, Day, ActivityDate
 from .schedule_month import ScheduleMonth, Place
 from .schedule_year import ScheduleYear, Month
+from .activity_type import ActivityType

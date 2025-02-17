@@ -2,7 +2,7 @@ import datetime
 
 from typing import Optional
 
-from pydantic import AnyUrl
+from pydantic import AnyUrl, validator
 
 from schemas import NamedModel, ReadNamedModel
 
@@ -12,8 +12,14 @@ class DispensaryRegistrationBase(NamedModel):
     initiatorKZ: str
     start_date: datetime.datetime
     end_date: Optional[datetime.datetime]
-    document_link: Optional[AnyUrl]
+    document_link: Optional[str]
     profile_id: str
+
+    @validator("document_link")
+    def validate_document_link(cls, v):
+        if v and not v.startswith(("http://", "https://")):
+            raise ValueError("Invalid URL format")
+        return v
 
 
 class DispensaryRegistrationCreate(DispensaryRegistrationBase):
@@ -30,6 +36,7 @@ class DispensaryRegistrationRead(DispensaryRegistrationBase, ReadNamedModel):
     initiatorKZ: Optional[str]
     start_date: Optional[datetime.datetime]
     end_date: Optional[datetime.datetime]
+    medical_profile_id: Optional[str]
     profile_id: Optional[str]
 
     class Config:

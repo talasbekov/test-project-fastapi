@@ -1,6 +1,6 @@
 aiohttp==3.8.4
 aiosignal==1.3.1
-alembic==1.9.3
+alembic==1.13.1
 anyio==3.6.2
 async-timeout==4.0.2
 attrs==23.1.0
@@ -88,5 +88,6 @@ Pillow==10.0.1
 fastapi_utilities
 limits==3.8.0
 apscheduler
-typing_extensions
-asgiref==3.7.2 
+asgiref==3.7.2
+pypandoc==1.13
+pandoc==2.3

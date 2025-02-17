@@ -8,6 +8,7 @@ from models import Properties, Profile
 from schemas import PropertiesCreate, PropertiesUpdate
 from services import profile_service
 from services.base import ServiceBase
+from utils.date import parse_datetime
 
 
 class PropertiesService(
@@ -22,8 +23,7 @@ class PropertiesService(
 
     def create(self, db: Session, obj_in: PropertiesCreate):
         obj_in_data = jsonable_encoder(obj_in)
-        obj_in_data['purchase_date'] = datetime.strptime(obj_in_data['purchase_date'],
-                                                '%Y-%m-%dT%H:%M:%S.%f%z')
+        obj_in_data['purchase_date'] = parse_datetime(obj_in_data['purchase_date'])
         db_obj = self.model(**obj_in_data)
         db.add(db_obj)
         db.flush()

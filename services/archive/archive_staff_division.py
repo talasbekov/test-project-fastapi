@@ -1,7 +1,7 @@
 import uuid
 import json
 from typing import List
-
+from datetime import datetime
 from sqlalchemy.orm import Session
 
 from exceptions import BadRequestException, NotFoundException
@@ -107,6 +107,7 @@ class ArchiveStaffDivisionService(
         group = self.get_by_id(db, id)
         self._validate_parent(db, body.parent_group_id)
         group.parent_group_id = body.parent_group_id
+        setattr(group, 'updated_at', datetime.now())
         db.add(group)
         increment_changes_size(db, group.staff_list)
         db.flush()
@@ -157,7 +158,7 @@ class ArchiveStaffDivisionService(
             parent_group_id=parent_group_id,
             name=staff_division.name,
             nameKZ=staff_division.nameKZ,
-            description=staff_division.description,
+            description='{"name": "", "nameKZ": ""}',
             type_id=staff_division.type_id,
             staff_division_number=staff_division.staff_division_number,
             staff_list_id=staff_list_id,

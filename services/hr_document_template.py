@@ -1,10 +1,10 @@
 import uuid
 import json
-
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 from fastapi.encoders import jsonable_encoder
 from typing import List, Union, Dict
-
+from datetime import datetime
 from exceptions import NotFoundException
 from models import (
     HrDocumentTemplate,
@@ -37,7 +37,6 @@ from services import (
     BaseCategory,
 )
 from ws import notification_manager
-
 
 class HrDocumentTemplateService(
     ServiceBase[HrDocumentTemplate,
@@ -120,6 +119,7 @@ class HrDocumentTemplateService(
         if isinstance(hr_document_template.description, dict):
             hr_document_template.description= json.dumps(hr_document_template.description)
         hr_document_template.is_draft = False
+        setattr(hr_document_template, 'updated_at', datetime.now())
         db.add(hr_document_template)
         db.commit()
         if isinstance(hr_document_template.properties, str):
@@ -147,7 +147,7 @@ class HrDocumentTemplateService(
 
     def get_steps_by_document_template_id(
         self, db: Session, document_template_id: str, user_id: str
-    ) -> dict[str, Union[Union[str, Dict[int, str]], list[str]]]:
+    ) -> List[Union[Dict, str]]:
         user = db.query(User).filter(User.id == user_id).first()
         if user is None:
             raise NotFoundException(
@@ -156,18 +156,18 @@ class HrDocumentTemplateService(
         initial_step = hr_document_step_service.get_initial_step_for_template(
             db, document_template_id
         )
-
+        # print("initial step:", initial_step.__dict__)
         all_steps = hr_document_step_service.get_all_by_document_template_id(
             db, document_template_id
         )
-
+        # print("all steps:", all_steps)
         all_functions = (
             db.query(DocumentStaffFunction)
             .filter(
                 HrDocumentStep.hr_document_template_id == document_template_id,
                 DocumentStaffFunction.priority != 1,
             )
-            .join(HrDocumentStep.staff_function)
+            # .join(HrDocumentStep.staff_function)
             .order_by(DocumentStaffFunction.priority.asc())
             .all()
         )
@@ -177,26 +177,41 @@ class HrDocumentTemplateService(
         steps = {}
         for function, step in zip(all_functions, all_steps):
             function: DocumentStaffFunction
-
+            # print(step.__dict__)
+            # print(function.__dict__)
             if step.is_direct_supervisor is not None:
+                # print(11)
+                # print(user_id)
                 steps[str(function.priority)] = self.get_all_supervisors(
-                    db, step.id, step.is_direct_supervisor, document_template_id, user_id
+                    db, step.is_direct_supervisor, user_id, document_template_id, step.id
                 )
+                # print(12)
                 continue
             if step.category is not None:
+                # print(13)
                 category: BaseCategory = categories.get(step.category, None)
                 if category is None:
                     raise NotFoundException(
                         detail=f"Category with id: {step.category} is not found!"
                     )
+                # print(14)
                 steps[str(function.priority)] = category.handle(db, str(user_id))
+                # print(15)
                 continue
             staff_units_ids = [unit.id for unit in function.staff_units]
+            # print(666)
+            # print(staff_units_ids)
+            if staff_units_ids == []:
+                continue
             user = (
                 db.query(User).filter(
                     User.staff_unit_id.in_(staff_units_ids)).first()
             )
-            steps[str(function.priority)] = str(user.id)
+            if user is None:
+                raise NotFoundException(
+                    detail="User for staff unit is not found!"
+                )
+            steps[str(function.priority)] = [str(user.id)]
         return steps
 
     def get_all_by_name(self, db: Session, name: str, skip: int, limit: int):
@@ -205,9 +220,9 @@ class HrDocumentTemplateService(
                 db.query(HrDocumentTemplate)
                 .filter(
                     HrDocumentTemplate.is_active == True,
-                    (
-                        HrDocumentTemplate.name.ilike(f"%{name}%")
-                        | HrDocumentTemplate.description.ilike(f"%{name}%")
+                    or_(
+                        HrDocumentTemplate.name.ilike(f"%{name}%"),
+                        HrDocumentTemplate.description.ilike(f"%{name}%")
                     ),
                     HrDocumentTemplate.is_draft == False
                 )
@@ -226,8 +241,7 @@ class HrDocumentTemplateService(
                     template.description = json.loads(template.description)
                 if isinstance(template.actions , str):
                     template.actions = json.loads(template.actions)
-            
-            return hr_document_templates
+            return {"total": len(hr_document_templates), "objects": [HrDocumentTemplateRead.from_orm(template) for template in hr_document_templates]}
         return self.get_all_active(db, skip, limit)
     
 
@@ -496,47 +510,60 @@ class HrDocumentTemplateService(
     def get_all_supervisors(
         self,
         db: Session,
-        step_id: str,
         is_direct: bool,
-        template_id: str,
         user_id: str,
+        step_id: str = None,
+        template_id: str = None,
     ):
         user = db.query(User).filter(User.id == user_id).first()
         count = 0
         #all_steps = {}
         all_steps = []
-        
-        if user.staff_unit.staff_division.leader_id != user.staff_unit_id:
-            #TODO: add exception if leader id does not exist
-            leader_id = user.staff_unit.staff_division.leader_id
-            leader = db.query(User).filter(User.staff_unit_id == leader_id).first()
-            #all_steps[count] = leader.id 
-            all_steps.append(leader.id)
-        else:
-            if user.staff_unit.staff_division.leader_id is None:
-                raise NotFoundException(
-                    detail="Leader for staff division of this user is not found!"
-                )
-            parent_id = user.staff_unit.staff_division.parent_group_id
-            if parent_id:
-                leader_id = staff_division_service.get_by_id(db, parent_id).leader_id
-                leader = db.query(User).filter(User.staff_unit_id == leader_id).first()
-                #all_steps[count] = leader.id
-                all_steps.append(leader.id)
+        leader_id = staff_division_service.get_leader_id(db, user.staff_unit.staff_division.id)
+        user_leader = db.query(User).filter(User.staff_unit_id == leader_id).first()
+        if user_leader:
+            all_steps.append(user_leader.id)
+        # if user.staff_unit.staff_division.leader_id != user.staff_unit_id:
+        #     #TODO: add exception if leader id does not exist
+        #     # leader_id = user.staff_unit.staff_division.leader_id
+        #     # leader = db.query(User).filter(User.staff_unit_id == leader_id).first()
+        #     # leader = staff_division_service.get_leader_id(db, user.staff_unit.staff_division.id)
+        #     if leader is None:
+        #         raise NotFoundException(
+        #             detail="Leader for staff division of this user is not found!"
+        #         )
+        #     all_steps.append(leader.id)
+        # else:
+        #     if user.staff_unit.staff_division.leader_id is None:
+        #         raise NotFoundException(
+        #             detail="Leader for staff division of this user is not found!"
+        #         )
+        #     # parent_id = user.staff_unit.staff_division.parent_group_id
+        #     # if parent_id:
+        #     #     leader_id = staff_division_service.get_by_id(db, parent_id).leader_id
+                
+        #     #     leader = db.query(User).filter(User.staff_unit_id == leader_id).first()
+        #     #     if leader is None:
+        #     #         raise NotFoundException(
+        #     #             detail="Leader for staff division of this user is not found!"
+        #     #         )
+        #     #     #all_steps[count] = leader.id
+        #     #     all_steps.append(leader.id)
+        #     # all_steps.append(leader.id)
+
                 
         if is_direct:
-            if user.staff_unit.staff_division.leader_id is None:
-                raise NotFoundException(
-                        detail="Direct Leader for staff division of this user is not found!"
-                    )
+            # if user.staff_unit.staff_division.leader_id is None:
+            #     raise NotFoundException(
+            #             detail="Direct Leader for staff division of this user is not found!"
+            #         )
             return all_steps
-
         service_division = staff_division_service.get_by_name(
             db, StaffDivisionEnum.SERVICE.value
         )
         if service_division.id == user.staff_unit.staff_division.id:
-            #all_steps[count] = user.staff_unit.staff_division.leader.users[0].id
-            all_steps.append(leader.id)
+            pgs_id = user.staff_unit.staff_division.leader.users[0].id
+            all_steps.append(pgs_id)
             return all_steps
 
         parent_id = user.staff_unit.staff_division.parent_group_id
@@ -546,7 +573,7 @@ class HrDocumentTemplateService(
 
             while tmp.parent_group_id != service_division.id:
                 tmp = staff_division_service.get_by_id(db, tmp.parent_group_id)
-                if tmp.leader is None:
+                if tmp.leader is None or tmp.leader.users == []:
                     continue
                 all_steps.append(tmp.leader.users[0].id)
                 #all_steps[count] = tmp.leader.users[0].id
@@ -554,5 +581,49 @@ class HrDocumentTemplateService(
 
         return all_steps
 
+    # def get_template_by_action(self, db: Session, action: str):
+    #     return db.query(HrDocumentTemplate).filter(HrDocumentTemplate.actions[action].isnot(None)).first()
 
+    def get_document_id_by_action_name(self, db: Session, action_name: str):
+        documents = db.query(HrDocumentTemplate).all()
+        for document in documents:
+            actions = document.actions
+            if actions:
+                try:
+                    actions_json = json.loads(actions)
+                    for action in actions_json.get('args', []):
+                        if action_name in action:
+                            return document.id
+                except json.JSONDecodeError:
+                    return f"Error decoding JSON for document ID: {document.id}"
+        return None
+    
+    def extract_properties_by_template_id(self, db: Session, template_id: str):
+        result = []
+        hr_document_temp = self.get_by_id(db, template_id)
+        json_obj = json.loads(hr_document_temp.properties)
+        for prop in json_obj:
+            result.append(prop.get('field_name', ''))
+        return result
+
+    def update_to_active(self, db: Session, id: str):
+        template = self.get_by_id(db, id)
+        template.is_active = True
+        db.add(template)
+        db.commit()
+        template.properties = json.loads(template.properties)
+        template.actions = json.loads(template.actions)
+        template.description = json.loads(template.description)
+        return template
+    
+    def update_to_inactive(self, db: Session, id: str):
+        template = self.get_by_id(db, id)
+        template.is_active = False
+        db.add(template)
+        db.commit()
+        template.properties = json.loads(template.properties)
+        template.actions = json.loads(template.actions)
+        template.description = json.loads(template.description)
+        return template
+    
 hr_document_template_service = HrDocumentTemplateService(HrDocumentTemplate)

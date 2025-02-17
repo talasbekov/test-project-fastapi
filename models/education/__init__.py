@@ -12,3 +12,4 @@ from .academic_degree_degree import AcademicDegreeDegree
 from .academic_title_degree import AcademicTitleDegree
 from .specialty import Specialty
 from .science import Science
+from .military_institution import MilitaryInstitution

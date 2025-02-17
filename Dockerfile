@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y libaio1 wget unzip tzdata && apt-get in
 ENV TZ=Asia/Almaty
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-COPY ./instantclient_19_21 /opt/oracle/instantclient19
+COPY ./instantclient_19_22 /opt/oracle/instantclient19
 
 WORKDIR /opt/oracle
 # RUN wget https://download.oracle.com/otn_software/linux/instantclient/instantclient-basiclite-linuxx64.zip && \
@@ -24,6 +24,7 @@ RUN echo /opt/oracle/instantclient* > /etc/ld.so.conf.d/oracle-instantclient.con
 
 WORKDIR /app
 
+
 # Install wget
 RUN apt-get update && apt-get install libssl-dev wkhtmltopdf -y
 
@@ -35,3 +36,6 @@ RUN pip install -r requirements.txt
 
 # Copy project
 COPY . .
+
+
+

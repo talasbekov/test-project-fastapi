@@ -1,7 +1,9 @@
 import json
 from datetime import datetime, timedelta
-
+from sqlalchemy import func, and_
+from typing import List
 from sqlalchemy.orm import Session
+from services import rank_service
 
 from exceptions import NotFoundException, NotSupportedException
 from models import (
@@ -30,7 +32,8 @@ from models import (
     Badge,
     Coolness,
     CoolnessStatusEnum,
-    User, BadgeType, ReserveEnum
+    User, BadgeType, ReserveEnum,
+    PermissionTypeEnum
 )
 from schemas import HistoryCreate, HistoryUpdate
 from schemas.history.history import EquipmentRead
@@ -51,6 +54,7 @@ from schemas import (
     HistoryTimeLineRead,
     HistoryContractCreate,
     HistoryBadgeCreate,
+    HistoryRankCreate,
     HistorySecondmentCreate,
     HistoryPenaltyCreate,
     HistoryStatusCreate,
@@ -66,7 +70,7 @@ from services import (privelege_emergency_service, coolness_service, badge_servi
                       recommender_user_service, contract_service, driving_license_service,
                       identification_card_service, passport_service, profile_service,
                       secondment_service, staff_division_service, penalty_service,
-                      status_service)
+                      status_service, rank_service)
 
 
 classes = {
@@ -256,6 +260,28 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         db.refresh(obj_db)
         return obj_db
     
+    def create_rank_history(self, db: Session, obj_in: HistoryRankCreate):
+        cls = options.get(obj_in.type)
+        if cls is None:
+            raise NotSupportedException(
+                detail=f'Type: {obj_in.type} is not supported!')
+        #rank = rank_service.create_relation(db, obj_in.user_id, obj_in.rank_id)
+        obj_data = {
+            "user_id": obj_in.user_id,
+            "rank_id": obj_in.rank_id,
+            "type": obj_in.type,
+            "document_number": obj_in.document_number,
+            "date_from": obj_in.date_from,
+            #"date_to": obj_in.date_to if obj_in.date_to is not None else None,
+            "early_promotion": obj_in.early_promotion,
+            "rank_assigned_by": obj_in.rank_assigned_by,
+        }
+        obj_db = cls(**obj_data)
+        db.add(obj_db)
+        db.flush()
+        db.refresh(obj_db)
+        return obj_db
+    
     def create_black_beret_history(self, db: Session, obj_in: HistoryBlackBeretCreate):
         cls = options.get(obj_in.type)
         if cls is None:
@@ -400,23 +426,32 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                 detail=f'Type: {type} is not supported!')
         return cls
 
-    def get_all_by_user_id(self, db: Session, user_id: str):
+    def get_all_by_user_id(self, db: Session, user_id: str, requester_id: str, permissions: List[int]):
         user = user_service.get_by_id(db, user_id)
-
         general_information = self.get_general_information_by_user_id(
             db, user_id, user)
         badges = db.query(BadgeHistory).filter(
             BadgeHistory.user_id == user_id).order_by(BadgeHistory.date_from.desc()).all()
-        ranks = db.query(RankHistory).filter(
-            RankHistory.user_id == user_id).order_by(RankHistory.date_from.desc()).all()
+        ranks = db.query(RankHistory).filter(RankHistory.user_id == user_id).order_by(RankHistory.date_from.desc()).all()
+        # for rank in ranks:
+        #     print(rank.__dict__)
+        #     if rank.rank is not None:
+        #         rank = rank.rank
+        rank = user_service.get_by_id(db, user_id).rank
         penalties = db.query(PenaltyHistory).filter(
             PenaltyHistory.user_id == user_id).order_by(PenaltyHistory.date_from.desc()).all()
         contracts = db.query(ContractHistory).filter(
             ContractHistory.user_id == user_id).order_by(ContractHistory.date_from.desc()).all()
-        attestations = db.query(AttestationHistory).filter(
-            AttestationHistory.user_id == user_id).order_by(AttestationHistory.date_from.desc()).all()
-        characteristics = db.query(ServiceCharacteristicHistory).filter(
-            ServiceCharacteristicHistory.user_id == user_id).order_by(ServiceCharacteristicHistory.date_from.desc()).all()
+        if user_id==requester_id or int(PermissionTypeEnum.VIEW_ATTESTATION.value) in permissions:
+            attestations = db.query(AttestationHistory).filter(
+                AttestationHistory.user_id == user_id).order_by(AttestationHistory.date_from.desc()).all()
+        else:
+            attestations = "Permission Denied"
+        if user_id==requester_id or int(PermissionTypeEnum.VIEW_SERVICE_CHARACTERISTICS.value) in permissions:
+            characteristics = db.query(ServiceCharacteristicHistory).filter(
+                ServiceCharacteristicHistory.user_id == user_id).order_by(ServiceCharacteristicHistory.date_from.desc()).all()
+        else: 
+            characteristics = "Permission Denied"
         holidays = db.query(StatusHistory).filter(
             StatusHistory.user_id == user_id).order_by(StatusHistory.date_from.desc()).all()
         emergency_contracts = db.query(EmergencyServiceHistory).filter(
@@ -425,6 +460,13 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             WorkExperienceHistory.user_id == user_id).order_by(WorkExperienceHistory.date_from.desc()).all()
         secondments = db.query(SecondmentHistory).filter(
             SecondmentHistory.user_id == user_id).order_by(SecondmentHistory.date_from.desc()).all()
+        
+        for i in emergency_contracts:
+            if i.position is not None:
+                print(i.position.__dict__)
+
+        # print("HEEEEEERE")
+        # print(i.__dict__ for i in secondments)
         equipments = user.equipments
 
         # clothing_equipments_type_count = (
@@ -458,12 +500,12 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             tactical_training=100,
             shooting_training=100,
         )
-        
-        
+
 
         history_service_detail_read = HistoryServiceDetailRead(
             holidays=holidays,
             badges=badges,
+            rank=rank if rank is not None else None,
             ranks=ranks,
             penalties=penalties,
             contracts=contracts,
@@ -483,11 +525,13 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                 additional_emergency_length["years"] += experience.length_of_service["years"]
                 additional_emergency_length["months"] += experience.length_of_service["months"]
                 additional_emergency_length["days"] += experience.length_of_service["days"]
-        if history_service_detail_read.emergency_contracts:
-            history_service_detail_read.emergency_contracts[0].length_of_service["years"] += additional_emergency_length["years"]
-            history_service_detail_read.emergency_contracts[0].length_of_service["months"] += additional_emergency_length["months"]
-            history_service_detail_read.emergency_contracts[0].length_of_service["days"] += additional_emergency_length["days"]
-
+        if history_service_detail_read.emergency_contracts and len(history_service_detail_read.emergency_contracts) > 0:
+            emergency_contract = history_service_detail_read.emergency_contracts[0]
+            if emergency_contract.length_of_service is None:
+                emergency_contract.length_of_service = {"years": 0, "months": 0, "days": 0}
+            emergency_contract.length_of_service["years"] += additional_emergency_length["years"]
+            emergency_contract.length_of_service["months"] += additional_emergency_length["months"]
+            emergency_contract.length_of_service["days"] += additional_emergency_length["days"]
         history_dict = HistoryServiceDetailRead.from_orm(
             history_service_detail_read).dict()
         return history_dict
@@ -529,9 +573,9 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             user_oath_read = OathRead(
                 id=oauth_user.id,
                 date=oauth_user.date,
-                military_name=oauth_user.military_unit.name,
-                military_nameKZ=oauth_user.military_unit.nameKZ,
-                military_id=oauth_user.military_unit_id
+                military_name=oauth_user.military_unit,
+                military_nameKZ=oauth_user.military_unit,
+                military_id=oauth_user.military_unit
             )
 
         privelege_emergency = privelege_emergency_service.get_by_user_id(
@@ -564,6 +608,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                 coolnesses_list.append(coolness_read)
         # HERE!
         black_beret_badge = badge_service.get_black_beret_by_user_id(db, user_id)
+        # print('black_beret_badge')
         # print(black_beret_badge.id)
         if black_beret_badge is not None:
             # print("here1")
@@ -572,7 +617,8 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                 BadgeHistory.badge_id == black_beret_badge.id,
                 # BadgeHistory.date_to == None
             ).first()
-            
+            # print('black_beret')
+            # print(black_beret is None)
             if black_beret is not None:
                 black_beret = BlackBeretRead(
                     id=black_beret.id,
@@ -580,9 +626,9 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                     date_from=black_beret.date_from,
                     document_number=black_beret.document_number
                 )
-                print(black_beret.id)
+                # print(black_beret.id)
         else:
-            print("here_null")
+            # print("here_null")
             black_beret = None
             
         personal_reserve = personnal_reserve_service.get_by_user_id(
@@ -770,14 +816,14 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         for key, value in object.dict(exclude_unset=True).items():
             setattr(history, key, value)
         if history.secondment_id:
-            staff_division = staff_division_service.get_by_id(
-                db, object.staff_division_id)
+            staff_division = staff_division_service.get_by_id(db, object.staff_division_id)
             history.secondment.staff_division_id = staff_division.id
             history.secondment.name = staff_division.name
             history.secondment.nameKZ = staff_division.nameKZ
         else:
             raise NotFoundException(
                 detail=f'Secondment is not found!')
+        setattr(history, 'updated_at', datetime.now())
         db.add(history)
         db.commit()
         return history
@@ -795,9 +841,29 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         else:
             raise NotFoundException(
                 detail=f'Badge is not found!')
+        setattr(history, 'updated_at', datetime.now())
         db.add(history)
         db.commit()
         return history
+
+    def update_rank(self, db: Session, id: str, object: HistoryUpdate):
+        history = self.get_by_id(db, id)
+        if history is None:
+            raise NotFoundException(
+                detail=f'History with id: {id} is not found!')
+        for key, value in object.dict(exclude_unset=True).items():
+            setattr(history, key, value)
+        if history.rank_id:
+            rank = rank_service.get_by_id(db, history.rank_id)
+            history.rank.type_id = object.rank_type_id
+        else:
+            raise NotFoundException(
+                detail=f'Rank is not found!')
+        setattr(history, 'updated_at', datetime.now())
+        db.add(history)
+        db.commit()
+        return history
+
 
     def update_status(self, db: Session, id: str, object: HistoryUpdate):
         history = self.get_by_id(db, id)
@@ -812,6 +878,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         else:
             raise NotFoundException(
                 detail=f'Status is not found!')
+        setattr(history, 'updated_at', datetime.now())
         db.add(history)
         db.commit()
         return history
@@ -823,6 +890,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                 detail=f'History with id: {id} is not found!')
         for key, value in object.dict(exclude_unset=True).items():
             setattr(history, key, value)
+        setattr(history, 'updated_at', datetime.now())
         db.add(history)
         db.commit()
         return history
@@ -926,21 +994,14 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         courses = educational_profile.course
 
         service_id_info = self.get_service_id_by_user_id(db, user_id)
-
+        # print(badges)
         timeline_read = HistoryTimeLineRead(
-            holidays=holidays,
             badges=badges,
+            rank = user.rank,
             ranks=ranks,
-            penalties=penalties,
             contracts=contracts,
-            attestations=attestations,
-            characteristics=characteristics,
             emergency_contracts=emergency_contracts,
-            experience=experience,
-            secondments=secondments,
             equipments=equipments,
-            general_information=general_information,
-            service_id_info=service_id_info,
             driving_license=driving_license,
             identification_card=identification_card,
             passport=passport,
@@ -949,6 +1010,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             educations=educations,
             courses=courses
         )
+        # print("timeline:", timeline_read)
         timeline_dict = HistoryTimeLineRead.from_orm(
             timeline_read).dict()
         return timeline_dict
@@ -1049,6 +1111,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
         timeline_read = HistoryTimeLineRead(
             holidays=holidays,
             badges=badges,
+            rank = user.rank,
             ranks=ranks,
             penalties=penalties,
             contracts=contracts,
@@ -1155,18 +1218,61 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
 
     def black_beret_remove(self, db: Session, id: str):
         obj = db.query(self.model).get(id)
-        badge = db.query(Badge).filter(Badge.id == obj.badge_id).first()
-        db.delete(obj)
-        db.delete(badge)
-        db.flush()
+        if obj:
+            badge = db.query(Badge).filter(Badge.id == obj.badge_id).first()
+            db.delete(obj)
+            db.delete(badge)
+            db.flush()
+        return obj
+    
+    def rank_histories_remove(self, db: Session, id: str):
+        obj = db.query(self.model).get(id)
+        if obj:
+            rank = db.query(Rank).filter(Rank.id == obj.rank_id).first()
+            db.delete(obj)
+            db.delete(rank)
+            db.flush()
         return obj
     
     def get_expiring_contracts(self, db: Session):
-        contracts = db.query(ContractHistory).filter(
-            ContractHistory.date_to >= datetime.now() + timedelta(days=1),
-            ContractHistory.date_to <= datetime.now() + timedelta(days=30)
-        ).all()
-        return contracts
+        today = datetime.now()
+        day_30 = today + timedelta(days=30)
+
+        latest_contract_subquery = db.query(
+            ContractHistory.user_id.label("user_id"),
+            func.max(ContractHistory.date_to).label("last_date_to")
+        ).filter(
+            ContractHistory.date_to >= today + timedelta(days=1),
+            ContractHistory.date_to <= day_30
+        ).group_by(ContractHistory.user_id).subquery()
+        # print(latest_contract_subquery.c.user_id)
+        # Main query to join the subquery and fetch the expiring contracts
+        expiring_contracts = db.query(ContractHistory).join(
+            latest_contract_subquery,
+            and_(
+                ContractHistory.user_id == latest_contract_subquery.c.user_id,
+                ContractHistory.date_to == latest_contract_subquery.c.last_date_to
+            )
+        )
+
+        return expiring_contracts.all()
+    
+    
+    def get_expiring_ranks(self, db: Session):
+        today = datetime.now()
+        day_30 = today + timedelta(days=30)
+
+        ranks = db.query(RankHistory).all()
+        expiring_ranks = []
+        for rank in ranks:
+            rank_of_user = rank_service.get_by_id(db, rank.rank_id)
+            duration_days = rank_of_user.duration * 365
+            user = user_service.get_by_id(db, rank.user_id)
+            user_max_rank = user.staff_unit.position.max_rank_id
+            if rank.date_from + timedelta(days=duration_days) <= day_30 and rank_of_user.higher_rank_id is not None and rank_of_user.higher_rank_id != user_max_rank:
+                expiring_ranks.append(rank)
+
+        return expiring_ranks    
 
 
 history_service = HistoryService(History)

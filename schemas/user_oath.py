@@ -10,7 +10,7 @@ from schemas import Model, ReadModel
 class UserOath(Model):
     date: Optional[date]
     user_id: str
-    military_unit_id: str
+    military_unit: str
 
     class Config:
         orm_mode = True
@@ -26,4 +26,4 @@ class UserOathUpdate(UserOath):
 
 
 class UserOathRead(UserOath, ReadModel):
-    military_unit: Optional[MilitaryUnitRead]
+    military_unit: Optional[str]

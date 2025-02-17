@@ -12,6 +12,11 @@ from .tax_declaration import router as tax_declaration_router
 from .user_financial_info import router as user_financial_info_router
 from .sport_type import router as sport_type_router
 from .sport_degree_type import router as sport_degree_type_router
+from .citizenship import router as citizenship_router
+from .nationality import router as nationality_router
+from .birthplace import router as birthplace_router
+from .city import router as city_router
+from .region import router as region_router
 
 personal_router = APIRouter(prefix="/personal")
 
@@ -27,3 +32,8 @@ personal_router.include_router(tax_declaration_router)
 personal_router.include_router(user_financial_info_router)
 personal_router.include_router(sport_type_router)
 personal_router.include_router(sport_degree_type_router)
+personal_router.include_router(citizenship_router)
+personal_router.include_router(nationality_router)
+personal_router.include_router(birthplace_router)
+personal_router.include_router(city_router)
+personal_router.include_router(region_router)

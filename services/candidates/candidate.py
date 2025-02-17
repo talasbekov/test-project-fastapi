@@ -19,7 +19,7 @@ from .candidate_stage_info import candidate_stage_info_service
 
 
 class CandidateService(
-        ServiceBase[Candidate, CandidateCreate, CandidateUpdate]):
+    ServiceBase[Candidate, CandidateCreate, CandidateUpdate]):
     # This const variable stores the positions which have access to all
     # candidates
     ALL_CANDIDATE_VIEWERS = {

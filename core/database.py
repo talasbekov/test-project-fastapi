@@ -6,21 +6,21 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
 from fastapi import HTTPException
 
-from .config import configs
 import cx_Oracle
 
-# SQLALCHEMY_DATABASE_URL = f"oracle://system:Oracle123@172.20.0.2:1521/MORAL"
-
 Base = declarative_base()
-SQLALCHEMY_DATABASE_URL2 = f"oracle://system:Oracle123@172.20.0.4:1521/MORAL"
-# SQLALCHEMY_DATABASE_URL2 = f"oracle://system:Oracle123@192.168.0.61:1521/MORAL"
-# Create engine
 
+# Обновленный URL подключения
+SQLALCHEMY_DATABASE_URL2 = "oracle+cx_oracle://hr:hr2025@192.168.1.86:1521/hrfree"
+
+
+# Создание двигателя
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL2,
     pool_size=20,
-    echo=configs.SQLALCHEMY_ECHO
+    echo=False  # Лучше отключить избыточные логи
 )
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def get_db():
@@ -29,10 +29,9 @@ def get_db():
         yield db
         db.commit()
     except SQLAlchemyError as e:
-        logging.debug(e)
+        logging.error(f"Database error: {e}")
         db.rollback()
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail="Database operation failed.")
     finally:
-        if db:
-            db.close()
-            logging.debug("Database connection closed.")
+        db.close()
+        logging.debug("Database connection closed.")

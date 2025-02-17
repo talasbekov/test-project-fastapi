@@ -9,6 +9,7 @@ from models import Violation
 from schemas import ViolationCreate, ViolationUpdate
 from services import profile_service
 from services.base import ServiceBase
+from utils.date import parse_datetime
 
 
 class ViolationService(
@@ -24,8 +25,19 @@ class ViolationService(
     def create(self, db: Session,
                obj_in: Union[ViolationCreate, Dict[str, Any]]) -> Violation:
         obj_in_data = jsonable_encoder(obj_in)
-        obj_in_data['date'] = datetime.strptime(
-            obj_in_data['date'], '%Y-%m-%dT%H:%M:%S.%f%z')
+        obj_in_data['date'] = parse_datetime(
+            obj_in_data['date'])
+        db_obj = self.model(**obj_in_data)
+        db.add(db_obj)
+        db.flush()
+        return db_obj
+
+    def create_family_violation(self, db: Session,
+               obj_in: Union[ViolationCreate, Dict[str, Any]]) -> Violation:
+        obj_in_data = jsonable_encoder(obj_in)
+        obj_in_data['date'] = parse_datetime(
+            obj_in_data['date'])
+        obj_in_data['profile_id'] = None
         db_obj = self.model(**obj_in_data)
         db.add(db_obj)
         db.flush()

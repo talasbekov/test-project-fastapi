@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from typing import List, Union, Dict, Any, Optional
 from utils import get_access_token_by_user_id
 from core import get_db
-from models import LanguageEnum, ContractType
+from models import LanguageEnum, ContractType, ActionType
 from schemas import (HrDocumentInit,
                      HrDocumentRead,
                      HrDocumentSign,
@@ -19,7 +19,7 @@ from schemas import (HrDocumentInit,
                      HrDocumentSignEcp,
                      HrDocumentSignEcpWithIds,
                      QrRead)
-from services import hr_document_service
+from services import hr_document_service, hr_document_template_service
 from services.autotags import auto_tags
 from tasks import task_sign_document_with_certificate
 
@@ -611,19 +611,42 @@ async def generate_document_for_expiring(*,
     properties = {}
     contract = db.query(ContractType).filter(ContractType.id == contract_type_id).all()[0]
     contract_new = {}
-    contract_new['name'] = contract.name
+    # contract_new['name'] = contract.name
     contract_new['nameKZ'] = contract.nameKZ
     contract_new['value'] = contract.id
     contract_new['auto'] = False
     properties["contract"] = contract_new
     years = contract.years
     # properties["contract"] = await auto_tags.get("contract").handle(db, str(contract_id))
-    required_properties = ["father_name", "name", "officer_number", "position", "rank", "surname"]
+    template_id = hr_document_template_service.get_document_id_by_action_name(db, ActionType.RENEW_CONTRACT.value)
+    required_properties = hr_document_template_service.extract_properties_by_template_id(db, template_id)
     for prop in required_properties:
         # print(auto_tags.get("father").handle(db, str(user_id)))
         properties[prop] = auto_tags.get(prop).handle(db, str(user_id))
         
     role = Authorize.get_raw_jwt()['role']
-    document = await hr_document_service.generate_document_for_expiring(db, contract_id, role, properties, years)
+    document = await hr_document_service.generate_document_for_expiring_contract(db, contract_id, role, properties, years)
     return document
-    # return properties
+
+@router.get('/generate_document_for_expiring_rank/{rank_contract_id}/', summary="Generate draft for expiring ranks")
+async def generate_document_for_expiring_rank(*,
+                                      db: Session = Depends(get_db),
+                                      Authorize: AuthJWT = Depends(),
+                                      rank_contract_id: str = None,
+                                      ):
+    """
+        Generate draft for expiring ranks
+
+    """
+    Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
+    properties = {}
+    # {"rank": {"alias_name": "\u0417\u0432\u0430\u043d\u0438\u0435", "alias_nameKZ": "\u0414\u04d9\u0440\u0435\u0436\u0435", "data_taken": "auto", "type": "read", "data_type": null, "field_name": "rank", "to_tags": {"prevWordKZ": "{{real-rank-full}}", "alias_name": null, "alias_nameKZ": "rank", "directory": null, "isHidden": false, "cases": 0}}, "surname": {"alias_name": "\u0424\u0430\u043c\u0438\u043b\u0438\u044f \u0441\u0443\u0431\u044a\u0435\u043a\u0442\u0430", "alias_nameKZ": "\u0422\u0435\u0433\u0456", "data_taken": "auto", "type": "read", "data_type": null, "field_name": "surname", "to_tags": {"prevWordKZ": "{{surname}}", "alias_name": null, "alias_nameKZ": "surname", "directory": null, "isHidden": false, "cases": 0}}, "name": {"alias_name": "\u0418\u043c\u044f \u0441\u0443\u0431\u044a\u0435\u043a\u0442\u0430", "alias_nameKZ": "\u0410\u0442\u044b", "data_taken": "auto", "type": "read", "data_type": null, "field_name": "name", "to_tags": {"prevWordKZ": "{{name}}", "alias_name": null, "alias_nameKZ": "name", "directory": null, "isHidden": false, "cases": 0}}, "father": {"alias_name": "\u041e\u0442\u0447\u0435\u0441\u0442\u0432\u043e \u0441\u0443\u0431\u044a\u0435\u043a\u0442\u0430", "alias_nameKZ": "\u04d8\u043a\u0435\u0441\u0456\u043d\u0456\u04a3 \u0430\u0442\u044b", "data_taken": "auto", "type": "read", "data_type": null, "field_name": "father_name", "to_tags": {"prevWordKZ": "{{father-name}}", "alias_name": null, "alias_nameKZ": "father", "directory": null, "isHidden": false, "cases": 0}}, "officer": {"alias_name": "\u041e\u0444\u0438\u0446\u0435\u0440\u0441\u043a\u0438\u0439 \u043d\u043e\u043c\u0435\u0440 \u0441\u0443\u0431\u044a\u0435\u043a\u0442\u0430", "alias_nameKZ": "\u0421\u0443\u0431\u044a\u0435\u043a\u0442 \u049b\u044b\u0437\u043c\u0435\u0442\u043a\u0435\u0440\u0456\u043d\u0456\u04a3 \u043d\u04e9\u043c\u0456\u0440\u0456", "data_taken": "auto", "type": "read", "data_type": null, "field_name": "officer_number", "to_tags": {"prevWordKZ": "{{officer-number}}", "alias_name": null, "alias_nameKZ": "officer", "directory": null, "isHidden": false, "cases": 0}}, "new_rank": {"alias_name": "\u0417\u0432\u0430\u043d\u0438\u0435 \u0434\u043b\u044f \u043f\u043e\u0432\u044b\u0448\u0435\u043d\u0438\u044f", "alias_nameKZ": "\u0410\u0440\u0442\u0442\u044b\u0440\u0443 \u04af\u0448\u0456\u043d \u0414\u04d9\u0440\u0435\u0436\u0435", "data_taken": "dropdown", "type": "write", "data_type": null, "field_name": "rank", "to_tags": {"prevWordKZ": "{{new-rank-full}}", "alias_name": "\u0417\u0432\u0430\u043d\u0438\u0435 \u0434\u043b\u044f \u043f\u043e\u0432\u044b\u0448\u0435\u043d\u0438\u044f", "alias_nameKZ": "\u0410\u0440\u0442\u0442\u044b\u0440\u0443 \u04af\u0448\u0456\u043d \u0414\u04d9\u0440\u0435\u0436\u0435", "directory": "rank", "isHidden": false, "cases": null, "actions": [{"id": 0, "actions": {"args": [{"increase_rank": {"rank": {"tagname": "rank", "alias_name": "\u0417\u0432\u0430\u043d\u0438\u0435 \u0434\u043b\u044f \u043f\u043e\u0432\u044b\u0448\u0435\u043d\u0438\u044f", "alias_nameKZ": "\u0410\u0440\u0442\u0442\u044b\u0440\u0443 \u04af\u0448\u0456\u043d \u0414\u04d9\u0440\u0435\u0436\u0435"}}}]}, "properties": {"rank": {"alias_name": "\u0417\u0432\u0430\u043d\u0438\u0435 \u0434\u043b\u044f \u043f\u043e\u0432\u044b\u0448\u0435\u043d\u0438\u044f", "alias_nameKZ": "\u0410\u0440\u0442\u0442\u044b\u0440\u0443 \u04af\u0448\u0456\u043d \u0414\u04d9\u0440\u0435\u0436\u0435", "type": "write", "data_taken": "dropdown", "field_name": "rank"}}, "actionsValue": {"name": "\u041f\u0440\u0438\u0441\u0432\u043e\u0435\u043d\u0438\u0435 \u0437\u0432\u0430\u043d\u0438\u044f", "nameKZ": "\u0414\u04d9\u0440\u0435\u0436\u0435 \u0442\u0430\u0493\u0430\u0439\u044b\u043d\u0434\u0430\u0443"}}]}}, "extraordinary": {"alias_name": null, "alias_nameKZ": "extraordinary", "data_taken": "manual", "type": "read", "data_type": "string", "field_name": "manual", "to_tags": {"prevWordKZ": "{{first-officer-or-ordinary-or-extraordinary}}", "alias_name": null, "alias_nameKZ": "extraordinary", "directory": null, "isHidden": false, "cases": null}}, "military": {"alias_name": null, "alias_nameKZ": "military", "data_taken": "manual", "type": "read", "data_type": "string", "field_name": "manual", "to_tags": {"prevWordKZ": "{{special-or-military}}", "alias_name": null, "alias_nameKZ": "military", "directory": null, "isHidden": false, "cases": null}}}
+    # required_properties = ["father_name", "name", "officer_number", "position", "rank", "surname"]
+    required_properties = ["father_name", "name", "officer_number", "surname", "new_rank"]
+    for prop in required_properties:
+        properties[prop] = auto_tags.get(prop).handle(db, str(user_id))
+        
+    role = Authorize.get_raw_jwt()['role']
+    document = await hr_document_service.generate_document_for_expiring_ranks(db, rank_contract_id, role, properties)
+    return document

@@ -17,7 +17,7 @@ from schemas import (
     StaffListApplyRead
 )
 from services import staff_list_service
-from tasks import task_create_draft, task_apply_staff_list
+from tasks import task_create_draft, task_apply_staff_list, task_staff_list_duplicate
 
 router = APIRouter(
     prefix="/staff_list",
@@ -107,7 +107,7 @@ async def get_result(task_id: str):
     if result.ready():
         if isinstance(result.result, Exception):
             raise result.result
-        return StaffListRead(**result.result)
+        return result.result
     else:
         return {"status": AsyncResult(task_id).state}
 
@@ -230,27 +230,49 @@ async def delete(*,
     Authorize.jwt_required()
     staff_list_service.remove(db, str(id))
 
+# @router.post("/duplicate/{id}/",
+#              status_code=status.HTTP_201_CREATED,
+#              dependencies=[Depends(HTTPBearer())],
+#              response_model=StaffListRead,
+#              summary="Duplicate Staff List")
+# async def duplicate(*,
+#                     db: Session = Depends(get_db),
+#                     id: str,
+#                     body: StaffListUserCreate,
+#                     Authorize: AuthJWT = Depends()
+#                     ):
+#     """
+#         Duplicate Staff List
+
+#         - **id**: UUID - id of the Staff List.
+#     """
+#     Authorize.jwt_required()
+#     role = Authorize.get_raw_jwt()['role']
+#     return staff_list_service.duplicate(
+#         db,
+#         staff_list_id=id,
+#         user_id=Authorize.get_jwt_subject(),
+#         obj_in=body,
+#         current_user_role_id=role)
+
 @router.post("/duplicate/{id}/",
              status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
-             response_model=StaffListRead,
              summary="Duplicate Staff List")
-async def duplicate(*,
-                    db: Session = Depends(get_db),
-                    id: str,
-                    body: StaffListUserCreate,
-                    Authorize: AuthJWT = Depends()
-                    ):
+async def task_duplicate(*,
+                         id: str,
+                         body: StaffListUserCreate,
+                         Authorize: AuthJWT = Depends()
+                         ):
     """
         Duplicate Staff List
-
-        - **id**: UUID - id of the Staff List.
     """
     Authorize.jwt_required()
     role = Authorize.get_raw_jwt()['role']
-    return staff_list_service.duplicate(
-        db,
+    body = body.dict()
+    result = task_staff_list_duplicate.delay(
         staff_list_id=id,
         user_id=Authorize.get_jwt_subject(),
         obj_in=body,
         current_user_role_id=role)
+    return {"task_id": result.id}

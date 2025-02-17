@@ -9,3 +9,4 @@ from .schedule_day import schedule_day_service
 from .schedule_month import schedule_month_service
 from .month import month_service
 from .schedule_year import schedule_year_service
+from .activity_type import activity_type_service

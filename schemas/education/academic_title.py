@@ -17,6 +17,7 @@ class AcademicTitleBase(BaseModel):
     document_number: Optional[str]
     document_link: Optional[AnyUrl]
     assignment_date: Optional[datetime.date]
+    educational_profile_id: Optional[str]
 
 
 class AcademicTitleCreate(AcademicTitleBase):
@@ -35,6 +36,7 @@ class AcademicTitleRead(AcademicTitleBase):
     document_number: Optional[str]
     document_link: Optional[str]
     assignment_date: Optional[datetime.date]
+    educational_profile_id: Optional[str]
 
     degree: Optional[AcademicTitleDegreeRead]
     specialty: Optional[SpecialtyRead]
@@ -43,7 +45,7 @@ class AcademicTitleRead(AcademicTitleBase):
         orm_mode = True
         
 class AcademicTitleShortRead(BaseModel):
-    document_number: Optional[str]
+    document_number: str
     document_link: Optional[str]
     assignment_date: Optional[datetime.date]
 

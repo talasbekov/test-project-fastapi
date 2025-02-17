@@ -5,10 +5,11 @@ from fastapi import APIRouter, Depends, status
 from fastapi.security import HTTPBearer
 from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
-
+from models import PermissionTypeEnum
 from core import get_db
 from schemas import FamilyProfileCreate, FamilyProfileRead, FamilyProfileUpdate
 from services import family_profile_service, profile_service
+from fastapi.encoders import jsonable_encoder
 
 router = APIRouter(
     prefix="/family_profiles",
@@ -85,8 +86,9 @@ async def get_by_profile(*,
                          Authorize: AuthJWT = Depends()
                          ):
     Authorize.jwt_required()
-    profile = profile_service.get_by_user_id(db, Authorize.get_jwt_subject())
-    return profile.family_profile
+    # profile = profile_service.get_by_user_id(db, Authorize.get_jwt_subject())
+    family_profile = family_profile_service.get_by_user_id(db, Authorize.get_jwt_subject())
+    return family_profile
 
 
 @router.get('/profile/{id}/', dependencies=[Depends(HTTPBearer())],
@@ -97,4 +99,9 @@ async def get_by_profile_id(*,
                             Authorize: AuthJWT = Depends()
                             ):
     Authorize.jwt_required()
-    return family_profile_service.get_by_user_id(db, str(id))
+    permissions = Authorize.get_raw_jwt()['permissions']
+    res = FamilyProfileRead.from_orm(family_profile_service.get_by_user_id(db, str(id))).dict()
+    if id!=Authorize.get_jwt_subject() and int(PermissionTypeEnum.VIEW_FAMILY.value) not in permissions:
+        res['family'] = "Permission Denied"
+    return res
+ 

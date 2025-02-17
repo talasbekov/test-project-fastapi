@@ -115,12 +115,12 @@ class HexagonService(ServiceBase):
         #     # FP=avg_FP
         # )
         averages_read = {
-            "KP": round(random.uniform(1.01, 5.00), 1),
-            "LS": round(random.uniform(1.01, 5.00), 1),
-            "EC": round(random.uniform(1.01, 5.00), 1),
-            "PZ": round(random.uniform(1.01, 5.00), 1),
-            "OP": round(random.uniform(1.01, 5.00), 1),
-            "FP": round(random.uniform(1.01, 5.00), 1)
+            "KP": round(random.uniform(4.01, 5.00), 1),
+            "LS": round(random.uniform(3.01, 4.00), 1),
+            "EC": round(random.uniform(2.01, 5.00), 1),
+            "PZ": round(random.uniform(1.01, 4.00), 1),
+            "OP": round(random.uniform(4.01, 5.00), 1),
+            "FP": round(random.uniform(3.01, 5.00), 1)
         }
 
         return averages_read

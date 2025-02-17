@@ -9,7 +9,7 @@ from sqlalchemy.sql import text
 from exceptions.client import BadRequestException, NotFoundException
 from models import (StaffUnit, Position, User, EmergencyServiceHistory,
                     ArchiveStaffUnit,
-                    StaffDivision, PositionNameEnum, StaffDivisionEnum, PositionType)
+                    StaffDivision, PositionNameEnum, StaffDivisionEnum, PositionType, Rank)
 from schemas import (StaffUnitCreate, StaffUnitUpdate,
                      StaffUnitFunctions, StaffUnitRead,
                      StaffUnitCreateWithPosition, StaffUnitFunctionsByPosition,
@@ -84,6 +84,9 @@ class StaffUnitService(
                        .offset(skip)
                        .limit(limit)
                        .all())
+        for staff_unit in staff_units:
+            if staff_unit.requirements:
+                staff_unit.requirements = json.loads(staff_unit.requirements)
         return {'total': total, 'objects': staff_units}
 
     def add_service_staff_function(
@@ -390,7 +393,7 @@ class StaffUnitService(
         for group in groups:
             for staff_unit in group.curators:
                 self.add_document_staff_function(db,
-                                                 StaffUnitFunctions(staff_unit_id=staff_unit.id,
+                                                 StaffUnitFunctions(staff_unit_id=staff_unit.staff_unit.id,
                                                                     staff_function_ids=staff_function_ids))
 
     def _add_document_staff_function_to_head_of_department(self,
@@ -576,12 +579,29 @@ class StaffUnitService(
         )
         return staff_units
 
-    def update_staff_unit(self, db: Session, staff_division_id: int, staff_unit_id: int, postion_id: int, actual_position_id: int):
+    def update_staff_unit(self, db: Session, staff_division_id: str, staff_unit_id: str, postion_id: str, actual_position_id: str, rank_id: str, user: User):
         staff_unit = db.query(StaffUnit).filter(StaffUnit.id == staff_unit_id).first()
-        staff_unit.position_id = postion_id
-        staff_unit.actual_position_id = actual_position_id
-        staff_unit.staff_division_id = staff_division_id
+        if postion_id is not None:
+            position = db.query(Position).filter(Position.id == postion_id).first()
+            if position:
+                staff_unit.position_id = postion_id
+        if actual_position_id is not None:
+            position = db.query(Position).filter(Position.id == actual_position_id).first()
+            if position:
+                staff_unit.actual_position_id = actual_position_id
+        if staff_division_id is not None:
+            staff_division = db.query(StaffDivision).filter(StaffDivision.id == staff_division_id).first()
+            if staff_division:      
+                staff_unit.staff_division_id = staff_division_id
+        staff_unit.updated_at = datetime.datetime.now()
+        # setattr(staff_unit, 'updated_at', datetime.datetime.now())
+        rank = db.query(Rank).filter(Rank.id == rank_id).first()
+        if rank:
+            setattr(user, 'rank_id', rank_id)
+            setattr(user, 'updated_at', datetime.datetime.now())
         db.add(staff_unit)
+        db.add(user)
         db.flush()
+        return "success"
 
 staff_unit_service = StaffUnitService(StaffUnit)

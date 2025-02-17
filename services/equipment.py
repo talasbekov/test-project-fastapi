@@ -19,10 +19,17 @@ from schemas import (EquipmentCreate,
                      EquipmentUpdate,
                      TypeClothingEquipmentRead,
                      TypeArmyEquipmentRead,
-                     TypeOtherEquipmentRead)
+                     TypeOtherEquipmentRead,
+                     TypeArmyEquipmentModelCreate,
+                     TypeClothingEquipmentModelCreate,
+                     TypeOtherEquipmentModelCreate,
+                     TypeClothingEquipmentUpdate,
+                     TypeArmyEquipmentCreate,
+                     TypeOtherEquipmentCreate,
+                     TypeClothingEquipmentModelSchema)
 from .base import ServiceBase
 from .filter import add_filter_to_query
-
+from datetime import datetime
 equipment = {
     "army_equipment": ArmyEquipment,
     "clothing_equipment": ClothingEquipment,
@@ -111,8 +118,6 @@ class EquipmentService(
             )
         return clothing_equipment_type_model_id
 
-
-
     def get_all_clothing_equipments(
             self, db: Session,
             skip: int = 0, limit: int = 10, filter: str = ''):
@@ -131,18 +136,22 @@ class EquipmentService(
         type_cloth_equipmets_read_list = []
         for type_clothing_equipment in type_cloth_equipmets_list:
             clothing_equipment_models = (db.query(TypeClothingEquipmentModel)
-                        .join(ClothingEquipmentTypesModels)
-                        .filter(ClothingEquipmentTypesModels.type_cloth_equipmets_id
+                        .filter(TypeClothingEquipmentModel.type_cloth_eq_types_id
                                 == type_clothing_equipment.id)
                         .offset(skip)
                         .limit(limit)
                         .all()
             )
+            print(i.__dict__ for i in clothing_equipment_models)
             type_clothing_equipment_read = TypeClothingEquipmentRead.from_orm(
                 type_clothing_equipment)
+            
+            clothing = [TypeClothingEquipmentModelSchema.from_orm(i) for i in clothing_equipment_models]
+            print(clothing)
             type_clothing_equipment_read.type_cloth_eq_models = (
-                clothing_equipment_models
+                clothing
             )
+            print(type_clothing_equipment_read)
             type_cloth_equipmets_read_list.append(
                 type_clothing_equipment_read)
 
@@ -152,6 +161,79 @@ class EquipmentService(
 
     def get_all_clothing_equipment_models(self, db: Session):
         return db.query(TypeClothingEquipmentModel).all()
+    
+    def update_cloth_model(self, db: Session, id: str, body: TypeClothingEquipmentModelCreate):
+        cloth_eq_model = self.get_cloth_equipment_model_by_id(db, id)
+        if not cloth_eq_model:
+            raise NotFoundException("Clothing equipment model not found")
+        for key, value in body.dict(exclude_none=True).items():
+            setattr(cloth_eq_model, key, value)
+        setattr(cloth_eq_model, 'updated_at', datetime.now())
+        db.add(cloth_eq_model)
+        db.flush()
+        return cloth_eq_model
+    
+    def delete_cloth_model(self, db: Session, id: str):
+        cloth_eq_model = self.get_cloth_equipment_model_by_id(db, id)
+        if not cloth_eq_model:
+            raise NotFoundException("Clothing equipment model not found")
+        db.delete(cloth_eq_model)
+        db.flush()
+        return True
+
+    def get_all_army_equipment_models(self, db: Session):
+        return db.query(TypeArmyEquipmentModel).all()
+    
+    def get_army_equipment_model_by_id(self, db: Session, id: str):
+        return (db.query(TypeArmyEquipmentModel)
+                .filter(TypeArmyEquipmentModel.id==id)
+                .first())
+
+    def update_army_model(self, db: Session, id: str, body: TypeArmyEquipmentModelCreate):
+        army_eq_model = self.get_army_equipment_model_by_id(db, id)
+        if not army_eq_model:
+            raise NotFoundException("Army equipment model not found")
+        for key, value in body.dict(exclude_none=True).items():
+            setattr(army_eq_model, key, value)
+        setattr(army_eq_model, 'updated_at', datetime.now())
+        db.add(army_eq_model)
+        db.flush()
+        return army_eq_model
+    
+    def delete_army_model(self, db: Session, id: str):
+        army_eq_model = self.get_army_equipment_model_by_id(db, id)
+        if not army_eq_model:
+            raise NotFoundException("Army equipment model not found")
+        db.delete(army_eq_model)
+        db.flush()
+        return True
+    
+    def get_all_other_equipment_models(self, db: Session):
+        return db.query(TypeOtherEquipmentModel).all()
+    
+    def get_other_equipment_model_by_id(self, db: Session, id: str):
+        return (db.query(TypeOtherEquipmentModel)
+                .filter(TypeOtherEquipmentModel.id==id)
+                .first())
+    
+    def update_other_model(self, db: Session, id: str, body: TypeOtherEquipmentModelCreate):
+        other_eq_model = self.get_other_equipment_model_by_id(db, id)
+        if not other_eq_model:
+            raise NotFoundException("Other equipment model not found")
+        for key, value in body.dict(exclude_none=True).items():
+            setattr(other_eq_model, key, value)
+        setattr(other_eq_model, 'updated_at', datetime.now())
+        db.add(other_eq_model)
+        db.flush()
+        return other_eq_model
+    
+    def delete_other_model(self, db: Session, id: str):
+        other_eq_model = self.get_other_equipment_model_by_id(db, id)
+        if not other_eq_model:
+            raise NotFoundException("Other equipment model not found")
+        db.delete(other_eq_model)
+        db.flush()
+        return True
 
     def get_clothing_equipment_model_by_id(self, db: Session, id: str):
         return (db.query(TypeClothingEquipmentModel)
@@ -237,6 +319,7 @@ class EquipmentService(
             body.cloth_eq_models_id = None
         for key, value in body.dict(exclude_none=True).items():
             setattr(equipment, key, value)
+        setattr(equipment, 'updated_at', datetime.now())
         db.add(equipment)
         db.flush()
         return equipment
@@ -288,7 +371,62 @@ class EquipmentService(
                 ClothingEquipment.user_id == user_id
             )
         )
+    
+    def update_type_clothing(self, db: Session, id: str, body: TypeClothingEquipmentUpdate):
+        type_cloth = self.get_clothing_equipment_type_by_id(db, id)
+        if not type_cloth:
+            raise NotFoundException("TypeClothingEquipment not found")
+        for key, value in body.dict(exclude_none=True).items():
+            setattr(type_cloth, key, value)
+        setattr(type_cloth, 'updated_at', datetime.now())
+        db.add(type_cloth)
+        db.flush()
+        return type_cloth
 
-
+    def delete_type_clothing(self, db: Session, id: str):
+        type_cloth = self.get_clothing_equipment_type_by_id(db, id)
+        if not type_cloth:
+            raise NotFoundException("TypeClothingEquipment not found")
+        db.delete(type_cloth)
+        db.flush()
+        return True
+    
+    def update_type_army(self, db: Session, id: str, body: TypeArmyEquipmentCreate):
+        type_army = self.get_army_equipment_type_by_id(db, id)
+        if not type_army:
+            raise NotFoundException("TypeArmyEquipment not found")
+        for key, value in body.dict(exclude_none=True).items():
+            setattr(type_army, key, value)
+        setattr(type_army, 'updated_at', datetime.now())
+        db.add(type_army)
+        db.flush()
+        return type_army
+    
+    def delete_type_army(self, db: Session, id: str):
+        type_army = self.get_army_equipment_type_by_id(db, id)
+        if not type_army:
+            raise NotFoundException("TypeArmyEquipment not found")
+        db.delete(type_army)
+        db.flush()
+        return True
+    
+    def update_other_type(self, db: Session, id: str, body: TypeOtherEquipmentCreate):
+        type_other = self.get_other_equipment_type_by_id(db, id)
+        if not type_other:
+            raise NotFoundException("TypeOtherEquipment not found")
+        for key, value in body.dict(exclude_none=True).items():
+            setattr(type_other, key, value)
+        setattr(type_other, 'updated_at', datetime.now())
+        db.add(type_other)
+        db.flush()
+        return type_other
+    
+    def delete_other_type(self, db: Session, id: str):
+        type_other = self.get_other_equipment_type_by_id(db, id)
+        if not type_other:
+            raise NotFoundException("TypeOtherEquipment not found")
+        db.delete(type_other)
+        db.flush()
+        return True
 
 equipment_service = EquipmentService(Equipment)

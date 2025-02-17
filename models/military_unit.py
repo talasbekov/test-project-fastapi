@@ -7,4 +7,4 @@ class MilitaryUnit(NamedModel):
 
     __tablename__ = "hr_erp_military_units"
 
-    user_oaths = relationship("UserOath", back_populates="military_unit")
+    # user_oaths = relationship("UserOath", back_populates="military_unit")

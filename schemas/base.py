@@ -2,7 +2,7 @@ import uuid
 import datetime
 from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
 
 
 class Model(BaseModel):
@@ -29,7 +29,7 @@ class TextModel(Model):
 
 
 class ReadModel(Model):
-    id: Optional[str]
+    id: str
     created_at: Optional[datetime.datetime]
     updated_at: Optional[datetime.datetime]
 

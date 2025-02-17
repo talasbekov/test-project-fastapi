@@ -91,9 +91,11 @@ async def update(*,
         - **name**: required.
     """
     Authorize.jwt_required()
+    education = education_service.get_by_id(db, str(id))
+    body.profile_id = education.educational_profile_id
     return education_service.update(
         db,
-        db_obj=education_service.get_by_id(db, str(id)),
+        db_obj=education,
         obj_in=body)
 
 

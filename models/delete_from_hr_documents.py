@@ -5,7 +5,8 @@ from hr_document import HrDocument
 # from ..core.config import configs
 
 Base = declarative_base()
-SQLALCHEMY_DATABASE_URL2 = f"oracle://system:Oracle123@172.20.0.4:1521/MORAL"
+SQLALCHEMY_DATABASE_URL2 = f"oracle+cx_oracle://hr:hr2025@192.168.1.86:1521/hrfree"
+# SQLALCHEMY_DATABASE_URL2 = f"oracle://system:Oracle123@172.20.0.4:1521/MORAL"
 # SQLALCHEMY_DATABASE_URL2 = f"oracle://system:Oracle123@192.168.0.61:1521/MORAL"
 # Create engine
 

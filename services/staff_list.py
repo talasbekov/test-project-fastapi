@@ -83,14 +83,20 @@ class StaffListService(
         staff_divisions = staff_division_service.get_all_except_special_raw(
             db, 0, 100)
         
-        task.update_state(state=30)
+        # task.update_state(state=30)
         disposition_division = staff_division_service.get_by_name(
             db, StaffDivisionEnum.DISPOSITION.value)
         staff_divisions.append(disposition_division)
-
+        new_state = 10
+        loader_iter = 80/len(staff_divisions)
         for staff_division in staff_divisions:
+            i = 1
+
+            task.update_state(state=(20 + (i/len(staff_divisions) * 100)))
             self._create_archive_staff_division(
                 db, staff_division, staff_list.id, None, current_user_role_id)
+            new_state+=loader_iter
+            task.update_state(state=new_state)
 
         task.update_state(state=90)
         staff_list.status = StaffListStatusEnum.IN_PROGRESS.value
@@ -104,14 +110,18 @@ class StaffListService(
             name=obj_in.name,
             user_id=user_id
         )
+        # print(1)
         staff_list = super().create(db, create_staff_list)
+        # print(2)
         for archive_staff_division in db.query(ArchiveStaffDivision).filter(
                 ArchiveStaffDivision.staff_list_id == staff_list_id,
                 ArchiveStaffDivision.parent_group_id == None):
             staff_division = staff_division_service.get_by_id(
                 db, archive_staff_division.origin_id)
+            # print(2.5)
             self._create_archive_staff_division(
                 db, staff_division, staff_list.id, None, current_user_role_id)
+        # print(3)
         staff_list.is_signed = False
         db.add(staff_list)
         db.flush()
@@ -142,13 +152,17 @@ class StaffListService(
             archive_staff_division_service.get_departments(
                 db, staff_list_id, 0, 100)
         )
-        print(staff_divisions)
+        # print(staff_divisions)
         new_staff_divisions = []
-        task.update_state(state=30)
+        # task.update_state(state=30)
+        new_state = 10
+        loader_iter = 80/len(staff_divisions)
         for staff_division in staff_divisions:
             new_staff_division = self._create_staff_division(
                 db, staff_division, None, current_user_role_id)
             new_staff_divisions.append(new_staff_division)
+            new_state+=loader_iter
+            task.update_state(state=new_state)
         task.update_state(state=90)
         staff_list.document_signed_by = signed_by
         staff_list.document_signed_at = document_creation_date
@@ -260,7 +274,7 @@ class StaffListService(
                                        staff_list_id: str,
                                        parent_group_id: Optional[str],
                                        current_user_role_id: str):
-
+        # print(11)
         archive_division = (archive_staff_division_service
                             .create_based_on_existing_staff_division(
                                 db,
@@ -268,7 +282,7 @@ class StaffListService(
                                 staff_list_id,
                                 parent_group_id)
                             )
-
+        # print(12)
         if staff_division.children:
             for child in staff_division.children:
                 child_archive_staff_division = self._create_archive_staff_division(db,
@@ -277,16 +291,17 @@ class StaffListService(
                                                                                    archive_division.id,
                                                                                    current_user_role_id)
                 archive_division.children.append(child_archive_staff_division)
+        # print(13)
         if staff_division.name == StaffDivisionEnum.DISPOSITION.value:
             db.add(archive_division)
             db.flush()
             return archive_division
-
+        # print(14)
         is_leader_needed = False
         leader_id = None
         if staff_division.leader_id is not None:
             is_leader_needed = True
-
+        # print(15)
         if staff_division.staff_units:
             for staff_unit in staff_division.staff_units:
                 staff_unit: StaffUnit
@@ -298,7 +313,8 @@ class StaffListService(
                 staff_unit_position = staff_unit.position_id
                 staff_unit_actual_position = staff_unit.actual_position_id
                 staff_unit_curator_of_id = staff_unit.curator_of_id
-
+                staff_unit_requirements = staff_unit.requirements
+                # print(16)
                 archive_staff_unit = (archive_staff_unit_service
                                       .create_based_on_existing_staff_unit(
                                           db,
@@ -311,11 +327,11 @@ class StaffListService(
                                           staff_unit_user_replacing,
                                           archive_division)
                                       )
-
+                # print(17)
                 if is_leader_needed:
                     if staff_division.leader_id == staff_unit.id:
                         leader_id = archive_staff_unit.id
-
+                # print(18)
                 if staff_unit.staff_functions:
                     for staff_function in staff_unit.staff_functions:
                         service = options.get(staff_function.discriminator)
@@ -340,10 +356,11 @@ class StaffListService(
                         archive_staff_unit.staff_functions.append(
                             archive_staff_function)
                 db.add(archive_staff_unit)
+                # print(19)
                 db.flush()
                 hr_vacancy = hr_vacancy_service.get_by_staff_unit(
                     db, staff_unit.id)
-
+                # print(20)
                 if hr_vacancy:
                     body = HrVacancyUpdate()
                     body.archive_staff_unit_id = archive_staff_unit.id
@@ -354,7 +371,7 @@ class StaffListService(
                     # hr_vacancy_service.update(db, hr_vacancy, body,
                     #                           current_user_role_id)
                 archive_division.staff_units.append(archive_staff_unit)
-
+        # print(21)
         if is_leader_needed:
             archive_division.leader_id = leader_id
 

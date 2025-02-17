@@ -17,7 +17,7 @@ from .hr_document import HrDocument, HrDocumentStatusEnum
 from .hr_document_users import HrDocumentUsers
 from .hr_document_info import HrDocumentInfo
 from .hr_document_step import HrDocumentStep
-from .hr_document_template import HrDocumentTemplate, SubjectType, LanguageEnum, HrDocumentTemplateEnum
+from .hr_document_template import HrDocumentTemplate, SubjectType, LanguageEnum, HrDocumentTemplateEnum, ActionType
 from .rank import Rank
 from .staff_division_type import StaffDivisionType
 from .staff_division import StaffDivision, StaffDivisionEnum
@@ -62,5 +62,6 @@ from .survey import *
 from .bsp import *
 from .hexagon import *
 from .user_logging_actitivty import UserLoggingActivity
-from .permission import Permission, PermissionType, PermissionEnum
+from .permission import Permission, PermissionType, PermissionEnum, PermissionTypeEnum
+from .staff_unit_division import StaffUnitDivisions
 # import .delete_from_hr_documents

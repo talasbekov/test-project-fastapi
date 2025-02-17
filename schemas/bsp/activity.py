@@ -3,14 +3,15 @@ from typing import Optional, List
 
 from pydantic import validator
 
-from schemas import NamedModel
+from schemas import Model
 
 
-class ActivityBase(NamedModel):
+class ActivityBase(Model):
     parent_group_id: Optional[str]
     instructions: Optional[str]
     is_time_required: bool = False
     normative_img: Optional[str]
+    activity_type_id: Optional[str]
 
     class Config:
         orm_mode = True

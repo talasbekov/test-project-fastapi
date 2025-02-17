@@ -1,6 +1,6 @@
 import datetime
 
-from typing import List, Optional, Any
+from typing import List, Optional, Any, Union
 
 from pydantic import BaseModel, EmailStr, Field, validator
 
@@ -61,6 +61,16 @@ class StaffDivisionUpdateParentGroup(BaseModel):
     parent_group_id: str
 
 
+class UserShortRead(ReadModel):
+    icon: Optional[str] = Field(None, nullable=True)
+    first_name: Optional[str]
+    last_name: Optional[str]
+    father_name: Optional[str]
+    id_number: Optional[str]
+    personal_id: Optional[str]
+
+    class Config:
+        orm_mode = True
 class UserRead(ReadModel):
     badges: Optional[List[BadgeRead]]
     icon: Optional[str] = Field(None, nullable=True)
@@ -168,6 +178,17 @@ class UserReplacingRead(UserRead):
         arbitrary_types_allowed = True
 
 
+class StaffUnitShortRead(ReadModel):
+    staff_division_id: Optional[str]
+    position_id: Optional[str]
+    position: Optional[PositionRead]
+    actual_position_id: Optional[str]
+    actual_position: Optional[PositionRead]
+    users: Optional[List[Optional[UserShortRead]]]
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
 class StaffUnitRead(ReadModel):
     staff_division_id: Optional[str]
     position_id: Optional[str]
@@ -224,6 +245,7 @@ class StaffUnitMatreshkaOptionRead(ReadModel):
     position: Optional[NamedModel]
     actual_position_id: Optional[str]
     actual_position: Optional[PositionRead]
+    requirements: Optional[List[dict]]
     users: Optional[List[Optional[MatreshkaUserRead]]]
 
     class Config:
@@ -396,7 +418,7 @@ class StaffDivisionReadSchedule(StaffDivisionBaseSchedule):
 class StaffDivisionReadScheduleShort(StaffDivisionBaseSchedule):
     id: Optional[str]
     children: Optional[List['StaffDivisionChildReadScheduleShort']]
-    # staff_units: Optional[List['StaffUnitReadSchedule']]
+    staff_units: Optional[List['StaffUnitReadSchedule']]
     # type: Optional[StaffDivisionTypeRead]
     # count_vacancies: Optional[int]
 
@@ -512,6 +534,13 @@ class ShortStaffUnitDivisionRead(ReadNamedModel):
         orm_mode = True
 
 
+class SuperShortStaffUnitDivisionRead(ReadNamedModel):
+    parent_group_id: Optional[str] = Field(None, nullable=True)
+
+    class Config:
+        orm_mode = True
+
+
 class StaffDivisionStepChildRead(StaffDivisionBase):
     id: Optional[str]
     type: Optional[StaffDivisionTypeRead]
@@ -554,6 +583,21 @@ class StaffDivisionMatreshkaStepRead(ReadNamedModel):
     name: str
     nameKZ: Optional[str] = Field(None, nullable=True)
     is_parent: Optional[bool]
+
+    @validator('children')
+    def validate_children(cls, children):
+        if children == []:
+            return None
+        else:
+            return children
+
+    class Config:
+        orm_mode = True
+
+class StaffDivisionTreeReadShort(ReadNamedModel):
+    id: Optional[str]
+    staff_units: Optional[List['StaffUnitShortRead']]
+    children: Optional[List['StaffDivisionTreeReadShort']]
 
     @validator('children')
     def validate_children(cls, children):

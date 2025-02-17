@@ -35,6 +35,7 @@ class UserLiberationRead(UserLiberationBase):
     start_date: Optional[datetime.datetime]
     end_date: Optional[datetime.datetime]
     profile_id: Optional[str]
+    medical_profile_id: Optional[str]
 
     class Config:
         orm_mode = True

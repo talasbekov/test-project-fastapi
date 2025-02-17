@@ -21,7 +21,7 @@ class EducationalProfileService(
     def get_by_profile_id(self, db: Session, profile_id: str):
         profile = db.query(
             self.model).filter(
-            self.model.profile_id == profile_id)
+            self.model.profile_id == profile_id).one()
         if profile is None:
             raise NotFoundException(
                 detail=('EducationalProfile with profile_id:'

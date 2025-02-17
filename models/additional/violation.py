@@ -10,8 +10,6 @@ class Violation(Model):
 
     __tablename__ = "hr_erp_violations"
 
-    name = Column(String(255), nullable=False)
-    nameKZ = Column('namekz', String, nullable=True)
     date = Column(
         'violation_date',
         TIMESTAMP(
@@ -24,12 +22,16 @@ class Violation(Model):
     article_numberKZ = Column('article_numberkz', String, nullable=True)
     consequence = Column(String(255), nullable=False)
     consequenceKZ = Column('consequencekz', String, nullable=True)
-    document_link = Column(String(255), nullable=False)
+    document_link = Column(String(255), nullable=True)
 
     profile_id = Column(String(),
                         ForeignKey("hr_erp_additional_profiles.id"),
                         nullable=True)
-
+    violation_type_id = Column(String(),
+                               ForeignKey("hr_erp_violation_types.id"),
+                               nullable=True)
+    
+    violation_type = relationship("ViolationType", back_populates="violations")
     profile = relationship("AdditionalProfile", back_populates="violations")
 
     family_violation = relationship(

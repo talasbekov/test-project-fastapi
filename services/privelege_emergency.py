@@ -44,6 +44,7 @@ class PrivelegeEmergencyService(
             if field in update_data:
                 setattr(db_obj, field, update_data[field])
         db_obj.form = FormEnum[obj_in.form]
+        setattr(db_obj, 'updated_at', datetime.now())
         db.add(db_obj)
         db.flush()
         return db_obj

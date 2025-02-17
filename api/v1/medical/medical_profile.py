@@ -12,7 +12,8 @@ from schemas.medical import (
     MedicalProfileRead,
     MedicalProfileUpdate
 )
-from services import profile_service
+from models import PermissionTypeEnum
+from services import profile_service, dispensary_registration_service, user_liberations_service, hospital_data_service
 from services.medical import medical_profile_service
 
 router = APIRouter(
@@ -138,11 +139,33 @@ async def get_profile_by_id(*,
                             Authorize: AuthJWT = Depends()
                             ):
     Authorize.jwt_required()
-    medical_profile = (profile_service.get_by_user_id(
-        db, str(id)).medical_profile)
+    permissions = Authorize.get_raw_jwt()['permissions']
+    profile = profile_service.get_by_user_id(
+        db, str(id))
+    
+    medical_profile = profile.medical_profile
+    medical_profile_id = medical_profile_service.get_by_profile_id(db, profile.id).id
+
+    dispensary_registrations = dispensary_registration_service.get_by_profile_id(db, medical_profile_id)
+    user_liberations = user_liberations_service.get_by_profile_id(db, medical_profile_id)
+    hospital_datas = hospital_data_service.get_by_profile_id(db, medical_profile_id)
+    # print('HHHHEEEERREEE')
+    # print(medical_profile_id, hospital_datas.__dict__)
+
+    medical_profile.dispensary_registrations = dispensary_registrations
+    medical_profile.hospital_datas = hospital_datas
+    medical_profile.user_liberations = user_liberations
+
     medical_profile = MedicalProfileRead.from_orm(medical_profile).dict()
     if medical_profile['user_liberations'] is not None:
         for user_liberation in medical_profile['user_liberations']:
             user_liberation['liberation_ids'] = medical_profile_service.get_liberation_ids(
                 db, user_liberation)
+    if id != Authorize.get_jwt_subject():
+        if int(PermissionTypeEnum.VIEW_DISP_UCHET.value) not in permissions:
+            medical_profile['dispensary_registrations'] = "Permission Denied"
+        if int(PermissionTypeEnum.VIEW_LEAVES.value) not in permissions:
+            medical_profile['user_liberations'] = "Permission Denied"
+        if int(PermissionTypeEnum.VIEW_MEDICAL_LISTS.value) not in permissions:
+            medical_profile['hospital_datas'] = "Permission Denied"
     return medical_profile

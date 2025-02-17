@@ -22,9 +22,9 @@ class PositionNameEnum(str, EnumBase):
     )
     POLYGRAPH_EXAMINER = 'Полиграфолог'
     INSTRUCTOR = 'Инструктор'
-    DEAD = "Умер"
-    RETIRED = "В отставке"
-    IN_RESERVE = "В запасе"
+    DEAD = "Исключен из списков в связи со смертью"
+    RETIRED = "Уволенный сотрудник"
+    IN_RESERVE = "В распоряжении"
     REMOVED_FROM_LIST = "Исключен из списков личного состава"
     SECONDMENT_OTHER = "Откомандирован в другой гос. орган"
     PERISHED = "Погиб"

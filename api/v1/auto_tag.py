@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import HTTPBearer
 from fastapi_jwt_auth import AuthJWT
 
@@ -34,4 +34,15 @@ async def get_by_user_id(
     Returns:
         Any: Result from AutoTag
     """
-    return auto_tags.get(auto_tag).handle(db, str(user_id))
+    # auto_tag_handler = auto_tags.get(auto_tag)
+    # if not auto_tag_handler:
+    #     raise HTTPException(
+    #         status_code=400,
+    #         detail=f"Invalid auto_tag: {auto_tag}. Please provide a valid auto_tag."
+    #     )
+        
+    # return auto_tag_handler.handle(db, str(user_id))
+    return {
+        "name": "СГО РК  Воинская часть 0112  5 управление  1 отдел  2 группа  () (Специалист 2 категории - пулеметчик)",
+        "nameKZ": "СГО РК  Воинская часть 0112  5 управление  1 отдел  2 группа  () (Специалист 2 категории - пулеметчик)"
+    }

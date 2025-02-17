@@ -31,7 +31,7 @@ class BadgeTypePaginationRead(Model):
 
 class BadgeBase(Model):
     user_id: str
-    type_id: str
+    type_id: Optional[str]
 
 
 class BadgeCreate(BadgeBase):

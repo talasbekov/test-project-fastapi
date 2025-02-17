@@ -1,20 +1,18 @@
-version: '3'
-
+version: '3.8'
 services:
-  sgo-erp-oracle:
+  sgo-erp-back:
     platform: linux/amd64
     command: bash -c "uvicorn main:app --host 0.0.0.0 --port 8003 --log-config log.ini --workers ${NUMBER_OF_WORKERS}"
     build: .
-    container_name: sgo-erp-oracle
+    container_name: sgo-erp-back
     restart: always
     ports:
       - "8003:8003"
-    volumes:
-      - .:/app
-    network_mode: "oracle"
+    environment:
+      NUMBER_OF_WORKERS: 2
+      DATABASE_URL: oracle+cx_oracle://hr:hr2025@192.168.1.86:1521/hrfree  
     deploy:
       resources:
         limits:
           memory: 4g
-   
 

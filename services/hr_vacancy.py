@@ -3,7 +3,7 @@ import json
 from typing import List
 from sqlalchemy import func, literal_column, select
 from sqlalchemy.orm import Session
-
+from datetime import datetime
 from exceptions.client import BadRequestException, ForbiddenException, NotFoundException
 from models import (HrVacancy, StaffUnit, StaffDivision,
                     PositionNameEnum, HrVacancyCandidate)
@@ -226,7 +226,7 @@ class HrVacancyService(
         if body.archive_staff_unit_id is not None:
             hr_vacancy.archive_staff_unit_id = archive_staff_unit_service.get_by_id(
                 db, body.archive_staff_unit_id).id
-
+        setattr(hr_vacancy, 'updated_at', datetime.now())
         db.add(hr_vacancy)
         db.flush()
 

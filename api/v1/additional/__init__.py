@@ -12,6 +12,7 @@ from .service_housing import router as service_housing_router
 from .vehicle import router as vehicle_router
 from .country import router as country_router
 from .vehicle_type import router as vehicle_type_router
+from .violation_type import router as violation_type_router
 
 additional_router = APIRouter(prefix="/additional")
 
@@ -27,3 +28,4 @@ additional_router.include_router(service_housing_router)
 additional_router.include_router(vehicle_router)
 additional_router.include_router(country_router)
 additional_router.include_router(vehicle_type_router)
+additional_router.include_router(violation_type_router)

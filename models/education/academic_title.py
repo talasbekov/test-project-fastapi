@@ -9,8 +9,9 @@ class AcademicTitle(Model):
 
     __tablename__ = "hr_erp_academic_titles"
 
-    profile_id = Column(String(), ForeignKey(
+    educational_profile_id = Column(String(), ForeignKey(
         "hr_erp_educational_profiles.id"), nullable=True)
+    profile_id = Column(String(), nullable=True)
     profile = relationship(
         "EducationalProfile",
         back_populates="academic_title")

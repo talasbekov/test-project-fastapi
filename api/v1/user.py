@@ -1,7 +1,7 @@
 import uuid
 from typing import List
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.security import HTTPBearer
 from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
@@ -12,7 +12,10 @@ from schemas import (UserRead,
                      UserShortRead,
                      TableUserRead,
                      UserShortReadStatusPagination,
-                     UserShortReadFullNames)
+                     UserShortReadFullNames,
+                     TableUserReadActive,
+                     DocumentReadForUser)
+from models import PermissionTypeEnum
 from services import user_service
 
 router = APIRouter(
@@ -189,12 +192,77 @@ async def get_all_active(
     """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
-    role = Authorize.get_raw_jwt()["role"]
-    permissions = Authorize.get_raw_jwt()["permissions"]
     users, total = user_service.get_all_active(
-        db, filter.lstrip().rstrip(), skip, limit, user_id, role, list(permissions))
+        db, filter.lstrip().rstrip(), skip, limit, user_id)
+    for user in users:
+        print(f"User ID: {user.id}, Email: {user.email}, IIN: {user.iin}")
+    return TableUserReadActive(total=total, users=users)
+
+
+@router.get("/active_old",
+            dependencies=[Depends(HTTPBearer())],
+            response_model=TableUserRead,
+            summary="Get all Users")
+async def get_all_active(
+    *,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends(),
+    filter: str = "",
+    skip: int = 0,
+    limit: int = 10
+):
+    """
+     Get all Users
+    - **filter**: str - The value which returns filtered results.
+    This parameter is optional and defaults to None
+    - **skip**: int - The number of users to skip before returning the results.
+    This parameter is optional and defaults to 0.
+    - **limit**: int - The maximum number of users to return in response.
+    This parameter is optional and defaults to 10.
+    """
+    Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
+    users, total = user_service.get_all_active(
+        db, filter.lstrip().rstrip(), skip, limit, user_id)
     return TableUserRead(total=total, users=users)
 
+
+@router.get("/restricted/active",
+            dependencies=[Depends(HTTPBearer())],
+            response_model=TableUserRead,
+            summary="Get all Users")
+async def get_all_active_with_permission(
+    *,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends(),
+    filter: str = "",
+    skip: int = 0,
+    limit: int = 10
+):
+    """
+     Get all Users
+    - **filter**: str - The value which returns filtered results.
+    This parameter is optional and defaults to None
+    - **skip**: int - The number of users to skip before returning the results.
+    This parameter is optional and defaults to 0.
+    - **limit**: int - The maximum number of users to return in response.
+    This parameter is optional and defaults to 10.
+    """
+    Authorize.jwt_required()
+    decoded_token = Authorize.get_raw_jwt()
+    user_id = Authorize.get_jwt_subject()
+    user = user_service.get_by_id(db, user_id)
+    permissions = decoded_token.get("permissions")
+    if int(PermissionTypeEnum.VIEW_ALL_EMPLOYEES.value) not in permissions and \
+            int(PermissionTypeEnum.VIEW_ALL_EMPLOYEES_BY_DEPARTMENT.value) not in permissions:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail = "You are not allowed")
+    if int(PermissionTypeEnum.VIEW_ALL_EMPLOYEES_BY_DEPARTMENT.value) in permissions and \
+            int(PermissionTypeEnum.VIEW_ALL_EMPLOYEES.value) not in permissions:
+        users = user_service.get_users_by_staff_division(db, user.staff_unit.staff_division_id)
+        return TableUserRead(total=len(users), users=users)
+    users, total = user_service.get_all_active(
+        db, filter.lstrip().rstrip(), skip, limit, user_id)
+    return TableUserRead(total=total, users=users)
 
 @router.get(
     "/jurisdiction",
@@ -366,7 +434,9 @@ async def get_profile(
     return user_service.get_by_id(db, str(id))
 
 
-@router.get("/templates/{user_id}/")
+@router.get("/templates/{user_id}/",
+            response_model=List[DocumentReadForUser]
+            )
 async def get_templates(
     *,
     db: Session = Depends(get_db),
@@ -389,6 +459,16 @@ async def get_short_user(
     Authorize.jwt_required()
     return user_service.get_by_id(db, str(id))
 
+@router.put("/add-rank/", response_model=UserShortRead)
+def add_rank(
+    *,
+    db: Session = Depends(get_db),
+    id: str,
+    rank_id: str,
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    return user_service.update_user_rank(db, id, rank_id)
 
 @router.post("/iins/", response_model=dict)
 def get_short_user(
@@ -410,3 +490,18 @@ async def get_user_by_iin(
 ):
     Authorize.jwt_required()
     return user_service.get_user_by_iin(db, iin)
+
+@router.get("/get_eligible_for_vacancy/{staff_unit_id}/")
+def get_eligible_for_vacancy(
+    *,
+    db: Session = Depends(get_db),
+    Authorize: AuthJWT = Depends(),
+    staff_unit_id: str,
+    filter: str = "",
+    skip: int = 0,
+    limit: int = 10
+):
+    Authorize.jwt_required()
+    user_id = Authorize.get_jwt_subject()
+    return user_service.get_users_for_vacancy_fill(db, staff_unit_id, filter.lstrip().rstrip(), skip, limit, user_id)
+    

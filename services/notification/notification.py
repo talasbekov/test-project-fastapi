@@ -43,6 +43,7 @@ class NotificationService(
     def update_is_seen(self, db: Session, notification_id: str):
         notification = self.get_by_id(db, notification_id)
         notification.is_seen = True
+        notification.updated_at = datetime.now()
         db.add(notification)
         db.flush()
         return notification

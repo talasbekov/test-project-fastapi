@@ -15,13 +15,17 @@ class Family(Model):
     IIN = Column(String)    
     birthday = Column(TIMESTAMP(timezone=True), nullable=False)
     death_day = Column(TIMESTAMP(timezone=True))
-    birthplace = Column(String)
     address = Column(String)
     workplace = Column(String)
+    document_link = Column(String, nullable=True)
+    profile_id = Column(String, nullable=True)
+    birthplace_id = Column(String(), ForeignKey("hr_erp_birthplaces.id"))
+    birthplace_text = Column(String, nullable=True)
 
     relation_id = Column(String(), ForeignKey("hr_erp_family_relations.id"))
-    profile_id = Column(String(), ForeignKey("hr_erp_family_profiles.id"))
+    families_profile_id = Column(String(), ForeignKey("hr_erp_family_profiles.id"))
 
+    birthplace = relationship("Birthplace", back_populates="family")
     profile = relationship("FamilyProfile", back_populates="family")
     relation = relationship("FamilyRelation")
     violation = relationship(

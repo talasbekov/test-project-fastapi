@@ -8,6 +8,7 @@ from models import SpecialCheck
 from schemas import SpecialCheckCreate, SpecialCheckUpdate
 from services import profile_service
 from services.base import ServiceBase
+from utils.date import parse_datetime
 
 
 class SpecialCheckService(
@@ -22,8 +23,7 @@ class SpecialCheckService(
 
     def create(self, db: Session, obj_in: SpecialCheckCreate):
         obj_in_data = jsonable_encoder(obj_in)
-        obj_in_data['date_of_issue'] = datetime.strptime(obj_in_data['date_of_issue'],
-                                                '%Y-%m-%dT%H:%M:%S.%f%z')
+        obj_in_data['date_of_issue'] = parse_datetime(obj_in_data['date_of_issue'])
         db_obj = self.model(**obj_in_data)
         db.add(db_obj)
         db.flush()

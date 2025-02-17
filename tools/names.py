@@ -7,7 +7,7 @@ random_dates = []
 
 for i in range(10000):
     random_dates.append(datetime.fromtimestamp(random.randint(0, 2**32)).strftime('%Y-%m-%d'))
- 
+
 # Base lists of first names, last names, and father names in Russian and Kazakh languages.
 # These lists are simplified and may not cover the full range of names found in Kazakhstan.
 russian_first_names = ['Алексей', 'Дмитрий', 'Максим', 'Иван', 'Кирилл', 'Сергей', 'Владимир', 'Николай', 'Егор', 'Артем']

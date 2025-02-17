@@ -1,5 +1,5 @@
 import uuid
-from typing import Optional, List
+from typing import Optional, List, Union
 
 from pydantic import BaseModel
 
@@ -27,5 +27,5 @@ class FamilyProfileRead(FamilyProfileBase):
 
     id: Optional[str]
     profile_id: Optional[str]
-
-    family: Optional[List[FamilyRead]]
+    
+    family: Union[Optional[List[FamilyRead]], str]

@@ -8,6 +8,7 @@ from services.base import ServiceBase
 from typing import Union, Dict, Any
 from fastapi.encoders import jsonable_encoder
 from datetime import datetime
+from utils.date import parse_datetime
 
 
 class PsychologicalService(
@@ -25,7 +26,7 @@ class PsychologicalService(
     def create(self, db: Session,
             obj_in: Union[PsychologicalCheckCreate, Dict[str, Any]]) -> PsychologicalCheck:
         obj_in_data = jsonable_encoder(obj_in)
-        obj_in_data['date_of_issue'] = datetime.strptime(obj_in_data['date_of_issue'], '%Y-%m-%dT%H:%M:%S.%f%z')
+        obj_in_data['date_of_issue'] = parse_datetime(obj_in_data['date_of_issue'])
         db_obj = self.model(**obj_in_data) 
         db.add(db_obj)
         db.flush()

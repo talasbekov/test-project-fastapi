@@ -16,20 +16,22 @@ from .equipment import (EquipmentCreate,
                         TypeClothingEquipmentModelCreate,
                         TypeOtherEquipmentCreate,
                         TypeOtherEquipmentModelCreate,
+                        TypeClothingEquipmentUpdate,
+                        TypeClothingEquipmentModelSchema
                         )
 
 from .event import EventCreate, EventRead, EventUpdate
 from .hr_document_template import (HrDocumentTemplateCreate,
                                    HrDocumentTemplateRead,
                                    HrDocumentTemplateUpdate,
-                                   SuggestCorrections,
+                                   SuggestCorrections, HrDocumentTemplateUserRead,
                                    HrDocumentTemplatePaginationRead)
 from .permission import (PermissionCreate, PermissionRead, PermissionUpdate,
                          UserPermission, PermissionTypeRead, PermissionType,
                          PermissionPaginationRead)
 
 from .rank import RankCreate, RankRead, RankUpdate, RankPaginationRead
-from .position import PositionCreate, PositionUpdate, PositionRead, PositionPaginationRead, PositionReadShort, PositionTypeRead, PositionTypeUpdate
+from .position import PositionCreate, PositionUpdate, PositionRead, PositionPaginationRead, PositionReadShort, PositionTypeRead
 from .jurisdiction import JurisdictionRead, JurisdictionCreate, JurisdictionUpdate
 from .staff_function_type import (DocumentStaffFunctionTypeCreate, DocumentStaffFunctionTypeRead,
                                   DocumentStaffFunctionTypeUpdate, ServiceStaffFunctionTypeCreate,
@@ -52,10 +54,11 @@ from .staff_division import (StaffDivisionCreate, StaffDivisionRead, StaffDivisi
                              StaffDivisionVacancyRead, StaffUnitMatreshkaOptionRead,
                              StaffUnitMatreshkaOptionReadPagination,
                              ShortStaffUnitDivisionRead, StaffDivisionOptionChildRead,
-                             StaffDivisionMatreshkaStepRead, StaffDivisionNamedModel, StaffDivisionTreeRead, StaffDivisionChildReadScheduleShort, StaffDivisionReadScheduleShort)
+                             StaffDivisionMatreshkaStepRead, StaffDivisionNamedModel, StaffDivisionTreeRead, StaffDivisionChildReadScheduleShort, StaffDivisionReadScheduleShort, 
+                             SuperShortStaffUnitDivisionRead, StaffDivisionTreeReadShort)
 from .staff_unit import (StaffUnitCreate, StaffUnitRead, StaffUnitUpdate,
                          UserStaffUnitRead, StaffUnitCreateWithPosition,
-                         ShortUserStaffUnitRead, StaffUnitFromArchiveCreate, StaffUnitUpdateOverwrite)
+                         ShortUserStaffUnitRead, StaffUnitFromArchiveCreate, StaffUnitUpdateOverwrite, StaffUnitReadActive)
 from .state_body import StateBodyCreate, StateBodyRead, StateBodyUpdate
 from .hr_document_step import (HrDocumentStepCreate, HrDocumentStepRead,
                                HrDocumentStepUpdate)
@@ -65,11 +68,11 @@ from .user import (UserCreate, UserRead, UserUpdate,
                    UserShortReadStatus, TableUserRead,
                    UserShortReadStatusPagination,
                    UserShortReadAgeCategory,
-                   UserShortReadPagination, UserShortReadFullNames)
+                   UserShortReadPagination, UserShortReadFullNames, TableUserReadActive, UserReadDocumentShort)
 from .profile import ProfileCreate, ProfileUpdate, ProfileRead
 from .hr_document_status import HrDocumentStatusRead, HrDocumentStatusCreate, HrDocumentStatusUpdate
 from .hr_document import (HrDocumentCreate, HrDocumentInit, HrDocumentRead,
-                          HrDocumentSign, HrDocumentUpdate, DraftHrDocumentCreate,
+                          HrDocumentSign, HrDocumentUpdate, DraftHrDocumentCreate, DocumentReadForUser,
                           DraftHrDocumentInit, HrDocumentInitEcp, HrDocumentSignEcp, HrDocumentSignEcpWithIds,
                           QrRead)
 from .hr_document_info import (HrDocumentInfoCreate, HrDocumentInfoRead,

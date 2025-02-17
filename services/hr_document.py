@@ -46,6 +46,7 @@ from models import (
     LanguageEnum,
     DocumentFunctionTypeEnum,
     ArchiveStaffUnit,
+    ActionType
 )
 from schemas import (
     HrDocumentCreate,
@@ -329,7 +330,7 @@ class HrDocumentService(
             self, db: Session, user_id: str, skip: int, limit: int
     ):
         user = user_service.get_by_id(db, user_id)
-        print(user_id)
+        # print(user_id)
         documents = (
             db.query(self.model)
             .join(self.model.hr_document_infos)
@@ -396,6 +397,9 @@ class HrDocumentService(
 
         status = hr_document_status_service.get_by_name(
             db, HrDocumentStatusEnum.DRAFT.value)
+        
+        due_date_new = body.due_date.replace(tzinfo=None)   
+        due_date_new_str = due_date_new.strftime('%Y-%m-%d %H:%M:%S')
 
         document: HrDocument = super().create(
             db,
@@ -557,7 +561,7 @@ class HrDocumentService(
 
         document_info_initiator = self._create_hr_document_info_for_initiator(
             db, document, current_user, step)
-        print(2)
+        # print(2)
         if body.user_ids is not None:
             users_document = [
                 user_service.get_by_id(db, user_id) for user_id in body.user_ids
@@ -624,7 +628,7 @@ class HrDocumentService(
 
         db.add(document)
         db.commit()
-        print(3)
+        # print(3)
         if notifier_id:
             message = f"{template.name} \n"
             for user in users_document:
@@ -655,7 +659,7 @@ class HrDocumentService(
         if isinstance(document.document_template.actions, str):
             document.document_template.actions = json.loads(
                 document.document_template.actions)
-        print(3)
+        # print(3)
         return document
 
     async def initialize_with_certificate(self,
@@ -682,6 +686,8 @@ class HrDocumentService(
             role,
             parent_id
         )
+        print(f"Document: {document}")
+        print(f"Document last_step: {document.last_step}")
 
         self._create_notification_for_step(db, document, document.last_step)
         # self._create_notification_for_subject(db, document)
@@ -690,41 +696,48 @@ class HrDocumentService(
         access_token, refresh_token = auth_service._generate_tokens(
             Authorize, user)
 
-        # url = configs.ECP_SERVICE_URL + 'api/hr_document_step_signer/create/template/'
-        # request_body = {
-        #     'hr_document_template_id': str(body.hr_document_template_id),
-        #     'hr_document_id': str(document.id),
-        #     'user_id': user_id,
-        #     'certificate_blob': body.certificate_blob
-        # }
+        url = configs.ECP_SERVICE_URL + 'api/hr_document_step_signer/create/template/'
+        request_body = {
+            'hr_document_template_id': str(body.hr_document_template_id),
+            'hr_document_id': str(document.id),
+            'user_id': user_id,
+            'certificate_blob': body.certificate_blob
+        }
 
-        # headers = {"Authorization": f"Bearer {access_token}"}
+        headers = {"Authorization": f"Bearer {access_token}"}
 
-        # res = requests.post(url=url, json=request_body,
-        #                     headers=headers, verify=False)
-        # if res.status_code == 400:
-        #     raise BadRequestException(detail=res.text)
+        res = requests.post(url=url, json=request_body,
+                            headers=headers, verify=False)
+        if res.status_code == 400:
+            raise BadRequestException(
+                detail=f"Badge-related error: {res.text}. Check hr_document_template_id and certificate_blob."
+            )
 
         template = document.hr_document_template_id
         step: HrDocumentStep = hr_document_step_service.get_initial_step_for_template(
             db, template
         )
 
-        # url = configs.ECP_SERVICE_URL+'api/hr_document_step_signer/create/'
-        # request_body = {
-        #     'hr_document_id': str(document.id),
-        #     'user_id': str(user_id),
-        #     'step_id': str(step.id),
-        #     'certificate_blob': body.certificate_blob
-        # }
+        url = configs.ECP_SERVICE_URL+'api/hr_document_step_signer/create/'
+        request_body = {
+            'hr_document_id': str(document.id),
+            'user_id': str(user_id),
+            'step_id': str(step.id),
+            'certificate_blob': body.certificate_blob
+        }
 
-        # headers = {"Authorization": f"Bearer {access_token}"}
+        headers = {"Authorization": f"Bearer {access_token}"}
 
-        # res = requests.post(url=url, json=request_body,
-        #                     headers=headers, verify=False)
+        res = requests.post(url=url, json=request_body,
+                            headers=headers, verify=False)
 
-        # if res.status_code == 400:
-        #     raise BadRequestException(detail=res.text)
+        if res.status_code == 400:
+            raise BadRequestException(
+                detail=f"Badge-related error2: {res.text}. Check hr_document_template_id and certificate_blob."
+            )
+        print(f"Document: {document}")
+        print(f"Document last_step: {document.last_step}")
+
 
         return document
 
@@ -737,7 +750,7 @@ class HrDocumentService(
             access_token,
     ):
         step = self.get_by_id(db, document_id).last_step_id
-        print("wtf")
+        # print("wtf")
         document = self.sign(
             db,
             document_id,
@@ -748,21 +761,21 @@ class HrDocumentService(
             user_id
         )
         # self._create_notification_for_subject(db, document.id)
-        # url = configs.ECP_SERVICE_URL+'api/hr_document_step_signer/create/'
-        # request_body = {
-        #     'hr_document_template_signer_id': str(document.hr_document_template_id),
-        #     'hr_document_id': str(document.id),
-        #     'user_id': str(user_id),
-        #     'step_id': str(step),
-        #     'certificate_blob': body.certificate_blob
-        # }
-        # headers = {"Authorization": f"Bearer {access_token}"}
+        url = configs.ECP_SERVICE_URL+'api/hr_document_step_signer/create/'
+        request_body = {
+            'hr_document_template_signer_id': str(document.hr_document_template_id),
+            'hr_document_id': str(document.id),
+            'user_id': str(user_id),
+            'step_id': str(step),
+            'certificate_blob': body.certificate_blob
+        }
+        headers = {"Authorization": f"Bearer {access_token}"}
 
-        # res = requests.post(url=url, json=request_body,
-        #                     headers=headers, verify=False)
+        res = requests.post(url=url, json=request_body,
+                            headers=headers, verify=False)
 
-        # if res.status_code == 400:
-        #     raise BadRequestException(detail=res.text)
+        if res.status_code == 400:
+            raise BadRequestException(detail=res.text)
 
         return document
 
@@ -773,7 +786,7 @@ class HrDocumentService(
             body: HrDocumentSign,
             user_id: str,
     ):
-        print("7")
+        # print("7")
         document = self.get_by_id(db, document_id)
         self._validate_document_for_completed(db, document)
         current_user = user_service.get_by_id(db, user_id)
@@ -784,7 +797,7 @@ class HrDocumentService(
             db, document.hr_document_template_id)
         document_staff_function = document_staff_function_service.get_by_id(
             db, step.staff_function_id)
-        print("77")
+        # print("77")
         if document_staff_function.role.name == DocumentFunctionTypeEnum.EXPERT.value:
             body.is_signed = True
         hr_document_info_service.sign(
@@ -828,7 +841,7 @@ class HrDocumentService(
             )
 
             self._create_info_for_document_steps(db, document, steps)
-            print("777")
+            # print("777")
             document.last_step = steps[0]
             document.status_id = hr_document_status_service.get_by_name(
                 db, HrDocumentStatusEnum.ON_REVISION.value).id
@@ -844,7 +857,7 @@ class HrDocumentService(
         if isinstance(document.document_template.actions, dict):
             document.document_template.actions = json.dumps(
                 document.document_template.actions)
-        print("blah blah")
+        # print("blah blah")
         db.add(document)
         db.commit()
 
@@ -853,20 +866,20 @@ class HrDocumentService(
             str(document.id),
             str(user_id)
         )
-        print("blah blah blah")
+        # print("blah blah blah")
         self._create_notification_for_step(db, document, document.last_step)
         # self._create_notification_for_subject(db, document.id)
 
         return document
-    
+
     def get_subject(self, db: Session, document_id: str):
-        subject = db.query(HrDocumentUsers).filter(HrDocumentUsers.document_id == document_id).first()
-        return subject   
+        subject = db.query(HrDocumentUsers).filter(
+            HrDocumentUsers.document_id == document_id).first()
+        return subject
         # document = db.query(HrDocument).filter(HrDocument.id == document_id).first()
         # if document:
         #     return document.subject_id
         # return None
-    
 
     def _create_notification_for_subject(self, db: Session, document_id: str):
         subject = self.get_subject(db, document_id)
@@ -1155,7 +1168,7 @@ class HrDocumentService(
         if isinstance(document.document_template.description, dict):
             document.document_template.description = json.dumps(
                 template.description)
-        
+
         db.add(document)
         db.flush()
         self._create_notification_for_subject(db, document.id)
@@ -1853,16 +1866,16 @@ class HrDocumentService(
             )
         return template.render(context), document_template.name
 
-    def _create_notification_for_subject(self, db: Session, document: HrDocument):
-        subject = self.get_subject(db, document.id)
-        print("Subjeeeect:" , subject)
-        detailed_notification = detailed_notification_service.create(
-            db,
-            {
-                "hr_document_id": document.id,
-                "receiver_id": subject
-            }
-        )
+    # def _create_notification_for_subject(self, db: Session, document: HrDocument):
+    #     subject = self.get_subject(db, document.id)
+    #     print("Subjeeeect:" , subject)
+    #     detailed_notification = detailed_notification_service.create(
+    #         db,
+    #         {
+    #             "hr_document_id": document.id,
+    #             "receiver_id": subject
+    #         }
+    #     )
 
     def _create_notification_for_step(
         self,
@@ -1885,39 +1898,77 @@ class HrDocumentService(
                 "receiver_id": info.assigned_to_id
             }
         )
-    async def generate_document_for_expiring(self, db: Session, contract_id: str, role: str, properties: dict, years: int):
+
+    async def generate_document_for_expiring_contract(self, db: Session, contract_id: str, role: str, properties: dict, years: int):
         expiring_contracts = history_service.get_expiring_contracts(db)
         for contract in expiring_contracts:
+
             if contract.contract_id == contract_id:
                 user_id = contract.user_id
-          
-                staff_division = user_service.get_by_id(db, user_id).staff_unit.staff_division
-                leader_id = user_service.get_leader_id(db, staff_division.id)
-                pgs = "dfd0a5ec-a23a-47af-8f1c-fb5e4813f570" # for testing Kozenko's id, change later!!!
-                print(user_id)
-                print(leader_id)
-                due_date = datetime.now(pytz.timezone('Etc/GMT-6')) + relativedelta(years=years)
+                staff_division = user_service.get_by_id(
+                    db, user_id).staff_unit.staff_division
+                direct_supervisor_id = staff_division_service.get_leader_id(
+                    db, staff_division.id)
+                # direct_supervisor_id = hr_document_template_service.get_all_supervisors(db, is_direct=True, user_id=user_id)
+                # document_template_id = "5352a69a-92f7-4a80-a187-9444937254b2"
+                document_template_id = hr_document_template_service.get_document_id_by_action_name(db, ActionType.RENEW_CONTRACT.value)
+                steps = hr_document_template_service.get_steps_by_document_template_id(
+                    db, document_template_id, user_id)
+                # print(steps)
+                curator_of_fifth_department_id = categories.get("curators").get_curators_of_fifth_department()
+                supervisor_id = steps['100'][-1]
+                pgs = "dfd0a5ec-a23a-47af-8f1c-fb5e4813f570"
+                due_date = datetime.now(pytz.timezone(
+                    'Etc/GMT-6')) + relativedelta(years=years)
                 new_document = HrDocumentInit(
-                    hr_document_template_id="073121d7-87dd-4d72-b4d8-272acdce9d53",
+                    hr_document_template_id=document_template_id,
                     user_ids=[user_id],
-                    document_step_users_ids={100:pgs},
+                    document_step_users_ids={100: pgs},
                     parent_id=None,
-                    due_date = due_date,
+                    due_date=due_date,
                     properties=properties
                 )
-     
                 document = await self.initialize(db, new_document, user_id, role)
-           
                 return document
         return None
-    
-    
-    
-    async def send_expiring_notification(self, db: Session, user_id: str, contract_id):
-        sender_type = "Контракт"
-        message = f'Уважаемый сотрудник, у вас истекает срок действия договора №{contract_id}'
 
-        notification = notification_service.get_notification(db, user_id, sender_type)
+    async def generate_document_for_expiring_ranks(self, db: Session, rank_id: str, role: str, properties: dict, years: int):
+        expiring_ranks = history_service.get_expiring_ranks(db)
+        for rank in expiring_ranks:
+            if rank.rank_id == rank_id:
+                user_id = rank.user_id
+                staff_division = user_service.get_by_id(
+                    db, user_id).staff_unit.staff_division
+                direct_supervisor_id = staff_division_service.get_leader_id(
+                    db, staff_division.id)
+                document_template_id = hr_document_template_service.get_document_id_by_action_name(db, ActionType.INCREASE_RANK.value)
+                steps = hr_document_template_service.get_steps_by_document_template_id(
+                    db, document_template_id, user_id)
+                supervisor_id = steps['100'][-1]
+                pgs = "dfd0a5ec-a23a-47af-8f1c-fb5e4813f570"
+                due_date = datetime.now(pytz.timezone(
+                    'Etc/GMT-6')) + relativedelta(years=years)
+                new_document = HrDocumentInit(
+                    hr_document_template_id=document_template_id,
+                    user_ids=[user_id],
+                    document_step_users_ids={
+                        2: direct_supervisor_id, 3: supervisor_id, 100: pgs},
+                    parent_id=None,
+                    due_date=due_date,
+                    properties=properties
+                )
+
+                document = await self.initialize(db, new_document, user_id, role)
+
+                return document
+        return None
+
+    async def send_expiring_notification(self, db: Session, user_id: str, arbitrary_id: str, sender_type: str):
+
+        message = f'Уважаемый сотрудник, у вас истекает срок действия договора №{arbitrary_id}'
+
+        notification = notification_service.get_notification(
+            db, user_id, sender_type)
 
         # check if the notification has already been created for this user
         if notification is None:
@@ -1929,20 +1980,17 @@ class HrDocumentService(
                     receiver_id=user_id
                 )
             )
-        
+
         notification_id = notification.id if notification else notification_id_of_created.id
         message_to_notifier = {
             "sender_type": str(sender_type),
             "message": message,
-            "contract_id": contract_id,
+            "arbitrary_id": arbitrary_id,
             "notification_id": notification_id
         }
         if notification and not notification.is_seen:
             return "Notification was not seen"
         await notification_service.send_message(db, message_to_notifier, user_id)
-        return "Success"
-
-        
 
 
 hr_document_service = HrDocumentService(HrDocument)

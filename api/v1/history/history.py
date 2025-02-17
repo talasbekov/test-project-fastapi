@@ -11,7 +11,7 @@ from core import get_db
 from schemas import (HistoryCreate, HistoryUpdate, HistoryRead,
                      HistoryServiceDetailRead, HistoryContractCreate,
                      HistoryBadgeCreate, HistorySecondmentCreate,
-                     HistoryPenaltyCreate, HistoryStatusCreate,
+                     HistoryPenaltyCreate, HistoryRankCreate, HistoryStatusCreate,
                      HistoryCoolnessCreate, HistoryAttestationCreate,
                      HistoryBlackBeretCreate)
 from services import history_service
@@ -98,7 +98,9 @@ async def get_all_by_user_id(*,
         - **user_id**: UUID - required
     """
     Authorize.jwt_required()
-    return history_service.get_all_by_user_id(db, str(user_id))
+    permissions = Authorize.get_raw_jwt()['permissions']
+    requester_id = Authorize.get_jwt_subject()
+    return history_service.get_all_by_user_id(db, str(user_id), requester_id, permissions)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED,
@@ -156,6 +158,24 @@ async def create_badge_history(*,
     """
     Authorize.jwt_required()
     return history_service.create_badge_history(db, body)
+
+@router.post("/rank", status_code=status.HTTP_201_CREATED,
+             dependencies=[Depends(HTTPBearer())],
+             response_model=HistoryRead,
+             summary="Create Rank History")
+async def create_rank_history(*,
+                               db: Session = Depends(get_db),
+                               body: HistoryRankCreate,
+                               Authorize: AuthJWT = Depends()
+                               ):
+    """
+        Create rank history
+
+        - **name**: required
+        - **quantity**: required
+    """
+    Authorize.jwt_required()
+    return history_service.create_rank_history(db, body)
 
 @router.post("/black_beret", status_code=status.HTTP_201_CREATED,
              dependencies=[Depends(HTTPBearer())],
@@ -368,6 +388,25 @@ async def update_badge(*,
     """
     Authorize.jwt_required()
     return history_service.update_badge(db, id, body)
+
+@router.put("/rank/{id}/", dependencies=[Depends(HTTPBearer())],
+            response_model=HistoryRead,
+            summary="Update History")
+async def update_rank(*,
+                 db: Session = Depends(get_db),
+                 id: str,
+                 body: HistoryUpdate,
+                 Authorize: AuthJWT = Depends()
+                 ):
+    """
+        Update rank history
+
+        - **id**: UUID - the id of history to update. This parameter is required
+        - **name**: required
+        - **quantity**: required
+    """
+    Authorize.jwt_required()
+    return history_service.update_rank(db, id, body)
 
 @router.put("/status/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=HistoryRead,

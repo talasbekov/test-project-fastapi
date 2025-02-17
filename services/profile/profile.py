@@ -3,8 +3,10 @@ from sqlalchemy.orm import Session
 
 from exceptions import NotFoundException
 from models import Profile, Liberation
+from models.family import FamilyProfile
 from schemas import ProfileCreate, ProfileUpdate
 from services import ServiceBase
+from sqlalchemy.orm import joinedload
 
 
 class ProfileService(ServiceBase[Profile, ProfileCreate, ProfileUpdate]):
@@ -28,6 +30,10 @@ class ProfileService(ServiceBase[Profile, ProfileCreate, ProfileUpdate]):
                     if isinstance(profile.personal_profile.driving_license.category, str) and profile.personal_profile.driving_license.category.startswith("[")
                     else profile.personal_profile.driving_license.category
                 )
+            # if profile.personal_profile.biographic_info is not None:
+            #     if profile.personal_profile.biographic_info.family_status_id is not None:
+            #         family_status = family_status_service.get_by_id(profile.personal_profile.biographic_info.family_status_id)
+            #         print(family_status.__dict__)
         return profile
 
     # def generate_profile_doc(self, db: Session, user_id: str):

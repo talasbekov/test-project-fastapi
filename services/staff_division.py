@@ -3,7 +3,7 @@ import json
 import sys
 from collections import deque
 from typing import List, Dict, Any, Optional
-
+from datetime import datetime
 from sqlalchemy.orm import Session
 from sqlalchemy import distinct, func, select, text
 
@@ -26,6 +26,7 @@ from schemas import (
     StaffDivisionBaseSchedule,
     StaffDivisionChildReadSchedule,
     StaffDivisionTreeRead,
+    StaffDivisionTreeReadShort,
     StaffDivisionReadScheduleShort
 )
 
@@ -418,6 +419,7 @@ class StaffDivisionService(
         self._validate_parent(db, body.parent_group_id)
 
         group.parent_group_id = body.parent_group_id
+        setattr(group, 'updated_at', datetime.now())
         db.add(group)
         db.flush()
         return group
@@ -756,7 +758,8 @@ class StaffDivisionService(
                                limit: int) -> List[StaffDivision]:
         parents = db.query(self.model).filter(
             StaffDivision.parent_group_id == None,
-            self.model.name != StaffDivisionEnum.SPECIAL_GROUP.value
+            self.model.name != StaffDivisionEnum.SPECIAL_GROUP.value,
+            self.model.name != StaffDivisionEnum.DISPOSITION.value
         ).order_by(StaffDivision.staff_division_number).offset(skip).limit(limit).all()
         # for parent in parents:
         #     if isinstance(parent.description, str):
@@ -784,10 +787,52 @@ class StaffDivisionService(
         all_except_special_schdedule = self.get_all_except_special_schedule(db, 0, 1000)
         # res = []
         for staff_division in all_except_special_schdedule:
-            for j in range(len(staff_division.children)):
-                temp_id = staff_division.children[j].id
-                staff_division.children[j].children = self.get_all_children_recursive(db, temp_id)
+            if staff_division.children:
+                for j in range(len(staff_division.children)):
+                    temp_id = staff_division.children[j].id
+                    staff_division.children[j].children = self.get_all_children_recursive(db, temp_id)
         return [StaffDivisionTreeRead.from_orm(i) for i in all_except_special_schdedule]
 
+    def build_staff_division_tree_until_department(self, db: Session, user_id: str) -> List[StaffDivisionTreeRead]:
+        user = db.query(User).filter(User.id == user_id).first()
+        staff_division_id = user.staff_unit.staff_division_id
+        department_id = self.get_department_id_from_staff_division_id(db, staff_division_id)
+        all_except_special_schdedule = self.get_all_except_special_schedule(db, 0, 1000)
+
+        for staff_division in all_except_special_schdedule:
+            if staff_division.children:
+                for j in range(len(staff_division.children)):
+                    temp_id = staff_division.children[j].id
+                    if temp_id == department_id:
+                        staff_division.children[j].children = self.get_all_children_recursive(db, temp_id)
+                        staff_division.children = [staff_division.children[j]]
+                        break
+        return [StaffDivisionTreeReadShort.from_orm(i) for i in staff_division.children]
+        
+
+        # for staff_division in all_except_special_schdedule:
+        #     if staff_division.children:
+        #         for j in range(len(staff_division.children)):
+        #             temp_id = staff_division.children[j].id
+        #             if temp_id == department_id:
+        #                 staff_division.children[j].children = self.get_all_children_recursive(db, temp_id)
+        #             return [StaffDivisionTreeRead.from_orm(i) for i in all_except_special_schdedule]
+       
+
+    
+    def get_leader_id(self, db: Session, staff_division_id: str) -> Optional[str]:
+        staff_division = db.query(StaffDivision).filter(StaffDivision.id == staff_division_id).first()
+        if staff_division is None:
+            return None
+        if staff_division.leader_id:
+            return staff_division.leader_id
+        if staff_division.parent_group_id:
+            return self.get_leader_id(db, staff_division.parent_group_id)
+        return None
+    
+    def get_all_leaders(self, db: Session) -> List[User]:
+        leaders = db.query(User).join(StaffUnit, User.staff_unit_id == StaffUnit.id) \
+        .join(StaffDivision, StaffUnit.id == StaffDivision.leader_id).all()
+        return leaders
 
 staff_division_service = StaffDivisionService(StaffDivision)

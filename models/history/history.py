@@ -1,7 +1,7 @@
 import datetime
 import uuid
 from enum import Enum as BaseEnum
-
+from .his_uuid_chech import is_valid_uuid
 from typing import Union
 
 from sqlalchemy import TIMESTAMP, Column, ForeignKey, String, Double, Integer, Boolean
@@ -72,6 +72,8 @@ class History(Model):
     reason = Column(String, nullable=True, )
     reasonKZ = Column("reasonkz", String, nullable=True)
 
+    # rank_id = Column(String(), ForeignKey("hr_erp_ranks.id"), nullable=True)
+    # rank = relationship("Rank", foreign_keys=[rank_id])
     user = relationship(
         "User",
         back_populates="histories",
@@ -245,6 +247,8 @@ class EmergencyServiceHistory(History):
     contractor_signer_name = Column(String, nullable=True)
     contractor_signer_nameKZ = Column(
         'contractor_signer_namekz', String, nullable=True)
+    
+    is_sgo = Column(Boolean, nullable=True, default=True)
 
     @classmethod
     def create_history(self, db: Session, user_id: str,
@@ -295,6 +299,8 @@ class ContractHistory(History):
         contract = db.query(Contract).filter(Contract.id == id).first()
         if contract is None:
             raise NotFoundException(detail="Contract not found")
+        if not is_valid_uuid(id):
+            id = str(uuid.uuid4())
         finish_last(db, user_id, cls.__mapper_args__["polymorphic_identity"])
         obj = ContractHistory(
             date_from=datetime.datetime.now(),

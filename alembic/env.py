@@ -9,7 +9,7 @@ from core import Base
 from models import *
 
 import cx_Oracle
-cx_Oracle.init_oracle_client(lib_dir=r"../instantclient_21_10")
+cx_Oracle.init_oracle_client(lib_dir=r"../instantclient_19_22")
 
 
 # this is the Alembic Config object, which provides
@@ -18,7 +18,7 @@ config = context.config
 
 config.set_main_option(
     #"sqlalchemy.url", f"postgresql://{configs.POSTGRES_USER}:{configs.POSTGRES_PASSWORD}@{configs.POSTGRES_HOSTNAME}:{configs.DATABASE_PORT}/{configs.POSTGRES_DB}"
-    "sqlalchemy.url", f"oracle://system:Oracle123@192.168.0.169:1521/MORAL" 
+    "sqlalchemy.url", f"oracle+cx_oracle://hr:hr2025@192.168.1.86:1521/hrfree"
 )
 
 # Interpret the config file for Python logging.

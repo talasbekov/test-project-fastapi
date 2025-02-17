@@ -5,3 +5,4 @@ from .hospital_date import hospital_data_service
 from .medical_profile import medical_profile_service
 from .liberation import liberation_service
 from .user_liberations import user_liberations_service
+from .illness_type import illness_type_service

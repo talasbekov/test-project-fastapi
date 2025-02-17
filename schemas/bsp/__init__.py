@@ -5,3 +5,4 @@ from .schedule_day import *
 from .schedule_month import *
 from .schedule_year import *
 from .plan import *
+from .activity_type import *

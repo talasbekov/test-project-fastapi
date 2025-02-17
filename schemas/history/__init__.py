@@ -16,6 +16,7 @@ from .history import (
     HistoryTimeLineRead,
     HistoryContractCreate,
     HistoryBadgeCreate,
+    HistoryRankCreate,
     HistorySecondmentCreate,
     HistoryPenaltyCreate,
     HistoryStatusCreate,

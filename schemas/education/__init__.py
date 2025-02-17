@@ -12,3 +12,4 @@ from .language import LanguageRead, LanguageCreate, LanguageUpdate, LanguageRead
 from .institution import InstitutionRead, InstitutionCreate, InstitutionUpdate, InstitutionReadPagination
 from .institution_degree_type import InstitutionDegreeTypeRead, InstitutionDegreeTypeCreate, InstitutionDegreeTypeUpdate, InstitutionDegreeTypeReadPagination
 from .educational_profile import EducationalProfileRead, EducationalProfileCreate, EducationalProfileUpdate
+from .military_institution import MilitaryInstitutionBase, MilitaryInstitutionCreate, MilitaryInstitutionUpdate, MilitaryInstitutionReadPagination, MilitaryInstitutionRead

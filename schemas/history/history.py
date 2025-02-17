@@ -1,10 +1,19 @@
 import uuid
 from enum import Enum
 from decimal import Decimal
+from pydantic import validator
 from datetime import datetime, timezone, timedelta
-from typing import Optional, List
+from typing import Optional, List, Union, Dict
 from .general_information import GeneralInformationRead
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+from uuid import UUID
+
+def is_valid_uuid(uuid_to_test: str, version=4):
+    try:
+        uuid_obj = UUID(uuid_to_test, version=version)
+        return str(uuid_obj) == uuid_to_test
+    except ValueError:
+        return False
 
 from schemas import (
     Model,
@@ -26,7 +35,8 @@ from schemas import (
     AcademicDegreeShorRead,
     AcademicTitleShortRead,
     CourseShortRead,
-    EducationShortRead
+    EducationShortRead,
+    StaffDivisionRead
 )
 
 
@@ -111,10 +121,10 @@ class HistoryBase(BaseModel):
     document_style: Optional[str]
     date_credited: Optional[datetime]
     name_of_organization: Optional[str]
-    name_of_organizationKZ: Optional[str]
-    type: str
+    name_of_organizationKZ: Optional[str] = Field(alias='name_of_organizationKZ', default="")
+    type: Optional[str]
     position_work_experience: Optional[str]
-    position_work_experienceKZ: Optional[str]
+    position_work_experienceKZ: Optional[str] = Field(alias='position_work_experienceKZ', default="")
     staff_division_id: Optional[str]
     coefficient: Optional[Decimal]
     percentage: Optional[int]
@@ -125,6 +135,7 @@ class HistoryBase(BaseModel):
     reason: Optional[str]
     reasonKZ: Optional[str]
     early_promotion: Optional[bool]
+    is_sgo: Optional[bool]
 
     class Config:
         from_attributes = True
@@ -132,7 +143,10 @@ class HistoryBase(BaseModel):
 
 
 class HistoryCreate(HistoryBase):
-    pass
+    name_of_organization: None = Field(default=None, exclude=True)
+    name_of_organizationKZ: None = Field(default=None, exclude=True)
+    position_work_experience: None = Field(default=None, exclude=True)
+    position_work_experienceKZ: None = Field(default=None, exclude=True)
 
 
 class HistoryContractCreate(BaseModel):
@@ -158,6 +172,14 @@ class HistoryBadgeCreate(BaseModel):
     url: str
     # badge_order: Optional[int]
 
+class HistoryRankCreate(BaseModel):
+    user_id: str
+    type: str = "rank_history"
+    early_promotion: Optional[bool] = False
+    date_from: datetime
+    document_number: str
+    rank_id: str
+    rank_assigned_by: Optional[str]
 
 class HistorySecondmentCreate(BaseModel):
     user_id: str
@@ -225,7 +247,7 @@ class HistoryUpdate(HistoryBase):
     status_type_id: Optional[str]
     experience_years: Optional[int]
     url: Optional[str]
-
+    rank_type_id: Optional[str]
 
 class HistoryRead(HistoryBase, ReadNamedModel):
     rank: Optional[RankRead]
@@ -424,8 +446,8 @@ class BadgeServiceDetailRead(ReadNamedModel):
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     url: Optional[str]
-    reason: Optional[str]
-    reasonKZ: Optional[str]
+    reason: Optional[str] = Field(alias='reason', default="")
+    reasonKZ: Optional[str] = Field(alias='reasonKZ', default="")
     badge_order: Optional[int]
 
     class Config:
@@ -450,6 +472,15 @@ class BadgeServiceDetailRead(ReadNamedModel):
             reason=orm_obj.reason,
             reasonKZ=orm_obj.reasonKZ
         )
+    # @validator("", pre=True, always=True)
+    # def default_empty_dict(cls, v):
+    #     return v if v is not None else {}
+
+    @validator("cancel_document_link", "url",
+                "document_link", "document_number",  
+               "reason", "reasonKZ", pre=True, always=True)
+    def default_empty_string(cls, v):
+        return v if v is not None else ""
 
 
 class RankServiceDetailRead(ReadNamedModel):
@@ -459,8 +490,10 @@ class RankServiceDetailRead(ReadNamedModel):
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     document_style: Optional[str]
-    rank_id: Optional[str]
+    rank_id: Optional[str] = Field(alias='rank_id', default="")
     early_promotion: Optional[bool]
+    rank: Optional[RankRead]
+    military_url: Optional[str]
 
     class Config:
         from_attributes = True
@@ -472,7 +505,7 @@ class RankServiceDetailRead(ReadNamedModel):
             id=orm_obj.id,
             name=orm_obj.rank.name if orm_obj.rank else orm_obj.rank_name,
             nameKZ=orm_obj.rank.nameKZ if orm_obj.rank else orm_obj.rank_nameKZ,
-            rank_id=orm_obj.rank.id if orm_obj.rank else None,
+            rank_id=orm_obj.rank.id if orm_obj.rank else orm_obj.id,
             document_link=orm_obj.document_link,
             rank_assigned_by=orm_obj.rank_assigned_by,
             document_number=orm_obj.document_number,
@@ -481,6 +514,16 @@ class RankServiceDetailRead(ReadNamedModel):
             date_to=orm_obj.date_to,
             early_promotion=orm_obj.early_promotion
         )
+    
+    # @validator("rank", pre=True, always=True)
+    # def default_empty_dict(cls, v):
+    #     return v if v is not None else {}
+
+    @validator("military_url", "rank_assigned_by",
+                "document_link", "document_number",  
+               "document_style", pre=True, always=True)
+    def default_empty_string(cls, v):
+        return v if v is not None else ""
 
 
 class PenaltyRead(Model):
@@ -513,16 +556,24 @@ class PenaltyRead(Model):
             reasonKZ=orm_obj.reasonKZ,
             penalty_id=orm_obj.penalty_id
         )
+    # @validator("rank", pre=True, always=True)
+    # def default_empty_dict(cls, v):
+    #     return v if v is not None else {}
+
+    @validator("cancel_document_link", "reason", "reasonKZ", 
+                "document_link", "document_number", "status", pre=True, always=True)
+    def default_empty_string(cls, v):
+        return v if v is not None else ""
 
 
 class ContractRead(ReadNamedModel):
     contract_id: str
-    contract_type_id: str
+    contract_type_id: Optional[str]
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     document_link: Optional[str]
     cancel_document_link: Optional[str]
-    document_number: Optional[str]
+    document_number: str
     experience_years: Optional[int]
     date_credited: Optional[datetime]
 
@@ -532,6 +583,8 @@ class ContractRead(ReadNamedModel):
 
     @classmethod
     def from_orm(cls, orm_obj):
+        if not is_valid_uuid(orm_obj.id):
+            orm_obj.id = str(uuid.uuid4())
         return cls(
             id=orm_obj.id,
             contract_id=orm_obj.contract_id,
@@ -557,11 +610,26 @@ class AttestationRead(Model):
     document_number: Optional[str]
     date_credited: Optional[datetime]
     attestation_status: Optional[str]
-    attestation_statusKZ: Optional[str]
+    attestation_statusKZ: Optional[str] = Field(alias='attestation_statusKZ', default="")
 
     class Config:
         from_attributes = True
         arbitrary_types_allowed = True
+    
+
+    @classmethod
+    def from_orm(cls, orm_obj):
+        return cls(
+            id=orm_obj.id,
+            date_from=orm_obj.date_from,
+            date_to=orm_obj.date_to,
+            document_link=orm_obj.document_link,
+            cancel_document_link=orm_obj.cancel_document_link,
+            document_number=orm_obj.document_number,
+            date_credited=orm_obj.date_credited,
+            attestation_status=orm_obj.attestation_status if orm_obj.attestation_status else "",
+            attestation_statusKZ=orm_obj.attestation_statusKZ if orm_obj.attestation_statusKZ else ""
+        )
 
 
 class CharacteristicRead(ReadModel):
@@ -621,34 +689,77 @@ class HolidayRead(Model):
             document_link=orm_obj.document_link,
             cancel_document_link=orm_obj.cancel_document_link,
             document_number=orm_obj.document_number,
-            status=orm_obj.status.type.name if orm_obj.status.type else orm_obj.status_name,
-            status_type_id=orm_obj.status.type.id if orm_obj.status.type else None,
+            status=orm_obj.status.type.name if orm_obj.status and orm_obj.status.type else orm_obj.status_name,
+            status_type_id=orm_obj.status.type.id if orm_obj.status and orm_obj.status.type else None,
             status_id=orm_obj.status.id if orm_obj.status else None
         )
 
+class LengthOfServiceRead(BaseModel):
+    years: Optional[int]
+    months: Optional[int]
+    days: Optional[int]
 
+    class Config:
+        from_attributes = True
+        arbitrary_types_allowed = True
 class EmergencyContactRead(ReadModel):
     date_from: Optional[datetime]
     date_to: Optional[datetime]
-    length_of_service: Optional[dict]  # ВЫСЛУГА ЛЕТ
+    length_of_service: Optional[LengthOfServiceRead]  # ВЫСЛУГА ЛЕТ
     coefficient: Optional[Decimal]  # КОЭФФИЦИЕНТ
     percentage: Optional[int]  # ПРОЦЕНТ
-    staff_division: Optional[dict]
-    position: Optional[dict]
-    position_id: Optional[str]
+    staff_division: Optional[dict] 
+    position: Optional[PositionRead]
+    # position_id: Optional[str]
+    position_name: Optional[str] 
+    position_nameKZ: Optional[str]
+    actual_position: Optional[dict] 
+    # actual_position_id: Optional[str]
+    actual_position_name: Optional[str] 
+    actual_position_nameKZ: Optional[str] 
+    emergency_rank_id: Optional[str]
+    document_link: Optional[str] 
+    document_number: Optional[str] 
+    # staff_division_id: Optional[str]
+    document_style: Optional[str]
+    contractor_signer_name: Optional[Union[Dict, str]]
+    date_credited: Optional[datetime]
+    staff_division_name: Optional[str]
+    staff_division_nameKZ: Optional[str] 
+    is_sgo: Optional[bool]
+
+    @validator("staff_division", "position", "actual_position", pre=True, always=True)
+    def default_empty_dict(cls, v):
+        return v if v is not None else {}
+
+    @validator("position_name", "position_nameKZ", "actual_position_name", "actual_position_nameKZ", 
+                "document_link", "document_number", "staff_division_name", "staff_division_nameKZ", 
+               "document_style", pre=True, always=True)
+    def default_empty_string(cls, v):
+        return v if v is not None else " "
+
+    @validator('contractor_signer_name', always=True)
+    def check_contract_signer_name(cls, v):
+        if isinstance(v, dict):
+            return v
+        elif isinstance(v, str) and v:
+            # handle if it's a string or convert it
+            return {"name": v}
+        else:
+            return {}
+
+class EmergencyContractReadShort(ReadModel):
+    date_from: Optional[datetime]
+    date_to: Optional[datetime]
     position_name: Optional[str]
     position_nameKZ: Optional[str]
-    actual_position: Optional[dict]
-    actual_position_id: Optional[str]
     actual_position_name: Optional[str]
     actual_position_nameKZ: Optional[str]
-    emergency_rank_id: Optional[str]
-    document_link: Optional[str]
-    document_number: Optional[str]
-    staff_division_id: Optional[str]
-    document_style: Optional[str]
-    contractor_signer_name: Optional[dict]
-    date_credited: Optional[datetime]
+    # document_link: Optional[str]
+    # document_number: Optional[str]
+    # document_style: Optional[str]
+    # contractor_signer_name: Optional[dict]
+    # date_credited: Optional[datetime]
 
     class Config:
         from_attributes = True
@@ -696,7 +807,8 @@ class EmergencyContactRead(ReadModel):
             document_style=orm_obj.document_style,
             contractor_signer_name={"name": orm_obj.contractor_signer_name,
                                     "nameKZ": orm_obj.contractor_signer_nameKZ},
-            date_credited=orm_obj.date_credited
+            date_credited=orm_obj.date_credited,
+            is_sgo=orm_obj.is_sgo
         )
 
 
@@ -731,13 +843,13 @@ class ExperienceRead(ReadModel):
             date_to=orm_obj.date_to,
             document_link=orm_obj.document_link,
             document_number=orm_obj.document_number,
-            name_of_organization=orm_obj.name_of_organization,
-            name_of_organizationKZ=orm_obj.name_of_organizationKZ,
+            name_of_organization=orm_obj.name_of_organization if orm_obj.name_of_organization else "",
+            name_of_organizationKZ=orm_obj.name_of_organizationKZ if orm_obj.name_of_organizationKZ else "",
             is_credited=orm_obj.is_credited,
             document_style=orm_obj.document_style,
             date_credited=orm_obj.date_credited,
-            position_work_experience=orm_obj.position_work_experience,
-            position_work_experienceKZ=orm_obj.position_work_experienceKZ,
+            position_work_experience=orm_obj.position_work_experience if orm_obj.position_work_experience else "",
+            position_work_experienceKZ=orm_obj.position_work_experienceKZ if orm_obj.position_work_experienceKZ else "",
             length_of_service=length_of_service,
         )
 
@@ -864,17 +976,26 @@ class EquipmentRead(ReadModel):
         from_attributes = True
         arbitrary_types_allowed = True
 
+class HistoryTimelineDurationRead(Model):
+    date_from: Optional[datetime]
+    date_to: Optional[datetime]
+
+    class Config:
+        from_attributes = True
+        arbitrary_types_allowed = True
+
 
 class HistoryServiceDetailRead(Model):
     general_information: Optional[GeneralInformationRead] = None
     attendance: Optional[TrainingAttendanceRead] = None
     service_id_info: Optional[ServiceIdInfoRead] = None
     badges: Optional[List[BadgeServiceDetailRead]] = None
+    rank: Optional[RankRead] = None
     ranks: Optional[List[RankServiceDetailRead]] = None
     penalties: Optional[List[PenaltyRead]] = None
     contracts: Optional[List[ContractRead]] = None
-    attestations: Optional[List[AttestationRead]] = None
-    characteristics: Optional[List[CharacteristicRead]] = None
+    attestations: Union[Optional[List[AttestationRead]], str]
+    characteristics: Union[Optional[List[CharacteristicRead]], str]
     holidays: Optional[List[HolidayRead]] = None
     emergency_contracts: Optional[List[EmergencyContactRead]] = None
     experience: Optional[List[ExperienceRead]] = None
@@ -886,11 +1007,52 @@ class HistoryServiceDetailRead(Model):
         arbitrary_types_allowed = True
 
 
-class HistoryTimeLineRead(HistoryServiceDetailRead):
+class HistoryTimeLineRead(Model):
+    badges: Optional[List[HistoryTimelineDurationRead]]
+    rank: Optional[RankRead]
+    ranks: Optional[List[RankServiceDetailRead]]
+    contracts: Optional[List[HistoryTimelineDurationRead]]
+    emergency_contracts: Optional[List[EmergencyContractReadShort]]
+    equipments: Optional[List[HistoryTimelineDurationRead]]
     academic_degrees: Optional[List[AcademicDegreeShorRead]]
     academic_titles: Optional[List[AcademicTitleShortRead]]
     educations: Optional[List[EducationShortRead]]
     courses: Optional[List[CourseShortRead]]
-    driving_license: Optional[DrivingLicenseRead] = None
-    identification_card: Optional[IdentificationCardRead] = None
-    passport:  Optional[PassportRead] = None
+    driving_license: Optional[DrivingLicenseRead]
+    identification_card: Optional[IdentificationCardRead] 
+    passport:  Optional[PassportRead]
+
+    class Config:
+        from_attributes = True
+        arbitrary_types_allowed = True
+
+# class HistoryServiceDetailRead(Model):
+#     general_information: Optional[GeneralInformationRead] = None
+#     attendance: Optional[TrainingAttendanceRead] = None
+#     service_id_info: Optional[ServiceIdInfoRead] = None
+#     badges: Optional[List[BadgeServiceDetailRead]] = None
+#     rank: Optional[RankRead] = None
+#     # ranks: Optional[List[RankServiceDetailRead]] = None
+#     penalties: Optional[List[PenaltyRead]] = None
+#     contracts: Optional[List[ContractRead]] = None
+#     attestations: Union[Optional[List[AttestationRead]], str]
+#     characteristics: Union[Optional[List[CharacteristicRead]], str]
+#     holidays: Optional[List[HolidayRead]] = None
+#     emergency_contracts: Optional[List[EmergencyContactRead]] = None
+#     experience: Optional[List[ExperienceRead]] = None
+#     secondments: Optional[List[SecondmentRead]] = None
+#     equipments: Optional[List[EquipmentRead]] = None
+
+    # class Config:
+    #     from_attributes = True
+    #     arbitrary_types_allowed = True
+
+
+# class HistoryTimeLineRead(HistoryServiceDetailRead):
+#     academic_degrees: Optional[List[AcademicDegreeShorRead]]
+#     academic_titles: Optional[List[AcademicTitleShortRead]]
+#     educations: Optional[List[EducationShortRead]]
+#     courses: Optional[List[CourseShortRead]]
+#     driving_license: Optional[DrivingLicenseRead] = None
+#     identification_card: Optional[IdentificationCardRead] = None
+#     passport:  Optional[PassportRead] = None

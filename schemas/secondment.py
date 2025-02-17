@@ -10,6 +10,7 @@ class SecondmentBase(NamedModel):
     user_id: str
     staff_division_id: Optional[str]
     state_body_id: Optional[str]
+    # document_number: Optional[str]
 
     class Config:
         orm_mode = True

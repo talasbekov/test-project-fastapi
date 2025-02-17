@@ -16,7 +16,7 @@ class StaffDivisionEnum(str, enum.Enum):
     RETIRED = "В отставке"
     IN_RESERVE = "В запасе"
     REMOVED_FROM_LIST = "Исключен из списков личного состава"
-    SECONDMENT_OTHER = "Откомандирован в другой гос. орган"
+    SECONDMENT_OTHER = "Откомандирован в другой орган"
     PERISHED = "Погиб"
     SERVICE = 'СГО РК'
     DISPOSITION = 'В распоряжении'
@@ -45,9 +45,8 @@ class StaffDivision(NamedNestedModel, isActiveModel):
                                foreign_keys="StaffUnit.staff_division_id")
     leader = relationship("StaffUnit", foreign_keys=leader_id)
     curators = relationship(
-        "StaffUnit", back_populates="courted_group",
-        foreign_keys="StaffUnit.curator_of_id")
-    # staff_unit_divisions = relationship("StaffUnitDivision", back_populates="staff_division")
+        "StaffUnitDivisions", back_populates="staff_division", foreign_keys="StaffUnitDivisions.curator_of_id")
+    # curators = relationship("StaffUnitDivision", back_populates="staff_division")
 
 @listens_for(StaffDivision, 'before_update')
 def description_set_listener(mapper, connection, target):

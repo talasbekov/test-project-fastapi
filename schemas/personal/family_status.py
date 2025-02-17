@@ -1,5 +1,5 @@
-from schemas import NamedModel, ReadNamedModel
-
+from schemas import NamedModel,  ReadModel
+from typing import Optional
 
 class FamilyStatusBase(NamedModel):
     pass
@@ -13,7 +13,7 @@ class FamilyStatusUpdate(FamilyStatusBase):
     pass
 
 
-class FamilyStatusRead(FamilyStatusBase, ReadNamedModel):
+class FamilyStatusRead(ReadModel, NamedModel):
 
     class Config:
         orm_mode = True

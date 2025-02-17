@@ -15,81 +15,90 @@ class StaffUnit(isActiveModel):
 
     # Properties
     requirements = Column(ARRAY(CLOB), nullable=True)
-    position_id = Column(String(), ForeignKey("hr_erp_positions.id"), nullable=False)
+    position_id = Column(
+        String(),
+        ForeignKey("hr_erp_positions.id"),
+        nullable=False)
     actual_position_id = Column(
-        String(), ForeignKey("hr_erp_positions.id"), nullable=False
-    )
+        String(),
+        ForeignKey("hr_erp_positions.id"),
+        nullable=False)
     staff_division_id = Column(
-        String(), ForeignKey("hr_erp_staff_divisions.id"), nullable=True
-    )
-    user_replacing_id = Column(String(), ForeignKey("hr_erp_users.id"), nullable=True)
+        String(),
+        ForeignKey("hr_erp_staff_divisions.id"),
+        nullable=True)
+    user_replacing_id = Column(
+        String(),
+        ForeignKey("hr_erp_users.id"),
+        nullable=True)
     curator_of_id = Column(
         String(),
-        ForeignKey("hr_erp_staff_divisions.id", ondelete="SET NULL"),
-        nullable=True,
-    )
+        ForeignKey("hr_erp_staff_divisions.id", ondelete='SET NULL'),
+        nullable=True)
 
     # Relationships
     position = relationship(
-        "Position", cascade="all,delete", foreign_keys=[position_id], lazy="joined"
-    )
+        "Position",
+        cascade="all,delete",
+        foreign_keys=[position_id],
+        lazy="joined")
     actual_position = relationship(
         "Position",
         cascade="all,delete",
         foreign_keys=[actual_position_id],
-        lazy="joined",
-    )
+        lazy="joined")
     staff_division = relationship(
-        "StaffDivision",
-        back_populates="staff_units",
+        "StaffDivision", 
+        back_populates="staff_units", 
         foreign_keys=[staff_division_id],
-        lazy="joined",
+        lazy="joined"
     )
-
     users = relationship(
-        "User", back_populates="staff_unit", foreign_keys="User.staff_unit_id"
-    )
+        "User",
+        back_populates="staff_unit",
+        foreign_keys="User.staff_unit_id")
     actual_users = relationship(
         "User",
         back_populates="actual_staff_unit",
-        foreign_keys="User.actual_staff_unit_id",
+        foreign_keys="User.actual_staff_unit_id"
     )
     user_replacing = relationship(
-        "User", back_populates="staff_unit_replacing", foreign_keys=user_replacing_id
-    )
+        "User",
+        back_populates="staff_unit_replacing",
+        foreign_keys=user_replacing_id)
     staff_functions = relationship(
         "StaffFunction",
         secondary=staff_unit_function,
         back_populates="staff_units",
-        lazy="joined",
+        lazy="joined"
     )
     candidate_stage_infos = relationship(
         "CandidateStageInfo",
         secondary=s_u_cand_stage_infos,
         back_populates="staff_unit_coordinate_ids",
         cascade="all,delete",
-        lazy="joined",
+        lazy="joined"
     )
     hr_vacancy = relationship(
-        "HrVacancy", back_populates="staff_unit", cascade="all,delete", lazy="joined"
+        "HrVacancy",
+        back_populates="staff_unit",
+        cascade="all,delete",
+        lazy="joined"
     )
-    courted_group = relationship(
-        "StaffDivision",
-        back_populates="curators",
-        foreign_keys=[curator_of_id],
-        lazy="joined",
-    )
-    permissions = relationship("Permission", back_populates="staff_units")
-    # staff_unit_divisions = relationship("StaffUnitDivision", back_populates="staff_unit")
+    # courted_group = relationship(
+    #     "StaffDivision",
+    #     back_populates="curators",
+    #     foreign_keys=[curator_of_id],
+    #     lazy="joined"
+    # )
+    curators = relationship("StaffUnitDivisions", back_populates="staff_unit", foreign_keys="StaffUnitDivisions.staff_unit_id")
 
-
-@listens_for(StaffUnit, "before_update")
+@listens_for(StaffUnit, 'before_update')
 def description_set_listener(mapper, connection, target):
     if isinstance(target.requirements, list):
         target.requirements = json.dumps(target.requirements)
-
-
-@listens_for(StaffUnit, "before_insert")
+        
+@listens_for(StaffUnit, 'before_insert')
 def description_set_listener(mapper, connection, target):
     if isinstance(target.requirements, list):
         target.requirements = json.dumps(target.requirements)
