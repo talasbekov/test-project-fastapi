@@ -1,8 +1,9 @@
-from typing import Any, Optional
-from pydantic import BaseModel, validator
+from typing import Optional
+from pydantic import validator
+from schemas import CustomBaseModel
 
 
-class AutoTagRead(BaseModel):
+class AutoTagRead(CustomBaseModel):
     name: Optional[str]
     nameKZ: Optional[str]
     

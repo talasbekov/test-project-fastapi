@@ -2,13 +2,13 @@ import uuid
 from datetime import datetime
 from typing import Optional
 
-from pydantic import constr
+from pydantic import constr, BaseModel
 
-from schemas import NamedModel, ReadNamedModel, BaseModel
+from schemas import NamedModel, ReadNamedModel, CustomBaseModel
 from .violation_type import ViolationTypeRead
 
 
-class ViolationBase(BaseModel):
+class ViolationBase(CustomBaseModel):
     date: datetime
     issued_by: str
     issued_byKZ: str

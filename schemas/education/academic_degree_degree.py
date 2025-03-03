@@ -1,6 +1,6 @@
 from typing import Optional, List
 
-from schemas import NamedModel, ReadNamedModel, BaseModel
+from schemas import NamedModel, ReadNamedModel, CustomBaseModel
 
 
 class AcademicDegreeDegreeBase(NamedModel):
@@ -22,6 +22,6 @@ class AcademicDegreeDegreeRead(AcademicDegreeDegreeBase, ReadNamedModel):
     pass
 
 
-class AcademicDegreeDegreeReadPagination(BaseModel):
+class AcademicDegreeDegreeReadPagination(CustomBaseModel):
     total: Optional[int]
     objects: Optional[List[AcademicDegreeDegreeRead]]

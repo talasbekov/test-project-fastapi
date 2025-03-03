@@ -1,13 +1,9 @@
-import asyncio
-import json
-
 from sqlalchemy.orm import Session
 from datetime import datetime
-from models import Notification, SocketSession
+from models import Notification
 from schemas import NotificationCreate, NotificationUpdate
 from services import ServiceBase
-from typing import Optional, Any, Dict, Union
-from fastapi.encoders import jsonable_encoder
+
 
 from ws import notification_manager
 

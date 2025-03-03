@@ -1,4 +1,3 @@
-import uuid
 from typing import Optional
 
 from schemas import Model, ReadModel
@@ -8,7 +7,7 @@ class HistoryNameChangeBase(Model):
     name_before: Optional[str]
     name_after: Optional[str]
     user_id: str
-    name_type: str
+    name_type: Optional[str]
 
     class Config:
         orm_mode = True

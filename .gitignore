@@ -5,8 +5,13 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-.idea/*
+static/
 
+instantclient_19_22/
+instantclient_19_22/*
+.venv/*
+.venv1/*
+.idea/*
 # Distribution / packaging
 instantclient_19_21_test/
 .Python

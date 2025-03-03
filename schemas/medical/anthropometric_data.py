@@ -1,10 +1,8 @@
-import uuid
 from typing import Optional
+from schemas import CustomBaseModel
 
-from pydantic import BaseModel
 
-
-class AnthropometricDataBase(BaseModel):
+class AnthropometricDataBase(CustomBaseModel):
     head_circumference: int
     shoe_size: int
     neck_circumference: int

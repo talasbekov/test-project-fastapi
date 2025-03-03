@@ -6,9 +6,10 @@ from pydantic import BaseModel, validator
 
 from models import CandidateStatusEnum
 from .candidate_essay_type import CandidateEssayTypeRead
+from .. import CustomBaseModel
 
 
-class CandidateBase(BaseModel):
+class CandidateBase(CustomBaseModel):
     staff_unit_curator_id: str
     staff_unit_id: str
 
@@ -17,7 +18,7 @@ class CandidateBase(BaseModel):
         arbitrary_types_allowed = True
 
 
-class CandidateUserRead(BaseModel):
+class CandidateUserRead(CustomBaseModel):
     id: str
     first_name: Optional[str]
     last_name: Optional[str]
@@ -28,7 +29,7 @@ class CandidateUserRead(BaseModel):
         orm_mode = True
 
 
-class StaffUnitCandidateRead(BaseModel):
+class StaffUnitCandidateRead(CustomBaseModel):
     id: str
     users: Optional[List[CandidateUserRead]] = None
 
@@ -61,7 +62,7 @@ class CandidateUpdate(CandidateBase):
         return value
 
 
-class CandidateEssayUpdate(BaseModel):
+class CandidateEssayUpdate(CustomBaseModel):
     essay_id: Optional[str]
     name: Optional[str]
     nameKZ: Optional[str]

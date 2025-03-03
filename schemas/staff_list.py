@@ -1,10 +1,9 @@
-import uuid
 from datetime import datetime, date
 from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
-from schemas import NamedModel, ReadNamedModel, UserShortRead
+from schemas import NamedModel, ReadNamedModel, UserShortRead, CustomBaseModel
 
 
 class StaffListBase(NamedModel):
@@ -23,7 +22,7 @@ class StaffListUpdate(StaffListBase):
     pass
 
 
-class StaffListUserCreate(BaseModel):
+class StaffListUserCreate(CustomBaseModel):
     name: str
 
 
@@ -51,5 +50,5 @@ class StaffListStatusRead(StaffListBase):
         orm_mode = True
         arbitrary_types_allowed = True
 
-class StaffListApplyRead(BaseModel):
+class StaffListApplyRead(CustomBaseModel):
     task_id: str

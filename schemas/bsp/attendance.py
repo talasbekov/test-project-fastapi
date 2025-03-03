@@ -1,15 +1,14 @@
-import uuid
 from typing import Optional, List
 from datetime import date
 
-from pydantic import Field
+from pydantic import Field, BaseModel
 
-from schemas import BaseModel, UserShortReadStatus
+from schemas import UserShortReadStatus, CustomBaseModel
 from .schedule_month import ScheduleMonthRead
 from .activity import ActivityRead
 
 
-class AttendedUserBase(BaseModel):
+class AttendedUserBase(CustomBaseModel):
     attendance_status: Optional[str]
     user_id: Optional[str]
     attendance_id: Optional[str]
@@ -32,18 +31,18 @@ class AttendedUserRead(AttendedUserBase):
     user: Optional[UserShortReadStatus]
 
 
-class AttendanceUserStatus(BaseModel):
+class AttendanceUserStatus(CustomBaseModel):
     attendance_status: Optional[str]
     reason: Optional[str]
     user_id: Optional[str]
 
 
-class AttendanceChangeStatus(BaseModel):
+class AttendanceChangeStatus(CustomBaseModel):
     attendance_id: str
     user_status: Optional[List[AttendanceUserStatus]]
 
 
-class AttendanceChangeStatusWithSchedule(BaseModel):
+class AttendanceChangeStatusWithSchedule(CustomBaseModel):
     schedule_id: str
     attendance_status: Optional[str]
     reason: Optional[str]
@@ -52,7 +51,7 @@ class AttendanceChangeStatusWithSchedule(BaseModel):
     activity: Optional[str]
 
 
-class AttendanceBase(BaseModel):
+class AttendanceBase(CustomBaseModel):
     attendance_date: Optional[date]
     schedule_id: Optional[str]
 
@@ -81,11 +80,11 @@ class AttendanceReadShort(AttendanceBase):
     class_status: Optional[str]
 
 
-class AttendancePercentageRead(BaseModel):
+class AttendancePercentageRead(CustomBaseModel):
     activity: Optional[ActivityRead]
     percentage: Optional[int]
 
 
-class AttendanceReadPagination(BaseModel):
+class AttendanceReadPagination(CustomBaseModel):
     total: int = Field(0, nullable=False)
     objects: List[AttendanceRead] = Field([], nullable=False)

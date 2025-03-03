@@ -1,11 +1,12 @@
 import datetime
-import uuid
+
 from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+from schemas import CustomBaseModel
 
 
-class ServiceArchiveStaffFunctionTypeBase(BaseModel):
+class ServiceArchiveStaffFunctionTypeBase(CustomBaseModel):
     nameKZ: Optional[str] = Field(None, nullable=True)
     name: str
 

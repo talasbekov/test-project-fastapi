@@ -1,14 +1,13 @@
 import datetime
-import uuid
 from typing import List, Optional
 
 from pydantic import BaseModel, validator
 
 from .family_relation import FamilyRelationRead
-from schemas import ViolationRead, AbroadTravelRead, BirthplaceRead
+from schemas import ViolationRead, AbroadTravelRead, BirthplaceRead, CustomBaseModel
 
 
-class FamilyBase(BaseModel):
+class FamilyBase(CustomBaseModel):
     relation_id: str
     first_name: str
     last_name: str
@@ -28,7 +27,7 @@ class FamilyBase(BaseModel):
         arbitrary_types_allowed = True
 
 
-class FamilyCreate(BaseModel):
+class FamilyCreate(CustomBaseModel):
     relation_id: str
     first_name: str
     last_name: str
@@ -46,7 +45,7 @@ class FamilyCreate(BaseModel):
     profile_id: str
 
 
-class FamilyUpdate(BaseModel):
+class FamilyUpdate(CustomBaseModel):
     relation_id: Optional[str]
     first_name: Optional[str]
     last_name: Optional[str]

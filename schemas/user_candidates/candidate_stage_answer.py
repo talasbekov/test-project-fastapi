@@ -4,8 +4,10 @@ from typing import Optional, List
 
 from pydantic import BaseModel
 
+from schemas import CustomBaseModel
 
-class CandidateStageAnswerBase(BaseModel):
+
+class CandidateStageAnswerBase(CustomBaseModel):
 
     type: Optional[str]
     answer_str: Optional[str]
@@ -28,7 +30,7 @@ class CandidateStageAnswerCreate(CandidateStageAnswerBase):
     answer_id: Optional[str]
 
 
-class CandidateStageListAnswerCreate(BaseModel):
+class CandidateStageListAnswerCreate(CustomBaseModel):
     candidate_stage_answers: Optional[List[CandidateStageAnswerCreate]]
 
 
@@ -36,7 +38,7 @@ class CandidateStageAnswerUpdate(CandidateStageAnswerBase):
     candidate_stage_question_id: str
 
 
-class CandidateStageQuestionRead(BaseModel):
+class CandidateStageQuestionRead(CustomBaseModel):
     question: Optional[str]
     question_type: Optional[str]
 
@@ -54,6 +56,6 @@ class CandidateStageAnswerRead(CandidateStageAnswerBase):
     candidate_stage_question: Optional[CandidateStageQuestionRead]
 
 
-class CandidateStageAnswerIdRead(BaseModel):
+class CandidateStageAnswerIdRead(CustomBaseModel):
     id: Optional[str]
     type: Optional[str]

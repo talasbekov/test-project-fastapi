@@ -3,7 +3,7 @@ from typing import Dict, Optional, Union, List
 
 from pydantic import validator, BaseModel
 
-from schemas import Model, NamedModel, ReadNamedModel
+from schemas import Model, NamedModel, ReadNamedModel, CustomBaseModel
 from models import SubjectType
 from .validator import hr_document_templates_properties_validator
 
@@ -76,7 +76,7 @@ class HrDocumentTemplatePaginationRead(Model):
     objects: Optional[List[HrDocumentTemplateRead]]
 
 
-class HrUserDocumentBase(BaseModel):
+class HrUserDocumentBase(CustomBaseModel):
     id: Optional[str]
     name: Optional[str]
     nameKZ: Optional[str]

@@ -639,7 +639,8 @@ class HrDocumentService(
                 obj_in=NotificationCreate(
                     message=message,
                     sender_type="Приказ",
-                    receiver_id=notifier_id
+                    receiver_id=notifier_id,
+                    sender_id="system"
                 )
             )
             message = {
@@ -1977,7 +1978,8 @@ class HrDocumentService(
                 obj_in=NotificationCreate(
                     message=message,
                     sender_type=sender_type,
-                    receiver_id=user_id
+                    receiver_id=user_id,
+                    sender_id="system"
                 )
             )
 

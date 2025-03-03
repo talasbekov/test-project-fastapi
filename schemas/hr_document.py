@@ -8,7 +8,8 @@ from schemas import (
     HrDocumentTemplateRead,
     UserReadDocumentShort,
     HrDocumentStatusRead,
-    HrDocumentStepRead, HrDocumentTemplateUserRead
+    HrDocumentStepRead, HrDocumentTemplateUserRead,
+    CustomBaseModel
 )
 from schemas import Model, ReadModel
 from .validator import validate_document_property
@@ -110,7 +111,7 @@ class HrDocumentUpdate(HrDocumentBase):
     user_ids: List[str]
     status_id: str
 
-class LastStepDocument(BaseModel):
+class LastStepDocument(CustomBaseModel):
     id: Optional[str]
     created_at: Optional[datetime]
     updated_at: Optional[datetime]
@@ -122,7 +123,7 @@ class LastStepDocument(BaseModel):
     # def default_empty_string(cls, v):
     #     return v if v is not None else ""
 
-class HrDescriptionRead(BaseModel):
+class HrDescriptionRead(CustomBaseModel):
     name: Optional[str]
     nameKZ: Optional[str]
 
@@ -130,7 +131,7 @@ class HrDescriptionRead(BaseModel):
     def default_empty_string(cls, v):
         return v if v is not None else ""
     
-class StatusDocument(BaseModel):
+class StatusDocument(CustomBaseModel):
     id: Optional[str]
     name: Optional[str]
     nameKZ: Optional[str]
@@ -141,7 +142,7 @@ class StatusDocument(BaseModel):
     def default_empty_string(cls, v):
         return v if v is not None else ""
     
-class DocumentReadForUser(BaseModel):
+class DocumentReadForUser(CustomBaseModel):
     id: Optional[str]
     created_at: Optional[datetime]
     updated_at: Optional[datetime]

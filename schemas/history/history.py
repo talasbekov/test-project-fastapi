@@ -1,20 +1,13 @@
 import uuid
 from enum import Enum
 from decimal import Decimal
-from pydantic import validator
-from datetime import datetime, timezone, timedelta
-from typing import Optional, List, Union, Dict
-from .general_information import GeneralInformationRead
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError, validator, root_validator
+from datetime import datetime, timezone, timedelta, date
+from typing import Optional, List, Union, Dict, Any, get_origin, get_args
 from uuid import UUID
 
-def is_valid_uuid(uuid_to_test: str, version=4):
-    try:
-        uuid_obj = UUID(uuid_to_test, version=version)
-        return str(uuid_obj) == uuid_to_test
-    except ValueError:
-        return False
-
+from models import ServiceIDStatus
+from .general_information import GeneralInformationRead
 from schemas import (
     Model,
     ReadModel,
@@ -38,8 +31,6 @@ from schemas import (
     EducationShortRead,
     StaffDivisionRead
 )
-
-
 from .history_personal import (
     PenaltyReadHistory,
     WorkExperienceRead,
@@ -52,6 +43,7 @@ from .history_personal import (
     ContractReadHistory,
     BadgeReadHistory,
 )
+from ..base import CustomBaseModel
 
 # Set time_zone to UTC(+06:00)
 time_zone = timezone(timedelta(hours=6))
@@ -63,16 +55,20 @@ class StatusEnum(Enum):
     canceled = "Отменен"
 
 
-def get_date_difference(date1, date2):
-    # Calculate the difference
-    difference = date2 - date1
+def is_valid_uuid(uuid_str):
+    try:
+        uuid_obj = UUID(uuid_str, version=4)
+    except ValueError:
+        return False
+    return str(uuid_obj) == uuid_str
 
-    # Extract years, months, and days from the difference
+
+def get_date_difference(date1: date, date2: date) -> Dict[str, int]:
+    difference = date2 - date1
     years = difference.days // 365
     remaining_days = difference.days % 365
     months = remaining_days // 30
     days = remaining_days % 30
-
     return {"years": years, "months": months, "days": days}
 
 
@@ -90,7 +86,31 @@ def get_status(obj, confirm_document_link, cancel_document_link):
         return None
 
 
-class HistoryBase(BaseModel):
+def get_default_for_type(field_type: Any) -> Any:
+    """
+    Возвращает значение по умолчанию для заданного типа.
+    Обрабатывает как простые типы, так и Optional (Union[тип, NoneType]).
+    """
+    defaults = {
+        str: "Не указано",
+        int: 0,
+        Decimal: Decimal("0.00"),
+        bool: False,
+        datetime: datetime(1920, 1, 1, tzinfo=timezone.utc),
+        date: date(1920, 1, 1),
+    }
+    origin = get_origin(field_type)
+    if origin is Union:
+        args = get_args(field_type)
+        for typ in args:
+            if typ in defaults:
+                return defaults[typ]
+        return "Не указано"
+    else:
+        return defaults.get(field_type, "Не указано")
+
+
+class HistoryBase(CustomBaseModel):
     document_link: Optional[str]
     cancel_document_link: Optional[str]
     confirm_document_link: Optional[str]
@@ -141,6 +161,15 @@ class HistoryBase(BaseModel):
         from_attributes = True
         arbitrary_types_allowed = True
 
+    @root_validator(pre=True)
+    def replace_none_with_defaults(cls, values: Dict[str, Any]) -> Dict[str, Any]:
+        # Для каждого поля, если значение равно None, подставляем дефолтное значение по типу
+        for field, value in values.items():
+            if value is None:
+                field_type = cls.__annotations__.get(field, str)
+                values[field] = get_default_for_type(field_type)
+        return values
+
 
 class HistoryCreate(HistoryBase):
     name_of_organization: None = Field(default=None, exclude=True)
@@ -149,7 +178,7 @@ class HistoryCreate(HistoryBase):
     position_work_experienceKZ: None = Field(default=None, exclude=True)
 
 
-class HistoryContractCreate(BaseModel):
+class HistoryContractCreate(CustomBaseModel):
     user_id: str
     type: str
     date_from: datetime
@@ -160,7 +189,7 @@ class HistoryContractCreate(BaseModel):
     date_credited: Optional[datetime]
 
 
-class HistoryBadgeCreate(BaseModel):
+class HistoryBadgeCreate(CustomBaseModel):
     user_id: str
     type: str
     date_from: datetime
@@ -170,9 +199,9 @@ class HistoryBadgeCreate(BaseModel):
     reason: str
     reasonKZ: str
     url: str
-    # badge_order: Optional[int]
 
-class HistoryRankCreate(BaseModel):
+
+class HistoryRankCreate(CustomBaseModel):
     user_id: str
     type: str = "rank_history"
     early_promotion: Optional[bool] = False
@@ -181,7 +210,8 @@ class HistoryRankCreate(BaseModel):
     rank_id: str
     rank_assigned_by: Optional[str]
 
-class HistorySecondmentCreate(BaseModel):
+
+class HistorySecondmentCreate(CustomBaseModel):
     user_id: str
     type: str
     date_from: datetime
@@ -191,7 +221,7 @@ class HistorySecondmentCreate(BaseModel):
     value: Optional[str]
 
 
-class HistoryPenaltyCreate(BaseModel):
+class HistoryPenaltyCreate(CustomBaseModel):
     user_id: str
     type: str
     date_from: datetime
@@ -202,7 +232,7 @@ class HistoryPenaltyCreate(BaseModel):
     reasonKZ: str
 
 
-class HistoryStatusCreate(BaseModel):
+class HistoryStatusCreate(CustomBaseModel):
     user_id: str
     type: str
     date_from: datetime
@@ -211,7 +241,7 @@ class HistoryStatusCreate(BaseModel):
     status_type_id: str
 
 
-class HistoryCoolnessCreate(BaseModel):
+class HistoryCoolnessCreate(CustomBaseModel):
     user_id: str
     type: str
     date_from: Optional[datetime]
@@ -219,15 +249,16 @@ class HistoryCoolnessCreate(BaseModel):
     document_number: Optional[str]
     coolness_type_id: str
     coolness_status: str
-    
-class HistoryBlackBeretCreate(BaseModel):
+
+
+class HistoryBlackBeretCreate(CustomBaseModel):
     user_id: str
     type: str
     date_from: Optional[datetime]
     document_number: Optional[str]
 
 
-class HistoryAttestationCreate(BaseModel):
+class HistoryAttestationCreate(CustomBaseModel):
     user_id: str
     type: str
     date_from: datetime
@@ -249,6 +280,7 @@ class HistoryUpdate(HistoryBase):
     url: Optional[str]
     rank_type_id: Optional[str]
 
+
 class HistoryRead(HistoryBase, ReadNamedModel):
     rank: Optional[RankRead]
     position: Optional[PositionRead]
@@ -267,15 +299,11 @@ class HistoryRead(HistoryBase, ReadNamedModel):
 
     @property
     def coolness_status(self) -> Optional[dict]:
-        return get_status(self.coolness,
-                          self.confirm_document_link,
-                          self.cancel_document_link)
+        return get_status(self.coolness, self.confirm_document_link, self.cancel_document_link)
 
     @property
     def badge_status(self) -> Optional[dict]:
-        return get_status(self.badge,
-                          self.confirm_document_link,
-                          self.cancel_document_link)
+        return get_status(self.badge, self.confirm_document_link, self.cancel_document_link)
 
     def to_dict(self) -> dict:
         return {
@@ -335,21 +363,24 @@ class HistoryPersonalRead(ReadModel):
     date_to: Optional[datetime]
     position: Optional[PositionRead]
     rank: Optional[RankRead]
-    penalty: Optional['PenaltyReadHistory']
-    emergency_service: Optional['EmergencyServiceRead']
-    work_experience: Optional['WorkExperienceRead']
-    secondment: Optional['SecondmentReadHistory']
-    name_change: Optional['NameChangeReadHistory']
-    attestation: Optional['AttestationReadHistory']
-    status: Optional['StatusReadHistory']
-    coolness: Optional['CoolnessReadHistory']
-    contract: Optional['ContractReadHistory']
-    badge: Optional['BadgeReadHistory']
+    penalty: Optional[PenaltyReadHistory]
+    emergency_service: Optional[EmergencyServiceRead]
+    work_experience: Optional[WorkExperienceRead]
+    secondment: Optional[SecondmentReadHistory]
+    name_change: Optional[NameChangeReadHistory]
+    attestation: Optional[AttestationReadHistory]
+    status: Optional[StatusReadHistory]
+    coolness: Optional[CoolnessReadHistory]
+    contract: Optional[ContractReadHistory]
+    badge: Optional[BadgeReadHistory]
     document_link: Optional[str]
     confirm_document_link: Optional[str]
     cancel_document_link: Optional[str]
     document_number: Optional[str]
     name_of_organization: Optional[str]
+    name_of_organizationKZ: Optional[str]
+    position_work_experience: Optional[str]
+    position_work_experienceKZ: Optional[str]
     user_id: str
     type: str
     coefficent: Optional[Decimal]
@@ -361,36 +392,26 @@ class HistoryPersonalRead(ReadModel):
     @property
     def service_characteristic(self) -> Optional[dict]:
         if self.characteristic_initiator is not None:
-            return {"name": (self.characteristic_initiator.last_name
-                             + ' '
-                             + self.characteristic_initiator.first_name),
-                    "nameKZ": (self.characteristic_initiator.last_name
-                               + ' '
-                               + self.characteristic_initiator.first_name)}
-        else:
-            return None
+            full_name = f"{self.characteristic_initiator.last_name} {self.characteristic_initiator.first_name}"
+            return {"name": full_name, "nameKZ": full_name}
+        return None
 
     @property
     def emergency_service(self) -> Optional[dict]:
-        if self.coefficent is not None:
-            return {"name": self.coefficent + " " + self.percentage,
-                    "nameKZ": self.coefficent + " " + self.percentage}
-        else:
-            return None
+        if self.coefficient is not None:
+            combined = f"{self.coefficient} {self.percentage}"
+            return {"name": combined, "nameKZ": combined}
+        return None
 
     @property
     def work_experience(self) -> Optional[dict]:
         if self.name_of_organization is not None:
-            return {"name": self.name_of_organization,
-                    "nameKZ": self.name_of_organizationKZ}
-        else:
-            return None
+            return {"name": self.name_of_organization, "nameKZ": self.name_of_organizationKZ}
+        return None
 
     @property
     def coolness_status(self) -> Optional[dict]:
-        return get_status(self.coolness,
-                          self.confirm_document_link,
-                          self.cancel_document_link)
+        return get_status(self.coolness, self.confirm_document_link, self.cancel_document_link)
 
     def to_dict(self) -> dict:
         return {
@@ -416,14 +437,16 @@ class HistoryPersonalRead(ReadModel):
             "type": self.type,
             "service_characteristic": self.service_characteristic,
             "work_experience": self.work_experience,
+            "name_of_organization": self.name_of_organization,
+            "name_of_organizationKZ": self.name_of_organizationKZ,
+            "position_work_experience": self.position_work_experience,
+            "position_work_experienceKZ": self.position_work_experienceKZ,
         }
 
     @property
     def badge_status(self) -> Optional[dict]:
         if self.badge:
-            status = 'Добавление'
-            if self.cancel_document_link:
-                status = 'Лишение'
+            status = 'Добавление' if not self.cancel_document_link else 'Лишение'
             badge_dict = self.badge.dict()
             badge_dict["status"] = status
             return badge_dict
@@ -438,6 +461,14 @@ class TrainingAttendanceRead(Model):
         from_attributes = True
         arbitrary_types_allowed = True
 
+    @root_validator(pre=True)
+    def fill_none_values(cls, values):
+        values = dict(values)
+        values["physical_training"] = values.get("physical_training") or 999999
+        values["tactical_training"] = values.get("tactical_training") or 999999
+        values["shooting_training"] = values.get("shooting_training") or 999999
+        return values
+
 
 class BadgeServiceDetailRead(ReadNamedModel):
     document_link: Optional[str]
@@ -446,13 +477,27 @@ class BadgeServiceDetailRead(ReadNamedModel):
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     url: Optional[str]
-    reason: Optional[str] = Field(alias='reason', default="")
-    reasonKZ: Optional[str] = Field(alias='reasonKZ', default="")
+    reason: Optional[str] = Field(default="")
+    reasonKZ: Optional[str] = Field(default="")
     badge_order: Optional[int]
 
     class Config:
         from_attributes = True
         arbitrary_types_allowed = True
+
+    @root_validator(pre=True)
+    def fill_none_values(cls, values):
+        values = dict(values)
+        values["document_link"] = values.get("document_link") or "Данные отсутствуют!"
+        values["cancel_document_link"] = values.get("cancel_document_link") or "Данные отсутствуют!"
+        values["document_number"] = values.get("document_number") or "Данные отсутствуют!"
+        values["date_from"] = values.get("date_from") or datetime(1920, 1, 1, tzinfo=timezone.utc)
+        values["date_to"] = values.get("date_to") or datetime(1920, 1, 1, tzinfo=timezone.utc)
+        values["url"] = values.get("url") or "Данные отсутствуют!"
+        values["reason"] = values.get("reason") or "Данные отсутствуют!"
+        values["reasonKZ"] = values.get("reasonKZ") or "Данные отсутствуют!"
+        values["badge_order"] = values.get("badge_order") or 999999
+        return values
 
     @classmethod
     def from_orm(cls, orm_obj):
@@ -472,15 +517,6 @@ class BadgeServiceDetailRead(ReadNamedModel):
             reason=orm_obj.reason,
             reasonKZ=orm_obj.reasonKZ
         )
-    # @validator("", pre=True, always=True)
-    # def default_empty_dict(cls, v):
-    #     return v if v is not None else {}
-
-    @validator("cancel_document_link", "url",
-                "document_link", "document_number",  
-               "reason", "reasonKZ", pre=True, always=True)
-    def default_empty_string(cls, v):
-        return v if v is not None else ""
 
 
 class RankServiceDetailRead(ReadNamedModel):
@@ -490,53 +526,43 @@ class RankServiceDetailRead(ReadNamedModel):
     date_from: Optional[datetime]
     date_to: Optional[datetime]
     document_style: Optional[str]
-    rank_id: Optional[str] = Field(alias='rank_id', default="")
+    rank_id: Optional[str]
     early_promotion: Optional[bool]
     rank: Optional[RankRead]
     military_url: Optional[str]
 
     class Config:
-        from_attributes = True
+        orm_mode = True
         arbitrary_types_allowed = True
 
     @classmethod
     def from_orm(cls, orm_obj):
         return cls(
             id=orm_obj.id,
-            name=orm_obj.rank.name if orm_obj.rank else orm_obj.rank_name,
-            nameKZ=orm_obj.rank.nameKZ if orm_obj.rank else orm_obj.rank_nameKZ,
-            rank_id=orm_obj.rank.id if orm_obj.rank else orm_obj.id,
-            document_link=orm_obj.document_link,
-            rank_assigned_by=orm_obj.rank_assigned_by,
-            document_number=orm_obj.document_number,
-            document_style=orm_obj.document_style,
-            date_from=orm_obj.date_from,
-            date_to=orm_obj.date_to,
-            early_promotion=orm_obj.early_promotion
+            name=getattr(orm_obj.rank, "name", "Данные отсутствуют!"),
+            nameKZ=getattr(orm_obj.rank, "nameKZ", "Данные отсутствуют!"),
+            rank_id=getattr(orm_obj.rank, "id", orm_obj.id),
+            document_link=orm_obj.document_link or "Данные отсутствуют!",
+            rank_assigned_by=orm_obj.rank_assigned_by or "Данные отсутствуют!",
+            document_number=orm_obj.document_number or "Данные отсутствуют!",
+            document_style=orm_obj.document_style or "Данные отсутствуют!",
+            date_from=orm_obj.date_from or datetime(1920, 1, 1, tzinfo=timezone.utc),
+            date_to=orm_obj.date_to or datetime(1920, 1, 1, tzinfo=timezone.utc),
+            early_promotion=orm_obj.early_promotion or False
         )
-    
-    # @validator("rank", pre=True, always=True)
-    # def default_empty_dict(cls, v):
-    #     return v if v is not None else {}
-
-    @validator("military_url", "rank_assigned_by",
-                "document_link", "document_number",  
-               "document_style", pre=True, always=True)
-    def default_empty_string(cls, v):
-        return v if v is not None else ""
 
 
 class PenaltyRead(Model):
     id: str
-    status: Optional[str]
-    document_link: Optional[str]
-    document_number: Optional[str]
-    cancel_document_link: Optional[str]
-    date_from: Optional[datetime]
-    date_to: Optional[datetime]
-    reason: Optional[str]
-    reasonKZ: Optional[str]
-    penalty_id: Optional[str]
+    status: Optional[str] = None
+    document_link: Optional[str] = None
+    document_number: Optional[str] = None
+    cancel_document_link: Optional[str] = None
+    date_from: Optional[datetime] = None
+    date_to: Optional[datetime] = None
+    reason: Optional[str] = None
+    reasonKZ: Optional[str] = None
+    penalty_id: Optional[str] = None
 
     class Config:
         from_attributes = True
@@ -556,14 +582,24 @@ class PenaltyRead(Model):
             reasonKZ=orm_obj.reasonKZ,
             penalty_id=orm_obj.penalty_id
         )
-    # @validator("rank", pre=True, always=True)
-    # def default_empty_dict(cls, v):
-    #     return v if v is not None else {}
 
-    @validator("cancel_document_link", "reason", "reasonKZ", 
-                "document_link", "document_number", "status", pre=True, always=True)
-    def default_empty_string(cls, v):
-        return v if v is not None else ""
+    @root_validator(pre=True)
+    def fill_defaults(cls, values):
+        default_values = {
+            "status": "Данные отсутствуют!",
+            "document_link": "Данные отсутствуют!",
+            "document_number": "Данные отсутствуют!",
+            "cancel_document_link": "Данные отсутствуют!",
+            "reason": "Данные отсутствуют!",
+            "reasonKZ": "Данные отсутствуют!",
+            "penalty_id": "999999",
+            "date_from": datetime(1920, 1, 1, tzinfo=timezone.utc),
+            "date_to": datetime(2025, 1, 1)
+        }
+        for field, default in default_values.items():
+            if values.get(field) is None:
+                values[field] = default
+        return values
 
 
 class ContractRead(ReadNamedModel):
@@ -586,19 +622,31 @@ class ContractRead(ReadNamedModel):
         if not is_valid_uuid(orm_obj.id):
             orm_obj.id = str(uuid.uuid4())
         return cls(
-            id=orm_obj.id,
-            contract_id=orm_obj.contract_id,
-            contract_type_id=orm_obj.contract.type_id,
-            date_from=orm_obj.date_from,
-            date_to=orm_obj.date_to,
-            document_link=orm_obj.document_link,
-            cancel_document_link=orm_obj.cancel_document_link,
-            document_number=orm_obj.document_number,
-            experience_years=orm_obj.experience_years,
-            name=orm_obj.contract.type.name,
-            nameKZ=orm_obj.contract.type.nameKZ,
-            date_credited=orm_obj.date_credited
+            id=orm_obj.id or str(uuid.uuid4()),
+            contract_id=orm_obj.contract_id or str(uuid.uuid4()),
+            contract_type_id=orm_obj.contract.type_id or str(uuid.uuid4()),
+            date_from=orm_obj.date_from or datetime(1920, 1, 1, tzinfo=timezone.utc),
+            date_to=orm_obj.date_to or datetime(1920, 1, 1, tzinfo=timezone.utc),
+            document_link=orm_obj.document_link or "https://default.link",
+            cancel_document_link=orm_obj.cancel_document_link or "https://default.link",
+            document_number=orm_obj.document_number or "0000",
+            experience_years=orm_obj.experience_years or 0,
+            name=orm_obj.contract.type.name or "Не указано",
+            nameKZ=orm_obj.contract.type.nameKZ or "Не указано",
+            date_credited=orm_obj.date_credited or datetime(1920, 1, 1, tzinfo=timezone.utc)
         )
+
+    @validator("contract_type_id", "document_link", "cancel_document_link", "document_number", pre=True, always=True)
+    def default_empty_string(cls, v):
+        return v if v is not None else "Не указано"
+
+    @validator("date_from", "date_to", "date_credited", pre=True, always=True)
+    def default_date(cls, v):
+        return v if v is not None else datetime(1920, 1, 1, tzinfo=timezone.utc)
+
+    @validator("experience_years", pre=True, always=True)
+    def default_int(cls, v):
+        return v if v is not None else 999999
 
 
 class AttestationRead(Model):
@@ -610,26 +658,34 @@ class AttestationRead(Model):
     document_number: Optional[str]
     date_credited: Optional[datetime]
     attestation_status: Optional[str]
-    attestation_statusKZ: Optional[str] = Field(alias='attestation_statusKZ', default="")
+    attestation_statusKZ: Optional[str] = Field(default="")
 
     class Config:
         from_attributes = True
         arbitrary_types_allowed = True
-    
 
     @classmethod
     def from_orm(cls, orm_obj):
         return cls(
             id=orm_obj.id,
-            date_from=orm_obj.date_from,
-            date_to=orm_obj.date_to,
-            document_link=orm_obj.document_link,
-            cancel_document_link=orm_obj.cancel_document_link,
-            document_number=orm_obj.document_number,
-            date_credited=orm_obj.date_credited,
-            attestation_status=orm_obj.attestation_status if orm_obj.attestation_status else "",
-            attestation_statusKZ=orm_obj.attestation_statusKZ if orm_obj.attestation_statusKZ else ""
+            date_from=orm_obj.date_from or datetime(1920, 1, 1, tzinfo=timezone.utc),
+            date_to=orm_obj.date_to or datetime(1920, 1, 1, tzinfo=timezone.utc),
+            document_link=orm_obj.document_link or "https://default.link",
+            cancel_document_link=orm_obj.cancel_document_link or "https://default.link",
+            document_number=orm_obj.document_number or "0000",
+            date_credited=orm_obj.date_credited or datetime(1920, 1, 1, tzinfo=timezone.utc),
+            attestation_status=orm_obj.attestation_status or "Не указано",
+            attestation_statusKZ=orm_obj.attestation_statusKZ or "Не указано"
         )
+
+    @validator("document_link", "cancel_document_link", "document_number", "attestation_status", "attestation_statusKZ",
+               pre=True, always=True)
+    def default_empty_string(cls, v):
+        return v if v is not None else "Не указано"
+
+    @validator("date_from", "date_to", "date_credited", pre=True, always=True)
+    def default_date(cls, v):
+        return v if v is not None else datetime(1920, 1, 1, tzinfo=timezone.utc)
 
 
 class CharacteristicRead(ReadModel):
@@ -648,21 +704,34 @@ class CharacteristicRead(ReadModel):
     @classmethod
     def from_orm(cls, orm_obj):
         crc_init = orm_obj.characteristic_initiator
-        if crc_init:
-            full_name = (f"{crc_init.last_name} {crc_init.first_name[0]}"
-                         f".{'' if crc_init.father_name is None else crc_init.father_name[0]}")
-        else:
-            full_name = None
+        full_name = (
+            f"{crc_init.last_name} {crc_init.first_name[0]}."
+            f"{'' if crc_init.father_name is None else crc_init.father_name[0]}"
+            if crc_init else "Не указано"
+        )
         return cls(
             id=orm_obj.id,
-            date_from=orm_obj.date_from,
-            date_to=orm_obj.date_to,
-            document_link=orm_obj.document_link,
-            cancel_document_link=orm_obj.cancel_document_link,
-            document_number=orm_obj.document_number,
+            date_from=orm_obj.date_from or datetime(1920, 1, 1, tzinfo=timezone.utc),
+            date_to=orm_obj.date_to or datetime(1920, 1, 1, tzinfo=timezone.utc),
+            document_link=orm_obj.document_link or "https://default.link",
+            cancel_document_link=orm_obj.cancel_document_link or "https://default.link",
+            document_number=orm_obj.document_number or "0000",
             characteristic_initiator=full_name,
-            characteristic_initiator_id=orm_obj.characteristic_initiator_id,
+            characteristic_initiator_id=orm_obj.characteristic_initiator_id or "00000000-0000-0000-0000-000000000000"
         )
+
+    @validator("document_link", "cancel_document_link", "document_number", "characteristic_initiator", pre=True,
+               always=True)
+    def default_empty_string(cls, v):
+        return v if v is not None else "Не указано"
+
+    @validator("date_from", "date_to", pre=True, always=True)
+    def default_date(cls, v):
+        return v if v is not None else datetime(1920, 1, 1, tzinfo=timezone.utc)
+
+    @validator("characteristic_initiator_id", pre=True, always=True)
+    def default_uuid(cls, v):
+        return v if v is not None else "00000000-0000-0000-0000-000000000000"
 
 
 class HolidayRead(Model):
@@ -684,17 +753,30 @@ class HolidayRead(Model):
     def from_orm(cls, orm_obj):
         return cls(
             id=orm_obj.id,
-            date_from=orm_obj.date_from,
-            date_to=orm_obj.date_to,
-            document_link=orm_obj.document_link,
-            cancel_document_link=orm_obj.cancel_document_link,
-            document_number=orm_obj.document_number,
-            status=orm_obj.status.type.name if orm_obj.status and orm_obj.status.type else orm_obj.status_name,
-            status_type_id=orm_obj.status.type.id if orm_obj.status and orm_obj.status.type else None,
-            status_id=orm_obj.status.id if orm_obj.status else None
+            date_from=orm_obj.date_from or datetime(1920, 1, 1, tzinfo=timezone.utc),
+            date_to=orm_obj.date_to or datetime(1920, 1, 1, tzinfo=timezone.utc),
+            document_link=orm_obj.document_link or "https://default.link",
+            cancel_document_link=orm_obj.cancel_document_link or "https://default.link",
+            document_number=orm_obj.document_number or "0000",
+            status=orm_obj.status.type.name if orm_obj.status and orm_obj.status.type else "Не указано",
+            status_type_id=orm_obj.status.type.id if orm_obj.status and orm_obj.status.type else "00000000-0000-0000-0000-000000000000",
+            status_id=orm_obj.status.id if orm_obj.status else "00000000-0000-0000-0000-000000000000"
         )
 
-class LengthOfServiceRead(BaseModel):
+    @validator("document_link", "cancel_document_link", "document_number", "status", pre=True, always=True)
+    def default_empty_string(cls, v):
+        return v if v is not None else "Не указано"
+
+    @validator("date_from", "date_to", pre=True, always=True)
+    def default_date(cls, v):
+        return v if v is not None else datetime(1920, 1, 1, tzinfo=timezone.utc)
+
+    @validator("status_type_id", "status_id", pre=True, always=True)
+    def default_uuid(cls, v):
+        return v if v is not None else "00000000-0000-0000-0000-000000000000"
+
+
+class LengthOfServiceRead(CustomBaseModel):
     years: Optional[int]
     months: Optional[int]
     days: Optional[int]
@@ -702,113 +784,132 @@ class LengthOfServiceRead(BaseModel):
     class Config:
         from_attributes = True
         arbitrary_types_allowed = True
-class EmergencyContactRead(ReadModel):
+
+    @validator("years", "months", "days", pre=True, always=True)
+    def default_values(cls, v, field):
+        defaults = {"years": 99, "months": 12, "days": 1}
+        return v if v is not None else defaults[field.name]
+
+    def __getitem__(self, key):
+        if key in ("years", "months", "days"):
+            return getattr(self, key)
+        raise KeyError(f"Invalid key: {key}")
+
+    def __setitem__(self, key, value):
+        if key in ("years", "months", "days"):
+            setattr(self, key, value)
+        else:
+            raise KeyError(f"Invalid key: {key}")
+
+
+class EmergencyContractRead(CustomBaseModel):
     date_from: Optional[datetime]
     date_to: Optional[datetime]
-    length_of_service: Optional[LengthOfServiceRead]  # ВЫСЛУГА ЛЕТ
-    coefficient: Optional[Decimal]  # КОЭФФИЦИЕНТ
-    percentage: Optional[int]  # ПРОЦЕНТ
-    staff_division: Optional[dict] 
-    position: Optional[PositionRead]
-    # position_id: Optional[str]
-    position_name: Optional[str] 
-    position_nameKZ: Optional[str]
-    actual_position: Optional[dict] 
-    # actual_position_id: Optional[str]
-    actual_position_name: Optional[str] 
-    actual_position_nameKZ: Optional[str] 
+    length_of_service: Optional[LengthOfServiceRead] = Field(default_factory=LengthOfServiceRead)
+    coefficient: Optional[Decimal] = Decimal("0.00")
+    percentage: Optional[int] = 100
+    staff_division: Optional[dict] = Field(default_factory=dict)
+    position: Optional[PositionRead] = None
+    position_name: Optional[str] = "Данные отсутствуют!"
+    position_nameKZ: Optional[str] = "Данные отсутствуют!"
+    actual_position: Optional[dict] = Field(default_factory=dict)
+    actual_position_name: Optional[str] = "Данные отсутствуют!"
+    actual_position_nameKZ: Optional[str] = "Данные отсутствуют!"
     emergency_rank_id: Optional[str]
-    document_link: Optional[str] 
-    document_number: Optional[str] 
-    # staff_division_id: Optional[str]
-    document_style: Optional[str]
+    document_link: Optional[str] = "Данные отсутствуют!"
+    document_number: Optional[str] = "Данные отсутствуют!"
+    document_style: Optional[str] = "Данные отсутствуют!"
     contractor_signer_name: Optional[Union[Dict, str]]
     date_credited: Optional[datetime]
-    staff_division_name: Optional[str]
-    staff_division_nameKZ: Optional[str] 
-    is_sgo: Optional[bool]
+    staff_division_name: Optional[str] = "Данные отсутствуют!"
+    staff_division_nameKZ: Optional[str] = "Данные отсутствуют!"
+    is_sgo: Optional[bool] = False
 
-    @validator("staff_division", "position", "actual_position", pre=True, always=True)
-    def default_empty_dict(cls, v):
-        return v if v is not None else {}
+    class Config:
+        orm_mode = True
 
-    @validator("position_name", "position_nameKZ", "actual_position_name", "actual_position_nameKZ", 
-                "document_link", "document_number", "staff_division_name", "staff_division_nameKZ", 
-               "document_style", pre=True, always=True)
-    def default_empty_string(cls, v):
-        return v if v is not None else " "
-
-    @validator('contractor_signer_name', always=True)
-    def check_contract_signer_name(cls, v):
-        if isinstance(v, dict):
-            return v
-        elif isinstance(v, str) and v:
-            # handle if it's a string or convert it
+    @validator("contractor_signer_name", pre=True, always=True)
+    def ensure_dict(cls, v):
+        if isinstance(v, str):
             return {"name": v}
-        else:
-            return {}
+        return v or {"name": "Неизвестный подписант"}
 
+    @root_validator(pre=True)
+    def fill_none_values(cls, values):
+        values = dict(values)
+        defaults = {
+            "length_of_service": LengthOfServiceRead(years=99, months=12, days=1),
+            "coefficient": Decimal("0.00"),
+            "percentage": 100,
+            "staff_division": {},
+            "position": {},
+            "actual_position": {},
+            "position_name": "Данные отсутствуют!",
+            "position_nameKZ": "Данные отсутствуют!",
+            "actual_position_name": "Данные отсутствуют!",
+            "actual_position_nameKZ": "Данные отсутствуют!",
+            "document_link": "Данные отсутствуют!",
+            "document_number": "Данные отсутствуют!",
+            "document_style": "Данные отсутствуют!",
+            "staff_division_name": "Данные отсутствуют!",
+            "staff_division_nameKZ": "Данные отсутствуют!",
+            "contractor_signer_name": {"name": "Неизвестный подписант"},
+            "is_sgo": False,
+        }
+        for key, default_value in defaults.items():
+            if values.get(key) is None:
+                values[key] = default_value
+        return values
+
+
+# Модель для краткого представления emergency_contracts (для таймлайна)
 class EmergencyContractReadShort(ReadModel):
-    date_from: Optional[datetime]
-    date_to: Optional[datetime]
-    position_name: Optional[str]
-    position_nameKZ: Optional[str]
-    actual_position_name: Optional[str]
-    actual_position_nameKZ: Optional[str]
-    # document_link: Optional[str]
-    # document_number: Optional[str]
-    # document_style: Optional[str]
-    # contractor_signer_name: Optional[dict]
-    # date_credited: Optional[datetime]
+    id: str = Field(default="00000000-0000-0000-0000-000000000000")
+    date_from: datetime = Field(default_factory=lambda: datetime(1920, 1, 1))
+    date_to: datetime = Field(default_factory=lambda: datetime(2500, 1, 1))
+    created_at: datetime = Field(default_factory=lambda: datetime(1920, 1, 1))
+    updated_at: datetime = Field(default_factory=lambda: datetime(1920, 1, 1))
+    position_name: str = Field(default="Данные отсутствуют!")
+    position_nameKZ: str = Field(default="Данные отсутствуют!")
+    actual_position_name: str = Field(default="Данные отсутствуют!")
+    actual_position_nameKZ: str = Field(default="Данные отсутствуют!")
 
     class Config:
         from_attributes = True
         arbitrary_types_allowed = True
+        # Не забываем наследовать параметры из ReadModel, если нужно:
+        allow_population_by_field_name = True
+        exclude_unset = False
+        json_encoders = {datetime: lambda v: v.isoformat()}
+
+    @validator(
+        "position_name", "position_nameKZ",
+        "actual_position_name", "actual_position_nameKZ",
+        pre=True, always=True
+    )
+    def default_empty_string(cls, v):
+        return v if v is not None else "Данные отсутствуют!"
 
     @classmethod
     def from_orm(cls, orm_obj):
-        position_name = orm_obj.position.name if orm_obj.position else orm_obj.position_name
-        position_nameKZ = orm_obj.position.nameKZ if orm_obj.position else orm_obj.position_nameKZ
+        position_name = orm_obj.position.name if getattr(orm_obj, "position", None) else "Данные отсутствуют!"
+        position_nameKZ = orm_obj.position.nameKZ if getattr(orm_obj, "position", None) else "Данные отсутствуют!"
         actual_position_name = (orm_obj.actual_position.name
-                                if orm_obj.actual_position
-                                else orm_obj.actual_position_name)
+                                if getattr(orm_obj, "actual_position", None)
+                                else "Данные отсутствуют!")
         actual_position_nameKZ = (orm_obj.actual_position.nameKZ
-                                  if orm_obj.actual_position
-                                  else orm_obj.actual_position_nameKZ)
-        staff_division_name = (orm_obj.staff_division.name
-                               if orm_obj.staff_division else orm_obj.staff_division_name)
-        staff_division_nameKZ = (orm_obj.staff_division.nameKZ
-                                 if orm_obj.staff_division else orm_obj.staff_division_nameKZ)
-
-        date_to = orm_obj.date_to or datetime.now(orm_obj.date_from.tzinfo)
-        length_of_service = get_date_difference(orm_obj.date_from, date_to)
+                                  if getattr(orm_obj, "actual_position", None)
+                                  else "Данные отсутствуют!")
         return cls(
             id=orm_obj.id,
-            date_from=orm_obj.date_from,
-            date_to=orm_obj.date_to,
-            length_of_service=length_of_service,
-            coefficient=orm_obj.coefficient,
-            percentage=orm_obj.percentage,
-            staff_division={"name": staff_division_name,
-                            "nameKZ": staff_division_nameKZ},
-            position={"name": position_name,
-                      "nameKZ": position_nameKZ},
-            position_id=orm_obj.position_id,
+            date_from=orm_obj.date_from or datetime(1920, 1, 1),
+            date_to=orm_obj.date_to or datetime(2500, 1, 1),
+            created_at=orm_obj.created_at or datetime(1920, 1, 1),
+            updated_at=orm_obj.updated_at or datetime(1920, 1, 1),
             position_name=position_name,
             position_nameKZ=position_nameKZ,
-            actual_position={"name": actual_position_name,
-                             "nameKZ": actual_position_nameKZ},
-            actual_position_id=orm_obj.actual_position_id,
             actual_position_name=actual_position_name,
-            actual_position_nameKZ=actual_position_nameKZ,
-            document_link=orm_obj.document_link,
-            document_number=orm_obj.document_number,
-            staff_division_id=orm_obj.staff_division_id,
-            document_style=orm_obj.document_style,
-            contractor_signer_name={"name": orm_obj.contractor_signer_name,
-                                    "nameKZ": orm_obj.contractor_signer_nameKZ},
-            date_credited=orm_obj.date_credited,
-            is_sgo=orm_obj.is_sgo
+            actual_position_nameKZ=actual_position_nameKZ
         )
 
 
@@ -830,40 +931,76 @@ class ExperienceRead(ReadModel):
         from_attributes = True
         arbitrary_types_allowed = True
 
+    @validator("document_link", "document_number",
+               "name_of_organization", "name_of_organizationKZ",
+               "document_style", "position_work_experience",
+               "position_work_experienceKZ", pre=True, always=True)
+    def default_empty_string(cls, v):
+        return v if v is not None else "Данные отсутствуют!"
+
+    @validator("date_from", "date_to", "date_credited", pre=True, always=True)
+    def default_date(cls, v):
+        return v if v is not None else datetime(1920, 1, 1, tzinfo=timezone.utc)
+
+    @validator("is_credited", pre=True, always=True)
+    def default_false(cls, v):
+        return v if v is not None else False
+
+    @validator("length_of_service", pre=True, always=True)
+    def default_length_of_service(cls, v):
+        return v if v is not None else {"years": 99, "months": 12, "days": 1}
+
     @classmethod
     def from_orm(cls, orm_obj):
-        date_to = orm_obj.date_to or datetime.now(orm_obj.date_from.tzinfo)
-        if orm_obj.is_credited:
-            length_of_service = get_date_difference(orm_obj.date_from, date_to)
-        else:
-            length_of_service = None
+        date_to = orm_obj.date_to or datetime(1920, 1, 1, tzinfo=timezone.utc)
+        length_of_service = (
+            get_date_difference(orm_obj.date_from, date_to)
+            if orm_obj.is_credited else {"years": 99, "months": 12, "days": 1}
+        )
         return cls(
             id=orm_obj.id,
-            date_from=orm_obj.date_from,
-            date_to=orm_obj.date_to,
-            document_link=orm_obj.document_link,
-            document_number=orm_obj.document_number,
-            name_of_organization=orm_obj.name_of_organization if orm_obj.name_of_organization else "",
-            name_of_organizationKZ=orm_obj.name_of_organizationKZ if orm_obj.name_of_organizationKZ else "",
-            is_credited=orm_obj.is_credited,
-            document_style=orm_obj.document_style,
-            date_credited=orm_obj.date_credited,
-            position_work_experience=orm_obj.position_work_experience if orm_obj.position_work_experience else "",
-            position_work_experienceKZ=orm_obj.position_work_experienceKZ if orm_obj.position_work_experienceKZ else "",
+            date_from=orm_obj.date_from or datetime(1920, 1, 1, tzinfo=timezone.utc),
+            date_to=date_to,
+            document_link=orm_obj.document_link or "Данные отсутствуют!",
+            document_number=orm_obj.document_number or "Данные отсутствуют!",
+            name_of_organization=orm_obj.name_of_organization or "Данные отсутствуют!",
+            name_of_organizationKZ=orm_obj.name_of_organizationKZ or "Данные отсутствуют!",
+            is_credited=orm_obj.is_credited if orm_obj.is_credited is not None else False,
+            document_style=orm_obj.document_style or "Данные отсутствуют!",
+            date_credited=orm_obj.date_credited or datetime(1920, 1, 1, tzinfo=timezone.utc),
+            position_work_experience=orm_obj.position_work_experience or "Данные отсутствуют!",
+            position_work_experienceKZ=orm_obj.position_work_experienceKZ or "Данные отсутствуют!",
             length_of_service=length_of_service,
         )
 
 
+# Обновлённая схема ServiceIdInfoRead с корректными дефолтными значениями для enum-полей
 class ServiceIdInfoRead(ReadModel):
-    number: Optional[str]
-    token_number: Optional[str]
-    date_to: Optional[datetime]
-    token_status: Optional[str]
-    id_status: Optional[str]
+    number: str
+    token_number: str
+    date_to: datetime
+    token_status: str = Field(default="NOT_RECEIVED")
+    id_status: str = Field(default="NOT_RECEIVED")
 
     class Config:
         from_attributes = True
         arbitrary_types_allowed = True
+
+    @root_validator(pre=True)
+    def fill_none_values(cls, values):
+        values = dict(values)
+        # Если в базе приходит значение, отличное от допустимых, заменяем его на "NOT_RECEIVED"
+        if values.get("token_status") in [None, "Данные отсутствуют!"]:
+            values["token_status"] = "NOT_RECEIVED"
+        if values.get("id_status") in [None, "Данные отсутствуют!"]:
+            values["id_status"] = "NOT_RECEIVED"
+        if values.get("number") is None:
+            values["number"] = "Данные отсутствуют!"
+        if values.get("token_number") is None:
+            values["token_number"] = "Данные отсутствуют!"
+        if values.get("date_to") is None:
+            values["date_to"] = datetime(1920, 1, 1)
+        return values
 
 
 class SecondmentRead(Model):
@@ -875,26 +1012,30 @@ class SecondmentRead(Model):
     document_link: Optional[str]
     state_body: Optional[str]
 
+    @validator("staff_division", "staff_divisionKZ", "state_body", pre=True, always=True)
+    def default_empty_string(cls, v):
+        return v if v is not None else "Данные отсутствуют!"
+
+    @validator("document_link", pre=True, always=True)
+    def default_empty_link(cls, v):
+        return v if v is not None else "https://example.com/default.pdf"
+
     class Config:
         from_attributes = True
         arbitrary_types_allowed = True
 
     @classmethod
     def from_orm(cls, orm_obj):
-        staff_division = (orm_obj.secondment.name
-                          if orm_obj.secondment else None)
-        staff_divisionKZ = (orm_obj.secondment.nameKZ
-                            if orm_obj.secondment else None)
-
-        body = (orm_obj.secondment.state_body.name
-                if orm_obj.secondment.state_body else None)
+        staff_division = orm_obj.secondment.name if orm_obj.secondment else "Данные отсутствуют!"
+        staff_divisionKZ = orm_obj.secondment.nameKZ if orm_obj.secondment else "Данные отсутствуют!"
+        body = orm_obj.secondment.state_body.name if orm_obj.secondment.state_body else "Данные отсутствуют!"
         return cls(
             id=orm_obj.id,
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
             staff_division=staff_division,
             staff_divisionKZ=staff_divisionKZ,
-            document_link=orm_obj.document_link,
+            document_link=orm_obj.document_link if orm_obj.document_link else "https://example.com/default.pdf",
             state_body=body
         )
 
@@ -902,6 +1043,10 @@ class SecondmentRead(Model):
 class TypeOfArmyEquipmentModelRead(ReadNamedModel):
     type_of_equipment: Optional[dict]
 
+    @validator("type_of_equipment", pre=True, always=True)
+    def default_empty_dict(cls, v):
+        return v if v is not None else {"name": "Неизвестно", "nameKZ": "Белгісіз"}
+
     class Config:
         from_attributes = True
         arbitrary_types_allowed = True
@@ -912,8 +1057,8 @@ class TypeOfArmyEquipmentModelRead(ReadNamedModel):
             id=orm_obj.id,
             name=orm_obj.name,
             nameKZ=orm_obj.nameKZ,
-            type_of_equipment={"name": orm_obj.type_of_army_equipment.name,
-                               "nameKZ": orm_obj.type_of_army_equipment.nameKZ}
+            type_of_equipment={"name": orm_obj.type_of_army_equipment.name if orm_obj.type_of_army_equipment else "Неизвестно",
+                               "nameKZ": orm_obj.type_of_army_equipment.nameKZ if orm_obj.type_of_army_equipment else "Белгісіз"}
         )
 
 
@@ -921,6 +1066,10 @@ class TypeOfClothingEquipmentModelRead(ReadModel):
     type_of_equipment: Optional[dict]
     model_of_equipment: Optional[dict]
 
+    @validator("type_of_equipment", "model_of_equipment", pre=True, always=True)
+    def default_empty_dict(cls, v):
+        return v if v is not None else {"name": "Неизвестно", "nameKZ": "Белгісіз"}
+
     class Config:
         from_attributes = True
         arbitrary_types_allowed = True
@@ -929,15 +1078,19 @@ class TypeOfClothingEquipmentModelRead(ReadModel):
     def from_orm(cls, orm_obj):
         return cls(
             id=orm_obj.id,
-            type_of_equipment={"name": orm_obj.type_cloth_equipmets.name,
-                               "nameKZ": orm_obj.type_cloth_equipmets.nameKZ},
-            model_of_equipment={"name": orm_obj.type_cloth_eq_models.name,
-                                "nameKZ": orm_obj.type_cloth_eq_models.nameKZ}
+            type_of_equipment={"name": orm_obj.type_cloth_equipmets.name if orm_obj.type_cloth_equipmets else "Неизвестно",
+                               "nameKZ": orm_obj.type_cloth_equipmets.nameKZ if orm_obj.type_cloth_equipmets else "Белгісіз"},
+            model_of_equipment={"name": orm_obj.type_cloth_eq_models.name if orm_obj.type_cloth_eq_models else "Неизвестно",
+                                "nameKZ": orm_obj.type_cloth_eq_models.nameKZ if orm_obj.type_cloth_eq_models else "Белгісіз"}
         )
 
 
 class TypeOfOtherEquipmentModelRead(ReadNamedModel):
     type_of_equipment: Optional[dict]
+
+    @validator("type_of_equipment", pre=True, always=True)
+    def default_empty_dict(cls, v):
+        return v if v is not None else {"name": "Неизвестно", "nameKZ": "Белгісіз"}
 
     class Config:
         from_attributes = True
@@ -949,8 +1102,8 @@ class TypeOfOtherEquipmentModelRead(ReadNamedModel):
             id=orm_obj.id,
             name=orm_obj.name,
             nameKZ=orm_obj.nameKZ,
-            type_of_equipment={"name": orm_obj.type_of_other_equipment.name,
-                               "nameKZ": orm_obj.type_of_other_equipment.nameKZ}
+            type_of_equipment={"name": orm_obj.type_of_other_equipment.name if orm_obj.type_of_other_equipment else "Неизвестно",
+                               "nameKZ": orm_obj.type_of_other_equipment.nameKZ if orm_obj.type_of_other_equipment else "Белгісіз"}
         )
 
 
@@ -972,41 +1125,66 @@ class EquipmentRead(ReadModel):
     cloth_eq_types_models: Optional[TypeOfClothingEquipmentModelRead]
     type_of_other_equipment_model: Optional[TypeOfOtherEquipmentModelRead]
 
+    @validator("type_of_equipment", "inventory_number", "clothing_size",
+               "document_link", "document_number", pre=True, always=True)
+    def default_empty_string(cls, v):
+        return v if v is not None else "Данные отсутствуют!"
+
+    @validator("inventory_count", "count_of_ammo", pre=True, always=True)
+    def default_int(cls, v):
+        return v if v is not None else 999999
+
+    @validator("date_from", "date_to", pre=True, always=True)
+    def default_date(cls, v):
+        return v if v is not None else datetime(1920, 1, 1, tzinfo=timezone.utc)
+
     class Config:
         from_attributes = True
         arbitrary_types_allowed = True
+
 
 class HistoryTimelineDurationRead(Model):
     date_from: Optional[datetime]
     date_to: Optional[datetime]
 
+    @root_validator(pre=True)
+    def fill_default_dates(cls, values):
+        values = dict(values)
+        if values.get("date_from") is None:
+            values["date_from"] = datetime(1920, 1, 1, tzinfo=timezone.utc)
+        if values.get("date_to") is None:
+            values["date_to"] = datetime(2500, 1, 1, tzinfo=timezone.utc)
+        return values
+
     class Config:
         from_attributes = True
         arbitrary_types_allowed = True
 
 
+# Схема для детального представления данных сервиса
 class HistoryServiceDetailRead(Model):
-    general_information: Optional[GeneralInformationRead] = None
-    attendance: Optional[TrainingAttendanceRead] = None
-    service_id_info: Optional[ServiceIdInfoRead] = None
-    badges: Optional[List[BadgeServiceDetailRead]] = None
-    rank: Optional[RankRead] = None
-    ranks: Optional[List[RankServiceDetailRead]] = None
-    penalties: Optional[List[PenaltyRead]] = None
-    contracts: Optional[List[ContractRead]] = None
+    general_information: Optional[GeneralInformationRead]
+    attendance: Optional[TrainingAttendanceRead]
+    service_id_info: Optional[ServiceIdInfoRead]
+    badges: Optional[List[BadgeServiceDetailRead]] = Field(default_factory=list)
+    rank: Optional[RankRead]
+    ranks: Optional[List[RankServiceDetailRead]]
+    penalties: Optional[List[PenaltyRead]]
+    contracts: Optional[List[ContractRead]]
     attestations: Union[Optional[List[AttestationRead]], str]
     characteristics: Union[Optional[List[CharacteristicRead]], str]
-    holidays: Optional[List[HolidayRead]] = None
-    emergency_contracts: Optional[List[EmergencyContactRead]] = None
-    experience: Optional[List[ExperienceRead]] = None
-    secondments: Optional[List[SecondmentRead]] = None
-    equipments: Optional[List[EquipmentRead]] = None
+    holidays: Optional[List[HolidayRead]]
+    emergency_contracts: List[EmergencyContractRead] = Field(default_factory=list)
+    experience: Optional[List[ExperienceRead]]
+    secondments: Optional[List[SecondmentRead]]
+    equipments: Optional[List[EquipmentRead]]
 
     class Config:
         from_attributes = True
         arbitrary_types_allowed = True
 
 
+# Схема для таймлайна, где emergency_contracts представлены кратко
 class HistoryTimeLineRead(Model):
     badges: Optional[List[HistoryTimelineDurationRead]]
     rank: Optional[RankRead]
@@ -1019,40 +1197,25 @@ class HistoryTimeLineRead(Model):
     educations: Optional[List[EducationShortRead]]
     courses: Optional[List[CourseShortRead]]
     driving_license: Optional[DrivingLicenseRead]
-    identification_card: Optional[IdentificationCardRead] 
-    passport:  Optional[PassportRead]
+    identification_card: Optional[IdentificationCardRead]
+    passport: Optional[PassportRead]
+
+    @validator('emergency_contracts', pre=True, each_item=True)
+    def ensure_dict(cls, value):
+        # Если значение не dict, возвращаем словарь с дефолтными значениями
+        if not isinstance(value, dict):
+            return {
+                "id": "00000000-0000-0000-0000-000000000000",
+                "date_from": datetime(1920, 1, 1),
+                "date_to": datetime(2500, 1, 1),
+                "created_at": datetime(1920, 1, 1),
+                "updated_at": datetime(1920, 1, 1),
+                "position_name": "Данные отсутствуют!",
+                "position_nameKZ": "Данные отсутствуют!",
+                "actual_position_name": "Данные отсутствуют!",
+                "actual_position_nameKZ": "Данные отсутствуют!"
+            }
+        return value
 
     class Config:
-        from_attributes = True
         arbitrary_types_allowed = True
-
-# class HistoryServiceDetailRead(Model):
-#     general_information: Optional[GeneralInformationRead] = None
-#     attendance: Optional[TrainingAttendanceRead] = None
-#     service_id_info: Optional[ServiceIdInfoRead] = None
-#     badges: Optional[List[BadgeServiceDetailRead]] = None
-#     rank: Optional[RankRead] = None
-#     # ranks: Optional[List[RankServiceDetailRead]] = None
-#     penalties: Optional[List[PenaltyRead]] = None
-#     contracts: Optional[List[ContractRead]] = None
-#     attestations: Union[Optional[List[AttestationRead]], str]
-#     characteristics: Union[Optional[List[CharacteristicRead]], str]
-#     holidays: Optional[List[HolidayRead]] = None
-#     emergency_contracts: Optional[List[EmergencyContactRead]] = None
-#     experience: Optional[List[ExperienceRead]] = None
-#     secondments: Optional[List[SecondmentRead]] = None
-#     equipments: Optional[List[EquipmentRead]] = None
-
-    # class Config:
-    #     from_attributes = True
-    #     arbitrary_types_allowed = True
-
-
-# class HistoryTimeLineRead(HistoryServiceDetailRead):
-#     academic_degrees: Optional[List[AcademicDegreeShorRead]]
-#     academic_titles: Optional[List[AcademicTitleShortRead]]
-#     educations: Optional[List[EducationShortRead]]
-#     courses: Optional[List[CourseShortRead]]
-#     driving_license: Optional[DrivingLicenseRead] = None
-#     identification_card: Optional[IdentificationCardRead] = None
-#     passport:  Optional[PassportRead] = None

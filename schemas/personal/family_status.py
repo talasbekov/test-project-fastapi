@@ -1,5 +1,5 @@
 from schemas import NamedModel,  ReadModel
-from typing import Optional
+
 
 class FamilyStatusBase(NamedModel):
     pass

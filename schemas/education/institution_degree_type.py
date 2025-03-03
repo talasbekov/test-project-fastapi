@@ -1,6 +1,6 @@
 from typing import List, Optional
-
-from schemas import NamedModel, ReadNamedModel, BaseModel
+from pydantic import BaseModel
+from schemas import NamedModel, ReadNamedModel, CustomBaseModel
 
 
 class InstitutionDegreeTypeBase(NamedModel):
@@ -21,6 +21,6 @@ class InstitutionDegreeTypeRead(InstitutionDegreeTypeBase, ReadNamedModel):
         orm_mode = True
 
 
-class InstitutionDegreeTypeReadPagination(BaseModel):
+class InstitutionDegreeTypeReadPagination(CustomBaseModel):
     total: Optional[int]
     objects: Optional[List[InstitutionDegreeTypeRead]]

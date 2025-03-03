@@ -4,9 +4,10 @@ from typing import Optional
 from pydantic import BaseModel
 
 from .language import LanguageRead
+from .. import CustomBaseModel
 
 
-class LanguageProficiencyBase(BaseModel):
+class LanguageProficiencyBase(CustomBaseModel):
     level: int
     profile_id: Optional[str]
     language_id: Optional[str]

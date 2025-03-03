@@ -4,6 +4,9 @@ from sqlalchemy import Column, ForeignKey, String, Integer
 from sqlalchemy.orm import relationship
 
 from models import NamedModel
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class PositionNameEnum(str, EnumBase):
@@ -98,13 +101,18 @@ class Position(NamedModel):
 
     @property
     def shortened_max_rank_name(self):
+        if self.category_code is None:
+            logger.warning("category_code is None for Position ID: %s", self.id)
+            return "Unknown Rank"
         if self.category_code.startswith("C-RG"):
-            return self.max_rank.name[:-6]
-        return self.max_rank.name
+            return self.max_rank.name[:-6] if self.max_rank else "Unknown Rank"
+        return self.max_rank.name if self.max_rank else "Unknown Rank"
 
     @property
     def shortened_nameKZ(self):
+        if self.category_code is None:
+            logger.warning("category_code is None for Position ID: %s", self.id)
+            return "Unknown NameKZ"
         if self.category_code.startswith("C-RG"):
-            return self.nameKZ[:-6]
-        return self.nameKZ
-
+            return self.nameKZ[:-6] if self.nameKZ else "Unknown NameKZ"
+        return self.nameKZ if self.nameKZ else "Unknown NameKZ"

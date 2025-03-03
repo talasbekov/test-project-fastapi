@@ -1,8 +1,8 @@
-from pydantic import BaseModel
 from typing import Optional
+from schemas import CustomBaseModel
 
 
-class PenaltyReadHistory(BaseModel):
+class PenaltyReadHistory(CustomBaseModel):
     name: Optional[str]
     nameKZ: Optional[str]
 
@@ -18,7 +18,7 @@ class PenaltyReadHistory(BaseModel):
         )
 
 
-class WorkExperienceRead(BaseModel):
+class WorkExperienceRead(CustomBaseModel):
     name: Optional[str]
     nameKZ: Optional[str]
 
@@ -34,9 +34,9 @@ class WorkExperienceRead(BaseModel):
         )
 
 
-class EmergencyServiceRead(BaseModel):
-    name: Optional[str]
-    nameKZ: Optional[str]
+class EmergencyServiceRead(CustomBaseModel):
+    name: Optional[str] = "Данные отсутствуют"
+    nameKZ: Optional[str] = "Данные отсутствуют"
 
     class Config:
         orm_mode = True
@@ -54,7 +54,7 @@ class EmergencyServiceRead(BaseModel):
         )
 
 
-class AttestationReadHistory(BaseModel):
+class AttestationReadHistory(CustomBaseModel):
     name: Optional[str]
     nameKZ: Optional[str]
 
@@ -70,7 +70,7 @@ class AttestationReadHistory(BaseModel):
         )
 
 
-class NameChangeReadHistory(BaseModel):
+class NameChangeReadHistory(CustomBaseModel):
     name: str
     nameKZ: str
 
@@ -102,7 +102,7 @@ class NameChangeReadHistory(BaseModel):
         )
 
 
-class BadgePersonalReadHistory(BaseModel):
+class BadgePersonalReadHistory(CustomBaseModel):
     name: Optional[str]
     nameKZ: Optional[str]
 
@@ -118,7 +118,7 @@ class BadgePersonalReadHistory(BaseModel):
         )
 
 
-class StatusReadHistory(BaseModel):
+class StatusReadHistory(CustomBaseModel):
     name: Optional[str]
     nameKZ: Optional[str]
 
@@ -134,7 +134,7 @@ class StatusReadHistory(BaseModel):
         )
 
 
-class CoolnessReadHistory(BaseModel):
+class CoolnessReadHistory(CustomBaseModel):
     name: Optional[str]
     nameKZ: Optional[str]
 
@@ -150,7 +150,7 @@ class CoolnessReadHistory(BaseModel):
         )
 
 
-class ContractReadHistory(BaseModel):
+class ContractReadHistory(CustomBaseModel):
     name: Optional[str]
     nameKZ: Optional[str]
 
@@ -167,7 +167,7 @@ class ContractReadHistory(BaseModel):
         )
 
 
-class BadgeReadHistory(BaseModel):
+class BadgeReadHistory(CustomBaseModel):
     name: Optional[str]
     nameKZ: Optional[str]
 
@@ -183,7 +183,7 @@ class BadgeReadHistory(BaseModel):
             nameKZ=orm_obj.type.nameKZ,
         )
 
-class SecondmentReadHistory(BaseModel):
+class SecondmentReadHistory(CustomBaseModel):
     name: Optional[str]
     nameKZ: Optional[str]
 

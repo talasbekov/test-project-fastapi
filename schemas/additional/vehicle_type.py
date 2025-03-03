@@ -1,6 +1,7 @@
 from typing import Optional, List
+from pydantic import BaseModel
 
-from schemas import NamedModel, ReadNamedModel, BaseModel
+from schemas import NamedModel, ReadNamedModel, CustomBaseModel
 
 
 class VehicleTypeBase(NamedModel):
@@ -22,6 +23,6 @@ class VehicleTypeRead(VehicleTypeBase, ReadNamedModel):
     pass
 
 
-class VehicleTypeReadPagination(BaseModel):
+class VehicleTypeReadPagination(CustomBaseModel):
     total: Optional[int]
     objects: Optional[List[VehicleTypeRead]]

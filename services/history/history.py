@@ -501,7 +501,6 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             shooting_training=100,
         )
 
-
         history_service_detail_read = HistoryServiceDetailRead(
             holidays=holidays,
             badges=badges,

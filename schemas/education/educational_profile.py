@@ -8,9 +8,10 @@ from .academic_title import AcademicTitleRead
 from .course import CourseRead
 from .education import EducationRead
 from .language_proficiency import LanguageProficiencyRead
+from .. import CustomBaseModel
 
 
-class EducationalProfileBase(BaseModel):
+class EducationalProfileBase(CustomBaseModel):
     profile_id: Optional[str]
 
     class Config:

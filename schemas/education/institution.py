@@ -1,6 +1,6 @@
 from typing import Optional, List
-
-from schemas import NamedModel, ReadNamedModel, BaseModel
+from pydantic import BaseModel
+from schemas import NamedModel, ReadNamedModel, CustomBaseModel
 
 
 class InstitutionBase(NamedModel):
@@ -21,6 +21,6 @@ class InstitutionUpdate(InstitutionBase):
 class InstitutionRead(InstitutionBase, ReadNamedModel):
     pass
 
-class InstitutionReadPagination(BaseModel):
+class InstitutionReadPagination(CustomBaseModel):
     total: Optional[int]
     objects: Optional[List[InstitutionRead]]

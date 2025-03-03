@@ -1,11 +1,9 @@
-import uuid
 from typing import Optional, List
 from datetime import date
 
-from schemas import (BaseModel,
-                     NamedModel,
+from schemas import (NamedModel,
                      UserShortReadStatus,
-                     StaffDivisionReadWithoutStaffUnit,)
+                     StaffDivisionReadWithoutStaffUnit, CustomBaseModel)
 from .activity import ActivityRead
 from .schedule_day import ScheduleDayRead, ScheduleDayCreateWithString
 
@@ -44,7 +42,7 @@ class MonthRead(NamedModel):
     id: Optional[str]
 
 
-class ScheduleMonthBase(BaseModel):
+class ScheduleMonthBase(CustomBaseModel):
     start_date: date
     end_date: date
     place_id: str

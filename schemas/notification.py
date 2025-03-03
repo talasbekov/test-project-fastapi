@@ -8,8 +8,9 @@ class NotificationBase(Model):
     message: str
     sender_type: str
     receiver_id: str
+    sender_id: Optional[str] = "system"
 
-    class Config():
+    class Config:
         orm_mode = True
         arbitrary_types_allowed = True
 
@@ -26,6 +27,7 @@ class NotificationRead(ReadModel, NotificationBase):
     message: Optional[str]
     sender_type: Optional[str]
     receiver_id: Optional[str]
+    sender_id: Optional[str] = "system"
  
 class NotificationReadPagination(Model):
     total: Optional[int]

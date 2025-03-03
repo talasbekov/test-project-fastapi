@@ -2,7 +2,7 @@ import uuid
 from typing import List, Optional, Union
 
 from pydantic import BaseModel, Field, validator
-from schemas import NamedModel, StaffDivisionTypeRead, ReadModel, PositionRead, RankRead
+from schemas import NamedModel, StaffDivisionTypeRead, ReadModel, PositionRead, RankRead, CustomBaseModel
 from .archive_staff_unit import ArchiveStaffUnitRead
 
 
@@ -34,7 +34,7 @@ class NewArchiveStaffDivisionUpdate(ArchiveStaffDivisionBase):
     pass
 
 
-class ArchiveStaffDivisionUpdateParentGroup(BaseModel):
+class ArchiveStaffDivisionUpdateParentGroup(CustomBaseModel):
     parent_group_id: str
 
 

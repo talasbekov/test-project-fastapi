@@ -2,6 +2,7 @@ import uuid
 import json
 import sys
 from collections import deque
+from json import JSONDecodeError
 from typing import List, Dict, Any, Optional
 from datetime import datetime
 from sqlalchemy.orm import Session
@@ -36,24 +37,51 @@ from .base import ServiceBase
 class StaffDivisionService(
         ServiceBase[StaffDivision, StaffDivisionCreate, StaffDivisionUpdate]):
 
+    @staticmethod
+    def safe_json_loads(value: str):
+        if not value or not value.strip():
+            return {}
+        try:
+            return json.loads(value)
+        except JSONDecodeError:
+            return {}
+
     def get_by_id(self, db: Session, id: str) -> StaffDivision:
         group = super().get(db, id)
         if group is None:
-            raise NotFoundException(
-                f"StaffDivision with id: {id} is not found!")
+            raise NotFoundException(f"StaffDivision with id: {id} is not found!")
         for staff_unit in group.staff_units:
             if isinstance(staff_unit.requirements, str):
-                staff_unit.requirements = json.loads(staff_unit.requirements)
+                staff_unit.requirements = self.safe_json_loads(staff_unit.requirements)
             if staff_unit.user_replacing:
                 if isinstance(staff_unit.user_replacing.staff_unit.requirements, str):
-                    staff_unit.user_replacing.staff_unit.requirements = json.loads(
+                    staff_unit.user_replacing.staff_unit.requirements = self.safe_json_loads(
                         staff_unit.user_replacing.staff_unit.requirements)
         if isinstance(group.description, str):
-            group.description = json.loads(group.description)
+            group.description = self.safe_json_loads(group.description)
         for child in group.children:
             if isinstance(child.description, str):
-                child.description = json.loads(child.description)
+                child.description = self.safe_json_loads(child.description)
         return group
+
+    # def get_by_id(self, db: Session, id: str) -> StaffDivision:
+    #     group = super().get(db, id)
+    #     if group is None:
+    #         raise NotFoundException(
+    #             f"StaffDivision with id: {id} is not found!")
+    #     for staff_unit in group.staff_units:
+    #         if isinstance(staff_unit.requirements, str):
+    #             staff_unit.requirements = json.loads(staff_unit.requirements)
+    #         if staff_unit.user_replacing:
+    #             if isinstance(staff_unit.user_replacing.staff_unit.requirements, str):
+    #                 staff_unit.user_replacing.staff_unit.requirements = json.loads(
+    #                     staff_unit.user_replacing.staff_unit.requirements)
+    #     if isinstance(group.description, str):
+    #         group.description = json.loads(group.description)
+    #     for child in group.children:
+    #         if isinstance(child.description, str):
+    #             child.description = json.loads(child.description)
+    #     return group
     
     def get_by_id_schedule(self, db: Session, id: str) -> StaffDivision:
         group = super().get(db, id)

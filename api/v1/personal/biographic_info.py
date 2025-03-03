@@ -64,12 +64,12 @@ async def create(*,
     Authorize.jwt_required()
     return biographic_info_service.create(db, body)
 
-@router.get("/user/{user_id}/", dependencies=[Depends(HTTPBearer())],
+@router.get("/user/{profile_id}/", dependencies=[Depends(HTTPBearer())],
             response_model=BiographicInfoRead,
             summary="Get BiographicInfo by user_id")
-async def get_by_user_id(*,
+async def get_by_profile_id(*,
                     db: Session = Depends(get_db),
-                    user_id: str,
+                    profile_id: str,
                     Authorize: AuthJWT = Depends()
                     ):
     """
@@ -78,7 +78,7 @@ async def get_by_user_id(*,
         - **user_id**: UUID - required.
     """
     Authorize.jwt_required()
-    return biographic_info_service.get_by_user_id(db, str(user_id))
+    return biographic_info_service.get_by_profile_id(db, str(profile_id))
 
 @router.get("/{id}/", dependencies=[Depends(HTTPBearer())],
             response_model=BiographicInfoRead,

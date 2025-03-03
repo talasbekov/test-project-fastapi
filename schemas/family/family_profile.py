@@ -4,9 +4,10 @@ from typing import Optional, List, Union
 from pydantic import BaseModel
 
 from .family import FamilyRead
+from .. import CustomBaseModel
 
 
-class FamilyProfileBase(BaseModel):
+class FamilyProfileBase(CustomBaseModel):
 
     profile_id: Optional[str]
 

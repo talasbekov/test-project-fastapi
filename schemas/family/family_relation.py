@@ -1,7 +1,7 @@
 from typing import Optional, List
-from pydantic import validator
+from pydantic import validator, BaseModel
 
-from schemas import NamedModel, ReadNamedModel, BaseModel
+from schemas import NamedModel, ReadNamedModel, CustomBaseModel
 
 
 class FamilyRelationBase(NamedModel):
@@ -25,6 +25,6 @@ class FamilyRelationRead(FamilyRelationBase, ReadNamedModel):
     class Config:
         orm_mode = True
 
-class FamilyRelationReadPagination(BaseModel):
+class FamilyRelationReadPagination(CustomBaseModel):
     total: Optional[int]
     objects: Optional[List[FamilyRelationRead]]

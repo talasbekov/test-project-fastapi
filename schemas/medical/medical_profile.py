@@ -1,8 +1,5 @@
-import uuid
 from typing import List, Optional, Union
-
-from pydantic import BaseModel
-
+from schemas import CustomBaseModel
 from schemas.medical import (AnthropometricDataRead,
                              DispensaryRegistrationRead,
                              GeneralUserInformationRead,
@@ -11,7 +8,7 @@ from schemas.medical import (AnthropometricDataRead,
                              GeneralUserInformationRead)
 
 
-class MedicalProfileBase(BaseModel):
+class MedicalProfileBase(CustomBaseModel):
     profile_id: str
 
     class Config:

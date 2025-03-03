@@ -20,7 +20,6 @@ from ws import notification_manager
 from ws.custom_websocket import CustomWebSocket
 
 
-
 socket.setdefaulttimeout(15) # TODO: change to configs.SOCKET_TIMEOUT
 
 app = FastAPI(

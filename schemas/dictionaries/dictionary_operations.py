@@ -1,7 +1,7 @@
 from typing import List
-from pydantic import BaseModel
+from schemas import CustomBaseModel
 
 
-class JoinRecordsBody(BaseModel):
+class JoinRecordsBody(CustomBaseModel):
     correct_id: str
     ids_to_change: List[str]

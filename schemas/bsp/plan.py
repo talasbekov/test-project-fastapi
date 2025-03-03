@@ -2,12 +2,12 @@ import uuid
 from datetime import datetime
 from typing import Optional, List
 from enum import Enum
-from pydantic import Field
+from pydantic import Field, BaseModel
 
-from schemas import BaseModel, UserShortReadStatus
+from schemas import UserShortReadStatus, CustomBaseModel
 from .schedule_year import ScheduleYearRead
 
-class BspPlanBase(BaseModel):
+class BspPlanBase(CustomBaseModel):
     year: Optional[int]
     creator_id: Optional[str]
     status: Optional[Enum]
@@ -31,6 +31,6 @@ class BspPlanRead(BspPlanBase):
     creator: Optional[UserShortReadStatus]
     schedule_years: Optional[List[ScheduleYearRead]]
 
-class BspPlanReadPagination(BaseModel):
+class BspPlanReadPagination(CustomBaseModel):
     total: int = Field(0, nullable=False)
     objects: List[BspPlanRead] = Field([], nullable=False)

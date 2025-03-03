@@ -20,6 +20,11 @@ class Notification(Model):
         nullable=False,
         index=True)
 
+    sender_id = Column(
+        String(),
+        nullable=False,
+        index=True)
+
     is_seen = Column(
         Boolean,
         nullable=False,

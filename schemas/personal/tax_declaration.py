@@ -1,11 +1,9 @@
 import datetime
-import uuid
 from typing import Optional
+from schemas import CustomBaseModel
 
-from pydantic import BaseModel
 
-
-class TaxDeclarationBase(BaseModel):
+class TaxDeclarationBase(CustomBaseModel):
     year: str
     is_paid: bool
     profile_id: str

@@ -1,26 +1,29 @@
 import datetime
-import uuid
+
 from typing import Optional
 
-from pydantic import AnyUrl, BaseModel, validator
+from pydantic import validator
+from pydantic.networks import AnyUrl
+
 from .illness_type import IllnessTypeRead
+from .. import CustomBaseModel
 
 
-class HospitalDataBase(BaseModel):
+class HospitalDataBase(CustomBaseModel):
     code: str
     place: str
     placeKZ: str
     start_date: datetime.datetime
     end_date: datetime.datetime
-    document_link: Optional[str]
+    document_link: Optional[AnyUrl]
     profile_id: str
     illness_type_id: Optional[str]
 
-    @validator("document_link")
-    def validate_document_link(cls, v):
-        if v and not v.startswith(("http://", "https://")):
+    @validator("document_link", pre=True, always=True)
+    def validate_url(cls, v):
+        if v and not (v.startswith("http://") or v.startswith("https://")):
             raise ValueError("Invalid URL format")
-        return v
+        return v or "https://default.link"
 
 
 class HospitalDataCreate(HospitalDataBase):
@@ -33,7 +36,7 @@ class HospitalDataUpdate(HospitalDataBase):
 
 class HospitalDataRead(HospitalDataBase):
     id: Optional[str]
-    document_link: Optional[str]
+    document_link: Optional[AnyUrl]
     code: Optional[str]
     place: Optional[str]
     placeKZ: Optional[str]
@@ -43,9 +46,9 @@ class HospitalDataRead(HospitalDataBase):
     medical_profile_id: Optional[str]
     illness_type: Optional[IllnessTypeRead]
 
-    @validator("placeKZ", "illness_type_id", pre=True, always=True)
-    def default_empty_string(cls, v):
-        return v if v is not None else " "
+    # @validator("placeKZ", "illness_type_id", pre=True, always=True)
+    # def default_empty_string(cls, v):
+    #     return v if v is not None else " "
 
     class Config:
         orm_mode = True

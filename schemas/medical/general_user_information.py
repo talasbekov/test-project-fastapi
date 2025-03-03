@@ -1,12 +1,9 @@
-import uuid
 from typing import Optional
-
-from pydantic import BaseModel
-
 from models import AgeGroup
+from schemas import CustomBaseModel
 
 
-class GeneralUserInformationBase(BaseModel):
+class GeneralUserInformationBase(CustomBaseModel):
     height: int
     blood_group: str
     age_group: AgeGroup

@@ -6,7 +6,7 @@ from pydantic import BaseModel, EmailStr, Field, validator
 
 from schemas import (PositionRead, RankRead, StaffFunctionRead,
                      NamedModel, ReadModel, ReadNamedModel,
-                     BadgeRead, StatusRead, StaffDivisionTypeRead)
+                     BadgeRead, StatusRead, StaffDivisionTypeRead, CustomBaseModel)
 
 
 class StaffDivisionBase(NamedModel):
@@ -57,7 +57,7 @@ class StaffDivisionUpdate(StaffDivisionBase):
     pass
 
 
-class StaffDivisionUpdateParentGroup(BaseModel):
+class StaffDivisionUpdateParentGroup(CustomBaseModel):
     parent_group_id: str
 
 
@@ -253,7 +253,7 @@ class StaffUnitMatreshkaOptionRead(ReadModel):
         arbitrary_types_allowed = True
 
 
-class StaffUnitMatreshkaOptionReadPagination(BaseModel):
+class StaffUnitMatreshkaOptionReadPagination(CustomBaseModel):
     total: Optional[int]
     objects: Optional[List[StaffUnitMatreshkaOptionRead]]
 
@@ -623,7 +623,7 @@ class StaffDivisionTreeRead(ReadNamedModel):
     class Config:
         orm_mode = True
 
-class StaffDivisionVacancyRead(BaseModel):
+class StaffDivisionVacancyRead(CustomBaseModel):
     id: Optional[str]
     staff_division_number: Optional[int] = Field(None, nullable=True)
     type: Optional[StaffDivisionTypeRead]
@@ -635,7 +635,7 @@ class StaffDivisionVacancyRead(BaseModel):
         orm_mode = True
 
 
-class StaffDivisionNamedModel(BaseModel):
+class StaffDivisionNamedModel(CustomBaseModel):
     id: Optional[str]
     name: str
     nameKZ: Optional[str] = Field(None, nullable=True)

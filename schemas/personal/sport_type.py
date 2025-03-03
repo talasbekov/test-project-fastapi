@@ -1,4 +1,4 @@
-from schemas import NamedModel, ReadNamedModel, BaseModel
+from schemas import NamedModel, ReadNamedModel, CustomBaseModel
 from typing import Optional, List
 
 
@@ -20,6 +20,6 @@ class SportTypeUpdate(SportTypeBase):
 class SportTypeRead(SportTypeBase, ReadNamedModel):
     pass
 
-class SportTypePaginationRead(BaseModel):
+class SportTypePaginationRead(CustomBaseModel):
     total: Optional[int]
     objects: Optional[List[SportTypeRead]]

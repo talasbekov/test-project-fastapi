@@ -6,7 +6,7 @@ from models import ServiceIDStatus
 from schemas import Model, ReadModel
 
 
-class ServiceIDBase(Model):
+class ServiceIDBase(ReadModel):
     number: Optional[str]
     date_to: Optional[date]
     token_status: Optional[str]

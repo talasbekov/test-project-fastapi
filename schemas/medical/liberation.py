@@ -1,6 +1,5 @@
 from typing import Optional, List
-
-from schemas import NamedModel, ReadNamedModel, BaseModel
+from schemas import NamedModel, ReadNamedModel, CustomBaseModel
 
 
 class LiberationBase(NamedModel):
@@ -21,6 +20,6 @@ class LiberationRead(LiberationBase, ReadNamedModel):
         orm_mode = True
 
 
-class LiberationReadPagination(BaseModel):
+class LiberationReadPagination(CustomBaseModel):
     total: Optional[int]
     objects: Optional[List[LiberationRead]]
