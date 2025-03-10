@@ -3,10 +3,10 @@ import datetime
 from typing import Optional
 
 from pydantic import Field
-from schemas import CustomBaseModel
+from schemas import Model
 
 
-class ServiceArchiveStaffFunctionTypeBase(CustomBaseModel):
+class ServiceArchiveStaffFunctionTypeBase(Model):
     nameKZ: Optional[str] = Field(None, nullable=True)
     name: str
 

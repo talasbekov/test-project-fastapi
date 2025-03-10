@@ -4,10 +4,10 @@ from typing import Optional, List
 
 from pydantic import BaseModel
 from .candidate_stage_answer import CandidateStageAnswerRead
-from schemas import ReadNamedModel, CustomBaseModel
+from schemas import ReadNamedModel, Model
 
 
-class CandidateStageQuestionBase(CustomBaseModel):
+class CandidateStageQuestionBase(Model):
     question: str
     question_type: str
 
@@ -33,7 +33,7 @@ class CandidateStageQuestionRead(CandidateStageQuestionBase):
     updated_at: Optional[datetime.datetime]
 
 
-class CandidateStageQuestionReadIn(CustomBaseModel):
+class CandidateStageQuestionReadIn(Model):
     id: Optional[str]
     answer: Optional[CandidateStageAnswerRead]
     question: Optional[str]
@@ -44,7 +44,7 @@ class CandidateStageQuestionReadIn(CustomBaseModel):
         arbitrary_types_allowed = True
 
 
-class CandidateStageInfoReadAnswer(CustomBaseModel):
+class CandidateStageInfoReadAnswer(Model):
     id: Optional[str]
     status: Optional[str]
     date_sign: Optional[datetime.date]

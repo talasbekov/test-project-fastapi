@@ -30,7 +30,12 @@ class Family(Model):
     relation = relationship("FamilyRelation")
     violation = relationship(
         "Violation",
-        secondary=family_violation)
-    abroad_travel = relationship(
+        secondary=family_violation,
+        back_populates="families"  # связываем с атрибутом в Violation
+    )
+    abroad_travels = relationship(
         "AbroadTravel",
-        secondary=family_abroad_travel)
+        secondary=family_abroad_travel,
+        back_populates="families",
+        cascade="all, delete"
+    )

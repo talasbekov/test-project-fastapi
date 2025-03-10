@@ -2,7 +2,7 @@ import uuid
 from typing import Optional, List
 from datetime import time, date
 
-from schemas import NamedModel, Model, CustomBaseModel
+from schemas import NamedModel, Model, Model
 
 
 class DayBase(NamedModel):
@@ -37,7 +37,7 @@ class ActivityDateRead(ActivityDateBase):
     pass
 
 
-class ScheduleDayBase(CustomBaseModel):
+class ScheduleDayBase(Model):
     day_id: Optional[str]
     start_time: Optional[time]
     end_time: Optional[time]
@@ -53,7 +53,7 @@ class ScheduleDayCreate(ScheduleDayBase):
     pass
 
 
-class ScheduleDayCreateWithString(CustomBaseModel):
+class ScheduleDayCreateWithString(Model):
     day: Optional[str]
     start_time: Optional[time]
     end_time: Optional[time]

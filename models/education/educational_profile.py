@@ -10,8 +10,8 @@ class EducationalProfile(Model):
 
     profile_id = Column(String(), ForeignKey(
         "hr_erp_profiles.id"), nullable=True)
-    profile = relationship("Profile", back_populates="educational_profile")
 
+    profile = relationship("Profile", back_populates="educational_profile")
     academic_degree = relationship(
         "AcademicDegree", back_populates="profile", cascade="all, delete")
     academic_title = relationship(

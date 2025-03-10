@@ -1,19 +1,15 @@
 import datetime
-import uuid
 from typing import List, Optional, Union
-
-from pydantic import BaseModel, validator
 
 from schemas.personal import (BiographicInfoRead, DrivingLicenseRead,
                               IdentificationCardRead, PassportRead,
                               SportAchievementRead, SportDegreeRead,
                               TaxDeclarationRead, UserFinancialInfoRead)
 
-from schemas import ProfileRead, CustomBaseModel
+from schemas import ProfileRead, Model
 
 
-# base
-class PersonalProfileBase(CustomBaseModel):
+class PersonalProfileBase(Model):
     profile_id: str
 
 
@@ -43,12 +39,6 @@ class PersonalProfileRead(PersonalProfileBase):
     sport_degrees: Optional[List[SportDegreeRead]]
     tax_declarations: Optional[List[TaxDeclarationRead]]
     user_financial_infos: Optional[List[UserFinancialInfoRead]]
-
-    @validator("sport_achievements", "sport_degrees", pre=True, always=True)
-    def sort_by_assignment_date(cls, v):
-        if v is None:
-            return []
-        return sorted(v, key=lambda x: x.assignment_date)
 
     class Config:
         orm_mode = True

@@ -41,7 +41,8 @@ class AbroadTravel(Model):
     destination_country = relationship(
         "Country", back_populates="abroad_travels")
 
-    family_abroad_travel = relationship(
-        "AbroadTravel",
+    families = relationship(
+        "Family",
         secondary=family_abroad_travel,
-        cascade="all, delete")
+        back_populates="abroad_travels"
+    )

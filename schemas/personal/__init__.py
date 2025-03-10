@@ -1,4 +1,9 @@
 from .family_status import FamilyStatusCreate, FamilyStatusRead, FamilyStatusUpdate
+from .city import CityCreate, CityRead, CityUpdate
+from .region import RegionCreate, RegionRead, RegionUpdate
+from .citizenship import (CitizenshipCreate, CitizenshipRead, CitizenshipUpdate)
+from .nationality import (NationalityCreate, NationalityRead, NationalityUpdate)
+from .birthplace import (BirthplaceCreate, BirthplaceRead, BirthplaceUpdate)
 from .biographic_info import (BiographicInfoCreate, BiographicInfoRead,
                               BiographicInfoUpdate)
 from .driving_license import (DrivingLicenseCreate, DrivingLicenseRead,
@@ -20,8 +25,5 @@ from .user_financial_info import (UserFinancialInfoCreate,
 from .personal_profile import (PersonalProfileCreate, PersonalProfileRead,
                                PersonalProfileUpdate)
 from .sport_degree_type import *
-from .citizenship import (CitizenshipCreate, CitizenshipRead, CitizenshipUpdate)
-from .nationality import (NationalityCreate, NationalityRead, NationalityUpdate)
-from .birthplace import (BirthplaceCreate, BirthplaceRead, BirthplaceUpdate)
-from .city import CityCreate, CityRead, CityUpdate
-from .region import RegionCreate, RegionRead, RegionUpdate
+
+

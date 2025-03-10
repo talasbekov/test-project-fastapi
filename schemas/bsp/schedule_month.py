@@ -3,7 +3,7 @@ from datetime import date
 
 from schemas import (NamedModel,
                      UserShortReadStatus,
-                     StaffDivisionReadWithoutStaffUnit, CustomBaseModel)
+                     StaffDivisionReadWithoutStaffUnit, Model)
 from .activity import ActivityRead
 from .schedule_day import ScheduleDayRead, ScheduleDayCreateWithString
 
@@ -42,7 +42,7 @@ class MonthRead(NamedModel):
     id: Optional[str]
 
 
-class ScheduleMonthBase(CustomBaseModel):
+class ScheduleMonthBase(Model):
     start_date: date
     end_date: date
     place_id: str

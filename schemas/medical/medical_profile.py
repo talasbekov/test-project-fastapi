@@ -1,5 +1,5 @@
 from typing import List, Optional, Union
-from schemas import CustomBaseModel
+from schemas import Model
 from schemas.medical import (AnthropometricDataRead,
                              DispensaryRegistrationRead,
                              GeneralUserInformationRead,
@@ -8,7 +8,7 @@ from schemas.medical import (AnthropometricDataRead,
                              GeneralUserInformationRead)
 
 
-class MedicalProfileBase(CustomBaseModel):
+class MedicalProfileBase(Model):
     profile_id: str
 
     class Config:

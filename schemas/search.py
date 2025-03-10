@@ -1,5 +1,5 @@
 from typing import List, Optional
-from schemas import CustomBaseModel
+from schemas import Model
 
 
 class SearchType:
@@ -48,18 +48,18 @@ class SearchType:
     STAFF_DIVISION = "staff_division"
 
 
-class Search(CustomBaseModel):
+class Search(Model):
     user_id: Optional[str] = None
     name: Optional[str] = None
 
 
-class SearchType(CustomBaseModel):
+class SearchType(Model):
     search_type: str
     name: str
 
-class SearchTypeListCreate(CustomBaseModel):
+class SearchTypeListCreate(Model):
     search_types: List[SearchType]
 
 
-class SearchTypeListRead(CustomBaseModel):
+class SearchTypeListRead(Model):
     users: List[Search]

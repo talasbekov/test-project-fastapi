@@ -4,14 +4,14 @@ from typing import List, Optional, Union
 
 from pydantic import BaseModel, AnyUrl, root_validator
 
-from schemas import CustomBaseModel
+from schemas import Model
 
 
-class DrivingLicenseLinkUpdate(CustomBaseModel):
+class DrivingLicenseLinkUpdate(Model):
     document_link: Optional[AnyUrl]
 
 
-class DrivingLicenseBase(CustomBaseModel):
+class DrivingLicenseBase(Model):
     document_number: str
     category: List[str]
     date_of_issue: datetime.date
@@ -26,7 +26,7 @@ class DrivingLicenseCreate(DrivingLicenseBase):
     date_to: Optional[datetime.date]
 
 
-class DrivingLicenseUpdate(CustomBaseModel):
+class DrivingLicenseUpdate(Model):
     document_number: Optional[str]
     category: Optional[str]
     date_of_issue: Optional[datetime.date]

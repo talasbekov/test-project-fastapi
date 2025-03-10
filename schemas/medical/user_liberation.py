@@ -3,10 +3,10 @@ from typing import Optional, List
 from pydantic import validator
 from pydantic.networks import AnyUrl
 
-from schemas import CustomBaseModel
+from schemas import Model
 
 
-class UserLiberationBase(CustomBaseModel):
+class UserLiberationBase(Model):
     reason: str
     reasonKZ: str
     liberation_ids: List

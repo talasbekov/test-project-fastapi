@@ -5,7 +5,7 @@ from pydantic import Field, BaseModel
 
 from schemas import (UserShortReadStatus,
                      UserShortReadAgeCategory,
-                     StaffDivisionReadWithoutStaffUnit, CustomBaseModel)
+                     StaffDivisionReadWithoutStaffUnit, Model)
 from .schedule_month import PlaceRead
 from .activity import ActivityRead
 
@@ -23,7 +23,7 @@ def get_days_between_dates(start_date, end_date):
     return dates
 
 
-class ExamScheduleBase(CustomBaseModel):
+class ExamScheduleBase(Model):
     start_date: Optional[date]
     end_date: Optional[date]
     start_time: Optional[time]
@@ -78,12 +78,12 @@ class ExamScheduleRead(ExamScheduleBase):
             exam_dates=exam_dates
         )
 
-class ExamScheduleReadPagination(CustomBaseModel):
+class ExamScheduleReadPagination(Model):
     total: int = Field(0, nullable=False)
     objects: List[ExamScheduleRead] = Field([], nullable=False)
 
 
-class ExamResultBase(CustomBaseModel):
+class ExamResultBase(Model):
     exam_date: Optional[date]
     grade: Optional[int]
     user_id: Optional[str]
@@ -102,13 +102,13 @@ class ExamResultUpdate(ExamResultBase):
     pass
 
 
-class ExamUserResult(CustomBaseModel):
+class ExamUserResult(Model):
     grade: Optional[int]
     results: Optional[dict]
     user_id: Optional[uuid.UUID]
 
 
-class ExamChangeResults(CustomBaseModel):
+class ExamChangeResults(Model):
     exam_id: uuid.UUID
     users_results: Optional[List[ExamUserResult]]
 
@@ -120,11 +120,11 @@ class ExamResultRead(ExamResultBase):
     results: Optional[dict]
 
 
-class ExamResultReadPagination(CustomBaseModel):
+class ExamResultReadPagination(Model):
     total: int = Field(0, nullable=False)
     objects: List[ExamResultRead] = Field([], nullable=False)
 
 
-class ExamTabletRead(CustomBaseModel):
+class ExamTabletRead(Model):
     exams: List[ExamScheduleRead] = Field([], nullable=False)
     results: List[ExamResultRead] = Field([], nullable=False)

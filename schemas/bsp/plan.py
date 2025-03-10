@@ -4,10 +4,10 @@ from typing import Optional, List
 from enum import Enum
 from pydantic import Field, BaseModel
 
-from schemas import UserShortReadStatus, CustomBaseModel
+from schemas import UserShortReadStatus, Model
 from .schedule_year import ScheduleYearRead
 
-class BspPlanBase(CustomBaseModel):
+class BspPlanBase(Model):
     year: Optional[int]
     creator_id: Optional[str]
     status: Optional[Enum]
@@ -31,6 +31,6 @@ class BspPlanRead(BspPlanBase):
     creator: Optional[UserShortReadStatus]
     schedule_years: Optional[List[ScheduleYearRead]]
 
-class BspPlanReadPagination(CustomBaseModel):
+class BspPlanReadPagination(Model):
     total: int = Field(0, nullable=False)
     objects: List[BspPlanRead] = Field([], nullable=False)

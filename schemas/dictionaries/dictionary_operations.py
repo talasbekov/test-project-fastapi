@@ -1,7 +1,7 @@
 from typing import List
-from schemas import CustomBaseModel
+from schemas import Model
 
 
-class JoinRecordsBody(CustomBaseModel):
+class JoinRecordsBody(Model):
     correct_id: str
     ids_to_change: List[str]

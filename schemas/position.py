@@ -1,7 +1,7 @@
 import uuid
 from typing import Optional, List
 
-from schemas import NamedModel, RankRead, ReadModel, CustomBaseModel
+from schemas import NamedModel, RankRead, ReadModel, Model
 from pydantic import BaseModel, validator
 
 class PositionBase(NamedModel):
@@ -63,6 +63,6 @@ class PositionRead(PositionBase, ReadModel):
         arbitrary_types_allowed = True
 
     
-class PositionPaginationRead(CustomBaseModel):
+class PositionPaginationRead(Model):
     total: Optional[int]
     objects: Optional[List[PositionRead]]

@@ -1,9 +1,9 @@
 import datetime
 from typing import Optional
-from schemas import CustomBaseModel
+from schemas import Model
 
 
-class TaxDeclarationBase(CustomBaseModel):
+class TaxDeclarationBase(Model):
     year: str
     is_paid: bool
     profile_id: str

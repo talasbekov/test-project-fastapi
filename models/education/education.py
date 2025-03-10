@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Boolean, String, Enum
+from sqlalchemy import Column, ForeignKey, Boolean, String
 from sqlalchemy.dialects.postgresql import DATE, TEXT
 from sqlalchemy.orm import relationship
 

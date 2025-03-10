@@ -41,10 +41,10 @@ class CourseRead(CourseBase, ReadNamedModel):
 
 
 class CourseShortRead(NamedModel):
-    start_date: Optional[date] = date(1920, 1, 1)
-    end_date: Optional[date] = date(1920, 1, 1)
-    document_link: Optional[str] = "Данные отсутствуют!"
-    course_provider: Optional[NamedModel] = NamedModel()
+    start_date: Optional[date]
+    end_date: Optional[date]
+    document_link: Optional[str]
+    course_provider: Optional[NamedModel]
 
     class Config:
         orm_mode = True

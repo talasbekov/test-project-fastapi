@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
-from schemas import NamedModel, ReadNamedModel, UserShortRead, CustomBaseModel
+from schemas import NamedModel, ReadNamedModel, UserShortRead, Model
 
 
 class StaffListBase(NamedModel):
@@ -22,7 +22,7 @@ class StaffListUpdate(StaffListBase):
     pass
 
 
-class StaffListUserCreate(CustomBaseModel):
+class StaffListUserCreate(Model):
     name: str
 
 
@@ -50,5 +50,5 @@ class StaffListStatusRead(StaffListBase):
         orm_mode = True
         arbitrary_types_allowed = True
 
-class StaffListApplyRead(CustomBaseModel):
+class StaffListApplyRead(Model):
     task_id: str

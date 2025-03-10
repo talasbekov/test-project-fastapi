@@ -2,7 +2,7 @@ from typing import Optional, List
 
 from pydantic import AnyUrl, root_validator, validator
 
-from schemas import NamedModel, ReadNamedModel, CustomBaseModel
+from schemas import NamedModel, ReadNamedModel, Model
 
 
 class RankBase(NamedModel):
@@ -48,6 +48,6 @@ class RankRead(RankBase, ReadNamedModel):
         return values
 
 
-class RankPaginationRead(CustomBaseModel):
+class RankPaginationRead(Model):
     total: Optional[int]
     objects: Optional[List[RankRead]]

@@ -1,9 +1,9 @@
 from typing import Optional
 from models import AgeGroup
-from schemas import CustomBaseModel
+from schemas import Model
 
 
-class GeneralUserInformationBase(CustomBaseModel):
+class GeneralUserInformationBase(Model):
     height: int
     blood_group: str
     age_group: AgeGroup

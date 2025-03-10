@@ -1,9 +1,9 @@
 import datetime
 from typing import Optional
-from schemas import CustomBaseModel
+from schemas import Model
 
 
-class DocumentArchiveStaffFunctionTypeBase(CustomBaseModel):
+class DocumentArchiveStaffFunctionTypeBase(Model):
     name: str
     can_cancel: Optional[bool]
 

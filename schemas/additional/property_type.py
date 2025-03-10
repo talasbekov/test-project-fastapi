@@ -1,4 +1,4 @@
-from schemas import NamedModel, ReadNamedModel, CustomBaseModel
+from schemas import NamedModel, ReadNamedModel, Model
 from typing import Optional, List
 from pydantic import BaseModel
 
@@ -21,6 +21,6 @@ class PropertyTypeUpdate(PropertyTypeBase):
 class PropertyTypeRead(PropertyTypeBase, ReadNamedModel):
     pass
 
-class PropertyTypePaginationRead(CustomBaseModel):
+class PropertyTypePaginationRead(Model):
     total: Optional[int]
     objects: Optional[List[PropertyTypeRead]]

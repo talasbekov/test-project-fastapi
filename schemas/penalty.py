@@ -4,7 +4,7 @@ from typing import Optional, List
 
 
 from schemas import NamedModel, ReadNamedModel
-from schemas.base import CustomBaseModel
+from schemas.base import Model
 
 
 class PenaltyTypeBase(NamedModel):
@@ -25,11 +25,11 @@ class PenaltyTypeUpdate(PenaltyTypeBase):
 class PenaltyTypeRead(PenaltyTypeBase, ReadNamedModel):
     pass
 
-class PenaltyTypePaginationRead(CustomBaseModel):
+class PenaltyTypePaginationRead(Model):
     total: Optional[int]
     objects: Optional[List[PenaltyTypeRead]]
 
-class PenaltyBase(CustomBaseModel):
+class PenaltyBase(Model):
     user_id: str
     type_id: str
 
@@ -52,7 +52,7 @@ class PenaltyRead(PenaltyBase):
     type: Optional[PenaltyTypeRead]
 
 
-class PenaltyPaginationRead(CustomBaseModel):
+class PenaltyPaginationRead(Model):
     total: Optional[int]
     objects: Optional[List[PenaltyRead]]
 

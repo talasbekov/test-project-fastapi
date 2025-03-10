@@ -6,10 +6,10 @@ from pydantic import validator
 from pydantic.networks import AnyUrl
 
 from .illness_type import IllnessTypeRead
-from .. import CustomBaseModel
+from .. import Model
 
 
-class HospitalDataBase(CustomBaseModel):
+class HospitalDataBase(Model):
     code: str
     place: str
     placeKZ: str

@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 from typing import Optional, List
 
-from schemas import Model, NamedModel, ReadModel, ReadNamedModel, CustomBaseModel
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel, Model
 
 
 class StatusTypeBase(NamedModel):
@@ -20,7 +20,7 @@ class StatusTypeUpdate(StatusTypeBase):
 class StatusTypeRead(StatusTypeBase, ReadNamedModel):
     pass
 
-class StatusTypePaginationRead(CustomBaseModel):
+class StatusTypePaginationRead(Model):
     total: Optional[int]
     objects: Optional[List[StatusTypeRead]]
 
@@ -48,6 +48,6 @@ class StatusRead(StatusBase, ReadModel):
     history: Optional[History]
 
 
-class StatusReadPagination(CustomBaseModel):
+class StatusReadPagination(Model):
     total: Optional[int]
     objects: Optional[List[StatusRead]]

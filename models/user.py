@@ -92,11 +92,11 @@ class User(isActiveModel):
 
     profile = relationship("Profile", back_populates="user", uselist=False)
 
-    biographic_info = relationship(
-        "BiographicInfo",
-        back_populates="user",
-        cascade="all,delete",
-        lazy="select")
+    # biographic_info = relationship(
+    #     "BiographicInfo",
+    #     back_populates="user",
+    #     cascade="all,delete",
+    #     lazy="select")
 
     histories = relationship(
         "History",

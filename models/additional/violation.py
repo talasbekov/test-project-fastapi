@@ -34,7 +34,9 @@ class Violation(Model):
     violation_type = relationship("ViolationType", back_populates="violations")
     profile = relationship("AdditionalProfile", back_populates="violations")
 
-    family_violation = relationship(
-        "Violation",
+    families = relationship(
+        "Family",
         secondary=family_violation,
-        cascade="all, delete")
+        cascade="all, delete",
+        back_populates="violation"
+    )

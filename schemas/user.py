@@ -14,7 +14,7 @@ from schemas import (
     StatusRead
 )
 from schemas import Model, ReadModel
-from schemas.base import CustomBaseModel
+from schemas.base import Model
 
 
 def calculate_age_from_birthdate(birth_date: datetime.date) -> int:
@@ -48,7 +48,7 @@ def get_age_group(age: int) -> int:
     else:
         return 0
 
-# Пример модели UserBase, наследующей и от вашего Model, и от CustomBaseModel
+# Пример модели UserBase, наследующей и от вашего Model, и от Model
 class UserBase(Model):
     """
     Общие поля для пользователя
@@ -175,7 +175,7 @@ class UserShortRead(Model):
     def default_empty_email(cls, v):
         return v if v is not None else "fake@example.com"
 
-class UserShortReadPagination(CustomBaseModel):
+class UserShortReadPagination(Model):
     total: int = Field(0, nullable=False)
     objects: List[UserShortRead] = Field(default_factory=list, nullable=False)
 
@@ -249,6 +249,6 @@ class UserShortReadFullNames(Model):
     total: int
     users: List[UserShortRead]
 
-class UserShortReadStatusPagination(CustomBaseModel):
+class UserShortReadStatusPagination(Model):
     total: int = Field(0, nullable=False)
     objects: List[UserShortReadStatus] = Field(default_factory=list, nullable=False)

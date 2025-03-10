@@ -1,5 +1,5 @@
 from typing import Optional, Any, List
-from schemas import Model, NamedModel, ReadModel, ReadNamedModel, CustomBaseModel
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel, Model
 
 
 class CoolnessTypeBase(NamedModel):
@@ -21,7 +21,7 @@ class CoolnessTypeRead(CoolnessTypeBase, ReadNamedModel):
     pass
 
 
-class CoolnessTypeReadPagination(CustomBaseModel):
+class CoolnessTypeReadPagination(Model):
     total: Optional[int]
     objects: Optional[List[CoolnessTypeRead]]
 
@@ -34,22 +34,6 @@ class CoolnessBase(Model):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
-
-    # @root_validator(pre=True)
-    # def fill_none_values(cls, values):
-    #     # Превращаем GetterDict в обычный dict, чтобы можно было делать item assignment
-    #     values = dict(values)
-    #     """
-    #     Если поле None, заменяем его "жёстким" значением:
-    #      - coolness_status → "Данные отсутствуют!"
-    #      - type_id → "missing_type_id"
-    #      - user_id → "missing_user"
-    #     """
-    #     values["coolness_status"] = values.get("coolness_status") or "Данные отсутствуют!"
-    #     values["type_id"] = values.get("type_id") or str(uuid.uuid4())
-    #     values["user_id"] = values.get("user_id") or str(uuid.uuid4())
-    #
-    #     return values
 
 
 class CoolnessCreate(CoolnessBase):

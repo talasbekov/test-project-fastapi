@@ -1,4 +1,4 @@
-from .base import Model, NamedModel, ReadModel, ReadNamedModel, ReadTextModel, TextModel, CustomBaseModel
+from .base import Model, NamedModel, ReadModel, ReadNamedModel, ReadTextModel, TextModel, Model
 from .badge import BadgeBase, BadgeTypeBase, BadgeTypeRead, BadgeTypeCreate, BadgeCreate, BadgeRead, BadgeTypeUpdate, BadgeUpdate, BadgeTypePaginationRead
 from .autotag import AutoTagRead
 from .equipment import (EquipmentCreate,

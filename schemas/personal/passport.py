@@ -4,10 +4,10 @@ from typing import Optional
 
 from pydantic import BaseModel, validator, root_validator, AnyUrl
 
-from schemas import CustomBaseModel
+from schemas import Model
 
 
-class PassportBase(CustomBaseModel):
+class PassportBase(Model):
     document_number: str
     date_of_issue: datetime.date
     date_to: datetime.date
@@ -20,7 +20,7 @@ class PassportCreate(PassportBase):
     pass
 
 
-class PassportUpdate(CustomBaseModel):
+class PassportUpdate(Model):
     document_number: Optional[str]
     date_of_issue: Optional[datetime.date]
     date_to: Optional[datetime.date]

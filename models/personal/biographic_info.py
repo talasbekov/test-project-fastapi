@@ -18,7 +18,7 @@ class BiographicInfo(Model):
         ForeignKey("hr_erp_personal_profiles.id"),
         nullable=False)
     personal_profile_id = Column(String(), nullable=True)
-    user_id = Column(String(), ForeignKey("hr_erp_users.id"), nullable=True)
+    # user_id = Column(String(), ForeignKey("hr_erp_users.id"), nullable=True)
     
     citizenship_id = Column(String(), ForeignKey("hr_erp_citizenships.id"),nullable=True)
     nationality_id = Column(String(), ForeignKey("hr_erp_nationalities.id"),nullable=True)
@@ -27,6 +27,6 @@ class BiographicInfo(Model):
     birthplace = relationship("Birthplace", back_populates="biographic_info")
     citizenship = relationship("Citizenship", back_populates="biographic_info")
     nationality = relationship("Nationality", back_populates="biographic_info")
-    user = relationship("User", back_populates="biographic_info")
+    # user = relationship("User", back_populates="biographic_info")
     family_status = relationship("FamilyStatus", back_populates="biographic_info")
     profile = relationship("PersonalProfile", back_populates="biographic_info")

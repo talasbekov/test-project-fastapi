@@ -4,11 +4,11 @@ from typing import Optional
 
 from pydantic import constr, BaseModel
 
-from schemas import NamedModel, ReadNamedModel, CustomBaseModel
+from schemas import NamedModel, ReadNamedModel, Model
 from .violation_type import ViolationTypeRead
 
 
-class ViolationBase(CustomBaseModel):
+class ViolationBase(Model):
     date: datetime
     issued_by: str
     issued_byKZ: str

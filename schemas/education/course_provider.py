@@ -2,7 +2,7 @@ from typing import List
 
 from pydantic import Field, BaseModel
 
-from schemas import NamedModel, ReadNamedModel, CustomBaseModel
+from schemas import NamedModel, ReadNamedModel, Model
 
 
 class CourseProviderBase(NamedModel):
@@ -23,6 +23,6 @@ class CourseProviderRead(CourseProviderBase, ReadNamedModel):
         orm_mode = True
 
 
-class CourseProviderReadPagination(CustomBaseModel):
+class CourseProviderReadPagination(Model):
     total: int = Field(0, nullable=False)
     objects: List[CourseProviderRead] = Field([], nullable=False)

@@ -68,8 +68,8 @@ family_violation = Table(
 family_abroad_travel = Table(
     "hr_erp_family_abroad_travels",
     Base.metadata,
-    Column("family_id", ForeignKey("hr_erp_families.id")),
-    Column("abroad_travel_id", ForeignKey("hr_erp_abroad_travels.id"))
+    Column("family_id", ForeignKey("hr_erp_families.id"), primary_key=True),
+    Column("abroad_travel_id", ForeignKey("hr_erp_abroad_travels.id"), primary_key=True)
 )
 
 answers_options = Table(

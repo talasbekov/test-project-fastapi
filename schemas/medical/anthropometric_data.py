@@ -1,8 +1,8 @@
 from typing import Optional
-from schemas import CustomBaseModel
+from schemas import Model
 
 
-class AnthropometricDataBase(CustomBaseModel):
+class AnthropometricDataBase(Model):
     head_circumference: int
     shoe_size: int
     neck_circumference: int

@@ -1,11 +1,9 @@
-import datetime
-import uuid
 from typing import Optional
 
 from schemas import Model
 from .region import RegionRead
 from .city import CityRead
-from schemas import CountryRead, ReadNamedModel
+from schemas import CountryRead
 
 class BirthplaceBase(Model):
     region_id: Optional[str]
@@ -18,10 +16,6 @@ class BirthplaceBase(Model):
 
 
 class BirthplaceCreate(BirthplaceBase):
-    # def __init__(self, region_id, city_id, country_id):
-    #     self.region_id = region_id
-    #     self.city_id = city_id
-    #     self.country_id = country_id
     pass
 
 class BirthplaceUpdate(BirthplaceBase):

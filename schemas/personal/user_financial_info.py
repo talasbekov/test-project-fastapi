@@ -1,10 +1,10 @@
 import datetime
 from typing import Optional
 
-from schemas import CustomBaseModel
+from schemas import Model
 
 
-class UserFinancialInfoBase(CustomBaseModel):
+class UserFinancialInfoBase(Model):
     iban: str
     housing_payments_iban: str
     profile_id: str
