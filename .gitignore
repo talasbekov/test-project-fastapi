@@ -4,8 +4,9 @@
 __pycache__/
 *.py[cod]
 *$py.class
+
 static/
-static/*
+
 instantclient_19_22/
 instantclient_19_22/*
 .venv/*
