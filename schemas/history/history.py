@@ -371,7 +371,7 @@ class HistoryPersonalRead(ReadModel):
     position_work_experienceKZ: Optional[str]
     user_id: str
     type: str
-    coefficent: Optional[Decimal]
+    # coefficent: Optional[Decimal]
 
     class Config:
         from_attributes = True
@@ -751,72 +751,39 @@ class EmergencyContractRead(Model):
     date_to: Optional[datetime]
     length_of_service: Optional[LengthOfServiceRead] = Field(default_factory=LengthOfServiceRead)
     coefficient: Optional[Decimal] = Decimal("0.00")
-    percentage: Optional[int] = 100
+    percentage: Optional[int]
     staff_division: Optional[dict] = Field(default_factory=dict)
     position: Optional[PositionRead] = None
-    position_name: Optional[str] = "Данные отсутствуют!"
-    position_nameKZ: Optional[str] = "Данные отсутствуют!"
+    position_name: Optional[str]
+    position_nameKZ: Optional[str]
     actual_position: Optional[dict] = Field(default_factory=dict)
-    actual_position_name: Optional[str] = "Данные отсутствуют!"
-    actual_position_nameKZ: Optional[str] = "Данные отсутствуют!"
+    actual_position_name: Optional[str]
+    actual_position_nameKZ: Optional[str]
     emergency_rank_id: Optional[str]
-    document_link: Optional[str] = "Данные отсутствуют!"
-    document_number: Optional[str] = "Данные отсутствуют!"
-    document_style: Optional[str] = "Данные отсутствуют!"
+    document_link: Optional[str]
+    document_number: Optional[str]
+    document_style: Optional[str]
     contractor_signer_name: Optional[Union[Dict, str]]
     date_credited: Optional[datetime]
-    staff_division_name: Optional[str] = "Данные отсутствуют!"
-    staff_division_nameKZ: Optional[str] = "Данные отсутствуют!"
-    is_sgo: Optional[bool] = False
+    staff_division_name: Optional[str]
+    staff_division_nameKZ: Optional[str]
+    is_sgo: Optional[bool]
 
     class Config:
         orm_mode = True
 
-    @validator("contractor_signer_name", pre=True, always=True)
-    def ensure_dict(cls, v):
-        if isinstance(v, str):
-            return {"name": v}
-        return v or {"name": "Неизвестный подписант"}
-
-    @root_validator(pre=True)
-    def fill_none_values(cls, values):
-        values = dict(values)
-        defaults = {
-            "length_of_service": LengthOfServiceRead(years=99, months=12, days=1),
-            "coefficient": Decimal("0.00"),
-            "percentage": 100,
-            "staff_division": {},
-            "position": {},
-            "actual_position": {},
-            "position_name": "Данные отсутствуют!",
-            "position_nameKZ": "Данные отсутствуют!",
-            "actual_position_name": "Данные отсутствуют!",
-            "actual_position_nameKZ": "Данные отсутствуют!",
-            "document_link": "Данные отсутствуют!",
-            "document_number": "Данные отсутствуют!",
-            "document_style": "Данные отсутствуют!",
-            "staff_division_name": "Данные отсутствуют!",
-            "staff_division_nameKZ": "Данные отсутствуют!",
-            "contractor_signer_name": {"name": "Неизвестный подписант"},
-            "is_sgo": False,
-        }
-        for key, default_value in defaults.items():
-            if values.get(key) is None:
-                values[key] = default_value
-        return values
-
 
 # Модель для краткого представления emergency_contracts (для таймлайна)
 class EmergencyContractReadShort(ReadModel):
-    id: str = Field(default="00000000-0000-0000-0000-000000000000")
-    date_from: datetime = Field(default_factory=lambda: datetime(1920, 1, 1))
-    date_to: datetime = Field(default_factory=lambda: datetime(2500, 1, 1))
-    created_at: datetime = Field(default_factory=lambda: datetime(1920, 1, 1))
-    updated_at: datetime = Field(default_factory=lambda: datetime(1920, 1, 1))
-    position_name: str = Field(default="Данные отсутствуют!")
-    position_nameKZ: str = Field(default="Данные отсутствуют!")
-    actual_position_name: str = Field(default="Данные отсутствуют!")
-    actual_position_nameKZ: str = Field(default="Данные отсутствуют!")
+    id: str
+    date_from: datetime
+    date_to: datetime
+    created_at: datetime
+    updated_at: datetime
+    position_name: str
+    position_nameKZ: str
+    actual_position_name: str
+    actual_position_nameKZ: str
 
     class Config:
         from_attributes = True
@@ -826,30 +793,18 @@ class EmergencyContractReadShort(ReadModel):
         exclude_unset = False
         json_encoders = {datetime: lambda v: v.isoformat()}
 
-    @validator(
-        "position_name", "position_nameKZ",
-        "actual_position_name", "actual_position_nameKZ",
-        pre=True, always=True
-    )
-    def default_empty_string(cls, v):
-        return v if v is not None else "Данные отсутствуют!"
-
     @classmethod
     def from_orm(cls, orm_obj):
-        position_name = orm_obj.position.name if getattr(orm_obj, "position", None) else "Данные отсутствуют!"
-        position_nameKZ = orm_obj.position.nameKZ if getattr(orm_obj, "position", None) else "Данные отсутствуют!"
-        actual_position_name = (orm_obj.actual_position.name
-                                if getattr(orm_obj, "actual_position", None)
-                                else "Данные отсутствуют!")
-        actual_position_nameKZ = (orm_obj.actual_position.nameKZ
-                                  if getattr(orm_obj, "actual_position", None)
-                                  else "Данные отсутствуют!")
+        position_name = orm_obj.position.name
+        position_nameKZ = orm_obj.position.nameKZ
+        actual_position_name = orm_obj.actual_position.name
+        actual_position_nameKZ = orm_obj.actual_position.nameKZ
         return cls(
             id=orm_obj.id,
-            date_from=orm_obj.date_from or datetime(1920, 1, 1),
-            date_to=orm_obj.date_to or datetime(2500, 1, 1),
-            created_at=orm_obj.created_at or datetime(1920, 1, 1),
-            updated_at=orm_obj.updated_at or datetime(1920, 1, 1),
+            date_from=orm_obj.date_from,
+            date_to=orm_obj.date_to,
+            created_at=orm_obj.created_at,
+            updated_at=orm_obj.updated_at,
             position_name=position_name,
             position_nameKZ=position_nameKZ,
             actual_position_name=actual_position_name,

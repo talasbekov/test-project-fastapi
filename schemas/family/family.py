@@ -81,7 +81,7 @@ class FamilyRead(FamilyBase):
 
     birthplace: Optional["BirthplaceRead"]
     violation: Optional[List[ViolationRead]]
-    abroad_travel: Optional[List[AbroadTravelRead]]
+    abroad_travels: Optional[List[AbroadTravelRead]]
 
     @classmethod
     def from_orm(cls, orm_obj):

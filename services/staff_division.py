@@ -184,26 +184,37 @@ class StaffDivisionService(
         ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
         return departments
 
-    def get_department_name_by_id(
-        self,
-        db: Session,
-        id: str
-    ) -> StaffDivision:
-        service_staff_division = self.get_by_name(
-            db, StaffDivisionEnum.SERVICE.value)
-        staff_division = self.get_by_id(db, id)
+    # def get_department_name_by_id(
+    #     self,
+    #     db: Session,
+    #     id: str
+    # ) -> StaffDivision:
+    #     service_staff_division = self.get_by_name(
+    #         db, StaffDivisionEnum.SERVICE.value)
+    #     staff_division = self.get_by_id(db, id)
+    #
+    #     if staff_division.id == service_staff_division.id:
+    #         return {"id": staff_division.id,
+    #                 "name": staff_division.name,
+    #                 "nameKZ": staff_division.nameKZ}
+    #
+    #     while staff_division.parent_group_id != service_staff_division.id:
+    #         staff_division = self.get_by_id(db, staff_division.parent_group_id)
+    #
+    #     return {"id": staff_division.id,
+    #             "name": staff_division.name,
+    #             "nameKZ": staff_division.nameKZ}
 
-        if staff_division.id == service_staff_division.id:
-            return {"id": staff_division.id,
-                    "name": staff_division.name,
-                    "nameKZ": staff_division.nameKZ}
+    def get_department_name_by_id(self, db: Session, id: str) -> dict[str, str]:
+        service_division = self.get_by_name(db, StaffDivisionEnum.SERVICE.value)
+        print(StaffDivisionEnum.SERVICE.value, service_division)
+        division = self.get_by_id(db, id)
 
-        while staff_division.parent_group_id != service_staff_division.id:
-            staff_division = self.get_by_id(db, staff_division.parent_group_id)
+        # Если текущий отдел – не сервисный, поднимаемся по иерархии
+        while division.id != service_division.id and division.parent_group_id != service_division.id:
+            division = self.get_by_id(db, division.parent_group_id)
 
-        return {"id": staff_division.id,
-                "name": staff_division.name,
-                "nameKZ": staff_division.nameKZ}
+        return {"id": division.id, "name": division.name, "nameKZ": division.nameKZ}
 
     def get_all_parents(self,
                         db: Session,
@@ -212,7 +223,6 @@ class StaffDivisionService(
             StaffDivision.parent_group_id == None
         ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
         return parents
-    
 
     def get_all_except_special(self,
                                db: Session,
@@ -365,7 +375,6 @@ class StaffDivisionService(
         #                     staff_unit.user_replacing.staff_unit.requirements)
            
         return [StaffDivisionReadScheduleShort.from_orm(parent) for parent in parents]
-    
 
     def get_all_except_special_minimized(self,
                                db: Session,

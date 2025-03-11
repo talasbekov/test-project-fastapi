@@ -1,11 +1,8 @@
-import uuid
 from typing import Optional
-from enum import Enum
 from datetime import date
-from pydantic import root_validator
 
 from models import ReserveEnum
-from schemas import Model, ReadModel
+from schemas import ReadModel
 from schemas.base import Model
 
 
@@ -30,4 +27,4 @@ class PersonnalReserveUpdate(PersonnalReserveBase):
 
 
 class PersonnalReserveRead(PersonnalReserveBase, ReadModel):
-    reserve: Optional[Enum]
+    pass

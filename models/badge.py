@@ -6,8 +6,6 @@ from models import Model, NamedModel
 
 class BadgeType(NamedModel):
     __tablename__ = "hr_erp_badge_types"
-    # name = Column(String, nullable=False)
-    # nameKZ = Column('namekz', String, nullable=True)
     url = Column(NCLOB, nullable=True)
     badge_order = Column(Integer, nullable=True)
     # parent_id = Column(String(), ForeignKey("hr_erp_badge_types.id"), nullable=True)

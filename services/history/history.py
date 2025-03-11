@@ -197,7 +197,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
     def _get_all_by_type_and_user_id(self, db: Session, type: str, user_id):
         return db.query(self.model).filter(self.model.type ==
                                            type, self.model.user_id == user_id)
-    
+
     def create(self, db: Session, obj_in: HistoryCreate):
         cls = options.get(obj_in.type)
         if cls is None:
@@ -208,7 +208,14 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             if badge is None:
                 raise NotFoundException(
                     detail=f'Badge with id: {obj_in.badge_id} not found!')
-        obj_db = cls(**obj_in.dict(exclude_none=True))
+        # Фильтруем данные:
+        model_columns = {c.name for c in cls.__table__.columns}
+        data = {
+            k: v for k, v in obj_in.dict(exclude_none=True).items()
+            if k in model_columns
+        }
+
+        obj_db = cls(**data)
         db.add(obj_db)
         db.flush()
         db.refresh(obj_db)

@@ -38,16 +38,3 @@ class AbroadTravelRead(AbroadTravelBase, ReadModel):
     destination_country: Optional[CountryRead]
     vehicle_type: Optional[VehicleTypeRead] # VehicleTypeRead
     reasonKZ: Optional[str]
-
-    # @validator("vehicle_type_id", "reasonKZ", pre=True, always=True)
-    # def default_empty_string(cls, v):
-    #     return v if v is not None else " "
-
-    # @validator("vehicle_type", pre=True, always=True)
-    # def default_empty_obj(cls, v):
-    #     return v if v is not None else {
-    #         "id": " ",
-    #         "created_at": " ",
-    #         "updated_at": " ",
-
-    #     }

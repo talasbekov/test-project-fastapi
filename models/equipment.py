@@ -111,6 +111,7 @@ class TypeClothingEquipment(NamedModel):  # obj.
         cascade="all, delete-orphan"
     )
 
+
 class ClothingEquipmentTypesModels(Model):
     __tablename__ = 'hr_erp_cloth_eq_types_models'
 
