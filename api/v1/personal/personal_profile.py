@@ -125,16 +125,16 @@ async def get_profile(*,
     return profile.personal_profile
 
 
-@router.get('/profile/{id}', dependencies=[Depends(HTTPBearer())],  
+@router.get('/profile/{user_id}', dependencies=[Depends(HTTPBearer())],
             response_model=PersonalProfileRead)
 async def get_profile_by_id(*,
                             db: Session = Depends(get_db),
-                            id: str,
+                            user_id: str,
                             Authorize: AuthJWT = Depends()
                             ):
     Authorize.jwt_required()
     permissions = Authorize.get_raw_jwt()['permissions']
-    res = PersonalProfileRead.from_orm(profile_service.get_by_user_id(db, str(id)).personal_profile).dict()
-    if id != Authorize.get_jwt_subject() and int(PermissionTypeEnum.VIEW_UD.value) not in permissions:
+    res = PersonalProfileRead.from_orm(profile_service.get_by_user_id(db, str(user_id)).personal_profile).dict()
+    if user_id != Authorize.get_jwt_subject() and int(PermissionTypeEnum.VIEW_UD.value) not in permissions:
         res['identification_card'] =  "Permission Denied"
     return res

@@ -1,11 +1,9 @@
-import uuid
 from typing import Optional
-from pydantic import validator
 
-from schemas import Model, ReadModel
+from schemas import ReadModel
 
 
-class RecommenderUserBase(Model):
+class RecommenderUserBase(ReadModel):
     document_link: Optional[str]
     recommendant: Optional[str]
     researcher: Optional[str]
@@ -26,9 +24,5 @@ class RecommenderUserUpdate(RecommenderUserBase):
     pass
 
 
-class RecommenderUserRead(RecommenderUserBase, ReadModel):
+class RecommenderUserRead(RecommenderUserBase):
     id: Optional[str]
-
-    @validator("user_by_id", pre=True, always=True)
-    def default_empty_string(cls, v):
-        return v if v is not None else " "

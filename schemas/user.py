@@ -1,21 +1,38 @@
 import datetime
 import uuid
 from typing import List, Optional
+
 from dateutil.relativedelta import relativedelta
+from pydantic import BaseModel, EmailStr, Field, root_validator, validator
 
-from pydantic import EmailStr, Field, root_validator, validator
+# Импорт нужных схем
+from schemas import (
+    BadgeRead,
+    RankRead,
+    ShortUserStaffUnitRead,
+    StaffUnitReadActive,
+    StatusRead
+)
+from schemas import Model, ReadModel
+from schemas.base import Model
 
-from schemas import (BadgeRead, RankRead, UserStaffUnitRead,
-                     StatusRead, ShortUserStaffUnitRead, StaffUnitReadActive, UserStaffUnitRead)
-from schemas import Model, ReadModel, BaseModel
 
-def calculate_age_from_birthdate(birth_date):
+def calculate_age_from_birthdate(birth_date: datetime.date) -> int:
     today = datetime.datetime.now()
     age = relativedelta(today, birth_date)
     return age.years
 
-
-def get_age_group(age):
+def get_age_group(age: int) -> int:
+    """
+    Возвращает код возрастной категории по возрасту:
+    1 — до 25,
+    2 — 25-29,
+    3 — 30-34,
+    4 — 35-39,
+    5 — 40-44,
+    6 — 45-49,
+    0 — 50 и старше.
+    """
     if age <= 25:
         return 1
     elif age < 30:
@@ -31,7 +48,12 @@ def get_age_group(age):
     else:
         return 0
 
+# Пример модели UserBase, наследующей и от вашего Model, и от Model
 class UserBase(Model):
+    """
+    Общие поля для пользователя
+    """
+    id: str
     email: EmailStr
     first_name: str
     last_name: str
@@ -49,81 +71,62 @@ class UserBase(Model):
     is_military: Optional[bool]
     personal_id: Optional[str]
     date_birth: Optional[datetime.datetime]
-    iin: str
+    iin: Optional[str]
     is_active: Optional[bool]
-    id: str
     description: Optional[str]
 
-    # @validator("description", "name","military_url", "employee_url", pre=True, always=True)
-    # def default_empty_string(cls, v):
-    #     return v if v is not None else ""
-
-
-    @validator("father_name", "description", pre=True, always=True)
+    @validator(
+        "father_name", "description", "address", "cabinet",
+        "call_sign", "id_number", "phone_number", "service_phone_number",
+        "supervised_by", pre=True, always=True
+    )
     def default_empty_string(cls, v):
-        return v if v is not None else ""
-    
+        return v if v is not None else "Данные отсутствуют!"
 
+    @validator("iin", pre=True, always=True)
+    def default_empty_iin(cls, v):
+        return v if v is not None else "Данные отсутствуют!"
 
+    @validator("email", pre=True, always=True)
+    def ensure_email(cls, v):
+        return v if v is not None else "fake@example.com"
 
 class UserCreate(UserBase):
-    password: Optional[str]
+    password: Optional[str] = None
 
 class UserUpdate(UserBase):
-    pass
-
+    id: Optional[str]
+    email: Optional[EmailStr]
+    first_name: Optional[str]
+    last_name: Optional[str]
+    iin: Optional[str]
 
 class UserGroupUpdate(Model):
     user_id: str
     group_id: str
 
 class UserReadDocumentShort(UserBase, ReadModel):
-    is_military: Optional[bool]
+    last_signed_at: Optional[datetime.datetime]
+    statuses: Optional[List[StatusRead]] = Field(default_factory=list)
     staff_unit: Optional[ShortUserStaffUnitRead]
     actual_staff_unit: Optional[ShortUserStaffUnitRead]
     rank: Optional[RankRead]
-    email: Optional[str]
-    first_name: str
-    last_name: str
-    last_signed_at: Optional[datetime.datetime]
-    staff_unit_id: Optional[str]
-    call_sign: Optional[str]
-    id_number: Optional[str]
-    status_till: Optional[datetime.datetime]
-    personal_id: Optional[str]
-    # badges: Optional[str] = None
-    date_birth: Optional[datetime.datetime]
-    iin: Optional[str]
-    statuses: Optional[List[StatusRead]]
 
     class Config:
         orm_mode = True
-    
+
 class UserRead(UserBase, ReadModel):
-    badges: Optional[List[BadgeRead]]
+    badges: Optional[List[BadgeRead]] = Field(default_factory=list)
     is_military: Optional[bool]
+    last_signed_at: Optional[datetime.datetime]
+    status_till: Optional[datetime.datetime]
+    statuses: Optional[List[StatusRead]] = Field(default_factory=list)
     staff_unit: Optional[ShortUserStaffUnitRead]
     actual_staff_unit: Optional[ShortUserStaffUnitRead]
     rank: Optional[RankRead]
-    email: Optional[str]
-    first_name: str
-    last_name: str
-    last_signed_at: Optional[datetime.datetime]
-    staff_unit_id: Optional[str]
-    call_sign: Optional[str]
-    id_number: Optional[str]
-    status_till: Optional[datetime.datetime]
-    personal_id: Optional[str]
-    badges: Optional[List[BadgeRead]]
-    date_birth: Optional[datetime.datetime]
-    iin: Optional[str]
-    statuses: Optional[List[StatusRead]]
 
     class Config:
         orm_mode = True
-    # @validator("rank", pre=True, always=True)
-    # def default_empty_dict(cls, v):
-    #     return v if v is not None else {}
 
 class UserReadActiveShort(ReadModel):
     staff_unit: Optional[StaffUnitReadActive]
@@ -132,10 +135,15 @@ class UserReadActiveShort(ReadModel):
     last_signed_at: Optional[datetime.datetime]
     staff_unit_id: Optional[str]
     statuses: Optional[List[StatusRead]]
-    icon: Optional[str]
+    icon: Optional[str] = ""
 
     class Config:
         orm_mode = True
+        extra = "ignore"  # Игнорируем дополнительные поля, такие как badges
+
+    @validator("first_name", "last_name", "icon", pre=True, always=True)
+    def default_empty_string(cls, v):
+        return v if v is not None else "Данные отсутствуют!"
 
 class UserShortRead(Model):
     id: Optional[str]
@@ -145,22 +153,31 @@ class UserShortRead(Model):
     icon: Optional[str]
     rank: Optional[RankRead]
     staff_unit_id: Optional[str]
-    iin: str
-    email: EmailStr
-    first_name: str
-    last_name: str
-
+    iin: Optional[str]
+    email: Optional[EmailStr]
 
     class Config:
         orm_mode = True
 
-    # @validator("rank", pre=True, always=True)
-    # def default_empty_dict(cls, v):
-    #     return v if v is not None else {}
+    @validator("id", pre=True, always=True)
+    def default_id(cls, v):
+        return v if v else str(uuid.uuid4())
 
-class UserShortReadPagination(BaseModel):
+    @validator("first_name", "last_name", "father_name", "icon", pre=True, always=True)
+    def default_empty_string(cls, v):
+        return v if v is not None else "Данные отсутствуют!"
+
+    @validator("iin", pre=True, always=True)
+    def default_empty_iin(cls, v):
+        return v if v is not None else "Данные отсутствуют!"
+
+    @validator("email", pre=True, always=True)
+    def default_empty_email(cls, v):
+        return v if v is not None else "fake@example.com"
+
+class UserShortReadPagination(Model):
     total: int = Field(0, nullable=False)
-    objects: List[UserShortRead] = Field([], nullable=False)
+    objects: List[UserShortRead] = Field(default_factory=list, nullable=False)
 
 class UserShortReadStatus(Model):
     id: Optional[str]
@@ -171,10 +188,16 @@ class UserShortReadStatus(Model):
     rank: Optional[RankRead]
     statuses: Optional[List[StatusRead]]
 
-
     class Config:
         orm_mode = True
 
+    @validator("id", pre=True, always=True)
+    def default_id(cls, v):
+        return v if v else str(uuid.uuid4())
+
+    @validator("first_name", "last_name", "father_name", "icon", pre=True, always=True)
+    def default_empty_string(cls, v):
+        return v if v is not None else "Данные отсутствуют!"
 
 class UserShortReadAgeCategory(Model):
     id: Optional[uuid.UUID]
@@ -187,10 +210,18 @@ class UserShortReadAgeCategory(Model):
     staff_division: Optional[dict]
     age_category: Optional[int]
 
+    class Config:
+        orm_mode = True
+
     @classmethod
     def from_orm(cls, orm_obj):
-        staff_division = orm_obj.staff_unit.staff_division
-        age = calculate_age_from_birthdate(orm_obj.date_birth)
+        staff_division = getattr(orm_obj.staff_unit, "staff_division", None)
+        birth_date = getattr(orm_obj, "date_birth", None)
+        if birth_date and isinstance(birth_date, datetime.date):
+            age = calculate_age_from_birthdate(birth_date)
+            age_cat = get_age_group(age)
+        else:
+            age_cat = None
         return cls(
             id=orm_obj.id,
             first_name=orm_obj.first_name,
@@ -198,18 +229,13 @@ class UserShortReadAgeCategory(Model):
             father_name=orm_obj.father_name,
             icon=orm_obj.icon,
             rank=orm_obj.rank,
-            date_birth=orm_obj.date_birth,
-            staff_division={"name": staff_division.name
-                                   if staff_division else None,
-                            "nameKZ": staff_division.nameKZ
-                                   if staff_division else None
-                            },
-            age_category=get_age_group(age)
+            date_birth=birth_date,
+            staff_division={
+                "name": staff_division.name if staff_division else None,
+                "nameKZ": staff_division.nameKZ if staff_division else None,
+            } if staff_division else None,
+            age_category=age_cat
         )
-
-    class Config:
-        orm_mode = True
-
 
 class TableUserRead(Model):
     total: int
@@ -223,21 +249,6 @@ class UserShortReadFullNames(Model):
     total: int
     users: List[UserShortRead]
 
-class UserShortReadStatusPagination(BaseModel):
+class UserShortReadStatusPagination(Model):
     total: int = Field(0, nullable=False)
-    objects: List[UserShortReadStatus] = Field([], nullable=False)
-
-# class UserFillVacancy(Model):
-#     id: Optional[str]
-#     first_name: Optional[str]
-#     last_name: Optional[str]
-#     father_name: Optional[str]
-#     icon: Optional[str]
-#     rank: Optional[RankRead]
-#     staff_unit: Optional[UserStaffUnitRead]
-#     is_viable: Optional[bool]
-    
-
-#     @validator("is_viable", pre=False, always=False)
-#     def set_viable(cls, v, values):
-        
+    objects: List[UserShortReadStatus] = Field(default_factory=list, nullable=False)

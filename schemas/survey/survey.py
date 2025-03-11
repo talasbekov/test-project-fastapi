@@ -3,7 +3,7 @@ import datetime
 from typing import Optional, List
 from pydantic import BaseModel, Field
 
-from schemas import NamedModel, ReadNamedModel, UserShortRead
+from schemas import NamedModel, ReadNamedModel, UserShortRead, Model
 from models import (SurveyTypeEnum, SurveyStatusEnum, SurveyRepeatTypeEnum)
 from .question import QuestionRead
 from .survey_jurisdiction import SurveyJurisdictionRead, SurveyJurisdictionBase
@@ -50,6 +50,6 @@ class SurveyRead(SurveyBase, ReadNamedModel):
         orm_mode = True
     
 
-class SurveyReadPagination(BaseModel):
+class SurveyReadPagination(Model):
     total: int = Field(0, nullable=False)
     objects: List[SurveyRead] = Field([], nullable=False)

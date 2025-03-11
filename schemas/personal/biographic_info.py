@@ -1,96 +1,79 @@
-import datetime
-import uuid
-from typing import Optional, Any
+from typing import Optional
 
-from pydantic import BaseModel, validator, root_validator
-
-from .family_status import FamilyStatusRead
-from .citizenship import CitizenshipRead
-from .nationality import NationalityRead
-from .birthplace import BirthplaceRead
+from schemas import Model, ReadModel
+from schemas.personal import BirthplaceRead, NationalityRead, CitizenshipRead, FamilyStatusRead
 
 
-class BiographicInfoBase(BaseModel):
-    gender: bool
-    family_status_id: str
-    address: str
-    residence_address: str
-    profile_id: str
+# --------------------------
+# 1. Модели для создания и обновления
+# --------------------------
+
+class BiographicInfoCreate(Model):
+    gender: Optional[bool] = None
+    family_status_id: Optional[str] = None
+    address: Optional[str] = None
+    residence_address: Optional[str] = None
+    user_id: Optional[str] = None
+    profile_id: Optional[str] = None
+    citizenship_id: Optional[str] = None
+    nationality_id: Optional[str] = None
+
+    # Поля для места рождения
+    region_id: Optional[str] = None
+    city_id: Optional[str] = None
+    country_id: Optional[str] = None
+
+
+class BiographicInfoUpdate(Model):
+    gender: Optional[bool] = None
+    family_status_id: Optional[str] = None
+    address: Optional[str] = None
+    residence_address: Optional[str] = None
+    profile_id: Optional[str] = None
+    user_id: Optional[str] = None
+    personal_profile_id: Optional[str] = None
+    citizenship_id: Optional[str] = None
+    nationality_id: Optional[str] = None
+    region_id: Optional[str] = None
+    city_id: Optional[str] = None
+    country_id: Optional[str] = None
+
+
+class BiographicInfoRead(ReadModel):
+    gender: bool = False
+    family_status_id: Optional[str]
+    family_status: Optional["FamilyStatusRead"]
+    address: Optional[str]
+    residence_address: Optional[str]
+    profile_id: Optional[str]
+    personal_profile_id: Optional[str]
     citizenship_id: Optional[str]
+    citizenship: Optional["CitizenshipRead"]
     nationality_id: Optional[str]
+    nationality: Optional["NationalityRead"]
     birthplace_id: Optional[str]
-
-
-class BiographicInfoCreate(BaseModel):
-    gender: bool
-    family_status_id: str
-    address: str
-    residence_address: str
-    user_id: Optional[str]
-    personal_profile_id: str
-    citizenship_id: Optional[str]
-    nationality_id: Optional[str]
-    region_id: Optional[str]
-    city_id: Optional[str]
-    country_id: Optional[str]
-
-
-class BiographicInfoUpdate(BaseModel):
-    gender: Optional[bool]
-    family_status_id: Optional[str]
-    residence_address: Optional[str]
-    address: Optional[str]
-    user_id: Optional[str]
-    profile_id: Optional[str]
-    personal_profile_id: Optional[str]
-    citizenship_id: Optional[str]
-    nationality_id: Optional[str]
-    region_id: Optional[str]
-    city_id: Optional[str]
-    country_id: Optional[str]
-
-
-class BiographicInfoRead(BiographicInfoBase):
-    id: Optional[str]
-    gender: Optional[bool]
-    family_status_id: Optional[str]
-    address: Optional[str]
-    residence_address: Optional[str]
-    profile_id: Optional[str]
-    personal_profile_id: Optional[str]
-    created_at: Optional[datetime.datetime]
-    updated_at: Optional[datetime.datetime]
-    family_status: Optional[Any]
-    citizenship_id: Optional[str]
-    nationality_id: Optional[str]
-    citizenship: Optional[Any]
-    nationality: Optional[Any]  
-    birthplace: Optional[BirthplaceRead]
+    birthplace: Optional["BirthplaceRead"]
 
     class Config:
         orm_mode = True
-    
-    @validator("address", pre=True, always=True)
-    def default_empty_string(cls, v):
-        return v if v is not None else " "
 
     @classmethod
     def from_orm(cls, orm_obj):
         return cls(
             id=orm_obj.id,
             gender=orm_obj.gender,
-            family_status_id=orm_obj.family_status_id if orm_obj.family_status_id else orm_obj.id,
+            family_status_id=orm_obj.family_status_id,
+            family_status=FamilyStatusRead.from_orm(orm_obj.family_status) if orm_obj.family_status else None,
             address=orm_obj.address,
             residence_address=orm_obj.residence_address,
             profile_id=orm_obj.profile_id,
             personal_profile_id=orm_obj.personal_profile_id,
             created_at=orm_obj.created_at,
             updated_at=orm_obj.updated_at,
-            family_status=orm_obj.family_status if orm_obj.family_status else {},
             citizenship_id=orm_obj.citizenship_id,
-            birthplace_id=orm_obj.birthplace_id if orm_obj.birthplace_id else orm_obj.id,
-            nationality_id=orm_obj.nationality_id if orm_obj.nationality_id else orm_obj.id,
-            citizenship=orm_obj.citizenship if orm_obj.citizenship else {},
-            nationality=orm_obj.nationality if orm_obj.nationality else {},
-            birthplace=orm_obj.birthplace if orm_obj.birthplace else {}
+            citizenship=CitizenshipRead.from_orm(orm_obj.citizenship) if orm_obj.citizenship else None,
+            nationality_id=orm_obj.nationality_id,
+            nationality=NationalityRead.from_orm(orm_obj.nationality) if orm_obj.nationality else None,
+            birthplace_id=orm_obj.birthplace_id,
+            birthplace=BirthplaceRead.from_orm(orm_obj.birthplace) if orm_obj.birthplace else None
         )

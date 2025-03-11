@@ -1,11 +1,9 @@
 import datetime
-import uuid
 from typing import Optional
+from schemas import Model
 
-from pydantic import BaseModel
 
-
-class DocumentArchiveStaffFunctionTypeBase(BaseModel):
+class DocumentArchiveStaffFunctionTypeBase(Model):
     name: str
     can_cancel: Optional[bool]
 

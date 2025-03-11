@@ -1,7 +1,5 @@
 from typing import Optional, Any, List
-
-from schemas import Model, NamedModel, ReadModel, ReadNamedModel, BaseModel
-from pydantic import validator
+from schemas import Model, NamedModel, ReadModel, ReadNamedModel, Model
 
 
 class CoolnessTypeBase(NamedModel):
@@ -23,7 +21,7 @@ class CoolnessTypeRead(CoolnessTypeBase, ReadNamedModel):
     pass
 
 
-class CoolnessTypeReadPagination(BaseModel):
+class CoolnessTypeReadPagination(Model):
     total: Optional[int]
     objects: Optional[List[CoolnessTypeRead]]
 

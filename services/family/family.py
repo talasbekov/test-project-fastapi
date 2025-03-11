@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Type
 from sqlalchemy.orm import Session
 
 from exceptions.client import NotFoundException
@@ -18,13 +18,13 @@ from uuid import UUID
 
 class FamilyService(ServiceBase[Family, FamilyCreate, FamilyUpdate]):
     def get_multi(self, db: Session, skip: int = 0,
-                  limit: int = 100) -> List[Family]:
-        return (db.query(Family).order_by(Family.profile_id).join(Family.violation).join(Family.abroad_travel).offset(skip).limit(limit).all())
+                  limit: int = 100) -> list[Type[Family]]:
+        return db.query(Family).order_by(Family.profile_id).join(Family.violation).join(Family.abroad_travels).offset(skip).limit(limit).all()
 
-    def get_by_id(self, db: Session, id: str) -> Family:
+    def get_by_id(self, db: Session, id: str) -> Type[Family]:
         family = db.query(Family).outerjoin(
             Family.violation).outerjoin(
-            Family.abroad_travel).filter(
+            Family.abroad_travels).filter(
             Family.id == id).first()
         if not family:
             raise NotFoundException(f"Family with id: {id} not found!")

@@ -1,4 +1,3 @@
-import uuid
 from typing import Optional, List
 
 from pydantic import validator
@@ -9,7 +8,7 @@ from schemas import Model
 class ActivityBase(Model):
     parent_group_id: Optional[str]
     instructions: Optional[str]
-    is_time_required: bool = False
+    is_time_required: Optional[bool] = False
     normative_img: Optional[str]
     activity_type_id: Optional[str]
 

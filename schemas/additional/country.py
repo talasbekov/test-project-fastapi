@@ -1,6 +1,7 @@
 from typing import Optional, List
 
-from schemas import NamedModel, ReadNamedModel, BaseModel
+from pydantic import BaseModel
+from schemas import NamedModel, ReadNamedModel, Model
 
 
 class CountryBase(NamedModel):
@@ -18,10 +19,10 @@ class CountryUpdate(CountryBase):
     pass
 
 
-class CountryRead(CountryBase, ReadNamedModel):
+class CountryRead(ReadNamedModel):
     pass
 
 
-class CountryReadPagination(BaseModel):
+class CountryReadPagination(Model):
     total: Optional[int]
     objects: Optional[List[CountryRead]]

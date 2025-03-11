@@ -1,11 +1,12 @@
 import datetime
-import uuid
 from typing import Optional, List
+from pydantic import validator
+from pydantic.networks import AnyUrl
 
-from pydantic import BaseModel
+from schemas import Model
 
 
-class UserLiberationBase(BaseModel):
+class UserLiberationBase(Model):
     reason: str
     reasonKZ: str
     liberation_ids: List
@@ -14,7 +15,13 @@ class UserLiberationBase(BaseModel):
     start_date: datetime.datetime
     end_date: datetime.datetime
     profile_id: str
-    document_link: Optional[str]
+    document_link: Optional[AnyUrl]
+
+    @validator("document_link", pre=True, always=True)
+    def validate_url(cls, v):
+        if v and not (v.startswith("http://") or v.startswith("https://")):
+            raise ValueError("Invalid URL format")
+        return v or "https://default.link"
 
 
 class UserLiberationCreate(UserLiberationBase):

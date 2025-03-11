@@ -20,14 +20,14 @@ class BiographicInfoService(ServiceBase[BiographicInfo, BiographicInfoCreate, Bi
                 detail=f"BiographicInfo with id: {id} is not found!")
         return biographic_info
     
-    def get_by_user_id(self, db: Session, user_id: str):
-        user_id = user_id.lower() 
-        biographic_info = db.query(self.model).filter(
-            self.model.user_id == user_id).first()
-        if not biographic_info:
-            raise NotFoundException(
-                detail=f"Biographic info with user_id: {user_id} is not found!")
-        return biographic_info
+    # def get_by_user_id(self, db: Session, user_id: str):
+    #     user_id = user_id.lower()
+    #     biographic_info = db.query(self.model).filter(
+    #         self.model.user_id == user_id).first()
+    #     if not biographic_info:
+    #         raise NotFoundException(
+    #             detail=f"Biographic info with user_id: {user_id} is not found!")
+    #     return biographic_info
 
     def get_by_profile_id(self, db: Session, profile_id: str):
         biographic_info = db.query(self.model).filter(
@@ -49,12 +49,12 @@ class BiographicInfoService(ServiceBase[BiographicInfo, BiographicInfoCreate, Bi
             db.add(birthplace)
             db.flush()
         
-        profiles = db.query(PersonalProfile).filter(
-            PersonalProfile.profile_id == biographic_info.personal_profile_id
-        ).all()
-        if not profiles:
-            raise HTTPException(status_code=400, detail="Profile ID not found in hr_erp_personal_profiles.")
-        profile = profiles[0]
+        # profiles = db.query(PersonalProfile).filter(
+        #     PersonalProfile.profile_id == biographic_info.profile_id
+        # ).all()
+        # if not profiles:
+        #     raise HTTPException(status_code=400, detail="Profile ID not found in hr_erp_personal_profiles.")
+        # profile = profiles[0]
 
         biographic_info_new = self.model(
             birthplace_id = birthplace.id,
@@ -62,8 +62,8 @@ class BiographicInfoService(ServiceBase[BiographicInfo, BiographicInfoCreate, Bi
             address = biographic_info.address,
             family_status_id = biographic_info.family_status_id,
             residence_address = biographic_info.residence_address,
-            profile_id = profile.id,
-            personal_profile_id = biographic_info.personal_profile_id,
+            # profile_id = profile.id,
+            profile_id = biographic_info.profile_id,
             citizenship_id = biographic_info.citizenship_id,
             nationality_id = biographic_info.nationality_id,
         )

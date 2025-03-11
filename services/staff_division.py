@@ -2,6 +2,7 @@ import uuid
 import json
 import sys
 from collections import deque
+from json import JSONDecodeError
 from typing import List, Dict, Any, Optional
 from datetime import datetime
 from sqlalchemy.orm import Session
@@ -36,24 +37,51 @@ from .base import ServiceBase
 class StaffDivisionService(
         ServiceBase[StaffDivision, StaffDivisionCreate, StaffDivisionUpdate]):
 
+    @staticmethod
+    def safe_json_loads(value: str):
+        if not value or not value.strip():
+            return {}
+        try:
+            return json.loads(value)
+        except JSONDecodeError:
+            return {}
+
     def get_by_id(self, db: Session, id: str) -> StaffDivision:
         group = super().get(db, id)
         if group is None:
-            raise NotFoundException(
-                f"StaffDivision with id: {id} is not found!")
+            raise NotFoundException(f"StaffDivision with id: {id} is not found!")
         for staff_unit in group.staff_units:
             if isinstance(staff_unit.requirements, str):
-                staff_unit.requirements = json.loads(staff_unit.requirements)
+                staff_unit.requirements = self.safe_json_loads(staff_unit.requirements)
             if staff_unit.user_replacing:
                 if isinstance(staff_unit.user_replacing.staff_unit.requirements, str):
-                    staff_unit.user_replacing.staff_unit.requirements = json.loads(
+                    staff_unit.user_replacing.staff_unit.requirements = self.safe_json_loads(
                         staff_unit.user_replacing.staff_unit.requirements)
         if isinstance(group.description, str):
-            group.description = json.loads(group.description)
+            group.description = self.safe_json_loads(group.description)
         for child in group.children:
             if isinstance(child.description, str):
-                child.description = json.loads(child.description)
+                child.description = self.safe_json_loads(child.description)
         return group
+
+    # def get_by_id(self, db: Session, id: str) -> StaffDivision:
+    #     group = super().get(db, id)
+    #     if group is None:
+    #         raise NotFoundException(
+    #             f"StaffDivision with id: {id} is not found!")
+    #     for staff_unit in group.staff_units:
+    #         if isinstance(staff_unit.requirements, str):
+    #             staff_unit.requirements = json.loads(staff_unit.requirements)
+    #         if staff_unit.user_replacing:
+    #             if isinstance(staff_unit.user_replacing.staff_unit.requirements, str):
+    #                 staff_unit.user_replacing.staff_unit.requirements = json.loads(
+    #                     staff_unit.user_replacing.staff_unit.requirements)
+    #     if isinstance(group.description, str):
+    #         group.description = json.loads(group.description)
+    #     for child in group.children:
+    #         if isinstance(child.description, str):
+    #             child.description = json.loads(child.description)
+    #     return group
     
     def get_by_id_schedule(self, db: Session, id: str) -> StaffDivision:
         group = super().get(db, id)
@@ -156,26 +184,37 @@ class StaffDivisionService(
         ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
         return departments
 
-    def get_department_name_by_id(
-        self,
-        db: Session,
-        id: str
-    ) -> StaffDivision:
-        service_staff_division = self.get_by_name(
-            db, StaffDivisionEnum.SERVICE.value)
-        staff_division = self.get_by_id(db, id)
+    # def get_department_name_by_id(
+    #     self,
+    #     db: Session,
+    #     id: str
+    # ) -> StaffDivision:
+    #     service_staff_division = self.get_by_name(
+    #         db, StaffDivisionEnum.SERVICE.value)
+    #     staff_division = self.get_by_id(db, id)
+    #
+    #     if staff_division.id == service_staff_division.id:
+    #         return {"id": staff_division.id,
+    #                 "name": staff_division.name,
+    #                 "nameKZ": staff_division.nameKZ}
+    #
+    #     while staff_division.parent_group_id != service_staff_division.id:
+    #         staff_division = self.get_by_id(db, staff_division.parent_group_id)
+    #
+    #     return {"id": staff_division.id,
+    #             "name": staff_division.name,
+    #             "nameKZ": staff_division.nameKZ}
 
-        if staff_division.id == service_staff_division.id:
-            return {"id": staff_division.id,
-                    "name": staff_division.name,
-                    "nameKZ": staff_division.nameKZ}
+    def get_department_name_by_id(self, db: Session, id: str) -> dict[str, str]:
+        service_division = self.get_by_name(db, StaffDivisionEnum.SERVICE.value)
+        print(StaffDivisionEnum.SERVICE.value, service_division)
+        division = self.get_by_id(db, id)
 
-        while staff_division.parent_group_id != service_staff_division.id:
-            staff_division = self.get_by_id(db, staff_division.parent_group_id)
+        # Если текущий отдел – не сервисный, поднимаемся по иерархии
+        while division.id != service_division.id and division.parent_group_id != service_division.id:
+            division = self.get_by_id(db, division.parent_group_id)
 
-        return {"id": staff_division.id,
-                "name": staff_division.name,
-                "nameKZ": staff_division.nameKZ}
+        return {"id": division.id, "name": division.name, "nameKZ": division.nameKZ}
 
     def get_all_parents(self,
                         db: Session,
@@ -184,7 +223,6 @@ class StaffDivisionService(
             StaffDivision.parent_group_id == None
         ).order_by(StaffDivision.created_at).offset(skip).limit(limit).all()
         return parents
-    
 
     def get_all_except_special(self,
                                db: Session,
@@ -337,7 +375,6 @@ class StaffDivisionService(
         #                     staff_unit.user_replacing.staff_unit.requirements)
            
         return [StaffDivisionReadScheduleShort.from_orm(parent) for parent in parents]
-    
 
     def get_all_except_special_minimized(self,
                                db: Session,

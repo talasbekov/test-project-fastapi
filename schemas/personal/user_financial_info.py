@@ -1,11 +1,10 @@
 import datetime
-import uuid
 from typing import Optional
 
-from pydantic import BaseModel
+from schemas import Model
 
 
-class UserFinancialInfoBase(BaseModel):
+class UserFinancialInfoBase(Model):
     iban: str
     housing_payments_iban: str
     profile_id: str

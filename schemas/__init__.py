@@ -1,6 +1,6 @@
-from .base import Model, NamedModel, ReadModel, ReadNamedModel, ReadTextModel, TextModel
-from .badge import *
-from .autotag import *
+from .base import Model, NamedModel, ReadModel, ReadNamedModel, ReadTextModel, TextModel, Model
+from .badge import BadgeBase, BadgeTypeBase, BadgeTypeRead, BadgeTypeCreate, BadgeCreate, BadgeRead, BadgeTypeUpdate, BadgeUpdate, BadgeTypePaginationRead
+from .autotag import AutoTagRead
 from .equipment import (EquipmentCreate,
                         EquipmentRead,
                         EquipmentUpdate,
@@ -40,7 +40,7 @@ from .staff_function import (DocumentStaffFunctionCreate, DocumentStaffFunctionR
                              ServiceStaffFunctionCreate, ServiceStaffFunctionRead, ServiceStaffFunctionUpdate,
                              StaffUnitFunctions, StaffFunctionRead, DocumentStaffFunctionAdd,
                              DocumentStaffFunctionConstructorAdd, DocumentStaffFunctionAppendToStaffUnit, StaffUnitFunctionsByPosition)
-from .status import *
+from .status import StatusUpdate, StatusCreate, StatusTypeCreate, StatusTypeRead, StatusRead, StatusReadPagination, StatusTypeBase, StatusBase, StatusTypePaginationRead, StatusTypeUpdate
 from .staff_division_type import (
     StaffDivisionTypeBase,
     StaffDivisionTypeCreate,
@@ -85,7 +85,7 @@ from .personnal_reserve import (
     PersonnalReserveCreate,
     PersonnalReserveRead,
     PersonnalReserveUpdate)
-from .coolness import *
+from .coolness import CoolnessRead, CoolnessTypeRead, CoolnessTypeCreate, CoolnessCreate, CoolnessTypeUpdate, CoolnessUpdate, CoolnessTypeBase, CoolnessBase, CoolnessTypeReadPagination
 from .user_stat import UserStatCreate, UserStatRead, UserStatUpdate
 from .auth import LoginForm, RegistrationForm, CandidateRegistrationForm, EcpLoginForm
 from .staff_list import (

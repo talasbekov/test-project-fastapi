@@ -1,7 +1,7 @@
 import datetime
 from typing import Optional
 
-from pydantic import AnyUrl
+from pydantic import AnyUrl, root_validator
 
 from .institution import InstitutionRead
 from .specialty import SpecialtyRead
@@ -90,4 +90,22 @@ class EducationShortRead(Model):
     specialty: Optional[NamedModel]
     institution: Optional[NamedModel]
     degree: Optional[NamedModel]
+
+    class Config:
+        from_attributes = True
+
+    # @root_validator(pre=True)
+    # def fill_none_values(cls, values):
+    #     values = dict(values)  # ✅ Превращаем GetterDict в dict
+    #     defaults = {
+    #         "start_date": datetime.date(1920, 1, 1),
+    #         "end_date": datetime.date(1920, 1, 1),
+    #         "document_link": "Данные отсутствуют!",
+    #         "specialty": NamedModel(),
+    #         "institution": NamedModel(),
+    #         "degree": NamedModel()
+    #     }
+    #     for key, default in defaults.items():
+    #         values[key] = values.get(key) or default
+    #     return values
 

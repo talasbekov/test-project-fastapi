@@ -1,6 +1,7 @@
+import uuid
 from typing import Optional, List
 
-from schemas import NamedModel, BaseModel, RankRead, ReadModel
+from schemas import NamedModel, RankRead, ReadModel, Model
 from pydantic import BaseModel, validator
 
 class PositionBase(NamedModel):
@@ -45,36 +46,23 @@ class PositionRead(PositionBase, ReadModel):
     name: Optional[str]
     nameKZ: Optional[str]
 
-    # @validator('max_rank', always=True)
-    # def shorten_max_rank(cls, v, values, **kwargs):
-    #     if 'category_code' in values and values['category_code'].startswith('C-RG'):
-    #         v.name = v.name[:-6]
-    #         v.nameKZ = v.nameKZ[:-6]
-    #         return v
-    #     return v
-    
+    @validator("id", pre=True, always=True)
+    def default_uuid(cls, v):
+        return v if v is not None else str(uuid.uuid4())
+
+    @validator("category_code", "form", "name", "nameKZ", pre=True, always=True)
+    def default_empty_string(cls, v):
+        return v if v is not None else "Данные отсутствуют!"
+
+    @validator("position_order", pre=True, always=True)
+    def default_int(cls, v):
+        return v if v is not None else 999999
+
     class Config:
         from_attributes = True
         arbitrary_types_allowed = True
 
-    # @classmethod
-    # def from_orm(cls, orm_obj):
-    #     max_rank = orm_obj.max_rank
-    #     if orm_obj.category_code.startswith("C_RG"):
-    #         max_rank = max_rank[:-6]
-    #     return cls(
-    #         id=orm_obj.id,
-    #         created_at=orm_obj.created_at,
-    #         updated_at=orm_obj.updated_at,
-    #         category_code=orm_obj.category_code,
-    #         form=orm_obj.form,
-    #         position_order=orm_obj.position_order,
-    #         max_rank_id=orm_obj.max_rank_id,
-    #         max_rank=orm_obj.max_rank,
-    #         name=orm_obj.type.name,
-    #         nameKZ=orm_obj.type.nameKZ
-    #     )
     
-class PositionPaginationRead(BaseModel):
+class PositionPaginationRead(Model):
     total: Optional[int]
     objects: Optional[List[PositionRead]]

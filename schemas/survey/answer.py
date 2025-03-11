@@ -2,7 +2,7 @@ import uuid
 
 from typing import List, Optional
 from pydantic import BaseModel, Field
-from schemas import Model, ReadModel
+from schemas import Model, ReadModel, Model
 from .question import QuestionRead
 from .option import OptionRead
 
@@ -32,12 +32,12 @@ class AnswerRead(AnswerBase, ReadModel):
     class Config:
         orm_mode = True
 
-class AnswerReadPagination(BaseModel):
+class AnswerReadPagination(Model):
     total: int = Field(0, nullable=False)
     objects: List[AnswerRead] = Field([], nullable=False)
 
 
-class AnswerAnalyze(BaseModel):
+class AnswerAnalyze(Model):
     question_id: Optional[uuid.UUID]
     question_text: Optional[str]
     question_textKZ: Optional[str]

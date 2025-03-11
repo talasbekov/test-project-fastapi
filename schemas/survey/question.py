@@ -4,7 +4,7 @@ from typing import Optional, List
 from pydantic import BaseModel, Field
 
 from models import QuestionTypeEnum
-from schemas import TextModel, ReadTextModel
+from schemas import TextModel, ReadTextModel, Model
 from .option import OptionRead
 
 
@@ -49,6 +49,6 @@ class QuestionRead(QuestionBase, ReadTextModel):
     class Config:
         orm_mode = True
 
-class QuestionReadPagination(BaseModel):
+class QuestionReadPagination(Model):
     total: int = Field(0, nullable=False)
     objects: List[QuestionRead] = Field([], nullable=False)

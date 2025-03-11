@@ -1,5 +1,5 @@
 import datetime
-import uuid
+
 from typing import Optional
 
 from pydantic import AnyUrl
@@ -33,5 +33,5 @@ class SportAchievementRead(SportAchievementBase, ReadNamedModel):
     sport_type: Optional[SportTypeRead]
     document_link: Optional[str]
     profile_id: Optional[str]
-    created_at: Optional[datetime.date]
-    updated_at: Optional[datetime.date]
+    # created_at: Optional[datetime.date]
+    # updated_at: Optional[datetime.date]

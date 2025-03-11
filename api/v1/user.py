@@ -171,7 +171,7 @@ async def get_all_archived(
 
 @router.get("/active",
             dependencies=[Depends(HTTPBearer())],
-            response_model=TableUserRead,
+            response_model=TableUserReadActive,
             summary="Get all Users")
 async def get_all_active(
     *,
@@ -182,20 +182,11 @@ async def get_all_active(
     limit: int = 10
 ):
     """
-     Get all Users
-    - **filter**: str - The value which returns filtered results.
-    This parameter is optional and defaults to None
-    - **skip**: int - The number of users to skip before returning the results.
-    This parameter is optional and defaults to 0.
-    - **limit**: int - The maximum number of users to return in response.
-    This parameter is optional and defaults to 10.
+    Получает всех активных пользователей.
     """
     Authorize.jwt_required()
     user_id = Authorize.get_jwt_subject()
-    users, total = user_service.get_all_active(
-        db, filter.lstrip().rstrip(), skip, limit, user_id)
-    for user in users:
-        print(f"User ID: {user.id}, Email: {user.email}, IIN: {user.iin}")
+    users, total = user_service.get_all_active(db, filter.strip(), skip, limit, user_id)
     return TableUserReadActive(total=total, users=users)
 
 

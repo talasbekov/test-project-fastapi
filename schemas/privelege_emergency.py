@@ -1,14 +1,17 @@
 import uuid
+
+from pydantic import root_validator
 from typing import Optional
 
 from datetime import date
 from enum import Enum
 
+from models import FormEnum
 from schemas import Model, ReadModel
 
 
 class PrivelegeEmergency(Model):
-    form: Optional[str]
+    form: Optional[FormEnum]
     date_from: Optional[date]
     date_to: Optional[date]
     user_id: Optional[str]

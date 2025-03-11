@@ -1,17 +1,16 @@
-import uuid
 from datetime import date
 from typing import Optional
 
-from pydantic import AnyUrl, BaseModel
+from pydantic import AnyUrl, BaseModel, validator
 
 from .academic_degree_degree import AcademicDegreeDegreeRead
 from .science import ScienceRead
 from .specialty import SpecialtyRead
 
-from schemas import NamedModel
+from schemas import NamedModel, Model
 
 
-class AcademicDegreeBase(BaseModel):
+class AcademicDegreeBase(Model):
     profile_id: str
     degree_id: str
     science_id: str
@@ -50,15 +49,35 @@ class AcademicDegreeRead(AcademicDegreeBase):
     science: Optional[ScienceRead]
     specialty: Optional[SpecialtyRead]
 
-class AcademicDegreeShorRead(BaseModel):
+
+class AcademicDegreeShorRead(Model):
     specialty: Optional[NamedModel]
-    document_number: str
+    document_number: Optional[str]
     document_link: Optional[str]
     assignment_date: Optional[date]
 
     degree: Optional[NamedModel]
     science: Optional[NamedModel]
-    
+
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
+
+    # @validator("document_number", "document_link", pre=True, always=True)
+    # def default_empty_string(cls, v):
+    #     return v if v is not None else "Данные отсутствуют!"
+    #
+    # @validator("assignment_date", pre=True, always=True)
+    # def default_date(cls, v):
+    #     return v if v is not None else date(1920, 1, 1)
+
+    @classmethod
+    def from_orm(cls, orm_obj):
+        return cls(
+            specialty=orm_obj.specialty,
+            document_number=orm_obj.document_number,
+            document_link=orm_obj.document_link,
+            assignment_date=orm_obj.assignment_date,
+            degree=orm_obj.degree,
+            science=orm_obj.science,
+        )

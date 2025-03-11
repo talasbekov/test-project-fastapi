@@ -1,14 +1,12 @@
 import datetime
-import uuid
 from typing import List, Optional
 
-from pydantic import BaseModel, validator
-
 from .family_relation import FamilyRelationRead
-from schemas import ViolationRead, AbroadTravelRead, BirthplaceRead
+from schemas import ViolationRead, AbroadTravelRead, Model
+from schemas.personal import BirthplaceRead
 
 
-class FamilyBase(BaseModel):
+class FamilyBase(Model):
     relation_id: str
     first_name: str
     last_name: str
@@ -28,7 +26,7 @@ class FamilyBase(BaseModel):
         arbitrary_types_allowed = True
 
 
-class FamilyCreate(BaseModel):
+class FamilyCreate(Model):
     relation_id: str
     first_name: str
     last_name: str
@@ -46,7 +44,7 @@ class FamilyCreate(BaseModel):
     profile_id: str
 
 
-class FamilyUpdate(BaseModel):
+class FamilyUpdate(Model):
     relation_id: Optional[str]
     first_name: Optional[str]
     last_name: Optional[str]
@@ -81,15 +79,9 @@ class FamilyRead(FamilyBase):
     document_link: Optional[str]
     families_profile_id: Optional[str]
 
-    birthplace: Optional[BirthplaceRead]
+    birthplace: Optional["BirthplaceRead"]
     violation: Optional[List[ViolationRead]]
-    abroad_travel: Optional[List[AbroadTravelRead]]
-
-    
-    @validator("IIN", pre=True, always=True)
-    def default_empty_string(cls, v):
-        return v if v is not None else " "
-
+    abroad_travels: Optional[List[AbroadTravelRead]]
 
     @classmethod
     def from_orm(cls, orm_obj):
@@ -106,7 +98,7 @@ class FamilyRead(FamilyBase):
             workplace=orm_obj.workplace,
             profile_id=orm_obj.profile_id,
             violation=orm_obj.violation if orm_obj.violation else [],
-            abroad_travel=orm_obj.abroad_travel if orm_obj.abroad_travel else [],
+            abroad_travel=orm_obj.abroad_travels if orm_obj.abroad_travels else [],  # исправлено
             birthplace=orm_obj.birthplace if orm_obj.birthplace else {},
             birthplace_id=orm_obj.birthplace_id if orm_obj.birthplace_id else orm_obj.id,
             document_link=orm_obj.document_link,

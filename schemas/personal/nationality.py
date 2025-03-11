@@ -1,8 +1,6 @@
-import datetime
-import uuid
 from typing import Optional
 
-from schemas import NamedModel, ReadNamedModel
+from schemas import NamedModel
 
 class NationalityBase(NamedModel):
 
@@ -17,5 +15,5 @@ class NationalityCreate(NationalityBase):
 class NationalityUpdate(NationalityBase):
     pass
 
-class NationalityRead(NationalityBase, ReadNamedModel):
+class NationalityRead(NationalityBase):
     id: Optional[str]

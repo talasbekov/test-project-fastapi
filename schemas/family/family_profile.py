@@ -1,12 +1,10 @@
-import uuid
 from typing import Optional, List, Union
 
-from pydantic import BaseModel
-
 from .family import FamilyRead
+from .. import Model
 
 
-class FamilyProfileBase(BaseModel):
+class FamilyProfileBase(Model):
 
     profile_id: Optional[str]
 

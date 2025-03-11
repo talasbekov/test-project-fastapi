@@ -1,13 +1,11 @@
 import uuid
 from datetime import datetime
 from typing import Optional, List
-from pydantic import Field
+from pydantic import Field, BaseModel
 
-from schemas import (BaseModel,
-                     NamedModel,
-                     UserShortReadStatus,
+from schemas import (NamedModel,
                      StaffDivisionReadWithoutStaffUnit,
-                     )
+                     Model)
 from .activity import ActivityRead
 from .schedule_month import ScheduleMonthRead
 from .exam import ExamScheduleRead
@@ -30,7 +28,7 @@ class MonthRead(MonthBase):
     has_schedule_month: bool = True
 
 
-class ScheduleYearBase(BaseModel):
+class ScheduleYearBase(Model):
     is_exam_required: Optional[bool]
     retry_count: Optional[int]
     plan_id: Optional[str]
@@ -66,6 +64,6 @@ class ScheduleYearRead(ScheduleYearBase):
     months: Optional[List[ScheduleMonthRead]]
     exams: Optional[List[ExamScheduleRead]]
     
-class ScheduleYearReadPagination(BaseModel):
+class ScheduleYearReadPagination(Model):
     total: int = Field(0, nullable=False)
     objects: List[ScheduleYearRead] = Field([], nullable=False)

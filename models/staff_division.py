@@ -18,7 +18,7 @@ class StaffDivisionEnum(str, enum.Enum):
     REMOVED_FROM_LIST = "Исключен из списков личного состава"
     SECONDMENT_OTHER = "Откомандирован в другой орган"
     PERISHED = "Погиб"
-    SERVICE = 'СГО РК'
+    SERVICE = 'РК'
     DISPOSITION = 'В распоряжении'
     OUT_STAFF = 'Внештатный сотрудник'
 

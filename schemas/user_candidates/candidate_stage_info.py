@@ -6,9 +6,10 @@ from pydantic import BaseModel
 
 from .candidate_stage_type import CandidateStageTypeRead
 from .candidate import CandidateRead
+from .. import Model
 
 
-class CandidateStageInfoBase(BaseModel):
+class CandidateStageInfoBase(Model):
     candidate_id: str
     candidate_stage_type_id: str
 
@@ -21,7 +22,7 @@ class CandidateStageInfoCreate(CandidateStageInfoBase):
     pass
 
 
-class CandidateStageInfoSignEcp(BaseModel):
+class CandidateStageInfoSignEcp(Model):
     certificate_blob: str
 
 
@@ -31,7 +32,7 @@ class CandidateStageInfoUpdate(CandidateStageInfoBase):
     status: Optional[str]
 
 
-class CandidateStageInfoSendToApproval(BaseModel):
+class CandidateStageInfoSendToApproval(Model):
     staff_unit_coordinate_id: Optional[str]
 
 

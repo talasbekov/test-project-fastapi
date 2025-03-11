@@ -96,7 +96,7 @@ class DocumentStaffFunctionStep(ReadModel):
         orm_mode = True
 
 
-# class DocumentStaffFunctionInit(BaseModel):
+# class DocumentStaffFunctionInit(Model):
 #     hr_document_step: Optional[DocumentStaffFunctionStep]
 #     priority: Optional[int]
 #     role_id: Optional[str]

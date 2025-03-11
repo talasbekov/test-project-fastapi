@@ -18,7 +18,7 @@ class PersonnalReserveService(
         obj_in_data = jsonable_encoder(obj_in)
         obj_in_data['reserve_date'] = datetime.strptime(
             obj_in_data['reserve_date'], '%Y-%m-%d')
-        obj_in_data['reserve'] = ReserveEnum[obj_in_data['reserve']]
+        obj_in_data['reserve'] = ReserveEnum(obj_in_data['reserve'])
         db_obj = self.model(**obj_in_data)
         db.add(db_obj)
         db.flush()

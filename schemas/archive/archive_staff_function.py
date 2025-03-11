@@ -3,7 +3,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-from schemas import JurisdictionRead, ServiceStaffFunctionTypeRead, NamedModel
+from schemas import JurisdictionRead, ServiceStaffFunctionTypeRead, NamedModel, Model
 
 
 class ArchiveStaffFunctionBase(NamedModel):
@@ -73,7 +73,7 @@ class NewArchiveDocumentStaffFunctionUpdate(ArchiveDocumentStaffFunctionBase):
     pass
 
 
-class ArchiveStaffUnitFunctions(BaseModel):
+class ArchiveStaffUnitFunctions(Model):
     staff_unit_id: str
     staff_function_ids: List[str]
 
@@ -89,7 +89,7 @@ class ArchiveStaffFunctionRead(ArchiveStaffFunctionBase):
         arbitrary_types_allowed = True
 
 
-class ArchiveDocumentStaffFunctionTemplate(BaseModel):
+class ArchiveDocumentStaffFunctionTemplate(Model):
 
     id: Optional[str]
     name: Optional[str]
@@ -98,7 +98,7 @@ class ArchiveDocumentStaffFunctionTemplate(BaseModel):
         orm_mode = True
 
 
-class ArchiveDocumentStaffFunctionStep(BaseModel):
+class ArchiveDocumentStaffFunctionStep(Model):
 
     id: Optional[str]
     hr_document_template: Optional[ArchiveDocumentStaffFunctionTemplate]

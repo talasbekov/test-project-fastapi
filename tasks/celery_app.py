@@ -176,13 +176,13 @@ def task_sign_document_with_certificate(
     user_id,
     access_token,
 ):
-    print("what")
+
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     db = SessionLocal()
     body = pickle.loads(byte_body)
     state_counter = 0
     self.update_state(state=state_counter)
-    print("wtfffff")
+
     # hr_documents = []
     percent_per_document = 100/len(body.document_ids)
     for document_id in body.document_ids:
@@ -212,7 +212,7 @@ async def check_expiring_documents():
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     db = SessionLocal()
     contracts = history_service.get_expiring_contracts(db)
-    print(contracts)
+
     for contract in contracts:
         await hr_document_service.send_expiring_notification(db, contract.user_id, contract.id, sender_type="system")
     try:

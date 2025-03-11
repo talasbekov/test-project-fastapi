@@ -1,6 +1,5 @@
-from pydantic import BaseModel
-from enum import Enum
 from typing import List, Optional
+from schemas import Model
 
 
 class SearchType:
@@ -49,18 +48,18 @@ class SearchType:
     STAFF_DIVISION = "staff_division"
 
 
-class Search(BaseModel):
+class Search(Model):
     user_id: Optional[str] = None
     name: Optional[str] = None
 
 
-class SearchType(BaseModel):
+class SearchType(Model):
     search_type: str
     name: str
 
-class SearchTypeListCreate(BaseModel):
+class SearchTypeListCreate(Model):
     search_types: List[SearchType]
 
 
-class SearchTypeListRead(BaseModel):
+class SearchTypeListRead(Model):
     users: List[Search]

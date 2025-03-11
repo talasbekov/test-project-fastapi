@@ -1,8 +1,8 @@
 from typing import List
 
-from pydantic import Field
+from pydantic import Field, BaseModel
 
-from schemas import NamedModel, ReadNamedModel, BaseModel
+from schemas import NamedModel, ReadNamedModel, Model
 
 
 class CourseProviderBase(NamedModel):
@@ -23,6 +23,6 @@ class CourseProviderRead(CourseProviderBase, ReadNamedModel):
         orm_mode = True
 
 
-class CourseProviderReadPagination(BaseModel):
+class CourseProviderReadPagination(Model):
     total: int = Field(0, nullable=False)
     objects: List[CourseProviderRead] = Field([], nullable=False)
