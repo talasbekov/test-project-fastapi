@@ -33,7 +33,7 @@ from models import (
     Coolness,
     CoolnessStatusEnum,
     User, BadgeType, ReserveEnum,
-    PermissionTypeEnum
+    PermissionTypeEnum, StaffDivision
 )
 from schemas import HistoryCreate, HistoryUpdate
 from schemas.history.history import EquipmentRead
@@ -316,13 +316,16 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             raise NotSupportedException(
                 detail=f'Type: {obj_in.type} is not supported!')
         if obj_in.staff_division_id:
-            staff_division = staff_division_service.get_by_id(
+            staff_division = staff_division_service.get_full_name(
                 db, obj_in.staff_division_id)
+            print(obj_in.staff_division_id, "1. staff_division_id")
+            print(staff_division, "2. staff_division")
             secondment = secondment_service.create_relation(
-                db, obj_in.user_id, staff_division)
+                db, obj_in.user_id, obj_in.staff_division_id, staff_division)
+
         else:
             secondment = secondment_service.create_relation(
-                db, obj_in.user_id, obj_in.value)
+                db, obj_in.user_id, obj_in.staff_division_id, obj_in.value)
         obj_data = {
             "user_id": obj_in.user_id,
             "secondment_id": secondment.id,

@@ -1,16 +1,18 @@
 from .base import Model, NamedModel, NestedModel, NamedNestedModel, isActiveModel, TextModel
 from .badge import Badge, BadgeType
-from .equipment import (Equipment,
-                        TypeClothingEquipment,
-                        TypeArmyEquipment,
-                        TypeOtherEquipment,
-                        ClothingEquipment,
-                        ArmyEquipment,
-                        OtherEquipment,
-                        TypeClothingEquipmentModel,
-                        ClothingEquipmentTypesModels,
-                        TypeOtherEquipmentModel,
-                        TypeArmyEquipmentModel)
+from .equipment import (
+    Equipment,
+    ClothingEquipmentType,
+    ArmyEquipmentType,
+    OtherEquipmentType,
+    ClothingEquipment,
+    ArmyEquipment,
+    OtherEquipment,
+    ClothingEquipmentTypeModel,
+    ClothingTypeAssociation,
+    OtherEquipmentTypeModel,
+    ArmyEquipmentTypeModel
+)
 from .event import Event
 from .hr_document_status import HrDocumentStatus
 from .hr_document import HrDocument, HrDocumentStatusEnum

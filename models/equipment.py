@@ -6,13 +6,14 @@ from sqlalchemy import (
     TIMESTAMP
 )
 from sqlalchemy.orm import relationship
+from models import Model, NamedModel  # Ваши базовые классы
+from models.association import hr_document_equipments
 
-from models import Model, NamedModel
-from .association import hr_document_equipments
 
-
+# ------------------------------------------------------------------
+#  Полиморфная базовая модель Equipment
+# ------------------------------------------------------------------
 class Equipment(Model):
-
     __tablename__ = "hr_erp_equipments"
 
     date_from = Column(TIMESTAMP(timezone=True), nullable=True)
@@ -20,15 +21,20 @@ class Equipment(Model):
     document_number = Column(String, nullable=True)
     document_link = Column(String, nullable=True)
 
+    # Поле для полиморфного определения, какой подкласс использовать
     type_of_equipment = Column(String, nullable=True)
-    
-    hr_documents = relationship("HrDocument",
-                                secondary=hr_document_equipments,
-                                back_populates="equipments")
+
     inventory_count = Column(BigInteger, nullable=True)
     inventory_number = Column(String, nullable=True)
-    user_id = Column(String(), ForeignKey("hr_erp_users.id"))
+
+    user_id = Column(String, ForeignKey("hr_erp_users.id"))
     user = relationship("User", back_populates="equipments")
+
+    hr_documents = relationship(
+        "HrDocument",
+        secondary=hr_document_equipments,
+        back_populates="equipments"
+    )
 
     __mapper_args__ = {
         "polymorphic_identity": "equipment",
@@ -36,154 +42,218 @@ class Equipment(Model):
     }
 
 
-class TypeArmyEquipmentModel(NamedModel):
-    """Type of equipment. Example: AK-47, RPG-7, etc."""
-    __tablename__ = "hr_erp_type_ar_equip_models"
+# ------------------------------------------------------------------
+#  Армейское оборудование
+# ------------------------------------------------------------------
 
-    type_of_army_equipment_id = Column(
-        String(),
-        ForeignKey("hr_erp_type_army_equipments.id"),
-        nullable=True)
-    army_equipments = relationship(
-        "ArmyEquipment",
-        back_populates="type_of_army_equipment_model")
-    type_of_army_equipment = relationship(
-        "TypeArmyEquipment",
-        back_populates="type_of_army_equipment_models")
+class ArmyEquipmentType(NamedModel):
+    """
+    Прежнее: TypeArmyEquipment. Пример: «Автомат», «РПГ».
+    """
+    __tablename__ = "hr_erp_army_equipment_types"
 
-
-class TypeArmyEquipment(NamedModel):
-    """Type of army equipment. Example:
-    Автомат, РПГ, etc."""
-    __tablename__ = "hr_erp_type_army_equipments"
-
-    type_of_army_equipment_models = relationship(
-        "TypeArmyEquipmentModel",
-        back_populates="type_of_army_equipment",
-        cascade="all, delete-orphan")
-
-
-class ArmyEquipment(Equipment):
-
-    type_of_army_eq_model_id = Column(
-        String(),
-        ForeignKey("hr_erp_type_ar_equip_models.id"),
-        nullable=True)
-    count_of_ammo = Column(BigInteger, nullable=True)
-
-    type_of_army_equipment_model = relationship(
-        "TypeArmyEquipmentModel",
-        back_populates="army_equipments",
-        uselist=False)
-
-    __mapper_args__ = {
-        "polymorphic_identity": "army_equipment",
-    }
-
-
-class TypeClothingEquipmentModel(NamedModel):
-    """Clothing equipment model. Example:
-    ПАРАДНАЯ, ПОВСЕДНЕВНО-ПОСТОВАЯ, ТАКТИЧЕСКАЯ, etc."""
-    __tablename__ = "hr_erp_type_cloth_eq_models"
-    type_cloth_eq_types_id = Column(String(), ForeignKey("hr_erp_type_cloth_equipmets.id"), nullable=True)
-
-    cloth_eq_types_models = relationship(
-        "ClothingEquipmentTypesModels",
-        back_populates="type_cloth_eq_models")
-    type_cloth_equipmets = relationship(
-        "TypeClothingEquipment",
-        back_populates="cloth_eq_types_model",
-        uselist=False)
-
-
-class TypeClothingEquipment(NamedModel):  # obj.
-    """Type of equipment. Example:
-    ШАПКА, ПОЛУЧЕК, ПОЛУЧЕК, etc."""
-    __tablename__ = "hr_erp_type_cloth_equipmets"
-
-    cloth_eq_types_models = relationship(
-        "ClothingEquipmentTypesModels",
-        back_populates="type_cloth_equipmets"
-    )
-    cloth_eq_types_model = relationship(
-        "TypeClothingEquipmentModel",
-        back_populates="type_cloth_equipmets",
+    army_equipment_type_models = relationship(
+        "ArmyEquipmentTypeModel",
+        back_populates="army_equipment_type",
         cascade="all, delete-orphan"
     )
 
 
-class ClothingEquipmentTypesModels(Model):
-    __tablename__ = 'hr_erp_cloth_eq_types_models'
+class ArmyEquipmentTypeModel(NamedModel):
+    """
+    Прежнее: TypeArmyEquipmentModel. Пример: «АК-47».
+    """
+    __tablename__ = "hr_erp_army_equipment_type_models"
 
-    type_cloth_eq_models_id = Column(String(),
-                                    ForeignKey("hr_erp_type_cloth_eq_models.id"),
-                                    nullable=True)
-    type_cloth_eq_models = relationship("TypeClothingEquipmentModel",
-                                    back_populates="cloth_eq_types_models",
-                                    uselist=False)
+    army_equipment_type_id = Column(
+        String,
+        ForeignKey("hr_erp_army_equipment_types.id"),
+        nullable=True
+    )
+    army_equipment_type = relationship(
+        "ArmyEquipmentType",
+        back_populates="army_equipment_type_models"
+    )
 
-    type_cloth_equipmets_id = Column(String(),
-                                    ForeignKey("hr_erp_type_cloth_equipmets.id"),
-                                    nullable=True)
-    type_cloth_equipmets = relationship("TypeClothingEquipment",
-                                    back_populates="cloth_eq_types_models",
-                                    uselist=False)
+    # Список конкретных единиц оборудования
+    army_equipments = relationship(
+        "ArmyEquipment",
+        back_populates="army_equipment_type_model"
+    )
+
+
+class ArmyEquipment(Equipment):
+    """
+    Наследник Equipment: конкретный экземпляр армейского оборудования.
+    """
+    __mapper_args__ = {
+        "polymorphic_identity": "army_equipment",
+    }
+
+    # Внешний ключ на модель
+    army_equipment_type_model_id = Column(
+        String,
+        ForeignKey("hr_erp_army_equipment_type_models.id"),
+        nullable=True
+    )
+
+    count_of_ammo = Column(BigInteger, nullable=True)
+
+    # Связь "один к одному/многим" (но uselist=False для одного объекта)
+    army_equipment_type_model = relationship(
+        "ArmyEquipmentTypeModel",
+        back_populates="army_equipments",
+        uselist=False
+    )
+
+# ------------------------------------------------------------------
+#  Одежда
+# ------------------------------------------------------------------
+class ClothingEquipmentType(NamedModel):
+    __tablename__ = "hr_erp_clothing_equipment_types"
+
+    clothing_equipment_models = relationship(
+        "ClothingEquipmentTypeModel",
+        back_populates="clothing_equipment_type",
+        cascade="all, delete-orphan"
+    )
+
+    # NEW relationship to the association table
+    clothing_type_associations = relationship(
+        "ClothingTypeAssociation",
+        back_populates="clothing_equipment_type",
+        cascade="all, delete-orphan"
+    )
+
+
+class ClothingEquipmentTypeModel(NamedModel):
+    __tablename__ = "hr_erp_clothing_equipment_type_models"
+
+    clothing_equipment_type_id = Column(
+        String,
+        ForeignKey("hr_erp_clothing_equipment_types.id"),
+        nullable=True
+    )
+    # This is the existing relationship to the parent clothing_equipment_type
+    clothing_equipment_type = relationship(
+        "ClothingEquipmentType",
+        back_populates="clothing_equipment_models",
+        uselist=False
+    )
+
+    # NEW: Relationship back to the association table
+    # Name it something like "clothing_associations" or "cloth_eq_type_associations"
+    cloth_eq_type_associations = relationship(
+        "ClothingTypeAssociation",
+        back_populates="clothing_equipment_type_model"
+    )
+
+
+class ClothingTypeAssociation(Model):
+    """
+    Прежнее: ClothingEquipmentTypesModels (join).
+    """
+    __tablename__ = "hr_erp_clothing_eq_type_association"
+
+    clothing_equipment_type_model_id = Column(
+        String,
+        ForeignKey("hr_erp_clothing_equipment_type_models.id"),
+        nullable=True
+    )
+
+    clothing_equipment_type_id = Column(
+        String,
+        ForeignKey("hr_erp_clothing_equipment_types.id"),
+        nullable=True
+    )
+
+    clothing_equipment_type_model = relationship("ClothingEquipmentTypeModel", uselist=False)
+
+    clothing_equipment_type = relationship(
+        "ClothingEquipmentType",
+        back_populates="clothing_type_associations",
+        uselist=False
+    )
 
     clothing_equipments = relationship(
         "ClothingEquipment",
-        back_populates="cloth_eq_types_models")
+        back_populates="clothing_type_association"
+    )
 
 
 class ClothingEquipment(Equipment):
-    cloth_eq_types_models_id = Column(String(), ForeignKey(
-        "hr_erp_cloth_eq_types_models.id"), nullable=True)
-    cloth_eq_types_models = relationship(
-        "ClothingEquipmentTypesModels",
-        back_populates="clothing_equipments",
-        uselist=False)
-    clothing_size = Column(String, nullable=True)
     __mapper_args__ = {
         "polymorphic_identity": "clothing_equipment",
     }
 
+    clothing_type_association_id = Column(
+        String,
+        ForeignKey("hr_erp_clothing_eq_type_association.id"),
+        nullable=True
+    )
+    clothing_type_association = relationship(
+        "ClothingTypeAssociation",
+        back_populates="clothing_equipments",
+        uselist=False
+    )
 
-class TypeOtherEquipmentModel(NamedModel):
-    """Type of equipment. Example: HP laserjet 1020, HP laserjet 1020, etc."""
-    __tablename__ = "hr_erp_type_oth_eq_models"
+    clothing_size = Column(String, nullable=True)
 
-    type_of_other_equipment_id = Column(
-        String(),
-        ForeignKey("hr_erp_type_other_equipments.id"),
-        nullable=True)
+
+# ------------------------------------------------------------------
+#  Прочее оборудование
+# ------------------------------------------------------------------
+class OtherEquipmentType(NamedModel):
+    """
+    Прежнее: TypeOtherEquipment. Пример: «Компьютер», «Принтер».
+    """
+    __tablename__ = "hr_erp_other_equipment_types"
+
+    other_equipment_type_models = relationship(
+        "OtherEquipmentTypeModel",
+        back_populates="other_equipment_type",
+        cascade="all, delete-orphan"
+    )
+
+
+class OtherEquipmentTypeModel(NamedModel):
+    """
+    Прежнее: TypeOtherEquipmentModel. Пример: «HP LaserJet 1020».
+    """
+    __tablename__ = "hr_erp_other_equipment_type_models"
+
+    other_equipment_type_id = Column(
+        String,
+        ForeignKey("hr_erp_other_equipment_types.id"),
+        nullable=True
+    )
+    other_equipment_type = relationship(
+        "OtherEquipmentType",
+        back_populates="other_equipment_type_models"
+    )
+
     other_equipments = relationship(
         "OtherEquipment",
-        back_populates="type_of_other_equipment_model")
-    type_of_other_equipment = relationship(
-        "TypeOtherEquipment",
-        back_populates="type_of_other_equipment_models")
-
-
-class TypeOtherEquipment(NamedModel):
-    """Type of clothing equipment. Example: КОМПЬЮТЕР, КОМПЬЮТЕР, КОМПЬЮТЕР, etc."""
-    __tablename__ = "hr_erp_type_other_equipments"
-
-    type_of_other_equipment_models = relationship(
-        "TypeOtherEquipmentModel",
-        back_populates="type_of_other_equipment",
-        cascade="all, delete-orphan")
+        back_populates="other_equipment_type_model"
+    )
 
 
 class OtherEquipment(Equipment):
-
-    type_of_other_equipment_model_id = Column(
-        String(),
-        ForeignKey("hr_erp_type_oth_eq_models.id"),
-        nullable=True)
-    type_of_other_equipment_model = relationship(
-        "TypeOtherEquipmentModel",
-        back_populates="other_equipments",
-        uselist=False)
-
+    """
+    Наследник Equipment для 'прочего' оборудования.
+    """
     __mapper_args__ = {
         "polymorphic_identity": "other_equipment",
     }
+
+    other_equipment_type_model_id = Column(
+        String,
+        ForeignKey("hr_erp_other_equipment_type_models.id"),
+        nullable=True
+    )
+
+    other_equipment_type_model = relationship(
+        "OtherEquipmentTypeModel",
+        back_populates="other_equipments",
+        uselist=False
+    )

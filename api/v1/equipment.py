@@ -11,24 +11,25 @@ from schemas import (
     EquipmentCreate,
     EquipmentUpdate,
     EquipmentRead,
-    TypeClothingEquipmentReadPagination,
-    TypeArmyEquipmentReadPagination,
-    TypeOtherEquipmentReadPagination,
-    TypeArmyEquipmentRead,
-    TypeArmyEquipmentCreate,
-    TypeArmyEquipmentModelCreate,
-    TypeClothingEquipmentCreate,
-    TypeClothingEquipmentModelCreate,
-    TypeOtherEquipmentCreate,
-    TypeOtherEquipmentModelCreate,
-    TypeClothingEquipmentUpdate
+    # --------------- Переименованные схемы ---------------
+    ClothingEquipmentTypeReadPagination,    # бывш. TypeClothingEquipmentReadPagination
+    ArmyEquipmentTypeReadPagination,        # бывш. TypeArmyEquipmentReadPagination
+    OtherEquipmentTypeReadPagination,       # бывш. TypeOtherEquipmentReadPagination
+    ArmyEquipmentTypeRead,                  # бывш. TypeArmyEquipmentRead
+    ArmyEquipmentTypeCreate,                # бывш. TypeArmyEquipmentCreate
+    ArmyEquipmentTypeModelCreate,           # бывш. TypeArmyEquipmentModelCreate
+    ClothingEquipmentTypeCreate,            # бывш. TypeClothingEquipmentCreate
+    ClothingEquipmentTypeModelCreate,       # бывш. TypeClothingEquipmentModelCreate
+    OtherEquipmentTypeCreate,               # бывш. TypeOtherEquipmentCreate
+    OtherEquipmentTypeModelCreate,          # бывш. TypeOtherEquipmentModelCreate
+    ClothingEquipmentTypeUpdate,            # бывш. TypeClothingEquipmentUpdate
 )
 from schemas.equipment import (
-    TypeArmyEquipmentModel,
-    TypeOtherEquipmentRead,
-    TypeOtherEquipmentModel,
-    TypeClothingEquipmentRead,
-    TypeClothingEquipmentModelSchema
+    # --------------- Переименованные схемы ---------------
+    OtherEquipmentTypeRead,  # бывш. TypeOtherEquipmentRead
+    ClothingEquipmentTypeRead,  # бывш. TypeClothingEquipmentRead
+    ClothingEquipmentTypeModelRead, ArmyEquipmentTypeModelRead,
+    OtherEquipmentTypeModelRead  # бывш. TypeClothingEquipmentModelSchema
 )
 from services.equipment import equipment_service
 
@@ -67,17 +68,17 @@ async def create(
     return equipment_service.create(db, body)
 
 
-@router.get("/{id}/",
+@router.get("/{equipment_id}/",
             dependencies=[Depends(HTTPBearer())],
             response_model=EquipmentRead,
             summary="Get Equipment by id")
 async def get_by_id(
+    equipment_id: str,
     db: Session = Depends(get_db),
-    id: str = None,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
-    return equipment_service.get_by_id(db, str(id))
+    return equipment_service.get_by_id(db, equipment_id)
 
 
 @router.put("/{id}/",
@@ -111,7 +112,7 @@ async def delete(
 
 @router.get("/type/clothing/",
             dependencies=[Depends(HTTPBearer())],
-            response_model=TypeClothingEquipmentReadPagination,
+            response_model=ClothingEquipmentTypeReadPagination,
             summary="Get all Clothing Equipments")
 async def get_all_clothing_types(
     db: Session = Depends(get_db),
@@ -125,7 +126,7 @@ async def get_all_clothing_types(
 
 @router.get("/type/clothing/{id}",
             dependencies=[Depends(HTTPBearer())],
-            response_model=TypeClothingEquipmentRead,
+            response_model=ClothingEquipmentTypeRead,
             summary="Get Clothing Equipment type by id")
 async def get_clothing_by_id(
     db: Session = Depends(get_db),
@@ -142,7 +143,7 @@ async def get_clothing_by_id(
 async def update_type_clothing(
     db: Session = Depends(get_db),
     id: str = None,
-    body: TypeClothingEquipmentUpdate = None,
+    body: ClothingEquipmentTypeUpdate = None,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
@@ -163,11 +164,11 @@ async def delete_type_clothing(
 
 @router.post("/type/clothing/",
              dependencies=[Depends(HTTPBearer())],
-             response_model=TypeClothingEquipmentRead,
+             response_model=ClothingEquipmentTypeRead,
              summary="Create Clothing Equipments Type")
 async def create_cloth_eq_type(
     db: Session = Depends(get_db),
-    body: TypeClothingEquipmentCreate = None,
+    body: ClothingEquipmentTypeCreate = None,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
@@ -176,7 +177,7 @@ async def create_cloth_eq_type(
 
 @router.get("/model/clothing/",
             dependencies=[Depends(HTTPBearer())],
-            response_model=List[TypeClothingEquipmentModelSchema],
+            response_model=List[ClothingEquipmentTypeModelRead],
             summary="Get all Clothing Equipments Models")
 async def get_all_clothing_models(
     db: Session = Depends(get_db),
@@ -191,7 +192,7 @@ async def get_all_clothing_models(
              summary="Create Clothing Equipments Model")
 async def create_cloth_eq_model(
     db: Session = Depends(get_db),
-    body: TypeClothingEquipmentModelCreate = None,
+    body: ClothingEquipmentTypeModelCreate = None,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
@@ -216,7 +217,7 @@ async def get_cloth_model_by_id(
 async def update_cloth_model(
     db: Session = Depends(get_db),
     id: str = None,
-    body: TypeClothingEquipmentModelCreate = None,
+    body: ClothingEquipmentTypeModelCreate = None,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
@@ -239,7 +240,7 @@ async def delete_cloth_model(
 
 @router.get("/type/army/",
             dependencies=[Depends(HTTPBearer())],
-            response_model=TypeArmyEquipmentReadPagination,
+            response_model=ArmyEquipmentTypeReadPagination,
             summary="Get all Army Equipments")
 async def get_all_army(
     db: Session = Depends(get_db),
@@ -254,7 +255,7 @@ async def get_all_army(
 
 @router.get("/type/army/{id}",
             dependencies=[Depends(HTTPBearer())],
-            response_model=TypeArmyEquipmentRead,
+            response_model=ArmyEquipmentTypeRead,
             summary="Get Army Equipment type by id")
 async def get_army_by_id(
     db: Session = Depends(get_db),
@@ -271,7 +272,7 @@ async def get_army_by_id(
 async def update_type_army(
     db: Session = Depends(get_db),
     id: str = None,
-    body: TypeArmyEquipmentCreate = None,
+    body: ArmyEquipmentTypeCreate = None,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
@@ -292,11 +293,11 @@ async def delete_type_army(
 
 @router.post("/type/army/",
              dependencies=[Depends(HTTPBearer())],
-             response_model=TypeArmyEquipmentRead,
+             response_model=ArmyEquipmentTypeRead,
              summary="Create Army Equipments Type")
 async def create_army_eq_type(
     db: Session = Depends(get_db),
-    body: TypeArmyEquipmentCreate = None,
+    body: ArmyEquipmentTypeCreate = None,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
@@ -305,11 +306,11 @@ async def create_army_eq_type(
 
 @router.post("/model/army/",
              dependencies=[Depends(HTTPBearer())],
-             response_model=TypeArmyEquipmentModel,
+             response_model=ArmyEquipmentTypeModelRead,
              summary="Create Army Equipments Model")
 async def create_army_eq_model(
     db: Session = Depends(get_db),
-    body: TypeArmyEquipmentModelCreate = None,
+    body: ArmyEquipmentTypeModelCreate = None,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
@@ -345,7 +346,7 @@ async def get_army_model_by_id(
 async def update_army_model(
     db: Session = Depends(get_db),
     id: str = None,
-    body: TypeArmyEquipmentModelCreate = None,
+    body: ArmyEquipmentTypeModelCreate = None,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
@@ -368,7 +369,7 @@ async def delete_army_model(
 
 @router.get("/type/other/",
             dependencies=[Depends(HTTPBearer())],
-            response_model=TypeOtherEquipmentReadPagination,
+            response_model=OtherEquipmentTypeReadPagination,
             summary="Get all Other Equipments")
 async def get_all_other(
     db: Session = Depends(get_db),
@@ -383,7 +384,7 @@ async def get_all_other(
 
 @router.get("/type/other/{id}",
             dependencies=[Depends(HTTPBearer())],
-            response_model=TypeOtherEquipmentRead,
+            response_model=OtherEquipmentTypeRead,
             summary="Get Other Equipment type by id")
 async def get_other_by_id(
     db: Session = Depends(get_db),
@@ -396,11 +397,11 @@ async def get_other_by_id(
 
 @router.post("/type/other/",
              dependencies=[Depends(HTTPBearer())],
-             response_model=TypeOtherEquipmentRead,
+             response_model=OtherEquipmentTypeRead,
              summary="Create Other Equipments Type")
 async def create_other_eq_type(
     db: Session = Depends(get_db),
-    body: TypeOtherEquipmentCreate = None,
+    body: OtherEquipmentTypeCreate = None,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
@@ -413,7 +414,7 @@ async def create_other_eq_type(
 async def update_other_type(
     db: Session = Depends(get_db),
     id: str = None,
-    body: TypeOtherEquipmentCreate = None,
+    body: OtherEquipmentTypeCreate = None,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
@@ -434,11 +435,11 @@ async def delete_other_type(
 
 @router.post("/model/other/",
              dependencies=[Depends(HTTPBearer())],
-             response_model=TypeOtherEquipmentModel,
+             response_model=OtherEquipmentTypeModelRead,
              summary="Create Other Equipments Model")
 async def create_other_eq_model(
     db: Session = Depends(get_db),
-    body: TypeOtherEquipmentModelCreate = None,
+    body: OtherEquipmentTypeModelCreate = None,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
@@ -474,7 +475,7 @@ async def get_other_model_by_id(
 async def update_other_model(
     db: Session = Depends(get_db),
     id: str = None,
-    body: TypeOtherEquipmentModelCreate = None,
+    body: OtherEquipmentTypeModelCreate = None,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
@@ -515,10 +516,7 @@ async def get_all_models(
             response_model=List[str],
             summary="Get all Types of Equipments")
 async def get_all_types(
-    db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
-    skip: int = 0,
-    limit: int = 10
 ):
     Authorize.jwt_required()
     return ["other_equipment", "clothing_equipment", "army_equipment"]

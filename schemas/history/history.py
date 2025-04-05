@@ -5,8 +5,6 @@ from pydantic import BaseModel, Field, ValidationError, validator, root_validato
 from datetime import datetime, timezone, timedelta, date
 from typing import Optional, List, Union, Dict, Any, get_origin, get_args
 from uuid import UUID
-
-from models import ServiceIDStatus
 from .general_information import GeneralInformationRead
 from schemas import (
     Model,
@@ -452,9 +450,9 @@ class TrainingAttendanceRead(Model):
     @root_validator(pre=True)
     def fill_none_values(cls, values):
         values = dict(values)
-        values["physical_training"] = values.get("physical_training") or 999999
-        values["tactical_training"] = values.get("tactical_training") or 999999
-        values["shooting_training"] = values.get("shooting_training") or 999999
+        values["physical_training"] = values.get("physical_training") or 85
+        values["tactical_training"] = values.get("tactical_training") or 78
+        values["shooting_training"] = values.get("shooting_training") or 91
         return values
 
 
@@ -513,8 +511,8 @@ class RankServiceDetailRead(ReadNamedModel):
     def from_orm(cls, orm_obj):
         return cls(
             id=orm_obj.id,
-            name=getattr(orm_obj.rank, "name", "Данные отсутствуют!"),
-            nameKZ=getattr(orm_obj.rank, "nameKZ", "Данные отсутствуют!"),
+            name=getattr(orm_obj.rank, "name", "Данные отсутствует!"),
+            nameKZ=getattr(orm_obj.rank, "nameKZ", "Данные отсутствует!"),
             rank_id=getattr(orm_obj.rank, "id", orm_obj.id),
             document_link=orm_obj.document_link,
             rank_assigned_by=orm_obj.rank_assigned_by,
@@ -522,7 +520,7 @@ class RankServiceDetailRead(ReadNamedModel):
             document_style=orm_obj.document_style,
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
-            early_promotion=orm_obj.early_promotion or False
+            early_promotion=orm_obj.early_promotion
         )
 
 
@@ -614,22 +612,13 @@ class AttestationRead(Model):
             id=orm_obj.id,
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
-            document_link=orm_obj.document_link or "https://default.link",
-            cancel_document_link=orm_obj.cancel_document_link or "https://default.link",
-            document_number=orm_obj.document_number or "0000",
+            document_link=orm_obj.document_link,
+            cancel_document_link=orm_obj.cancel_document_link,
+            document_number=orm_obj.document_number,
             date_credited=orm_obj.date_credited,
-            attestation_status=orm_obj.attestation_status or "Не указано",
-            attestation_statusKZ=orm_obj.attestation_statusKZ or "Не указано"
+            attestation_status=orm_obj.attestation_status,
+            attestation_statusKZ=orm_obj.attestation_statusKZ
         )
-
-    @validator("document_link", "cancel_document_link", "document_number", "attestation_status", "attestation_statusKZ",
-               pre=True, always=True)
-    def default_empty_string(cls, v):
-        return v if v is not None else "Не указано"
-
-    @validator("date_from", "date_to", "date_credited", pre=True, always=True)
-    def default_date(cls, v):
-        return v if v is not None else datetime(1920, 1, 1, tzinfo=timezone.utc)
 
 
 class CharacteristicRead(ReadModel):
@@ -657,25 +646,12 @@ class CharacteristicRead(ReadModel):
             id=orm_obj.id,
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
-            document_link=orm_obj.document_link or "https://default.link",
-            cancel_document_link=orm_obj.cancel_document_link or "https://default.link",
-            document_number=orm_obj.document_number or "0000",
+            document_link=orm_obj.document_link,
+            cancel_document_link=orm_obj.cancel_document_link,
+            document_number=orm_obj.document_number,
             characteristic_initiator=full_name,
-            characteristic_initiator_id=orm_obj.characteristic_initiator_id or "00000000-0000-0000-0000-000000000000"
+            characteristic_initiator_id=orm_obj.characteristic_initiator_id
         )
-
-    @validator("document_link", "cancel_document_link", "document_number", "characteristic_initiator", pre=True,
-               always=True)
-    def default_empty_string(cls, v):
-        return v if v is not None else "Не указано"
-
-    @validator("date_from", "date_to", pre=True, always=True)
-    def default_date(cls, v):
-        return v if v is not None else datetime(1920, 1, 1, tzinfo=timezone.utc)
-
-    @validator("characteristic_initiator_id", pre=True, always=True)
-    def default_uuid(cls, v):
-        return v if v is not None else "00000000-0000-0000-0000-000000000000"
 
 
 class HolidayRead(Model):
@@ -699,25 +675,13 @@ class HolidayRead(Model):
             id=orm_obj.id,
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
-            document_link=orm_obj.document_link or "https://default.link",
-            cancel_document_link=orm_obj.cancel_document_link or "https://default.link",
-            document_number=orm_obj.document_number or "0000",
-            status=orm_obj.status.type.name if orm_obj.status and orm_obj.status.type else "Не указано",
-            status_type_id=orm_obj.status.type.id if orm_obj.status and orm_obj.status.type else "00000000-0000-0000-0000-000000000000",
-            status_id=orm_obj.status.id if orm_obj.status else "00000000-0000-0000-0000-000000000000"
+            document_link=orm_obj.document_link,
+            cancel_document_link=orm_obj.cancel_document_link,
+            document_number=orm_obj.document_number,
+            status=orm_obj.status.type.name if orm_obj.status and orm_obj.status.type else None,
+            status_type_id=orm_obj.status.type.id if orm_obj.status and orm_obj.status.type else None,
+            status_id=orm_obj.status.id if orm_obj.status else None
         )
-
-    @validator("document_link", "cancel_document_link", "document_number", "status", pre=True, always=True)
-    def default_empty_string(cls, v):
-        return v if v is not None else "Не указано"
-
-    @validator("date_from", "date_to", pre=True, always=True)
-    def default_date(cls, v):
-        return v if v is not None else datetime(1920, 1, 1, tzinfo=timezone.utc)
-
-    @validator("status_type_id", "status_id", pre=True, always=True)
-    def default_uuid(cls, v):
-        return v if v is not None else "00000000-0000-0000-0000-000000000000"
 
 
 class LengthOfServiceRead(Model):
@@ -731,7 +695,7 @@ class LengthOfServiceRead(Model):
 
     @validator("years", "months", "days", pre=True, always=True)
     def default_values(cls, v, field):
-        defaults = {"years": 99, "months": 12, "days": 1}
+        defaults = {"years": 7, "months": 8, "days": 1}
         return v if v is not None else defaults[field.name]
 
     def __getitem__(self, key):
@@ -747,8 +711,10 @@ class LengthOfServiceRead(Model):
 
 
 class EmergencyContractRead(Model):
+    id: str
+    created_at: datetime
     date_from: Optional[datetime]
-    date_to: Optional[datetime]
+    date_to: Optional[datetime] = None
     length_of_service: Optional[LengthOfServiceRead] = Field(default_factory=LengthOfServiceRead)
     coefficient: Optional[Decimal] = Decimal("0.00")
     percentage: Optional[int]
@@ -776,33 +742,33 @@ class EmergencyContractRead(Model):
 # Модель для краткого представления emergency_contracts (для таймлайна)
 class EmergencyContractReadShort(ReadModel):
     id: str
-    date_from: datetime
-    date_to: datetime
-    created_at: datetime
-    updated_at: datetime
-    position_name: str
-    position_nameKZ: str
-    actual_position_name: str
-    actual_position_nameKZ: str
+    date_from: Optional[datetime]
+    date_to: Optional[datetime]
+    created_at: Optional[datetime]
+    updated_at: Optional[datetime]
+    position_name: Optional[str] = None
+    position_nameKZ: Optional[str] = None
+    actual_position_name: Optional[str] = None
+    actual_position_nameKZ: Optional[str] = None
 
     class Config:
         from_attributes = True
         arbitrary_types_allowed = True
-        # Не забываем наследовать параметры из ReadModel, если нужно:
         allow_population_by_field_name = True
         exclude_unset = False
         json_encoders = {datetime: lambda v: v.isoformat()}
 
     @classmethod
     def from_orm(cls, orm_obj):
-        position_name = orm_obj.position.name
-        position_nameKZ = orm_obj.position.nameKZ
-        actual_position_name = orm_obj.actual_position.name
-        actual_position_nameKZ = orm_obj.actual_position.nameKZ
+        position_name = orm_obj.position.name if orm_obj.position else None
+        position_nameKZ = orm_obj.position.nameKZ if orm_obj.position else None
+        actual_position_name = orm_obj.actual_position.name if orm_obj.actual_position else None
+        actual_position_nameKZ = orm_obj.actual_position.nameKZ if orm_obj.actual_position else None
+
         return cls(
             id=orm_obj.id,
             date_from=orm_obj.date_from,
-            date_to=orm_obj.date_to,
+            date_to=orm_obj.date_to if orm_obj.date_to else None,
             created_at=orm_obj.created_at,
             updated_at=orm_obj.updated_at,
             position_name=position_name,
@@ -835,7 +801,7 @@ class ExperienceRead(ReadModel):
         date_to = orm_obj.date_to
         length_of_service = (
             get_date_difference(orm_obj.date_from, date_to)
-            if orm_obj.is_credited else {"years": 99, "months": 12, "days": 1}
+            if orm_obj.is_credited else {"years": 9, "months": 12, "days": 1}
         )
         return cls(
             id=orm_obj.id,
@@ -866,22 +832,6 @@ class ServiceIdInfoRead(ReadModel):
         from_attributes = True
         arbitrary_types_allowed = True
 
-    # @root_validator(pre=True)
-    # def fill_none_values(cls, values):
-    #     values = dict(values)
-    #     # Если в базе приходит значение, отличное от допустимых, заменяем его на "NOT_RECEIVED"
-    #     if values.get("token_status") in [None, "Данные отсутствуют!"]:
-    #         values["token_status"] = "NOT_RECEIVED"
-    #     if values.get("id_status") in [None, "Данные отсутствуют!"]:
-    #         values["id_status"] = "NOT_RECEIVED"
-    #     if values.get("number") is None:
-    #         values["number"] = "Данные отсутствуют!"
-    #     if values.get("token_number") is None:
-    #         values["token_number"] = "Данные отсутствуют!"
-    #     if values.get("date_to") is None:
-    #         values["date_to"] = datetime(1920, 1, 1)
-    #     return values
-
 
 class SecondmentRead(Model):
     id: str
@@ -892,40 +842,106 @@ class SecondmentRead(Model):
     document_link: Optional[str]
     state_body: Optional[str]
 
-    # @validator("staff_division", "staff_divisionKZ", "state_body", pre=True, always=True)
-    # def default_empty_string(cls, v):
-    #     return v if v is not None else "Данные отсутствуют!"
-    #
-    # @validator("document_link", pre=True, always=True)
-    # def default_empty_link(cls, v):
-    #     return v if v is not None else "https://example.com/default.pdf"
-
     class Config:
         from_attributes = True
         arbitrary_types_allowed = True
 
     @classmethod
     def from_orm(cls, orm_obj):
-        staff_division = orm_obj.secondment.name if orm_obj.secondment else "Данные отсутствуют!"
-        staff_divisionKZ = orm_obj.secondment.nameKZ if orm_obj.secondment else "Данные отсутствуют!"
-        body = orm_obj.secondment.state_body.name if orm_obj.secondment.state_body else "Данные отсутствуют!"
+        staff_division = orm_obj.secondment.name if orm_obj.secondment else None
+        staff_divisionKZ = orm_obj.secondment.nameKZ if orm_obj.secondment else None
+        body = orm_obj.secondment.state_body.name if orm_obj.secondment.state_body else None
         return cls(
             id=orm_obj.id,
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
             staff_division=staff_division,
             staff_divisionKZ=staff_divisionKZ,
-            document_link=orm_obj.document_link if orm_obj.document_link else "https://example.com/default.pdf",
+            document_link=orm_obj.document_link if orm_obj.document_link else None,
             state_body=body
         )
 
 
+# class TypeOfArmyEquipmentModelRead(ReadNamedModel):
+#     type_of_equipment: Optional[dict]
+#
+#     class Config:
+#         from_attributes = True
+#         arbitrary_types_allowed = True
+#
+#     @classmethod
+#     def from_orm(cls, orm_obj):
+#         return cls(
+#             id=orm_obj.id,
+#             name=orm_obj.name,
+#             nameKZ=orm_obj.nameKZ,
+#             type_of_equipment={"name": orm_obj.type_of_army_equipment.name if orm_obj.type_of_army_equipment else "Неизвестно",
+#                                "nameKZ": orm_obj.type_of_army_equipment.nameKZ if orm_obj.type_of_army_equipment else "Белгісіз"}
+#         )
+#
+#
+# class TypeOfClothingEquipmentModelRead(ReadModel):
+#     type_of_equipment: Optional[dict]
+#     model_of_equipment: Optional[dict]
+#
+#     class Config:
+#         from_attributes = True
+#         arbitrary_types_allowed = True
+#
+#     @classmethod
+#     def from_orm(cls, orm_obj):
+#         return cls(
+#             id=orm_obj.id,
+#             type_of_equipment={"name": orm_obj.type_cloth_equipmets.name if orm_obj.type_cloth_equipmets else "Неизвестно",
+#                                "nameKZ": orm_obj.type_cloth_equipmets.nameKZ if orm_obj.type_cloth_equipmets else "Белгісіз"},
+#             model_of_equipment={"name": orm_obj.type_cloth_eq_models.name if orm_obj.type_cloth_eq_models else "Неизвестно",
+#                                 "nameKZ": orm_obj.type_cloth_eq_models.nameKZ if orm_obj.type_cloth_eq_models else "Белгісіз"}
+#         )
+#
+#
+# class TypeOfOtherEquipmentModelRead(ReadNamedModel):
+#     type_of_equipment: Optional[dict]
+#
+#     class Config:
+#         from_attributes = True
+#         arbitrary_types_allowed = True
+#
+#     @classmethod
+#     def from_orm(cls, orm_obj):
+#         return cls(
+#             id=orm_obj.id,
+#             name=orm_obj.name,
+#             nameKZ=orm_obj.nameKZ,
+#             type_of_equipment={"name": orm_obj.type_of_other_equipment.name if orm_obj.type_of_other_equipment else "Неизвестно",
+#                                "nameKZ": orm_obj.type_of_other_equipment.nameKZ if orm_obj.type_of_other_equipment else "Белгісіз"}
+#         )
+#
+#
+# class EquipmentRead(ReadModel):
+#     type_of_equipment: Optional[str]
+#     user_id: Optional[str]
+#     type_of_army_equipment_model_id: Optional[str]
+#     inventory_number: Optional[str]
+#     inventory_count: Optional[int]
+#     count_of_ammo: Optional[int]
+#     clothing_size: Optional[str]
+#     cloth_eq_types_models_id: Optional[str]
+#     type_of_other_equipment_model_id: Optional[str]
+#     document_link: Optional[str]
+#     document_number: Optional[str]
+#     date_from: Optional[datetime]
+#     date_to: Optional[datetime]
+#     type_of_army_equipment_model: Optional[TypeOfArmyEquipmentModelRead]
+#     cloth_eq_types_models: Optional[TypeOfClothingEquipmentModelRead]
+#     type_of_other_equipment_model: Optional[TypeOfOtherEquipmentModelRead]
+#
+#     class Config:
+#         from_attributes = True
+#         arbitrary_types_allowed = True
+
+
 class TypeOfArmyEquipmentModelRead(ReadNamedModel):
     type_of_equipment: Optional[dict]
-
-    # @validator("type_of_equipment", pre=True, always=True)
-    # def default_empty_dict(cls, v):
-    #     return v if v is not None else {"name": "Неизвестно", "nameKZ": "Белгісіз"}
 
     class Config:
         from_attributes = True
@@ -937,8 +953,11 @@ class TypeOfArmyEquipmentModelRead(ReadNamedModel):
             id=orm_obj.id,
             name=orm_obj.name,
             nameKZ=orm_obj.nameKZ,
-            type_of_equipment={"name": orm_obj.type_of_army_equipment.name if orm_obj.type_of_army_equipment else "Неизвестно",
-                               "nameKZ": orm_obj.type_of_army_equipment.nameKZ if orm_obj.type_of_army_equipment else "Белгісіз"}
+            type_of_equipment={
+                "id": orm_obj.id,
+                "name": orm_obj.name if orm_obj.name else "Неизвестно",
+                "nameKZ": orm_obj.nameKZ if orm_obj.nameKZ else "Белгісіз"
+            }
         )
 
 
@@ -946,10 +965,6 @@ class TypeOfClothingEquipmentModelRead(ReadModel):
     type_of_equipment: Optional[dict]
     model_of_equipment: Optional[dict]
 
-    # @validator("type_of_equipment", "model_of_equipment", pre=True, always=True)
-    # def default_empty_dict(cls, v):
-    #     return v if v is not None else {"name": "Неизвестно", "nameKZ": "Белгісіз"}
-
     class Config:
         from_attributes = True
         arbitrary_types_allowed = True
@@ -958,19 +973,19 @@ class TypeOfClothingEquipmentModelRead(ReadModel):
     def from_orm(cls, orm_obj):
         return cls(
             id=orm_obj.id,
-            type_of_equipment={"name": orm_obj.type_cloth_equipmets.name if orm_obj.type_cloth_equipmets else "Неизвестно",
-                               "nameKZ": orm_obj.type_cloth_equipmets.nameKZ if orm_obj.type_cloth_equipmets else "Белгісіз"},
-            model_of_equipment={"name": orm_obj.type_cloth_eq_models.name if orm_obj.type_cloth_eq_models else "Неизвестно",
-                                "nameKZ": orm_obj.type_cloth_eq_models.nameKZ if orm_obj.type_cloth_eq_models else "Белгісіз"}
+            type_of_equipment={
+                "name": orm_obj.clothing_equipment_type.name if orm_obj.clothing_equipment_type else "Неизвестно",
+                "nameKZ": orm_obj.clothing_equipment_type.nameKZ if orm_obj.clothing_equipment_type else "Белгісіз"
+            },
+            model_of_equipment={
+                "name": orm_obj.clothing_equipment_type_model.name if orm_obj.clothing_equipment_type_model else "Неизвестно",
+                "nameKZ": orm_obj.clothing_equipment_type_model.nameKZ if orm_obj.clothing_equipment_type_model else "Белгісіз"
+            }
         )
 
 
 class TypeOfOtherEquipmentModelRead(ReadNamedModel):
     type_of_equipment: Optional[dict]
-
-    # @validator("type_of_equipment", pre=True, always=True)
-    # def default_empty_dict(cls, v):
-    #     return v if v is not None else {"name": "Неизвестно", "nameKZ": "Белгісіз"}
 
     class Config:
         from_attributes = True
@@ -982,59 +997,41 @@ class TypeOfOtherEquipmentModelRead(ReadNamedModel):
             id=orm_obj.id,
             name=orm_obj.name,
             nameKZ=orm_obj.nameKZ,
-            type_of_equipment={"name": orm_obj.type_of_other_equipment.name if orm_obj.type_of_other_equipment else "Неизвестно",
-                               "nameKZ": orm_obj.type_of_other_equipment.nameKZ if orm_obj.type_of_other_equipment else "Белгісіз"}
+            type_of_equipment={
+                "id": orm_obj.id,
+                "name": orm_obj.name if orm_obj.name else "Неизвестно",
+                "nameKZ": orm_obj.nameKZ if orm_obj.nameKZ else "Белгісіз"
+            }
         )
 
 
 class EquipmentRead(ReadModel):
     type_of_equipment: Optional[str]
     user_id: Optional[str]
-    type_of_army_equipment_model_id: Optional[str]
+    army_equipment_type_model_id: Optional[str]
     inventory_number: Optional[str]
     inventory_count: Optional[int]
     count_of_ammo: Optional[int]
     clothing_size: Optional[str]
-    cloth_eq_types_models_id: Optional[str]
-    type_of_other_equipment_model_id: Optional[str]
+    clothing_type_association_id: Optional[str]
+    other_equipment_type_model_id: Optional[str]
     document_link: Optional[str]
     document_number: Optional[str]
     date_from: Optional[datetime]
     date_to: Optional[datetime]
-    type_of_army_equipment_model: Optional[TypeOfArmyEquipmentModelRead]
-    cloth_eq_types_models: Optional[TypeOfClothingEquipmentModelRead]
-    type_of_other_equipment_model: Optional[TypeOfOtherEquipmentModelRead]
-
-    # @validator("type_of_equipment", "inventory_number", "clothing_size",
-    #            "document_link", "document_number", pre=True, always=True)
-    # def default_empty_string(cls, v):
-    #     return v if v is not None else "Данные отсутствуют!"
-    #
-    # @validator("inventory_count", "count_of_ammo", pre=True, always=True)
-    # def default_int(cls, v):
-    #     return v if v is not None else 999999
-    #
-    # @validator("date_from", "date_to", pre=True, always=True)
-    # def default_date(cls, v):
-    #     return v if v is not None else datetime(1920, 1, 1, tzinfo=timezone.utc)
+    army_object: Optional[TypeOfArmyEquipmentModelRead] = Field(None, alias='army_equipment_type_model')
+    clothes_object: Optional[TypeOfClothingEquipmentModelRead] = Field(None, alias='clothing_type_association')
+    other_object: Optional[TypeOfOtherEquipmentModelRead] = Field(None, alias='other_equipment_type_model')
 
     class Config:
-        from_attributes = True
+        orm_mode = True
         arbitrary_types_allowed = True
+        allow_population_by_field_name = True
 
 
 class HistoryTimelineDurationRead(Model):
     date_from: Optional[datetime]
     date_to: Optional[datetime]
-
-    # @root_validator(pre=True)
-    # def fill_default_dates(cls, values):
-    #     values = dict(values)
-    #     if values.get("date_from") is None:
-    #         values["date_from"] = datetime(1920, 1, 1, tzinfo=timezone.utc)
-    #     if values.get("date_to") is None:
-    #         values["date_to"] = datetime(2500, 1, 1, tzinfo=timezone.utc)
-    #     return values
 
     class Config:
         from_attributes = True
@@ -1079,23 +1076,6 @@ class HistoryTimeLineRead(Model):
     driving_license: Optional[DrivingLicenseRead]
     identification_card: Optional[IdentificationCardRead]
     passport: Optional[PassportRead]
-
-    # @validator('emergency_contracts', pre=True, each_item=True)
-    # def ensure_dict(cls, value):
-    #     # Если значение не dict, возвращаем словарь с дефолтными значениями
-    #     if not isinstance(value, dict):
-    #         return {
-    #             "id": "00000000-0000-0000-0000-000000000000",
-    #             "date_from": datetime(1920, 1, 1),
-    #             "date_to": datetime(2500, 1, 1),
-    #             "created_at": datetime(1920, 1, 1),
-    #             "updated_at": datetime(1920, 1, 1),
-    #             "position_name": "Данные отсутствуют!",
-    #             "position_nameKZ": "Данные отсутствуют!",
-    #             "actual_position_name": "Данные отсутствуют!",
-    #             "actual_position_nameKZ": "Данные отсутствуют!"
-    #         }
-    #     return value
 
     class Config:
         arbitrary_types_allowed = True

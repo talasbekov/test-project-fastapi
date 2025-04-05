@@ -9,38 +9,38 @@ from schemas.personal import BirthplaceRead, NationalityRead, CitizenshipRead, F
 # --------------------------
 
 class BiographicInfoCreate(Model):
-    gender: Optional[bool] = None
-    family_status_id: Optional[str] = None
-    address: Optional[str] = None
-    residence_address: Optional[str] = None
-    user_id: Optional[str] = None
-    profile_id: Optional[str] = None
-    citizenship_id: Optional[str] = None
-    nationality_id: Optional[str] = None
+    gender: Optional[bool]
+    family_status_id: Optional[str]
+    address: Optional[str]
+    residence_address: Optional[str]
+    user_id: Optional[str]
+    profile_id: Optional[str]
+    citizenship_id: Optional[str]
+    nationality_id: Optional[str]
 
     # Поля для места рождения
-    region_id: Optional[str] = None
-    city_id: Optional[str] = None
-    country_id: Optional[str] = None
+    region_id: Optional[str]
+    city_id: Optional[str]
+    country_id: Optional[str]
 
 
 class BiographicInfoUpdate(Model):
-    gender: Optional[bool] = None
-    family_status_id: Optional[str] = None
-    address: Optional[str] = None
-    residence_address: Optional[str] = None
-    profile_id: Optional[str] = None
-    user_id: Optional[str] = None
-    personal_profile_id: Optional[str] = None
-    citizenship_id: Optional[str] = None
-    nationality_id: Optional[str] = None
-    region_id: Optional[str] = None
-    city_id: Optional[str] = None
-    country_id: Optional[str] = None
+    gender: Optional[bool]
+    family_status_id: Optional[str]
+    address: Optional[str]
+    residence_address: Optional[str]
+    profile_id: Optional[str]
+    user_id: Optional[str]
+    personal_profile_id: Optional[str]
+    citizenship_id: Optional[str]
+    nationality_id: Optional[str]
+    region_id: Optional[str]
+    city_id: Optional[str]
+    country_id: Optional[str]
 
 
 class BiographicInfoRead(ReadModel):
-    gender: bool = False
+    gender: Optional[bool]
     family_status_id: Optional[str]
     family_status: Optional["FamilyStatusRead"]
     address: Optional[str]

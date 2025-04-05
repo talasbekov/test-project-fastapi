@@ -1,21 +1,22 @@
-import uuid
 from typing import Optional, List
 from datetime import datetime
-
+from pydantic import Field
 from schemas.base import Model, ReadModel, ReadNamedModel, NamedModel
 
-
+# ----------------------------------------------------
+#              Общие схемы Equipment
+# ----------------------------------------------------
 class EquipmentBase(Model):
     """
     Общие поля для сущности Equipment.
     """
     type_of_equipment: Optional[str]
-    type_of_army_eq_model_id: Optional[str]
+    army_equipment_type_model_id: Optional[str]
     inventory_number: Optional[str]
     inventory_count: Optional[int]
     count_of_ammo: Optional[int]
-    cloth_eq_types_models_id: Optional[str]
-    type_of_other_eq_model_id: Optional[str]
+    clothing_type_association_id: Optional[str]
+    other_equipment_type_model_id: Optional[str]
     clothing_size: Optional[str]
     document_link: Optional[str]
     document_number: Optional[str]
@@ -26,187 +27,159 @@ class EquipmentBase(Model):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
+        allow_population_by_field_name = True
 
 
 class EquipmentCreate(EquipmentBase):
     """
     Схема для создания Equipment.
-    Если type_of_equipment == 'clothing_equipment',
-    используются поля cloth_eq_types_id и cloth_eq_models_id.
+    Поскольку все поля соответствуют модели, дополнительных полей для одежды не требуется.
     """
-    cloth_eq_types_id: Optional[str]
-    cloth_eq_models_id: Optional[str]
+    pass
 
 
 class EquipmentUpdate(EquipmentBase):
     """
-    Схема для обновления Equipment (аналогична EquipmentCreate).
-    """
-    cloth_eq_types_id: Optional[str]
-    cloth_eq_models_id: Optional[str]
-
-
-class EquipmentRead(EquipmentBase, ReadModel):
-    """
-    Схема для чтения Equipment (id, created_at, updated_at).
+    Схема для обновления Equipment.
     """
     pass
 
 
-# ------------------- Армейское оборудование ------------------- #
-
-class TypeArmyEquipmentModel(ReadNamedModel):
-    """
-    Схема чтения для модели армейского оборудования.
-    """
+# ----------------------------------------------------
+#           Армейское оборудование (Army)
+# ----------------------------------------------------
+class ArmyEquipmentTypeModelRead(ReadNamedModel):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
 
 
-class TypeArmyEquipmentRead(ReadNamedModel):
+class ArmyEquipmentTypeRead(ReadNamedModel):
     """
-    Схема чтения для типа армейского оборудования,
-    со связанными моделями (type_of_army_equipment_models).
+    Тип армейского оборудования (например, «Автомат») с привязанными моделями.
     """
-    type_of_army_equipment_models: Optional[List[TypeArmyEquipmentModel]]
+    army_equipment_type_models: Optional[List[ArmyEquipmentTypeModelRead]] = None
 
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
 
 
-class TypeArmyEquipmentReadPagination(Model):
-    """
-    Схема пагинации для списка типов армейского оборудования.
-    """
+class ArmyEquipmentTypeReadPagination(Model):
     total: Optional[int]
-    objects: Optional[List[TypeArmyEquipmentRead]]
+    objects: Optional[List[ArmyEquipmentTypeRead]]
 
 
-class TypeArmyEquipmentModelCreate(NamedModel):
-    """
-    Схема для создания модели армейского оборудования.
-    """
-    type_of_army_equipment_id: Optional[str]
+class ArmyEquipmentTypeModelCreate(NamedModel):
+    army_equipment_type_id: Optional[str]
 
 
-class TypeArmyEquipmentCreate(NamedModel):
-    """
-    Схема для создания типа армейского оборудования.
-    (Поля name, nameKZ наследуются от NamedModel.)
-    """
+class ArmyEquipmentTypeCreate(NamedModel):
     pass
 
 
-# ------------------- Одежда ------------------- #
+# ----------------------------------------------------
+#             Одежда (Clothing)
+# ----------------------------------------------------
+class ClothingEquipmentTypeModelRead(ReadNamedModel):
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
 
-class TypeClothingEquipmentModelSchema(ReadNamedModel):
+
+class ClothingEquipmentTypeRead(ReadNamedModel):
     """
-    Схема чтения для одной модели одежды.
+    Тип одежды (например, «Шапка») с привязанными моделями.
     """
-    type_cloth_eq_types_id: Optional[str]
+    # В модели поле называется "clothing_equipment_models"
+    clothing_equipment_models: Optional[List[ClothingEquipmentTypeModelRead]] = None
 
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
 
 
-class TypeClothingEquipmentRead(ReadNamedModel):
-    """
-    Схема чтения для типа одежды,
-    со связанными моделями (type_cloth_eq_models).
-    """
-    type_cloth_eq_models: Optional[List[TypeClothingEquipmentModelSchema]]
-
-    class Config:
-        orm_mode = True
-        arbitrary_types_allowed = True
-
-
-class TypeClothingEquipmentReadPagination(Model):
-    """
-    Схема пагинации для списка типов одежды.
-    """
+class ClothingEquipmentTypeReadPagination(Model):
     total: Optional[int]
-    objects: Optional[List[TypeClothingEquipmentRead]]
+    objects: Optional[List[ClothingEquipmentTypeRead]]
 
 
 class ClothingEquipmentTypesModelsRead(ReadNamedModel):
     """
-    Схема для промежуточной таблицы ClothingEquipmentTypesModels.
+    Ассоциативная сущность, отражающая связь между типом и моделью одежды.
     """
-    type_cloth_eq_models: Optional[List[TypeClothingEquipmentModelSchema]]
-    type_cloth_equipmets: Optional[List[TypeClothingEquipmentRead]]
+    clothing_equipment_type_model: Optional[ClothingEquipmentTypeModelRead] = None
+    clothing_equipment_type: Optional[ClothingEquipmentTypeRead] = None
 
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
 
 
-class TypeClothingEquipmentModelCreate(NamedModel):
-    """
-    Схема для создания модели одежды.
-    """
-    # Пока полей нет
+class ClothingEquipmentTypeModelCreate(NamedModel):
     pass
 
 
-class TypeClothingEquipmentCreate(NamedModel):
+class ClothingEquipmentTypeCreate(NamedModel):
     """
-    Схема для создания типа одежды, с привязкой к нескольким моделям.
-    model_ids: список id моделей.
+    При создании типа одежды можно передать список идентификаторов моделей.
     """
-    model_ids: Optional[List[Optional[str]]]  # можно заменить на Optional[List[str]]
-
-
-class TypeClothingEquipmentUpdate(NamedModel):
-    """
-    Схема для обновления типа одежды (без model_ids).
-    """
+    # model_ids: Optional[List[Optional[str]]] = None
     pass
 
 
-# ------------------- Прочее оборудование ------------------- #
+class ClothingEquipmentTypeUpdate(NamedModel):
+    pass
 
-class TypeOtherEquipmentModel(ReadNamedModel):
-    """
-    Схема чтения для модели 'другого' оборудования.
-    """
+
+# ----------------------------------------------------
+#           Прочее оборудование (Other)
+# ----------------------------------------------------
+class OtherEquipmentTypeModelRead(ReadNamedModel):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
 
 
-class TypeOtherEquipmentRead(ReadNamedModel):
+class OtherEquipmentTypeRead(ReadNamedModel):
     """
-    Схема чтения для типа 'другого' оборудования,
-    со связанными моделями.
+    Тип прочего оборудования (например, «Принтер») с привязанными моделями.
     """
-    type_of_other_equipment_models: Optional[List[TypeOtherEquipmentModel]]
+    other_equipment_type_models: Optional[List[OtherEquipmentTypeModelRead]] = None
 
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
 
 
-class TypeOtherEquipmentReadPagination(Model):
-    """
-    Схема пагинации для списка типов 'другого' оборудования.
-    """
+class OtherEquipmentTypeReadPagination(Model):
     total: Optional[int]
-    objects: Optional[List[TypeOtherEquipmentRead]]
+    objects: Optional[List[OtherEquipmentTypeRead]]
 
 
-class TypeOtherEquipmentModelCreate(NamedModel):
-    """
-    Схема для создания модели 'другого' оборудования.
-    """
-    type_of_other_equipment_id: Optional[str]
+class OtherEquipmentTypeModelCreate(NamedModel):
+    other_equipment_type_id: Optional[str]
 
 
-class TypeOtherEquipmentCreate(NamedModel):
-    """
-    Схема для создания типа 'другого' оборудования.
-    """
+class OtherEquipmentTypeCreate(NamedModel):
     pass
+
+
+# ----------------------------------------------------
+#        Основная схема чтения: EquipmentRead
+# ----------------------------------------------------
+class EquipmentRead(EquipmentBase, ReadModel):
+    """
+    Схема для чтения Equipment, объединяющая общие поля и связанные объекты.
+    """
+    # Соответствие: ArmyEquipment.army_equipment_type_model -> army_object
+    army_object: Optional[ArmyEquipmentTypeRead] = Field(None, alias='army_equipment_type_model')
+    # Соответствие: ClothingEquipment.clothing_type_association -> clothes_object
+    clothes_object: Optional[ClothingEquipmentTypesModelsRead] = Field(None, alias='clothing_type_association')
+    # Соответствие: OtherEquipment.other_equipment_type_model -> other_object
+    other_object: Optional[OtherEquipmentTypeRead] = Field(None, alias='other_equipment_type_model')
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
+        allow_population_by_field_name = True

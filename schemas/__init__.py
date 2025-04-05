@@ -1,24 +1,25 @@
 from .base import Model, NamedModel, ReadModel, ReadNamedModel, ReadTextModel, TextModel, Model
 from .badge import BadgeBase, BadgeTypeBase, BadgeTypeRead, BadgeTypeCreate, BadgeCreate, BadgeRead, BadgeTypeUpdate, BadgeUpdate, BadgeTypePaginationRead
 from .autotag import AutoTagRead
-from .equipment import (EquipmentCreate,
-                        EquipmentRead,
-                        EquipmentUpdate,
-                        TypeClothingEquipmentRead,
-                        TypeArmyEquipmentRead,
-                        TypeOtherEquipmentRead,
-                        TypeArmyEquipmentReadPagination,
-                        TypeClothingEquipmentReadPagination,
-                        TypeOtherEquipmentReadPagination,
-                        TypeArmyEquipmentCreate,
-                        TypeArmyEquipmentModelCreate,
-                        TypeClothingEquipmentCreate,
-                        TypeClothingEquipmentModelCreate,
-                        TypeOtherEquipmentCreate,
-                        TypeOtherEquipmentModelCreate,
-                        TypeClothingEquipmentUpdate,
-                        TypeClothingEquipmentModelSchema
-                        )
+from .equipment import (
+    EquipmentCreate,
+    EquipmentRead,
+    EquipmentUpdate,
+    ArmyEquipmentTypeRead,
+    ClothingEquipmentTypeRead,
+    OtherEquipmentTypeRead,
+    ArmyEquipmentTypeReadPagination,
+    ClothingEquipmentTypeReadPagination,
+    OtherEquipmentTypeReadPagination,
+    ArmyEquipmentTypeCreate,
+    ArmyEquipmentTypeModelCreate,
+    ClothingEquipmentTypeCreate,
+    ClothingEquipmentTypeModelCreate,
+    OtherEquipmentTypeCreate,
+    OtherEquipmentTypeModelCreate,
+    ClothingEquipmentTypeUpdate,
+    ClothingEquipmentTypeModelRead
+)
 
 from .event import EventCreate, EventRead, EventUpdate
 from .hr_document_template import (HrDocumentTemplateCreate,

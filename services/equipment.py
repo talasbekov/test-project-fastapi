@@ -8,35 +8,41 @@ from sqlalchemy.orm import Session
 from exceptions.client import NotFoundException
 from models import (
     Equipment,
-    TypeClothingEquipment,
-    TypeArmyEquipment,
-    TypeOtherEquipment,
-    TypeClothingEquipmentModel,
+    ClothingEquipmentType,        # вместо ClothingEquipmentType
+    ArmyEquipmentType,            # вместо ArmyEquipmentType
+    OtherEquipmentType,           # вместо OtherEquipmentType
+    ClothingEquipmentTypeModel,   # вместо ClothingEquipmentTypeModel
     ArmyEquipment,
     ClothingEquipment,
     OtherEquipment,
-    ClothingEquipmentTypesModels,
-    TypeArmyEquipmentModel,
-    TypeOtherEquipmentModel
+    ClothingTypeAssociation,      # вместо ClothingTypeAssociation
+    ArmyEquipmentTypeModel,       # вместо ArmyEquipmentTypeModel
+    OtherEquipmentTypeModel       # вместо OtherEquipmentTypeModel
 )
 from models.position import logger
 from schemas import (
     EquipmentCreate,
     EquipmentUpdate,
     EquipmentRead,
-    TypeClothingEquipmentRead,
-    TypeArmyEquipmentRead,
-    TypeOtherEquipmentRead,
-    TypeArmyEquipmentModelCreate,
-    TypeClothingEquipmentModelCreate,
-    TypeOtherEquipmentModelCreate,
-    TypeClothingEquipmentUpdate,
-    TypeArmyEquipmentCreate,
-    TypeClothingEquipmentCreate,  # Импорт добавлен!
-    TypeOtherEquipmentCreate,
-    TypeClothingEquipmentModelSchema,
-    TypeArmyEquipmentReadPagination,
-    TypeOtherEquipmentReadPagination
+
+    # Одежда
+    ClothingEquipmentTypeRead,            # (был ClothingEquipmentTypeRead)
+    ClothingEquipmentTypeUpdate,          # (был ClothingEquipmentTypeUpdate)
+    ClothingEquipmentTypeModelRead,       # (был ClothingEquipmentTypeModelSchema)
+    ClothingEquipmentTypeCreate,          # (был ClothingEquipmentTypeCreate)
+    ClothingEquipmentTypeModelCreate,     # (был ClothingEquipmentTypeModelCreate)
+
+    # Армейское
+    ArmyEquipmentTypeRead,               # (был ArmyEquipmentTypeRead)
+    ArmyEquipmentTypeCreate,             # (был ArmyEquipmentTypeCreate)
+    ArmyEquipmentTypeModelCreate,        # (был ArmyEquipmentTypeModelCreate)
+    ArmyEquipmentTypeReadPagination,     # (был ArmyEquipmentTypeReadPagination)
+
+    # Прочее
+    OtherEquipmentTypeRead,              # (был OtherEquipmentTypeRead)
+    OtherEquipmentTypeCreate,            # (был OtherEquipmentTypeCreate)
+    OtherEquipmentTypeModelCreate,       # (был OtherEquipmentTypeModelCreate)
+    OtherEquipmentTypeReadPagination     # (был OtherEquipmentTypeReadPagination)
 )
 from .base import ServiceBase
 from .filter import add_filter_to_query
@@ -62,13 +68,13 @@ class EquipmentService(ServiceBase[Equipment, EquipmentCreate, EquipmentUpdate])
     Сервис для управления оборудованием (армейским, одеждой, прочим).
     """
 
-    def get_by_id(self, db: Session, id: str):
-        equipment_obj = db.query(Equipment).filter(Equipment.id == id).first()
+    def get_by_id(self, db: Session, equipment_id: str):
+        equipment_obj = db.query(Equipment).filter(Equipment.id == equipment_id).first()
         if equipment_obj is None:
-            raise NotFoundException(detail=f"Equipment with id {id} not found!")
+            raise NotFoundException(detail=f"Equipment with id {equipment_id} not found!")
         equipment_type = equipment_obj.type_of_equipment
         cls = equipment[equipment_type]
-        return db.query(cls).filter(cls.id == id).first()
+        return db.query(cls).filter(cls.id == equipment_id).first()
 
     def create(self, db: Session, body: EquipmentCreate):
         if body.type_of_equipment not in equipment:
@@ -111,10 +117,10 @@ class EquipmentService(ServiceBase[Equipment, EquipmentCreate, EquipmentUpdate])
 
     def get_clothing_equipment_type_by_ids(self, db: Session, type_id: str, model_id: str):
         return (
-            db.query(ClothingEquipmentTypesModels.id)
+            db.query(ClothingTypeAssociation.id)
             .filter(
-                ClothingEquipmentTypesModels.type_cloth_equipmets_id == type_id,
-                ClothingEquipmentTypesModels.type_cloth_eq_models_id == model_id
+                ClothingTypeAssociation.clothing_equipment_type_id == type_id,
+                ClothingTypeAssociation.clothing_equipment_type_model_id == model_id
             )
             .first()
         )
@@ -127,21 +133,29 @@ class EquipmentService(ServiceBase[Equipment, EquipmentCreate, EquipmentUpdate])
             return res[0]
         return None
 
+    def get_clothing_equipment_model_by_id(self, db: Session, id: str):
+        if not id:
+            raise ValueError("ID must be provided")
+        model = db.query(ClothingEquipmentTypeModel).filter(ClothingEquipmentTypeModel.id == id).first()
+        if model is None:
+            raise NotFoundException(f"ClothingEquipmentModel with id {id} not found")
+        return model
+
     # ------------- Армейское оборудование ------------- #
 
     def get_army_equipment_type_by_id(self, db: Session, id: str):
-        obj = db.query(TypeArmyEquipment).filter(TypeArmyEquipment.id == id).first()
+        obj = db.query(ArmyEquipmentType).filter(ArmyEquipmentType.id == id).first()
         if not obj:
-            raise NotFoundException(f"TypeArmyEquipment with id {id} not found!")
+            raise NotFoundException(f"ArmyEquipmentType with id {id} not found!")
         return obj
 
-    def create_army_eq_type(self, db: Session, body: TypeArmyEquipmentCreate):
-        return super().create(db, body, TypeArmyEquipment)
+    def create_army_eq_type(self, db: Session, body: ArmyEquipmentTypeCreate):
+        return super().create(db, body, ArmyEquipmentType)
 
-    def create_army_eq_model(self, db: Session, body: TypeArmyEquipmentModelCreate):
-        return super().create(db, body, TypeArmyEquipmentModel)
+    def create_army_eq_model(self, db: Session, body: ArmyEquipmentTypeModelCreate):
+        return super().create(db, body, ArmyEquipmentTypeModel)
 
-    def update_army_model(self, db: Session, id: str, body: TypeArmyEquipmentModelCreate):
+    def update_army_model(self, db: Session, id: str, body: ArmyEquipmentTypeModelCreate):
         army_eq_model = self.get_army_equipment_model_by_id(db, id)
         if not army_eq_model:
             raise NotFoundException("Army equipment model not found")
@@ -161,53 +175,62 @@ class EquipmentService(ServiceBase[Equipment, EquipmentCreate, EquipmentUpdate])
         return True
 
     def get_army_equipment_model_by_id(self, db: Session, id: str):
-        return db.query(TypeArmyEquipmentModel).filter(TypeArmyEquipmentModel.id == id).first()
+        return db.query(ArmyEquipmentTypeModel).filter(ArmyEquipmentTypeModel.id == id).first()
+
+    def get_all_army_equipment_models(self, db: Session):
+        models = db.query(ArmyEquipmentTypeModel).all()
+        if not models:
+            raise NotFoundException("No Army Equipment Models found")
+        return models
 
     def get_all_army_equipments(self, db: Session, skip=0, limit=10, filter_str=''):
-        query = db.query(TypeArmyEquipment)
+        query = db.query(ArmyEquipmentType)
         if filter_str:
-            query = add_filter_to_query(query, filter_str, TypeArmyEquipment)
+            query = add_filter_to_query(query, filter_str, ArmyEquipmentType)
         objects = query.offset(skip).limit(limit).all()
-        total = db.query(TypeArmyEquipment).count()
+        total = db.query(ArmyEquipmentType).count()
         return {
             'total': total,
-            'objects': [TypeArmyEquipmentRead.from_orm(obj) for obj in objects]
+            'objects': [ArmyEquipmentTypeRead.from_orm(obj) for obj in objects]
         }
 
     # ------------- Одежда ------------- #
 
     def get_clothing_equipment_type_by_id(self, db: Session, id: str):
-        obj = db.query(TypeClothingEquipment).filter(TypeClothingEquipment.id == id).first()
+        obj = db.query(ClothingEquipmentType).filter(ClothingEquipmentType.id == id).first()
         if not obj:
-            raise NotFoundException(f"TypeClothingEquipment with id {id} not found!")
+            raise NotFoundException(f"ClothingEquipmentType with id {id} not found!")
         return obj
 
-    def create_cloth_eq_type(self, db: Session, body: TypeClothingEquipmentCreate):
+    def create_cloth_eq_type(self, db: Session, body: ClothingEquipmentTypeCreate):
         cloth_type = self.get_clothing_equipment_type_by_name(db, body.name)
         if not cloth_type:
-            new_type = TypeClothingEquipment(name=body.name, nameKZ=body.nameKZ)
-            cloth_type = super().create(db, new_type, TypeClothingEquipment)
+            new_type = ClothingEquipmentType(name=body.name, nameKZ=body.nameKZ)
+            cloth_type = super().create(db, new_type, ClothingEquipmentType)
         if body.model_ids:
             for m_id in body.model_ids:
                 if m_id:
+                    # Используем корректные ключи для модели ClothingTypeAssociation:
+                    # clothing_equipment_type_model_id – ссылка на модель (hr_erp_clothing_equipment_type_models)
+                    # clothing_equipment_type_id – ссылка на тип (hr_erp_clothing_equipment_types)
                     link_data = {
-                        'type_cloth_eq_models_id': m_id,
-                        'type_cloth_equipmets_id': cloth_type.id
+                        'clothing_equipment_type_model_id': m_id,
+                        'clothing_equipment_type_id': cloth_type.id
                     }
-                    super().create(db, link_data, ClothingEquipmentTypesModels)
+                    super().create(db, link_data, ClothingTypeAssociation)
         db.add(cloth_type)
         db.flush()
         return cloth_type
 
-    def create_cloth_eq_model(self, db: Session, body: TypeClothingEquipmentModelCreate):
+    def create_cloth_eq_model(self, db: Session, body: ClothingEquipmentTypeModelCreate):
         try:
-            cloth_model = super().create(db, body, TypeClothingEquipmentModel)
+            cloth_model = super().create(db, body, ClothingEquipmentTypeModel)
             return cloth_model
         except Exception as e:
             logger.exception("Ошибка при создании модели оборудования: %s", e)
             raise EquipmentCreationError("Ошибка при создании модели оборудования") from e
 
-    def update_type_clothing(self, db: Session, id: str, body: TypeClothingEquipmentUpdate):
+    def update_type_clothing(self, db: Session, id: str, body: ClothingEquipmentTypeUpdate):
         type_cloth = self.get_clothing_equipment_type_by_id(db, id)
         for key, value in body.dict(exclude_none=True).items():
             setattr(type_cloth, key, value)
@@ -223,50 +246,74 @@ class EquipmentService(ServiceBase[Equipment, EquipmentCreate, EquipmentUpdate])
         return True
 
     def get_all_clothing_equipments(self, db: Session, skip=0, limit=10):
-        query = db.query(TypeClothingEquipment)
+        query = db.query(ClothingEquipmentType)
         objects = query.offset(skip).limit(limit).all()
         if not objects:
             raise NotFoundException("Equipment not found")
         result = []
         for cloth_type in objects:
-            models = db.query(TypeClothingEquipmentModel).filter(
-                TypeClothingEquipmentModel.type_cloth_eq_types_id == cloth_type.id
+            # Поиск связанных моделей по внешнему ключу clothing_equipment_type_id
+            models = db.query(ClothingEquipmentTypeModel).filter(
+                ClothingEquipmentTypeModel.clothing_equipment_type_id == cloth_type.id
             ).all()
-            cloth_type_read = TypeClothingEquipmentRead.from_orm(cloth_type)
-            cloth_type_read.type_cloth_eq_models = [
-                TypeClothingEquipmentModelSchema.from_orm(m) for m in models
+            cloth_type_read = ClothingEquipmentTypeRead.from_orm(cloth_type)
+            cloth_type_read.clothing_equipment_models = [
+                ClothingEquipmentTypeModelRead.from_orm(m) for m in models
             ]
             result.append(cloth_type_read)
-        total = db.query(TypeClothingEquipment).count()
+        total = db.query(ClothingEquipmentType).count()
         return {'total': total, 'objects': result}
 
     def get_all_clothing_equipment_models(self, db: Session):
-        return db.query(TypeClothingEquipmentModel).all()
+        return db.query(ClothingEquipmentTypeModel).all()
 
     def get_clothing_equipment_type_by_name(self, db: Session, name: str):
-        return db.query(TypeClothingEquipment).filter(TypeClothingEquipment.name == name).first()
+        return db.query(ClothingEquipmentType).filter(ClothingEquipmentType.name == name).first()
 
     # ------------- Прочее оборудование ------------- #
 
     def get_other_equipment_type_by_id(self, db: Session, id: str):
-        obj = db.query(TypeOtherEquipment).filter(TypeOtherEquipment.id == id).first()
+        obj = db.query(OtherEquipmentType).filter(OtherEquipmentType.id == id).first()
         if not obj:
-            raise NotFoundException(f"TypeOtherEquipment with id {id} not found!")
+            raise NotFoundException(f"OtherEquipmentType with id {id} not found!")
         return obj
 
-    def create_other_eq_type(self, db: Session, body: TypeOtherEquipmentCreate):
-        return super().create(db, body, TypeOtherEquipment)
+    def get_all_other_equipment_models(self, db: Session):
+        return db.query(OtherEquipmentTypeModel).all()
 
-    def create_other_eq_model(self, db: Session, body: TypeOtherEquipmentModelCreate):
-        return super().create(db, body, TypeOtherEquipmentModel)
+    def get_other_equipment_model_by_id(self, db: Session, id: str):
+        if not id:
+            raise ValueError("ID must be provided")
+        model = db.query(OtherEquipmentTypeModel).filter(OtherEquipmentTypeModel.id == id).first()
+        if model is None:
+            raise NotFoundException(f"OtherEquipmentModel with id {id} not found")
+        return model
 
-    def update_other_type(self, db: Session, id: str, body: TypeOtherEquipmentCreate):
+    def create_other_eq_type(self, db: Session, body: OtherEquipmentTypeCreate):
+        return super().create(db, body, OtherEquipmentType)
+
+    def create_other_eq_model(self, db: Session, body: OtherEquipmentTypeModelCreate):
+        return super().create(db, body, OtherEquipmentTypeModel)
+
+    def update_other_type(self, db: Session, id: str, body: OtherEquipmentTypeCreate):
         obj = self.get_other_equipment_type_by_id(db, id)
         for key, value in body.dict(exclude_none=True).items():
             setattr(obj, key, value)
         setattr(obj, 'updated_at', datetime.now())
         db.add(obj)
         db.flush()
+        return obj
+
+    def update_other_model(self, db: Session, id: str, body: OtherEquipmentTypeModelCreate):
+        obj = self.get_other_equipment_model_by_id(db, id)
+        if not obj:
+            raise ValueError(f"OtherEquipmentModel with ID {id} not found")
+        for key, value in body.dict(exclude_none=True).items():
+            setattr(obj, key, value)
+        obj.updated_at = datetime.now()
+        db.add(obj)
+        db.commit()
+        db.refresh(obj)
         return obj
 
     def delete_other_type(self, db: Session, id: str):
@@ -276,14 +323,14 @@ class EquipmentService(ServiceBase[Equipment, EquipmentCreate, EquipmentUpdate])
         return True
 
     def get_all_other_equipments(self, db: Session, skip=0, limit=10, filter_str=''):
-        query = db.query(TypeOtherEquipment)
+        query = db.query(OtherEquipmentType)
         if filter_str:
-            query = add_filter_to_query(query, filter_str, TypeOtherEquipment)
+            query = add_filter_to_query(query, filter_str, OtherEquipmentType)
         objects = query.offset(skip).limit(limit).all()
-        total = db.query(TypeOtherEquipment).count()
+        total = db.query(OtherEquipmentType).count()
         return {
             'total': total,
-            'objects': [TypeOtherEquipmentRead.from_orm(o) for o in objects]
+            'objects': [OtherEquipmentTypeRead.from_orm(o) for o in objects]
         }
 
     # ------------- Дополнительно ------------- #
@@ -291,7 +338,7 @@ class EquipmentService(ServiceBase[Equipment, EquipmentCreate, EquipmentUpdate])
     def get_all_available_equipments(self, db: Session, user_id: str, skip=0, limit=10):
         subquery = self._get_user_clothing_type_query(db, user_id)
         return (
-            db.query(TypeClothingEquipment)
+            db.query(ClothingEquipmentType)
             .except_(subquery)
             .offset(skip)
             .limit(limit)
@@ -300,8 +347,8 @@ class EquipmentService(ServiceBase[Equipment, EquipmentCreate, EquipmentUpdate])
 
     def _get_user_clothing_type_query(self, db: Session, user_id: str):
         return (
-            db.query(TypeClothingEquipment)
-            .join(ClothingEquipmentTypesModels)
+            db.query(ClothingEquipmentType)
+            .join(ClothingTypeAssociation)
             .join(ClothingEquipment)
             .filter(ClothingEquipment.user_id == user_id)
         )

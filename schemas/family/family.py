@@ -40,7 +40,6 @@ class FamilyCreate(Model):
     region_id: Optional[str]
     city_id: Optional[str]
     country_id: Optional[str]
-
     profile_id: str
 
 
@@ -58,7 +57,6 @@ class FamilyUpdate(Model):
     region_id: Optional[str]
     country_id: Optional[str]
     document_link: Optional[str]
-
     profile_id: Optional[str]
 
 
@@ -98,7 +96,6 @@ class FamilyRead(FamilyBase):
             workplace=orm_obj.workplace,
             profile_id=orm_obj.profile_id,
             violation=orm_obj.violation if orm_obj.violation else [],
-            abroad_travel=orm_obj.abroad_travels if orm_obj.abroad_travels else [],  # исправлено
             birthplace=orm_obj.birthplace if orm_obj.birthplace else {},
             birthplace_id=orm_obj.birthplace_id if orm_obj.birthplace_id else orm_obj.id,
             document_link=orm_obj.document_link,

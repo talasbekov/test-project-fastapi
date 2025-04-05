@@ -54,6 +54,7 @@ class EducationRead(EducationBase):
     start_date: Optional[datetime.date]
     end_date: Optional[datetime.date]
     document_link: Optional[str]
+    document_number: Optional[str]
     specialty: Optional[SpecialtyRead]
     institution: Optional[InstitutionRead]
     degree: Optional[InstitutionDegreeTypeRead]
@@ -73,6 +74,7 @@ class EducationRead(EducationBase):
             start_date=orm_obj.start_date,
             end_date=orm_obj.end_date,
             document_link=orm_obj.document_link,
+            document_number=orm_obj.document_number,
             specialty=orm_obj.specialty,
             institution=orm_obj.institution,
             degree=orm_obj.degree,

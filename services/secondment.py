@@ -15,16 +15,60 @@ from .base import ServiceBase
 class SecondmentService(
         ServiceBase[Secondment, SecondmentCreate, SecondmentUpdate]):
 
-    def create_relation(self, db: Session, user_id: str, value):
-        if isinstance(value, Base):
+    # def create_relation(self, db: Session, user_id: str, staff_division_id, value):
+    #     print(f"{staff_division_id}, {value.name}, {value.nameKZ} is a StaffDivision")
+    #     if isinstance(value, Base):
+    #         if isinstance(value, StaffDivision):
+    #             print(f"{staff_division_id}, {value.name}, {value.nameKZ} is a StaffDivision")
+    #             status = super().create(
+    #                 db,
+    #                 SecondmentCreate(
+    #                     user_id=user_id,
+    #                     staff_division_id=staff_division_id,
+    #                     name=value.name,
+    #                     nameKZ=value.nameKZ)
+    #             )
+    #         else:
+    #             status = super().create(
+    #                 db,
+    #                 SecondmentCreate(
+    #                     user_id=user_id,
+    #                     state_body_id=value.id,
+    #                     name=value.name,
+    #                     nameKZ=value.nameKZ))
+    #     else:
+    #         status = super().create(
+    #             db,
+    #             SecondmentCreate(
+    #                 user_id=user_id,
+    #                 staff_division_id=None,
+    #                 name=value))
+    #     return status
+
+    def create_relation(self, db: Session, user_id: str, staff_division_id, value):
+        # Если value — кортеж из двух элементов, распаковываем его
+        if isinstance(value, tuple) and len(value) == 2:
+            name, nameKZ = value
+            print(f"{staff_division_id}, {name}, {nameKZ} is a StaffDivision (tuple)")
+            status = super().create(
+                db,
+                SecondmentCreate(
+                    user_id=user_id,
+                    staff_division_id=staff_division_id,
+                    name=name,
+                    nameKZ=nameKZ)
+            )
+        elif isinstance(value, Base):
             if isinstance(value, StaffDivision):
+                print(f"{staff_division_id}, {value.name}, {value.nameKZ} is a StaffDivision")
                 status = super().create(
                     db,
                     SecondmentCreate(
                         user_id=user_id,
-                        staff_division_id=value.id,
+                        staff_division_id=staff_division_id,
                         name=value.name,
-                        nameKZ=value.nameKZ))
+                        nameKZ=value.nameKZ)
+                )
             else:
                 status = super().create(
                     db,
@@ -32,14 +76,16 @@ class SecondmentService(
                         user_id=user_id,
                         state_body_id=value.id,
                         name=value.name,
-                        nameKZ=value.nameKZ))
+                        nameKZ=value.nameKZ)
+                )
         else:
             status = super().create(
                 db,
                 SecondmentCreate(
                     user_id=user_id,
                     staff_division_id=None,
-                    name=value))
+                    name=value)
+            )
         return status
 
     def get_by_option(self, db: Session, type: str,
