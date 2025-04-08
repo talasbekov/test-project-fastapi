@@ -24,13 +24,12 @@ class PenaltyService(ServiceBase[Penalty, PenaltyCreate, PenaltyUpdate]):
         return res
 
 
-    def get_by_type_and_user(self, db: Session, type_id: str, user_id: str) -> Penalty:
-        res = (
-               db.query(Penalty)
-               .filter(Penalty.user_id == user_id)
-               .filter(Penalty.type_id == type_id)
-              )
-        return res
+    def get_by_type_and_user(self, db: Session, type_id: str, user_id: str):
+        penalty = db.query(Penalty).filter(Penalty.user_id == user_id, Penalty.type_id == type_id).first()
+        if penalty is None:
+            raise NotFoundException(
+                detail=f"Penalty with id: {type_id} is not found!")
+        return penalty
 
     
     def get_by_option(

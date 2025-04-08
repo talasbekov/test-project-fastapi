@@ -839,6 +839,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
 
     def update_badge(self, db: Session, id: str, object: HistoryUpdate):
         history = self.get_by_id(db, id)
+        print(history.__dict__, "history")
         if history is None:
             raise NotFoundException(
                 detail=f'History with id: {id} is not found!')
@@ -846,7 +847,12 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
             setattr(history, key, value)
         if history.badge_id:
             badge = badge_service.get_by_id(db, history.badge_id)
+            print(badge.__dict__, "badge")
+            print(badge, "badge without dict")
+
             history.badge.type_id = object.badge_type_id
+            print(history.badge.type_id, "badge type")
+            print(object.__dict__, "object")
         else:
             raise NotFoundException(
                 detail=f'Badge is not found!')
@@ -899,6 +905,25 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                 detail=f'History with id: {id} is not found!')
         for key, value in object.dict(exclude_unset=True).items():
             setattr(history, key, value)
+        if object.type == "badge_history":
+            if history.badge_id:
+                badge = badge_service.get_badge_by_type(db, history.badge_id)
+                history.badge_id = badge.id
+            else:
+                raise NotFoundException(
+                    detail=f'Badge is not found!')
+        if object.type == "penalty_history":
+            if history.penalty_id:
+                print(object.__dict__, "history object")
+                print(history.__dict__, "history")
+                print(history.penalty_id, "penalty_id")
+                print(history.user_id, "user_id")
+                penalty = penalty_service.get_by_type_and_user(db, history.penalty_id, history.user_id)
+                print(penalty.id, "penalty.id")
+                history.penalty_id = penalty.id
+            else:
+                raise NotFoundException(
+                    detail=f'Penalty is not found!')
         setattr(history, 'updated_at', datetime.now())
         db.add(history)
         db.commit()

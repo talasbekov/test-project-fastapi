@@ -479,10 +479,10 @@ class BadgeServiceDetailRead(ReadNamedModel):
             cancel_document_link=orm_obj.cancel_document_link,
             date_from=orm_obj.date_from,
             date_to=orm_obj.date_to,
-            name=orm_obj.badge.type.name,
-            nameKZ=orm_obj.badge.type.nameKZ,
-            badge_order=orm_obj.badge.type.badge_order,
-            url=orm_obj.badge.type.url,
+            name=orm_obj.badge.type.name if orm_obj.badge and orm_obj.badge.type else None,
+            nameKZ=orm_obj.badge.type.nameKZ if orm_obj.badge and orm_obj.badge.type else None,
+            badge_order=orm_obj.badge.type.badge_order if orm_obj.badge and orm_obj.badge.type else None,
+            url=orm_obj.badge.type.url if orm_obj.badge and orm_obj.badge.type else None,
             id=orm_obj.id,
             created_at=orm_obj.created_at,
             updated_at=orm_obj.updated_at,
@@ -544,7 +544,7 @@ class PenaltyRead(Model):
     def from_orm(cls, orm_obj):
         return cls(
             id=orm_obj.id,
-            status=orm_obj.penalty.type.name if orm_obj.penalty.type else None,
+            status=orm_obj.penalty.type.name if orm_obj.penalty and orm_obj.penalty.type else None,
             document_link=orm_obj.document_link,
             cancel_document_link=orm_obj.cancel_document_link,
             document_number=orm_obj.document_number,

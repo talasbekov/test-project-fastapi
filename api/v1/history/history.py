@@ -187,7 +187,7 @@ async def create_black_beret_history(*,
                                Authorize: AuthJWT = Depends()
                                ):
     """
-        Create badge history
+        Create Black Beret history
 
         - **name**: required
         - **quantity**: required

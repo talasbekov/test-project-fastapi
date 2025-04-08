@@ -15,14 +15,15 @@ class PrivelegeEmergencyService(
                     PrivelegeEmergencyCreate,
                     PrivelegeEmergencyUpdate]):
 
-    def create(self, db: Session,
-               obj_in: Union[PrivelegeEmergencyCreate, Dict[str, Any]]) -> PrivilegeEmergency:
+    def create(
+            self, db: Session, obj_in: Union[PrivelegeEmergencyCreate, Dict[str, Any]]
+    ) -> PrivilegeEmergency:
         obj_in_data = jsonable_encoder(obj_in)
         obj_in_data['date_from'] = datetime.strptime(
             obj_in_data['date_from'], '%Y-%m-%d')
         obj_in_data['date_to'] = datetime.strptime(
             obj_in_data['date_to'], '%Y-%m-%d')
-        obj_in_data['form'] = FormEnum[obj_in_data['form']]
+        obj_in_data['form'] = FormEnum(obj_in_data['form'])
         db_obj = self.model(**obj_in_data)
         db.add(db_obj)
         db.flush()
@@ -43,7 +44,7 @@ class PrivelegeEmergencyService(
         for field in obj_data:
             if field in update_data:
                 setattr(db_obj, field, update_data[field])
-        db_obj.form = FormEnum[obj_in.form]
+        db_obj.form = FormEnum(obj_in.form)
         setattr(db_obj, 'updated_at', datetime.now())
         db.add(db_obj)
         db.flush()

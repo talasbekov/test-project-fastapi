@@ -1,6 +1,3 @@
-import uuid
-
-from pydantic import root_validator
 from typing import Optional
 
 from datetime import date

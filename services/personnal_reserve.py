@@ -39,7 +39,7 @@ class PersonnalReserveService(
         for field in obj_data:
             if field in update_data:
                 setattr(db_obj, field, update_data[field])
-        db_obj.reserve = ReserveEnum[obj_in.reserve]
+        db_obj.reserve = ReserveEnum(obj_in.reserve)
         setattr(db_obj, 'updated_at', datetime.now())
         db.add(db_obj)
         db.flush()
