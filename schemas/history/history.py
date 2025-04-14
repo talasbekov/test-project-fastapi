@@ -5,9 +5,10 @@ from pydantic import BaseModel, Field, ValidationError, validator, root_validato
 from datetime import datetime, timezone, timedelta, date
 from typing import Optional, List, Union, Dict, Any, get_origin, get_args
 from uuid import UUID
+
+from models import ArmyEquipmentTypeModel, ClothingEquipmentTypeModel, OtherEquipmentTypeModel
 from .general_information import GeneralInformationRead
 from schemas import (
-    Model,
     ReadModel,
     ReadNamedModel,
     PositionRead,
@@ -27,7 +28,6 @@ from schemas import (
     AcademicTitleShortRead,
     CourseShortRead,
     EducationShortRead,
-    StaffDivisionRead
 )
 from .history_personal import (
     PenaltyReadHistory,
@@ -940,72 +940,70 @@ class SecondmentRead(Model):
 #         arbitrary_types_allowed = True
 
 
-class TypeOfArmyEquipmentModelRead(ReadNamedModel):
+class ArmyEquipmentTypeRead(ReadNamedModel):
     type_of_equipment: Optional[dict]
 
     class Config:
-        from_attributes = True
         arbitrary_types_allowed = True
+        orm_mode = True
 
     @classmethod
-    def from_orm(cls, orm_obj):
+    def from_orm(cls, orm_obj: ArmyEquipmentTypeModel):
+        parent_type = orm_obj.army_equipment_type  # родитель
         return cls(
-            id=orm_obj.id,
-            name=orm_obj.name,
-            nameKZ=orm_obj.nameKZ,
+            id=parent_type.id,
+            name=parent_type.name,
+            nameKZ=parent_type.nameKZ,
             type_of_equipment={
-                "id": orm_obj.id,
-                "name": orm_obj.name if orm_obj.name else "Неизвестно",
-                "nameKZ": orm_obj.nameKZ if orm_obj.nameKZ else "Белгісіз"
+                "name": orm_obj.name,
+                "nameKZ": orm_obj.nameKZ,
             }
         )
 
 
-class TypeOfClothingEquipmentModelRead(ReadModel):
+class ClothingEquipmentTypeRead(ReadNamedModel):
     type_of_equipment: Optional[dict]
-    model_of_equipment: Optional[dict]
 
     class Config:
-        from_attributes = True
         arbitrary_types_allowed = True
+        orm_mode = True
 
     @classmethod
-    def from_orm(cls, orm_obj):
+    def from_orm(cls, orm_obj: ClothingEquipmentTypeModel):
+        parent_type = orm_obj.clothing_equipment_type  # родитель
         return cls(
-            id=orm_obj.id,
+            id=parent_type.id,
+            name=parent_type.name,
+            nameKZ=parent_type.nameKZ,
             type_of_equipment={
-                "name": orm_obj.clothing_equipment_type.name if orm_obj.clothing_equipment_type else "Неизвестно",
-                "nameKZ": orm_obj.clothing_equipment_type.nameKZ if orm_obj.clothing_equipment_type else "Белгісіз"
-            },
-            model_of_equipment={
-                "name": orm_obj.clothing_equipment_type_model.name if orm_obj.clothing_equipment_type_model else "Неизвестно",
-                "nameKZ": orm_obj.clothing_equipment_type_model.nameKZ if orm_obj.clothing_equipment_type_model else "Белгісіз"
+                "name": orm_obj.name,
+                "nameKZ": orm_obj.nameKZ,
             }
         )
 
 
-class TypeOfOtherEquipmentModelRead(ReadNamedModel):
+class OtherEquipmentTypeRead(ReadNamedModel):
     type_of_equipment: Optional[dict]
 
     class Config:
-        from_attributes = True
         arbitrary_types_allowed = True
+        orm_mode = True
 
     @classmethod
-    def from_orm(cls, orm_obj):
+    def from_orm(cls, orm_obj: OtherEquipmentTypeModel):
+        parent_type = orm_obj.other_equipment_type  # родитель
         return cls(
-            id=orm_obj.id,
-            name=orm_obj.name,
-            nameKZ=orm_obj.nameKZ,
+            id=parent_type.id,
+            name=parent_type.name,
+            nameKZ=parent_type.nameKZ,
             type_of_equipment={
-                "id": orm_obj.id,
-                "name": orm_obj.name if orm_obj.name else "Неизвестно",
-                "nameKZ": orm_obj.nameKZ if orm_obj.nameKZ else "Белгісіз"
+                "name": orm_obj.name,
+                "nameKZ": orm_obj.nameKZ,
             }
         )
 
 
-class EquipmentRead(ReadModel):
+class EquipmentRead(BaseModel):
     type_of_equipment: Optional[str]
     user_id: Optional[str]
     army_equipment_type_model_id: Optional[str]
@@ -1013,15 +1011,16 @@ class EquipmentRead(ReadModel):
     inventory_count: Optional[int]
     count_of_ammo: Optional[int]
     clothing_size: Optional[str]
-    clothing_type_association_id: Optional[str]
+    clothing_equipment_type_model_id: Optional[str]
     other_equipment_type_model_id: Optional[str]
     document_link: Optional[str]
     document_number: Optional[str]
     date_from: Optional[datetime]
     date_to: Optional[datetime]
-    army_object: Optional[TypeOfArmyEquipmentModelRead] = Field(None, alias='army_equipment_type_model')
-    clothes_object: Optional[TypeOfClothingEquipmentModelRead] = Field(None, alias='clothing_type_association')
-    other_object: Optional[TypeOfOtherEquipmentModelRead] = Field(None, alias='other_equipment_type_model')
+
+    army_equipment_type_model: Optional[ArmyEquipmentTypeRead]
+    clothing_equipment_type_model: Optional[ClothingEquipmentTypeRead]
+    other_equipment_type_model: Optional[OtherEquipmentTypeRead]
 
     class Config:
         orm_mode = True

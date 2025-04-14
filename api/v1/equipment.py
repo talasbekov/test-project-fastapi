@@ -118,10 +118,11 @@ async def get_all_clothing_types(
     db: Session = Depends(get_db),
     Authorize: AuthJWT = Depends(),
     skip: int = 0,
-    limit: int = 10
+    limit: int = 10,
+    filter: str = ''
 ):
     Authorize.jwt_required()
-    return equipment_service.get_all_clothing_equipments(db, skip, limit)
+    return equipment_service.get_all_clothing_equipments(db, skip, limit, filter)
 
 
 @router.get("/type/clothing/{id}",
@@ -135,6 +136,19 @@ async def get_clothing_by_id(
 ):
     Authorize.jwt_required()
     return equipment_service.get_clothing_equipment_type_by_id(db, id)
+
+
+@router.post("/type/clothing/",
+             dependencies=[Depends(HTTPBearer())],
+             response_model=ClothingEquipmentTypeRead,
+             summary="Create Clothing Equipments Type")
+async def create_clothing_equipment_type(
+    db: Session = Depends(get_db),
+    body: ClothingEquipmentTypeCreate = None,
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    return equipment_service.create_clothing_equipment_type(db, body)
 
 
 @router.put("/type/clothing/{id}",
@@ -162,19 +176,6 @@ async def delete_type_clothing(
     return equipment_service.delete_type_clothing(db, id)
 
 
-@router.post("/type/clothing/",
-             dependencies=[Depends(HTTPBearer())],
-             response_model=ClothingEquipmentTypeRead,
-             summary="Create Clothing Equipments Type")
-async def create_cloth_eq_type(
-    db: Session = Depends(get_db),
-    body: ClothingEquipmentTypeCreate = None,
-    Authorize: AuthJWT = Depends()
-):
-    Authorize.jwt_required()
-    return equipment_service.create_cloth_eq_type(db, body)
-
-
 @router.get("/model/clothing/",
             dependencies=[Depends(HTTPBearer())],
             response_model=List[ClothingEquipmentTypeModelRead],
@@ -190,16 +191,17 @@ async def get_all_clothing_models(
 @router.post("/model/clothing/",
              dependencies=[Depends(HTTPBearer())],
              summary="Create Clothing Equipments Model")
-async def create_cloth_eq_model(
+async def create_clothing_equipment_model(
     db: Session = Depends(get_db),
     body: ClothingEquipmentTypeModelCreate = None,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
-    return equipment_service.create_cloth_eq_model(db, body)
+    print(body.__dict__, "1 body clothing equipment type model")
+    return equipment_service.create_clothing_equipment_model(db, body)
 
 
-@router.get("/models/clothing/{id}",
+@router.get("/model/clothing/{id}",
             dependencies=[Depends(HTTPBearer())],
             summary="Get Clothing Equipment Model by id")
 async def get_cloth_model_by_id(
@@ -211,7 +213,7 @@ async def get_cloth_model_by_id(
     return equipment_service.get_clothing_equipment_model_by_id(db, id)
 
 
-@router.put("/models/clothing/{id}",
+@router.put("/model/clothing/{id}",
             dependencies=[Depends(HTTPBearer())],
             summary="Update Clothing Equipment Model")
 async def update_cloth_model(
@@ -224,7 +226,7 @@ async def update_cloth_model(
     return equipment_service.update_cloth_model(db, id, body)
 
 
-@router.delete("/models/clothing/{id}",
+@router.delete("/model/clothing/{id}",
                dependencies=[Depends(HTTPBearer())],
                summary="Delete Clothing Equipment Model")
 async def delete_cloth_model(

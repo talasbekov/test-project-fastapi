@@ -1,6 +1,5 @@
 from typing import Optional, List
 from datetime import datetime
-from pydantic import Field
 from schemas.base import Model, ReadModel, ReadNamedModel, NamedModel
 
 # ----------------------------------------------------
@@ -12,11 +11,11 @@ class EquipmentBase(Model):
     """
     type_of_equipment: Optional[str]
     army_equipment_type_model_id: Optional[str]
+    clothing_equipment_type_model_id: Optional[str]
+    other_equipment_type_model_id: Optional[str]
     inventory_number: Optional[str]
     inventory_count: Optional[int]
     count_of_ammo: Optional[int]
-    clothing_type_association_id: Optional[str]
-    other_equipment_type_model_id: Optional[str]
     clothing_size: Optional[str]
     document_link: Optional[str]
     document_number: Optional[str]
@@ -58,7 +57,7 @@ class ArmyEquipmentTypeRead(ReadNamedModel):
     """
     Тип армейского оборудования (например, «Автомат») с привязанными моделями.
     """
-    army_equipment_type_models: Optional[List[ArmyEquipmentTypeModelRead]] = None
+    army_equipment_type_model: Optional[List[ArmyEquipmentTypeModelRead]]
 
     class Config:
         orm_mode = True
@@ -92,7 +91,7 @@ class ClothingEquipmentTypeRead(ReadNamedModel):
     Тип одежды (например, «Шапка») с привязанными моделями.
     """
     # В модели поле называется "clothing_equipment_models"
-    clothing_equipment_models: Optional[List[ClothingEquipmentTypeModelRead]] = None
+    clothing_equipment_type_model: Optional[List[ClothingEquipmentTypeModelRead]]
 
     class Config:
         orm_mode = True
@@ -104,27 +103,14 @@ class ClothingEquipmentTypeReadPagination(Model):
     objects: Optional[List[ClothingEquipmentTypeRead]]
 
 
-class ClothingEquipmentTypesModelsRead(ReadNamedModel):
-    """
-    Ассоциативная сущность, отражающая связь между типом и моделью одежды.
-    """
-    clothing_equipment_type_model: Optional[ClothingEquipmentTypeModelRead] = None
-    clothing_equipment_type: Optional[ClothingEquipmentTypeRead] = None
-
-    class Config:
-        orm_mode = True
-        arbitrary_types_allowed = True
-
-
 class ClothingEquipmentTypeModelCreate(NamedModel):
-    pass
+    clothing_equipment_type_id: Optional[str]
 
 
 class ClothingEquipmentTypeCreate(NamedModel):
     """
     При создании типа одежды можно передать список идентификаторов моделей.
     """
-    # model_ids: Optional[List[Optional[str]]] = None
     pass
 
 
@@ -145,7 +131,7 @@ class OtherEquipmentTypeRead(ReadNamedModel):
     """
     Тип прочего оборудования (например, «Принтер») с привязанными моделями.
     """
-    other_equipment_type_models: Optional[List[OtherEquipmentTypeModelRead]] = None
+    other_equipment_type_model: Optional[List[OtherEquipmentTypeModelRead]]
 
     class Config:
         orm_mode = True
@@ -172,12 +158,12 @@ class EquipmentRead(EquipmentBase, ReadModel):
     """
     Схема для чтения Equipment, объединяющая общие поля и связанные объекты.
     """
-    # Соответствие: ArmyEquipment.army_equipment_type_model -> army_object
-    army_object: Optional[ArmyEquipmentTypeRead] = Field(None, alias='army_equipment_type_model')
-    # Соответствие: ClothingEquipment.clothing_type_association -> clothes_object
-    clothes_object: Optional[ClothingEquipmentTypesModelsRead] = Field(None, alias='clothing_type_association')
-    # Соответствие: OtherEquipment.other_equipment_type_model -> other_object
-    other_object: Optional[OtherEquipmentTypeRead] = Field(None, alias='other_equipment_type_model')
+    # Соответствие: ArmyEquipment.army_equipment_type -> army_equipment_type
+    army_equipment_type_model: Optional[ArmyEquipmentTypeRead]
+    # Соответствие: ClothingEquipment.clothing_equipment_type -> clothing_equipment_type
+    clothing_equipment_type_model: Optional[ClothingEquipmentTypeRead]
+    # Соответствие: OtherEquipment.other_equipment_type -> other_equipment_type
+    other_equipment_type_model: Optional[OtherEquipmentTypeRead]
 
     class Config:
         orm_mode = True
