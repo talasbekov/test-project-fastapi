@@ -75,6 +75,7 @@ class EquipmentService(ServiceBase[Equipment, EquipmentCreate, EquipmentUpdate])
         return equipment_obj
 
     def create(self, db: Session, body: EquipmentCreate):
+        print(body.__dict__, "Equipment Create Body")
         if body.type_of_equipment not in equipment:
             raise NotFoundException(
                 detail=f"Unknown type_of_equipment '{body.type_of_equipment}'"
@@ -83,6 +84,7 @@ class EquipmentService(ServiceBase[Equipment, EquipmentCreate, EquipmentUpdate])
         equipment_obj = cls(**body.dict(exclude_none=True))
         db.add(equipment_obj)
         db.flush()
+        db.commit()  # добавьте commit для сохранения данных в базе
         return equipment_obj
 
     def update(self, db: Session, id: str, body: EquipmentUpdate):
@@ -240,10 +242,19 @@ class EquipmentService(ServiceBase[Equipment, EquipmentCreate, EquipmentUpdate])
             raise NotFoundException(f"OtherEquipmentModel with id {id} not found")
         return model
 
-    def create_other_eq_type(self, db: Session, body: OtherEquipmentTypeCreate):
+    def create_other_equipment_type(self, db: Session, body: OtherEquipmentTypeCreate):
         return super().create(db, body, OtherEquipmentType)
 
-    def create_other_eq_model(self, db: Session, body: OtherEquipmentTypeModelCreate):
+    def create_other_equipment_model(self, db: Session, body: OtherEquipmentTypeModelCreate):
+        body_type = db.query(OtherEquipmentType).filter(
+            OtherEquipmentType.id == body.other_equipment_type_id
+        ).first()
+
+        if not body_type:
+            raise HTTPException(
+                status_code=400,
+                detail="Тип с таким other_equipment_type_id не найден."
+            )
         return super().create(db, body, OtherEquipmentTypeModel)
 
     def update_other_type(self, db: Session, id: str, body: OtherEquipmentTypeCreate):

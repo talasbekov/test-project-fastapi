@@ -401,13 +401,13 @@ async def get_other_by_id(
              dependencies=[Depends(HTTPBearer())],
              response_model=OtherEquipmentTypeRead,
              summary="Create Other Equipments Type")
-async def create_other_eq_type(
+async def create_other_equipment_type(
     db: Session = Depends(get_db),
     body: OtherEquipmentTypeCreate = None,
     Authorize: AuthJWT = Depends()
 ):
     Authorize.jwt_required()
-    return equipment_service.create_other_eq_type(db, body)
+    return equipment_service.create_other_equipment_type(db, body)
 
 
 @router.put("/type/other/{id}",
@@ -435,19 +435,6 @@ async def delete_other_type(
     return equipment_service.delete_other_type(db, id)
 
 
-@router.post("/model/other/",
-             dependencies=[Depends(HTTPBearer())],
-             response_model=OtherEquipmentTypeModelRead,
-             summary="Create Other Equipments Model")
-async def create_other_eq_model(
-    db: Session = Depends(get_db),
-    body: OtherEquipmentTypeModelCreate = None,
-    Authorize: AuthJWT = Depends()
-):
-    Authorize.jwt_required()
-    return equipment_service.create_other_eq_model(db, body)
-
-
 @router.get("/models/other",
             dependencies=[Depends(HTTPBearer())],
             summary="Get all Models of Other Equipments")
@@ -457,6 +444,19 @@ async def get_all_other_models(
 ):
     Authorize.jwt_required()
     return equipment_service.get_all_other_equipment_models(db)
+
+
+@router.post("/model/other/",
+             dependencies=[Depends(HTTPBearer())],
+             response_model=OtherEquipmentTypeModelRead,
+             summary="Create Other Equipments Model")
+async def create_other_equipment_model(
+    db: Session = Depends(get_db),
+    body: OtherEquipmentTypeModelCreate = None,
+    Authorize: AuthJWT = Depends()
+):
+    Authorize.jwt_required()
+    return equipment_service.create_other_equipment_model(db, body)
 
 
 @router.get("/models/other/{id}",

@@ -914,12 +914,7 @@ class HistoryService(ServiceBase[History, HistoryCreate, HistoryUpdate]):
                     detail=f'Badge is not found!')
         if object.type == "penalty_history":
             if history.penalty_id:
-                print(object.__dict__, "history object")
-                print(history.__dict__, "history")
-                print(history.penalty_id, "penalty_id")
-                print(history.user_id, "user_id")
                 penalty = penalty_service.get_by_type_and_user(db, history.penalty_id, history.user_id)
-                print(penalty.id, "penalty.id")
                 history.penalty_id = penalty.id
             else:
                 raise NotFoundException(

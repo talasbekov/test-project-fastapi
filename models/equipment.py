@@ -52,11 +52,10 @@ class ArmyEquipmentType(NamedModel):
     """
     __tablename__ = "hr_erp_army_equipment_types"
 
-    army_equipment_type_model = relationship(
+    army_equipment_type_models = relationship(
         "ArmyEquipmentTypeModel",
         back_populates="army_equipment_type",
-        cascade="all, delete-orphan",
-        uselist=False
+        cascade="all, delete-orphan"
     )
 
 
@@ -73,7 +72,7 @@ class ArmyEquipmentTypeModel(NamedModel):
     )
     army_equipment_type = relationship(
         "ArmyEquipmentType",
-        back_populates="army_equipment_type_model"
+        back_populates="army_equipment_type_models"
     )
     # Список конкретных единиц оборудования
     army_equipments = relationship(
@@ -112,11 +111,10 @@ class ArmyEquipment(Equipment):
 class ClothingEquipmentType(NamedModel):
     __tablename__ = "hr_erp_clothing_equipment_types"
 
-    clothing_equipment_type_model = relationship(
+    clothing_equipment_type_models = relationship(
         "ClothingEquipmentTypeModel",
         back_populates="clothing_equipment_type",
-        cascade="all, delete-orphan",
-        uselist=False
+        cascade="all, delete-orphan"
     )
 
 
@@ -131,7 +129,7 @@ class ClothingEquipmentTypeModel(NamedModel):
     # This is the existing relationship to the parent clothing_equipment_type
     clothing_equipment_type = relationship(
         "ClothingEquipmentType",
-        back_populates="clothing_equipment_type_model",
+        back_populates="clothing_equipment_type_models",
         uselist=False
     )
     clothing_equipments = relationship(
@@ -169,11 +167,10 @@ class OtherEquipmentType(NamedModel):
     """
     __tablename__ = "hr_erp_other_equipment_types"
 
-    other_equipment_type_model = relationship(
+    other_equipment_type_models = relationship(
         "OtherEquipmentTypeModel",
         back_populates="other_equipment_type",
-        cascade="all, delete-orphan",
-        uselist=False
+        cascade="all, delete-orphan"
     )
 
 
@@ -192,7 +189,7 @@ class OtherEquipmentTypeModel(NamedModel):
     )
     other_equipment_type = relationship(
         "OtherEquipmentType",
-        back_populates="other_equipment_type_model"
+        back_populates="other_equipment_type_models"
     )
     other_equipments = relationship(
         "OtherEquipment",

@@ -1,6 +1,8 @@
-from typing import Optional, List
+from typing import Optional, List, get_origin, get_args
 from datetime import datetime
-from schemas.base import Model, ReadModel, ReadNamedModel, NamedModel
+
+from models import OtherEquipmentTypeModel, ClothingEquipmentTypeModel, ArmyEquipmentTypeModel
+from schemas.base import Model, ReadModel, ReadNamedModel, NamedModel, Field
 
 # ----------------------------------------------------
 #              Общие схемы Equipment
@@ -57,7 +59,7 @@ class ArmyEquipmentTypeRead(ReadNamedModel):
     """
     Тип армейского оборудования (например, «Автомат») с привязанными моделями.
     """
-    army_equipment_type_model: Optional[List[ArmyEquipmentTypeModelRead]]
+    army_equipment_type_models: Optional[List[ArmyEquipmentTypeModelRead]]
 
     class Config:
         orm_mode = True
@@ -91,7 +93,7 @@ class ClothingEquipmentTypeRead(ReadNamedModel):
     Тип одежды (например, «Шапка») с привязанными моделями.
     """
     # В модели поле называется "clothing_equipment_models"
-    clothing_equipment_type_model: Optional[List[ClothingEquipmentTypeModelRead]]
+    clothing_equipment_type_models: Optional[List[ClothingEquipmentTypeModelRead]]
 
     class Config:
         orm_mode = True
@@ -131,7 +133,7 @@ class OtherEquipmentTypeRead(ReadNamedModel):
     """
     Тип прочего оборудования (например, «Принтер») с привязанными моделями.
     """
-    other_equipment_type_model: Optional[List[OtherEquipmentTypeModelRead]]
+    other_equipment_type_models: Optional[List[OtherEquipmentTypeModelRead]]
 
     class Config:
         orm_mode = True
@@ -154,16 +156,73 @@ class OtherEquipmentTypeCreate(NamedModel):
 # ----------------------------------------------------
 #        Основная схема чтения: EquipmentRead
 # ----------------------------------------------------
+
+class ArmyBaseEquipmentTypeRead(ReadNamedModel):
+    type_of_equipment: Optional[dict]
+
+    class Config:
+        arbitrary_types_allowed = True
+        orm_mode = True
+
+    @classmethod
+    def from_orm(cls, orm_obj: ArmyEquipmentTypeModel):
+        parent_type = orm_obj.army_equipment_type  # родитель
+        return cls(
+            id=parent_type.id,
+            name=parent_type.name,
+            nameKZ=parent_type.nameKZ,
+            type_of_equipment={
+                "name": orm_obj.name,
+                "nameKZ": orm_obj.nameKZ,
+            }
+        )
+
+
+class ClothingBaseEquipmentTypeRead(ReadNamedModel):
+    type_of_equipment: Optional[dict]
+
+    class Config:
+        arbitrary_types_allowed = True
+        orm_mode = True
+
+    @classmethod
+    def from_orm(cls, orm_obj: ClothingEquipmentTypeModel):
+        parent_type = orm_obj.clothing_equipment_type  # родитель
+        return cls(
+            id=parent_type.id,
+            name=parent_type.name,
+            nameKZ=parent_type.nameKZ,
+            type_of_equipment={
+                "name": orm_obj.name,
+                "nameKZ": orm_obj.nameKZ,
+            }
+        )
+
+
+class OtherBaseEquipmentTypeRead(ReadNamedModel):
+    type_of_equipment: Optional[dict]
+
+    class Config:
+        arbitrary_types_allowed = True
+        orm_mode = True
+
+    @classmethod
+    def from_orm(cls, orm_obj: OtherEquipmentTypeModel):
+        parent_type = orm_obj.other_equipment_type  # родитель
+        return cls(
+            id=parent_type.id,
+            name=parent_type.name,
+            nameKZ=parent_type.nameKZ,
+            type_of_equipment={
+                "name": orm_obj.name,
+                "nameKZ": orm_obj.nameKZ,
+            }
+        )
+
 class EquipmentRead(EquipmentBase, ReadModel):
-    """
-    Схема для чтения Equipment, объединяющая общие поля и связанные объекты.
-    """
-    # Соответствие: ArmyEquipment.army_equipment_type -> army_equipment_type
-    army_equipment_type_model: Optional[ArmyEquipmentTypeRead]
-    # Соответствие: ClothingEquipment.clothing_equipment_type -> clothing_equipment_type
-    clothing_equipment_type_model: Optional[ClothingEquipmentTypeRead]
-    # Соответствие: OtherEquipment.other_equipment_type -> other_equipment_type
-    other_equipment_type_model: Optional[OtherEquipmentTypeRead]
+    army_equipment_type_model: Optional[ArmyBaseEquipmentTypeRead]
+    clothing_equipment_type_model: Optional[ClothingBaseEquipmentTypeRead]
+    other_equipment_type_model: Optional[OtherBaseEquipmentTypeRead]
 
     class Config:
         orm_mode = True
